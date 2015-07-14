@@ -29,6 +29,7 @@ has 'file_format' =>
 has 'header' =>
   (is            => 'rw',
    isa           => 'ArrayRef[Str]',
+   init_arg      => undef,
    predicate     => 'has_header',
    clearer       => 'clear_header',
    documentation => 'The HTS file header (or excerpts of it)');

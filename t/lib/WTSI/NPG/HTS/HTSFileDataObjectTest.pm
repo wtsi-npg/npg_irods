@@ -36,13 +36,15 @@ sub setup_fixture : Test(setup) {
 
   if ($samtools) {
     WTSI::NPG::HTS::Samtools->new
-        (arguments => [q{view}, q{-C}, q{-T}, qq{$data_path/$reference_file},
-                       q{-o}, qq{irods:$irods_tmp_coll/$data_file.cram}],
+        (arguments => ['view', '-C',
+                       '-T', qq{$data_path/$reference_file},
+                       '-o', qq{irods:$irods_tmp_coll/$data_file.cram}],
          path      => "$data_path/$data_file.sam")->run;
 
     WTSI::NPG::HTS::Samtools->new
-        (arguments => [q{view}, q{-b}, q{-T}, qq{$data_path/$reference_file},
-                       q{-o}, qq{irods:$irods_tmp_coll/$data_file.bam}],
+        (arguments => ['view', '-b',
+                       '-T', qq{$data_path/$reference_file},
+                       '-o', qq{irods:$irods_tmp_coll/$data_file.bam}],
          path      => "$data_path/$data_file.sam")->run;
   }
 }
@@ -135,7 +137,9 @@ sub align_filter : Test(12) {
 
 sub header : Test(4) {
  SKIP: {
-    if (not $samtools) { skip 'samtools executable not on the PATH', 4 }
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 4;
+    }
 
     my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
 
@@ -159,7 +163,9 @@ sub header : Test(4) {
 
 sub is_aligned : Test(2) {
  SKIP: {
-    if (not $samtools) { skip 'samtools executable not on the PATH', 2 }
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 2;
+    }
 
     my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
 
@@ -179,7 +185,9 @@ sub is_aligned : Test(2) {
 
 sub reference : Test(2) {
  SKIP: {
-    skip 'samtools executable not on the PATH', 2;
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 2;
+    }
 
     my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
 
