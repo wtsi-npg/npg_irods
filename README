@@ -1,0 +1,5 @@
+
+data_handling
+=============
+
+ - Tools for managing HTS (BAM and CRAM) format files in iRODS.

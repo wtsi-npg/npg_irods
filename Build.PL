@@ -1,0 +1,49 @@
+
+use strict;
+use warnings;
+
+# These paths are propagated to @INC in the build script. The 't/lib'
+# directory is added because the Test::Class tests are there.
+use lib qw(lib t/lib);
+
+use WTSI::DNAP::Utilities::Build;
+
+my $build = WTSI::DNAP::Utilities::Build->new
+  (module_name        => 'irods_data_handling',
+   dist_author        => q(NPG <npg@sanger.ac.uk>),
+   dist_abstract      => q(NPG iRODS data/metadata loading and update tools),
+   dist_version       => WTSI::DNAP::Utilities::Build->report_version,
+   license            => 'gpl',
+   configure_requires =>
+   {
+    'Module::Build'             => ">= 0.42"
+   },
+   test_requires =>
+   {
+    'TAP::Harness'              => '>= 3.30',
+    'Test::Class'               => '>= 0.41',
+    'Test::More'                => '>= 0.98',
+    'Test::Exception'           => '>= 0.32',
+    'Test::Perl::Critic'        => '>= 1.02'
+   },
+   requires =>
+   {
+    'Carp'                      => '>= 1.20',
+    'Log::Log4perl'             => '>= 1.42',
+    'List::AllUtils'            => '>= 0.09',
+    'Moose'                     => '>= 2.1',
+    'MooseX::Types'             => '>= 0.45',
+    'MooseX::StrictConstructor' => 0,
+    'Try::Tiny'                 => '>= 0.12',
+    'WTSI::DNAP::Utilities'     => '>= 0.4.2',
+    'WTSI::NPG::iRODS'          => '>= 1.5.1'
+   },
+   recommends =>
+   {
+    'npg_common::roles::software_location' => 0
+   }
+  );
+
+$build->create_build_script;
+
+1;
