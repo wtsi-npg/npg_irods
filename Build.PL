@@ -16,27 +16,30 @@ my $build = WTSI::DNAP::Utilities::Build->new
    license            => 'gpl',
    configure_requires =>
    {
-    'Module::Build'             => ">= 0.42"
+    'Module::Build'                 => ">= 0.42"
    },
    test_requires =>
    {
-    'TAP::Harness'              => '>= 3.30',
-    'Test::Class'               => '>= 0.41',
-    'Test::More'                => '>= 0.98',
-    'Test::Exception'           => '>= 0.32',
-    'Test::Perl::Critic'        => '>= 1.02'
+    'TAP::Harness'                  => '>= 3.30',
+    'Test::Class'                   => '>= 0.41',
+    'Test::Compile'                 => 0,
+    'Test::More'                    => '>= 0.98',
+    'Test::Exception'               => '>= 0.32',
+    'Test::Perl::Critic'            => '>= 1.02'
    },
    requires =>
    {
-    'Carp'                      => '>= 1.20',
-    'Log::Log4perl'             => '>= 1.42',
-    'List::AllUtils'            => '>= 0.09',
-    'Moose'                     => '>= 2.1',
-    'MooseX::Types'             => '>= 0.45',
-    'MooseX::StrictConstructor' => 0,
-    'Try::Tiny'                 => '>= 0.12',
-    'WTSI::DNAP::Utilities'     => '>= 0.4.2',
-    'WTSI::NPG::iRODS'          => '>= 1.5.1'
+    'Carp'                          => '>= 1.20',
+    'Data::Dump'                    => 0,
+    'Log::Log4perl'                 => '>= 1.42',
+    'List::AllUtils'                => '>= 0.09',
+    'Moose'                         => '>= 2.1',
+    'MooseX::Types'                 => '>= 0.45',
+    'MooseX::StrictConstructor'     => 0,
+    'Try::Tiny'                     => '>= 0.12',
+    'WTSI::DNAP::Utilities'         => '>= 0.4.2',
+    'WTSI::NPG::iRODS'              => '>= 1.8.0',
+    'WTSI::DNAP::Warehouse::Schema' => '>= 1.1'
    },
    recommends =>
    {

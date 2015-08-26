@@ -49,7 +49,7 @@ sub run {
   my ($self) = @_;
 
   my $p = $self->path;
-  my @args = (@{$self->arguments}, qq{$p});
+  my @args = (@{$self->arguments}, qq[$p]);
 
   return WTSI::DNAP::Utilities::Runnable->new
     (arguments  => \@args,
@@ -72,9 +72,9 @@ sub iterate {
   my ($self, $callback) = @_;
 
   my $p = $self->path;
-  my @args = ('view', @{$self->arguments}, qq{$p});
+  my @args = ('view', @{$self->arguments}, qq[$p]);
 
-  my $out = q{};
+  my $out = q[];
   my $stdout_sink = sub {
     $out .= shift;
     if ($out =~ m{.+\n$}msx) {
@@ -83,7 +83,7 @@ sub iterate {
           $callback->($line);
         }
       }
-      $out = q{};
+      $out = q[];
     }
   };
 

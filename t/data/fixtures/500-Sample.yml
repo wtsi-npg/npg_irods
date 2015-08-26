@@ -1,0 +1,1675 @@
+---
+- accession_number: ERS018463
+  cohort: ~
+  common_name: Streptococcus suis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-13 14:19:06
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 317
+  id_sample_tmp: 3277
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: BM308
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-01-20 16:32:42
+  reference_genome: Streptococcus_suis (BM407)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BM308
+  supplier_name: ~
+  taxon_id: 1307
+  uuid_sample_lims: 30b25f9c-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS018464
+  cohort: ~
+  common_name: Streptococcus suis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-13 14:19:45
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 318
+  id_sample_tmp: 3278
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: BM321
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-01-20 16:32:42
+  reference_genome: Streptococcus_suis (BM407)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BM321
+  supplier_name: ~
+  taxon_id: 1307
+  uuid_sample_lims: 30b4bb98-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS018465
+  cohort: ~
+  common_name: Streptococcus suis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-13 14:19:26
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 319
+  id_sample_tmp: 3279
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: BM315
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-01-20 16:32:42
+  reference_genome: Streptococcus_suis (BM407)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BM315
+  supplier_name: ~
+  taxon_id: 1307
+  uuid_sample_lims: 30b676b8-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS018466
+  cohort: ~
+  common_name: Streptococcus suis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-13 14:20:05
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 320
+  id_sample_tmp: 3280
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: BM329
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-01-20 16:32:42
+  reference_genome: Streptococcus_suis (BM407)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BM329
+  supplier_name: ~
+  taxon_id: 1307
+  uuid_sample_lims: 30b82972-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS018467
+  cohort: ~
+  common_name: Streptococcus suis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-13 14:20:26
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 321
+  id_sample_tmp: 3281
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: BM334
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-01-20 16:32:42
+  reference_genome: Streptococcus_suis (BM407)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BM334
+  supplier_name: ~
+  taxon_id: 1307
+  uuid_sample_lims: 30b9ea46-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS018468
+  cohort: ~
+  common_name: Streptococcus suis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-13 14:20:47
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 322
+  id_sample_tmp: 3282
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: BM345
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-01-20 16:32:42
+  reference_genome: Streptococcus_suis (BM407)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BM345
+  supplier_name: ~
+  taxon_id: 1307
+  uuid_sample_lims: 30bbc884-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS018469
+  cohort: ~
+  common_name: Streptococcus suis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-13 14:21:07
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 323
+  id_sample_tmp: 3283
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: BM346
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-01-20 16:32:42
+  reference_genome: Streptococcus_suis (BM407)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BM346
+  supplier_name: ~
+  taxon_id: 1307
+  uuid_sample_lims: 30bd75a8-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS018470
+  cohort: ~
+  common_name: Streptococcus suis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-13 14:21:25
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 324
+  id_sample_tmp: 3284
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: BM357
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-01-20 16:32:42
+  reference_genome: Streptococcus_suis (BM407)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BM357
+  supplier_name: ~
+  taxon_id: 1307
+  uuid_sample_lims: 30c02f6e-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS018471
+  cohort: ~
+  common_name: Streptococcus suis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-13 14:21:46
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 325
+  id_sample_tmp: 3285
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: BM358
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-01-20 16:32:42
+  reference_genome: Streptococcus_suis (BM407)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BM358
+  supplier_name: ~
+  taxon_id: 1307
+  uuid_sample_lims: 30c1eb1a-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS018472
+  cohort: ~
+  common_name: Streptococcus suis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-13 14:22:07
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 326
+  id_sample_tmp: 3286
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: BM362
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-01-20 16:32:42
+  reference_genome: Streptococcus_suis (BM407)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BM362
+  supplier_name: ~
+  taxon_id: 1307
+  uuid_sample_lims: 30c3b116-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS018473
+  cohort: ~
+  common_name: Streptococcus suis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-13 14:22:27
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 327
+  id_sample_tmp: 3287
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: BM366
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-01-20 16:32:42
+  reference_genome: Streptococcus_suis (BM407)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BM366
+  supplier_name: ~
+  taxon_id: 1307
+  uuid_sample_lims: 30c56d58-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS018474
+  cohort: ~
+  common_name: Streptococcus suis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-13 14:22:51
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 328
+  id_sample_tmp: 3288
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: BM373
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-01-20 16:32:42
+  reference_genome: Streptococcus_suis (BM407)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BM373
+  supplier_name: ~
+  taxon_id: 1307
+  uuid_sample_lims: 30c729d6-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS003826
+  cohort: ~
+  common_name: Clostridium difficile
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-05 13:55:34
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 348
+  id_sample_tmp: 3308
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: cdiff BI-2
+  organism: Clostridium difficile
+  public_name: Clostridium difficile strain BI-2
+  recorded_at: 2015-01-20 16:32:43
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BI-2
+  supplier_name: ~
+  taxon_id: 1496
+  uuid_sample_lims: 30ea5578-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS003827
+  cohort: ~
+  common_name: Clostridium difficile
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-05 13:57:13
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 349
+  id_sample_tmp: 3309
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: cdiff BI-4
+  organism: Clostridium difficile
+  public_name: Clostridium difficile strain BI-4
+  recorded_at: 2015-01-20 16:32:43
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BI-4
+  supplier_name: ~
+  taxon_id: 1496
+  uuid_sample_lims: 30ec164c-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS003828
+  cohort: ~
+  common_name: Clostridium difficile
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-05 14:18:51
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 350
+  id_sample_tmp: 3310
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: cdiff BI-5
+  organism: Clostridium difficile
+  public_name: Clostridium difficile strain BI-5
+  recorded_at: 2015-01-20 16:32:43
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BI-5
+  supplier_name: ~
+  taxon_id: 1496
+  uuid_sample_lims: 30ee4a20-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS003829
+  cohort: ~
+  common_name: Clostridium difficile
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-05 13:57:42
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 351
+  id_sample_tmp: 3311
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: cdiff BI-6p
+  organism: Clostridium difficile
+  public_name: Clostridium difficile strain BI-6p
+  recorded_at: 2015-01-20 16:32:43
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BI-6p
+  supplier_name: ~
+  taxon_id: 1496
+  uuid_sample_lims: 30f01698-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS003830
+  cohort: ~
+  common_name: Clostridium difficile
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-05 13:58:17
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 352
+  id_sample_tmp: 3312
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: cdiff BI-7
+  organism: Clostridium difficile
+  public_name: Clostridium difficile strain BI-7
+  recorded_at: 2015-01-20 16:32:43
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BI-7
+  supplier_name: ~
+  taxon_id: 1496
+  uuid_sample_lims: 30f1b0e8-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS003831
+  cohort: ~
+  common_name: Clostridium difficile
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-05 13:59:43
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 353
+  id_sample_tmp: 3313
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: cdiff BI-11
+  organism: Clostridium difficile
+  public_name: Clostridium difficile strain BI-11
+  recorded_at: 2015-01-20 16:32:43
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BI-11
+  supplier_name: ~
+  taxon_id: 1496
+  uuid_sample_lims: 30f3592a-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS003832
+  cohort: ~
+  common_name: Clostridium difficile
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-05 14:01:02
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 354
+  id_sample_tmp: 3314
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: cdiff BI-3
+  organism: Clostridium difficile
+  public_name: Clostridium difficile strain BI-3
+  recorded_at: 2015-01-20 16:32:43
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BI-3
+  supplier_name: ~
+  taxon_id: 1496
+  uuid_sample_lims: 30f4fcd0-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS003833
+  cohort: ~
+  common_name: Clostridium difficile
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-05 14:01:33
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 355
+  id_sample_tmp: 3315
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: cdiff BI-6
+  organism: Clostridium difficile
+  public_name: Clostridium difficile strain BI-6
+  recorded_at: 2015-01-20 16:32:43
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BI-6
+  supplier_name: ~
+  taxon_id: 1496
+  uuid_sample_lims: 30f69824-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS003834
+  cohort: ~
+  common_name: Clostridium difficile
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-05 14:02:03
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 356
+  id_sample_tmp: 3316
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: cdiff BI-8
+  organism: Clostridium difficile
+  public_name: Clostridium difficile strain BI-8
+  recorded_at: 2015-01-20 16:32:43
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BI-8
+  supplier_name: ~
+  taxon_id: 1496
+  uuid_sample_lims: 30f8d2c4-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS003835
+  cohort: ~
+  common_name: Clostridium difficile
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-05 14:03:44
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 357
+  id_sample_tmp: 3317
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: cdiff BI-15
+  organism: Clostridium difficile
+  public_name: Clostridium difficile strain BI-15
+  recorded_at: 2015-01-20 16:32:43
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BI-15
+  supplier_name: ~
+  taxon_id: 1496
+  uuid_sample_lims: 30fa83e4-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS003836
+  cohort: ~
+  common_name: Clostridium difficile
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-05 14:20:09
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 358
+  id_sample_tmp: 3318
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: cdiff BI-13
+  organism: Clostridium difficile
+  public_name: Clostridium difficile strain BI-13
+  recorded_at: 2015-01-20 16:32:43
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BI-13
+  supplier_name: ~
+  taxon_id: 1496
+  uuid_sample_lims: 30fc3626-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS003837
+  cohort: ~
+  common_name: Clostridium difficile
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-02-05 14:00:10
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 359
+  id_sample_tmp: 3319
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: cdiff BI-1
+  organism: Clostridium difficile
+  public_name: Clostridium difficile strain BI-1
+  recorded_at: 2015-01-20 16:32:43
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: BI-1
+  supplier_name: ~
+  taxon_id: 1496
+  uuid_sample_lims: 30fe7fee-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004321
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:22:06
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3212
+  id_sample_tmp: 6117
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 868
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 868
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5ede3080-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004325
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:22:36
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3213
+  id_sample_tmp: 6118
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 917
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 917
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5ee20f3e-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004322
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:23:13
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3214
+  id_sample_tmp: 6119
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 918
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 918
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5ee5cbd8-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004323
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:23:41
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3215
+  id_sample_tmp: 6120
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 536
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 536
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5ee9920e-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004328
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:24:56
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3216
+  id_sample_tmp: 6121
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 537
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 537
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5eed4e6c-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004324
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:25:40
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3217
+  id_sample_tmp: 6122
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 537B
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 537B
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5ef10ff2-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004327
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:32:09
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3218
+  id_sample_tmp: 6123
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 540A
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 540A
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5ef4db28-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004326
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:32:36
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3219
+  id_sample_tmp: 6124
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 540B
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 540B
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5ef91684-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004332
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:33:00
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3220
+  id_sample_tmp: 6125
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 547
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 547
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5f000b9c-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004331
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:33:21
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3221
+  id_sample_tmp: 6126
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 549
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 549
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5f03d6a0-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004329
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:33:41
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3222
+  id_sample_tmp: 6127
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 551
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 551
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5f07a1b8-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004333
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:34:02
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3223
+  id_sample_tmp: 6128
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 556
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 556
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5f0b80a8-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004330
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:34:21
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3224
+  id_sample_tmp: 6129
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 560
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 560
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5f0f7794-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004334
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:34:46
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3225
+  id_sample_tmp: 6130
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: SA
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: SA
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5f134748-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004336
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:35:06
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3226
+  id_sample_tmp: 6131
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: CF32
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: CF32
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5f171288-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004337
+  cohort: ~
+  common_name: Streptococcus equi
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-12 13:35:24
+  deleted_at: ~
+  description: ''
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3227
+  id_sample_tmp: 6132
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 303
+  organism: ''
+  public_name: ''
+  recorded_at: 2015-01-20 16:33:48
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 303
+  supplier_name: ~
+  taxon_id: 1336
+  uuid_sample_lims: 5f1ae278-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004438
+  cohort: ~
+  common_name: Mycobacterium bovis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-27 17:46:22
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 4632
+  id_sample_tmp: 6780
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: MbovisAN5
+  organism: Mycobacterium bovis
+  public_name: ~
+  recorded_at: 2015-01-20 16:34:04
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: AN5
+  supplier_name: ~
+  taxon_id: 1765
+  uuid_sample_lims: 6e0f6484-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004441
+  cohort: ~
+  common_name: Mycobacterium bovis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-27 17:46:23
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 4633
+  id_sample_tmp: 6781
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: Mbovis1121_T17
+  organism: Mycobacterium bovis
+  public_name: ~
+  recorded_at: 2015-01-20 16:34:04
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 1121_T17
+  supplier_name: ~
+  taxon_id: 1765
+  uuid_sample_lims: 6e13edf6-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS008368
+  cohort: ~
+  common_name: Mycobacterium bovis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-27 17:46:23
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 4634
+  id_sample_tmp: 6782
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: M.bovis2451_T25
+  organism: Mycobacterium bovis
+  public_name: ~
+  recorded_at: 2015-01-20 16:34:04
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: AF2451/01
+  supplier_name: ~
+  taxon_id: 1765
+  uuid_sample_lims: 6e1841bc-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004437
+  cohort: ~
+  common_name: Mycobacterium bovis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-27 17:46:23
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 4635
+  id_sample_tmp: 6783
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: Mbovis1307_T35
+  organism: Mycobacterium bovis
+  public_name: ~
+  recorded_at: 2015-01-20 16:34:04
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 1307_T35
+  supplier_name: ~
+  taxon_id: 1765
+  uuid_sample_lims: 6e1ca8ba-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004445
+  cohort: ~
+  common_name: Mycobacterium bovis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-27 17:46:23
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 4636
+  id_sample_tmp: 6784
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: Mbovis2122_PDIMpos
+  organism: Mycobacterium bovis
+  public_name: ~
+  recorded_at: 2015-01-20 16:34:04
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 2122_PDIMpos
+  supplier_name: ~
+  taxon_id: 1765
+  uuid_sample_lims: 6e210676-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS004440
+  cohort: ~
+  common_name: Mycobacterium bovis
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-03-27 17:46:23
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 4637
+  id_sample_tmp: 6785
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: Mbovis2122_PDIMneg
+  organism: Mycobacterium bovis
+  public_name: ~
+  recorded_at: 2015-01-20 16:34:04
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 2122_PDIMneg
+  supplier_name: ~
+  taxon_id: 1765
+  uuid_sample_lims: 6e255a46-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS013252
+  cohort: ~
+  common_name: Vibrio cholerae
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-04-09 10:58:22
+  deleted_at: ~
+  description: El Tor
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 4762
+  id_sample_tmp: 6889
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 4110
+  organism: vibrio cholerae
+  public_name: ''
+  recorded_at: 2015-01-20 16:34:06
+  reference_genome: Bordetella_bronchiseptica (RB50)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 07.95vp
+  supplier_name: ~
+  taxon_id: 666
+  uuid_sample_lims: 71019a72-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS013253
+  cohort: ~
+  common_name: Vibrio cholerae
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-04-09 10:58:22
+  deleted_at: ~
+  description: El Tor
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 4763
+  id_sample_tmp: 6890
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 4111
+  organism: vibrio cholerae
+  public_name: ''
+  recorded_at: 2015-01-20 16:34:06
+  reference_genome: Bordetella_bronchiseptica (RB50)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 12.02vp
+  supplier_name: ~
+  taxon_id: 666
+  uuid_sample_lims: 71057e12-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS013254
+  cohort: ~
+  common_name: Vibrio cholerae
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-04-09 10:58:22
+  deleted_at: ~
+  description: El Tor
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 4764
+  id_sample_tmp: 6891
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 4322
+  organism: vibrio cholerae
+  public_name: ''
+  recorded_at: 2015-01-20 16:34:06
+  reference_genome: Bordetella_bronchiseptica (RB50)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: F00419
+  supplier_name: ~
+  taxon_id: 666
+  uuid_sample_lims: 7109619e-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS013255
+  cohort: ~
+  common_name: Vibrio cholerae
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-04-09 10:58:22
+  deleted_at: ~
+  description: El Tor
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 4765
+  id_sample_tmp: 6892
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 4642
+  organism: vibrio cholerae
+  public_name: ''
+  recorded_at: 2015-01-20 16:34:06
+  reference_genome: Bordetella_bronchiseptica (RB50)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: B06491
+  supplier_name: ~
+  taxon_id: 666
+  uuid_sample_lims: 710d54e8-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS013256
+  cohort: ~
+  common_name: Vibrio cholerae
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-04-09 10:58:22
+  deleted_at: ~
+  description: Hybrid Matlab type 2
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 4766
+  id_sample_tmp: 6893
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 4670
+  organism: vibrio cholerae
+  public_name: ''
+  recorded_at: 2015-01-20 16:34:06
+  reference_genome: Bordetella_bronchiseptica (RB50)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: MG116926
+  supplier_name: ~
+  taxon_id: 666
+  uuid_sample_lims: 71113c3e-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS016137
+  cohort: ~
+  common_name: Vibrio cholerae
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-04-09 10:59:59
+  deleted_at: ~
+  description: 2000
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 4769
+  id_sample_tmp: 6894
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 4672
+  organism: 'vibrio cholerae '
+  public_name: ''
+  recorded_at: 2015-01-20 16:34:06
+  reference_genome: Bordetella_bronchiseptica (RB50)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: E1781
+  supplier_name: ~
+  taxon_id: 666
+  uuid_sample_lims: 711572a4-b9c2-11df-9e66-00144f01a414
+- accession_number: ERS013264
+  cohort: ~
+  common_name: Vibrio cholerae
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-04-09 11:00:55
+  deleted_at: ~
+  description: El Tor
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 4770
+  id_sample_tmp: 6895
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: 4122
+  organism: 'vibrio cholerae '
+  public_name: ''
+  recorded_at: 2015-01-20 16:34:06
+  reference_genome: Bordetella_bronchiseptica (RB50)
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 01.07vp
+  supplier_name: ~
+  taxon_id: 666
+  uuid_sample_lims: 711a0f62-b9c2-11df-9e66-00144f01a414
+- accession_number: ~
+  cohort: ~
+  common_name: ~
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2009-11-05 20:03:54
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 9832
+  id_sample_tmp: 11618
+  last_updated: 2012-08-03 10:07:02
+  mother: ~
+  name: Illumina phiX
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-01-20 16:36:00
+  reference_genome: ' '
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
+  taxon_id: ~
+  uuid_sample_lims: 21d7090e-b9c3-11df-9e66-00144f01a414

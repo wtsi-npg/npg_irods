@@ -1,16 +1,23 @@
 package WTSI::NPG::HTS::HTSFileDataObject;
 
 use namespace::autoclean;
+use Data::Dump qw(dump);
+use List::AllUtils qw(uniq);
 use Moose;
+use Try::Tiny;
 
 use WTSI::NPG::HTS::Types qw(HTSFileFormat);
 use WTSI::NPG::HTS::Samtools;
 
 our $VERSION = '';
 
+# Regex for matching to reference sequence paths in HTS file header PG
+# records.
 our $DEFAULT_REFERENCE_REGEX = qr{\/(nfs|lustre)\/\S+\/references}mxs;
 
 extends 'WTSI::NPG::iRODS::DataObject';
+
+with 'WTSI::NPG::HTS::Annotator';
 
 has 'align_filter' =>
   (isa           => 'Maybe[Str]',
@@ -46,7 +53,8 @@ has 'position' =>
    is            => 'ro',
    required      => 0,
    writer        => '_set_position',
-   documentation => 'The position, parsed from the iRODS path');
+   documentation => 'The position (i.e. sequencing lane), parsed ' .
+                    'from the iRODS path');
 
 has 'tag_index' =>
   (isa           => 'Maybe[Int]',
@@ -63,19 +71,19 @@ sub BUILD {
 
   if (not defined $self->id_run) {
     defined $id_run or
-      $self->logconfess(q{Failed to parse id_run from path }, $self->str);
+      $self->logconfess('Failed to parse id_run from path ', $self->str);
     $self->_set_id_run($id_run);
   }
 
   if (not defined $self->position) {
     defined $position or
-      $self->logconfess(q{Failed to parse position from path }, $self->str);
+      $self->logconfess('Failed to parse position from path ', $self->str);
     $self->_set_position($position);
   }
 
   if (not defined $self->file_format) {
     defined $file_format or
-      $self->logconfess(q{Failed to parse file format from path }, $self->str);
+      $self->logconfess('Failed to parse file format from path ', $self->str);
     $self->_set_file_format($file_format);
   }
 
@@ -102,12 +110,11 @@ around 'header' => sub {
   return $self->$orig;
 };
 
-
 =head2 is_aligned
 
   Arg [1]      None
 
-  Example    : $obj->iterate(sub { print $_[0] });
+  Example    : $obj->is_aligned
   Description: Return true if the reads in the file are aligned.
   Returntype : Bool
 
@@ -128,6 +135,27 @@ sub is_aligned {
   return $is_aligned;
 }
 
+=head2 reference
+
+  Arg [1]      A callback to be executed on each line of BWA @PG line
+               of the BAM/CRAM header, CodeRef. Optional, defaults to
+               a filter that matches on the default reference regex.
+
+  Example    : my $reference = $obj->reference(sub {
+                  return $_[0] =~ /my_reference/
+               })
+  Description: Return the reference path used in alignment. The reference
+               path is parsed from the last BWA @PG line in the header
+               by a simple split on whitespace, followed by application of
+               the filter.
+
+               This will give incorrect results if the reference path
+               contains whitespace.
+
+  Returntype : Bool
+
+=cut
+
 sub reference {
   my ($self, $filter) = @_;
 
@@ -135,11 +163,11 @@ sub reference {
     $self->logconfess('The filter argument must be a CodeRef');
 
   $filter ||= sub {
-    my ($line) = @_;
-
-    $line =~ m{$DEFAULT_REFERENCE_REGEX}msx;
+    return $_[0] =~ m{$DEFAULT_REFERENCE_REGEX}msx;
   };
 
+  # This filter was cribbed from the existing code. I don't understand
+  # why the bwa_sam header ID record is significant.
   my $last_bwa_pg_line;
   foreach my $line (@{$self->header}) {
     if ($line =~ m{^\@PG}mxs       &&
@@ -153,20 +181,70 @@ sub reference {
 
   my $reference;
   if ($last_bwa_pg_line) {
-    my @elts = grep { $filter->($_) } split m{\s}mxs, $last_bwa_pg_line;
+    # Note the uniq filter; the correct reference may appear multiple
+    # times in the @PG header record.
+    my @elts = uniq grep { $filter->($_) } split m{\s+}mxs, $last_bwa_pg_line;
     my $num_elts = scalar @elts;
 
     if ($num_elts == 1) {
-      $self->debug(q{Found reference '}, $elts[0], q{' for }, $self->str);
+      $self->debug(q[Found reference '], $elts[0], q[' for ], $self->str);
       $reference = $elts[0];
     }
     elsif ($num_elts > 1) {
       $self->logconfess("Reference filter matched $num_elts elements in PG ",
-                        "line '$last_bwa_pg_line': [", join q{, }, @elts, q{]});
+                        "line '$last_bwa_pg_line': [", join q[, ], @elts, ']');
     }
   }
 
   return $reference;
+}
+
+=head2 update_secondary_metadata
+
+  Arg [1]    : WTSI::DNAP::Warehouse::Schema multi-LIMS schema
+  Arg [2]    : CodeRef reference filter (see reference method). Optional.
+
+  Example    : $obj->update_secondary_metadata($schema);
+  Description: Update all secondary (LIMS-supplied) metadata and set data
+               access permissions. Return $self.
+  Returntype : WTSI::NPG::HTS::HTSFileDataObject
+
+=cut
+
+sub update_secondary_metadata {
+  my ($self, $schema, $filter) = @_;
+
+  my @meta = $self->make_hts_metadata($schema,
+                                      $self->id_run,
+                                      $self->position,
+                                      $self->tag_index);
+  push @meta, $self->make_avu
+    ($self->metadata_attr('alignment'), $self->is_aligned);
+  push @meta, $self->make_avu
+    ($self->metadata_attr('reference'), $self->reference($filter));
+
+  ##no critic (CodeLayout::ProhibitParensWithBuiltins)
+  $self->debug('Created metadata AVUs: ', dump(\@meta));
+
+  # Sorting by attribute to allow repeated updates to be in
+  # deterministic order
+  @meta = sort { $a->{attribute} cmp $b->{attribute} } @meta;
+
+  $self->debug('Superseding AVUs in order of attributes: [',
+               join(q{, }, map { $_->{attribute} } @meta), q{]});
+
+  foreach my $avu (@meta) {
+    try {
+      $self->supersede_avus($avu->{attribute}, $avu->{value}, $avu->{units});
+    } catch {
+      $self->error('Failed to supersede with AVU ', dump($avu), q{: }, $_);
+    };
+  }
+  ##use critic
+
+  $self->update_group_permissions;
+
+  return $self;
 }
 
 sub _parse_file_name {
@@ -176,7 +254,7 @@ sub _parse_file_name {
       $tag_index, $tag_index2, $align_filter3, $align_filter4, $format) =
         $self->str =~ m{\/
                         (\d+)        # Run ID
-                        _
+                        _            # Separator
                         (\d)         # Position
                         (_(\w+))?    # Align filter 1/2
                         (\#(\d+))?   # Tag index
@@ -193,8 +271,8 @@ sub _read_header {
   my ($self) = @_;
 
   my @header = WTSI::NPG::HTS::Samtools->new
-    (arguments  => [q{-H}],
-     path       => q{irods:} . $self->str,
+    (arguments  => ['-H'],
+     path       => 'irods:' . $self->str,
      logger     => $self->logger)->collect;
 
   return \@header;
