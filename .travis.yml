@@ -1,0 +1,79 @@
+sudo: required
+
+language: perl
+
+perl:
+  - "5.16"
+
+addons:
+  postgresql: "9.3"
+
+env:
+  global:
+    - PGVERSION="9.3"
+    - JANSSON_VERSION="2.7"
+    - DNAP_UTILITIES_VERSION="0.4.2"
+    - DNAP_WAREHOUSE_VERSION="1.4"
+    - NPG_IRODS_VERSION="1.8.0"
+    - NPG_TRACKING_VERSION="84.8"
+    - BATON_VERSION="0.15.0"
+    - SAMTOOLS_VERSION="1.2"
+    - HTSLIB_VERSION="1.2.1"
+    - CK_DEFAULT_TIMEOUT=10
+    - IRODS_VAULT=/usr/local/var/lib/irods/Vault
+    - IRODS_TEST_VAULT=/usr/local/var/lib/irods/Test
+
+before_install:
+  - env
+  - sudo apt-get update -qq
+  - wget -q https://github.com/wtsi-npg/irods-legacy/releases/download/3.3.1-travis-bc85aa/irods.tar.gz -O /tmp/irods.tar.gz
+  - wget -q https://github.com/akheron/jansson/archive/v${JANSSON_VERSION}.tar.gz -O /tmp/jansson-${JANSSON_VERSION}.tar.gz
+  - wget -q https://github.com/wtsi-npg/baton/releases/download/${BATON_VERSION}/baton-${BATON_VERSION}.tar.gz -O /tmp/baton-${BATON_VERSION}.tar.gz
+  - wget -q https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 -O /tmp/samtools-${SAMTOOLS_VERSION}.tar.bz2
+  - wget -q https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/htslib-${HTSLIB_VERSION}.tar.bz2 -O /tmp/htslib-${HTSLIB_VERSION}.tar.bz2
+
+install:
+  - sudo apt-get install -qq odbc-postgresql
+  - sudo apt-get install libgd2-xpm-dev # For npg_tracking
+  - tar xfz /tmp/irods.tar.gz
+  - source $TRAVIS_BUILD_DIR/travis_linux_env.sh
+  - export PATH=$PATH:$IRODS_HOME/clients/icommands/bin
+  - tar xfz /tmp/jansson-${JANSSON_VERSION}.tar.gz -C /tmp
+  - cd /tmp/jansson-${JANSSON_VERSION} ; autoreconf -fi ; ./configure ; make ; sudo make install ; sudo ldconfig
+  - tar xfz /tmp/baton-${BATON_VERSION}.tar.gz -C /tmp
+  - cd /tmp/baton-${BATON_VERSION} ; ./configure --with-irods=$IRODS_HOME ; make ; sudo make install ; sudo ldconfig
+  - tar xfj /tmp/htslib-${HTSLIB_VERSION}.tar.bz2 -C /tmp
+  - cd /tmp/htslib-${HTSLIB_VERSION} ; ./configure --with-irods=$IRODS_HOME ; perl -i -ple 's{(\$\(CC\)) \s+ (\$\(LDFLAGS\) \s+ -o \s+ \$\@ \s+ test/hfile.o \s+ libhts.a \s+ \$\(LDLIBS\) \s+ -lz)}{$1 -pthread $2}smx' Makefile ; make
+  - tar xfj /tmp/samtools-${SAMTOOLS_VERSION}.tar.bz2 -C /tmp
+  - cd /tmp/samtools-${SAMTOOLS_VERSION} ; make HTSDIR=/tmp/htslib-${HTSLIB_VERSION} LDFLAGS="-L${IRODS_HOME}/lib/core/obj" LDLIBS="-lRodsAPIs -lgssapi_krb5" ; sudo make HTSDIR=/tmp/htslib-${HTSLIB_VERSION} install
+  - cpanm --no-lwp --notest https://github.com/wtsi-npg/perl-dnap-utilities/releases/download/${DNAP_UTILITIES_VERSION}/WTSI-DNAP-Utilities-${DNAP_UTILITIES_VERSION}.tar.gz
+  - cpanm --no-lwp --notest https://github.com/wtsi-npg/perl-irods-wrap/releases/download/${NPG_IRODS_VERSION}/WTSI-NPG-iRODS-${NPG_IRODS_VERSION}.tar.gz
+  - cpanm --quiet --notest Alien::Tidyp # For npg_tracking
+  - cd /tmp ; git clone https://github.com/wtsi-npg/ml_warehouse.git ml_warehouse.git
+  - cd /tmp/ml_warehouse.git ; git checkout ${DNAP_WAREHOUSE_VERSION} ; cpanm --no-lwp --notest .
+  - cd /tmp ; git clone https://github.com/wtsi-npg/npg_tracking.git npg_tracking.git
+  - cd /tmp/npg_tracking.git ; git checkout ${NPG_TRACKING_VERSION} ; cpanm --no-lwp --notest .
+  - cd $TRAVIS_BUILD_DIR
+  - cpanm --notest --installdeps .
+
+before_script:
+  - sudo -E -u postgres $TRAVIS_BUILD_DIR/setup_pgusers.sh
+  - sudo -E -u postgres $TRAVIS_BUILD_DIR/irodscontrol psetup
+  - sudo mkdir -p $IRODS_VAULT
+  - sudo chown $USER:$USER $IRODS_VAULT
+  - sudo mkdir -p $IRODS_TEST_VAULT
+  - sudo chown $USER:$USER $IRODS_TEST_VAULT
+  - $TRAVIS_BUILD_DIR/irodscontrol istart ; sleep 10
+  - echo irods | script -q -c "iinit" > /dev/null
+  - iadmin mkresc testResc 'unix file system' cache `hostname --fqdn` $IRODS_TEST_VAULT
+  - ienv
+  - ilsresc -l
+  - ils
+
+script:
+  - perl Build.PL
+  - ./Build clean
+  - ./Build test --verbose
+
+after_script:
+  - $TRAVIS_BUILD_DIR/irodscontrol istop
