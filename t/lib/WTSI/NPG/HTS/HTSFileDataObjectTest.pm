@@ -36,6 +36,16 @@ my $reference_file = 'test_ref.fa';
 my $irods_tmp_coll;
 my $samtools = `which samtools`;
 
+my $have_admin_rights =
+  system(qq{$WTSI::NPG::iRODS::IADMIN lu 2> /dev/null}) == 0;
+
+# Prefix fot test iRODS data access groups
+my $group_prefix = 'group_';
+# Groups to be added to the test iRODS
+my @irods_groups = map { $group_prefix . $_ } (10, 100, 244);
+# Groups added to the test iRODS in fixture setup
+my @groups_added;
+
 my $pid = $$;
 
 sub setup_fixture : Test(setup) {
@@ -44,6 +54,14 @@ sub setup_fixture : Test(setup) {
   $irods_tmp_coll =
     $irods->add_collection("HTSFileDataObjectTest.$pid.$fixture_counter");
   $fixture_counter++;
+
+  if ($have_admin_rights) {
+    foreach my $group (@irods_groups) {
+      if (not $irods->group_exists($group)) {
+        push @groups_added, $irods->add_group($group);
+      }
+    }
+  }
 
   if ($samtools) {
     WTSI::NPG::HTS::Samtools->new
@@ -58,11 +76,13 @@ sub setup_fixture : Test(setup) {
                        '-o', qq[irods:$irods_tmp_coll/$data_file.bam]],
          path      => "$data_path/$data_file.sam")->run;
 
-    # Add some ss_ group permissions to be removed
-    foreach my $format (qw(bam cram)) {
-      foreach my $group (qw(public ss_10 ss_100)) {
-        $irods->set_object_permissions('read', $group,
-                                       "$irods_tmp_coll/$data_file.$format");
+    if (@groups_added) {
+      # Add some test group permissions
+      foreach my $format (qw(bam cram)) {
+        foreach my $group (qw(group_10 group_100)) {
+          $irods->set_object_permissions('read', $group,
+                                         "$irods_tmp_coll/$data_file.$format");
+        }
       }
     }
   }
@@ -72,6 +92,14 @@ sub teardown_fixture : Test(teardown) {
   my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
 
   $irods->remove_collection($irods_tmp_coll);
+
+  if ($have_admin_rights) {
+    foreach my $group (@groups_added) {
+      if ($irods->group_exists($group)) {
+        $irods->remove_group($group);
+      }
+    }
+  }
 }
 
 sub require : Test(1) {
@@ -171,7 +199,7 @@ sub header : Test(4) {
          irods       => $irods,
          position    => 1);
 
-      ok($obj->header, "$format eader can be read");
+      ok($obj->header, "$format header can be read");
 
       cmp_ok(scalar @{$obj->header}, '==', 11,
              "Correct number of $format header lines") or
@@ -231,62 +259,86 @@ sub reference : Test(2) {
 }
 
 sub update_secondary_metadata : Test(4) {
+ SKIP: {
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 2;
+    }
+    elsif (not @groups_added) {
+      skip 'iRODS groups were not added', 2;
+    }
 
-  my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
+    my $group_filter = sub {
+      my ($group) = @_;
+      if ($group =~ m{^$group_prefix}) {
+        return 1
+      }
+      else {
+        return 0;
+      }
+    };
 
-  my $data_object = WTSI::NPG::HTS::HTSFileDataObject->new
-    (collection  => $irods_tmp_coll,
-     data_object => "$data_file.bam",
-     irods       => $irods);
+    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+                                      group_prefix         => $group_prefix,
+                                      group_filter         => $group_filter);
 
-  my $db_dir = File::Temp->newdir;
-  my $db_file = File::Spec->catfile($db_dir, 'ml_warehouse.db');
-  my $schema = TestDB->new->create_test_db('WTSI::DNAP::Warehouse::Schema',
-                                           './t/data/fixtures',
-                                           $db_file);
+    my $data_object = WTSI::NPG::HTS::HTSFileDataObject->new
+      (collection  => $irods_tmp_coll,
+       data_object => "$data_file.bam",
+       irods       => $irods);
 
-  my $ref_regex = qr{\./t\/data\/test_ref.fa}msx;
-  my $ref_filter = sub {
-    my ($line) = @_;
-    return $line =~ m{$ref_regex}msx;
+    my $db_dir = File::Temp->newdir;
+    my $db_file = File::Spec->catfile($db_dir, 'ml_warehouse.db');
+
+    my $schema;
+    # create_test_db produces warnings during expected use, which
+    # appear mixed with test output in the terminal
+    {
+      local $SIG{__WARN__} = sub { };
+      $schema = TestDB->new->create_test_db('WTSI::DNAP::Warehouse::Schema',
+                                            './t/data/fixtures', $db_file);
+    }
+
+    my $ref_regex = qr{\./t\/data\/test_ref.fa}msx;
+    my $ref_filter = sub {
+      my ($line) = @_;
+      return $line =~ m{$ref_regex}msx;
+    };
+
+    my $expected_groups_before = ['group_10', 'group_100'];
+    my @groups_before = $data_object->get_groups;
+    is_deeply(\@groups_before, $expected_groups_before, 'Groups before update')
+      or diag explain \@groups_before;
+
+    ok($data_object->update_secondary_metadata($schema, $ref_filter));
+
+    my $expected_meta =
+      [{attribute => 'alignment',              value  => '1'},
+       {attribute => 'id_run',                 value  => '3002'},
+       {attribute => 'is_paired_read',         value => '1'},
+       {attribute => 'lane',                   value => '3'},
+       {attribute => 'library_id',             value => '60186'},
+       {attribute => 'manual_qc',              value => '0'},
+       {attribute => 'reference',              value => './t/data/test_ref.fa'},
+       {attribute => 'sample_common_name',     value => 'Streptococcus suis'},
+       {attribute => 'study',                  value =>
+        'Discovery of sequence diversity in Streptococcus suis (Vietnam)'},
+       {attribute => 'study_accession_number', value => 'ERP000893'},
+       {attribute => 'study_id',               value => '244'},
+       {attribute => 'study_title',            value =>
+        'Discovery of sequence diversity in Streptococcus suis (Vietnam)'},
+       {attribute => 'tag_index',              value => '1'}];
+
+    my $meta = [grep { $_->{attribute} !~ m{_history$} }
+                @{$data_object->metadata}];
+    is_deeply($meta, $expected_meta, 'Secondary metadata added')
+      or diag explain $meta;
+
+    my $expected_groups_after = ['group_244'];
+    my @groups_after = $data_object->get_groups;
+
+    is_deeply(\@groups_after, $expected_groups_after, 'Groups after update')
+      or diag explain \@groups_after;
   };
-
-  my $expected_groups_before = ['public', 'ss_10', 'ss_100'];
-  my @groups_before = $data_object->get_groups;
-  is_deeply(\@groups_before, $expected_groups_before, 'Groups before update')
-    or diag explain \@groups_before;
-
-  ok($data_object->update_secondary_metadata($schema, $ref_filter));
-
-  my $expected_meta =
-    [{attribute => 'alignment',              value  => '1'},
-     {attribute => 'id_run',                 value  => '3002'},
-     {attribute => 'is_paired_read',         value => '1'},
-     {attribute => 'lane',                   value => '3'},
-     {attribute => 'library_id',             value => '60186'},
-     {attribute => 'manual_qc',              value => '0'},
-     {attribute => 'reference',              value => './t/data/test_ref.fa'},
-     {attribute => 'sample_common_name',     value => 'Streptococcus suis'},
-     {attribute => 'study',                  value =>
-      'Discovery of sequence diversity in Streptococcus suis (Vietnam)'},
-     {attribute => 'study_accession_number', value => 'ERP000893'},
-     {attribute => 'study_id',               value => '244'},
-     {attribute => 'study_title',            value =>
-      'Discovery of sequence diversity in Streptococcus suis (Vietnam)'},
-     {attribute => 'tag_index',              value => '1'}];
-
-  my $meta = [grep { $_->{attribute} !~ m{_history$} }
-              @{$data_object->metadata}];
-  is_deeply($meta, $expected_meta, 'Secondary metadata added')
-    or diag explain $meta;
-
-  my $expected_groups_after = ['ss_244'];
-  my @groups_after = $data_object->get_groups;
-
-  is_deeply(\@groups_after, $expected_groups_after, 'Groups after update')
-    or diag explain \@groups_after;
-
-  exit;
 }
 
 1;
