@@ -1,0 +1,42 @@
+sudo: required
+
+language: perl
+
+perl:
+  - "5.16"
+
+addons:
+  postgresql: "9.3"
+
+env:
+  global:
+    - PGVERSION="9.3"
+    - JANSSON_VERSION="2.7"
+    - DNAP_UTILITIES_VERSION="0.4.2"
+    - DNAP_WAREHOUSE_VERSION="1.5"
+    - NPG_IRODS_VERSION="2.0.0"
+    - NPG_ML_WAREHOUSE_VERSION="37.7"
+    - NPG_QC_VERSION="59.0"
+    - NPG_SEQ_COMMON_VERSION="50.7"
+    - NPG_TRACKING_VERSION="devel"
+    - BATON_VERSION="0.16.1"
+    - SAMTOOLS_VERSION="1.2"
+    - HTSLIB_VERSION="1.2.1"
+
+before_install:
+  - ./scripts/travis_before_install.sh
+
+install:
+  - ./scripts/travis_install.sh
+
+before_script:
+  - source ./scripts/travis_before_script.sh
+  - ienv
+  - ilsresc -l
+  - ils
+
+script:
+  - ./scripts/travis_script.sh
+
+after_script:
+  - ./scripts/travis_after_script.sh

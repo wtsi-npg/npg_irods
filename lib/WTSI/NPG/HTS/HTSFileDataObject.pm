@@ -1,13 +1,14 @@
 package WTSI::NPG::HTS::HTSFileDataObject;
 
 use namespace::autoclean;
-use Data::Dump qw(dump);
-use List::AllUtils qw(uniq);
+use Data::Dump qw(pp);
+use List::AllUtils qw(any none uniq);
 use Moose;
 use Try::Tiny;
 
-use WTSI::NPG::HTS::Types qw(HTSFileFormat);
 use WTSI::NPG::HTS::Samtools;
+use WTSI::NPG::HTS::Types qw(HTSFileFormat);
+use WTSI::NPG::iRODS::Metadata qw($ALIGNMENT $REFERENCE);
 
 our $VERSION = '';
 
@@ -17,7 +18,7 @@ our $DEFAULT_REFERENCE_REGEX = qr{\/(nfs|lustre)\/\S+\/references}mxs;
 
 extends 'WTSI::NPG::iRODS::DataObject';
 
-with 'WTSI::NPG::HTS::Annotator';
+with 'WTSI::NPG::HTS::HeaderParser', 'WTSI::NPG::HTS::Annotator';
 
 has 'align_filter' =>
   (isa           => 'Maybe[Str]',
@@ -124,12 +125,10 @@ sub is_aligned {
   my ($self) = @_;
 
   my $is_aligned = 0;
-  foreach my $line (@{$self->header}) {
-    if ($line =~ m{^\@SQ\t}mxs){
-      $self->debug($self->str, " has SQ line: $line");
-      $is_aligned = 1;
-      last;
-    }
+  my @sq = $self->get_records($self->header, 'SQ');
+  if (@sq) {
+    $self->debug($self->str, ' has SQ record: ', $sq[0]);
+    $is_aligned = 1;
   }
 
   return $is_aligned;
@@ -169,21 +168,29 @@ sub reference {
   # This filter was cribbed from the existing code. I don't understand
   # why the bwa_sam header ID record is significant.
   my $last_bwa_pg_line;
-  foreach my $line (@{$self->header}) {
-    if ($line =~ m{^\@PG}mxs       &&
-        $line =~ m{ID\:bwa}mxs     &&
-        $line !~ m{ID\:bwa_sam}mxs &&
-        $line =~ m{\tCL\:}mxs) {
-      $self->debug($self->str, " has BWA PG line: $line");
-      $last_bwa_pg_line = $line;
+
+  foreach my $header_record ($self->get_records($self->header, 'PG')) {
+    my @id = $self->get_values($header_record, 'ID');
+    my @cl = $self->get_values($header_record, 'CL');
+
+    if (any  { m{^bwa}msx     } @id and
+        none { m{^bwa_sam}msx } @id and
+        @cl) {
+      $self->debug($self->str, " has BWA PG line: $header_record");
+      $last_bwa_pg_line = $header_record;
     }
   }
 
   my $reference;
   if ($last_bwa_pg_line) {
     # Note the uniq filter; the correct reference may appear multiple
-    # times in the @PG header record.
-    my @elts = uniq grep { $filter->($_) } split m{\s+}mxs, $last_bwa_pg_line;
+    # times in the PG header record's CL values.
+    my @elts;
+    foreach my $cl ($self->get_values($last_bwa_pg_line, 'CL')) {
+      push @elts, split m{\s+}msx, $cl;
+    }
+
+    @elts = uniq grep { $filter->($_) } @elts;
     my $num_elts = scalar @elts;
 
     if ($num_elts == 1) {
@@ -192,7 +199,7 @@ sub reference {
     }
     elsif ($num_elts > 1) {
       $self->logconfess("Reference filter matched $num_elts elements in PG ",
-                        "line '$last_bwa_pg_line': [", join q[, ], @elts, ']');
+                        "record '$last_bwa_pg_line': ", pp(\@elts));
     }
   }
 
@@ -218,29 +225,40 @@ sub update_secondary_metadata {
                                       $self->id_run,
                                       $self->position,
                                       $self->tag_index);
-  push @meta, $self->make_avu
-    ($self->metadata_attr('alignment'), $self->is_aligned);
-  push @meta, $self->make_avu
-    ($self->metadata_attr('reference'), $self->reference($filter));
+  push @meta, $self->make_avu($ALIGNMENT, $self->is_aligned);
+  push @meta, $self->make_avu($REFERENCE, $self->reference($filter));
 
-  ##no critic (CodeLayout::ProhibitParensWithBuiltins)
-  $self->debug('Created metadata AVUs: ', dump(\@meta));
+  $self->debug('Created metadata AVUs: ', pp(\@meta));
+
+  # Collate into lists of values per attribute
+  my %collated_avus;
+  foreach my $avu (@meta) {
+    my $attr  = $avu->{attribute};
+    my $value = $avu->{value};
+    if (exists $collated_avus{$attr}) {
+      push @{$collated_avus{$attr}}, $value;
+    }
+    else {
+      $collated_avus{$attr} = [$value];
+    }
+  }
+
+  $self->debug('Collated ', scalar @meta, ' AVUs into ',
+               scalar keys %collated_avus, ' lists');
+  $self->debug('Superseding AVUs in order of attributes: ',
+               join q[, ], keys %collated_avus);
 
   # Sorting by attribute to allow repeated updates to be in
   # deterministic order
-  @meta = sort { $a->{attribute} cmp $b->{attribute} } @meta;
-
-  $self->debug('Superseding AVUs in order of attributes: [',
-               join(q{, }, map { $_->{attribute} } @meta), q{]});
-
-  foreach my $avu (@meta) {
+  foreach my $attr (sort keys %collated_avus) {
+    my $values  = $collated_avus{$attr};
     try {
-      $self->supersede_avus($avu->{attribute}, $avu->{value}, $avu->{units});
+      $self->supersede_multivalue_avus($attr, $values, undef);
     } catch {
-      $self->error('Failed to supersede with AVU ', dump($avu), q{: }, $_);
+      $self->error("Failed to supersede with attribute '$attr' and values ",
+                   pp($values), q[: ], $_);
     };
   }
-  ##use critic
 
   $self->update_group_permissions;
 
