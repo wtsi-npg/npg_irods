@@ -305,8 +305,10 @@ SKIP: {
 
       my @groups_before = $obj->get_groups;
 
-      ok($obj->update_secondary_metadata($schema, $ref_filter),
-         'Updating secondary metadata');
+      my $with_spiked_control = 0;
+      ok($obj->update_secondary_metadata($schema, $with_spiked_control,
+                                         $ref_filter),
+         'Updating secondary metadata, w/o spiked control');
 
       my @groups_after = $obj->get_groups;
 
