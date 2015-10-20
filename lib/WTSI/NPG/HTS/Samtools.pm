@@ -7,10 +7,10 @@ use MooseX::StrictConstructor;
 
 use WTSI::DNAP::Utilities::Runnable;
 
-with qw{WTSI::DNAP::Utilities::Loggable};
+with 'WTSI::DNAP::Utilities::Loggable';
 
 ## no critic (ErrorHandling::RequireCheckingReturnValueOfEval)
-eval { with 'npg_common::roles::software_location' };
+eval { with q[npg_common::roles::software_location] };
 ## critic
 
 our $VERSION = '';
@@ -77,12 +77,17 @@ sub iterate {
   my $out = q[];
   my $stdout_sink = sub {
     $out .= shift;
-    if ($out =~ m{.+\n$}msx) {
+
+    # Wait for at least one EOL
+    if ($out =~ m{.+(\r\n?|\n)$}msx) {
       if ($callback) {
-        foreach my $line (split m{\n}msx, $out) {
+        # Call back for each of any internal EOLs
+        foreach my $line (split m{\r\n?|\n}msx, $out) {
           $callback->($line);
         }
       }
+
+      # Reset out. See IPC::Run
       $out = q[];
     }
   };
@@ -100,7 +105,7 @@ sub iterate {
                Any lines for which the filter returns true will be
                collected and returned.
 
-  Example    : my @pg_lines = $samtools->collect(sub { $_[0] =~ /^/ })
+  Example    : my @pg_lines = $samtools->collect(sub { $_[0] =~ /^@PG/ })
   Description: Iterate over lines of SAM format data returned by a samtools
                view command, filtering and collecting lines.
   Returntype : Array
@@ -136,8 +141,8 @@ sub _build_samtools {
   my ($self) = @_;
 
   if ($self->can('samtools_cmd')) {
-    $self->debug('Using npg_common::roles::software_location to find samtools: ',
-                 $self->samtools_cmd);
+    $self->debug('Using npg_common::roles::software_location to find ',
+                 'samtools: ', $self->samtools_cmd);
     return $self->samtools_cmd;
   }
   else {

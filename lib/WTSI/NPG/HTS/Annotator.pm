@@ -3,9 +3,14 @@ package WTSI::NPG::HTS::Annotator;
 use List::AllUtils qw(uniq);
 use Moose::Role;
 
+use WTSI::NPG::iRODS::Metadata;
+
+use st::api::lims;
+use st::api::lims::ml_warehouse;
+
 our $VERSION = '';
 
-with 'WTSI::DNAP::Utilities::Loggable', 'WTSI::NPG::HTS::Annotation';
+with 'WTSI::DNAP::Utilities::Loggable', 'WTSI::NPG::iRODS::Utilities';
 
 =head2 make_hts_metadata
 
@@ -21,62 +26,42 @@ with 'WTSI::DNAP::Utilities::Loggable', 'WTSI::NPG::HTS::Annotation';
 
 =cut
 
+## no critic (Subroutines::ProhibitManyArgs)
 sub make_hts_metadata {
-  my ($self, $schema, $id_run, $position, $tag_index) = @_;
+  my ($self, $schema, $id_run, $position, $tag_index,
+      $with_spiked_control) = @_;
 
-  my @query = ('me.id_run'                     => $id_run,
-               'me.position'                   => $position,
-               'iseq_product_metrics.id_run'   => $id_run,
-               'iseq_product_metrics.position' => $position);
-  if (defined $tag_index) {
-    push @query, ('iseq_product_metrics.tag_index' => $tag_index)
-  }
+  defined $schema or $self->logconfess('A defined schema argument is required');
+  defined $id_run or $self->logconfess('A defined id_run argument is required');
+  defined $position or
+    $self->logconfess('A defined position argument is required');
 
-  my $run_lane_metrics = $schema->resultset('IseqRunLaneMetric')->search
-    ({@query}, {prefetch => {'iseq_product_metrics' =>
-                             {'iseq_flowcell' => ['sample', 'study']}}});
+  my ($flowcell_barcode, $flowcell_id) =
+    $self->_find_barcode_and_lims_id($schema, $id_run);
+
+  my @initargs = (flowcell_barcode => $flowcell_barcode,
+                  id_flowcell_lims => $flowcell_id,
+                  position         => $position,
+                  tag_index        => $tag_index);
+  my $driver = st::api::lims::ml_warehouse->new
+    (mlwh_schema => $schema, @initargs);
+  my $lims = st::api::lims->new(driver => $driver,
+                                id_run => $id_run,
+                                @initargs);
 
   my @meta;
-  while (my $rlm = $run_lane_metrics->next) {
-    push @meta, $self->make_run_metadata($rlm);
 
-    # It is possible for a sequencing run without an indexing read to
-    # be performed on a tagged library. The IseqProductMetric::tag_index
-    # method checks for the indexing read, not for the presence of tags.
+  push @meta, $self->make_consent_metadata($lims);
+  push @meta, $self->make_run_metadata($lims);
+  push @meta, $self->make_plex_metadata($lims);
 
-    foreach my $pm ($rlm->iseq_product_metrics) {
-      if ($pm->tag_index) {
-        # An indexing read was sequenced, therefore we expect a tag
-        # argument to select the correct metadata
-        if (not defined $tag_index) {
-          $self->logconfess('Failed to make metadata for ',
-                            "$id_run:$position:?",
-                            'with an indexing read because no tag index ',
-                            'was supplied');
-        }
-        else {
-          $self->debug("Making metadata for $id_run:$position:$tag_index ",
-                       'with an indexing read');
-        }
-      }
-      else {
-        # No indexing read was sequenced and the metadata for all tags
-        # is collected (if there are tags)
-        $self->debug("Making metadata for $id_run:$position ",
-                     'without an indexing read');
-      }
-
-      push @meta, $self->make_study_metadata($pm);
-      push @meta, $self->make_sample_metadata($pm);
-      push @meta, $self->make_library_metadata($pm);
-      push @meta, $self->make_plex_metadata($pm);
-    }
-  }
-
-  @meta = $self->remove_duplicate_avus(@meta);
+  push @meta, $self->make_study_metadata($lims, $with_spiked_control);
+  push @meta, $self->make_sample_metadata($lims, $with_spiked_control);
+  push @meta, $self->make_library_metadata($lims, $with_spiked_control);
 
   return @meta;
 }
+## use critic
 
 =head2 make_run_metadata
 
@@ -89,19 +74,13 @@ sub make_hts_metadata {
 =cut
 
 sub make_run_metadata {
-  my ($self, $rlm) = @_;
+  my ($self, $lims) = @_;
 
-  my @meta;
-  push @meta, $self->make_avu
-    ($self->metadata_attr('id_run'), $rlm->id_run);
-
-  push @meta, $self->make_avu
-    ($self->metadata_attr('position'), $rlm->position);
-
-  push @meta, $self->make_avu
-    ($self->metadata_attr('is_paired_read'), $rlm->paired_read);
-
-  return @meta;
+  # Map of method name to attribute name under which the result will
+  # be stored.
+  my $method_attr = {id_run   => $ID_RUN,
+                     position => $POSITION};
+  return $self->_make_single_value_metadata($lims, $method_attr);
 }
 
 =head2 make_study_metadata
@@ -115,34 +94,18 @@ sub make_run_metadata {
 =cut
 
 sub make_study_metadata {
-  my ($self, $pm) = @_;
+  my ($self, $lims, $with_spiked_control) = @_;
 
-  my @meta;
-  if ($pm->iseq_flowcell) {
-    if ($pm->iseq_flowcell->study) {
-      push @meta, $self->make_avu
-        ($self->metadata_attr('study_id'),
-         $pm->iseq_flowcell->study->id_study_lims);
+  # Map of method name to attribute name under which the result will
+  # be stored.
+  my $method_attr =
+    {study_accession_numbers => $STUDY_ACCESSION_NUMBER,
+     study_names             => $STUDY_NAME,
+     study_ids               => $STUDY_ID,
+     study_titles            => $STUDY_TITLE};
 
-      if ($pm->iseq_flowcell->study->name) {
-        push @meta, $self->make_avu
-          ($self->metadata_attr('study'),
-           $pm->iseq_flowcell->study->name);
-      }
-      if ($pm->iseq_flowcell->study->accession_number) {
-        push @meta, $self->make_avu
-          ($self->metadata_attr('study_accession_number'),
-           $pm->iseq_flowcell->study->accession_number);
-      }
-      if ($pm->iseq_flowcell->study->study_title) {
-        push @meta, $self->make_avu
-          ($self->metadata_attr('study_title'),
-           $pm->iseq_flowcell->study->study_title);
-      }
-    }
-  }
-
-  return @meta;
+  return $self->_make_multi_value_metadata($lims, $method_attr,
+                                           $with_spiked_control);
 }
 
 =head2 make_sample_metadata
@@ -156,43 +119,29 @@ sub make_study_metadata {
 =cut
 
 sub make_sample_metadata {
-  my ($self, $pm) = @_;
+  my ($self, $lims, $with_spiked_control) = @_;
 
-  my @meta;
-  if ($pm->iseq_flowcell) {
-    if ($pm->iseq_flowcell->sample->public_name) {
-      push @meta, $self->make_avu
-        ($self->metadata_attr('sample_public_name'),
-         $pm->iseq_flowcell->sample->public_name);
-    }
-    if ($pm->iseq_flowcell->sample->common_name) {
-      push @meta, $self->make_avu
-        ($self->metadata_attr('sample_common_name'),
-         $pm->iseq_flowcell->sample->common_name);
-    }
-    if ($pm->iseq_flowcell->sample->supplier_name) {
-      push @meta, $self->make_avu
-        ($self->metadata_attr('sample_supplier_name'),
-         $pm->iseq_flowcell->sample->supplier_name);
-    }
-    if ($pm->iseq_flowcell->sample->cohort) {
-      push @meta, $self->make_avu
-        ($self->metadata_attr('sample_cohort'),
-         $pm->iseq_flowcell->sample->cohort);
-    }
-    if ($pm->iseq_flowcell->sample->donor_id) {
-      push @meta, $self->make_avu
-        ($self->metadata_attr('sample_donor_id'),
-         $pm->iseq_flowcell->sample->donor_id);
-    }
-    if ($pm->iseq_flowcell->sample->consent_withdrawn) {
-      push @meta, $self->make_avu
-        ($self->metadata_attr('sample_consent_withdrawn'),
-         $pm->iseq_flowcell->sample->consent_withdrawn);
-    }
-  }
+  # Map of method name to attribute name under which the result will
+  # be stored.
+  my $method_attr =
+    {sample_names          => $SAMPLE_NAME,
+     sample_public_names   => $SAMPLE_PUBLIC_NAME,
+     sample_common_names   => $SAMPLE_COMMON_NAME,
+     sample_supplier_names => $SAMPLE_SUPPLIER_NAME,
+     sample_cohorts        => $SAMPLE_COHORT,
+     sample_donor_ids      => $SAMPLE_DONOR_ID};
 
-  return @meta;
+  return $self->_make_multi_value_metadata($lims, $method_attr,
+                                           $with_spiked_control);
+}
+
+sub make_consent_metadata {
+  my ($self, $lims) = @_;
+
+  my $attr  = $SAMPLE_CONSENT_WITHDRAWN;
+  my $value = $lims->any_sample_consent_withdrawn;
+
+  return ($self->make_avu($attr, $value));
 }
 
 =head2 make_library_metadata
@@ -206,17 +155,14 @@ sub make_sample_metadata {
 =cut
 
 sub make_library_metadata {
-  my ($self, $pm) = @_;
+  my ($self, $lims, $with_spiked_control) = @_;
 
-  my @meta;
-  if ($pm->iseq_flowcell) {
-    if ($pm->iseq_flowcell->library_id) {
-      push @meta, $self->make_avu
-        ($self->metadata_attr('library_id'), $pm->iseq_flowcell->library_id);
-    }
-  }
+  # Map of method name to attribute name under which the result will
+  # be stored.
+  my $method_attr = {library_ids => $LIBRARY_ID};
 
-  return @meta;
+  return $self->_make_multi_value_metadata($lims, $method_attr,
+                                           $with_spiked_control);
 }
 
 =head2 make_plex_metadata
@@ -230,56 +176,69 @@ sub make_library_metadata {
 =cut
 
 sub make_plex_metadata {
-  my ($self, $pm) = @_;
+  my ($self, $lims) = @_;
 
-  my @meta;
-  if ($pm->iseq_flowcell) {
-    push @meta, $self->make_avu
-      ($self->metadata_attr('tag_index'), $pm->iseq_flowcell->tag_index);
-
-    push @meta, $self->make_avu
-      ($self->metadata_attr('manual_qc'), $pm->iseq_flowcell->manual_qc);
-  }
-
-  return @meta;
+  # Map of method name to attribute name under which the result will
+  # be stored.
+  my $method_attr = {tag_index => $TAG_INDEX,
+                     qc_state  => $QC_STATE};
+  return $self->_make_single_value_metadata($lims, $method_attr);
 }
 
-sub make_avu {
-  my ($self, $attribute, $value, $units) = @_;
-  return {attribute => $attribute,
-          value     => $value,
-          units     => $units};
-}
+sub _make_single_value_metadata {
+  my ($self, $lims, $method_attr) = @_;
+  # The method_attr argument is a map of method name to attribute name
+  # under which the result will be stored.
 
-sub remove_duplicate_avus {
-  my ($self, @meta) = @_;
+  my @avus;
+  foreach my $method_name (sort keys %{$method_attr}) {
+    my $attr  = $method_attr->{$method_name};
+    my $value = $lims->$method_name;
 
-  my %meta_tree;
-  foreach my $avu (@meta) {
-    my $a = $avu->{attribute};
-    my $u = $avu->{units} || q[]; # Empty string as proxy for undef
-
-    if (exists $meta_tree{$a}{$u}) {
-      push @{$meta_tree{$a}{$u}}, $avu->{value}
-    }
-    else {
-      $meta_tree{$a}{$u} = [$avu->{value}]
+    if (defined $value) {
+      push @avus, $self->make_avu($attr, $value);
     }
   }
 
-  my @uniq;
-  foreach my $a (sort keys %meta_tree) {
-    foreach my $u (sort keys $meta_tree{$a}) {
-      my @values = uniq @{$meta_tree{$a}{$u}};
+  return @avus;
+}
 
-      foreach my $v (sort @values) {
-        push @uniq, $self->make_avu($a, $v, $u ? $u : undef);
-      }
+sub _make_multi_value_metadata {
+  my ($self, $lims, $method_attr, $with_spiked_control) = @_;
+  # The method_attr argument is a map of method name to attribute name
+  # under which the result will be stored.
+
+  my @avus;
+  foreach my $method_name (sort keys %{$method_attr}) {
+    my $attr = $method_attr->{$method_name};
+
+    foreach my $value ($lims->$method_name($with_spiked_control)) {
+      push @avus, $self->make_avu($attr, $value);
     }
   }
 
-  return @uniq;
+  return @avus;
 }
+
+sub _find_barcode_and_lims_id {
+  my ($self, $schema, $id_run) = @_;
+
+  my $flowcell = $schema->resultset('IseqFlowcell')->search
+    ({'iseq_product_metrics.id_run' => $id_run},
+     {join     => 'iseq_product_metrics',
+      select   => ['flowcell_barcode', 'id_flowcell_lims'],
+      distinct => 1});
+
+  # FIXME
+  my @result;
+  while (my $fc = $flowcell->next) {
+    push @result, $fc->flowcell_barcode, $fc->id_flowcell_lims;
+  }
+
+  return @result;
+}
+
+no Moose::Role;
 
 1;
 
