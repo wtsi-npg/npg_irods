@@ -1,5 +1,6 @@
 package WTSI::NPG::HTS::Annotator;
 
+use Data::Dump qw(pp);
 use List::AllUtils qw(uniq);
 use Moose::Role;
 
@@ -235,19 +236,30 @@ sub _make_multi_value_metadata {
 sub _find_barcode_and_lims_id {
   my ($self, $schema, $id_run) = @_;
 
-  my $flowcell = $schema->resultset('IseqFlowcell')->search
+  my $flowcells = $schema->resultset('IseqFlowcell')->search
     ({'iseq_product_metrics.id_run' => $id_run},
      {join     => 'iseq_product_metrics',
       select   => ['flowcell_barcode', 'id_flowcell_lims'],
       distinct => 1});
 
-  # FIXME
-  my @result;
-  while (my $fc = $flowcell->next) {
-    push @result, $fc->flowcell_barcode, $fc->id_flowcell_lims;
+  my @flowcell_info;
+  while (my $fc = $flowcells->next) {
+    push @flowcell_info, [$fc->flowcell_barcode, $fc->id_flowcell_lims];
   }
 
-  return @result;
+  my ($flowcell_barcode, $flowcell_id);
+
+  my $num_flowcells = scalar @flowcell_info;
+  if ($num_flowcells == 1) {
+    ($flowcell_barcode, $flowcell_id) = @{$flowcell_info[0]};
+  }
+  elsif ($num_flowcells > 1) {
+    $self->logconfess("LIMS returned >1 ($num_flowcells) flowcell barcode ",
+                      "and identifier combinations for run $id_run: ",
+                      pp(\@flowcell_info));
+  }
+
+  return ($flowcell_barcode, $flowcell_id);
 }
 
 no Moose::Role;
