@@ -40,3 +40,4 @@ script:
 
 after_script:
   - ./scripts/travis_after_script.sh
+
