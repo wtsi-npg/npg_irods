@@ -234,7 +234,7 @@ sub update_secondary_metadata {
     push @meta, $self->make_avu($REFERENCE, $self->reference($filter));
   }
   else {
-    $self->warn("Unable to determine an alignment reference for ", $self->str);
+    $self->warn('Unable to determine an alignment reference for ', $self->str);
   }
 
   $self->debug('Created metadata AVUs for ', $self->str, ' : ', pp(\@meta));

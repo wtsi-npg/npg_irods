@@ -40,7 +40,7 @@ my $samtools = `which samtools`;
 my $have_admin_rights =
   system(qq{$WTSI::NPG::iRODS::IADMIN lu >/dev/null 2>&1}) == 0;
 
-# Prefix fot test iRODS data access groups
+# Prefix for test iRODS data access groups
 my $group_prefix = 'group_';
 # Groups to be added to the test iRODS
 my @irods_groups = map { $group_prefix . $_ } (10, 100, 244);
@@ -152,6 +152,7 @@ sub tag_index : Test(12) {
     my $iter = each_array(@objs, @tag_indices);
     while (my ($obj, $tag_index) = $iter->()) {
       my $full_path = $obj->str;
+      # 2 * 6 tests
       if (defined $tag_index) {
         cmp_ok($obj->tag_index, '==', $tag_index,
                "$full_path tag_index is correct");
@@ -178,6 +179,7 @@ sub align_filter : Test(12) {
     my $iter = each_array(@objs, @align_filters);
     while (my ($obj, $filter) = $iter->()) {
       my $full_path = $obj->str;
+      # 2 * 6 tests
       is($obj->align_filter, $filter, "$full_path align_filter is correct");
     }
   }
@@ -200,13 +202,15 @@ sub header : Test(4) {
          irods       => $irods,
          position    => 1);
 
+      # 2 * 1 tests
       ok($obj->header, "$format header can be read");
 
+      # 2 * 1 tests
       cmp_ok(scalar @{$obj->header}, '==', 11,
              "Correct number of $format header lines") or
                diag explain $obj->header;
     }
-  };
+  } # SKIP samtools
 }
 
 sub is_aligned : Test(2) {
@@ -226,9 +230,10 @@ sub is_aligned : Test(2) {
          irods       => $irods,
          position    => 1);
 
+      # 2 * 1 tests
       ok($obj->is_aligned, "$format data are aligned");
     }
-  };
+  } # SKIP samtools
 }
 
 sub reference : Test(2) {
@@ -253,17 +258,19 @@ sub reference : Test(2) {
         my ($line) = @_;
         return $line =~ m{$regex}msx;
       };
+
+      # 2 * 1 tests
       is($obj->reference($filter), './t/data/test_ref.fa',
          "$format reference is correct");
     }
-  };
+  } # SKIP samtools
 }
 
 sub update_secondary_metadata : Test(8) {
-SKIP: {
-   if (not $samtools) {
-     skip 'samtools executable not on the PATH', 8;
-   }
+ SKIP: {
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 8;
+    }
 
     my $group_filter = sub {
       my ($group) = @_;
@@ -306,6 +313,7 @@ SKIP: {
       my @groups_before = $obj->get_groups;
 
       my $with_spiked_control = 0;
+      # 2 * 1 tests
       ok($obj->update_secondary_metadata($schema, $with_spiked_control,
                                          $ref_filter),
          'Updating secondary metadata, w/o spiked control');
@@ -336,6 +344,7 @@ SKIP: {
 
       my $meta = [grep { $_->{attribute} !~ m{_history$} }
                   @{$obj->metadata}];
+      # 2 * 1 tests
       is_deeply($meta, $expected_meta, 'Secondary metadata updated correctly')
         or diag explain $meta;
 
@@ -345,16 +354,18 @@ SKIP: {
         }
         else {
           my $expected_groups_before = ['group_10', 'group_100'];
+          # 2 * 1 tests
           is_deeply(\@groups_before, $expected_groups_before,
                     'Groups before update') or diag explain \@groups_before;
 
           my $expected_groups_after = ['group_244'];
+          # 2 * 1 tests
           is_deeply(\@groups_after, $expected_groups_after,
                     'Groups after update') or diag explain \@groups_after;
         }
-      };
+      } # SKIP groups_added
     }
- };
+ } # SKIP samtools
 }
 
 1;

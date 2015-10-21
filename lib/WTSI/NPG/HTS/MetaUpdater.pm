@@ -8,19 +8,35 @@ use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::HTS::HTSFileDataObject;
 use WTSI::NPG::iRODS;
 
+with 'WTSI::DNAP::Utilities::Loggable';
+
 our $VERSION = '';
 
 has 'irods' =>
-  (is       => 'ro',
-   isa      => 'WTSI::NPG::iRODS',
-   required => 1);
+  (is            => 'ro',
+   isa           => 'WTSI::NPG::iRODS',
+   required      => 1,
+   documentation => 'An iRODS handle to run searches and perform updates.');
 
 has 'schema' =>
-  (is       => 'ro',
-   isa      => 'WTSI::DNAP::Warehouse::Schema',
-   required => 1);
+  (is            => 'ro',
+   isa           => 'WTSI::DNAP::Warehouse::Schema',
+   required      => 1,
+   documentation => 'A LIMS handle to obtain secondary metadata.');
 
-sub run {
+=head2 update_secondary_metadata
+
+  Arg [1]    : iRODS data objects to update, ArrayRef.
+
+  Example    : $updater->update_secondary_metadata(['/path/to/file.cram']);
+  Description: Update all secondary (LIMS-supplied) metadata and set data
+               access permissions on the given files in iRODS. Return the
+               number of files updated without error.
+  Returntype : Int
+
+=cut
+
+sub update_secondary_metadata {
   my ($self, $files) = @_;
 
   defined $files or
@@ -33,30 +49,32 @@ sub run {
   $self->info("Updating metadata on $num_files files");
 
   my $num_processed = 0;
-  my $num_errors = 0;
+  my $num_errors    = 0;
   foreach my $file (@{$files}) {
     $self->debug("Updating metadata on '$file' [$num_processed / $num_files]");
 
-    my $obj = WTSI::NPG::HTS::HTSFileDataObject->new($irods, $file);
+    my $obj = WTSI::NPG::HTS::HTSFileDataObject->new($self->irods, $file);
 
     try {
-      $obj->update_secondary_metadata($schema);
+      $obj->update_secondary_metadata($self->schema);
       $self->debug("Updated metadata on '$file' [$num_processed / $num_files]");
     } catch {
-      $num_error++;
+      $num_errors++;
       $self->error("Failed to update metadata on '$file' ",
                    "[$num_processed / $num_files]: ", $_);
     };
+
+    $num_processed++;
   }
 
-  $self->info("Updated metadata on $num_updated / $num_files files");
+  $self->info("Updated metadata on $num_processed / $num_files files");
 
   if ($num_errors > 0) {
     $self->error("Failed to update cleanly metadata on $num_files files. ",
                  "$num_errors errors were recorded. See logs for details.")
   }
 
-  return $num_errors == 0;
+  return $num_processed - $num_errors;
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -73,7 +91,7 @@ WTSI::NPG::HTS::MetaUpdater
 
 =head1 DESCRIPTION
 
-
+Updates secondary metadata on HTS data files in iRODS.
 
 =head1 AUTHOR
 

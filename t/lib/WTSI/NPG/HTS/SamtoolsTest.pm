@@ -55,7 +55,7 @@ sub iterate : Test(1) {
 
     is_deeply(\@records, \@expected, 'Iterated successfully') or
       diag explain \@records;
-  };
+  } # SKIP samtools
 }
 
 sub collect : Test(1) {
@@ -75,7 +75,7 @@ sub collect : Test(1) {
 
     is_deeply(\@collected, \@expected, 'Collected successfully') or
       diag explain \@collected;
-  };
+  } # SKIP samtools
 }
 
 1;
