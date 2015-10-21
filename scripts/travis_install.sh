@@ -4,6 +4,7 @@ set -e -x
 
 sudo apt-get install -qq odbc-postgresql
 sudo apt-get install libgd2-xpm-dev # For npg_tracking
+sudo apt-get install liblzma-dev # For npg_qc
 
 # iRODS 3.3.1
 wget -q https://github.com/wtsi-npg/irods-legacy/releases/download/3.3.1-travis-bc85aa/irods.tar.gz -O /tmp/irods.tar.gz
