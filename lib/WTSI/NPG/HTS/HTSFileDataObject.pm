@@ -229,9 +229,15 @@ sub update_secondary_metadata {
                                       $self->tag_index,
                                       $with_spiked_control);
   push @meta, $self->make_avu($ALIGNMENT, $self->is_aligned);
-  push @meta, $self->make_avu($REFERENCE, $self->reference($filter));
+  my $reference = $self->reference($filter);
+  if ($reference) {
+    push @meta, $self->make_avu($REFERENCE, $self->reference($filter));
+  }
+  else {
+    $self->warn("Unable to determine an alignment reference for ", $self->str);
+  }
 
-  $self->debug('Created metadata AVUs: ', pp(\@meta));
+  $self->debug('Created metadata AVUs for ', $self->str, ' : ', pp(\@meta));
 
   # Collate into lists of values per attribute
   my %collated_avus;
@@ -246,9 +252,9 @@ sub update_secondary_metadata {
     }
   }
 
-  $self->debug('Collated ', scalar @meta, ' AVUs into ',
+  $self->debug('Collated ', scalar @meta, ' AVUs for ', $self->str, ' into ',
                scalar keys %collated_avus, ' lists');
-  $self->debug('Superseding AVUs in order of attributes: ',
+  $self->debug('Superseding AVUs on ', $self->str, ' in order of attributes: ',
                join q[, ], keys %collated_avus);
 
   # Sorting by attribute to allow repeated updates to be in
