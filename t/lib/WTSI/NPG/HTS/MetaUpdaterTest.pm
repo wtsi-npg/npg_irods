@@ -29,7 +29,7 @@ my $fixture_counter = 0;
 my $data_path = './t/data';
 my $fixture_path = "$data_path/fixtures";
 
-my $data_file = '3002_3#1';
+my $data_file = '7915_5#1';
 my $reference_file = 'test_ref.fa';
 my $irods_tmp_coll;
 my $samtools = `which samtools`;
@@ -104,26 +104,25 @@ sub update_secondary_metadata : Test(3) {
     foreach my $format (qw(bam cram)) {
       my $expected_meta =
         [{attribute => $ALIGNMENT,                value     => '1'},
-         {attribute => $ID_RUN,                   value     => '3002'},
-         {attribute => $POSITION,                 value     => '3'},
-         {attribute => $LIBRARY_ID,               value     => '60186'},
-         {attribute => $QC_STATE,                 value     => '0'},
+         {attribute => $ID_RUN,                   value     => '7915'},
+         {attribute => $POSITION,                 value     => '5'},
+         {attribute => $LIBRARY_ID,               value     => '4957423'},
+         {attribute => $QC_STATE,                 value     => '1'},
          # There is currently no reference filter installed to detect
          # the test reference
          # {attribute => $REFERENCE,
          #  value     => './t/data/test_ref.fa'},
          {attribute => $SAMPLE_COMMON_NAME,
-          value     => 'Streptococcus suis'},
+          value     => 'Burkholderia pseudomallei'},
          {attribute => $SAMPLE_CONSENT_WITHDRAWN, value     => '0'},
-         {attribute => $SAMPLE_NAME,              value     => 'BM308'},
-         {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000893'},
-         {attribute => $STUDY_ID,                 value     => '244'},
+         {attribute => $SAMPLE_NAME,              value     => '619s040'},
+         {attribute => $SAMPLE_PUBLIC_NAME,       value     => '153.0'},
+         {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
+         {attribute => $STUDY_ID,                 value     => '619'},
          {attribute => $STUDY_NAME,
-          value     =>
-          'Discovery of sequence diversity in Streptococcus suis (Vietnam)'},
+          value     => 'Burkholderia pseudomallei diversity'},
          {attribute => $STUDY_TITLE,
-          value     =>
-          'Discovery of sequence diversity in Streptococcus suis (Vietnam)'},
+          value     => 'Burkholderia pseudomallei diversity'},
          {attribute => $TAG_INDEX,                value     => '1'}];
 
       my $obj = WTSI::NPG::HTS::HTSFileDataObject->new

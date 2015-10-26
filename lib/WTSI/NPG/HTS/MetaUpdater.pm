@@ -27,6 +27,7 @@ has 'schema' =>
 =head2 update_secondary_metadata
 
   Arg [1]    : iRODS data objects to update, ArrayRef.
+  Arg [2]    : HTS data has spiked control, Bool. Optional.
 
   Example    : $updater->update_secondary_metadata(['/path/to/file.cram']);
   Description: Update all secondary (LIMS-supplied) metadata and set data
@@ -37,7 +38,7 @@ has 'schema' =>
 =cut
 
 sub update_secondary_metadata {
-  my ($self, $files) = @_;
+  my ($self, $files, $with_spiked_control) = @_;
 
   defined $files or
     $self->logconfess('A files argument is required');
@@ -56,8 +57,9 @@ sub update_secondary_metadata {
     my $obj = WTSI::NPG::HTS::HTSFileDataObject->new($self->irods, $file);
 
     try {
-      $obj->update_secondary_metadata($self->schema);
-      $self->debug("Updated metadata on '$file' [$num_processed / $num_files]");
+      $obj->update_secondary_metadata($self->schema, $with_spiked_control);
+      $self->debug("Updated metadata on '$file' ",
+                   "[$num_processed / $num_files]");
     } catch {
       $num_errors++;
       $self->error("Failed to update metadata on '$file' ",

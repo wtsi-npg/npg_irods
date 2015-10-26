@@ -32,8 +32,10 @@ sub make_hts_metadata {
   my ($self, $schema, $id_run, $position, $tag_index,
       $with_spiked_control) = @_;
 
-  defined $schema or $self->logconfess('A defined schema argument is required');
-  defined $id_run or $self->logconfess('A defined id_run argument is required');
+  defined $schema or
+    $self->logconfess('A defined schema argument is required');
+  defined $id_run or
+    $self->logconfess('A defined id_run argument is required');
   defined $position or
     $self->logconfess('A defined position argument is required');
 
@@ -112,7 +114,7 @@ sub make_study_metadata {
 =head2 make_sample_metadata
 
   Arg [1]    : A LIMS handle, st::api::lims.
-  Arg [2]    : HTS data has spiked control, Bool.
+  Arg [2]    : HTS data has spiked control, Bool. Optional.
 
   Example    : $ann->make_sample_metadata($lims);
   Description: Return HTS sample metadata.
@@ -153,13 +155,13 @@ sub make_consent_metadata {
   my $attr  = $SAMPLE_CONSENT_WITHDRAWN;
   my $value = $lims->any_sample_consent_withdrawn;
 
-  return ($self->make_avu($attr, $value));
+  return $self->make_avu($attr, $value);
 }
 
 =head2 make_library_metadata
 
   Arg [1]    : A LIMS handle, st::api::lims.
-  Arg [2]    : HTS data has spiked control, Bool.
+  Arg [2]    : HTS data has spiked control, Bool. Optional.
 
   Example    : $ann->make_library_metadata($lims);
   Description: Return HTS library metadata.
@@ -250,10 +252,14 @@ sub _find_barcode_and_lims_id {
   my ($flowcell_barcode, $flowcell_id);
 
   my $num_flowcells = scalar @flowcell_info;
-  if ($num_flowcells == 1) {
+  if ($num_flowcells == 0) {
+    $self->logconfess('LIMS returned no flowcell barcodes or identifiers ',
+                      "for run $id_run");
+  }
+  elsif ($num_flowcells == 1) {
     ($flowcell_barcode, $flowcell_id) = @{$flowcell_info[0]};
   }
-  elsif ($num_flowcells > 1) {
+  else {
     $self->logconfess("LIMS returned >1 ($num_flowcells) flowcell barcode ",
                       "and identifier combinations for run $id_run: ",
                       pp(\@flowcell_info));

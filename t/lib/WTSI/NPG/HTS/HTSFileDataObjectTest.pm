@@ -3,11 +3,12 @@ package WTSI::NPG::HTS::HTSFileDataObjectTest;
 use strict;
 use warnings;
 
+use Carp;
 use File::Spec;
 use File::Temp;
 use List::AllUtils qw(each_array);
 use Log::Log4perl;
-use Test::More tests => 76;
+use Test::More tests => 124;
 
 use base qw(Test::Class);
 
@@ -32,8 +33,11 @@ my $fixture_counter = 0;
 my $data_path = './t/data';
 my $fixture_path = "$data_path/fixtures";
 
-my $data_file0 = '3002_3#0';
-my $data_file1 = '3002_3#1';
+my $data_file0 = '7915_5#0';
+my $data_file1 = '7915_5#1';
+
+my $data_file2 = '15440_1#0';
+my $data_file3 = '15440_1#81';
 
 my $reference_file = 'test_ref.fa';
 my $irods_tmp_coll;
@@ -43,11 +47,45 @@ my $have_admin_rights =
   system(qq{$WTSI::NPG::iRODS::IADMIN lu >/dev/null 2>&1}) == 0;
 
 # Prefix for test iRODS data access groups
-my $group_prefix = 'group_';
+my $group_prefix = 'ss_';
+
+# Filter for recognising test groups
+my $group_filter = sub {
+  my ($group) = @_;
+  if ($group =~ m{^$group_prefix}) {
+    return 1
+  }
+  else {
+    return 0;
+  }
+};
+
 # Groups to be added to the test iRODS
-my @irods_groups = map { $group_prefix . $_ } (10, 100, 244);
+my @irods_groups = map { $group_prefix . $_ } (10, 100, 619, 3720);
 # Groups added to the test iRODS in fixture setup
 my @groups_added;
+# Enable group tests
+my $group_tests_enabled = 0;
+
+# Test ML warehouse
+my $schema;
+my $db_dir = File::Temp->newdir;
+# my $db_dir = ".";
+my $db_file = File::Spec->catfile($db_dir, 'ml_warehouse.db');
+{
+  # create_test_db produces warnings during expected use, which
+  # appear mixed with test output in the terminal
+  local $SIG{__WARN__} = sub { };
+  $schema = TestDB->new->create_test_db('WTSI::DNAP::Warehouse::Schema',
+                                        './t/data/fixtures', $db_file);
+}
+
+# Reference filter for recognising the test reference
+my $ref_regex = qr{\./t\/data\/test_ref.fa}msx;
+my $ref_filter = sub {
+  my ($line) = @_;
+  return $line =~ m{$ref_regex}msx;
+};
 
 my $pid = $$;
 
@@ -58,16 +96,25 @@ sub setup_fixture : Test(setup) {
     $irods->add_collection("HTSFileDataObjectTest.$pid.$fixture_counter");
   $fixture_counter++;
 
-  if ($have_admin_rights) {
-    foreach my $group (@irods_groups) {
-      if (not $irods->group_exists($group)) {
+  my $group_count = 0;
+  foreach my $group (@irods_groups) {
+    if (not $irods->group_exists($group)) {
+      if ($have_admin_rights) {
         push @groups_added, $irods->add_group($group);
       }
     }
+    else {
+      $group_count++;
+    }
+  }
+
+  if ($group_count == scalar @irods_groups) {
+    $group_tests_enabled = 1;
   }
 
   if ($samtools) {
-    foreach my $data_file ($data_file0, $data_file1) {
+    foreach my $data_file ($data_file0, $data_file1,
+                           $data_file2, $data_file3) {
       WTSI::NPG::HTS::Samtools->new
           (arguments => ['view', '-C',
                          '-T', qq[$data_path/$reference_file],
@@ -80,10 +127,10 @@ sub setup_fixture : Test(setup) {
                          '-o', qq[irods:$irods_tmp_coll/$data_file.bam]],
            path      => "$data_path/$data_file.sam")->run;
 
-      if (@groups_added) {
+      if ($group_tests_enabled) {
         # Add some test group permissions
         foreach my $format (qw(bam cram)) {
-          foreach my $group (qw(group_10 group_100)) {
+          foreach my $group (qw(ss_10 ss_100)) {
             $irods->set_object_permissions
               ('read', $group, "$irods_tmp_coll/$data_file.$format");
           }
@@ -276,160 +323,652 @@ sub reference : Test(4) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata : Test(16) {
+sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
  SKIP: {
     if (not $samtools) {
-      skip 'samtools executable not on the PATH', 16;
+      skip 'samtools executable not on the PATH', 8;
     }
-
-    my $group_filter = sub {
-      my ($group) = @_;
-      if ($group =~ m{^$group_prefix}) {
-        return 1
-      }
-      else {
-        return 0;
-      }
-    };
 
     my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
                                       group_prefix         => $group_prefix,
                                       group_filter         => $group_filter);
 
-    my $db_dir = File::Temp->newdir;
-    my $db_file = File::Spec->catfile($db_dir, 'ml_warehouse.db');
+    my $tag0_expected_meta =
+      [{attribute => $ALIGNMENT,                value     => '1'},
+       {attribute => $ID_RUN,                   value     => '7915'},
+       {attribute => $POSITION,                 value     => '5'},
+       {attribute => $LIBRARY_ID,               value     => '4957423'},
+       {attribute => $LIBRARY_ID,               value     => '4957424'},
+       {attribute => $LIBRARY_ID,               value     => '4957425'},
+       {attribute => $LIBRARY_ID,               value     => '4957426'},
+       {attribute => $LIBRARY_ID,               value     => '4957427'},
+       {attribute => $LIBRARY_ID,               value     => '4957428'},
+       {attribute => $LIBRARY_ID,               value     => '4957429'},
+       {attribute => $LIBRARY_ID,               value     => '4957430'},
+       {attribute => $LIBRARY_ID,               value     => '4957431'},
+       {attribute => $LIBRARY_ID,               value     => '4957432'},
+       {attribute => $LIBRARY_ID,               value     => '4957433'},
+       {attribute => $LIBRARY_ID,               value     => '4957434'},
+       {attribute => $LIBRARY_ID,               value     => '4957435'},
+       {attribute => $LIBRARY_ID,               value     => '4957436'},
+       {attribute => $LIBRARY_ID,               value     => '4957437'},
+       {attribute => $LIBRARY_ID,               value     => '4957438'},
+       {attribute => $LIBRARY_ID,               value     => '4957439'},
+       {attribute => $LIBRARY_ID,               value     => '4957440'},
+       {attribute => $LIBRARY_ID,               value     => '4957441'},
+       {attribute => $LIBRARY_ID,               value     => '4957442'},
+       {attribute => $LIBRARY_ID,               value     => '4957443'},
+       {attribute => $LIBRARY_ID,               value     => '4957444'},
+       {attribute => $LIBRARY_ID,               value     => '4957445'},
+       {attribute => $LIBRARY_ID,               value     => '4957446'},
+       {attribute => $LIBRARY_ID,               value     => '4957447'},
+       {attribute => $LIBRARY_ID,               value     => '4957448'},
+       {attribute => $LIBRARY_ID,               value     => '4957449'},
+       {attribute => $LIBRARY_ID,               value     => '4957450'},
+       {attribute => $LIBRARY_ID,               value     => '4957451'},
+       {attribute => $LIBRARY_ID,               value     => '4957452'},
+       {attribute => $LIBRARY_ID,               value     => '4957453'},
+       {attribute => $LIBRARY_ID,               value     => '4957454'},
+       {attribute => $LIBRARY_ID,               value     => '4957455'},
+       {attribute => $QC_STATE,                 value     => '1'},
+       {attribute => $REFERENCE,
+        value     => './t/data/test_ref.fa'},
+       {attribute => $SAMPLE_COMMON_NAME,
+        value     => 'Burkholderia pseudomallei'},
+       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value     => '0'},
+       {attribute => $SAMPLE_NAME,              value     => '619s040'},
+       {attribute => $SAMPLE_NAME,              value     => '619s041'},
+       {attribute => $SAMPLE_NAME,              value     => '619s042'},
+       {attribute => $SAMPLE_NAME,              value     => '619s043'},
+       {attribute => $SAMPLE_NAME,              value     => '619s044'},
+       {attribute => $SAMPLE_NAME,              value     => '619s045'},
+       {attribute => $SAMPLE_NAME,              value     => '619s046'},
+       {attribute => $SAMPLE_NAME,              value     => '619s047'},
+       {attribute => $SAMPLE_NAME,              value     => '619s048'},
+       {attribute => $SAMPLE_NAME,              value     => '619s049'},
+       {attribute => $SAMPLE_NAME,              value     => '619s050'},
+       {attribute => $SAMPLE_NAME,              value     => '619s051'},
+       {attribute => $SAMPLE_NAME,              value     => '619s052'},
+       {attribute => $SAMPLE_NAME,              value     => '619s053'},
+       {attribute => $SAMPLE_NAME,              value     => '619s054'},
+       {attribute => $SAMPLE_NAME,              value     => '619s055'},
+       {attribute => $SAMPLE_NAME,              value     => '619s056'},
+       {attribute => $SAMPLE_NAME,              value     => '619s057'},
+       {attribute => $SAMPLE_NAME,              value     => '619s058'},
+       {attribute => $SAMPLE_NAME,              value     => '619s059'},
+       {attribute => $SAMPLE_NAME,              value     => '619s060'},
+       {attribute => $SAMPLE_NAME,              value     => '619s061'},
+       {attribute => $SAMPLE_NAME,              value     => '619s062'},
+       {attribute => $SAMPLE_NAME,              value     => '619s063'},
+       {attribute => $SAMPLE_NAME,              value     => '619s064'},
+       {attribute => $SAMPLE_NAME,              value     => '619s065'},
+       {attribute => $SAMPLE_NAME,              value     => '619s066'},
+       {attribute => $SAMPLE_NAME,              value     => '619s067'},
+       {attribute => $SAMPLE_NAME,              value     => '619s068'},
+       {attribute => $SAMPLE_NAME,              value     => '619s069'},
+       {attribute => $SAMPLE_NAME,              value     => '619s070'},
+       {attribute => $SAMPLE_NAME,              value     => '619s071'},
+       {attribute => $SAMPLE_NAME,              value     => '619s072'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '10/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '109/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '15/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '153.0'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '17/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '21/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '23/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '35/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '4009-19'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '4033-10'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '457/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '488.0'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '490.0'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '497/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '504/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '6/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '77/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '78/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '79/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'D107310-3154'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'D68346-3058'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DB'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DB30729/00'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DB61091/00'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DC'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DR08726/01'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DR13450/01'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'EM10266/01'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'EM2107'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'I64043-3096'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'K11277244-293'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'P73230-3018'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'SOIL'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
+       {attribute => $STUDY_ID,                 value     => '619'},
+       {attribute => $STUDY_NAME,
+        value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $STUDY_TITLE,
+        value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $TAG_INDEX,                value     => '0'}];
 
-    my $schema;
-    # create_test_db produces warnings during expected use, which
-    # appear mixed with test output in the terminal
-    {
-      local $SIG{__WARN__} = sub { };
-      $schema = TestDB->new->create_test_db('WTSI::DNAP::Warehouse::Schema',
-                                            './t/data/fixtures', $db_file);
+    my $spiked_control = 0;
+
+    foreach my $format (qw(bam cram)) {
+      # 2 * 4 tests
+      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+                           {data_file              => $data_file0, # tag 0
+                            format                 => $format,
+                            spiked_control         => $spiked_control,
+                            expected_metadata      => $tag0_expected_meta,
+                            expected_groups_before => ['ss_10',
+                                                       'ss_100'],
+                            expected_groups_after  => ['ss_619']});
+    }
+  } # SKIP samtools
+}
+
+sub update_secondary_metadata_tag0_spike_bact : Test(8) {
+ SKIP: {
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 8;
     }
 
-    my $ref_regex = qr{\./t\/data\/test_ref.fa}msx;
-    my $ref_filter = sub {
-      my ($line) = @_;
-      return $line =~ m{$ref_regex}msx;
-    };
+    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+                                      group_prefix         => $group_prefix,
+                                      group_filter         => $group_filter);
 
-    foreach my $data_file ($data_file0, $data_file1) {
-      foreach my $format (qw(bam cram)) {
-        my $obj = WTSI::NPG::HTS::HTSFileDataObject->new
-          (collection  => $irods_tmp_coll,
-           data_object => "$data_file.$format",
-           irods       => $irods);
+    my $tag0_expected_meta =
+      [{attribute => $ALIGNMENT,                value     => '1'},
+       {attribute => $ID_RUN,                   value     => '7915'},
+       {attribute => $POSITION,                 value     => '5'},
+       {attribute => $LIBRARY_ID,               value     => '3691209'}, # spike
+       {attribute => $LIBRARY_ID,               value     => '4957423'},
+       {attribute => $LIBRARY_ID,               value     => '4957424'},
+       {attribute => $LIBRARY_ID,               value     => '4957425'},
+       {attribute => $LIBRARY_ID,               value     => '4957426'},
+       {attribute => $LIBRARY_ID,               value     => '4957427'},
+       {attribute => $LIBRARY_ID,               value     => '4957428'},
+       {attribute => $LIBRARY_ID,               value     => '4957429'},
+       {attribute => $LIBRARY_ID,               value     => '4957430'},
+       {attribute => $LIBRARY_ID,               value     => '4957431'},
+       {attribute => $LIBRARY_ID,               value     => '4957432'},
+       {attribute => $LIBRARY_ID,               value     => '4957433'},
+       {attribute => $LIBRARY_ID,               value     => '4957434'},
+       {attribute => $LIBRARY_ID,               value     => '4957435'},
+       {attribute => $LIBRARY_ID,               value     => '4957436'},
+       {attribute => $LIBRARY_ID,               value     => '4957437'},
+       {attribute => $LIBRARY_ID,               value     => '4957438'},
+       {attribute => $LIBRARY_ID,               value     => '4957439'},
+       {attribute => $LIBRARY_ID,               value     => '4957440'},
+       {attribute => $LIBRARY_ID,               value     => '4957441'},
+       {attribute => $LIBRARY_ID,               value     => '4957442'},
+       {attribute => $LIBRARY_ID,               value     => '4957443'},
+       {attribute => $LIBRARY_ID,               value     => '4957444'},
+       {attribute => $LIBRARY_ID,               value     => '4957445'},
+       {attribute => $LIBRARY_ID,               value     => '4957446'},
+       {attribute => $LIBRARY_ID,               value     => '4957447'},
+       {attribute => $LIBRARY_ID,               value     => '4957448'},
+       {attribute => $LIBRARY_ID,               value     => '4957449'},
+       {attribute => $LIBRARY_ID,               value     => '4957450'},
+       {attribute => $LIBRARY_ID,               value     => '4957451'},
+       {attribute => $LIBRARY_ID,               value     => '4957452'},
+       {attribute => $LIBRARY_ID,               value     => '4957453'},
+       {attribute => $LIBRARY_ID,               value     => '4957454'},
+       {attribute => $LIBRARY_ID,               value     => '4957455'},
+       {attribute => $QC_STATE,                 value     => '1'},
+       {attribute => $REFERENCE,
+        value     => './t/data/test_ref.fa'},
+       {attribute => $SAMPLE_COMMON_NAME,
+        value     => 'Burkholderia pseudomallei'},
+       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value     => '0'},
+       {attribute => $SAMPLE_NAME,              value     => '619s040'},
+       {attribute => $SAMPLE_NAME,              value     => '619s041'},
+       {attribute => $SAMPLE_NAME,              value     => '619s042'},
+       {attribute => $SAMPLE_NAME,              value     => '619s043'},
+       {attribute => $SAMPLE_NAME,              value     => '619s044'},
+       {attribute => $SAMPLE_NAME,              value     => '619s045'},
+       {attribute => $SAMPLE_NAME,              value     => '619s046'},
+       {attribute => $SAMPLE_NAME,              value     => '619s047'},
+       {attribute => $SAMPLE_NAME,              value     => '619s048'},
+       {attribute => $SAMPLE_NAME,              value     => '619s049'},
+       {attribute => $SAMPLE_NAME,              value     => '619s050'},
+       {attribute => $SAMPLE_NAME,              value     => '619s051'},
+       {attribute => $SAMPLE_NAME,              value     => '619s052'},
+       {attribute => $SAMPLE_NAME,              value     => '619s053'},
+       {attribute => $SAMPLE_NAME,              value     => '619s054'},
+       {attribute => $SAMPLE_NAME,              value     => '619s055'},
+       {attribute => $SAMPLE_NAME,              value     => '619s056'},
+       {attribute => $SAMPLE_NAME,              value     => '619s057'},
+       {attribute => $SAMPLE_NAME,              value     => '619s058'},
+       {attribute => $SAMPLE_NAME,              value     => '619s059'},
+       {attribute => $SAMPLE_NAME,              value     => '619s060'},
+       {attribute => $SAMPLE_NAME,              value     => '619s061'},
+       {attribute => $SAMPLE_NAME,              value     => '619s062'},
+       {attribute => $SAMPLE_NAME,              value     => '619s063'},
+       {attribute => $SAMPLE_NAME,              value     => '619s064'},
+       {attribute => $SAMPLE_NAME,              value     => '619s065'},
+       {attribute => $SAMPLE_NAME,              value     => '619s066'},
+       {attribute => $SAMPLE_NAME,              value     => '619s067'},
+       {attribute => $SAMPLE_NAME,              value     => '619s068'},
+       {attribute => $SAMPLE_NAME,              value     => '619s069'},
+       {attribute => $SAMPLE_NAME,              value     => '619s070'},
+       {attribute => $SAMPLE_NAME,              value     => '619s071'},
+       {attribute => $SAMPLE_NAME,              value     => '619s072'},
+       {attribute => $SAMPLE_NAME,
+        value     => "phiX_for_spiked_buffers"},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '10/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '109/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '15/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '153.0'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '17/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '21/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '23/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '35/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '4009-19'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '4033-10'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '457/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '488.0'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '490.0'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '497/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '504/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '6/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '77/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '78/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '79/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'D107310-3154'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'D68346-3058'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DB'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DB30729/00'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DB61091/00'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DC'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DR08726/01'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DR13450/01'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'EM10266/01'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'EM2107'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'I64043-3096'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'K11277244-293'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'P73230-3018'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'SOIL'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
+       {attribute => $STUDY_ID,                 value     => '198'},
+       {attribute => $STUDY_ID,                 value     => '619'},
+       {attribute => $STUDY_NAME,
+        value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $STUDY_NAME,
+        value     => 'Illumina Controls'},
+       {attribute => $STUDY_TITLE,
+        value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $TAG_INDEX,                value     => '0'}];
 
-        my @groups_before = $obj->get_groups;
+    my $spiked_control = 1;
 
-        my $with_spiked_control = 0;
-        # 2 * 2 * 1 tests
-        ok($obj->update_secondary_metadata($schema, $with_spiked_control,
-                                           $ref_filter),
-           'Updating secondary metadata, w/o spiked control');
-
-        my @groups_after = $obj->get_groups;
-
-        my $tag0_expected_meta =
-          [{attribute => $ALIGNMENT,                value     => '1'},
-           {attribute => $ID_RUN,                   value     => '3002'},
-           {attribute => $POSITION,                 value     => '3'},
-           {attribute => $LIBRARY_ID,               value     => '60186'},
-           {attribute => $LIBRARY_ID,               value     => '60188'},
-           {attribute => $LIBRARY_ID,               value     => '60190'},
-           {attribute => $LIBRARY_ID,               value     => '60192'},
-           {attribute => $LIBRARY_ID,               value     => '60194'},
-           {attribute => $LIBRARY_ID,               value     => '60196'},
-           {attribute => $LIBRARY_ID,               value     => '60198'},
-           {attribute => $LIBRARY_ID,               value     => '60200'},
-           {attribute => $LIBRARY_ID,               value     => '60202'},
-           {attribute => $LIBRARY_ID,               value     => '60204'},
-           {attribute => $LIBRARY_ID,               value     => '60206'},
-           {attribute => $LIBRARY_ID,               value     => '60208'},
-           {attribute => $REFERENCE,
-            value     => './t/data/test_ref.fa'},
-           {attribute => $SAMPLE_COMMON_NAME,
-            value     => 'Streptococcus suis'},
-           {attribute => $SAMPLE_CONSENT_WITHDRAWN, value     => '0'},
-           {attribute => $SAMPLE_NAME,              value     => 'BM308'},
-           {attribute => $SAMPLE_NAME,              value     => 'BM315'},
-           {attribute => $SAMPLE_NAME,              value     => 'BM321'},
-           {attribute => $SAMPLE_NAME,              value     => 'BM329'},
-           {attribute => $SAMPLE_NAME,              value     => 'BM334'},
-           {attribute => $SAMPLE_NAME,              value     => 'BM345'},
-           {attribute => $SAMPLE_NAME,              value     => 'BM346'},
-           {attribute => $SAMPLE_NAME,              value     => 'BM357'},
-           {attribute => $SAMPLE_NAME,              value     => 'BM358'},
-           {attribute => $SAMPLE_NAME,              value     => 'BM362'},
-           {attribute => $SAMPLE_NAME,              value     => 'BM366'},
-           {attribute => $SAMPLE_NAME,              value     => 'BM373'},
-           {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000893'},
-           {attribute => $STUDY_ID,                 value     => '244'},
-           {attribute => $STUDY_NAME,
-            value     =>
-            'Discovery of sequence diversity in Streptococcus suis (Vietnam)'},
-           {attribute => $STUDY_TITLE,
-            value     =>
-            'Discovery of sequence diversity in Streptococcus suis (Vietnam)'},
-           {attribute => $TAG_INDEX,                value     => '0'}];
-
-        my $tag1_expected_meta =
-          [{attribute => $ALIGNMENT,                value     => '1'},
-           {attribute => $ID_RUN,                   value     => '3002'},
-           {attribute => $POSITION,                 value     => '3'},
-           {attribute => $LIBRARY_ID,               value     => '60186'},
-           {attribute => $QC_STATE,                 value     => '0'},
-           {attribute => $REFERENCE,
-            value     => './t/data/test_ref.fa'},
-           {attribute => $SAMPLE_COMMON_NAME,
-            value     => 'Streptococcus suis'},
-           {attribute => $SAMPLE_CONSENT_WITHDRAWN, value     => '0'},
-           {attribute => $SAMPLE_NAME,              value     => 'BM308'},
-           {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000893'},
-           {attribute => $STUDY_ID,                 value     => '244'},
-           {attribute => $STUDY_NAME,
-            value     =>
-            'Discovery of sequence diversity in Streptococcus suis (Vietnam)'},
-           {attribute => $STUDY_TITLE,
-            value     =>
-            'Discovery of sequence diversity in Streptococcus suis (Vietnam)'},
-           {attribute => $TAG_INDEX,                value     => '1'}];
-
-        my $meta = [grep { $_->{attribute} !~ m{_history$} }
-                    @{$obj->metadata}];
-
-        # 2 * 2 * 1 tests
-        if ($obj->tag_index == 0) {
-          is_deeply($meta, $tag0_expected_meta,
-                    'Secondary metadata updated correctly, tag 0')
-            or diag explain $meta;
-        }
-        else {
-          is_deeply($meta, $tag1_expected_meta,
-                    'Secondary metadata updated correctly, tag 1')
-            or diag explain $meta;
-        }
-
-      SKIP: {
-          if (not @groups_added) {
-            skip 'iRODS groups were not added', 2;
-          }
-          else {
-            my $expected_groups_before = ['group_10', 'group_100'];
-            # 2 * 2 * 1 tests
-            is_deeply(\@groups_before, $expected_groups_before,
-                      'Groups before update') or diag explain \@groups_before;
-
-            my $expected_groups_after = ['group_244'];
-            # 2 * 2 * 1 tests
-            is_deeply(\@groups_after, $expected_groups_after,
-                      'Groups after update') or diag explain \@groups_after;
-          }
-        }
-      } # SKIP groups_added
+    foreach my $format (qw(bam cram)) {
+      # 2 * 4 tests
+      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+                           {data_file              => $data_file0, # tag 0
+                            format                 => $format,
+                            spiked_control         => $spiked_control,
+                            expected_metadata      => $tag0_expected_meta,
+                            expected_groups_before => ['ss_10',
+                                                       'ss_100'],
+                            expected_groups_after  => ['ss_198',
+                                                       'ss_619']});
     }
- } # SKIP samtools
+  } # SKIP samtools
+}
+
+sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
+ SKIP: {
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 8;
+    }
+
+    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+                                      group_prefix         => $group_prefix,
+                                      group_filter         => $group_filter);
+
+    my $tag1_expected_meta =
+      [{attribute => $ALIGNMENT,                value     => '1'},
+       {attribute => $ID_RUN,                   value     => '7915'},
+       {attribute => $POSITION,                 value     => '5'},
+       {attribute => $LIBRARY_ID,               value     => '4957423'},
+       {attribute => $QC_STATE,                 value     => '1'},
+       {attribute => $REFERENCE,
+        value     => './t/data/test_ref.fa'},
+       {attribute => $SAMPLE_COMMON_NAME,
+        value     => 'Burkholderia pseudomallei'},
+       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value     => '0'},
+       {attribute => $SAMPLE_NAME,              value     => '619s040'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '153.0'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
+       {attribute => $STUDY_ID,                 value     => '619'},
+       {attribute => $STUDY_NAME,
+        value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $STUDY_TITLE,
+        value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $TAG_INDEX,                value     => '1'}];
+
+    my $spiked_control = 0;
+
+    foreach my $format (qw(bam cram)) {
+      # 2 * 4 tests
+      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+                           {data_file              => $data_file1,
+                            format                 => $format, # tag 1
+                            spiked_control         => $spiked_control,
+                            expected_metadata      => $tag1_expected_meta,
+                            expected_groups_before => ['ss_10',
+                                                       'ss_100'],
+                            expected_groups_after  => ['ss_619']});
+    }
+  } # SKIP samtools
+}
+
+sub update_secondary_metadata_tag1_spike_bact : Test(8) {
+ SKIP: {
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 8;
+    }
+
+    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+                                      group_prefix         => $group_prefix,
+                                      group_filter         => $group_filter);
+
+    my $tag1_expected_meta =
+      [{attribute => $ALIGNMENT,                value     => '1'},
+       {attribute => $ID_RUN,                   value     => '7915'},
+       {attribute => $POSITION,                 value     => '5'},
+       {attribute => $LIBRARY_ID,               value     => '4957423'},
+       {attribute => $QC_STATE,                 value     => '1'},
+       {attribute => $REFERENCE,
+        value     => './t/data/test_ref.fa'},
+       {attribute => $SAMPLE_COMMON_NAME,
+        value     => 'Burkholderia pseudomallei'},
+       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value     => '0'},
+       {attribute => $SAMPLE_NAME,              value     => '619s040'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '153.0'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
+       {attribute => $STUDY_ID,                 value     => '619'},
+       {attribute => $STUDY_NAME,
+        value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $STUDY_TITLE,
+        value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $TAG_INDEX,                value     => '1'}];
+
+    my $spiked_control = 1;
+
+    foreach my $format (qw(bam cram)) {
+      # 2 * 4 tests
+      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+                           {data_file              => $data_file1,
+                            format                 => $format, # tag 1
+                            spiked_control         => $spiked_control,
+                            expected_metadata      => $tag1_expected_meta,
+                            expected_groups_before => ['ss_10',
+                                                       'ss_100'],
+                            expected_groups_after  => ['ss_619']});
+    }
+  } # SKIP samtools
+}
+
+sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
+ SKIP: {
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 8;
+    }
+
+    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+                                      group_prefix         => $group_prefix,
+                                      group_filter         => $group_filter);
+
+    my $tag0_expected_meta =
+      [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $ID_RUN,                   value => '15440'},
+       {attribute => $POSITION,                 value => '1'},
+       {attribute => $LIBRARY_ID,               value => '12789790'},
+       {attribute => $LIBRARY_ID,               value => '12789802'},
+       {attribute => $LIBRARY_ID,               value => '12789814'},
+       {attribute => $LIBRARY_ID,               value => '12789826'},
+       {attribute => $QC_STATE,                 value => '1'},
+       {attribute => $REFERENCE,
+        value     => './t/data/test_ref.fa'},
+       {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
+       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value => '0'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759041'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759045'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759048'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759062'},
+       {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
+       {attribute => $SAMPLE_NAME,              value => 'T19PG5759045'},
+       {attribute => $SAMPLE_NAME,              value => 'T19PG5759048'},
+       {attribute => $SAMPLE_NAME,              value => 'T19PG5759062'},
+       {attribute => $SAMPLE_SUPPLIER_NAME,     value => '6AJ182'},
+       {attribute => $SAMPLE_SUPPLIER_NAME,     value => '7R5'},
+       {attribute => $SAMPLE_SUPPLIER_NAME,     value => '8AJ1'},
+       {attribute => $SAMPLE_SUPPLIER_NAME,     value => '8R163'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
+       {attribute => $STUDY_ID,                 value => '2967'},
+       {attribute => $STUDY_NAME,
+        value     => 'SEQCAP_Lebanon_LowCov-seq'},
+       {attribute => $STUDY_TITLE,
+        value     => 'Lebanon_LowCov-seq'},
+       {attribute => $TAG_INDEX,                value => '0'}];
+
+    my $spiked_control = 0;
+
+    foreach my $format (qw(bam cram)) {
+      # 2 * 4 tests
+      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+                           {data_file              => $data_file2, # tag 0
+                            format                 => $format,
+                            spiked_control         => $spiked_control,
+                            expected_metadata      => $tag0_expected_meta,
+                            expected_groups_before => ['ss_10',
+                                                       'ss_100'],
+                            expected_groups_after  => ['ss_2967']});
+    }
+  } # SKIP samtools
+}
+
+sub update_secondary_metadata_tag0_spike_human : Test(8) {
+ SKIP: {
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 8;
+    }
+
+    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+                                      group_prefix         => $group_prefix,
+                                      group_filter         => $group_filter);
+
+    my $tag0_expected_meta =
+      [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $ID_RUN,                   value => '15440'},
+       {attribute => $POSITION,                 value => '1'},
+       {attribute => $LIBRARY_ID,               value => '12789790'},
+       {attribute => $LIBRARY_ID,               value => '12789802'},
+       {attribute => $LIBRARY_ID,               value => '12789814'},
+       {attribute => $LIBRARY_ID,               value => '12789826'},
+       {attribute => $LIBRARY_ID,               value => '6759268'},
+       {attribute => $QC_STATE,                 value => '1'},
+       {attribute => $REFERENCE,
+        value     => './t/data/test_ref.fa'},
+       {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
+       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value => '0'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759041'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759045'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759048'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759062'},
+       {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
+       {attribute => $SAMPLE_NAME,              value => 'T19PG5759045'},
+       {attribute => $SAMPLE_NAME,              value => 'T19PG5759048'},
+       {attribute => $SAMPLE_NAME,              value => 'T19PG5759062'},
+       {attribute => $SAMPLE_NAME,
+        value     => 'phiX_for_spiked_buffers'},
+       {attribute => $SAMPLE_SUPPLIER_NAME,     value => '6AJ182'},
+       {attribute => $SAMPLE_SUPPLIER_NAME,     value => '7R5'},
+       {attribute => $SAMPLE_SUPPLIER_NAME,     value => '8AJ1'},
+       {attribute => $SAMPLE_SUPPLIER_NAME,     value => '8R163'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
+       {attribute => $STUDY_ID,                 value => '198'},
+       {attribute => $STUDY_ID,                 value => '2967'},
+       {attribute => $STUDY_NAME,               value => 'Illumina Controls'},
+       {attribute => $STUDY_NAME,
+        value     => 'SEQCAP_Lebanon_LowCov-seq'},
+       {attribute => $STUDY_TITLE,
+        value     => 'Lebanon_LowCov-seq'},
+       {attribute => $TAG_INDEX,                value => '0'}];
+
+    my $spiked_control = 1;
+
+    foreach my $format (qw(bam cram)) {
+      # 2 * 4 tests
+      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+                           {data_file              => $data_file2, # tag 0
+                            format                 => $format,
+                            spiked_control         => $spiked_control,
+                            expected_metadata      => $tag0_expected_meta,
+                            expected_groups_before => ['ss_10',
+                                                       'ss_100'],
+                            expected_groups_after  => ['ss_198',
+                                                       'ss_2967']});
+    }
+  } # SKIP samtools
+}
+
+sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
+ SKIP: {
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 8;
+    }
+
+    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+                                      group_prefix         => $group_prefix,
+                                      group_filter         => $group_filter);
+
+    my $tag81_expected_meta =
+      [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $ID_RUN,                   value => '15440'},
+       {attribute => $POSITION,                 value => '1'},
+       {attribute => $LIBRARY_ID,               value => '12789790'},
+       {attribute => $QC_STATE,                 value => '1'},
+       {attribute => $REFERENCE,
+        value     => './t/data/test_ref.fa'},
+       {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
+       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value => '0'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759041'},
+       {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
+       {attribute => $SAMPLE_SUPPLIER_NAME,     value => '7R5'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
+       {attribute => $STUDY_ID,                 value => '2967'},
+       {attribute => $STUDY_NAME,
+        value     => 'SEQCAP_Lebanon_LowCov-seq'},
+       {attribute => $STUDY_TITLE,
+        value     => 'Lebanon_LowCov-seq'},
+       {attribute => $TAG_INDEX,                value => '81'}];
+
+    my $spiked_control = 0;
+
+    foreach my $format (qw(bam cram)) {
+      # 2 * 4 tests
+      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+                           {data_file              => $data_file3, # tag 1
+                            format                 => $format,
+                            spiked_control         => $spiked_control,
+                            expected_metadata      => $tag81_expected_meta,
+                            expected_groups_before => ['ss_10',
+                                                       'ss_100'],
+                            expected_groups_after  => ['ss_2967']});
+    }
+  } # SKIP samtools
+}
+
+sub update_secondary_metadata_tag81_spike_human : Test(8) {
+ SKIP: {
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 8;
+    }
+
+    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+                                      group_prefix         => $group_prefix,
+                                      group_filter         => $group_filter);
+
+    my $tag81_expected_meta =
+      [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $ID_RUN,                   value => '15440'},
+       {attribute => $POSITION,                 value => '1'},
+       {attribute => $LIBRARY_ID,               value => '12789790'},
+       {attribute => $QC_STATE,                 value => '1'},
+       {attribute => $REFERENCE,
+        value     => './t/data/test_ref.fa'},
+       {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
+       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value => '0'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759041'},
+       {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
+       {attribute => $SAMPLE_SUPPLIER_NAME,     value => '7R5'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
+       {attribute => $STUDY_ID,                 value => '2967'},
+       {attribute => $STUDY_NAME,
+        value     => 'SEQCAP_Lebanon_LowCov-seq'},
+       {attribute => $STUDY_TITLE,
+        value     => 'Lebanon_LowCov-seq'},
+       {attribute => $TAG_INDEX,                value => '81'}];
+
+    my $spiked_control = 1;
+
+    foreach my $format (qw(bam cram)) {
+      # 2 * 4 tests
+      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+                           {data_file              => $data_file3, # tag 1
+                            format                 => $format,
+                            spiked_control         => $spiked_control,
+                            expected_metadata      => $tag81_expected_meta,
+                            expected_groups_before => ['ss_10',
+                                                       'ss_100'],
+                            expected_groups_after  => ['ss_2967']});
+    }
+  } # SKIP samtools
+}
+
+sub test_metadata_update {
+  my ($irods, $working_coll, $schema, $ref_filter, $args) = @_;
+
+  ref $args eq 'HASH' or croak "The arguments must be a HashRef";
+
+  my $data_file      = $args->{data_file};
+  my $format         = $args->{format};
+  my $spiked         = $args->{spiked_control};
+  my $exp_metadata   = $args->{expected_metadata};
+  my $exp_grp_before = $args->{expected_groups_before};
+  my $exp_grp_after  = $args->{expected_groups_after};
+
+  my $obj = WTSI::NPG::HTS::HTSFileDataObject->new
+    (collection  => $working_coll,
+     data_object => "$data_file.$format",,
+     irods       => $irods);
+  my $tag = $obj->tag_index;
+
+  my @groups_before = $obj->get_groups;
+  ok($obj->update_secondary_metadata($schema, $spiked, $ref_filter),
+     "Secondary metadata ran; format: $format, tag: $tag, spiked: $spiked");
+  my @groups_after = $obj->get_groups;
+
+  my $metadata = $obj->metadata;
+  is_deeply($metadata, $exp_metadata,
+            "Secondary metadata was updated; format: $format, " .
+            "tag: $tag, spiked: $spiked")
+    or diag explain $metadata;
+
+   SKIP: {
+       if (not $group_tests_enabled) {
+         skip 'iRODS test groups were not present', 2;
+       }
+       else {
+         is_deeply(\@groups_before, $exp_grp_before,
+                   'Groups before update') or diag explain \@groups_before;
+
+         is_deeply(\@groups_after, $exp_grp_after,
+                   'Groups after update') or diag explain \@groups_after;
+       }
+     } # SKIP groups_added
 }
 
 1;
