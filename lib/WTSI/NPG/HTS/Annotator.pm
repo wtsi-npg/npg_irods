@@ -1,5 +1,6 @@
 package WTSI::NPG::HTS::Annotator;
 
+use Data::Dump qw(pp);
 use List::AllUtils qw(uniq);
 use Moose::Role;
 
@@ -14,10 +15,10 @@ with 'WTSI::DNAP::Utilities::Loggable', 'WTSI::NPG::iRODS::Utilities';
 
 =head2 make_hts_metadata
 
-  Arg [1]    : WTSI::DNAP::Warehouse::Schema multi-LIMS schema
-  Arg [2]    : Int run identifier
-  Arg [3]    : Int flowcell lane position
-  Arg [4]    : Int tag index. Optional.
+  Arg [1]    : Multi-LIMS schema, WTSI::DNAP::Warehouse::Schema.
+  Arg [2]    : Run identifier, Int.
+  Arg [3]    : Flowcell lane position, Int.
+  Arg [4]    : Tag index, Int. Optional.
 
   Example    : $ann->make_hts_metadata($schema, 3002, 3, 1)
   Description: Return an array of metadata AVUs describing the HTS data
@@ -31,8 +32,10 @@ sub make_hts_metadata {
   my ($self, $schema, $id_run, $position, $tag_index,
       $with_spiked_control) = @_;
 
-  defined $schema or $self->logconfess('A defined schema argument is required');
-  defined $id_run or $self->logconfess('A defined id_run argument is required');
+  defined $schema or
+    $self->logconfess('A defined schema argument is required');
+  defined $id_run or
+    $self->logconfess('A defined id_run argument is required');
   defined $position or
     $self->logconfess('A defined position argument is required');
 
@@ -65,9 +68,9 @@ sub make_hts_metadata {
 
 =head2 make_run_metadata
 
-  Arg [1]    : WTSI::DNAP::Warehouse::Schema::Result::IseqRunLaneMetric
+  Arg [1]    : A LIMS handle, st::api::lims.
 
-  Example    : $ann->make_run_metadata($rlm);
+  Example    : $ann->make_run_metadata($st);
   Description: Return HTS run metadata.
   Returntype : Array[HashRef]
 
@@ -85,9 +88,9 @@ sub make_run_metadata {
 
 =head2 make_study_metadata
 
-  Arg [1]    : WTSI::DNAP::Warehouse::Schema::Result::IseqProductMetric
+  Arg [1]    : A LIMS handle, st::api::lims.
 
-  Example    : $ann->make_study_metadata($pm);
+  Example    : $ann->make_study_metadata($st);
   Description: Return HTS study metadata.
   Returntype : Array[HashRef]
 
@@ -110,9 +113,10 @@ sub make_study_metadata {
 
 =head2 make_sample_metadata
 
-  Arg [1]    : WTSI::DNAP::Warehouse::Schema::Result::IseqProductMetric
+  Arg [1]    : A LIMS handle, st::api::lims.
+  Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : $ann->make_sample_metadata($pm);
+  Example    : $ann->make_sample_metadata($lims);
   Description: Return HTS sample metadata.
   Returntype : Array[HashRef]
 
@@ -135,20 +139,31 @@ sub make_sample_metadata {
                                            $with_spiked_control);
 }
 
+=head2 make_library_metadata
+
+  Arg [1]    : A LIMS handle, st::api::lims.
+
+  Example    : $ann->make_library_metadata($lims);
+  Description: Return sample consent state metadata..
+  Returntype : Array[HashRef]
+
+=cut
+
 sub make_consent_metadata {
   my ($self, $lims) = @_;
 
   my $attr  = $SAMPLE_CONSENT_WITHDRAWN;
   my $value = $lims->any_sample_consent_withdrawn;
 
-  return ($self->make_avu($attr, $value));
+  return $self->make_avu($attr, $value);
 }
 
 =head2 make_library_metadata
 
-  Arg [1]    : WTSI::DNAP::Warehouse::Schema::Result::IseqProductMetric
+  Arg [1]    : A LIMS handle, st::api::lims.
+  Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : $ann->make_library_metadata($pm);
+  Example    : $ann->make_library_metadata($lims);
   Description: Return HTS library metadata.
   Returntype : Array[HashRef]
 
@@ -167,9 +182,9 @@ sub make_library_metadata {
 
 =head2 make_plex_metadata
 
-  Arg [1]    :  WTSI::DNAP::Warehouse::Schema::Result::IseqProductMetric
+  Arg [1]    :  A LIMS handle, st::api::lims.
 
-  Example    : $ann->make_plex_metadata($pm);
+  Example    : $ann->make_plex_metadata($lims);
   Description: Return HTS plex metadata.
   Returntype : Array[HashRef]
 
@@ -223,19 +238,34 @@ sub _make_multi_value_metadata {
 sub _find_barcode_and_lims_id {
   my ($self, $schema, $id_run) = @_;
 
-  my $flowcell = $schema->resultset('IseqFlowcell')->search
+  my $flowcells = $schema->resultset('IseqFlowcell')->search
     ({'iseq_product_metrics.id_run' => $id_run},
      {join     => 'iseq_product_metrics',
       select   => ['flowcell_barcode', 'id_flowcell_lims'],
       distinct => 1});
 
-  # FIXME
-  my @result;
-  while (my $fc = $flowcell->next) {
-    push @result, $fc->flowcell_barcode, $fc->id_flowcell_lims;
+  my @flowcell_info;
+  while (my $fc = $flowcells->next) {
+    push @flowcell_info, [$fc->flowcell_barcode, $fc->id_flowcell_lims];
   }
 
-  return @result;
+  my ($flowcell_barcode, $flowcell_id);
+
+  my $num_flowcells = scalar @flowcell_info;
+  if ($num_flowcells == 0) {
+    $self->logconfess('LIMS returned no flowcell barcodes or identifiers ',
+                      "for run $id_run");
+  }
+  elsif ($num_flowcells == 1) {
+    ($flowcell_barcode, $flowcell_id) = @{$flowcell_info[0]};
+  }
+  else {
+    $self->logconfess("LIMS returned >1 ($num_flowcells) flowcell barcode ",
+                      "and identifier combinations for run $id_run: ",
+                      pp(\@flowcell_info));
+  }
+
+  return ($flowcell_barcode, $flowcell_id);
 }
 
 no Moose::Role;

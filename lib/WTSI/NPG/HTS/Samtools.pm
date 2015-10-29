@@ -101,7 +101,7 @@ sub iterate {
 
 =head2 collect
 
-  Arg [1]    : A filter to be applied to each line of SAM data, CodeRef
+  Arg [1]    : A filter to be applied to each line of SAM data, CodeRef.
                Any lines for which the filter returns true will be
                collected and returned.
 

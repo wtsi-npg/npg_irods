@@ -138,7 +138,8 @@ sub is_aligned {
 
   Arg [1]      A callback to be executed on each line of BWA @PG line
                of the BAM/CRAM header, CodeRef. Optional, defaults to
-               a filter that matches on the default reference regex.
+               a filter that matches on the default reference regex,
+               CodeRef.
 
   Example    : my $reference = $obj->reference(sub {
                   return $_[0] =~ /my_reference/
@@ -208,8 +209,9 @@ sub reference {
 
 =head2 update_secondary_metadata
 
-  Arg [1]    : WTSI::DNAP::Warehouse::Schema multi-LIMS schema
-  Arg [2]    : CodeRef reference filter (see reference method). Optional.
+  Arg [1]    : Multi-LIMS schema, WTSI::DNAP::Warehouse::Schema.
+  Arg [2]    : HTS data has spiked control, Bool. Optional.
+  Arg [3]    : Reference filter (see reference method), CoreRef. Optional.
 
   Example    : $obj->update_secondary_metadata($schema);
   Description: Update all secondary (LIMS-supplied) metadata and set data
@@ -219,16 +221,23 @@ sub reference {
 =cut
 
 sub update_secondary_metadata {
-  my ($self, $schema, $filter) = @_;
+  my ($self, $schema, $with_spiked_control, $filter) = @_;
 
   my @meta = $self->make_hts_metadata($schema,
                                       $self->id_run,
                                       $self->position,
-                                      $self->tag_index);
+                                      $self->tag_index,
+                                      $with_spiked_control);
   push @meta, $self->make_avu($ALIGNMENT, $self->is_aligned);
-  push @meta, $self->make_avu($REFERENCE, $self->reference($filter));
+  my $reference = $self->reference($filter);
+  if ($reference) {
+    push @meta, $self->make_avu($REFERENCE, $self->reference($filter));
+  }
+  else {
+    $self->warn('Unable to determine an alignment reference for ', $self->str);
+  }
 
-  $self->debug('Created metadata AVUs: ', pp(\@meta));
+  $self->debug('Created metadata AVUs for ', $self->str, ' : ', pp(\@meta));
 
   # Collate into lists of values per attribute
   my %collated_avus;
@@ -243,9 +252,9 @@ sub update_secondary_metadata {
     }
   }
 
-  $self->debug('Collated ', scalar @meta, ' AVUs into ',
+  $self->debug('Collated ', scalar @meta, ' AVUs for ', $self->str, ' into ',
                scalar keys %collated_avus, ' lists');
-  $self->debug('Superseding AVUs in order of attributes: ',
+  $self->debug('Superseding AVUs on ', $self->str, ' in order of attributes: ',
                join q[, ], keys %collated_avus);
 
   # Sorting by attribute to allow repeated updates to be in

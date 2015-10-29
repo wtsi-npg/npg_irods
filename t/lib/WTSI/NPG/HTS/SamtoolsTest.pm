@@ -17,7 +17,7 @@ use WTSI::NPG::HTS::Samtools;
 
 my $fixture_counter = 0;
 my $data_path = './t/data';
-my $data_file = '3002_3#1';
+my $data_file = '7915_5#1';
 my $reference_file = 'test_ref.fa';
 my $samtools = `which samtools`;
 
@@ -42,7 +42,7 @@ sub iterate : Test(1) {
        '@SQ	SN:test_ref7	LN:1000',
        '@SQ	SN:test_ref8	LN:1000',
        '@SQ	SN:test_ref9	LN:1000',
-       '@PG	ID:bwa	PN:emacs	CL:emacs 3002_3#1.sam ./t/data/test_ref.fa');
+       '@PG	ID:bwa	PN:emacs	CL:emacs 7915_5#1.sam ./t/data/test_ref.fa');
 
     my @records;
     WTSI::NPG::HTS::Samtools->new
@@ -55,7 +55,7 @@ sub iterate : Test(1) {
 
     is_deeply(\@records, \@expected, 'Iterated successfully') or
       diag explain \@records;
-  };
+  } # SKIP samtools
 }
 
 sub collect : Test(1) {
@@ -63,7 +63,7 @@ sub collect : Test(1) {
     if (not $samtools) { skip 'samtools executable not on the PATH', 1 }
 
     my @expected =
-      ('@PG	ID:bwa	PN:emacs	CL:emacs 3002_3#1.sam ./t/data/test_ref.fa');
+      ('@PG	ID:bwa	PN:emacs	CL:emacs 7915_5#1.sam ./t/data/test_ref.fa');
 
     my @collected = WTSI::NPG::HTS::Samtools->new
       (arguments => [q{-H}],
@@ -75,7 +75,7 @@ sub collect : Test(1) {
 
     is_deeply(\@collected, \@expected, 'Collected successfully') or
       diag explain \@collected;
-  };
+  } # SKIP samtools
 }
 
 1;

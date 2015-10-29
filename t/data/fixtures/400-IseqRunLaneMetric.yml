@@ -1,193 +1,51 @@
 ---
 - cancelled: 0
-  cycles: 61
-  flowcell_barcode: ~
-  id_run: 3002
-  instrument_model: HK
-  instrument_name: IL13
+  cycles: 208
+  flowcell_barcode: D0WHJACXX
+  id_run: 7915
+  instrument_model: HiSeq
+  instrument_name: HS26
   paired_read: 1
-  pf_bases: 134367
-  pf_cluster_count: 24883
-  pf_cluster_density: ~
-  position: 1
-  q20_yield_kb_forward_read: 131274
-  q20_yield_kb_reverse_read: 126456
-  q30_yield_kb_forward_read: 120648
-  q30_yield_kb_reverse_read: 109157
-  q40_yield_kb_forward_read: 0
-  q40_yield_kb_reverse_read: 0
-  qc_complete: 2009-08-18 17:47:56
-  raw_cluster_count: 27630
-  raw_cluster_density: ~
-  run_complete: 2009-05-26 05:59:30
-  run_pending: 2009-05-23 14:24:09
-  tags_decode_cv: ~
-  tags_decode_percent: 0.00
-- cancelled: 0
-  cycles: 61
-  flowcell_barcode: ~
-  id_run: 3002
-  instrument_model: HK
-  instrument_name: IL13
-  paired_read: 1
-  pf_bases: 126948
-  pf_cluster_count: 23509
-  pf_cluster_density: ~
-  position: 2
-  q20_yield_kb_forward_read: 124150
-  q20_yield_kb_reverse_read: 119339
-  q30_yield_kb_forward_read: 115245
-  q30_yield_kb_reverse_read: 105896
-  q40_yield_kb_forward_read: 0
-  q40_yield_kb_reverse_read: 0
-  qc_complete: 2009-08-18 17:47:56
-  raw_cluster_count: 25716
-  raw_cluster_density: ~
-  run_complete: 2009-05-26 05:59:30
-  run_pending: 2009-05-23 14:24:09
-  tags_decode_cv: ~
-  tags_decode_percent: 0.00
-- cancelled: 0
-  cycles: 61
-  flowcell_barcode: ~
-  id_run: 3002
-  instrument_model: HK
-  instrument_name: IL13
-  paired_read: 1
-  pf_bases: 647113
-  pf_cluster_count: 119836
-  pf_cluster_density: ~
-  position: 3
-  q20_yield_kb_forward_read: 447405
-  q20_yield_kb_reverse_read: 485823
-  q30_yield_kb_forward_read: 329394
-  q30_yield_kb_reverse_read: 365339
-  q40_yield_kb_forward_read: 0
-  q40_yield_kb_reverse_read: 0
-  qc_complete: 2009-08-18 17:47:56
-  raw_cluster_count: 255780
-  raw_cluster_density: ~
-  run_complete: 2009-05-26 05:59:30
-  run_pending: 2009-05-23 14:24:09
-  tags_decode_cv: ~
-  tags_decode_percent: 0.00
-- cancelled: 0
-  cycles: 61
-  flowcell_barcode: ~
-  id_run: 3002
-  instrument_model: HK
-  instrument_name: IL13
-  paired_read: 1
-  pf_bases: 831808
-  pf_cluster_count: 154039
-  pf_cluster_density: ~
-  position: 4
-  q20_yield_kb_forward_read: 756262
-  q20_yield_kb_reverse_read: 717848
-  q30_yield_kb_forward_read: 601855
-  q30_yield_kb_reverse_read: 573114
-  q40_yield_kb_forward_read: 0
-  q40_yield_kb_reverse_read: 0
-  qc_complete: 2009-08-18 17:47:56
-  raw_cluster_count: 189639
-  raw_cluster_density: ~
-  run_complete: 2009-05-26 05:59:30
-  run_pending: 2009-05-23 14:24:09
-  tags_decode_cv: ~
-  tags_decode_percent: ~
-- cancelled: 0
-  cycles: 61
-  flowcell_barcode: ~
-  id_run: 3002
-  instrument_model: HK
-  instrument_name: IL13
-  paired_read: 1
-  pf_bases: 888070
-  pf_cluster_count: 164457
-  pf_cluster_density: ~
+  pf_bases: 33316770
+  pf_cluster_count: 3470497
+  pf_cluster_density: 597588.400
   position: 5
-  q20_yield_kb_forward_read: 772621
-  q20_yield_kb_reverse_read: 730152
-  q30_yield_kb_forward_read: 561260
-  q30_yield_kb_reverse_read: 528761
-  q40_yield_kb_forward_read: 0
-  q40_yield_kb_reverse_read: 0
-  qc_complete: 2009-08-18 17:47:56
-  raw_cluster_count: 220979
-  raw_cluster_density: ~
-  run_complete: 2009-05-26 05:59:30
-  run_pending: 2009-05-23 14:24:09
-  tags_decode_cv: ~
-  tags_decode_percent: 0.00
+  q20_yield_kb_forward_read: 16190659
+  q20_yield_kb_reverse_read: 15720937
+  q30_yield_kb_forward_read: 15238267
+  q30_yield_kb_reverse_read: 14331333
+  q40_yield_kb_forward_read: 9607460
+  q40_yield_kb_reverse_read: 8053004
+  qc_complete: 2012-05-16 15:33:09
+  raw_cluster_count: 3709563
+  raw_cluster_density: 639470.600
+  run_complete: 2012-05-13 16:16:23
+  run_pending: 2012-05-02 08:47:59
+  tags_decode_cv: 71.43
+  tags_decode_percent: 97.03
+  unexpected_tags_percent: 0.21
 - cancelled: 0
-  cycles: 61
-  flowcell_barcode: ~
-  id_run: 3002
-  instrument_model: HK
-  instrument_name: IL13
+  cycles: 208
+  flowcell_barcode: HBF2DADXX
+  id_run: 15440
+  instrument_model: HiSeq
+  instrument_name: HS24
   paired_read: 1
-  pf_bases: 685735
-  pf_cluster_count: 126988
-  pf_cluster_density: ~
-  position: 6
-  q20_yield_kb_forward_read: 636998
-  q20_yield_kb_reverse_read: 604132
-  q30_yield_kb_forward_read: 526485
-  q30_yield_kb_reverse_read: 466299
-  q40_yield_kb_forward_read: 0
-  q40_yield_kb_reverse_read: 0
-  qc_complete: 2009-08-18 17:47:56
-  raw_cluster_count: 145912
-  raw_cluster_density: ~
-  run_complete: 2009-05-26 05:59:30
-  run_pending: 2009-05-23 14:24:09
-  tags_decode_cv: ~
-  tags_decode_percent: 0.00
-- cancelled: 0
-  cycles: 61
-  flowcell_barcode: ~
-  id_run: 3002
-  instrument_model: HK
-  instrument_name: IL13
-  paired_read: 1
-  pf_bases: 731195
-  pf_cluster_count: 135407
-  pf_cluster_density: ~
-  position: 7
-  q20_yield_kb_forward_read: 597853
-  q20_yield_kb_reverse_read: 546758
-  q30_yield_kb_forward_read: 443261
-  q30_yield_kb_reverse_read: 344822
-  q40_yield_kb_forward_read: 0
-  q40_yield_kb_reverse_read: 0
-  qc_complete: 2009-08-18 17:47:56
-  raw_cluster_count: 175006
-  raw_cluster_density: ~
-  run_complete: 2009-05-26 05:59:30
-  run_pending: 2009-05-23 14:24:09
-  tags_decode_cv: ~
-  tags_decode_percent: 0.00
-- cancelled: 0
-  cycles: 61
-  flowcell_barcode: ~
-  id_run: 3002
-  instrument_model: HK
-  instrument_name: IL13
-  paired_read: 1
-  pf_bases: 594658
-  pf_cluster_count: 110122
-  pf_cluster_density: ~
-  position: 8
-  q20_yield_kb_forward_read: 557864
-  q20_yield_kb_reverse_read: 534778
-  q30_yield_kb_forward_read: 477152
-  q30_yield_kb_reverse_read: 444660
-  q40_yield_kb_forward_read: 0
-  q40_yield_kb_reverse_read: 0
-  qc_complete: 2009-08-18 17:47:56
-  raw_cluster_count: 124710
-  raw_cluster_density: ~
-  run_complete: 2009-05-26 05:59:30
-  run_pending: 2009-05-23 14:24:09
-  tags_decode_cv: ~
-  tags_decode_percent: 0.00
+  pf_bases: 30562668
+  pf_cluster_count: 2387708
+  pf_cluster_density: 831683.062
+  position: 1
+  q20_yield_kb_forward_read: 14961091
+  q20_yield_kb_reverse_read: 14423888
+  q30_yield_kb_forward_read: 14183298
+  q30_yield_kb_reverse_read: 13107058
+  q40_yield_kb_forward_read: 5368302
+  q40_yield_kb_reverse_read: 4532347
+  qc_complete: 2015-02-08 21:09:14
+  raw_cluster_count: 2714415
+  raw_cluster_density: 935699.625
+  run_complete: 2015-02-05 17:36:52
+  run_pending: 2015-02-04 11:39:20
+  tags_decode_cv: 2.80
+  tags_decode_percent: 97.14
+  unexpected_tags_percent: 0.03
