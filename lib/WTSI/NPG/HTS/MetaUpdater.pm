@@ -52,14 +52,14 @@ sub update_secondary_metadata {
   my $num_processed = 0;
   my $num_errors    = 0;
   foreach my $file (@{$files}) {
-    $self->debug("Updating metadata on '$file' [$num_processed / $num_files]");
+    $self->info("Updating metadata on '$file' [$num_processed / $num_files]");
 
     my $obj = WTSI::NPG::HTS::HTSFileDataObject->new($self->irods, $file);
 
     try {
       $obj->update_secondary_metadata($self->schema, $with_spiked_control);
-      $self->debug("Updated metadata on '$file' ",
-                   "[$num_processed / $num_files]");
+      $self->info("Updated metadata on '$file' ",
+                  "[$num_processed / $num_files]");
     } catch {
       $num_errors++;
       $self->error("Failed to update metadata on '$file' ",

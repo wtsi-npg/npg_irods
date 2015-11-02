@@ -39,6 +39,8 @@ sub make_hts_metadata {
   defined $position or
     $self->logconfess('A defined position argument is required');
 
+  # FIXME -- st::api::lims constructor requires information about the
+  # flowcell
   my ($flowcell_barcode, $flowcell_id) =
     $self->_find_barcode_and_lims_id($schema, $id_run);
 
@@ -53,7 +55,6 @@ sub make_hts_metadata {
                                 @initargs);
 
   my @meta;
-
   push @meta, $self->make_consent_metadata($lims);
   push @meta, $self->make_run_metadata($lims);
   push @meta, $self->make_plex_metadata($lims);
@@ -61,6 +62,12 @@ sub make_hts_metadata {
   push @meta, $self->make_study_metadata($lims, $with_spiked_control);
   push @meta, $self->make_sample_metadata($lims, $with_spiked_control);
   push @meta, $self->make_library_metadata($lims, $with_spiked_control);
+
+  my $hts_element = sprintf 'flowcell: %s, run: %d, pos: %s, tag_index: %d',
+    (defined $flowcell_barcode ? $flowcell_barcode : 'NA'),
+    $id_run, $position,
+    (defined $tag_index ? $tag_index : 'NA');
+  $self->info("Created metadata for $hts_element: ", pp(\@meta));
 
   return @meta;
 }
@@ -139,12 +146,13 @@ sub make_sample_metadata {
                                            $with_spiked_control);
 }
 
-=head2 make_library_metadata
+=head2 make_consent_metadata
 
   Arg [1]    : A LIMS handle, st::api::lims.
 
-  Example    : $ann->make_library_metadata($lims);
-  Description: Return sample consent state metadata..
+  Example    : $ann->make_consent_metadata($lims);
+  Description: Return HTS consent metadata. An AVU will be returned only
+               if a true AVU value is present.
   Returntype : Array[HashRef]
 
 =cut
@@ -155,7 +163,12 @@ sub make_consent_metadata {
   my $attr  = $SAMPLE_CONSENT_WITHDRAWN;
   my $value = $lims->any_sample_consent_withdrawn;
 
-  return $self->make_avu($attr, $value);
+  my @avus;
+  if ($value) {
+    push @avus, $self->make_avu($attr, $value);
+  }
+
+  return @avus;
 }
 
 =head2 make_library_metadata
@@ -211,7 +224,11 @@ sub _make_single_value_metadata {
     my $value = $lims->$method_name;
 
     if (defined $value) {
+      $self->debug("st::api::lims::$method_name returned ", $value);
       push @avus, $self->make_avu($attr, $value);
+    }
+    else {
+      $self->debug("st::api::lims::$method_name returned undef");
     }
   }
 
@@ -227,7 +244,10 @@ sub _make_multi_value_metadata {
   foreach my $method_name (sort keys %{$method_attr}) {
     my $attr = $method_attr->{$method_name};
 
-    foreach my $value ($lims->$method_name($with_spiked_control)) {
+    my @values = $lims->$method_name($with_spiked_control);
+    $self->debug("st::api::lims::$method_name returned ", pp(\@values));
+
+    foreach my $value (@values) {
       push @avus, $self->make_avu($attr, $value);
     }
   }
@@ -257,6 +277,15 @@ sub _find_barcode_and_lims_id {
                       "for run $id_run");
   }
   elsif ($num_flowcells == 1) {
+    if ($flowcell_barcode) {
+      $self->debug("Found flowcell barcode '$flowcell_barcode' for ",
+                   "run '$id_run'");
+    }
+    if ($flowcell_id) {
+      $self->debug("Found flowcell identifier '$flowcell_id' for ",
+                   "run '$id_run'");
+    }
+
     ($flowcell_barcode, $flowcell_id) = @{$flowcell_info[0]};
   }
   else {

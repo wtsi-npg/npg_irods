@@ -33,11 +33,11 @@ my $fixture_counter = 0;
 my $data_path = './t/data';
 my $fixture_path = "$data_path/fixtures";
 
-my $data_file0 = '7915_5#0';
-my $data_file1 = '7915_5#1';
+my $run7915_lane5_tag0 = '7915_5#0';
+my $run7915_lane5_tag1 = '7915_5#1';
 
-my $data_file2 = '15440_1#0';
-my $data_file3 = '15440_1#81';
+my $run15440_lane1_tag0 = '15440_1#0';
+my $run15440_lane1_tag81 = '15440_1#81';
 
 my $reference_file = 'test_ref.fa';
 my $irods_tmp_coll;
@@ -113,8 +113,8 @@ sub setup_fixture : Test(setup) {
   }
 
   if ($samtools) {
-    foreach my $data_file ($data_file0, $data_file1,
-                           $data_file2, $data_file3) {
+    foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1,
+                           $run15440_lane1_tag0, $run15440_lane1_tag81) {
       WTSI::NPG::HTS::Samtools->new
           (arguments => ['view', '-C',
                          '-T', qq[$data_path/$reference_file],
@@ -244,7 +244,7 @@ sub header : Test(8) {
 
     my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
 
-    foreach my $data_file ($data_file0, $data_file1) {
+    foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
       foreach my $format (qw(bam cram)) {
         my $obj = WTSI::NPG::HTS::HTSFileDataObject->new
           (collection  => $irods_tmp_coll,
@@ -274,7 +274,7 @@ sub is_aligned : Test(4) {
 
     my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
 
-    foreach my $data_file ($data_file0, $data_file1) {
+    foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
       foreach my $format (qw(bam cram)) {
         my $obj = WTSI::NPG::HTS::HTSFileDataObject->new
           (collection  => $irods_tmp_coll,
@@ -299,7 +299,7 @@ sub reference : Test(4) {
 
     my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
 
-    foreach my $data_file ($data_file0, $data_file1) {
+    foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
       foreach my $format (qw(bam cram)) {
         my $obj = WTSI::NPG::HTS::HTSFileDataObject->new
           (collection  => $irods_tmp_coll,
@@ -334,8 +334,7 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag0_expected_meta =
-      [{attribute => $ALIGNMENT,                value     => '1'},
-       {attribute => $ID_RUN,                   value     => '7915'},
+      [{attribute => $ID_RUN,                   value     => '7915'},
        {attribute => $POSITION,                 value     => '5'},
        {attribute => $LIBRARY_ID,               value     => '4957423'},
        {attribute => $LIBRARY_ID,               value     => '4957424'},
@@ -371,11 +370,6 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
        {attribute => $LIBRARY_ID,               value     => '4957454'},
        {attribute => $LIBRARY_ID,               value     => '4957455'},
        {attribute => $QC_STATE,                 value     => '1'},
-       {attribute => $REFERENCE,
-        value     => './t/data/test_ref.fa'},
-       {attribute => $SAMPLE_COMMON_NAME,
-        value     => 'Burkholderia pseudomallei'},
-       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value     => '0'},
        {attribute => $SAMPLE_NAME,              value     => '619s040'},
        {attribute => $SAMPLE_NAME,              value     => '619s041'},
        {attribute => $SAMPLE_NAME,              value     => '619s042'},
@@ -409,6 +403,8 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
        {attribute => $SAMPLE_NAME,              value     => '619s070'},
        {attribute => $SAMPLE_NAME,              value     => '619s071'},
        {attribute => $SAMPLE_NAME,              value     => '619s072'},
+       {attribute => $SAMPLE_COMMON_NAME,
+        value     => 'Burkholderia pseudomallei'},
        {attribute => $SAMPLE_PUBLIC_NAME,       value     => '10/96'},
        {attribute => $SAMPLE_PUBLIC_NAME,       value     => '109/96'},
        {attribute => $SAMPLE_PUBLIC_NAME,       value     => '15/96'},
@@ -442,10 +438,10 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
        {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'K11277244-293'},
        {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'P73230-3018'},
        {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'SOIL'},
-       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
-       {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_NAME,
         value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
+       {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_TITLE,
         value     => 'Burkholderia pseudomallei diversity'},
        {attribute => $TAG_INDEX,                value     => '0'}];
@@ -455,7 +451,7 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
-                           {data_file              => $data_file0, # tag 0
+                           {data_file              => $run7915_lane5_tag0,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag0_expected_meta,
@@ -477,8 +473,7 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag0_expected_meta =
-      [{attribute => $ALIGNMENT,                value     => '1'},
-       {attribute => $ID_RUN,                   value     => '7915'},
+      [{attribute => $ID_RUN,                   value     => '7915'},
        {attribute => $POSITION,                 value     => '5'},
        {attribute => $LIBRARY_ID,               value     => '3691209'}, # spike
        {attribute => $LIBRARY_ID,               value     => '4957423'},
@@ -515,11 +510,6 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
        {attribute => $LIBRARY_ID,               value     => '4957454'},
        {attribute => $LIBRARY_ID,               value     => '4957455'},
        {attribute => $QC_STATE,                 value     => '1'},
-       {attribute => $REFERENCE,
-        value     => './t/data/test_ref.fa'},
-       {attribute => $SAMPLE_COMMON_NAME,
-        value     => 'Burkholderia pseudomallei'},
-       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value     => '0'},
        {attribute => $SAMPLE_NAME,              value     => '619s040'},
        {attribute => $SAMPLE_NAME,              value     => '619s041'},
        {attribute => $SAMPLE_NAME,              value     => '619s042'},
@@ -555,6 +545,8 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
        {attribute => $SAMPLE_NAME,              value     => '619s072'},
        {attribute => $SAMPLE_NAME,
         value     => "phiX_for_spiked_buffers"},
+       {attribute => $SAMPLE_COMMON_NAME,
+        value     => 'Burkholderia pseudomallei'},
        {attribute => $SAMPLE_PUBLIC_NAME,       value     => '10/96'},
        {attribute => $SAMPLE_PUBLIC_NAME,       value     => '109/96'},
        {attribute => $SAMPLE_PUBLIC_NAME,       value     => '15/96'},
@@ -588,13 +580,13 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
        {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'K11277244-293'},
        {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'P73230-3018'},
        {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'SOIL'},
-       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
-       {attribute => $STUDY_ID,                 value     => '198'},
-       {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_NAME,
         value     => 'Burkholderia pseudomallei diversity'},
        {attribute => $STUDY_NAME,
         value     => 'Illumina Controls'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
+       {attribute => $STUDY_ID,                 value     => '198'},
+       {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_TITLE,
         value     => 'Burkholderia pseudomallei diversity'},
        {attribute => $TAG_INDEX,                value     => '0'}];
@@ -604,7 +596,7 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
-                           {data_file              => $data_file0, # tag 0
+                           {data_file              => $run7915_lane5_tag0,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag0_expected_meta,
@@ -627,22 +619,18 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag1_expected_meta =
-      [{attribute => $ALIGNMENT,                value     => '1'},
-       {attribute => $ID_RUN,                   value     => '7915'},
+      [{attribute => $ID_RUN,                   value     => '7915'},
        {attribute => $POSITION,                 value     => '5'},
        {attribute => $LIBRARY_ID,               value     => '4957423'},
        {attribute => $QC_STATE,                 value     => '1'},
-       {attribute => $REFERENCE,
-        value     => './t/data/test_ref.fa'},
+       {attribute => $SAMPLE_NAME,              value     => '619s040'},
        {attribute => $SAMPLE_COMMON_NAME,
         value     => 'Burkholderia pseudomallei'},
-       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value     => '0'},
-       {attribute => $SAMPLE_NAME,              value     => '619s040'},
        {attribute => $SAMPLE_PUBLIC_NAME,       value     => '153.0'},
-       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
-       {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_NAME,
         value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
+       {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_TITLE,
         value     => 'Burkholderia pseudomallei diversity'},
        {attribute => $TAG_INDEX,                value     => '1'}];
@@ -652,8 +640,8 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
-                           {data_file              => $data_file1,
-                            format                 => $format, # tag 1
+                           {data_file              => $run7915_lane5_tag1,
+                            format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag1_expected_meta,
                             expected_groups_before => ['ss_10',
@@ -674,22 +662,18 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag1_expected_meta =
-      [{attribute => $ALIGNMENT,                value     => '1'},
-       {attribute => $ID_RUN,                   value     => '7915'},
+      [{attribute => $ID_RUN,                   value     => '7915'},
        {attribute => $POSITION,                 value     => '5'},
        {attribute => $LIBRARY_ID,               value     => '4957423'},
        {attribute => $QC_STATE,                 value     => '1'},
-       {attribute => $REFERENCE,
-        value     => './t/data/test_ref.fa'},
+       {attribute => $SAMPLE_NAME,              value     => '619s040'},
        {attribute => $SAMPLE_COMMON_NAME,
         value     => 'Burkholderia pseudomallei'},
-       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value     => '0'},
-       {attribute => $SAMPLE_NAME,              value     => '619s040'},
        {attribute => $SAMPLE_PUBLIC_NAME,       value     => '153.0'},
-       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
-       {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_NAME,
         value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
+       {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_TITLE,
         value     => 'Burkholderia pseudomallei diversity'},
        {attribute => $TAG_INDEX,                value     => '1'}];
@@ -699,8 +683,8 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
-                           {data_file              => $data_file1,
-                            format                 => $format, # tag 1
+                           {data_file              => $run7915_lane5_tag1,
+                            format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag1_expected_meta,
                             expected_groups_before => ['ss_10',
@@ -721,34 +705,30 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag0_expected_meta =
-      [{attribute => $ALIGNMENT,                value => '1'},
-       {attribute => $ID_RUN,                   value => '15440'},
+      [{attribute => $ID_RUN,                   value => '15440'},
        {attribute => $POSITION,                 value => '1'},
        {attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $LIBRARY_ID,               value => '12789802'},
        {attribute => $LIBRARY_ID,               value => '12789814'},
        {attribute => $LIBRARY_ID,               value => '12789826'},
        {attribute => $QC_STATE,                 value => '1'},
-       {attribute => $REFERENCE,
-        value     => './t/data/test_ref.fa'},
-       {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
-       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value => '0'},
-       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759041'},
-       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759045'},
-       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759048'},
-       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759062'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759045'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759048'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759062'},
+       {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759041'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759045'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759048'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759062'},
        {attribute => $SAMPLE_SUPPLIER_NAME,     value => '6AJ182'},
        {attribute => $SAMPLE_SUPPLIER_NAME,     value => '7R5'},
        {attribute => $SAMPLE_SUPPLIER_NAME,     value => '8AJ1'},
        {attribute => $SAMPLE_SUPPLIER_NAME,     value => '8R163'},
-       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
-       {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_NAME,
         value     => 'SEQCAP_Lebanon_LowCov-seq'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
+       {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
         value     => 'Lebanon_LowCov-seq'},
        {attribute => $TAG_INDEX,                value => '0'}];
@@ -758,7 +738,7 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
-                           {data_file              => $data_file2, # tag 0
+                           {data_file              => $run15440_lane1_tag0,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag0_expected_meta,
@@ -780,8 +760,7 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag0_expected_meta =
-      [{attribute => $ALIGNMENT,                value => '1'},
-       {attribute => $ID_RUN,                   value => '15440'},
+      [{attribute => $ID_RUN,                   value => '15440'},
        {attribute => $POSITION,                 value => '1'},
        {attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $LIBRARY_ID,               value => '12789802'},
@@ -789,30 +768,27 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
        {attribute => $LIBRARY_ID,               value => '12789826'},
        {attribute => $LIBRARY_ID,               value => '6759268'},
        {attribute => $QC_STATE,                 value => '1'},
-       {attribute => $REFERENCE,
-        value     => './t/data/test_ref.fa'},
-       {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
-       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value => '0'},
-       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759041'},
-       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759045'},
-       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759048'},
-       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759062'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759045'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759048'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759062'},
        {attribute => $SAMPLE_NAME,
         value     => 'phiX_for_spiked_buffers'},
+       {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759041'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759045'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759048'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759062'},
        {attribute => $SAMPLE_SUPPLIER_NAME,     value => '6AJ182'},
        {attribute => $SAMPLE_SUPPLIER_NAME,     value => '7R5'},
        {attribute => $SAMPLE_SUPPLIER_NAME,     value => '8AJ1'},
        {attribute => $SAMPLE_SUPPLIER_NAME,     value => '8R163'},
-       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
-       {attribute => $STUDY_ID,                 value => '198'},
-       {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_NAME,               value => 'Illumina Controls'},
        {attribute => $STUDY_NAME,
         value     => 'SEQCAP_Lebanon_LowCov-seq'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
+       {attribute => $STUDY_ID,                 value => '198'},
+       {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
         value     => 'Lebanon_LowCov-seq'},
        {attribute => $TAG_INDEX,                value => '0'}];
@@ -822,7 +798,7 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
-                           {data_file              => $data_file2, # tag 0
+                           {data_file              => $run15440_lane1_tag0,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag0_expected_meta,
@@ -845,22 +821,18 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag81_expected_meta =
-      [{attribute => $ALIGNMENT,                value => '1'},
-       {attribute => $ID_RUN,                   value => '15440'},
+      [{attribute => $ID_RUN,                   value => '15440'},
        {attribute => $POSITION,                 value => '1'},
        {attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $QC_STATE,                 value => '1'},
-       {attribute => $REFERENCE,
-        value     => './t/data/test_ref.fa'},
-       {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
-       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value => '0'},
-       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759041'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
+       {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759041'},
        {attribute => $SAMPLE_SUPPLIER_NAME,     value => '7R5'},
-       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
-       {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_NAME,
         value     => 'SEQCAP_Lebanon_LowCov-seq'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
+       {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
         value     => 'Lebanon_LowCov-seq'},
        {attribute => $TAG_INDEX,                value => '81'}];
@@ -870,7 +842,7 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
-                           {data_file              => $data_file3, # tag 1
+                           {data_file              => $run15440_lane1_tag81,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag81_expected_meta,
@@ -892,22 +864,18 @@ sub update_secondary_metadata_tag81_spike_human : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag81_expected_meta =
-      [{attribute => $ALIGNMENT,                value => '1'},
-       {attribute => $ID_RUN,                   value => '15440'},
+      [{attribute => $ID_RUN,                   value => '15440'},
        {attribute => $POSITION,                 value => '1'},
        {attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $QC_STATE,                 value => '1'},
-       {attribute => $REFERENCE,
-        value     => './t/data/test_ref.fa'},
-       {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
-       {attribute => $SAMPLE_CONSENT_WITHDRAWN, value => '0'},
-       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759041'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
+       {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
+       {attribute => $SAMPLE_DONOR_ID,          value => 'T19PG5759041'},
        {attribute => $SAMPLE_SUPPLIER_NAME,     value => '7R5'},
-       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
-       {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_NAME,
         value     => 'SEQCAP_Lebanon_LowCov-seq'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
+       {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
         value     => 'Lebanon_LowCov-seq'},
        {attribute => $TAG_INDEX,                value => '81'}];
@@ -917,7 +885,7 @@ sub update_secondary_metadata_tag81_spike_human : Test(8) {
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
-                           {data_file              => $data_file3, # tag 1
+                           {data_file              => $run15440_lane1_tag81,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag81_expected_meta,

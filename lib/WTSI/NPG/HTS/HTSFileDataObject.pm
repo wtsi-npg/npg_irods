@@ -166,6 +166,8 @@ sub reference {
     return $_[0] =~ m{$DEFAULT_REFERENCE_REGEX}msx;
   };
 
+  # FIXME -- this header analysis needs to be replaced
+
   # This filter was cribbed from the existing code. I don't understand
   # why the bwa_sam header ID record is significant.
   my $last_bwa_pg_line;
@@ -228,15 +230,6 @@ sub update_secondary_metadata {
                                       $self->position,
                                       $self->tag_index,
                                       $with_spiked_control);
-  push @meta, $self->make_avu($ALIGNMENT, $self->is_aligned);
-  my $reference = $self->reference($filter);
-  if ($reference) {
-    push @meta, $self->make_avu($REFERENCE, $self->reference($filter));
-  }
-  else {
-    $self->warn('Unable to determine an alignment reference for ', $self->str);
-  }
-
   $self->debug('Created metadata AVUs for ', $self->str, ' : ', pp(\@meta));
 
   # Collate into lists of values per attribute
@@ -297,10 +290,23 @@ sub _parse_file_name {
 sub _read_header {
   my ($self) = @_;
 
-  my @header = WTSI::NPG::HTS::Samtools->new
-    (arguments  => ['-H'],
-     path       => 'irods:' . $self->str,
-     logger     => $self->logger)->collect;
+  my @header;
+
+  try {
+    push @header, WTSI::NPG::HTS::Samtools->new
+      (arguments  => ['-H'],
+       path       => 'irods:' . $self->str)->collect;
+  } catch {
+    # No logger is set on samtools directly to avoid noisy stack
+    # traces when a file can't be read. Instead, any error information
+    # is captured here, non-fatally.
+
+    ## no critic (RegularExpressions::RequireDotMatchAnything)
+    my ($msg) = m{^(.*)$}mx;
+    ## use critic
+    $self->error('Failed to read the header of ', q{'},
+                 $self->str, q{': }, $msg);
+  };
 
   return \@header;
 }
