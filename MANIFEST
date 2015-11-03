@@ -1,4 +1,5 @@
 .travis.yml
+bin/npg_update_hts_metadata.pl
 bin/samgen.pl
 Build.PL
 etc/log4perl_tests.conf
@@ -17,6 +18,7 @@ scripts/travis_before_install.sh
 scripts/travis_before_script.sh
 scripts/travis_install.sh
 scripts/travis_script.sh
+t/compile_scripts.t
 t/critic.t
 t/data/15440_1#0.sam
 t/data/15440_1#81.sam
