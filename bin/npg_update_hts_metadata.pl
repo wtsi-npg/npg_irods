@@ -11,8 +11,6 @@ use Log::Log4perl;
 use Log::Log4perl::Level;
 use Pod::Usage;
 
-# use npg_tracking::util::db_config;
-
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::DriRODS;
 use WTSI::NPG::HTS::MetaUpdater;
@@ -169,8 +167,9 @@ npg_update_hts_metadata
 
 =head1 SYNOPSIS
 
-npg_update_hts_metadata
-
+npg_update_hts_metadata [--dry-run] [--lane position] [--logconf file]
+  --min-run id_run --max-run id_run | --run id_run [--tag-index i]
+  [--verbose] [--zone name]
 
 Options:
 
@@ -187,7 +186,8 @@ Options:
   --min-run
   --min_run     The lower limit of a run number range to update. Optional,
                 incompatible with the --run option.
-  --run
+  --run         A specific run to update. Optional, incompatible with the
+                --min-run / --max-run options.
   --tag-index
   --tag_index   A tag index within a run to update. Optional.
   --verbose     Print messages while processing. Optional.
@@ -196,7 +196,16 @@ Options:
 
 =head1 DESCRIPTION
 
+This script updates secondary metadata (i.e. LIMS-derived metadata,
+not primary experimental metadata) on CRAM and BAM files in iRODS. The
+files may be specified by run (optionally restricted further by lane
+and tag index) in which case either a specific run or run range must
+be given. Alternatively a list of iRODS paths may be piped to
+STDIN. The latter is likely to be faster than using a run range
+because the iRODS query to identify files by range is slow.
 
+In dry run mode, the proposed metadata changes will be written as INFO
+notices to the log.
 
 =head1 AUTHOR
 
