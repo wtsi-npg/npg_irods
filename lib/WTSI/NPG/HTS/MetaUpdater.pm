@@ -24,6 +24,14 @@ has 'schema' =>
    required      => 1,
    documentation => 'A LIMS handle to obtain secondary metadata.');
 
+
+sub BUILD {
+  my ($self) = @_;
+
+  $self->logger($self->irods->logger);
+  return;
+}
+
 =head2 update_secondary_metadata
 
   Arg [1]    : iRODS data objects to update, ArrayRef.
