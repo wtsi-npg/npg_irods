@@ -55,10 +55,8 @@ sub make_hts_metadata {
                                 @initargs);
 
   my @meta;
-  push @meta, $self->make_consent_metadata($lims);
-  push @meta, $self->make_run_metadata($lims);
   push @meta, $self->make_plex_metadata($lims);
-
+  push @meta, $self->make_consent_metadata($lims);
   push @meta, $self->make_study_metadata($lims, $with_spiked_control);
   push @meta, $self->make_sample_metadata($lims, $with_spiked_control);
   push @meta, $self->make_library_metadata($lims, $with_spiked_control);
@@ -88,8 +86,9 @@ sub make_run_metadata {
 
   # Map of method name to attribute name under which the result will
   # be stored.
-  my $method_attr = {id_run   => $ID_RUN,
-                     position => $POSITION};
+  my $method_attr = {id_run    => $ID_RUN,
+                     position  => $POSITION,
+                     tag_index => $TAG_INDEX};
   return $self->_make_single_value_metadata($lims, $method_attr);
 }
 
@@ -208,8 +207,7 @@ sub make_plex_metadata {
 
   # Map of method name to attribute name under which the result will
   # be stored.
-  my $method_attr = {tag_index => $TAG_INDEX,
-                     qc_state  => $QC_STATE};
+  my $method_attr = {qc_state => $QC_STATE};
   return $self->_make_single_value_metadata($lims, $method_attr);
 }
 

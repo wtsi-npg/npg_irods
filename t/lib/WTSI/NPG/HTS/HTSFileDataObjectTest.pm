@@ -334,9 +334,7 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag0_expected_meta =
-      [{attribute => $ID_RUN,                   value     => '7915'},
-       {attribute => $POSITION,                 value     => '5'},
-       {attribute => $LIBRARY_ID,               value     => '4957423'},
+      [{attribute => $LIBRARY_ID,               value     => '4957423'},
        {attribute => $LIBRARY_ID,               value     => '4957424'},
        {attribute => $LIBRARY_ID,               value     => '4957425'},
        {attribute => $LIBRARY_ID,               value     => '4957426'},
@@ -443,8 +441,7 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
        {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_TITLE,
-        value     => 'Burkholderia pseudomallei diversity'},
-       {attribute => $TAG_INDEX,                value     => '0'}];
+        value     => 'Burkholderia pseudomallei diversity'}];
 
     my $spiked_control = 0;
 
@@ -473,9 +470,7 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag0_expected_meta =
-      [{attribute => $ID_RUN,                   value     => '7915'},
-       {attribute => $POSITION,                 value     => '5'},
-       {attribute => $LIBRARY_ID,               value     => '3691209'}, # spike
+      [{attribute => $LIBRARY_ID,               value     => '3691209'}, # spike
        {attribute => $LIBRARY_ID,               value     => '4957423'},
        {attribute => $LIBRARY_ID,               value     => '4957424'},
        {attribute => $LIBRARY_ID,               value     => '4957425'},
@@ -588,8 +583,7 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
        {attribute => $STUDY_ID,                 value     => '198'},
        {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_TITLE,
-        value     => 'Burkholderia pseudomallei diversity'},
-       {attribute => $TAG_INDEX,                value     => '0'}];
+        value     => 'Burkholderia pseudomallei diversity'}];
 
     my $spiked_control = 1;
 
@@ -619,9 +613,7 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag1_expected_meta =
-      [{attribute => $ID_RUN,                   value     => '7915'},
-       {attribute => $POSITION,                 value     => '5'},
-       {attribute => $LIBRARY_ID,               value     => '4957423'},
+      [{attribute => $LIBRARY_ID,               value     => '4957423'},
        {attribute => $QC_STATE,                 value     => '1'},
        {attribute => $SAMPLE_NAME,              value     => '619s040'},
        {attribute => $SAMPLE_COMMON_NAME,
@@ -632,8 +624,7 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
        {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_TITLE,
-        value     => 'Burkholderia pseudomallei diversity'},
-       {attribute => $TAG_INDEX,                value     => '1'}];
+        value     => 'Burkholderia pseudomallei diversity'}];
 
     my $spiked_control = 0;
 
@@ -662,9 +653,7 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag1_expected_meta =
-      [{attribute => $ID_RUN,                   value     => '7915'},
-       {attribute => $POSITION,                 value     => '5'},
-       {attribute => $LIBRARY_ID,               value     => '4957423'},
+      [{attribute => $LIBRARY_ID,               value     => '4957423'},
        {attribute => $QC_STATE,                 value     => '1'},
        {attribute => $SAMPLE_NAME,              value     => '619s040'},
        {attribute => $SAMPLE_COMMON_NAME,
@@ -675,8 +664,7 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
        {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_TITLE,
-        value     => 'Burkholderia pseudomallei diversity'},
-       {attribute => $TAG_INDEX,                value     => '1'}];
+        value     => 'Burkholderia pseudomallei diversity'}];
 
     my $spiked_control = 1;
 
@@ -705,9 +693,7 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag0_expected_meta =
-      [{attribute => $ID_RUN,                   value => '15440'},
-       {attribute => $POSITION,                 value => '1'},
-       {attribute => $LIBRARY_ID,               value => '12789790'},
+      [{attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $LIBRARY_ID,               value => '12789802'},
        {attribute => $LIBRARY_ID,               value => '12789814'},
        {attribute => $LIBRARY_ID,               value => '12789826'},
@@ -730,8 +716,7 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
-        value     => 'Lebanon_LowCov-seq'},
-       {attribute => $TAG_INDEX,                value => '0'}];
+        value     => 'Lebanon_LowCov-seq'}];
 
     my $spiked_control = 0;
 
@@ -760,9 +745,7 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag0_expected_meta =
-      [{attribute => $ID_RUN,                   value => '15440'},
-       {attribute => $POSITION,                 value => '1'},
-       {attribute => $LIBRARY_ID,               value => '12789790'},
+      [{attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $LIBRARY_ID,               value => '12789802'},
        {attribute => $LIBRARY_ID,               value => '12789814'},
        {attribute => $LIBRARY_ID,               value => '12789826'},
@@ -790,8 +773,7 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
        {attribute => $STUDY_ID,                 value => '198'},
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
-        value     => 'Lebanon_LowCov-seq'},
-       {attribute => $TAG_INDEX,                value => '0'}];
+        value     => 'Lebanon_LowCov-seq'}];
 
     my $spiked_control = 1;
 
@@ -821,9 +803,7 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag81_expected_meta =
-      [{attribute => $ID_RUN,                   value => '15440'},
-       {attribute => $POSITION,                 value => '1'},
-       {attribute => $LIBRARY_ID,               value => '12789790'},
+      [{attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $QC_STATE,                 value => '1'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
        {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
@@ -834,8 +814,7 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
-        value     => 'Lebanon_LowCov-seq'},
-       {attribute => $TAG_INDEX,                value => '81'}];
+        value     => 'Lebanon_LowCov-seq'}];
 
     my $spiked_control = 0;
 
@@ -864,9 +843,7 @@ sub update_secondary_metadata_tag81_spike_human : Test(8) {
                                       group_filter         => $group_filter);
 
     my $tag81_expected_meta =
-      [{attribute => $ID_RUN,                   value => '15440'},
-       {attribute => $POSITION,                 value => '1'},
-       {attribute => $LIBRARY_ID,               value => '12789790'},
+      [{attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $QC_STATE,                 value => '1'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
        {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
@@ -877,8 +854,7 @@ sub update_secondary_metadata_tag81_spike_human : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
-        value     => 'Lebanon_LowCov-seq'},
-       {attribute => $TAG_INDEX,                value => '81'}];
+        value     => 'Lebanon_LowCov-seq'}];
 
     my $spiked_control = 1;
 

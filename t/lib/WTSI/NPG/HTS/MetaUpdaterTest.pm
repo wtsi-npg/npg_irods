@@ -103,9 +103,7 @@ sub update_secondary_metadata : Test(3) {
 
     foreach my $format (qw(bam cram)) {
       my $expected_meta =
-        [{attribute => $ID_RUN,                   value     => '7915'},
-         {attribute => $POSITION,                 value     => '5'},
-         {attribute => $LIBRARY_ID,               value     => '4957423'},
+        [{attribute => $LIBRARY_ID,               value     => '4957423'},
          {attribute => $QC_STATE,                 value     => '1'},
          {attribute => $SAMPLE_NAME,              value     => '619s040'},
          {attribute => $SAMPLE_COMMON_NAME,
@@ -116,8 +114,7 @@ sub update_secondary_metadata : Test(3) {
          {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
          {attribute => $STUDY_ID,                 value     => '619'},
          {attribute => $STUDY_TITLE,
-          value     => 'Burkholderia pseudomallei diversity'},
-         {attribute => $TAG_INDEX,                value     => '1'}];
+          value     => 'Burkholderia pseudomallei diversity'}];
 
       my $obj = WTSI::NPG::HTS::HTSFileDataObject->new
         (collection  => $irods_tmp_coll,
