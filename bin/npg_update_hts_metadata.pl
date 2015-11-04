@@ -109,6 +109,7 @@ my @data_objs;
 if ($stdio) {
   binmode \*STDIN, 'encoding(UTF-8)';
 
+  $log->info('Reading iRODS paths from STDIN');
   while (my $line = <>) {
     chomp $line;
     push @data_objs, $line;
