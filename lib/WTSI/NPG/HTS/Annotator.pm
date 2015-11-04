@@ -61,7 +61,7 @@ sub make_hts_metadata {
   push @meta, $self->make_sample_metadata($lims, $with_spiked_control);
   push @meta, $self->make_library_metadata($lims, $with_spiked_control);
 
-  my $hts_element = sprintf 'flowcell: %s, run: %d, pos: %s, tag_index: %d',
+  my $hts_element = sprintf 'flowcell: %s, run: %s, pos: %s, tag_index: %s',
     (defined $flowcell_barcode ? $flowcell_barcode : 'NA'),
     $id_run, $position,
     (defined $tag_index ? $tag_index : 'NA');
