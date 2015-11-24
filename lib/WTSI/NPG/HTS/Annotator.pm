@@ -1,7 +1,8 @@
 package WTSI::NPG::HTS::Annotator;
 
 use Data::Dump qw(pp);
-use List::AllUtils qw(uniq);
+use DateTime;
+use File::Basename;
 use Moose::Role;
 
 use WTSI::NPG::iRODS::Metadata;
@@ -11,7 +12,136 @@ use st::api::lims::ml_warehouse;
 
 our $VERSION = '';
 
+our @DEFAULT_FILE_SUFFIXES = qw(.bam .cram .csv .gtc .idat
+                                .tif .tsv  .txt .xls .xlsx
+                                .xml);
+
 with 'WTSI::DNAP::Utilities::Loggable', 'WTSI::NPG::iRODS::Utilities';
+
+# See http://dublincore.org/documents/dcmi-terms/
+
+=head2 make_creation_metadata
+
+  Arg [1]    : Creating person, organization, or service, URI.
+  Arg [2]    : Creation time, DateTime
+  Arg [3]    : Publishing person, organization, or service, URI.
+
+  Example    : my @meta = $ann->make_creation_metadata($time, $publisher)
+  Description: Return a list of metadata AVUs describing the creation of
+               an item.
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_creation_metadata {
+  my ($self, $creator, $creation_time, $publisher) = @_;
+
+  defined $creation_time or
+    $self->logconfess('A defined creator argument is required');
+  defined $creation_time or
+    $self->logconfess('A defined creation_time argument is required');
+  defined $publisher or
+    $self->logconfess('A defined publisher argument is required');
+
+  return ($self->make_avu($DCTERMS_CREATOR,   $creator->as_string),
+          $self->make_avu($DCTERMS_CREATED,   $creation_time->iso8601),
+          $self->make_avu($DCTERMS_PUBLISHER, $publisher->as_string));
+}
+
+=head2 make_modification_metadata
+
+  Arg [1]    : Modification time, DateTime.
+
+  Example    : my @meta = $ann->make_modification_metadata($time)
+  Description: Return an array of of metadata AVUs describing the
+               modification of an item.
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_modification_metadata {
+  my ($self, $modification_time) = @_;
+
+  defined $modification_time or
+    $self->logconfess('A defined modification_time argument is required');
+
+  return ($self->make_avu($DCTERMS_MODIFIED, $modification_time->iso8601));
+}
+
+=head2 make_type_metadata
+
+  Arg [1]    : File name, Str.
+  Arg [2]    : Array of valid file suffix strings, Str. Optional
+
+  Example    : my @meta = $ann->make_type_metadata($sample, '.txt', '.csv')
+  Description: Return an array of metadata AVUs describing the file 'type'
+               (represented by its suffix).
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_type_metadata {
+  my ($self, $file, @suffixes) = @_;
+
+  defined $file or $self->logconfess('A defined file argument is required');
+  $file eq q{} and $self->logconfess('A non-empty file argument is required');
+
+  if (not @suffixes) {
+    @suffixes = @DEFAULT_FILE_SUFFIXES;
+  }
+
+  my ($basename, $dir, $suffix) = fileparse($file, @suffixes);
+
+  my @meta;
+  if ($suffix) {
+    my ($base_suffix) = $suffix =~ m{^[.]?(.*)}msx;
+    push @meta, $self->make_avu->($FILE_TYPE, $base_suffix);
+  }
+
+  return @meta;
+}
+
+=head2 make_md5_metadata
+
+  Arg [1]    : Checksum, Str.
+
+  Example    : my @meta = $ann->make_md5_metadata($checksum)
+  Description: Return an array of metadata AVUs describing the
+               file MD5 checksum.
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_md5_metadata {
+  my ($self, $md5) = @_;
+
+  defined $md5 or $self->logconfess('A defined md5 argument is required');
+  $md5 eq q{} and $self->logconfess('A non-empty md5 argument is required');
+
+  return ($self->make_avu($FILE_MD5, $md5));
+}
+
+=head2 make_ticket_metadata
+
+  Arg [1]    : string filename
+
+  Example    : my @meta = $ann->make_ticket_metadata($ticket_number)
+  Description: Return an array of metadata AVUs describing an RT ticket
+               relating to the file.
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_ticket_metadata {
+  my ($self, $ticket_number) = @_;
+
+  defined $ticket_number or
+    $self->logconfess('A defined ticket_number argument is required');
+  $ticket_number eq q{} and
+    $self->logconfess('A non-empty ticket_number argument is required');
+
+  return ($self->make_avu($RT_TICKET, $ticket_number));
+}
 
 =head2 make_hts_metadata
 
@@ -20,7 +150,7 @@ with 'WTSI::DNAP::Utilities::Loggable', 'WTSI::NPG::iRODS::Utilities';
   Arg [3]    : Flowcell lane position, Int.
   Arg [4]    : Tag index, Int. Optional.
 
-  Example    : $ann->make_hts_metadata($schema, 3002, 3, 1)
+  Example    : my @meta = $ann->make_hts_metadata($schema, 3002, 3, 1)
   Description: Return an array of metadata AVUs describing the HTS data
                in the specified run/lane/plex.
   Returntype : Array[HashRef]
@@ -75,14 +205,16 @@ sub make_hts_metadata {
 
   Arg [1]    : A LIMS handle, st::api::lims.
 
-  Example    : $ann->make_run_metadata($st);
-  Description: Return HTS run metadata.
+  Example    : my @meta = $ann->make_run_metadata($st);
+  Description: Return HTS run metadata AVUs.
   Returntype : Array[HashRef]
 
 =cut
 
 sub make_run_metadata {
   my ($self, $lims) = @_;
+
+  defined $lims or $self->logconfess('A defined lims argument is required');
 
   # Map of method name to attribute name under which the result will
   # be stored.
@@ -96,14 +228,16 @@ sub make_run_metadata {
 
   Arg [1]    : A LIMS handle, st::api::lims.
 
-  Example    : $ann->make_study_metadata($st);
-  Description: Return HTS study metadata.
+  Example    : my @meta = $ann->make_study_metadata($st);
+  Description: Return HTS study metadata AVUs.
   Returntype : Array[HashRef]
 
 =cut
 
 sub make_study_metadata {
   my ($self, $lims, $with_spiked_control) = @_;
+
+  defined $lims or $self->logconfess('A defined lims argument is required');
 
   # Map of method name to attribute name under which the result will
   # be stored.
@@ -122,14 +256,16 @@ sub make_study_metadata {
   Arg [1]    : A LIMS handle, st::api::lims.
   Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : $ann->make_sample_metadata($lims);
-  Description: Return HTS sample metadata.
+  Example    : my @meta = $ann->make_sample_metadata($lims);
+  Description: Return HTS sample metadata AVUs.
   Returntype : Array[HashRef]
 
 =cut
 
 sub make_sample_metadata {
   my ($self, $lims, $with_spiked_control) = @_;
+
+  defined $lims or $self->logconfess('A defined lims argument is required');
 
   # Map of method name to attribute name under which the result will
   # be stored.
@@ -149,15 +285,17 @@ sub make_sample_metadata {
 
   Arg [1]    : A LIMS handle, st::api::lims.
 
-  Example    : $ann->make_consent_metadata($lims);
-  Description: Return HTS consent metadata. An AVU will be returned only
-               if a true AVU value is present.
+  Example    : my @meta = $ann->make_consent_metadata($lims);
+  Description: Return HTS consent metadata AVUs. An AVU will be returned
+               only if a true AVU value is present.
   Returntype : Array[HashRef]
 
 =cut
 
 sub make_consent_metadata {
   my ($self, $lims) = @_;
+
+  defined $lims or $self->logconfess('A defined lims argument is required');
 
   my $attr  = $SAMPLE_CONSENT_WITHDRAWN;
   my $value = $lims->any_sample_consent_withdrawn;
@@ -175,14 +313,16 @@ sub make_consent_metadata {
   Arg [1]    : A LIMS handle, st::api::lims.
   Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : $ann->make_library_metadata($lims);
-  Description: Return HTS library metadata.
+  Example    : my @meta = $ann->make_library_metadata($lims);
+  Description: Return HTS library metadata AVUs.
   Returntype : Array[HashRef]
 
 =cut
 
 sub make_library_metadata {
   my ($self, $lims, $with_spiked_control) = @_;
+
+  defined $lims or $self->logconfess('A defined lims argument is required');
 
   # Map of method name to attribute name under which the result will
   # be stored.
@@ -196,14 +336,16 @@ sub make_library_metadata {
 
   Arg [1]    :  A LIMS handle, st::api::lims.
 
-  Example    : $ann->make_plex_metadata($lims);
-  Description: Return HTS plex metadata.
+  Example    : my @meta = $ann->make_plex_metadata($lims);
+  Description: Return HTS plex metadata AVUs.
   Returntype : Array[HashRef]
 
 =cut
 
 sub make_plex_metadata {
   my ($self, $lims) = @_;
+
+  defined $lims or $self->logconfess('A defined lims argument is required');
 
   # Map of method name to attribute name under which the result will
   # be stored.

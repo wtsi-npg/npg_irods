@@ -4,17 +4,15 @@ use strict;
 use warnings;
 
 use Carp;
-use File::Spec;
+use File::Spec::Functions;
 use File::Temp;
 use List::AllUtils qw(each_array);
 use Log::Log4perl;
-use Test::More tests => 124;
+use Test::More;
 
-use base qw(Test::Class);
+use base qw(WTSI::NPG::HTS::Test);
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
-
-BEGIN { use_ok('WTSI::NPG::HTS::HTSFileDataObject') }
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::HTS::HTSFileDataObject;
@@ -30,8 +28,8 @@ use WTSI::NPG::iRODS;
 }
 
 my $fixture_counter = 0;
-my $data_path = './t/data';
-my $fixture_path = "$data_path/fixtures";
+my $data_path = './t/data/htsfile_data_object';
+my $fixture_path = "./t/fixtures/ml_warehouse";
 
 my $run7915_lane5_tag0 = '7915_5#0';
 my $run7915_lane5_tag1 = '7915_5#1';
@@ -68,20 +66,19 @@ my @groups_added;
 my $group_tests_enabled = 0;
 
 # Test ML warehouse
-my $schema;
+my $wh_schema;
 my $db_dir = File::Temp->newdir;
-# my $db_dir = ".";
-my $db_file = File::Spec->catfile($db_dir, 'ml_warehouse.db');
+my $db_file = catfile($db_dir, 'ml_warehouse.db');
 {
   # create_test_db produces warnings during expected use, which
   # appear mixed with test output in the terminal
   local $SIG{__WARN__} = sub { };
-  $schema = TestDB->new->create_test_db('WTSI::DNAP::Warehouse::Schema',
-                                        './t/data/fixtures', $db_file);
+  $wh_schema = TestDB->new->create_test_db('WTSI::DNAP::Warehouse::Schema',
+                                           $fixture_path, $db_file);
 }
 
 # Reference filter for recognising the test reference
-my $ref_regex = qr{\./t\/data\/test_ref.fa}msx;
+my $ref_regex = qr{\./t\/data\/htsfile_data_object\/test_ref.fa}msx;
 my $ref_filter = sub {
   my ($line) = @_;
   return $line =~ m{$ref_regex}msx;
@@ -90,7 +87,8 @@ my $ref_filter = sub {
 my $pid = $$;
 
 sub setup_fixture : Test(setup) {
-  my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
 
   $irods_tmp_coll =
     $irods->add_collection("HTSFileDataObjectTest.$pid.$fixture_counter");
@@ -98,13 +96,14 @@ sub setup_fixture : Test(setup) {
 
   my $group_count = 0;
   foreach my $group (@irods_groups) {
-    if (not $irods->group_exists($group)) {
-      if ($have_admin_rights) {
-        push @groups_added, $irods->add_group($group);
-      }
+    if ($irods->group_exists($group)) {
+      $group_count++;
     }
     else {
-      $group_count++;
+      if ($have_admin_rights) {
+        push @groups_added, $irods->add_group($group);
+        $group_count++;
+      }
     }
   }
 
@@ -130,7 +129,7 @@ sub setup_fixture : Test(setup) {
       if ($group_tests_enabled) {
         # Add some test group permissions
         foreach my $format (qw(bam cram)) {
-          foreach my $group (qw(ss_10 ss_100)) {
+          foreach my $group (map { $group_prefix . $_ } (10, 100)) {
             $irods->set_object_permissions
               ('read', $group, "$irods_tmp_coll/$data_file.$format");
           }
@@ -141,7 +140,8 @@ sub setup_fixture : Test(setup) {
 }
 
 sub teardown_fixture : Test(teardown) {
-  my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
 
   $irods->remove_collection($irods_tmp_coll);
 
@@ -167,7 +167,8 @@ my @example_paths =
    '/seq/6345/6345_5#6_phix');
 
 sub id_run : Test(6) {
-  my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
 
   foreach my $path (@example_paths) {
     my $full_path = $path . q[.cram];
@@ -177,7 +178,8 @@ sub id_run : Test(6) {
 }
 
 sub position : Test(12) {
-  my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
 
   foreach my $format (qw(bam cram)) {
     foreach my $path (@example_paths) {
@@ -190,7 +192,8 @@ sub position : Test(12) {
 }
 
 sub tag_index : Test(12) {
-  my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
 
   foreach my $format (qw(bam cram)) {
     my @objs;
@@ -217,7 +220,8 @@ sub tag_index : Test(12) {
 }
 
 sub align_filter : Test(12) {
-  my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
 
   foreach my $format (qw(bam cram)) {
     my @objs;
@@ -242,7 +246,8 @@ sub header : Test(8) {
       skip 'samtools executable not on the PATH', 8;
     }
 
-    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                      strict_baton_version => 0);
 
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
       foreach my $format (qw(bam cram)) {
@@ -272,7 +277,8 @@ sub is_aligned : Test(4) {
       skip 'samtools executable not on the PATH', 4;
     }
 
-    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                      strict_baton_version => 0);
 
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
       foreach my $format (qw(bam cram)) {
@@ -297,7 +303,8 @@ sub reference : Test(4) {
       skip 'samtools executable not on the PATH', 4;
     }
 
-    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                      strict_baton_version => 0);
 
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
       foreach my $format (qw(bam cram)) {
@@ -329,9 +336,10 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
       skip 'samtools executable not on the PATH', 8;
     }
 
-    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                       group_prefix         => $group_prefix,
-                                      group_filter         => $group_filter);
+                                      group_filter         => $group_filter,
+                                      strict_baton_version => 0,);
 
     my $tag0_expected_meta =
       [{attribute => $LIBRARY_ID,               value     => '4957423'},
@@ -447,7 +455,7 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
                            {data_file              => $run7915_lane5_tag0,
                             format                 => $format,
                             spiked_control         => $spiked_control,
@@ -465,9 +473,10 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
       skip 'samtools executable not on the PATH', 8;
     }
 
-    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                       group_prefix         => $group_prefix,
-                                      group_filter         => $group_filter);
+                                      group_filter         => $group_filter,
+                                      strict_baton_version => 0,);
 
     my $tag0_expected_meta =
       [{attribute => $LIBRARY_ID,               value     => '3691209'}, # spike
@@ -589,7 +598,7 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
                            {data_file              => $run7915_lane5_tag0,
                             format                 => $format,
                             spiked_control         => $spiked_control,
@@ -608,9 +617,10 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
       skip 'samtools executable not on the PATH', 8;
     }
 
-    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                       group_prefix         => $group_prefix,
-                                      group_filter         => $group_filter);
+                                      group_filter         => $group_filter,
+                                      strict_baton_version => 0);
 
     my $tag1_expected_meta =
       [{attribute => $LIBRARY_ID,               value     => '4957423'},
@@ -630,7 +640,7 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
                            {data_file              => $run7915_lane5_tag1,
                             format                 => $format,
                             spiked_control         => $spiked_control,
@@ -648,9 +658,10 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
       skip 'samtools executable not on the PATH', 8;
     }
 
-    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                       group_prefix         => $group_prefix,
-                                      group_filter         => $group_filter);
+                                      group_filter         => $group_filter,
+                                      strict_baton_version => 0);
 
     my $tag1_expected_meta =
       [{attribute => $LIBRARY_ID,               value     => '4957423'},
@@ -670,7 +681,7 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
                            {data_file              => $run7915_lane5_tag1,
                             format                 => $format,
                             spiked_control         => $spiked_control,
@@ -688,9 +699,10 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
       skip 'samtools executable not on the PATH', 8;
     }
 
-    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                       group_prefix         => $group_prefix,
-                                      group_filter         => $group_filter);
+                                      group_filter         => $group_filter,
+                                      strict_baton_version => 0);
 
     my $tag0_expected_meta =
       [{attribute => $LIBRARY_ID,               value => '12789790'},
@@ -722,7 +734,7 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
                            {data_file              => $run15440_lane1_tag0,
                             format                 => $format,
                             spiked_control         => $spiked_control,
@@ -740,9 +752,10 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
       skip 'samtools executable not on the PATH', 8;
     }
 
-    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                       group_prefix         => $group_prefix,
-                                      group_filter         => $group_filter);
+                                      group_filter         => $group_filter,
+                                      strict_baton_version => 0);
 
     my $tag0_expected_meta =
       [{attribute => $LIBRARY_ID,               value => '12789790'},
@@ -779,7 +792,7 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
                            {data_file              => $run15440_lane1_tag0,
                             format                 => $format,
                             spiked_control         => $spiked_control,
@@ -798,9 +811,10 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
       skip 'samtools executable not on the PATH', 8;
     }
 
-    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                       group_prefix         => $group_prefix,
-                                      group_filter         => $group_filter);
+                                      group_filter         => $group_filter,
+                                      strict_baton_version => 0);
 
     my $tag81_expected_meta =
       [{attribute => $LIBRARY_ID,               value => '12789790'},
@@ -820,7 +834,7 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
                            {data_file              => $run15440_lane1_tag81,
                             format                 => $format,
                             spiked_control         => $spiked_control,
@@ -838,9 +852,10 @@ sub update_secondary_metadata_tag81_spike_human : Test(8) {
       skip 'samtools executable not on the PATH', 8;
     }
 
-    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0,
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                       group_prefix         => $group_prefix,
-                                      group_filter         => $group_filter);
+                                      group_filter         => $group_filter,
+                                      strict_baton_version => 0);
 
     my $tag81_expected_meta =
       [{attribute => $LIBRARY_ID,               value => '12789790'},
@@ -860,7 +875,7 @@ sub update_secondary_metadata_tag81_spike_human : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
                            {data_file              => $run15440_lane1_tag81,
                             format                 => $format,
                             spiked_control         => $spiked_control,

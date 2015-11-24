@@ -10,4 +10,3 @@ plan skip_all => "Test::Compile required for testing compilation"
 all_pl_files_ok(all_pl_files('bin'));
 
 1;
-

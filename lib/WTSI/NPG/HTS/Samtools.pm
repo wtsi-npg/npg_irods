@@ -10,7 +10,7 @@ use WTSI::DNAP::Utilities::Runnable;
 with 'WTSI::DNAP::Utilities::Loggable';
 
 ## no critic (ErrorHandling::RequireCheckingReturnValueOfEval)
-eval { with q[npg_common::roles::software_location] };
+eval { with 'npg_common::roles::software_location' };
 ## critic
 
 our $VERSION = '';
@@ -25,15 +25,17 @@ has 'executable' =>
    documentation => 'Path to the samtools executable');
 
 has 'arguments' =>
-  (is      => 'ro',
-   isa     => 'ArrayRef',
-   lazy    => 1,
-   default => sub { ['-H'] });
+  (is            => 'ro',
+   isa           => 'ArrayRef',
+   lazy          => 1,
+   default       => sub { ['-H'] },
+   documentation => 'The CLI arguments passed to the samtools executable');
 
 has 'path' =>
-  (isa      => 'Str',
-   is       => 'ro',
-   required => 1);
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 1,
+   documentation => 'The path of a BAM or CRAM file');
 
 =head2 run
 

@@ -4,4 +4,4 @@ use warnings;
 
 use WTSI::NPG::HTS::MetaUpdaterTest;
 
-Test::Class->runtests;
+WTSI::NPG::HTS::MetaUpdaterTest->runtests;

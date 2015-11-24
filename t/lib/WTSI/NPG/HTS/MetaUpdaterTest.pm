@@ -4,13 +4,11 @@ use strict;
 use warnings;
 
 use Log::Log4perl;
-use Test::More tests => 5;
+use Test::More;
 
-use base qw(Test::Class);
+use base qw(WTSI::NPG::HTS::Test);
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
-
-BEGIN { use_ok('WTSI::NPG::HTS::MetaUpdater') }
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::HTS::MetaUpdater;
@@ -26,8 +24,8 @@ use WTSI::NPG::iRODS;
 }
 
 my $fixture_counter = 0;
-my $data_path = './t/data';
-my $fixture_path = "$data_path/fixtures";
+my $data_path = './t/data/metaupdater';
+my $fixture_path = "./t/fixtures/ml_warehouse";
 
 my $data_file = '7915_5#1';
 my $reference_file = 'test_ref.fa';
@@ -37,7 +35,8 @@ my $samtools = `which samtools`;
 my $pid = $$;
 
 sub setup_fixture : Test(setup) {
-  my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
 
   $irods_tmp_coll =
     $irods->add_collection("MetaUpdaterTest.$pid.$fixture_counter");
@@ -59,7 +58,8 @@ sub setup_fixture : Test(setup) {
 }
 
 sub teardown_fixture : Test(teardown) {
-  my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
 
   $irods->remove_collection($irods_tmp_coll);
 }
@@ -74,7 +74,8 @@ sub update_secondary_metadata : Test(3) {
       skip 'samtools executable not on the PATH', 3;
     }
 
-    my $irods = WTSI::NPG::iRODS->new(strict_baton_version => 0);
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                      strict_baton_version => 0);
 
     my @paths_to_update;
     foreach my $format (qw(bam cram)) {
@@ -84,17 +85,17 @@ sub update_secondary_metadata : Test(3) {
     my $db_dir = File::Temp->newdir;
     my $db_file = File::Spec->catfile($db_dir, 'ml_warehouse.db');
 
-    my $schema;
+    my $wh_schema;
     # create_test_db produces warnings during expected use, which
     # appear mixed with test output in the terminal
     {
       local $SIG{__WARN__} = sub { };
-      $schema = TestDB->new->create_test_db('WTSI::DNAP::Warehouse::Schema',
-                                            './t/data/fixtures', $db_file);
+      $wh_schema = TestDB->new->create_test_db('WTSI::DNAP::Warehouse::Schema',
+                                               $fixture_path, $db_file);
     }
 
-    my $updater = WTSI::NPG::HTS::MetaUpdater->new(irods  => $irods,
-                                                   schema => $schema);
+    my $updater = WTSI::NPG::HTS::MetaUpdater->new(irods     => $irods,
+                                                   wh_schema => $wh_schema);
 
     # 1 test
     cmp_ok($updater->update_secondary_metadata(\@paths_to_update),

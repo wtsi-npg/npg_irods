@@ -1,22 +1,19 @@
-
 package WTSI::NPG::HTS::SamtoolsTest;
 
 use strict;
 use warnings;
 
 use Log::Log4perl;
-use Test::More tests => 4;
+use Test::More;
 
-use base qw(Test::Class);
+use base qw(WTSI::NPG::HTS::Test);
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
-
-BEGIN { use_ok('WTSI::NPG::HTS::Samtools') }
 
 use WTSI::NPG::HTS::Samtools;
 
 my $fixture_counter = 0;
-my $data_path = './t/data';
+my $data_path = './t/data/samtools';
 my $data_file = '7915_5#1';
 my $reference_file = 'test_ref.fa';
 my $samtools = `which samtools`;
@@ -42,7 +39,8 @@ sub iterate : Test(1) {
        '@SQ	SN:test_ref7	LN:1000',
        '@SQ	SN:test_ref8	LN:1000',
        '@SQ	SN:test_ref9	LN:1000',
-       '@PG	ID:bwa	PN:emacs	CL:emacs 7915_5#1.sam ./t/data/test_ref.fa');
+       '@PG	ID:bwa	PN:emacs	CL:emacs 7915_5#1.sam ' .
+       "$data_path/test_ref.fa");
 
     my @records;
     WTSI::NPG::HTS::Samtools->new
@@ -63,7 +61,8 @@ sub collect : Test(1) {
     if (not $samtools) { skip 'samtools executable not on the PATH', 1 }
 
     my @expected =
-      ('@PG	ID:bwa	PN:emacs	CL:emacs 7915_5#1.sam ./t/data/test_ref.fa');
+      ('@PG	ID:bwa	PN:emacs	CL:emacs 7915_5#1.sam '.
+       "$data_path/test_ref.fa");
 
     my @collected = WTSI::NPG::HTS::Samtools->new
       (arguments => [q{-H}],

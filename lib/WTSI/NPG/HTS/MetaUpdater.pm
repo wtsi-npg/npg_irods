@@ -18,11 +18,11 @@ has 'irods' =>
    required      => 1,
    documentation => 'An iRODS handle to run searches and perform updates.');
 
-has 'schema' =>
+has 'wh_schema' =>
   (is            => 'ro',
    isa           => 'WTSI::DNAP::Warehouse::Schema',
    required      => 1,
-   documentation => 'A LIMS handle to obtain secondary metadata.');
+   documentation => 'A ML warehouse handle to obtain secondary metadata.');
 
 
 sub BUILD {
@@ -65,7 +65,7 @@ sub update_secondary_metadata {
     my $obj = WTSI::NPG::HTS::HTSFileDataObject->new($self->irods, $file);
 
     try {
-      $obj->update_secondary_metadata($self->schema, $with_spiked_control);
+      $obj->update_secondary_metadata($self->wh_schema, $with_spiked_control);
       $self->info("Updated metadata on '$file' ",
                   "[$num_processed / $num_files]");
     } catch {
@@ -101,7 +101,8 @@ WTSI::NPG::HTS::MetaUpdater
 
 =head1 DESCRIPTION
 
-Updates secondary metadata on HTS data files in iRODS.
+Updates secondary metadata on HTS data files in iRODS. Any errors
+encountered on each file are trapped and logged.
 
 =head1 AUTHOR
 

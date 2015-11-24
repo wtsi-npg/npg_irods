@@ -4,4 +4,4 @@ use warnings;
 
 use WTSI::NPG::HTS::HTSFileDataObjectTest;
 
-Test::Class->runtests;
+WTSI::NPG::HTS::HTSFileDataObjectTest->runtests;

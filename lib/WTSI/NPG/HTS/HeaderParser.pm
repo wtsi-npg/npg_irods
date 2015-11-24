@@ -1,12 +1,10 @@
 package WTSI::NPG::HTS::HeaderParser;
 
-use Carp;
 use Moose::Role;
 
 with 'WTSI::DNAP::Utilities::Loggable';
 
 our $VERSION = '';
-
 
 =head2 get_records
 

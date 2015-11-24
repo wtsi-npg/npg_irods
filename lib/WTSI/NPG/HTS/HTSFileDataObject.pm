@@ -18,7 +18,8 @@ our $DEFAULT_REFERENCE_REGEX = qr{\/(nfs|lustre)\/\S+\/references}mxs;
 
 extends 'WTSI::NPG::iRODS::DataObject';
 
-with 'WTSI::NPG::HTS::HeaderParser', 'WTSI::NPG::HTS::Annotator';
+with 'WTSI::NPG::HTS::HTSFilenameParser', 'WTSI::NPG::HTS::HeaderParser',
+  'WTSI::NPG::HTS::Annotator';
 
 has 'align_filter' =>
   (isa           => 'Maybe[Str]',
@@ -68,7 +69,7 @@ sub BUILD {
   my ($self) = @_;
 
   my ($id_run, $position, $tag_index, $align_filter, $file_format) =
-    $self->_parse_file_name;
+    $self->parse_file_name($self->str);
 
   if (not defined $self->id_run) {
     defined $id_run or
@@ -211,7 +212,7 @@ sub reference {
 
 =head2 update_secondary_metadata
 
-  Arg [1]    : Multi-LIMS schema, WTSI::DNAP::Warehouse::Schema.
+  Arg [1]    : Multi-LIMS warehouse schema, WTSI::DNAP::Warehouse::Schema.
   Arg [2]    : HTS data has spiked control, Bool. Optional.
   Arg [3]    : Reference filter (see reference method), CoreRef. Optional.
 
@@ -265,26 +266,6 @@ sub update_secondary_metadata {
   $self->update_group_permissions;
 
   return $self;
-}
-
-sub _parse_file_name {
-  my ($self) = @_;
-
-  my ($id_run, $position, $align_filter, $align_filter2,
-      $tag_index, $tag_index2, $align_filter3, $align_filter4, $format) =
-        $self->str =~ m{\/
-                        (\d+)        # Run ID
-                        _            # Separator
-                        (\d)         # Position
-                        (_(\w+))?    # Align filter 1/2
-                        (\#(\d+))?   # Tag index
-                        (_(\w+))?    # Align filter 3/4
-                        [.](\S+)$    # File format
-                     }mxs;
-
-  $align_filter2 ||= $align_filter4;
-
-  return ($id_run, $position, $tag_index2, $align_filter2, $format);
 }
 
 sub _read_header {
