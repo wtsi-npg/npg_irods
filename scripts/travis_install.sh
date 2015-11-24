@@ -55,7 +55,7 @@ git clone https://github.com/wtsi-npg/npg_seq_common.git npg_seq_common.git
 git clone https://github.com/wtsi-npg/npg_qc.git npg_qc.git
 
 cd /tmp/perl-dnap-utilities.git ; git checkout ${DNAP_UTILITIES_VERSION}
-cd /tmp/perl-irods-wrap.git     ; git checkout ${NPG_IRODS_VERSION}
+cd /tmp/perl-irods-wrap.git     ; git checkout ${IRODS_WRAP_VERSION}
 cd /tmp/ml_warehouse.git        ; git checkout ${DNAP_WAREHOUSE_VERSION}
 cd /tmp/npg_ml_warehouse.git    ; git checkout ${NPG_ML_WAREHOUSE_VERSION}
 cd /tmp/npg_tracking.git        ; git checkout ${NPG_TRACKING_VERSION}
