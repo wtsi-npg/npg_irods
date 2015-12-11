@@ -1325,3 +1325,2757 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-A
+- bait_name: ~
+  cost_code: ~
+  entity_id_lims: 14849976
+  entity_type: library_indexed_spike
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047622
+  id_library_lims: NT564036I
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 1237247
+  id_study_tmp: 177
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 12172503
+  manual_qc: 1
+  pipeline_id_lims: ~
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:14
+  requested_insert_size_from: ~
+  requested_insert_size_to: ~
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 888
+  tag_sequence: ACAACGCAATC
+  tag_set_id_lims: 42
+  tag_set_name: 384plex_11mers
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047623
+  id_library_lims: DN415361H:A1
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340073
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14798968
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:14
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 1
+  tag_sequence: ATCACG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047624
+  id_library_lims: DN415361H:B1
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340074
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14798980
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:14
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 2
+  tag_sequence: CGATGT
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047625
+  id_library_lims: DN415361H:C1
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340075
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14798992
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:14
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 3
+  tag_sequence: TTAGGC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047626
+  id_library_lims: DN415361H:D1
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340076
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799004
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 4
+  tag_sequence: TGACCA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047627
+  id_library_lims: DN415361H:E1
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340077
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799016
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 5
+  tag_sequence: ACAGTG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047628
+  id_library_lims: DN415361H:F1
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340078
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799028
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 6
+  tag_sequence: GCCAAT
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047629
+  id_library_lims: DN415361H:G1
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340079
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799040
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 7
+  tag_sequence: CAGATC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047630
+  id_library_lims: DN415361H:H1
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340080
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799052
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 8
+  tag_sequence: ACTTGA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047631
+  id_library_lims: DN415361H:E3
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340093
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799018
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 9
+  tag_sequence: GATCAG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047632
+  id_library_lims: DN415361H:F3
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340094
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799030
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 10
+  tag_sequence: TAGCTT
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047633
+  id_library_lims: DN415361H:G3
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340095
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799042
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 11
+  tag_sequence: GGCTAC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047634
+  id_library_lims: DN415361H:H3
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340096
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799054
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 12
+  tag_sequence: CTTGTA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047635
+  id_library_lims: DN415361H:A4
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340097
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14798971
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 13
+  tag_sequence: AGTCAA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047636
+  id_library_lims: DN415361H:B4
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340098
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14798983
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 14
+  tag_sequence: AGTTCC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047637
+  id_library_lims: DN415361H:C4
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340099
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14798995
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 15
+  tag_sequence: ATGTCA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849976
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047638
+  id_library_lims: DN415361H:D4
+  id_lims: SQSCP
+  id_pool_lims: NT675529Q
+  id_sample_tmp: 2340100
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799007
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 1
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 16
+  tag_sequence: CCGTCC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: ~
+  entity_id_lims: 14849977
+  entity_type: library_indexed_spike
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047639
+  id_library_lims: NT564036I
+  id_lims: SQSCP
+  id_pool_lims: NT675531K
+  id_sample_tmp: 1237247
+  id_study_tmp: 177
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 12172503
+  manual_qc: 1
+  pipeline_id_lims: ~
+  position: 2
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: ~
+  requested_insert_size_to: ~
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 888
+  tag_sequence: ACAACGCAATC
+  tag_set_id_lims: 42
+  tag_set_name: 384plex_11mers
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849977
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047640
+  id_library_lims: DN415361H:A2
+  id_lims: SQSCP
+  id_pool_lims: NT675531K
+  id_sample_tmp: 2340081
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14798969
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 2
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 1
+  tag_sequence: ATCACG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849977
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047641
+  id_library_lims: DN415361H:B2
+  id_lims: SQSCP
+  id_pool_lims: NT675531K
+  id_sample_tmp: 2340082
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14798981
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 2
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 2
+  tag_sequence: CGATGT
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849977
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047642
+  id_library_lims: DN415361H:C2
+  id_lims: SQSCP
+  id_pool_lims: NT675531K
+  id_sample_tmp: 2340083
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14798993
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 2
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 3
+  tag_sequence: TTAGGC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849977
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047643
+  id_library_lims: DN415361H:D2
+  id_lims: SQSCP
+  id_pool_lims: NT675531K
+  id_sample_tmp: 2340084
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799005
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 2
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 4
+  tag_sequence: TGACCA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849977
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047644
+  id_library_lims: DN415361H:E2
+  id_lims: SQSCP
+  id_pool_lims: NT675531K
+  id_sample_tmp: 2340085
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799017
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 2
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 5
+  tag_sequence: ACAGTG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849977
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047645
+  id_library_lims: DN415361H:F2
+  id_lims: SQSCP
+  id_pool_lims: NT675531K
+  id_sample_tmp: 2340086
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799029
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 2
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 6
+  tag_sequence: GCCAAT
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849977
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047646
+  id_library_lims: DN415361H:G2
+  id_lims: SQSCP
+  id_pool_lims: NT675531K
+  id_sample_tmp: 2340087
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799041
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 2
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 7
+  tag_sequence: CAGATC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849977
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047647
+  id_library_lims: DN415361H:H2
+  id_lims: SQSCP
+  id_pool_lims: NT675531K
+  id_sample_tmp: 2340088
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799053
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 2
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 8
+  tag_sequence: ACTTGA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849977
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047648
+  id_library_lims: DN415361H:A3
+  id_lims: SQSCP
+  id_pool_lims: NT675531K
+  id_sample_tmp: 2340089
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14798970
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 2
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 9
+  tag_sequence: GATCAG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849977
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047649
+  id_library_lims: DN415361H:B3
+  id_lims: SQSCP
+  id_pool_lims: NT675531K
+  id_sample_tmp: 2340090
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14798982
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 2
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 10
+  tag_sequence: TAGCTT
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849977
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047650
+  id_library_lims: DN415361H:C3
+  id_lims: SQSCP
+  id_pool_lims: NT675531K
+  id_sample_tmp: 2340091
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14798994
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 2
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 11
+  tag_sequence: GGCTAC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0518
+  entity_id_lims: 14849977
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047651
+  id_library_lims: DN415361H:D3
+  id_lims: SQSCP
+  id_pool_lims: NT675531K
+  id_sample_tmp: 2340092
+  id_study_tmp: 3722
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14799006
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 2
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 12
+  tag_sequence: CTTGTA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: ~
+  entity_id_lims: 14849978
+  entity_type: library_indexed_spike
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047652
+  id_library_lims: NT564036I
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 1237247
+  id_study_tmp: 177
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 12172503
+  manual_qc: 1
+  pipeline_id_lims: ~
+  position: 3
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: ~
+  requested_insert_size_to: ~
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 888
+  tag_sequence: ACAACGCAATC
+  tag_set_id_lims: 42
+  tag_set_name: 384plex_11mers
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849978
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047653
+  id_library_lims: DN416143D:A1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354050
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848484
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 3
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 1
+  tag_sequence: ATCACG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849978
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047654
+  id_library_lims: DN416143D:B1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354051
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848496
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 3
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 2
+  tag_sequence: CGATGT
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849978
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047655
+  id_library_lims: DN416143D:C1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354052
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848508
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 3
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 3
+  tag_sequence: TTAGGC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849978
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047656
+  id_library_lims: DN416143D:D1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354053
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848520
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 3
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 4
+  tag_sequence: TGACCA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849978
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047657
+  id_library_lims: DN416143D:E1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354054
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848532
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 3
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 5
+  tag_sequence: ACAGTG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849978
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047658
+  id_library_lims: DN416143D:F1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354055
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848544
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 3
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 6
+  tag_sequence: GCCAAT
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849978
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047659
+  id_library_lims: DN416143D:G1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354056
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848556
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 3
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 7
+  tag_sequence: CAGATC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849978
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047660
+  id_library_lims: DN416143D:H1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354057
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848568
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 3
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 8
+  tag_sequence: ACTTGA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: ~
+  entity_id_lims: 14849979
+  entity_type: library_indexed_spike
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047661
+  id_library_lims: NT564036I
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 1237247
+  id_study_tmp: 177
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 12172503
+  manual_qc: 1
+  pipeline_id_lims: ~
+  position: 4
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: ~
+  requested_insert_size_to: ~
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 888
+  tag_sequence: ACAACGCAATC
+  tag_set_id_lims: 42
+  tag_set_name: 384plex_11mers
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849979
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047662
+  id_library_lims: DN416143D:A1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354050
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848484
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 4
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 1
+  tag_sequence: ATCACG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849979
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047663
+  id_library_lims: DN416143D:B1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354051
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848496
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 4
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 2
+  tag_sequence: CGATGT
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849979
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047664
+  id_library_lims: DN416143D:C1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354052
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848508
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 4
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 3
+  tag_sequence: TTAGGC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849979
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047665
+  id_library_lims: DN416143D:D1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354053
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848520
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 4
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 4
+  tag_sequence: TGACCA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849979
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047666
+  id_library_lims: DN416143D:E1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354054
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848532
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 4
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 5
+  tag_sequence: ACAGTG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849979
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047667
+  id_library_lims: DN416143D:F1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354055
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848544
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 4
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 6
+  tag_sequence: GCCAAT
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849979
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047668
+  id_library_lims: DN416143D:G1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354056
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848556
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 4
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 7
+  tag_sequence: CAGATC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849979
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047669
+  id_library_lims: DN416143D:H1
+  id_lims: SQSCP
+  id_pool_lims: NT680666J
+  id_sample_tmp: 2354057
+  id_study_tmp: 3258
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14848568
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP eukaryotic
+  position: 4
+  priority: 0
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 300
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 8
+  tag_sequence: ACTTGA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: ~
+  entity_id_lims: 14849982
+  entity_type: library_indexed_spike
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047670
+  id_library_lims: NT564036I
+  id_lims: SQSCP
+  id_pool_lims: NT687052N
+  id_sample_tmp: 1237247
+  id_study_tmp: 177
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 12172503
+  manual_qc: 1
+  pipeline_id_lims: ~
+  position: 5
+  priority: 3
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: ~
+  requested_insert_size_to: ~
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 888
+  tag_sequence: ACAACGCAATC
+  tag_set_id_lims: 42
+  tag_set_name: 384plex_11mers
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0703
+  entity_id_lims: 14849982
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047671
+  id_library_lims: NT687047Q
+  id_lims: SQSCP
+  id_pool_lims: NT687052N
+  id_sample_tmp: 2333947
+  id_study_tmp: 3718
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14766963
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 5
+  priority: 3
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 1
+  tag_sequence: ATCACG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0703
+  entity_id_lims: 14849982
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047672
+  id_library_lims: NT687048R
+  id_lims: SQSCP
+  id_pool_lims: NT687052N
+  id_sample_tmp: 2333948
+  id_study_tmp: 3718
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14766964
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 5
+  priority: 3
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 2
+  tag_sequence: CGATGT
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0703
+  entity_id_lims: 14849982
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047673
+  id_library_lims: NT687049S
+  id_lims: SQSCP
+  id_pool_lims: NT687052N
+  id_sample_tmp: 2333949
+  id_study_tmp: 3718
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14766965
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 5
+  priority: 3
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 3
+  tag_sequence: TTAGGC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0703
+  entity_id_lims: 14849982
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047674
+  id_library_lims: NT687050L
+  id_lims: SQSCP
+  id_pool_lims: NT687052N
+  id_sample_tmp: 2333950
+  id_study_tmp: 3718
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14766966
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 5
+  priority: 3
+  recorded_at: 2015-10-02 15:30:15
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 4
+  tag_sequence: TGACCA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0703
+  entity_id_lims: 14849982
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047675
+  id_library_lims: NT687051M
+  id_lims: SQSCP
+  id_pool_lims: NT687052N
+  id_sample_tmp: 2333951
+  id_study_tmp: 3718
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14766967
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 5
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 5
+  tag_sequence: ACAGTG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: ~
+  entity_id_lims: 14849983
+  entity_type: library_indexed_spike
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047676
+  id_library_lims: NT564036I
+  id_lims: SQSCP
+  id_pool_lims: NT689343G
+  id_sample_tmp: 1237247
+  id_study_tmp: 177
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 12172503
+  manual_qc: 1
+  pipeline_id_lims: ~
+  position: 6
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: ~
+  requested_insert_size_to: ~
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 888
+  tag_sequence: ACAACGCAATC
+  tag_set_id_lims: 42
+  tag_set_name: 384plex_11mers
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0979
+  entity_id_lims: 14849983
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047677
+  id_library_lims: NT689331C
+  id_lims: SQSCP
+  id_pool_lims: NT689343G
+  id_sample_tmp: 2358517
+  id_study_tmp: 3758
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14801131
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 6
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 1
+  tag_sequence: ATCACG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0979
+  entity_id_lims: 14849983
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047678
+  id_library_lims: NT689332D
+  id_lims: SQSCP
+  id_pool_lims: NT689343G
+  id_sample_tmp: 2358518
+  id_study_tmp: 3758
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14801132
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 6
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 2
+  tag_sequence: CGATGT
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0979
+  entity_id_lims: 14849983
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047679
+  id_library_lims: NT689333E
+  id_lims: SQSCP
+  id_pool_lims: NT689343G
+  id_sample_tmp: 2358519
+  id_study_tmp: 3758
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14801133
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 6
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 3
+  tag_sequence: TTAGGC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0979
+  entity_id_lims: 14849983
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047680
+  id_library_lims: NT689334F
+  id_lims: SQSCP
+  id_pool_lims: NT689343G
+  id_sample_tmp: 2358520
+  id_study_tmp: 3758
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14801134
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 6
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 4
+  tag_sequence: TGACCA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0979
+  entity_id_lims: 14849983
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047681
+  id_library_lims: NT689335G
+  id_lims: SQSCP
+  id_pool_lims: NT689343G
+  id_sample_tmp: 2358521
+  id_study_tmp: 3758
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14801135
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 6
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 5
+  tag_sequence: ACAGTG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0979
+  entity_id_lims: 14849983
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047682
+  id_library_lims: NT689336H
+  id_lims: SQSCP
+  id_pool_lims: NT689343G
+  id_sample_tmp: 2358522
+  id_study_tmp: 3758
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14801136
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 6
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 6
+  tag_sequence: GCCAAT
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0979
+  entity_id_lims: 14849983
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047683
+  id_library_lims: NT689337I
+  id_lims: SQSCP
+  id_pool_lims: NT689343G
+  id_sample_tmp: 2358523
+  id_study_tmp: 3758
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14801137
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 6
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 7
+  tag_sequence: CAGATC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0979
+  entity_id_lims: 14849983
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047684
+  id_library_lims: NT689338J
+  id_lims: SQSCP
+  id_pool_lims: NT689343G
+  id_sample_tmp: 2358524
+  id_study_tmp: 3758
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14801138
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 6
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 8
+  tag_sequence: ACTTGA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0979
+  entity_id_lims: 14849983
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047685
+  id_library_lims: NT689339K
+  id_lims: SQSCP
+  id_pool_lims: NT689343G
+  id_sample_tmp: 2358525
+  id_study_tmp: 3758
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14801139
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 6
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 9
+  tag_sequence: GATCAG
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0979
+  entity_id_lims: 14849983
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047686
+  id_library_lims: NT689340D
+  id_lims: SQSCP
+  id_pool_lims: NT689343G
+  id_sample_tmp: 2358526
+  id_study_tmp: 3758
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14801140
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 6
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 10
+  tag_sequence: TAGCTT
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0979
+  entity_id_lims: 14849983
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047687
+  id_library_lims: NT689341E
+  id_lims: SQSCP
+  id_pool_lims: NT689343G
+  id_sample_tmp: 2358527
+  id_study_tmp: 3758
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14801141
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 6
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 11
+  tag_sequence: GGCTAC
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0979
+  entity_id_lims: 14849983
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047688
+  id_library_lims: NT689342F
+  id_lims: SQSCP
+  id_pool_lims: NT689343G
+  id_sample_tmp: 2358528
+  id_study_tmp: 3758
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14801142
+  manual_qc: 1
+  pipeline_id_lims: RNA-seq dUTP
+  position: 6
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 12
+  tag_sequence: CTTGTA
+  tag_set_id_lims: 27
+  tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: ~
+  entity_id_lims: 14849980
+  entity_type: library_indexed_spike
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047689
+  id_library_lims: NT564036I
+  id_lims: SQSCP
+  id_pool_lims: NT690203K
+  id_sample_tmp: 1237247
+  id_study_tmp: 177
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 12172503
+  manual_qc: 1
+  pipeline_id_lims: ~
+  position: 7
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: ~
+  requested_insert_size_to: ~
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 888
+  tag_sequence: ACAACGCAATC
+  tag_set_id_lims: 42
+  tag_set_name: 384plex_11mers
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849980
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047690
+  id_library_lims: DN414429G:A1
+  id_lims: SQSCP
+  id_pool_lims: NT690203K
+  id_sample_tmp: 2353756
+  id_study_tmp: 2872
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14727828
+  manual_qc: 1
+  pipeline_id_lims: ChIP-Seq Auto
+  position: 7
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 1
+  tag_sequence: ATCACGTT
+  tag_set_id_lims: 6
+  tag_set_name: 'Sanger_168tags - 10 mer tags'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849980
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047691
+  id_library_lims: DN414429G:H1
+  id_lims: SQSCP
+  id_pool_lims: NT690203K
+  id_sample_tmp: 2353763
+  id_study_tmp: 2872
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14727912
+  manual_qc: 1
+  pipeline_id_lims: ChIP-Seq Auto
+  position: 7
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 2
+  tag_sequence: ACTTGATG
+  tag_set_id_lims: 6
+  tag_set_name: 'Sanger_168tags - 10 mer tags'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849980
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047692
+  id_library_lims: DN414429G:F2
+  id_lims: SQSCP
+  id_pool_lims: NT690203K
+  id_sample_tmp: 2353769
+  id_study_tmp: 2872
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14727889
+  manual_qc: 1
+  pipeline_id_lims: ChIP-Seq Auto
+  position: 7
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 3
+  tag_sequence: TCTCGGTT
+  tag_set_id_lims: 6
+  tag_set_name: 'Sanger_168tags - 10 mer tags'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849980
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047693
+  id_library_lims: DN414429G:H2
+  id_lims: SQSCP
+  id_pool_lims: NT690203K
+  id_sample_tmp: 2353771
+  id_study_tmp: 2872
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14727913
+  manual_qc: 1
+  pipeline_id_lims: ChIP-Seq Auto
+  position: 7
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 4
+  tag_sequence: TCCGTCTT
+  tag_set_id_lims: 6
+  tag_set_name: 'Sanger_168tags - 10 mer tags'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849980
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047694
+  id_library_lims: DN414429G:E3
+  id_lims: SQSCP
+  id_pool_lims: NT690203K
+  id_sample_tmp: 2353776
+  id_study_tmp: 2872
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14727878
+  manual_qc: 1
+  pipeline_id_lims: ChIP-Seq Auto
+  position: 7
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 5
+  tag_sequence: TCGAGCGT
+  tag_set_id_lims: 6
+  tag_set_name: 'Sanger_168tags - 10 mer tags'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849980
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047695
+  id_library_lims: DN414429G:F3
+  id_lims: SQSCP
+  id_pool_lims: NT690203K
+  id_sample_tmp: 2353777
+  id_study_tmp: 2872
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14727890
+  manual_qc: 1
+  pipeline_id_lims: ChIP-Seq Auto
+  position: 7
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 6
+  tag_sequence: TGATACGT
+  tag_set_id_lims: 6
+  tag_set_name: 'Sanger_168tags - 10 mer tags'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: ~
+  entity_id_lims: 14849981
+  entity_type: library_indexed_spike
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047696
+  id_library_lims: NT564036I
+  id_lims: SQSCP
+  id_pool_lims: NT690205M
+  id_sample_tmp: 1237247
+  id_study_tmp: 177
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 12172503
+  manual_qc: 1
+  pipeline_id_lims: ~
+  position: 8
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: ~
+  requested_insert_size_to: ~
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 888
+  tag_sequence: ACAACGCAATC
+  tag_set_id_lims: 42
+  tag_set_name: 384plex_11mers
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849981
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047697
+  id_library_lims: DN414429G:B1
+  id_lims: SQSCP
+  id_pool_lims: NT690205M
+  id_sample_tmp: 2353757
+  id_study_tmp: 2872
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14727840
+  manual_qc: 1
+  pipeline_id_lims: ChIP-Seq Auto
+  position: 8
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 1
+  tag_sequence: CGATGTTT
+  tag_set_id_lims: 6
+  tag_set_name: 'Sanger_168tags - 10 mer tags'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849981
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047698
+  id_library_lims: DN414429G:E1
+  id_lims: SQSCP
+  id_pool_lims: NT690205M
+  id_sample_tmp: 2353760
+  id_study_tmp: 2872
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14727876
+  manual_qc: 1
+  pipeline_id_lims: ChIP-Seq Auto
+  position: 8
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 2
+  tag_sequence: ACAGTGGT
+  tag_set_id_lims: 6
+  tag_set_name: 'Sanger_168tags - 10 mer tags'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849981
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047699
+  id_library_lims: DN414429G:A2
+  id_lims: SQSCP
+  id_pool_lims: NT690205M
+  id_sample_tmp: 2353764
+  id_study_tmp: 2872
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14727829
+  manual_qc: 1
+  pipeline_id_lims: ChIP-Seq Auto
+  position: 8
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 3
+  tag_sequence: GATCAGCG
+  tag_set_id_lims: 6
+  tag_set_name: 'Sanger_168tags - 10 mer tags'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849981
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047700
+  id_library_lims: DN414429G:G2
+  id_lims: SQSCP
+  id_pool_lims: NT690205M
+  id_sample_tmp: 2353770
+  id_study_tmp: 2872
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14727901
+  manual_qc: 1
+  pipeline_id_lims: ChIP-Seq Auto
+  position: 8
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 4
+  tag_sequence: TAAGCGTT
+  tag_set_id_lims: 6
+  tag_set_name: 'Sanger_168tags - 10 mer tags'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849981
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047701
+  id_library_lims: DN414429G:B3
+  id_lims: SQSCP
+  id_pool_lims: NT690205M
+  id_sample_tmp: 2353773
+  id_study_tmp: 2872
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14727842
+  manual_qc: 1
+  pipeline_id_lims: ChIP-Seq Auto
+  position: 8
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 5
+  tag_sequence: TTCTGTGT
+  tag_set_id_lims: 6
+  tag_set_name: 'Sanger_168tags - 10 mer tags'
+  team: Illumina-C
+- bait_name: ~
+  cost_code: S0815
+  entity_id_lims: 14849981
+  entity_type: library_indexed
+  external_release: 1
+  flowcell_barcode: C75BCANXX
+  forward_read_length: 75
+  id_flowcell_lims: 41065
+  id_iseq_flowcell_tmp: 4047702
+  id_library_lims: DN414429G:G3
+  id_lims: SQSCP
+  id_pool_lims: NT690205M
+  id_sample_tmp: 2353778
+  id_study_tmp: 2872
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2015-10-02 11:55:43
+  legacy_library_id: 14727902
+  manual_qc: 1
+  pipeline_id_lims: ChIP-Seq Auto
+  position: 8
+  priority: 3
+  recorded_at: 2015-10-02 15:30:16
+  requested_insert_size_from: 100
+  requested_insert_size_to: 1000
+  reverse_read_length: 75
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_index: 6
+  tag_sequence: TGCATAGT
+  tag_set_id_lims: 6
+  tag_set_name: 'Sanger_168tags - 10 mer tags'
+  team: Illumina-C

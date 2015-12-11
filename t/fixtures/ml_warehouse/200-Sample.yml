@@ -1,1027 +1,159 @@
 ---
-- accession_number: ERS012323
+- accession_number: ERS804080
   cohort: ~
-  common_name: Burkholderia pseudomallei
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:28
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3a, allele m881 and heterozygous for tcf3b, allele zf157Tg, collected at 80% epiboly.'
+  donor_id: 3749STDY6166891
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363891
+  id_sample_tmp: 2340096
+  last_updated: 2015-09-04 16:40:02
+  mother: ~
+  name: 3749STDY6166891
+  organism: ~
+  public_name: tcf3a_homozygous_3b_heterozygous_H3
+  recorded_at: 2015-09-04 16:40:02
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166891
+  strain: mixed
+  supplier_name: tcf3a_hom_3b_het_H3
+  taxon_id: 7955
+  uuid_sample_lims: a34b5cf0-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS804063
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, wild type for tcf3a, allele m881 collected at 80% epiboly.'
+  donor_id: 3749STDY6166874
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363874
+  id_sample_tmp: 2340079
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166874
+  organism: ~
+  public_name: tcf3a_wild type_G1
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166874
+  strain: mixed
+  supplier_name: tcf3a_wt_G1
+  taxon_id: 7955
+  uuid_sample_lims: a2d06090-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS793070
+  cohort: ~
+  common_name: Homo sapiens
   consent_withdrawn: 0
   control: ~
   country_of_origin: ~
-  created: 2010-06-30 09:38:46
+  created: 2015-07-16 19:30:04
   deleted_at: ~
   description: ~
   donor_id: ~
   ethnicity: ~
   father: ~
-  gender: ~
+  gender: Unknown
   geographical_region: ~
   id_lims: SQSCP
-  id_sample_lims: 230889
-  id_sample_tmp: 232248
-  last_updated: 2015-09-03 15:11:03
+  id_sample_lims: 2357744
+  id_sample_tmp: 2333949
+  last_updated: 2015-09-04 16:36:01
   mother: ~
-  name: 619s040
-  organism: Burkholderia pseudomallei
-  public_name: 153.0
-  recorded_at: 2015-09-03 15:11:03
+  name: 2_293T_chIFITM
+  organism: Homo sapiens
+  public_name: 293T/chIFITM2
+  recorded_at: 2015-09-04 16:36:01
   reference_genome: ~
   replicate: ~
   sample_visibility: Hold
   sanger_sample_id: ~
-  strain: 153.0
+  strain: 293T
   supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b4ebaa-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012324
+  taxon_id: 9606
+  uuid_sample_lims: 0f0337d0-2bf1-11e5-9274-68b59976a382
+- accession_number: ERS812460
   cohort: ~
-  common_name: Burkholderia pseudomallei
+  common_name: Mus musculus
   consent_withdrawn: 0
-  control: ~
+  control: 0
   country_of_origin: ~
-  created: 2010-06-30 09:38:46
+  created: 2015-08-13 09:48:56
   deleted_at: ~
-  description: ~
-  donor_id: ~
+  description: Total RNA extracted from Lin_neg_bone marrow
+  donor_id: 3291STDY6178378
   ethnicity: ~
   father: ~
-  gender: ~
+  gender: Female
   geographical_region: ~
   id_lims: SQSCP
-  id_sample_lims: 230890
-  id_sample_tmp: 232249
-  last_updated: 2015-09-03 15:11:03
+  id_sample_lims: 2377276
+  id_sample_tmp: 2354051
+  last_updated: 2015-09-04 16:49:13
   mother: ~
-  name: 619s041
-  organism: Burkholderia pseudomallei
-  public_name: 4009-19
-  recorded_at: 2015-09-03 15:11:03
+  name: 3291STDY6178378
+  organism: ~
+  public_name: DSMX47_4F
+  recorded_at: 2015-09-04 16:49:13
   reference_genome: ~
   replicate: ~
   sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 4009-19
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b4f3ac-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012325
+  sanger_sample_id: 3291STDY6178378
+  strain: ~
+  supplier_name: DSMX47_4F
+  taxon_id: 10090
+  uuid_sample_lims: 83b63f40-41a0-11e5-998e-3c4a9275d6c6
+- accession_number: ERS804077
   cohort: ~
-  common_name: Burkholderia pseudomallei
+  common_name: Danio rerio
   consent_withdrawn: 0
-  control: ~
+  control: 0
   country_of_origin: ~
-  created: 2010-06-30 09:38:46
+  created: 2015-07-23 11:33:28
   deleted_at: ~
-  description: ~
-  donor_id: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3a, allele m881 and heterozygous for tcf3b, allele zf157Tg, collected at 80% epiboly.'
+  donor_id: 3749STDY6166888
   ethnicity: ~
   father: ~
-  gender: ~
+  gender: Unknown
   geographical_region: ~
   id_lims: SQSCP
-  id_sample_lims: 230891
-  id_sample_tmp: 232250
-  last_updated: 2015-09-03 15:11:03
+  id_sample_lims: 2363888
+  id_sample_tmp: 2340093
+  last_updated: 2015-09-04 16:40:01
   mother: ~
-  name: 619s042
-  organism: Burkholderia pseudomallei
-  public_name: DR13450/01
-  recorded_at: 2015-09-03 15:11:03
+  name: 3749STDY6166888
+  organism: ~
+  public_name: tcf3a_homozygous_3b_heterozygous_E3
+  recorded_at: 2015-09-04 16:40:02
   reference_genome: ~
   replicate: ~
   sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: DR13450/01
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b4fbae-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012326
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:38:46
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230892
-  id_sample_tmp: 232251
-  last_updated: 2015-09-03 15:11:03
-  mother: ~
-  name: 619s043
-  organism: Burkholderia pseudomallei
-  public_name: EM2107
-  recorded_at: 2015-09-03 15:11:03
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: EM2107
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b503a6-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012327
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:39:33
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230893
-  id_sample_tmp: 232252
-  last_updated: 2015-09-03 15:11:03
-  mother: ~
-  name: 619s044
-  organism: Burkholderia pseudomallei
-  public_name: 15/96
-  recorded_at: 2015-09-03 15:11:03
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 15/96
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b50b9e-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012328
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:39:33
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230894
-  id_sample_tmp: 232253
-  last_updated: 2015-09-03 15:11:03
-  mother: ~
-  name: 619s045
-  organism: Burkholderia pseudomallei
-  public_name: 4033-10
-  recorded_at: 2015-09-03 15:11:03
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 4033-10
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b51396-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012329
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:39:34
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230895
-  id_sample_tmp: 232254
-  last_updated: 2015-09-03 15:11:03
-  mother: ~
-  name: 619s046
-  organism: Burkholderia pseudomallei
-  public_name: DB30729/00
-  recorded_at: 2015-09-03 15:11:03
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: DB30729/00
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b51ba2-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012330
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:39:34
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230896
-  id_sample_tmp: 232255
-  last_updated: 2015-09-03 15:11:03
-  mother: ~
-  name: 619s047
-  organism: Burkholderia pseudomallei
-  public_name: DB61091/00
-  recorded_at: 2015-09-03 15:11:03
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: DB61091/00
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5239a-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012331
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:39:34
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230897
-  id_sample_tmp: 232256
-  last_updated: 2015-09-03 15:11:03
-  mother: ~
-  name: 619s048
-  organism: Burkholderia pseudomallei
-  public_name: DR08726/01
-  recorded_at: 2015-09-03 15:11:03
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: DR08726/01
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b52b92-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012332
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:39:34
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230898
-  id_sample_tmp: 232257
-  last_updated: 2015-09-03 15:11:03
-  mother: ~
-  name: 619s049
-  organism: Burkholderia pseudomallei
-  public_name: EM10266/01
-  recorded_at: 2015-09-03 15:11:03
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: EM10266/01
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5338a-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012333
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:39:34
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230899
-  id_sample_tmp: 232258
-  last_updated: 2015-09-03 15:11:03
-  mother: ~
-  name: 619s050
-  organism: Burkholderia pseudomallei
-  public_name: 488.0
-  recorded_at: 2015-09-03 15:11:03
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 488.0
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b53b82-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012334
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:39:34
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230900
-  id_sample_tmp: 232259
-  last_updated: 2015-09-03 15:11:03
-  mother: ~
-  name: 619s051
-  organism: Burkholderia pseudomallei
-  public_name: 21/96
-  recorded_at: 2015-09-03 15:11:03
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 21/96
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5437a-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012335
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:39:35
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230901
-  id_sample_tmp: 232260
-  last_updated: 2015-09-03 15:11:03
-  mother: ~
-  name: 619s052
-  organism: Burkholderia pseudomallei
-  public_name: 497/96
-  recorded_at: 2015-09-03 15:11:03
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 497/96
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b54b7c-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012336
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:39:35
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230902
-  id_sample_tmp: 232261
-  last_updated: 2015-09-03 15:11:03
-  mother: ~
-  name: 619s053
-  organism: Burkholderia pseudomallei
-  public_name: 10/96
-  recorded_at: 2015-09-03 15:11:03
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 10/96
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b55374-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012337
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:39:35
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230903
-  id_sample_tmp: 232262
-  last_updated: 2015-09-03 15:11:03
-  mother: ~
-  name: 619s054
-  organism: Burkholderia pseudomallei
-  public_name: 457/96
-  recorded_at: 2015-09-03 15:11:03
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 457/96
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b55b94-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012338
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:39:35
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230904
-  id_sample_tmp: 232263
-  last_updated: 2015-09-03 15:11:03
-  mother: ~
-  name: 619s055
-  organism: Burkholderia pseudomallei
-  public_name: 504/96
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 504/96
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5638c-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012339
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:40:31
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230905
-  id_sample_tmp: 232264
-  last_updated: 2015-09-03 15:11:03
-  mother: ~
-  name: 619s056
-  organism: Burkholderia pseudomallei
-  public_name: 17/96
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 17/96
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b56bb6-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012340
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:40:31
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230906
-  id_sample_tmp: 232265
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s057
-  organism: Burkholderia pseudomallei
-  public_name: 6/96
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 6/96
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b573ae-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012341
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:40:31
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230907
-  id_sample_tmp: 232266
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s058
-  organism: Burkholderia pseudomallei
-  public_name: 35/96
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 35/96
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b57bb0-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012342
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:40:31
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230908
-  id_sample_tmp: 232267
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s059
-  organism: Burkholderia pseudomallei
-  public_name: 23/96
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 23/96
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b583a8-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012343
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:40:31
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230909
-  id_sample_tmp: 232268
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s060
-  organism: Burkholderia pseudomallei
-  public_name: D107310-3154
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: D107310-3154
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b58b96-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012344
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:40:32
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230910
-  id_sample_tmp: 232269
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s061
-  organism: Burkholderia pseudomallei
-  public_name: K11277244-293
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: K11277244-293
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5938e-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012345
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:40:32
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230911
-  id_sample_tmp: 232270
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s062
-  organism: Burkholderia pseudomallei
-  public_name: I64043-3096
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: I64043-3096
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b59b86-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012346
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:40:32
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230912
-  id_sample_tmp: 232271
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s063
-  organism: Burkholderia pseudomallei
-  public_name: P73230-3018
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: P73230-3018
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5a37e-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012347
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:40:32
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230913
-  id_sample_tmp: 232272
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s064
-  organism: Burkholderia pseudomallei
-  public_name: DB
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: DB
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5ab6c-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012348
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:40:32
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230914
-  id_sample_tmp: 232273
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s065
-  organism: Burkholderia pseudomallei
-  public_name: 77/96
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 77/96
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5b364-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012349
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:40:33
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230915
-  id_sample_tmp: 232274
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s066
-  organism: Burkholderia pseudomallei
-  public_name: DC
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: DC
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5bb5c-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012350
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:40:33
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230916
-  id_sample_tmp: 232275
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s067
-  organism: Burkholderia pseudomallei
-  public_name: 109/96
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 109/96
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5c35e-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012351
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:41:30
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230917
-  id_sample_tmp: 232276
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s068
-  organism: Burkholderia pseudomallei
-  public_name: 490.0
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 490.0
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5cb4c-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012352
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:41:30
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230918
-  id_sample_tmp: 232277
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s069
-  organism: Burkholderia pseudomallei
-  public_name: SOIL
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: SOIL
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5d34e-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012353
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:41:31
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230919
-  id_sample_tmp: 232278
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s070
-  organism: Burkholderia pseudomallei
-  public_name: D68346-3058
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: D68346-3058
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5db46-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012354
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:41:31
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230920
-  id_sample_tmp: 232279
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s071
-  organism: Burkholderia pseudomallei
-  public_name: 78/96
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 78/96
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5e352-c628-11df-8e7f-00144f2062b0
-- accession_number: ERS012355
-  cohort: ~
-  common_name: Burkholderia pseudomallei
-  consent_withdrawn: 0
-  control: ~
-  country_of_origin: ~
-  created: 2010-06-30 09:41:31
-  deleted_at: ~
-  description: ~
-  donor_id: ~
-  ethnicity: ~
-  father: ~
-  gender: ~
-  geographical_region: ~
-  id_lims: SQSCP
-  id_sample_lims: 230921
-  id_sample_tmp: 232280
-  last_updated: 2015-09-03 15:11:04
-  mother: ~
-  name: 619s072
-  organism: Burkholderia pseudomallei
-  public_name: 79/96
-  recorded_at: 2015-09-03 15:11:04
-  reference_genome: ~
-  replicate: ~
-  sample_visibility: Hold
-  sanger_sample_id: ~
-  strain: 79/96
-  supplier_name: ~
-  taxon_id: 28450
-  uuid_sample_lims: a8b5eb54-c628-11df-8e7f-00144f2062b0
+  sanger_sample_id: 3749STDY6166888
+  strain: mixed
+  supplier_name: tcf3a_hom_3b_het_E3
+  taxon_id: 7955
+  uuid_sample_lims: a332f2f0-312e-11e5-ad20-3c4a9275d6c6
 - accession_number: ~
   cohort: ~
   common_name: ~
@@ -1053,99 +185,781 @@
   supplier_name: ~
   taxon_id: 10847
   uuid_sample_lims: d3a59c4c-c037-11e0-834c-00144f01a414
-- accession_number: ERS429032
+- accession_number: ERS804071
   cohort: ~
-  common_name: Homo Sapien
+  common_name: Danio rerio
   consent_withdrawn: 0
   control: 0
-  country_of_origin: Lebanon
-  created: 2014-03-06 11:24:06
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3b, allele zf157Tg collected at 80% epiboly.'
+  donor_id: 3749STDY6166882
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363882
+  id_sample_tmp: 2340087
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166882
+  organism: ~
+  public_name: tcf3b_homozygous_G2
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166882
+  strain: mixed
+  supplier_name: tcf3b_hom_G2
+  taxon_id: 7955
+  uuid_sample_lims: a307eb50-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS012323
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:38:46
   deleted_at: ~
   description: ~
-  donor_id: T19PG5759041
-  ethnicity: Lebanon
+  donor_id: ~
+  ethnicity: ~
   father: ~
-  gender: Male
-  geographical_region: Middle East
+  gender: ~
+  geographical_region: ~
   id_lims: SQSCP
-  id_sample_lims: 1877285
-  id_sample_tmp: 1854903
-  last_updated: 2015-09-04 11:12:18
+  id_sample_lims: 230889
+  id_sample_tmp: 232248
+  last_updated: 2015-09-03 15:11:03
   mother: ~
-  name: T19PG5759041
-  organism: ~
+  name: 619s040
+  organism: Burkholderia pseudomallei
+  public_name: 153.0
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 153.0
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b4ebaa-c628-11df-8e7f-00144f2062b0
+- accession_number: ~
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-08-18 14:31:22
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2381771
+  id_sample_tmp: 2358517
+  last_updated: 2015-09-04 16:52:17
+  mother: ~
+  name: Kolf_US_1
+  organism: Homo sapiens
   public_name: ~
-  recorded_at: 2015-09-04 11:12:18
+  recorded_at: 2015-09-04 16:52:17
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
+  taxon_id: 9606
+  uuid_sample_lims: cc7895c0-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS811021
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-12 13:37:41
+  deleted_at: ~
+  description: Lin_neg_bone marrow
+  donor_id: 2905STDY6178183
+  ethnicity: ~
+  father: ~
+  gender: Female
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2376985
+  id_sample_tmp: 2353760
+  last_updated: 2015-09-04 16:49:04
+  mother: ~
+  name: 2905STDY6178183
+  organism: ~
+  public_name: UTX_IP_UTX_Bethyl_C
+  recorded_at: 2015-09-04 16:49:04
   reference_genome: ~
   replicate: ~
   sample_visibility: ~
-  sanger_sample_id: T19PG5759041
+  sanger_sample_id: 2905STDY6178183
   strain: ~
-  supplier_name: 7R5
-  taxon_id: 9606
-  uuid_sample_lims: d41d4a40-a521-11e3-8055-3c4a9275d6c6
-- accession_number: ERS429034
+  supplier_name: UTX_IP_UTX_Bethyl_C
+  taxon_id: 10090
+  uuid_sample_lims: 4e3034b0-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS012336
   cohort: ~
-  common_name: Homo Sapien
+  common_name: Burkholderia pseudomallei
   consent_withdrawn: 0
-  control: 0
-  country_of_origin: Lebanon
-  created: 2014-03-06 11:24:07
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:39:35
   deleted_at: ~
   description: ~
-  donor_id: T19PG5759045
-  ethnicity: Lebanon
+  donor_id: ~
+  ethnicity: ~
   father: ~
-  gender: Male
-  geographical_region: Middle East
+  gender: ~
+  geographical_region: ~
   id_lims: SQSCP
-  id_sample_lims: 1877289
-  id_sample_tmp: 1854907
-  last_updated: 2015-09-04 11:12:18
+  id_sample_lims: 230902
+  id_sample_tmp: 232261
+  last_updated: 2015-09-03 15:11:03
   mother: ~
-  name: T19PG5759045
+  name: 619s053
+  organism: Burkholderia pseudomallei
+  public_name: 10/96
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 10/96
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b55374-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS812459
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-13 09:48:56
+  deleted_at: ~
+  description: Total RNA extracted from Lin_neg_bone marrow
+  donor_id: 3291STDY6178377
+  ethnicity: ~
+  father: ~
+  gender: Female
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2377275
+  id_sample_tmp: 2354050
+  last_updated: 2015-09-04 16:49:13
+  mother: ~
+  name: 3291STDY6178377
   organism: ~
-  public_name: ~
-  recorded_at: 2015-09-04 11:12:18
+  public_name: DSMX47_4E
+  recorded_at: 2015-09-04 16:49:13
   reference_genome: ~
   replicate: ~
   sample_visibility: ~
-  sanger_sample_id: T19PG5759045
+  sanger_sample_id: 3291STDY6178377
   strain: ~
-  supplier_name: 8R163
-  taxon_id: 9606
-  uuid_sample_lims: d492a150-a521-11e3-8055-3c4a9275d6c6
-- accession_number: ERS429036
+  supplier_name: DSMX47_4E
+  taxon_id: 10090
+  uuid_sample_lims: 839bd970-41a0-11e5-998e-3c4a9275d6c6
+- accession_number: ERS804076
   cohort: ~
-  common_name: Homo Sapien
+  common_name: Danio rerio
   consent_withdrawn: 0
   control: 0
-  country_of_origin: Lebanon
-  created: 2014-03-06 11:24:07
+  country_of_origin: ~
+  created: 2015-07-23 11:33:28
   deleted_at: ~
-  description: ~
-  donor_id: T19PG5759048
-  ethnicity: Lebanon
+  description: 'Total RNA from a single zebrafish embryo, wild type for tcf3b, allele zf157Tg collected at 80% epiboly.'
+  donor_id: 3749STDY6166887
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363887
+  id_sample_tmp: 2340092
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166887
+  organism: ~
+  public_name: tcf3b_wild type_D3
+  recorded_at: 2015-09-04 16:40:02
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166887
+  strain: mixed
+  supplier_name: tcf3b_wt_D3
+  taxon_id: 7955
+  uuid_sample_lims: a32c3c30-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS811038
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-12 13:37:42
+  deleted_at: ~
+  description: Lin_neg_bone marrow
+  donor_id: 2905STDY6178200
+  ethnicity: ~
   father: ~
   gender: Male
-  geographical_region: Middle East
+  geographical_region: ~
   id_lims: SQSCP
-  id_sample_lims: 1877292
-  id_sample_tmp: 1854910
-  last_updated: 2015-09-04 11:12:18
+  id_sample_lims: 2377002
+  id_sample_tmp: 2353777
+  last_updated: 2015-09-04 16:49:05
   mother: ~
-  name: T19PG5759048
+  name: 2905STDY6178200
   organism: ~
-  public_name: ~
-  recorded_at: 2015-09-04 11:12:18
+  public_name: Ub_CS_KAMX28_4F
+  recorded_at: 2015-09-04 16:49:05
   reference_genome: ~
   replicate: ~
   sample_visibility: ~
-  sanger_sample_id: T19PG5759048
+  sanger_sample_id: 2905STDY6178200
   strain: ~
-  supplier_name: 8AJ1
+  supplier_name: Ub_CS_KAMX28_4F
+  taxon_id: 10090
+  uuid_sample_lims: 4ee4b7a0-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS012340
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:40:31
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230906
+  id_sample_tmp: 232265
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s057
+  organism: Burkholderia pseudomallei
+  public_name: 6/96
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 6/96
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b573ae-c628-11df-8e7f-00144f2062b0
+- accession_number: ~
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-08-18 14:31:23
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2381776
+  id_sample_tmp: 2358522
+  last_updated: 2015-09-04 16:52:17
+  mother: ~
+  name: Kolf_22_2
+  organism: Homo sapiens
+  public_name: ~
+  recorded_at: 2015-09-04 16:52:18
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
   taxon_id: 9606
-  uuid_sample_lims: d4ee2ed0-a521-11e3-8055-3c4a9275d6c6
+  uuid_sample_lims: cd21f520-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS793072
+  cohort: ~
+  common_name: Gallus gallus
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-07-16 19:30:04
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2357746
+  id_sample_tmp: 2333951
+  last_updated: 2015-09-04 16:36:01
+  mother: ~
+  name: DF-1_Gg
+  organism: Gallus gallus
+  public_name: DF-1
+  recorded_at: 2015-09-04 16:36:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: DF-1
+  supplier_name: ~
+  taxon_id: 9031
+  uuid_sample_lims: 0f46a970-2bf1-11e5-9274-68b59976a382
+- accession_number: ERS012333
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:39:34
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230899
+  id_sample_tmp: 232258
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s050
+  organism: Burkholderia pseudomallei
+  public_name: 488.0
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 488.0
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b53b82-c628-11df-8e7f-00144f2062b0
+- accession_number: ~
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-08-18 14:31:23
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2381773
+  id_sample_tmp: 2358519
+  last_updated: 2015-09-04 16:52:17
+  mother: ~
+  name: Kolf_ST_1
+  organism: Homo sapiens
+  public_name: ~
+  recorded_at: 2015-09-04 16:52:17
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
+  taxon_id: 9606
+  uuid_sample_lims: ccc3f6a0-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS804067
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, heterozygous for tcf3b, allele zf157Tg collected at 80% epiboly.'
+  donor_id: 3749STDY6166878
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363878
+  id_sample_tmp: 2340083
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166878
+  organism: ~
+  public_name: tcf3b_heterozygous_C2
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166878
+  strain: mixed
+  supplier_name: tcf3b_het_C2
+  taxon_id: 7955
+  uuid_sample_lims: a2ea5130-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS012328
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:39:33
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230894
+  id_sample_tmp: 232253
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s045
+  organism: Burkholderia pseudomallei
+  public_name: 4033-10
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 4033-10
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b51396-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS804068
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, heterozygous for tcf3b, allele zf157Tg collected at 80% epiboly.'
+  donor_id: 3749STDY6166879
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363879
+  id_sample_tmp: 2340084
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166879
+  organism: ~
+  public_name: tcf3b_heterozygous_D2
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166879
+  strain: mixed
+  supplier_name: tcf3b_het_D2
+  taxon_id: 7955
+  uuid_sample_lims: a2f092c0-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ~
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-08-18 14:31:23
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2381774
+  id_sample_tmp: 2358520
+  last_updated: 2015-09-04 16:52:17
+  mother: ~
+  name: Kolf_22_ST_1
+  organism: Homo sapiens
+  public_name: ~
+  recorded_at: 2015-09-04 16:52:17
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
+  taxon_id: 9606
+  uuid_sample_lims: cce2c940-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS012329
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:39:34
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230895
+  id_sample_tmp: 232254
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s046
+  organism: Burkholderia pseudomallei
+  public_name: DB30729/00
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: DB30729/00
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b51ba2-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS812463
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-13 09:48:56
+  deleted_at: ~
+  description: Total RNA extracted from Lin_neg_bone marrow
+  donor_id: 3291STDY6178381
+  ethnicity: ~
+  father: ~
+  gender: Male
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2377279
+  id_sample_tmp: 2354054
+  last_updated: 2015-09-04 16:49:13
+  mother: ~
+  name: 3291STDY6178381
+  organism: ~
+  public_name: IHMX1_1C
+  recorded_at: 2015-09-04 16:49:13
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3291STDY6178381
+  strain: ~
+  supplier_name: IHMX1_1C
+  taxon_id: 10090
+  uuid_sample_lims: 83d9a5c0-41a0-11e5-998e-3c4a9275d6c6
+- accession_number: ~
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-08-18 14:31:24
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2381781
+  id_sample_tmp: 2358527
+  last_updated: 2015-09-04 16:52:18
+  mother: ~
+  name: Kolf_ST_3
+  organism: Homo sapiens
+  public_name: ~
+  recorded_at: 2015-09-04 16:52:18
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
+  taxon_id: 9606
+  uuid_sample_lims: cd7ee230-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS012330
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:39:34
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230896
+  id_sample_tmp: 232255
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s047
+  organism: Burkholderia pseudomallei
+  public_name: DB61091/00
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: DB61091/00
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5239a-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS012347
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:40:32
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230913
+  id_sample_tmp: 232272
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s064
+  organism: Burkholderia pseudomallei
+  public_name: DB
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: DB
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5ab6c-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS811024
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-12 13:37:42
+  deleted_at: ~
+  description: Lin_neg_bone marrow
+  donor_id: 2905STDY6178186
+  ethnicity: ~
+  father: ~
+  gender: Female
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2376988
+  id_sample_tmp: 2353763
+  last_updated: 2015-09-04 16:49:04
+  mother: ~
+  name: 2905STDY6178186
+  organism: ~
+  public_name: KAMX34_4F_UTX_Bethyl
+  recorded_at: 2015-09-04 16:49:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 2905STDY6178186
+  strain: ~
+  supplier_name: KAMX34_4F_UTX_Bethyl
+  taxon_id: 10090
+  uuid_sample_lims: 4e563340-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS812461
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-13 09:48:56
+  deleted_at: ~
+  description: Total RNA extracted from Lin_neg_bone marrow
+  donor_id: 3291STDY6178379
+  ethnicity: ~
+  father: ~
+  gender: Female
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2377277
+  id_sample_tmp: 2354052
+  last_updated: 2015-09-04 16:49:13
+  mother: ~
+  name: 3291STDY6178379
+  organism: ~
+  public_name: DSMX47_4G
+  recorded_at: 2015-09-04 16:49:13
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3291STDY6178379
+  strain: ~
+  supplier_name: DSMX47_4G
+  taxon_id: 10090
+  uuid_sample_lims: 83c58180-41a0-11e5-998e-3c4a9275d6c6
+- accession_number: ERS811039
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-12 13:37:42
+  deleted_at: ~
+  description: Lin_neg_bone marrow
+  donor_id: 2905STDY6178201
+  ethnicity: ~
+  father: ~
+  gender: Male
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2377003
+  id_sample_tmp: 2353778
+  last_updated: 2015-09-04 16:49:05
+  mother: ~
+  name: 2905STDY6178201
+  organism: ~
+  public_name: Ub_Milipor_KAMX28_4F
+  recorded_at: 2015-09-04 16:49:05
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 2905STDY6178201
+  strain: ~
+  supplier_name: Ub_Milipor_KAMX28_4F
+  taxon_id: 10090
+  uuid_sample_lims: 4eed6a30-40f7-11e5-998e-3c4a9275d6c6
 - accession_number: ERS429041
   cohort: ~
   common_name: Homo Sapien
@@ -1177,3 +991,2204 @@
   supplier_name: 6AJ182
   taxon_id: 9606
   uuid_sample_lims: d62d8ca0-a521-11e3-8055-3c4a9275d6c6
+- accession_number: ERS804083
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:28
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3a, allele m881 and wild type for tcf3b, allele zf157Tg, collected at 80% epiboly.'
+  donor_id: 3749STDY6166894
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363894
+  id_sample_tmp: 2340099
+  last_updated: 2015-09-04 16:40:02
+  mother: ~
+  name: 3749STDY6166894
+  organism: ~
+  public_name: tcf3a_homozygous_3b_wild type_C4
+  recorded_at: 2015-09-04 16:40:02
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166894
+  strain: mixed
+  supplier_name: tcf3a_hom_3b_wt_C4
+  taxon_id: 7955
+  uuid_sample_lims: a3691e20-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS012332
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:39:34
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230898
+  id_sample_tmp: 232257
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s049
+  organism: Burkholderia pseudomallei
+  public_name: EM10266/01
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: EM10266/01
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5338a-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS012327
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:39:33
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230893
+  id_sample_tmp: 232252
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s044
+  organism: Burkholderia pseudomallei
+  public_name: 15/96
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 15/96
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b50b9e-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS812464
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-13 09:48:56
+  deleted_at: ~
+  description: Total RNA extracted from Lin_neg_bone marrow
+  donor_id: 3291STDY6178382
+  ethnicity: ~
+  father: ~
+  gender: Male
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2377280
+  id_sample_tmp: 2354055
+  last_updated: 2015-09-04 16:49:13
+  mother: ~
+  name: 3291STDY6178382
+  organism: ~
+  public_name: IHMX1_1D
+  recorded_at: 2015-09-04 16:49:13
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3291STDY6178382
+  strain: ~
+  supplier_name: IHMX1_1D
+  taxon_id: 10090
+  uuid_sample_lims: 83e342b0-41a0-11e5-998e-3c4a9275d6c6
+- accession_number: ERS793068
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-07-16 19:30:03
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2357742
+  id_sample_tmp: 2333947
+  last_updated: 2015-09-04 16:36:00
+  mother: ~
+  name: 293T_Hs
+  organism: Homo sapiens
+  public_name: 293T
+  recorded_at: 2015-09-04 16:36:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 293T
+  supplier_name: ~
+  taxon_id: 9606
+  uuid_sample_lims: 0eb53ee0-2bf1-11e5-9274-68b59976a382
+- accession_number: ERS804075
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:28
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, wild type for tcf3b, allele zf157Tg collected at 80% epiboly.'
+  donor_id: 3749STDY6166886
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363886
+  id_sample_tmp: 2340091
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166886
+  organism: ~
+  public_name: tcf3b_wild type_C3
+  recorded_at: 2015-09-04 16:40:02
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166886
+  strain: mixed
+  supplier_name: tcf3b_wt_C3
+  taxon_id: 7955
+  uuid_sample_lims: a3255e60-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS793071
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-07-16 19:30:04
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2357745
+  id_sample_tmp: 2333950
+  last_updated: 2015-09-04 16:36:01
+  mother: ~
+  name: 3_293T_chIFITM
+  organism: Homo sapiens
+  public_name: 293T/chIFITM3
+  recorded_at: 2015-09-04 16:36:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 293T
+  supplier_name: ~
+  taxon_id: 9606
+  uuid_sample_lims: 0f2517b0-2bf1-11e5-9274-68b59976a382
+- accession_number: ERS804084
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:28
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3a, allele m881 and wild type for tcf3b, allele zf157Tg, collected at 80% epiboly.'
+  donor_id: 3749STDY6166895
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363895
+  id_sample_tmp: 2340100
+  last_updated: 2015-09-04 16:40:02
+  mother: ~
+  name: 3749STDY6166895
+  organism: ~
+  public_name: tcf3a_homozygous_3b_wild type_D4
+  recorded_at: 2015-09-04 16:40:02
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166895
+  strain: mixed
+  supplier_name: tcf3a_hom_3b_wt_D4
+  taxon_id: 7955
+  uuid_sample_lims: a373cc80-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS012346
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:40:32
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230912
+  id_sample_tmp: 232271
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s063
+  organism: Burkholderia pseudomallei
+  public_name: P73230-3018
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: P73230-3018
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5a37e-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS804073
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, wild type for tcf3b, allele zf157Tg collected at 80% epiboly.'
+  donor_id: 3749STDY6166884
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363884
+  id_sample_tmp: 2340089
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166884
+  organism: ~
+  public_name: tcf3b_wild type_A3
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166884
+  strain: mixed
+  supplier_name: tcf3b_wt_A3
+  taxon_id: 7955
+  uuid_sample_lims: a316df70-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS012343
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:40:31
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230909
+  id_sample_tmp: 232268
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s060
+  organism: Burkholderia pseudomallei
+  public_name: D107310-3154
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: D107310-3154
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b58b96-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS811032
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-12 13:37:42
+  deleted_at: ~
+  description: Lin_neg_bone marrow
+  donor_id: 2905STDY6178194
+  ethnicity: ~
+  father: ~
+  gender: Female
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2376996
+  id_sample_tmp: 2353771
+  last_updated: 2015-09-04 16:49:04
+  mother: ~
+  name: 2905STDY6178194
+  organism: ~
+  public_name: BCOR_INPUT
+  recorded_at: 2015-09-04 16:49:05
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 2905STDY6178194
+  strain: ~
+  supplier_name: BCOR_INPUT
+  taxon_id: 10090
+  uuid_sample_lims: 4eae1740-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ~
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-08-18 14:31:22
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2381772
+  id_sample_tmp: 2358518
+  last_updated: 2015-09-04 16:52:17
+  mother: ~
+  name: Kolf_22_1
+  organism: Homo sapiens
+  public_name: ~
+  recorded_at: 2015-09-04 16:52:17
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
+  taxon_id: 9606
+  uuid_sample_lims: cca4fcf0-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS012324
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:38:46
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230890
+  id_sample_tmp: 232249
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s041
+  organism: Burkholderia pseudomallei
+  public_name: 4009-19
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 4009-19
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b4f3ac-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS012348
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:40:32
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230914
+  id_sample_tmp: 232273
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s065
+  organism: Burkholderia pseudomallei
+  public_name: 77/96
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 77/96
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5b364-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS804057
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3a, allele m881 collected at 80% epiboly.'
+  donor_id: 3749STDY6166868
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363868
+  id_sample_tmp: 2340073
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166868
+  organism: ~
+  public_name: tcf3a_homozygous_A1
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166868
+  strain: mixed
+  supplier_name: tcf3a_hom_A1
+  taxon_id: 7955
+  uuid_sample_lims: a2a754c0-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS012335
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:39:35
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230901
+  id_sample_tmp: 232260
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s052
+  organism: Burkholderia pseudomallei
+  public_name: 497/96
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 497/96
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b54b7c-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS012337
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:39:35
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230903
+  id_sample_tmp: 232262
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s054
+  organism: Burkholderia pseudomallei
+  public_name: 457/96
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 457/96
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b55b94-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS012352
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:41:30
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230918
+  id_sample_tmp: 232277
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s069
+  organism: Burkholderia pseudomallei
+  public_name: SOIL
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: SOIL
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5d34e-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS429036
+  cohort: ~
+  common_name: Homo Sapien
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: Lebanon
+  created: 2014-03-06 11:24:07
+  deleted_at: ~
+  description: ~
+  donor_id: T19PG5759048
+  ethnicity: Lebanon
+  father: ~
+  gender: Male
+  geographical_region: Middle East
+  id_lims: SQSCP
+  id_sample_lims: 1877292
+  id_sample_tmp: 1854910
+  last_updated: 2015-09-04 11:12:18
+  mother: ~
+  name: T19PG5759048
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-09-04 11:12:18
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: T19PG5759048
+  strain: ~
+  supplier_name: 8AJ1
+  taxon_id: 9606
+  uuid_sample_lims: d4ee2ed0-a521-11e3-8055-3c4a9275d6c6
+- accession_number: ERS012349
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:40:33
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230915
+  id_sample_tmp: 232274
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s066
+  organism: Burkholderia pseudomallei
+  public_name: DC
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: DC
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5bb5c-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS804058
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3a, allele m881 collected at 80% epiboly.'
+  donor_id: 3749STDY6166869
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363869
+  id_sample_tmp: 2340074
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166869
+  organism: ~
+  public_name: tcf3a_homozygous_B1
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166869
+  strain: mixed
+  supplier_name: tcf3a_hom_B1
+  taxon_id: 7955
+  uuid_sample_lims: a2b49b30-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS012341
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:40:31
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230907
+  id_sample_tmp: 232266
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s058
+  organism: Burkholderia pseudomallei
+  public_name: 35/96
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 35/96
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b57bb0-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS012351
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:41:30
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230917
+  id_sample_tmp: 232276
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s068
+  organism: Burkholderia pseudomallei
+  public_name: 490.0
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 490.0
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5cb4c-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS811031
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-12 13:37:42
+  deleted_at: ~
+  description: Lin_neg_bone marrow
+  donor_id: 2905STDY6178193
+  ethnicity: ~
+  father: ~
+  gender: Female
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2376995
+  id_sample_tmp: 2353770
+  last_updated: 2015-09-04 16:49:04
+  mother: ~
+  name: 2905STDY6178193
+  organism: ~
+  public_name: IgG_KAMX34_4F
+  recorded_at: 2015-09-04 16:49:05
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 2905STDY6178193
+  strain: ~
+  supplier_name: IgG_KAMX34_4F
+  taxon_id: 10090
+  uuid_sample_lims: 4ea25770-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS012338
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:39:35
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230904
+  id_sample_tmp: 232263
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s055
+  organism: Burkholderia pseudomallei
+  public_name: 504/96
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 504/96
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5638c-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS811025
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-12 13:37:42
+  deleted_at: ~
+  description: Lin_neg_bone marrow
+  donor_id: 2905STDY6178187
+  ethnicity: ~
+  father: ~
+  gender: Female
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2376989
+  id_sample_tmp: 2353764
+  last_updated: 2015-09-04 16:49:04
+  mother: ~
+  name: 2905STDY6178187
+  organism: ~
+  public_name: KAMX34_4G_UTX_Bethyl
+  recorded_at: 2015-09-04 16:49:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 2905STDY6178187
+  strain: ~
+  supplier_name: KAMX34_4G_UTX_Bethyl
+  taxon_id: 10090
+  uuid_sample_lims: 4e6108b0-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS012345
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:40:32
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230911
+  id_sample_tmp: 232270
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s062
+  organism: Burkholderia pseudomallei
+  public_name: I64043-3096
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: I64043-3096
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b59b86-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS429034
+  cohort: ~
+  common_name: Homo Sapien
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: Lebanon
+  created: 2014-03-06 11:24:07
+  deleted_at: ~
+  description: ~
+  donor_id: T19PG5759045
+  ethnicity: Lebanon
+  father: ~
+  gender: Male
+  geographical_region: Middle East
+  id_lims: SQSCP
+  id_sample_lims: 1877289
+  id_sample_tmp: 1854907
+  last_updated: 2015-09-04 11:12:18
+  mother: ~
+  name: T19PG5759045
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-09-04 11:12:18
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: T19PG5759045
+  strain: ~
+  supplier_name: 8R163
+  taxon_id: 9606
+  uuid_sample_lims: d492a150-a521-11e3-8055-3c4a9275d6c6
+- accession_number: ERS804059
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3a, allele m881 collected at 80% epiboly.'
+  donor_id: 3749STDY6166870
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363870
+  id_sample_tmp: 2340075
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166870
+  organism: ~
+  public_name: tcf3a_homozygous_C1
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166870
+  strain: mixed
+  supplier_name: tcf3a_hom_C1
+  taxon_id: 7955
+  uuid_sample_lims: a2b9f260-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ~
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-08-18 14:31:24
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2381782
+  id_sample_tmp: 2358528
+  last_updated: 2015-09-04 16:52:18
+  mother: ~
+  name: Kolf_22_ST_3
+  organism: Homo sapiens
+  public_name: ~
+  recorded_at: 2015-09-04 16:52:18
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
+  taxon_id: 9606
+  uuid_sample_lims: cd910aa0-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS793069
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-07-16 19:30:04
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2357743
+  id_sample_tmp: 2333948
+  last_updated: 2015-09-04 16:36:01
+  mother: ~
+  name: 1_293T_chIFITM
+  organism: Homo sapiens
+  public_name: 293T/chIFITM1
+  recorded_at: 2015-09-04 16:36:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 293T
+  supplier_name: ~
+  taxon_id: 9606
+  uuid_sample_lims: 0ee24250-2bf1-11e5-9274-68b59976a382
+- accession_number: ERS812466
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-13 09:48:56
+  deleted_at: ~
+  description: Total RNA extracted from Lin_neg_bone marrow
+  donor_id: 3291STDY6178384
+  ethnicity: ~
+  father: ~
+  gender: Male
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2377282
+  id_sample_tmp: 2354057
+  last_updated: 2015-09-04 16:49:13
+  mother: ~
+  name: 3291STDY6178384
+  organism: ~
+  public_name: IHMX2_1C
+  recorded_at: 2015-09-04 16:49:13
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3291STDY6178384
+  strain: ~
+  supplier_name: IHMX2_1C
+  taxon_id: 10090
+  uuid_sample_lims: 83f962c0-41a0-11e5-998e-3c4a9275d6c6
+- accession_number: ERS812462
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-13 09:48:56
+  deleted_at: ~
+  description: Total RNA extracted from Lin_neg_bone marrow
+  donor_id: 3291STDY6178380
+  ethnicity: ~
+  father: ~
+  gender: Female
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2377278
+  id_sample_tmp: 2354053
+  last_updated: 2015-09-04 16:49:13
+  mother: ~
+  name: 3291STDY6178380
+  organism: ~
+  public_name: DSMX47_4H
+  recorded_at: 2015-09-04 16:49:13
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3291STDY6178380
+  strain: ~
+  supplier_name: DSMX47_4H
+  taxon_id: 10090
+  uuid_sample_lims: 83cef760-41a0-11e5-998e-3c4a9275d6c6
+- accession_number: ERS804082
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:28
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3a, allele m881 and wild type for tcf3b, allele zf157Tg, collected at 80% epiboly.'
+  donor_id: 3749STDY6166893
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363893
+  id_sample_tmp: 2340098
+  last_updated: 2015-09-04 16:40:02
+  mother: ~
+  name: 3749STDY6166893
+  organism: ~
+  public_name: tcf3a_homozygous_3b_wild type_B4
+  recorded_at: 2015-09-04 16:40:02
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166893
+  strain: mixed
+  supplier_name: tcf3a_hom_3b_wt_B4
+  taxon_id: 7955
+  uuid_sample_lims: a35fa840-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ~
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-08-18 14:31:23
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2381775
+  id_sample_tmp: 2358521
+  last_updated: 2015-09-04 16:52:17
+  mother: ~
+  name: Kolf_US_2
+  organism: Homo sapiens
+  public_name: ~
+  recorded_at: 2015-09-04 16:52:17
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
+  taxon_id: 9606
+  uuid_sample_lims: cd01ea00-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS012339
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:40:31
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230905
+  id_sample_tmp: 232264
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s056
+  organism: Burkholderia pseudomallei
+  public_name: 17/96
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 17/96
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b56bb6-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS012354
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:41:31
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230920
+  id_sample_tmp: 232279
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s071
+  organism: Burkholderia pseudomallei
+  public_name: 78/96
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 78/96
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5e352-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS012353
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:41:31
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230919
+  id_sample_tmp: 232278
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s070
+  organism: Burkholderia pseudomallei
+  public_name: D68346-3058
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: D68346-3058
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5db46-c628-11df-8e7f-00144f2062b0
+- accession_number: ~
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-08-18 14:31:24
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2381778
+  id_sample_tmp: 2358524
+  last_updated: 2015-09-04 16:52:17
+  mother: ~
+  name: Kolf_22_ST_2
+  organism: Homo sapiens
+  public_name: ~
+  recorded_at: 2015-09-04 16:52:18
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
+  taxon_id: 9606
+  uuid_sample_lims: cd4f46b0-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS804060
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3a, allele m881 collected at 80% epiboly.'
+  donor_id: 3749STDY6166871
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363871
+  id_sample_tmp: 2340076
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166871
+  organism: ~
+  public_name: tcf3a_homozygous_D1
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166871
+  strain: mixed
+  supplier_name: tcf3a_hom_D1
+  taxon_id: 7955
+  uuid_sample_lims: a2bfbec0-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS012331
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:39:34
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230897
+  id_sample_tmp: 232256
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s048
+  organism: Burkholderia pseudomallei
+  public_name: DR08726/01
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: DR08726/01
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b52b92-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS811017
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-12 13:37:41
+  deleted_at: ~
+  description: Lin_neg_bone marrow
+  donor_id: 2905STDY6178179
+  ethnicity: ~
+  father: ~
+  gender: Female
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2376981
+  id_sample_tmp: 2353756
+  last_updated: 2015-09-04 16:49:04
+  mother: ~
+  name: 2905STDY6178179
+  organism: ~
+  public_name: UTX_INPUT_A
+  recorded_at: 2015-09-04 16:49:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 2905STDY6178179
+  strain: ~
+  supplier_name: UTX_INPUT_A
+  taxon_id: 10090
+  uuid_sample_lims: 4e052d10-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS804065
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, heterozygous for tcf3b, allele zf157Tg collected at 80% epiboly.'
+  donor_id: 3749STDY6166876
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363876
+  id_sample_tmp: 2340081
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166876
+  organism: ~
+  public_name: tcf3b_heterozygous_A2
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166876
+  strain: mixed
+  supplier_name: tcf3b_het_A2
+  taxon_id: 7955
+  uuid_sample_lims: a2db8420-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS811018
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-12 13:37:41
+  deleted_at: ~
+  description: Lin_neg_bone marrow
+  donor_id: 2905STDY6178180
+  ethnicity: ~
+  father: ~
+  gender: Female
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2376982
+  id_sample_tmp: 2353757
+  last_updated: 2015-09-04 16:49:04
+  mother: ~
+  name: 2905STDY6178180
+  organism: ~
+  public_name: UTX_IP_UTX_GTX_A
+  recorded_at: 2015-09-04 16:49:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 2905STDY6178180
+  strain: ~
+  supplier_name: UTX_IP_UTX_GTX_A
+  taxon_id: 10090
+  uuid_sample_lims: 4e0f6640-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS812465
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-13 09:48:56
+  deleted_at: ~
+  description: Total RNA extracted from Lin_neg_bone marrow
+  donor_id: 3291STDY6178383
+  ethnicity: ~
+  father: ~
+  gender: Male
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2377281
+  id_sample_tmp: 2354056
+  last_updated: 2015-09-04 16:49:13
+  mother: ~
+  name: 3291STDY6178383
+  organism: ~
+  public_name: IHMX2_1B
+  recorded_at: 2015-09-04 16:49:13
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3291STDY6178383
+  strain: ~
+  supplier_name: IHMX2_1B
+  taxon_id: 10090
+  uuid_sample_lims: 83ee1820-41a0-11e5-998e-3c4a9275d6c6
+- accession_number: ERS811034
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-12 13:37:42
+  deleted_at: ~
+  description: Lin_neg_bone marrow
+  donor_id: 2905STDY6178196
+  ethnicity: ~
+  father: ~
+  gender: Female
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2376998
+  id_sample_tmp: 2353773
+  last_updated: 2015-09-04 16:49:04
+  mother: ~
+  name: 2905STDY6178196
+  organism: ~
+  public_name: BCOR_IP_CTCF
+  recorded_at: 2015-09-04 16:49:05
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 2905STDY6178196
+  strain: ~
+  supplier_name: BCOR_IP_CTCF
+  taxon_id: 10090
+  uuid_sample_lims: 4ec17830-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ~
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-08-18 14:31:24
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2381780
+  id_sample_tmp: 2358526
+  last_updated: 2015-09-04 16:52:18
+  mother: ~
+  name: Kolf_22_3
+  organism: Homo sapiens
+  public_name: ~
+  recorded_at: 2015-09-04 16:52:18
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
+  taxon_id: 9606
+  uuid_sample_lims: cd6d5600-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS012344
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:40:32
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230910
+  id_sample_tmp: 232269
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s061
+  organism: Burkholderia pseudomallei
+  public_name: K11277244-293
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: K11277244-293
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5938e-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS012342
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:40:31
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230908
+  id_sample_tmp: 232267
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s059
+  organism: Burkholderia pseudomallei
+  public_name: 23/96
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 23/96
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b583a8-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS804081
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:28
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3a, allele m881 and wild type for tcf3b, allele zf157Tg, collected at 80% epiboly.'
+  donor_id: 3749STDY6166892
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363892
+  id_sample_tmp: 2340097
+  last_updated: 2015-09-04 16:40:02
+  mother: ~
+  name: 3749STDY6166892
+  organism: ~
+  public_name: tcf3a_homozygous_3b_wild type_A4
+  recorded_at: 2015-09-04 16:40:02
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166892
+  strain: mixed
+  supplier_name: tcf3a_hom_3b_wt_A4
+  taxon_id: 7955
+  uuid_sample_lims: a356cea0-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS804074
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, wild type for tcf3b, allele zf157Tg collected at 80% epiboly.'
+  donor_id: 3749STDY6166885
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363885
+  id_sample_tmp: 2340090
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166885
+  organism: ~
+  public_name: tcf3b_wild type_B3
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166885
+  strain: mixed
+  supplier_name: tcf3b_wt_B3
+  taxon_id: 7955
+  uuid_sample_lims: a31de450-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS811037
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-12 13:37:42
+  deleted_at: ~
+  description: Lin_neg_bone marrow
+  donor_id: 2905STDY6178199
+  ethnicity: ~
+  father: ~
+  gender: Male
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2377001
+  id_sample_tmp: 2353776
+  last_updated: 2015-09-04 16:49:05
+  mother: ~
+  name: 2905STDY6178199
+  organism: ~
+  public_name: INPUT_KAMX28_4F
+  recorded_at: 2015-09-04 16:49:05
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 2905STDY6178199
+  strain: ~
+  supplier_name: INPUT_KAMX28_4F
+  taxon_id: 10090
+  uuid_sample_lims: 4edbde00-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS804069
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3b, allele zf157Tg collected at 80% epiboly.'
+  donor_id: 3749STDY6166880
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363880
+  id_sample_tmp: 2340085
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166880
+  organism: ~
+  public_name: tcf3b_homozygous_E2
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166880
+  strain: mixed
+  supplier_name: tcf3b_hom_E2
+  taxon_id: 7955
+  uuid_sample_lims: a2f68630-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS811030
+  cohort: ~
+  common_name: Mus musculus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-08-12 13:37:42
+  deleted_at: ~
+  description: Lin_neg_bone marrow
+  donor_id: 2905STDY6178192
+  ethnicity: ~
+  father: ~
+  gender: Female
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2376994
+  id_sample_tmp: 2353769
+  last_updated: 2015-09-04 16:49:04
+  mother: ~
+  name: 2905STDY6178192
+  organism: ~
+  public_name: INPUT_KAMX34_4E
+  recorded_at: 2015-09-04 16:49:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 2905STDY6178192
+  strain: ~
+  supplier_name: INPUT_KAMX34_4E
+  taxon_id: 10090
+  uuid_sample_lims: 4e9956c0-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ~
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-08-18 14:31:24
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2381779
+  id_sample_tmp: 2358525
+  last_updated: 2015-09-04 16:52:18
+  mother: ~
+  name: Kolf_US_3
+  organism: Homo sapiens
+  public_name: ~
+  recorded_at: 2015-09-04 16:52:18
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
+  taxon_id: 9606
+  uuid_sample_lims: cd5dc5a0-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS012350
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:40:33
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230916
+  id_sample_tmp: 232275
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s067
+  organism: Burkholderia pseudomallei
+  public_name: 109/96
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 109/96
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5c35e-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS012325
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:38:46
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230891
+  id_sample_tmp: 232250
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s042
+  organism: Burkholderia pseudomallei
+  public_name: DR13450/01
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: DR13450/01
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b4fbae-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS804061
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, wild type for tcf3a, allele m881 collected at 80% epiboly.'
+  donor_id: 3749STDY6166872
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363872
+  id_sample_tmp: 2340077
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166872
+  organism: ~
+  public_name: tcf3a_wild type_E1
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166872
+  strain: mixed
+  supplier_name: tcf3a_wt_E1
+  taxon_id: 7955
+  uuid_sample_lims: a2c53d00-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS804079
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:28
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3a, allele m881 and heterozygous for tcf3b, allele zf157Tg, collected at 80% epiboly.'
+  donor_id: 3749STDY6166890
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363890
+  id_sample_tmp: 2340095
+  last_updated: 2015-09-04 16:40:02
+  mother: ~
+  name: 3749STDY6166890
+  organism: ~
+  public_name: tcf3a_homozygous_3b_heterozygous_G3
+  recorded_at: 2015-09-04 16:40:02
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166890
+  strain: mixed
+  supplier_name: tcf3a_hom_3b_het_G3
+  taxon_id: 7955
+  uuid_sample_lims: a342f880-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ~
+  cohort: ~
+  common_name: Homo sapiens
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2015-08-18 14:31:23
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2381777
+  id_sample_tmp: 2358523
+  last_updated: 2015-09-04 16:52:17
+  mother: ~
+  name: Kolf_ST_2
+  organism: Homo sapiens
+  public_name: ~
+  recorded_at: 2015-09-04 16:52:18
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
+  taxon_id: 9606
+  uuid_sample_lims: cd40a0b0-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS804064
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, wild type for tcf3a, allele m881 collected at 80% epiboly.'
+  donor_id: 3749STDY6166875
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363875
+  id_sample_tmp: 2340080
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166875
+  organism: ~
+  public_name: tcf3a_wild type_H1
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166875
+  strain: mixed
+  supplier_name: tcf3a_wt_H1
+  taxon_id: 7955
+  uuid_sample_lims: a2d605e0-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS012355
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:41:31
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230921
+  id_sample_tmp: 232280
+  last_updated: 2015-09-03 15:11:04
+  mother: ~
+  name: 619s072
+  organism: Burkholderia pseudomallei
+  public_name: 79/96
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 79/96
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5eb54-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS012326
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:38:46
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230892
+  id_sample_tmp: 232251
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s043
+  organism: Burkholderia pseudomallei
+  public_name: EM2107
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: EM2107
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b503a6-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS804066
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, heterozygous for tcf3b, allele zf157Tg collected at 80% epiboly.'
+  donor_id: 3749STDY6166877
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363877
+  id_sample_tmp: 2340082
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166877
+  organism: ~
+  public_name: tcf3b_heterozygous_B2
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166877
+  strain: mixed
+  supplier_name: tcf3b_het_B2
+  taxon_id: 7955
+  uuid_sample_lims: a2e3c180-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS429032
+  cohort: ~
+  common_name: Homo Sapien
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: Lebanon
+  created: 2014-03-06 11:24:06
+  deleted_at: ~
+  description: ~
+  donor_id: T19PG5759041
+  ethnicity: Lebanon
+  father: ~
+  gender: Male
+  geographical_region: Middle East
+  id_lims: SQSCP
+  id_sample_lims: 1877285
+  id_sample_tmp: 1854903
+  last_updated: 2015-09-04 11:12:18
+  mother: ~
+  name: T19PG5759041
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-09-04 11:12:18
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: T19PG5759041
+  strain: ~
+  supplier_name: 7R5
+  taxon_id: 9606
+  uuid_sample_lims: d41d4a40-a521-11e3-8055-3c4a9275d6c6
+- accession_number: ERS804072
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3b, allele zf157Tg collected at 80% epiboly.'
+  donor_id: 3749STDY6166883
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363883
+  id_sample_tmp: 2340088
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166883
+  organism: ~
+  public_name: tcf3b_homozygous_H2
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166883
+  strain: mixed
+  supplier_name: tcf3b_hom_H2
+  taxon_id: 7955
+  uuid_sample_lims: a30f1740-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS012334
+  cohort: ~
+  common_name: Burkholderia pseudomallei
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2010-06-30 09:39:34
+  deleted_at: ~
+  description: ~
+  donor_id: ~
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 230900
+  id_sample_tmp: 232259
+  last_updated: 2015-09-03 15:11:03
+  mother: ~
+  name: 619s051
+  organism: Burkholderia pseudomallei
+  public_name: 21/96
+  recorded_at: 2015-09-03 15:11:03
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: 21/96
+  supplier_name: ~
+  taxon_id: 28450
+  uuid_sample_lims: a8b5437a-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS804078
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:28
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3a, allele m881 and heterozygous for tcf3b, allele zf157Tg, collected at 80% epiboly.'
+  donor_id: 3749STDY6166889
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363889
+  id_sample_tmp: 2340094
+  last_updated: 2015-09-04 16:40:02
+  mother: ~
+  name: 3749STDY6166889
+  organism: ~
+  public_name: tcf3a_homozygous_3b_heterozygous_F3
+  recorded_at: 2015-09-04 16:40:02
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166889
+  strain: mixed
+  supplier_name: tcf3a_hom_3b_het_F3
+  taxon_id: 7955
+  uuid_sample_lims: a33b5760-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS804070
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, homozygous for tcf3b, allele zf157Tg collected at 80% epiboly.'
+  donor_id: 3749STDY6166881
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363881
+  id_sample_tmp: 2340086
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166881
+  organism: ~
+  public_name: tcf3b_homozygous_F2
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166881
+  strain: mixed
+  supplier_name: tcf3b_hom_F2
+  taxon_id: 7955
+  uuid_sample_lims: a2fdb220-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS804062
+  cohort: ~
+  common_name: Danio rerio
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-23 11:33:27
+  deleted_at: ~
+  description: 'Total RNA from a single zebrafish embryo, wild type for tcf3a, allele m881 collected at 80% epiboly.'
+  donor_id: 3749STDY6166873
+  ethnicity: ~
+  father: ~
+  gender: Unknown
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2363873
+  id_sample_tmp: 2340078
+  last_updated: 2015-09-04 16:40:01
+  mother: ~
+  name: 3749STDY6166873
+  organism: ~
+  public_name: tcf3a_wild type_F1
+  recorded_at: 2015-09-04 16:40:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 3749STDY6166873
+  strain: mixed
+  supplier_name: tcf3a_wt_F1
+  taxon_id: 7955
+  uuid_sample_lims: a2cae250-312e-11e5-ad20-3c4a9275d6c6

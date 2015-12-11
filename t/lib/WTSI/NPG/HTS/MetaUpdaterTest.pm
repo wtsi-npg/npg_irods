@@ -3,18 +3,21 @@ package WTSI::NPG::HTS::MetaUpdaterTest;
 use strict;
 use warnings;
 
+use English qw(-no_match_vars);
+use File::Spec::Functions;
 use Log::Log4perl;
 use Test::More;
 
 use base qw(WTSI::NPG::HTS::Test);
 
-Log::Log4perl::init('./etc/log4perl_tests.conf');
-
 use WTSI::DNAP::Warehouse::Schema;
+use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::HTS::MetaUpdater;
 use WTSI::NPG::HTS::Samtools;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
+
+Log::Log4perl::init('./etc/log4perl_tests.conf');
 
 {
   package TestDB;
@@ -23,24 +26,51 @@ use WTSI::NPG::iRODS;
   with 'npg_testing::db';
 }
 
-my $fixture_counter = 0;
-my $data_path = './t/data/metaupdater';
-my $fixture_path = "./t/fixtures/ml_warehouse";
+my $test_counter = 0;
+my $data_path = './t/data/meta_updater';
+my $fixture_path = "./t/fixtures";
+
+my $db_dir = File::Temp->newdir;
+my $wh_attr = {RaiseError    => 1,
+               on_connect_do => 'PRAGMA encoding = "UTF-8"'};
+my $wh_schema;
+my $lims_factory;
 
 my $data_file = '7915_5#1';
 my $reference_file = 'test_ref.fa';
 my $irods_tmp_coll;
 my $samtools = `which samtools`;
 
-my $pid = $$;
+my $pid = $PID;
 
-sub setup_fixture : Test(setup) {
+sub setup_databases : Test(startup) {
+  my $wh_db_file = catfile($db_dir, 'ml_wh.db');
+  my $wh_attr = {RaiseError    => 1,
+                 on_connect_do => 'PRAGMA encoding = "UTF-8"'};
+
+  {
+    # create_test_db produces warnings during expected use, which
+    # appear mixed with test output in the terminal
+    local $SIG{__WARN__} = sub { };
+    $wh_schema = TestDB->new(test_dbattr => $wh_attr)->create_test_db
+      ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
+       $wh_db_file);
+  }
+
+  $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+}
+
+sub teardown_databases : Test(shutdown) {
+  $wh_schema->storage->disconnect;
+}
+
+sub setup_test : Test(setup) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   $irods_tmp_coll =
-    $irods->add_collection("MetaUpdaterTest.$pid.$fixture_counter");
-  $fixture_counter++;
+    $irods->add_collection("MetaUpdaterTest.$pid.$test_counter");
+  $test_counter++;
 
   if ($samtools) {
     WTSI::NPG::HTS::Samtools->new
@@ -57,10 +87,9 @@ sub setup_fixture : Test(setup) {
   }
 }
 
-sub teardown_fixture : Test(teardown) {
+sub teardown_test : Test(teardown) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-
   $irods->remove_collection($irods_tmp_coll);
 }
 
@@ -82,20 +111,9 @@ sub update_secondary_metadata : Test(3) {
       push @paths_to_update, "$irods_tmp_coll/$data_file.$format";
     }
 
-    my $db_dir = File::Temp->newdir;
-    my $db_file = File::Spec->catfile($db_dir, 'ml_warehouse.db');
-
-    my $wh_schema;
-    # create_test_db produces warnings during expected use, which
-    # appear mixed with test output in the terminal
-    {
-      local $SIG{__WARN__} = sub { };
-      $wh_schema = TestDB->new->create_test_db('WTSI::DNAP::Warehouse::Schema',
-                                               $fixture_path, $db_file);
-    }
-
-    my $updater = WTSI::NPG::HTS::MetaUpdater->new(irods     => $irods,
-                                                   wh_schema => $wh_schema);
+    my $updater = WTSI::NPG::HTS::MetaUpdater->new
+      (irods       => $irods,
+      lims_factory => $lims_factory);
 
     # 1 test
     cmp_ok($updater->update_secondary_metadata(\@paths_to_update),
@@ -117,7 +135,7 @@ sub update_secondary_metadata : Test(3) {
          {attribute => $STUDY_TITLE,
           value     => 'Burkholderia pseudomallei diversity'}];
 
-      my $obj = WTSI::NPG::HTS::HTSFileDataObject->new
+      my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
         (collection  => $irods_tmp_coll,
          data_object => "$data_file.$format",
          irods       => $irods);

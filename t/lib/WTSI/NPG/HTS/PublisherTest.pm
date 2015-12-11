@@ -19,25 +19,24 @@ use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::HTS::Publisher;
 
-my $pid = $PID;
-my $fixture_counter = 0;
-
+my $test_counter = 0;
 my $data_path = './t/data/publisher';
+
 my $cwc;
 my $irods_tmp_coll;
 
+my $pid = $PID;
 
-sub make_fixture : Test(setup) {
+sub setup_test : Test(setup) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   $cwc = $irods->working_collection;
 
-  $irods_tmp_coll = $irods->add_collection
-    ("PublisherTest.$pid.$fixture_counter");
-  $fixture_counter++;
+  $irods_tmp_coll = $irods->add_collection("PublisherTest.$pid.$test_counter");
+  $test_counter++;
 }
 
-sub teardown : Test(teardown) {
+sub teardown_test : Test(teardown) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   $irods->working_collection($cwc);

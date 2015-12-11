@@ -12,7 +12,6 @@ Log::Log4perl::init('./etc/log4perl_tests.conf');
 
 use WTSI::NPG::HTS::Samtools;
 
-my $fixture_counter = 0;
 my $data_path = './t/data/samtools';
 my $data_file = '7915_5#1';
 my $reference_file = 'test_ref.fa';

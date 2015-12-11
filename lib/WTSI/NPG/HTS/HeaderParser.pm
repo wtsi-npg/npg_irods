@@ -114,7 +114,9 @@ WTSI::NPG::HTS::HeaderParser
 
 =head1 DESCRIPTION
 
-A basic parser for SAM/BAM/CRAM file headers.
+A basic parser for SAM/BAM/CRAM file headers. This may be used to
+discover whether the reads have been aligned and if so, to what
+reference, for eaxmple.
 
 =head1 AUTHOR
 

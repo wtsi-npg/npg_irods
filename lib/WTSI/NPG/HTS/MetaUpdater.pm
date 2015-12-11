@@ -4,8 +4,7 @@ use namespace::autoclean;
 use Moose;
 use Try::Tiny;
 
-use WTSI::DNAP::Warehouse::Schema;
-use WTSI::NPG::HTS::HTSFileDataObject;
+use WTSI::NPG::HTS::AlMapFileDataObject;
 use WTSI::NPG::iRODS;
 
 with 'WTSI::DNAP::Utilities::Loggable';
@@ -16,19 +15,20 @@ has 'irods' =>
   (is            => 'ro',
    isa           => 'WTSI::NPG::iRODS',
    required      => 1,
-   documentation => 'An iRODS handle to run searches and perform updates.');
+   documentation => 'An iRODS handle to run searches and perform updates');
 
-has 'wh_schema' =>
+has 'lims_factory' =>
   (is            => 'ro',
-   isa           => 'WTSI::DNAP::Warehouse::Schema',
+   isa           => 'WTSI::NPG::HTS::LIMSFactory',
    required      => 1,
-   documentation => 'A ML warehouse handle to obtain secondary metadata.');
-
+   documentation => 'A factory providing st:api::lims objects');
 
 sub BUILD {
   my ($self) = @_;
 
-  $self->logger($self->irods->logger);
+  # Use our logger to log activity in attributes.
+  $self->lims_factory->logger($self->logger);
+  $self->irods->logger($self->logger);
   return;
 }
 
@@ -62,10 +62,11 @@ sub update_secondary_metadata {
   foreach my $file (@{$files}) {
     $self->info("Updating metadata on '$file' [$num_processed / $num_files]");
 
-    my $obj = WTSI::NPG::HTS::HTSFileDataObject->new($self->irods, $file);
+    my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new($self->irods, $file);
 
     try {
-      $obj->update_secondary_metadata($self->wh_schema, $with_spiked_control);
+      $obj->update_secondary_metadata($self->lims_factory,
+                                      $with_spiked_control);
       $self->info("Updated metadata on '$file' ",
                   "[$num_processed / $num_files]");
     } catch {

@@ -2,19 +2,24 @@ package WTSI::NPG::HTS::Annotator;
 
 use Data::Dump qw(pp);
 use DateTime;
+use Encode; # FIXME
 use File::Basename;
 use Moose::Role;
 
 use WTSI::NPG::iRODS::Metadata;
 
-use st::api::lims;
-use st::api::lims::ml_warehouse;
-
 our $VERSION = '';
 
-our @DEFAULT_FILE_SUFFIXES = qw(.bam .cram .csv .gtc .idat
-                                .tif .tsv  .txt .xls .xlsx
-                                .xml);
+our @GENERAL_PURPOSE_SUFFIXES = qw(.csv .tif .tsv  .txt .xls .xlsx .xml);
+our @GENO_DATA_SUFFIXES       = qw(.gtc .idat);
+our @HTS_DATA_SUFFIXES        = qw(.bam .cram);
+our @HTS_ANCILLARY_SUFFIXES   = qw(.bamcheck .bed .flagstat .seqchksum
+                                   .stats .xml);
+
+our @DEFAULT_FILE_SUFFIXES = (@GENERAL_PURPOSE_SUFFIXES,
+                              @GENO_DATA_SUFFIXES,
+                              @HTS_DATA_SUFFIXES,
+                              @HTS_ANCILLARY_SUFFIXES);
 
 with 'WTSI::DNAP::Utilities::Loggable', 'WTSI::NPG::iRODS::Utilities';
 
@@ -95,7 +100,7 @@ sub make_type_metadata {
   my @meta;
   if ($suffix) {
     my ($base_suffix) = $suffix =~ m{^[.]?(.*)}msx;
-    push @meta, $self->make_avu->($FILE_TYPE, $base_suffix);
+    push @meta, $self->make_avu($FILE_TYPE, $base_suffix);
   }
 
   return @meta;
@@ -145,12 +150,12 @@ sub make_ticket_metadata {
 
 =head2 make_hts_metadata
 
-  Arg [1]    : Multi-LIMS schema, WTSI::DNAP::Warehouse::Schema.
+  Arg [1]    : Factory for st:api::lims objects, WTSI::NPG::HTS::LIMSFactory.
   Arg [2]    : Run identifier, Int.
   Arg [3]    : Flowcell lane position, Int.
   Arg [4]    : Tag index, Int. Optional.
 
-  Example    : my @meta = $ann->make_hts_metadata($schema, 3002, 3, 1)
+  Example    : my @meta = $ann->make_hts_metadata($factory, 3002, 3, 1)
   Description: Return an array of metadata AVUs describing the HTS data
                in the specified run/lane/plex.
   Returntype : Array[HashRef]
@@ -159,30 +164,17 @@ sub make_ticket_metadata {
 
 ## no critic (Subroutines::ProhibitManyArgs)
 sub make_hts_metadata {
-  my ($self, $schema, $id_run, $position, $tag_index,
+  my ($self, $factory, $id_run, $position, $tag_index,
       $with_spiked_control) = @_;
 
-  defined $schema or
-    $self->logconfess('A defined schema argument is required');
+  defined $factory or
+    $self->logconfess('A defined factory argument is required');
   defined $id_run or
     $self->logconfess('A defined id_run argument is required');
   defined $position or
     $self->logconfess('A defined position argument is required');
 
-  # FIXME -- st::api::lims constructor requires information about the
-  # flowcell
-  my ($flowcell_barcode, $flowcell_id) =
-    $self->_find_barcode_and_lims_id($schema, $id_run);
-
-  my @initargs = (flowcell_barcode => $flowcell_barcode,
-                  id_flowcell_lims => $flowcell_id,
-                  position         => $position,
-                  tag_index        => $tag_index);
-  my $driver = st::api::lims::ml_warehouse->new
-    (mlwh_schema => $schema, @initargs);
-  my $lims = st::api::lims->new(driver => $driver,
-                                id_run => $id_run,
-                                @initargs);
+  my $lims = $factory->make_lims($id_run, $position, $tag_index);
 
   my @meta;
   push @meta, $self->make_plex_metadata($lims);
@@ -191,10 +183,8 @@ sub make_hts_metadata {
   push @meta, $self->make_sample_metadata($lims, $with_spiked_control);
   push @meta, $self->make_library_metadata($lims, $with_spiked_control);
 
-  my $hts_element = sprintf 'flowcell: %s, run: %s, pos: %s, tag_index: %s',
-    (defined $flowcell_barcode ? $flowcell_barcode : 'NA'),
-    $id_run, $position,
-    (defined $tag_index ? $tag_index : 'NA');
+  my $hts_element = sprintf 'run: %s, pos: %s, tag_index: %s',
+    $id_run, $position, (defined $tag_index ? $tag_index : 'NA');
   $self->info("Created metadata for $hts_element: ", pp(\@meta));
 
   return @meta;
@@ -365,6 +355,10 @@ sub _make_single_value_metadata {
 
     if (defined $value) {
       $self->debug("st::api::lims::$method_name returned ", $value);
+
+      $attr  = decode('UTF-8', $attr,  Encode::FB_CROAK); # FIXME
+      $value = decode('UTF-8', $value, Encode::FB_CROAK); # FIXME
+
       push @avus, $self->make_avu($attr, $value);
     }
     else {
@@ -384,57 +378,19 @@ sub _make_multi_value_metadata {
   foreach my $method_name (sort keys %{$method_attr}) {
     my $attr = $method_attr->{$method_name};
 
+    $attr  = decode('UTF-8', $attr,  Encode::FB_CROAK); # FIXME
+
     my @values = $lims->$method_name($with_spiked_control);
     $self->debug("st::api::lims::$method_name returned ", pp(\@values));
 
     foreach my $value (@values) {
+      $value = decode('UTF-8', $value, Encode::FB_CROAK); # FIXME
+
       push @avus, $self->make_avu($attr, $value);
     }
   }
 
   return @avus;
-}
-
-sub _find_barcode_and_lims_id {
-  my ($self, $schema, $id_run) = @_;
-
-  my $flowcells = $schema->resultset('IseqFlowcell')->search
-    ({'iseq_product_metrics.id_run' => $id_run},
-     {join     => 'iseq_product_metrics',
-      select   => ['flowcell_barcode', 'id_flowcell_lims'],
-      distinct => 1});
-
-  my @flowcell_info;
-  while (my $fc = $flowcells->next) {
-    push @flowcell_info, [$fc->flowcell_barcode, $fc->id_flowcell_lims];
-  }
-
-  my ($flowcell_barcode, $flowcell_id);
-
-  my $num_flowcells = scalar @flowcell_info;
-  if ($num_flowcells == 0) {
-    $self->logconfess('LIMS returned no flowcell barcodes or identifiers ',
-                      "for run $id_run");
-  }
-  elsif ($num_flowcells == 1) {
-    if ($flowcell_barcode) {
-      $self->debug("Found flowcell barcode '$flowcell_barcode' for ",
-                   "run '$id_run'");
-    }
-    if ($flowcell_id) {
-      $self->debug("Found flowcell identifier '$flowcell_id' for ",
-                   "run '$id_run'");
-    }
-
-    ($flowcell_barcode, $flowcell_id) = @{$flowcell_info[0]};
-  }
-  else {
-    $self->logconfess("LIMS returned >1 ($num_flowcells) flowcell barcode ",
-                      "and identifier combinations for run $id_run: ",
-                      pp(\@flowcell_info));
-  }
-
-  return ($flowcell_barcode, $flowcell_id);
 }
 
 no Moose::Role;

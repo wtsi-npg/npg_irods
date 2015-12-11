@@ -8,7 +8,6 @@ use File::Spec::Functions qw(catfile splitpath);
 use Moose;
 use Try::Tiny;
 
-# use WTSI::NPG::iRODS::Metadata qw($FILE_MD5);
 use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS;
 
@@ -38,12 +37,12 @@ sub publish {
 
   my $published;
   if (-f $local_path) {
-    $published = $self->publish_file($local_path, $remote_path,
-                                     $metadata, $timestamp);
+    $published = $self->publish_file($local_path, $remote_path, $metadata,
+                                     $timestamp);
   }
   elsif (-d $local_path) {
-    $published = $self->publish_directory($local_path, $remote_path,
-                                          $metadata, $timestamp);
+    $published = $self->publish_directory($local_path, $remote_path, $metadata,
+                                          $timestamp);
   }
   else {
     $self->logconfess('The local_path argument as neither a file nor a ',
@@ -52,6 +51,37 @@ sub publish {
 
   return $published;
 }
+
+=head2 publish_file
+
+  Arg [1]    : Path to local file, Str.
+  Arg [2]    : Path to destination in iRODS, Str.
+  Arg [3]    : Custom metadata AVUs to add, ArrayRef[HashRef].
+  Arg [4]    : Timestamp to use in metadata, DateTime. Optional, defaults
+               to current time.
+
+  Example    : my $path = $pub->publish_file('./local/file.txt',
+                                             '/zone/path/file.txt',
+                                             [{attribute => 'x',
+                                               value     => 'y'}])
+  Description: Publish a local file to iRODS, create and/or supersede
+               metadata (both default and custom) and update permissions,
+               returning the absolute path of the published data object.
+
+               If the target path does not exist in iRODS the file will
+               be transferred. Default creation metadata will be added and
+               custom metadata will be added.
+
+               If the target path exists in iRODS, the checksum of the
+               local file will be compared with the cached checksum in
+               iRODS. If the checksums match, the local file will not
+               be uploaded. Default modification metadata will be added
+               and custom metadata will be superseded.
+
+               In both cases, permissions will be updated.
+  Returntype : Str
+
+=cut
 
 sub publish_file {
   my ($self, $local_path, $remote_path, $metadata, $timestamp) = @_;
@@ -63,7 +93,6 @@ sub publish_file {
   if (defined $metadata and ref $metadata ne 'ARRAY') {
     $self->logconfess('The metadata argument must be an ArrayRef');
   }
-
   if (not defined $timestamp) {
     $timestamp = DateTime->now;
   }
@@ -89,36 +118,48 @@ sub publish_file {
                                          $remote_path, $timestamp);
     }
 
+    my $num_meta_errors = 0;
     if (defined $metadata) {
       foreach my $avu (@{$metadata}) {
         try {
           $obj->supersede_multivalue_avus($avu->{attribute}, [$avu->{value}],
                                           $avu->{units});
         } catch {
+          $num_meta_errors++;
           $self->error('Failed to supersede with AVU ', pp($avu), ': ', $_);
         };
       }
     }
+
+    if ($num_meta_errors > 0) {
+       $self->logcroak("Failed to update metadata on '$remote_path': ",
+                       "$num_meta_errors errors encountered ",
+                       '(see log for details)');
+     }
   }
 
   return $obj->str;
 }
 
-sub publish_directory {
-  my ($self, $local_path, $remote_path, $metadata, $timestamp) = @_;
+# sub publish_directory {
+#   my ($self, $local_path, $remote_path, $metadata, $timestamp) = @_;
 
-  $self->_check_path_args($local_path, $remote_path);
+#   $self->_check_path_args($local_path, $remote_path);
+#   -d $local_path or
+#     $self->logconfess("The local_path argument '$local_path' ",
+#                       'was not a directory');
 
-  -d $local_path or
-    $self->logconfess("The local_path argument '$local_path' ",
-                      'was not a directory');
+#   if (defined $metadata and ref $metadata ne 'ARRAY') {
+#     $self->logconfess('The metadata argument must be an ArrayRef');
+#   }
+#   if (not defined $timestamp) {
+#     $timestamp = DateTime->now;
+#   }
 
-  my $coll = $self->_ensure_collection($remote_path);
+#   my $coll = $self->_ensure_collection($remote_path);
 
-  # NOT IMPLEMENTED
-
-  return $coll;
-}
+#   return $coll;
+# }
 
 sub _check_path_args {
   my ($self, $local_path, $remote_path) = @_;
@@ -159,7 +200,6 @@ sub _ensure_collection {
   return $collection;
 }
 
-
 sub _publish_file_create {
   my ($self, $local_path, $local_md5, $remote_path, $timestamp) = @_;
 
@@ -177,29 +217,40 @@ sub _publish_file_create {
   $self->irods->add_object($local_path, $remote_path);
 
   my $obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $remote_path);
+  my $num_meta_errors = 0;
+
   my $remote_md5 = $obj->checksum; # Calculated on publication
   my @meta = $self->make_creation_metadata($self->affiliation_uri,
                                            $timestamp,
                                            $self->accountee_uri);
   push @meta, $self->make_md5_metadata($remote_md5);
+  push @meta, $self->make_type_metadata($remote_path);
+
   foreach my $avu (@meta) {
     try {
       $obj->supersede_avus($avu->{attribute}, $avu->{value}, $avu->{units});
     } catch {
+      $num_meta_errors++;
       $self->error('Failed to supersede with AVU ', pp($avu), ': ', $_);
     };
   }
 
   if ($local_md5 eq $remote_md5) {
     $self->info("After publication of '$local_path' ",
-                "(MD5 '$local_md5') to '$remote_path' ",
-                "(MD5 '$remote_md5'): checksums match");
+                "MD5: '$local_md5' to '$remote_path' ",
+                "MD5: '$remote_md5': checksums match");
   }
   else {
     # Maybe tag with metadata to identify a failure?
     $self->logcroak("After publication of '$local_path' ",
-                    "(MD5 '$local_md5') to '$remote_path' ",
-                    "(MD5 '$remote_md5'): checksum mismatch");
+                    "MD5: '$local_md5' to '$remote_path' ",
+                    "MD5: '$remote_md5': checksum mismatch");
+  }
+
+  if ($num_meta_errors > 0) {
+    $self->logcroak("Failed to update metadata on '$remote_path': ",
+                    "$num_meta_errors errors encountered ",
+                    '(see log for details)');
   }
 
   return $obj;
@@ -210,26 +261,31 @@ sub _publish_file_overwrite {
 
   $self->info("Remote path '$remote_path' is a data object");
   my $obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $remote_path);
+  my $num_meta_errors = 0;
 
   my $pre_remote_md5 = $obj->calculate_checksum;
   if ($local_md5 eq $pre_remote_md5) {
     $self->info("Skipping publication of '$local_path' to '$remote_path': ",
                 "(checksum unchanged): local MD5 is '$local_md5', ",
-                "remote MD5 is '$pre_remote_md5'");
+                "remote is MD5: '$pre_remote_md5'");
   }
   else {
     $self->info("Re-publishing '$local_path' to '$remote_path' ",
                 "(checksum changed): local MD5 is '$local_md5', ",
-                "remote MD5 is '$pre_remote_md5'");
+                "remote is MD5: '$pre_remote_md5'");
     $self->irods->replace_object($local_path, $obj->str);
+
     my $post_remote_md5 = $obj->checksum; # Calculated on publication
     my @meta = $self->make_modification_metadata($timestamp);
     push @meta, $self->make_md5_metadata($post_remote_md5);
+    push @meta, $self->make_type_metadata($remote_path);
+
     foreach my $avu (@meta) {
       try {
         $obj->supersede_avus($avu->{attribute}, $avu->{value},
                              $avu->{units});
       } catch {
+        $num_meta_errors++;
         $self->error('Failed to supersede with AVU ', pp($avu), ': ', $_);
       };
     }
@@ -237,23 +293,29 @@ sub _publish_file_overwrite {
     if ($local_md5 eq $post_remote_md5) {
       $self->info("Re-published '$local_path' to '$remote_path': ",
                   "(checksums match): local MD5 was '$local_md5', ",
-                  "remote MD5 was '$pre_remote_md5', ",
-                  "remote MD5 is now '$post_remote_md5'");
+                  "remote was MD5: '$pre_remote_md5', ",
+                  "remote now MD5: '$post_remote_md5'");
     }
     elsif ($pre_remote_md5 eq $post_remote_md5) {
       # Maybe tag with metadata to identify a failure?
       $self->logcroak("Failed to re-publish '$local_path' to '$remote_path': ",
                       "(checksum unchanged): local MD5 was '$local_md5', ",
-                      "remote MD5 was '$pre_remote_md5', ",
-                      "remote MD5 is now '$post_remote_md5'");
+                      "remote was MD5: '$pre_remote_md5', ",
+                      "remote now MD5: '$post_remote_md5'");
     }
     else {
       # Maybe tag with metadata to identify a failure?
       $self->logcroak("Failed to re-publish '$local_path' to '$remote_path': ",
                       "(checksum mismatch): local MD5 was '$local_md5', ",
-                      "remote MD5 was '$pre_remote_md5', ",
-                      "remote MD5 is now '$post_remote_md5'");
+                      "remote was MD5: '$pre_remote_md5', ",
+                      "remote now MD5: '$post_remote_md5'");
     }
+  }
+
+  if ($num_meta_errors > 0) {
+    $self->logcroak("Failed to update metadata on '$remote_path': ",
+                    "$num_meta_errors errors encountered ",
+                    '(see log for details)');
   }
 
   return $obj;
