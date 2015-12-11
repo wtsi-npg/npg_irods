@@ -1,0 +1,20 @@
+Please keep test support files organised in the following way to help
+others maintain them.
+
+Database fixtures go in a subdirectory of 't/fixtures', named after
+the database e.g. for npgqc
+
+./t/fixtures/npgqc/
+
+Test data go in a subdirectory of './t/data', named after the harness
+script e.g. for hts_file_data_object.t
+
+./t/data/hts_file_data_object
+
+Optionally, further data subdirectories may be created under this one,
+named after individual test methods.
+
+All paths must be lower case only, using underscores to replace camel-case
+word boundaries. This way we can infer exactly where the data for a specific
+test are located without having to search for it.
+

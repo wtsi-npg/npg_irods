@@ -4,8 +4,7 @@ use namespace::autoclean;
 use Moose;
 use Try::Tiny;
 
-use WTSI::DNAP::Warehouse::Schema;
-use WTSI::NPG::HTS::HTSFileDataObject;
+use WTSI::NPG::HTS::AlMapFileDataObject;
 use WTSI::NPG::iRODS;
 
 with 'WTSI::DNAP::Utilities::Loggable';
@@ -16,13 +15,22 @@ has 'irods' =>
   (is            => 'ro',
    isa           => 'WTSI::NPG::iRODS',
    required      => 1,
-   documentation => 'An iRODS handle to run searches and perform updates.');
+   documentation => 'An iRODS handle to run searches and perform updates');
 
-has 'schema' =>
+has 'lims_factory' =>
   (is            => 'ro',
-   isa           => 'WTSI::DNAP::Warehouse::Schema',
+   isa           => 'WTSI::NPG::HTS::LIMSFactory',
    required      => 1,
-   documentation => 'A LIMS handle to obtain secondary metadata.');
+   documentation => 'A factory providing st:api::lims objects');
+
+sub BUILD {
+  my ($self) = @_;
+
+  # Use our logger to log activity in attributes.
+  $self->lims_factory->logger($self->logger);
+  $self->irods->logger($self->logger);
+  return;
+}
 
 =head2 update_secondary_metadata
 
@@ -52,14 +60,15 @@ sub update_secondary_metadata {
   my $num_processed = 0;
   my $num_errors    = 0;
   foreach my $file (@{$files}) {
-    $self->debug("Updating metadata on '$file' [$num_processed / $num_files]");
+    $self->info("Updating metadata on '$file' [$num_processed / $num_files]");
 
-    my $obj = WTSI::NPG::HTS::HTSFileDataObject->new($self->irods, $file);
+    my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new($self->irods, $file);
 
     try {
-      $obj->update_secondary_metadata($self->schema, $with_spiked_control);
-      $self->debug("Updated metadata on '$file' ",
-                   "[$num_processed / $num_files]");
+      $obj->update_secondary_metadata($self->lims_factory,
+                                      $with_spiked_control);
+      $self->info("Updated metadata on '$file' ",
+                  "[$num_processed / $num_files]");
     } catch {
       $num_errors++;
       $self->error("Failed to update metadata on '$file' ",
@@ -93,7 +102,8 @@ WTSI::NPG::HTS::MetaUpdater
 
 =head1 DESCRIPTION
 
-Updates secondary metadata on HTS data files in iRODS.
+Updates secondary metadata on HTS data files in iRODS. Any errors
+encountered on each file are trapped and logged.
 
 =head1 AUTHOR
 

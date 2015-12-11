@@ -6,25 +6,25 @@ use MooseX::Types::Moose qw(ArrayRef Str);
 
 use MooseX::Types -declare =>
   [qw(
-       HTSFileFormat
-       HTSMetaAttr
-       ArrayRefOfHTSMetaAttr
+       AlMapFileFormat
+       MetaAttr
+       ArrayRefOfMetaAttr
     )];
 
 our $VERSION = '';
 
-subtype HTSFileFormat,
+subtype AlMapFileFormat,
   as Str,
   where { m{^(cram|bam)$}msx },
   message { "'$_' is not a valid HTS file format" };
 
-subtype HTSMetaAttr,
+subtype MetaAttr,
   as Str,
   where { m{^[\w.-]+$}msx },
   message { "'$_' is not a valid HTS metadata attribute" };
 
-subtype ArrayRefOfHTSMetaAttr,
-  as ArrayRef[HTSMetaAttr];
+subtype ArrayRefOfMetaAttr,
+  as ArrayRef[MetaAttr];
 
 1;
 

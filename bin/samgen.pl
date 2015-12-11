@@ -2,6 +2,9 @@
 
 use strict;
 use warnings;
+use FindBin qw($Bin);
+use lib (-d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib");
+
 use File::Basename;
 use Getopt::Long;
 use Pod::Usage;
@@ -47,30 +50,38 @@ not defined $ref_end    and $ref_end    = $ref_size;
 $read_len ||= 0;
 
 $num_refs > 0 or pod2usage
-  (-msg     => "--num-refs must be > 0, was $num_refs\n", -exitval => 2);
+  (-msg     => "--num-refs must be > 0, was $num_refs\n",
+   -exitval => 2);
 
 $read_len >= 0 or pod2usage
-  (-msg     => "--read-length must be >= 0, was $read_len\n", -exitval => 2);
+  (-msg     => "--read-length must be >= 0, was $read_len\n",
+   -exitval => 2);
 
 $ref_size >= 1 or pod2usage
-  (-msg     => "--ref-size must be >= 1, was $ref_size\n", -exitval => 2);
+  (-msg     => "--ref-size must be >= 1, was $ref_size\n",
+   -exitval => 2);
 
 $ref_start >= 1 or pod2usage
-  (-msg     => "--ref-start must be >= 1, was $ref_start\n", -exitval => 2);
+  (-msg     => "--ref-start must be >= 1, was $ref_start\n",
+   -exitval => 2);
 
 $ref_end >= 1 or pod2usage
-  (-msg     => "--ref-end must be >= 1, was $ref_end\n", -exitval => 2);
+  (-msg     => "--ref-end must be >= 1, was $ref_end\n",
+   -exitval => 2);
 
 $ref_stride >= 1 or pod2usage
-  (-msg     => "--ref-stride must be >= 1, was $ref_stride\n", -exitval => 2);
+  (-msg     => "--ref-stride must be >= 1, was $ref_stride\n",
+   -exitval => 2);
 
 $ref_end <= $ref_size or pod2usage
   (-msg     => "--ref-end must be <= the reference size [$ref_size], " .
-   "was $ref_end\n", -exitval => 2);
+               "was $ref_end\n",
+   -exitval => 2);
 
 $ref_start <= $ref_end or pod2usage
   (-msg     => "--ref-start must be <= the reference range end [$ref_end], " .
-   "was $ref_start\n", -exitval => 2);
+               "was $ref_start\n",
+   -exitval => 2);
 
 my $sam;
 my $ref_path = q{.};
@@ -88,7 +99,6 @@ else {
 
 # Write reference Fasta files and SAM header. Write Fasta to the same
 # directory as the SAM file if a file path is given.
-
 
 my $fa_name = "$ref_path/$ref_name.fa";
 open my $fa, '>', $fa_name or die "Failed to open $fa_name: $!\n";
@@ -129,7 +139,7 @@ foreach my $name (@ref_names) {
                      $qual, $cigar);
     $read_count++;
   }
-  ## critic
+  ## use critic
 }
 
 if ($output) {
@@ -140,7 +150,10 @@ sub write_sam_seq_header {
   my ($fh, $name, $seq) = @_;
 
   my $len = length $seq;
-  print $fh "@SQ\tSN:$name\tLN:$len\n" or die "Failed to print: $!\n";
+  ## no critic (ValuesAndExpressions::RequireInterpolationOfMetachars)
+  print $fh '@SQ' . "\tSN:$name\tLN:$len\n" or
+    die "Failed to print: $!\n";
+  ## use critic
 
   return;
 }

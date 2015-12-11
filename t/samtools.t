@@ -4,4 +4,4 @@ use warnings;
 
 use WTSI::NPG::HTS::SamtoolsTest;
 
-Test::Class->runtests;
+WTSI::NPG::HTS::SamtoolsTest->runtests;
