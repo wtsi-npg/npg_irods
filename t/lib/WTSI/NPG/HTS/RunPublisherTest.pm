@@ -377,7 +377,7 @@ sub list_plex_ancillary_files : Test(16) {
   }
 }
 
-sub publish_plex_alignment_files : Test(4) {
+sub publish_plex_alignment_files : Test(2) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -404,7 +404,7 @@ sub publish_plex_alignment_files : Test(4) {
   }
 }
 
-sub publish_plex_ancillary_files : Test(4) {
+sub publish_plex_ancillary_files : Test(2) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -426,7 +426,7 @@ sub publish_plex_ancillary_files : Test(4) {
          npgqc_schema => $qc_schema);
 
       ok($pub->publish_plex_ancillary_files($position),
-         'Published position $position $file_format ancillary files');
+         "Published position $position $file_format ancillary files");
     }
   }
 }
