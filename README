@@ -1,5 +1,6 @@
 
-data_handling
-=============
+npg_irods
+=========
 
- - Tools for managing HTS (BAM and CRAM) format files in iRODS.
+Tools for managing high-throughput sequencing (HTS) result files in
+iRODS at the Wellcome Trust Sanger Institute.

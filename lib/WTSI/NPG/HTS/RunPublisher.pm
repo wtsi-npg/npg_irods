@@ -298,7 +298,7 @@ sub list_plex_ancillary_files {
 
   Arg [1]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : $pub->publish_alignment_files
+  Example    : my $num_published = $pub->publish_alignment_files
   Description: Publish all the alignment files (lane- or plex-level) to
                iRODS. Return the number of files published without error.
   Returntype : Int
@@ -317,6 +317,17 @@ sub publish_alignment_files {
   return $num_published;
 }
 
+=head2 publish_lane_alignment_files
+
+  Arg [1]    : HTS data has spiked control, Bool. Optional.
+
+  Example    : my $num_published = $pub->publish_lane_alignment_files
+  Description: Publish all the lane-level alignment files to iRODS.
+               Return the number of files published without error.
+  Returntype : Int
+
+=cut
+
 sub publish_lane_alignment_files {
   my ($self, $with_spiked_control) = @_;
 
@@ -334,6 +345,19 @@ sub publish_lane_alignment_files {
 
   return $num_published;
 }
+
+=head2 publish_plex_alignment_files
+
+  Arg [1]    : Lane position, Int.
+  Arg [2]    : HTS data has spiked control, Bool. Optional.
+
+  Example    : my $num_published = $pub->publish_plex_alignment_files(8)
+  Description: Publish all the plex-level alignment files in the
+               specified lane to iRODS.  Return the number of files
+               published without error.
+  Returntype : Int
+
+=cut
 
 sub publish_plex_alignment_files {
   my ($self, $position, $with_spiked_control) = @_;
@@ -358,9 +382,9 @@ sub publish_plex_alignment_files {
 
   Arg [1]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : $pub->publish_ancillary_files
-  Description: Publish all the ancillary files (lane- or plex-level) to
-               iRODS. Return the number of files published without error.
+  Example    : my $num_published = $pub->publish_ancillary_files
+  Description: Publish all the ancillary files to iRODS. Return the
+               number of files published without error.
   Returntype : Int
 
 =cut
@@ -370,12 +394,25 @@ sub publish_ancillary_files {
 
   my $num_published = 0;
   foreach my $position ($self->positions) {
-    $num_published += $self->publish_plex_ancillary_files($position,
-                                                          $with_spiked_control);
+    $num_published += $self->publish_plex_ancillary_files
+      ($position, $with_spiked_control);
   }
 
   return $num_published;
 }
+
+=head2 publish_plex_alignment_files
+
+  Arg [1]    : Lane position, Int.
+  Arg [2]    : HTS data has spiked control, Bool. Optional.
+
+  Example    : my $num_published = $pub->publish_plex_ancillary_files(8)
+  Description: Publish all the plex-level ancillary files in the
+               specified lane to iRODS.  Return the number of files
+               published without error.
+  Returntype : Int
+
+=cut
 
 sub publish_plex_ancillary_files {
   my ($self, $position, $with_spiked_control) = @_;
@@ -500,7 +537,7 @@ WTSI::NPG::HTS::RunPublisher
 
 =head1 DESCRIPTION
 
-Publishes alignment, QC and ancillary file to iRODS, adds metadata and
+Publishes alignment, QC and ancillary files to iRODS, adds metadata and
 sets permissions.
 
 =head1 AUTHOR
