@@ -148,6 +148,7 @@ sub make_ticket_metadata {
   return ($self->make_avu($RT_TICKET, $ticket_number));
 }
 
+## no critic (Subroutines::ProhibitManyArgs)
 sub make_primary_metadata {
   my ($self, $factory, $id_run, $position, $tag_index,
       $with_spiked_control) = @_;
@@ -166,6 +167,7 @@ sub make_primary_metadata {
 
   return @meta;
 }
+## use critic
 
 =head2 make_secondary_metadata
 
