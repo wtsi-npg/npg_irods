@@ -52,13 +52,15 @@ my $samtools = `which samtools`;
 my $have_admin_rights =
   system(qq{$WTSI::NPG::iRODS::IADMIN lu >/dev/null 2>&1}) == 0;
 
+# The public group
+my $public_group = 'public';
 # Prefix for test iRODS data access groups
 my $group_prefix = 'ss_';
 
 # Filter for recognising test groups
 my $group_filter = sub {
   my ($group) = @_;
-  if ($group =~ m{^$group_prefix}) {
+  if ($group eq $public_group or $group =~ m{^$group_prefix}) {
     return 1
   }
   else {
@@ -68,6 +70,7 @@ my $group_filter = sub {
 
 # Groups to be added to the test iRODS
 my @irods_groups = map { $group_prefix . $_ } (10, 100, 198, 619, 2967, 3720);
+push @irods_groups, $public_group;
 # Groups added to the test iRODS in fixture setup
 my @groups_added;
 # Enable group tests
@@ -146,9 +149,13 @@ sub setup_test : Test(setup) {
       if ($group_tests_enabled) {
         # Add some test group permissions
         foreach my $format (qw(bam cram)) {
+          $irods->set_object_permissions($WTSI::NPG::iRODS::READ_PERMISSION,
+                                         $public_group,
+                                         "$irods_tmp_coll/$data_file.$format");
           foreach my $group (map { $group_prefix . $_ } (10, 100)) {
             $irods->set_object_permissions
-              ('read', $group, "$irods_tmp_coll/$data_file.$format");
+              ($WTSI::NPG::iRODS::READ_PERMISSION, $group,
+               "$irods_tmp_coll/$data_file.$format");
           }
         }
       }
@@ -462,12 +469,13 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run7915_lane5_tag0,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag0_expected_meta,
-                            expected_groups_before => ['ss_10',
+                            expected_groups_before => [$public_group,
+                                                       'ss_10',
                                                        'ss_100'],
                             expected_groups_after  => ['ss_619']});
     }
@@ -605,12 +613,13 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run7915_lane5_tag0,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag0_expected_meta,
-                            expected_groups_before => ['ss_10',
+                            expected_groups_before => [$public_group,
+                                                       'ss_10',
                                                        'ss_100'],
                             expected_groups_after  => ['ss_198',
                                                        'ss_619']});
@@ -647,12 +656,13 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run7915_lane5_tag1,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag1_expected_meta,
-                            expected_groups_before => ['ss_10',
+                            expected_groups_before => [$public_group,
+                                                       'ss_10',
                                                        'ss_100'],
                             expected_groups_after  => ['ss_619']});
     }
@@ -688,12 +698,13 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run7915_lane5_tag1,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag1_expected_meta,
-                            expected_groups_before => ['ss_10',
+                            expected_groups_before => [$public_group,
+                                                       'ss_10',
                                                        'ss_100'],
                             expected_groups_after  => ['ss_619']});
     }
@@ -741,12 +752,13 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run15440_lane1_tag0,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag0_expected_meta,
-                            expected_groups_before => ['ss_10',
+                            expected_groups_before => [$public_group,
+                                                       'ss_10',
                                                        'ss_100'],
                             expected_groups_after  => ['ss_2967']});
     }
@@ -799,12 +811,13 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run15440_lane1_tag0,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag0_expected_meta,
-                            expected_groups_before => ['ss_10',
+                            expected_groups_before => [$public_group,
+                                                       'ss_10',
                                                        'ss_100'],
                             expected_groups_after  => ['ss_198',
                                                        'ss_2967']});
@@ -841,12 +854,13 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run15440_lane1_tag81,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag81_expected_meta,
-                            expected_groups_before => ['ss_10',
+                            expected_groups_before => [$public_group,
+                                                       'ss_10',
                                                        'ss_100'],
                             expected_groups_after  => ['ss_2967']});
     }
@@ -882,12 +896,13 @@ sub update_secondary_metadata_tag81_spike_human : Test(8) {
 
     foreach my $format (qw(bam cram)) {
       # 2 * 4 tests
-      test_metadata_update($irods, $irods_tmp_coll, $wh_schema, $ref_filter,
+      test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run15440_lane1_tag81,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag81_expected_meta,
-                            expected_groups_before => ['ss_10',
+                            expected_groups_before => [$public_group,
+                                                       'ss_10',
                                                        'ss_100'],
                             expected_groups_after  => ['ss_2967']});
     }
@@ -895,7 +910,7 @@ sub update_secondary_metadata_tag81_spike_human : Test(8) {
 }
 
 sub test_metadata_update {
-  my ($irods, $working_coll, $schema, $ref_filter, $args) = @_;
+  my ($irods, $working_coll, $ref_filter, $args) = @_;
 
   ref $args eq 'HASH' or croak "The arguments must be a HashRef";
 
@@ -923,18 +938,18 @@ sub test_metadata_update {
             "tag: $tag, spiked: $spiked")
     or diag explain $metadata;
 
-   SKIP: {
-       if (not $group_tests_enabled) {
-         skip 'iRODS test groups were not present', 2;
-       }
-       else {
-         is_deeply(\@groups_before, $exp_grp_before,
-                   'Groups before update') or diag explain \@groups_before;
+ SKIP: {
+    if (not $group_tests_enabled) {
+      skip 'iRODS test groups were not present', 2;
+    }
+    else {
+      is_deeply(\@groups_before, $exp_grp_before,
+                'Groups before update') or diag explain \@groups_before;
 
-         is_deeply(\@groups_after, $exp_grp_after,
-                   'Groups after update') or diag explain \@groups_after;
-       }
-     } # SKIP groups_added
+      is_deeply(\@groups_after, $exp_grp_after,
+                'Groups after update') or diag explain \@groups_after;
+    }
+  } # SKIP groups_added
 }
 
 1;

@@ -1,15 +1,21 @@
 package WTSI::NPG::HTS::AncFileDataObject;
 
 use namespace::autoclean;
+use Data::Dump qw(pp);
+use List::AllUtils qw(any);
 use Moose;
 use Try::Tiny;
 
 our $VERSION = '';
 
+# The contents of BED and JSON formatted file are sensitive and are
+# given restricted access
+our @RESTRICTED_ANCILLARY_FORMATS = qw(bed json);
+
 extends 'WTSI::NPG::iRODS::DataObject';
 
 with 'WTSI::NPG::HTS::RunComponent', 'WTSI::NPG::HTS::FilenameParser',
-  'WTSI::NPG::HTS::Annotator';
+  'WTSI::NPG::HTS::AVUCollator', 'WTSI::NPG::HTS::Annotator';
 
 has 'align_filter' =>
   (isa           => 'Maybe[Str]',
@@ -73,43 +79,56 @@ sub BUILD {
   return;
 }
 
-sub update_secondary_metadata {
+sub is_restricted_access {
   my ($self) = @_;
 
-  # There are no secondary metadata for ancillary files
+  return any { $self->file_format eq $_ } @RESTRICTED_ANCILLARY_FORMATS;
+}
 
-  $self->update_group_permissions;
+sub update_secondary_metadata {
+  my ($self, $factory, $with_spiked_control) = @_;
+
+  my $path = $self->str;
+
+  if ($self->is_restricted_access) {
+    my $lims = $factory->make_lims($self->id_run, $self->position,
+                                   $self->tag_index);
+
+    # These files do not have full secondary metadata. They have
+    # sufficient study metadata to set their permissions, if they are
+    # restricted.
+    my @meta = $self->make_study_metadata($lims, $with_spiked_control);
+    $self->debug("Created metadata AVUs for '$path' : ", pp(\@meta));
+
+    # Collate into lists of values per attribute
+    my %collated_avus = %{$self->collate_avus(@meta)};
+
+    # Sorting by attribute to allow repeated updates to be in
+    # deterministic order
+    my @attributes = sort keys %collated_avus;
+    $self->debug("Superseding AVUs on '$path' in order of attributes: ",
+                 join q[, ], @attributes);
+    foreach my $attr (@attributes) {
+      my $values = $collated_avus{$attr};
+      try {
+        $self->supersede_multivalue_avus($attr, $values, undef);
+      } catch {
+        $self->error("Failed to supersede with attribute '$attr' and values ",
+                     pp($values), q[: ], $_);
+      };
+    }
+
+    $self->debug("Setting study-defined access for restricted file '$path'");
+    $self->update_group_permissions;
+  }
+  else {
+    $self->update_group_permissions;
+    $self->debug("Setting public access for unrestricted file '$path'");
+    $self->set_permissions($WTSI::NPG::iRODS::READ_PERMISSION, 'public');
+  }
 
   return $self;
 }
-
-after 'update_group_permissions' => sub {
-  my ($self, $strict_groups) = @_;
-
-  my $path  = $self->str;
-  my $group = 'public';
-
-  if ($strict_groups and none { $group eq $_ } $self->irods->list_groups) {
-    $self->logconfess('Attempted to remove permissions for non-existent ',
-                      "group '$group' on '$path'");
-  }
-  else {
-    try {
-      $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION, $group);
-    } catch {
-      if ($strict_groups) {
-        $self->logconfess("Failed to remove permissions for group '$group' ",
-                          "on '$path': ", $_);
-      }
-      else {
-        $self->error("Failed to remove permissions for group '$group' ",
-                     "on '$path': ", $_);
-      }
-    };
-  }
-
-  return $self;
-};
 
 __PACKAGE__->meta->make_immutable;
 
