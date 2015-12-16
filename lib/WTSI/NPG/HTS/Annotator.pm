@@ -148,14 +148,35 @@ sub make_ticket_metadata {
   return ($self->make_avu($RT_TICKET, $ticket_number));
 }
 
-=head2 make_hts_metadata
+## no critic (Subroutines::ProhibitManyArgs)
+sub make_primary_metadata {
+  my ($self, $factory, $id_run, $position, $tag_index,
+      $with_spiked_control) = @_;
+
+  defined $factory or
+    $self->logconfess('A defined factory argument is required');
+  defined $id_run or
+    $self->logconfess('A defined id_run argument is required');
+  defined $position or
+    $self->logconfess('A defined position argument is required');
+
+  my $lims = $factory->make_lims($id_run, $position, $tag_index);
+
+  my @meta;
+  push @meta, $self->make_run_metadata($lims, $with_spiked_control);
+
+  return @meta;
+}
+## use critic
+
+=head2 make_secondary_metadata
 
   Arg [1]    : Factory for st:api::lims objects, WTSI::NPG::HTS::LIMSFactory.
   Arg [2]    : Run identifier, Int.
   Arg [3]    : Flowcell lane position, Int.
   Arg [4]    : Tag index, Int. Optional.
 
-  Example    : my @meta = $ann->make_hts_metadata($factory, 3002, 3, 1)
+  Example    : my @meta = $ann->make_secondary_metadata($factory, 3002, 3, 1)
   Description: Return an array of metadata AVUs describing the HTS data
                in the specified run/lane/plex.
   Returntype : Array[HashRef]
@@ -163,7 +184,7 @@ sub make_ticket_metadata {
 =cut
 
 ## no critic (Subroutines::ProhibitManyArgs)
-sub make_hts_metadata {
+sub make_secondary_metadata {
   my ($self, $factory, $id_run, $position, $tag_index,
       $with_spiked_control) = @_;
 

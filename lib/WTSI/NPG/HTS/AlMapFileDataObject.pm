@@ -19,7 +19,8 @@ our $DEFAULT_REFERENCE_REGEX = qr{\/(nfs|lustre)\/\S+\/references}mxs;
 extends 'WTSI::NPG::iRODS::DataObject';
 
 with 'WTSI::NPG::HTS::RunComponent', 'WTSI::NPG::HTS::FilenameParser',
-  'WTSI::NPG::HTS::HeaderParser', 'WTSI::NPG::HTS::Annotator';
+  'WTSI::NPG::HTS::HeaderParser', 'WTSI::NPG::HTS::AVUCollator',
+  'WTSI::NPG::HTS::Annotator';
 
 has 'align_filter' =>
   (isa           => 'Maybe[Str]',
@@ -203,6 +204,12 @@ sub reference {
   return $reference;
 }
 
+sub is_restricted_access {
+  my ($self) = @_;
+
+  return 1;
+}
+
 =head2 update_secondary_metadata
 
   Arg [1]    : Factory making st::api::lims, WTSI::NPG::HTS::LIMSFactory.
@@ -219,35 +226,24 @@ sub reference {
 sub update_secondary_metadata {
   my ($self, $factory, $with_spiked_control, $filter) = @_;
 
-  my @meta = $self->make_hts_metadata($factory,
-                                      $self->id_run,
-                                      $self->position,
-                                      $self->tag_index,
-                                      $with_spiked_control);
-  $self->debug('Created metadata AVUs for ', $self->str, ' : ', pp(\@meta));
+  my $path = $self->str;
+  my @meta = $self->make_secondary_metadata($factory,
+                                            $self->id_run,
+                                            $self->position,
+                                            $self->tag_index,
+                                            $with_spiked_control);
+  $self->debug("Created metadata AVUs for '$path' : ", pp(\@meta));
 
   # Collate into lists of values per attribute
-  my %collated_avus;
-  foreach my $avu (@meta) {
-    my $attr  = $avu->{attribute};
-    my $value = $avu->{value};
-    if (exists $collated_avus{$attr}) {
-      push @{$collated_avus{$attr}}, $value;
-    }
-    else {
-      $collated_avus{$attr} = [$value];
-    }
-  }
-
-  $self->debug('Collated ', scalar @meta, ' AVUs for ', $self->str, ' into ',
-               scalar keys %collated_avus, ' lists');
-  $self->debug('Superseding AVUs on ', $self->str, ' in order of attributes: ',
-               join q[, ], keys %collated_avus);
+  my %collated_avus = %{$self->collate_avus(@meta)};
 
   # Sorting by attribute to allow repeated updates to be in
   # deterministic order
-  foreach my $attr (sort keys %collated_avus) {
-    my $values  = $collated_avus{$attr};
+  my @attributes = sort keys %collated_avus;
+  $self->debug("Superseding AVUs on '$path' in order of attributes: ",
+               join q[, ], @attributes);
+  foreach my $attr (@attributes) {
+    my $values = $collated_avus{$attr};
     try {
       $self->supersede_multivalue_avus($attr, $values, undef);
     } catch {
@@ -260,34 +256,6 @@ sub update_secondary_metadata {
 
   return $self;
 }
-
-after 'update_group_permissions' => sub {
-  my ($self, $strict_groups) = @_;
-
-  my $path  = $self->str;
-  my $group = 'public';
-
-  if ($strict_groups and none { $group eq $_ } $self->irods->list_groups) {
-    $self->logconfess('Attempted to remove permissions for non-existent ',
-                      "group '$group' on '$path'");
-  }
-  else {
-    try {
-      $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION, $group);
-    } catch {
-      if ($strict_groups) {
-        $self->logconfess("Failed to remove permissions for group '$group' ",
-                          "on '$path': ", $_);
-      }
-      else {
-        $self->error("Failed to remove permissions for group '$group' ",
-                     "on '$path': ", $_);
-      }
-    };
-  }
-
-  return $self;
-};
 
 sub _read_header {
   my ($self) = @_;
