@@ -16,6 +16,11 @@ eval { with 'npg_common::roles::software_location' };
 our $VERSION = '';
 our $DEFAULT_SAMTOOLS_EXECUTABLE = 'samtools';
 
+our $TOTAL_PASSED      = __PACKAGE__ . 'total_passed';
+our $TOTAL_FAILED      = __PACKAGE__ . 'total_failed';
+our $SEQ_PAIRED_PASSED = __PACKAGE__ . 'seq_paired_passed';
+our $SEQ_PAIRED_FAILED = __PACKAGE__ . 'seq_paired_failed';
+
 has 'executable' =>
   (is            => 'ro',
    isa           => 'Str',
@@ -36,6 +41,23 @@ has 'path' =>
    is            => 'ro',
    required      => 1,
    documentation => 'The path of a BAM or CRAM file');
+
+
+sub num_reads {
+  my ($self) = @_;
+
+  my $flagstat = $self->_flagstat;
+
+  return ($flagstat->{$TOTAL_PASSED}, $flagstat->{$TOTAL_FAILED});
+}
+
+sub num_seq_paired_reads {
+  my ($self) = @_;
+
+  my $flagstat = $self->_flagstat;
+
+  return ($flagstat->{$SEQ_PAIRED_PASSED}, $flagstat->{$SEQ_PAIRED_FAILED});
+}
 
 =head2 run
 
@@ -152,6 +174,41 @@ sub _build_samtools {
                  $DEFAULT_SAMTOOLS_EXECUTABLE);
     return $DEFAULT_SAMTOOLS_EXECUTABLE;
   }
+}
+
+my $flagstat_cache = {};
+sub _flagstat {
+  my ($self) = @_;
+
+  if (not keys %{$flagstat_cache}) {
+    my $p = $self->path;
+
+    # FIXME -- this filter may need to be moved else where (to caller?)
+    my $view = WTSI::DNAP::Utilities::Runnable->new
+      (arguments  => ['view', q[-u], q[-F], q[0x0900], qq[$p]],
+       executable => $self->executable,
+       logger     => $self->logger);
+    my $flagstat = WTSI::DNAP::Utilities::Runnable->new
+      (arguments  => ['flagstat', q[-]],
+     executable => $self->executable,
+       logger     => $self->logger);
+
+    my @stats = $view->pipe($flagstat)->split_stdout;
+    foreach my $record (@stats) {
+      if ($record =~ m{^(\d+)\s+[+]\s+(\d+)\s+in\s+total}mxs) {
+        $flagstat_cache->{$TOTAL_PASSED} = $1;
+        $flagstat_cache->{$TOTAL_FAILED} = $2;
+        next;
+      }
+      if ($record =~ m{^(\d+)\s+[+]\s+(\d+)\s+paired\sin\s+sequencing}mxs) {
+        $flagstat_cache->{$SEQ_PAIRED_PASSED} = $1;
+        $flagstat_cache->{$SEQ_PAIRED_FAILED} = $2;
+        next;
+      }
+    }
+  }
+
+  return $flagstat_cache;
 }
 
 __PACKAGE__->meta->make_immutable;

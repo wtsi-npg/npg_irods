@@ -204,10 +204,63 @@ sub reference {
   return $reference;
 }
 
+=head2 is_restricted_access
+
+  Arg [1]      None
+
+  Example    : $obj->is_restricted_access
+  Description: Return true if the file contains or may contain sensitive
+               information and is not for unrestricted public access.
+  Returntype : Bool
+
+=cut
+
 sub is_restricted_access {
   my ($self) = @_;
 
   return 1;
+}
+
+=head2 set_primary_metadata
+
+  Arg [1]    : None
+
+  Example    : $obj->set_primary_metadata
+  Description: Set all primary metadata, which are:
+
+               - Run, lane position, and tag index metadata
+               - Alignment state
+               - Reference path
+               - Read pair state
+               - Read count
+
+               These values are derived from the data file itself, not
+               from LIMS. Return $self.
+  Returntype : WTSI::NPG::HTS::AlMapFileDataObject
+
+=cut
+
+sub set_primary_metadata {
+  my ($self) = @_;
+
+  my @avus;
+  push @avus, $self->make_run_metadata($self->id_run, $self->position,
+                                       $self->tag_index);
+  push @avus, $self->make_alignment_metadata($self->is_aligned,
+                                             $self->reference);
+
+  foreach my $avu (@avus) {
+    try {
+      my $attribute = $avu->{attribute};
+      my $value     = $avu->{value};
+      my $units     = $avu->{units};
+      $self->supersede_avus($attribute, $value, $units);
+    } catch {
+      $self->error('Failed to set AVU ', pp($avu), ' on ',  $self->str);
+    };
+  }
+
+  return $self;
 }
 
 =head2 update_secondary_metadata
@@ -219,7 +272,7 @@ sub is_restricted_access {
   Example    : $obj->update_secondary_metadata($schema);
   Description: Update all secondary (LIMS-supplied) metadata and set data
                access permissions. Return $self.
-  Returntype : WTSI::NPG::HTS::HTSFileDataObject
+  Returntype : WTSI::NPG::HTS::AlMapFileDataObject
 
 =cut
 
@@ -227,15 +280,15 @@ sub update_secondary_metadata {
   my ($self, $factory, $with_spiked_control, $filter) = @_;
 
   my $path = $self->str;
-  my @meta = $self->make_secondary_metadata($factory,
+  my @avus = $self->make_secondary_metadata($factory,
                                             $self->id_run,
                                             $self->position,
                                             $self->tag_index,
                                             $with_spiked_control);
-  $self->debug("Created metadata AVUs for '$path' : ", pp(\@meta));
+  $self->debug("Created metadata AVUs for '$path' : ", pp(\@avus));
 
   # Collate into lists of values per attribute
-  my %collated_avus = %{$self->collate_avus(@meta)};
+  my %collated_avus = %{$self->collate_avus(@avus)};
 
   # Sorting by attribute to allow repeated updates to be in
   # deterministic order
@@ -255,6 +308,53 @@ sub update_secondary_metadata {
   $self->update_group_permissions;
 
   return $self;
+}
+
+=head2 total_reads
+
+  Arg [1]    : None
+
+  Example    : my $n = $obj->total_reads;
+  Description: Return the total number of reads in the iRODS data object
+               using samtools.
+  Returntype : Int
+
+=cut
+
+sub total_reads {
+  my ($self) = @_;
+
+  my $total;
+  try {
+    my ($passed_qc, $failed_qc) = $self->_flagstat->num_reads;
+    $total = $passed_qc + $failed_qc;
+  } catch {
+    my $path = $self->str;
+    $self->error("Failed to count the reads in '$path': ", $_);
+  };
+
+  return $total;
+}
+
+sub total_seq_paired_reads {
+  my ($self) = @_;
+
+  my $total;
+  try {
+    my ($passed_qc, $failed_qc) = $self->_flagstat->num_seq_paired_reads;
+    $total = $passed_qc + $failed_qc;
+  } catch {
+    my $path = $self->str;
+    $self->error("Failed to count the seq paired reads in '$path': ", $_);
+  };
+
+  return $total;
+}
+
+sub is_seq_paired_read {
+  my ($self) = @_;
+
+  return $self->total_seq_paired_reads > 0;
 }
 
 sub _read_header {
@@ -279,6 +379,18 @@ sub _read_header {
   };
 
   return \@header;
+}
+
+my $flagstat_cache;
+sub _flagstat {
+  my ($self) = @_;
+
+  my $path = $self->str;
+  if (not $flagstat_cache) {
+    $flagstat_cache = WTSI::NPG::HTS::Samtools->new(path => "irods:$path");
+  }
+
+  return $flagstat_cache;
 }
 
 __PACKAGE__->meta->make_immutable;
