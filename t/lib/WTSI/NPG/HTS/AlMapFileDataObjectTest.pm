@@ -348,7 +348,7 @@ sub reference : Test(4) {
   } # SKIP samtools
 }
 
-sub total_reads : Test(4) {
+sub count_reads : Test(4) {
  SKIP: {
     if (not $samtools) {
       skip 'samtools executable not on the PATH', 4;
@@ -371,14 +371,15 @@ sub total_reads : Test(4) {
              position    => 1);
 
           # 2 * 2 * 1 tests
-          cmp_ok($obj->total_reads, '==', 9010, "$format total reads is correct");
+          cmp_ok($obj->count_reads, '==', 9010,
+                 "$format total reads is correct");
         }
       }
     }
   } # SKIP samtools
 }
 
-sub total_seq_paired_reads : Test(2) {
+sub count_seq_paired_reads : Test(2) {
  SKIP: {
     if (not $samtools) {
       skip 'samtools executable not on the PATH', 2;
@@ -401,7 +402,7 @@ sub total_seq_paired_reads : Test(2) {
            position    => 1);
 
         # 2 * 2 * 1 tests
-        cmp_ok($obj->total_seq_paired_reads, '==', 8,
+        cmp_ok($obj->count_seq_paired_reads, '==', 8,
                "$format total seq paired reads is correct");
       }
     }

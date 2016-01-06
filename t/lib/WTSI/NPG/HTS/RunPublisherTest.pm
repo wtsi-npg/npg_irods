@@ -84,18 +84,16 @@ sub teardown_test : Test(teardown) {
 sub positions : Test(2) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my $id_run = 17550;
-  my $archive_path =
-    "$data_path/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive";
+
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
 
   foreach my $file_format (qw(bam cram)) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
-      (archive_path => $archive_path,
-       file_format  => $file_format,
-       id_run       => $id_run,
+      (file_format  => $file_format,
        irods        => $irods,
        lims_factory => $lims_factory,
-       npgqc_schema => $qc_schema);
+       npgqc_schema => $qc_schema,
+       runfolder_path => $runfolder_path);
 
     is_deeply([$pub->positions], [1 .. 8],
               "Found expected positions ($file_format)")
@@ -103,21 +101,74 @@ sub positions : Test(2) {
   }
 }
 
+sub num_total_reads : Test(36) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+  my $position  = 1;
+  my $tag_count = 16,
+  my $expected_read_counts = [3334934,  # tag 0
+                              71488156, 29817458, 15354480, 33948370,
+                              33430552, 24094786, 32604688, 26749430,
+                              27668866, 30775624, 33480806, 40965140,
+                              32087634, 37315470, 27193418, 31538878,
+                              1757876]; # tag 888
+
+  foreach my $file_format (qw(bam cram)) {
+    my $pub = WTSI::NPG::HTS::RunPublisher->new
+      (file_format    => $file_format,
+       irods          => $irods,
+       lims_factory   => $lims_factory,
+       npgqc_schema   => $qc_schema,
+       runfolder_path => $runfolder_path);
+
+    my @tags = (0 .. $tag_count, 888);
+
+    my $i = 0;
+    foreach my $tag (@tags) {
+      my $expected = $expected_read_counts->[$i];
+      my $count = $pub->num_total_reads($position, $tag);
+
+      cmp_ok($count, '==', $expected,
+             "num_total_reads for position $position tag $tag") or
+               diag explain $count;
+      $i++;
+    }
+  }
+}
+
+sub is_paired_read : Test(2) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+
+  foreach my $file_format (qw(bam cram)) {
+    my $pub = WTSI::NPG::HTS::RunPublisher->new
+      (file_format    => $file_format,
+       irods          => $irods,
+       lims_factory   => $lims_factory,
+       npgqc_schema   => $qc_schema,
+       runfolder_path => $runfolder_path);
+
+    ok($pub->is_paired_read, "$runfolder_path is paired read");
+  }
+}
+
 sub list_plex_alignment_files : Test(16) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $id_run = 17550;
-  my $summary_path =
-    "$data_path/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary";
-  my $archive_path = "$summary_path/archive";
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
 
   foreach my $file_format (qw(bam cram)) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new(archive_path => $archive_path,
-                                                file_format  => $file_format,
-                                                id_run       => $id_run,
-                                                irods        => $irods,
-                                                lims_factory => $lims_factory,
-                                                npgqc_schema => $qc_schema);
+    my $pub = WTSI::NPG::HTS::RunPublisher->new
+      (file_format    => $file_format,
+       irods          => $irods,
+       lims_factory   => $lims_factory,
+       npgqc_schema   => $qc_schema,
+       runfolder_path => $runfolder_path);
 
     my $lane_tag_counts = {1 => 16,
                            2 => 12,
@@ -128,6 +179,7 @@ sub list_plex_alignment_files : Test(16) {
                            7 =>  6,
                            8 =>  6};
     my $lane_yhuman = 6;
+    my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
     foreach my $position (sort keys %{$lane_tag_counts}) {
       # All lanes have tag 888
@@ -162,18 +214,17 @@ sub list_plex_qc_files : Test(16) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  my $id_run = 17550;
-  my $archive_path =
-    "$data_path/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive";
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
 
   foreach my $file_format (qw(bam cram)) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new(archive_path => $archive_path,
-                                                file_format  => $file_format,
-                                                id_run       => $id_run,
-                                                irods        => $irods,
-                                                lims_factory => $lims_factory,
-                                                npgqc_schema => $qc_schema);
+    my $pub = WTSI::NPG::HTS::RunPublisher->new
+      (file_format    => $file_format,
+       irods          => $irods,
+       lims_factory   => $lims_factory,
+       npgqc_schema   => $qc_schema,
+       runfolder_path => $runfolder_path);
 
+    my $id_run = 17550;
     my $lane_tag_counts = {1 => 16,
                            2 => 12,
                            3 =>  8,
@@ -183,6 +234,7 @@ sub list_plex_qc_files : Test(16) {
                            7 =>  6,
                            8 =>  6};
     my $lane_yhuman = 6;
+    my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
     my @qc_metrics = qw(adapter bam_flagstats gc_bias gc_fraction insert_size
                         qX_yield ref_match sequence_error);
@@ -258,18 +310,17 @@ sub list_plex_ancillary_files : Test(16) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  my $id_run = 17550;
-  my $archive_path =
-    "$data_path/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive";
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
 
   foreach my$file_format (qw(bam cram)) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new(archive_path => $archive_path,
-                                                file_format  => $file_format,
-                                                id_run       => $id_run,
-                                                irods        => $irods,
-                                                lims_factory => $lims_factory,
-                                                npgqc_schema => $qc_schema);
+    my $pub = WTSI::NPG::HTS::RunPublisher->new
+      (file_format    => $file_format,
+       irods          => $irods,
+       lims_factory   => $lims_factory,
+       npgqc_schema   => $qc_schema,
+       runfolder_path => $runfolder_path);
 
+    my $id_run = 17550;
     my $lane_tag_counts = {1 => 16,
                            2 => 12,
                            3 =>  8,
@@ -287,6 +338,7 @@ sub list_plex_ancillary_files : Test(16) {
                          7 => 'DNA',
                          8 => 'DNA'};
     my $lane_yhuman = 6;
+    my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
     my @default_parts = qw(.bamcheck
                            .flagstat
@@ -381,22 +433,19 @@ sub publish_plex_alignment_files : Test(2) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  my $id_run = 17550;
-  my $archive_path =
-    "$data_path/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive";
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
 
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
     # Omitting bam
     foreach my $file_format (qw(cram)) {
       my $pub = WTSI::NPG::HTS::RunPublisher->new
-        (archive_path => $archive_path,
-         collection   => "$irods_tmp_coll/publish_alignment_files",
-         file_format  => $file_format,
-         id_run       => $id_run,
-         irods        => $irods,
-         lims_factory => $lims_factory,
-         npgqc_schema => $qc_schema);
+        (collection     => "$irods_tmp_coll/publish_alignment_files",
+         file_format    => $file_format,
+         irods          => $irods,
+         lims_factory   => $lims_factory,
+         npgqc_schema   => $qc_schema,
+         runfolder_path => $runfolder_path);
 
       ok($pub->publish_plex_alignment_files($position),
          "Published position $position $file_format alignment files");
@@ -408,22 +457,19 @@ sub publish_plex_ancillary_files : Test(2) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  my $id_run = 17550;
-  my $archive_path =
-    "$data_path/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive";
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
 
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
     # Omitting bam
     foreach my $file_format (qw(cram)) {
       my $pub = WTSI::NPG::HTS::RunPublisher->new
-        (archive_path => $archive_path,
-         collection   => "$irods_tmp_coll/publish_ancillary_files",
-         file_format  => $file_format,
-         id_run       => $id_run,
-         irods        => $irods,
-         lims_factory => $lims_factory,
-         npgqc_schema => $qc_schema);
+        (collection     => "$irods_tmp_coll/publish_ancillary_files",
+         file_format    => $file_format,
+         irods          => $irods,
+         lims_factory   => $lims_factory,
+         npgqc_schema   => $qc_schema,
+         runfolder_path => $runfolder_path);
 
       ok($pub->publish_plex_ancillary_files($position),
          "Published position $position $file_format ancillary files");
@@ -434,26 +480,27 @@ sub publish_plex_ancillary_files : Test(2) {
 sub collection : Test(4) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my $id_run = 17550;
-  my $archive_path =
-    catfile($data_path, 'sequence/100818_IL32_05174/Latest_Summary/archive');
+
+  my $runfolder_path = "$data_path/sequence/100818_IL32_05174";
 
   foreach my $file_format (qw(bam cram)) {
-    my $pub1 = WTSI::NPG::HTS::RunPublisher->new(archive_path => $archive_path,
-                                                 file_format  => $file_format,
-                                                 id_run       => $id_run,
-                                                 irods        => $irods,
-                                                 lims_factory => $lims_factory,
-                                                 npgqc_schema => $qc_schema);
-    is($pub1->collection, '/seq/17550', 'Default collection');
+    my $pub1 = WTSI::NPG::HTS::RunPublisher->new
+      (file_format    => $file_format,
+       irods          => $irods,
+       lims_factory   => $lims_factory,
+       npgqc_schema   => $qc_schema,
+       runfolder_path => $runfolder_path);
 
-    my $pub2 = WTSI::NPG::HTS::RunPublisher->new(archive_path => $archive_path,
-                                                 collection   => '/a/b/c',
-                                                 file_format  => $file_format,
-                                                 id_run       => $id_run,
-                                                 irods        => $irods,
-                                                 lims_factory => $lims_factory,
-                                                 npgqc_schema => $qc_schema);
+    is($pub1->collection, '/seq/5174', 'Default collection');
+
+    my $pub2 = WTSI::NPG::HTS::RunPublisher->new
+      (collection     => '/a/b/c',
+       file_format    => $file_format,
+       irods          => $irods,
+       lims_factory   => $lims_factory,
+       npgqc_schema   => $qc_schema,
+       runfolder_path => $runfolder_path);
+
     is($pub2->collection, '/a/b/c', 'Custom collection');
   }
 }

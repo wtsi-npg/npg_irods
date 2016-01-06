@@ -310,24 +310,24 @@ sub update_secondary_metadata {
   return $self;
 }
 
-=head2 total_reads
+=head2 count_reads
 
   Arg [1]    : None
 
-  Example    : my $n = $obj->total_reads;
+  Example    : my $n = $obj->count_reads;
   Description: Return the total number of reads in the iRODS data object
                using samtools.
   Returntype : Int
 
 =cut
 
-sub total_reads {
+sub count_reads {
   my ($self) = @_;
 
   my $total;
   try {
-    my ($passed_qc, $failed_qc) = $self->_flagstat->num_reads;
-    $total = $passed_qc + $failed_qc;
+    my ($num_passed_qc, $num_failed_qc) = $self->_flagstat->num_reads;
+    $total = $num_passed_qc + $num_failed_qc;
   } catch {
     my $path = $self->str;
     $self->error("Failed to count the reads in '$path': ", $_);
@@ -336,13 +336,14 @@ sub total_reads {
   return $total;
 }
 
-sub total_seq_paired_reads {
+sub count_seq_paired_reads {
   my ($self) = @_;
 
   my $total;
   try {
-    my ($passed_qc, $failed_qc) = $self->_flagstat->num_seq_paired_reads;
-    $total = $passed_qc + $failed_qc;
+    my ($num_passed_qc, $num_failed_qc) =
+      $self->_flagstat->num_seq_paired_reads;
+    $total = $num_passed_qc + $num_failed_qc;
   } catch {
     my $path = $self->str;
     $self->error("Failed to count the seq paired reads in '$path': ", $_);
@@ -351,10 +352,11 @@ sub total_seq_paired_reads {
   return $total;
 }
 
-sub is_seq_paired_read {
+sub is_paired_read {
   my ($self) = @_;
 
-  return $self->total_seq_paired_reads > 0;
+  # TODO -- Maybe check for this information in the metadata first?
+  return $self->count_seq_paired_reads > 0;
 }
 
 sub _read_header {

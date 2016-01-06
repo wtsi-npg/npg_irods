@@ -2,9 +2,10 @@ package WTSI::NPG::HTS::RunPublisher;
 
 use namespace::autoclean;
 use Data::Dump qw(pp);
+use English qw(-no_match_vars);
 use File::Basename;
-use List::AllUtils qw(any none);
-use File::Spec::Functions;
+use List::AllUtils qw(any first none);
+use File::Spec::Functions qw(catdir catfile splitdir);
 use Moose;
 use Try::Tiny;
 
@@ -16,9 +17,12 @@ use WTSI::NPG::HTS::Types qw(AlMapFileFormat);
 use WTSI::NPG::iRODS;
 
 with 'WTSI::DNAP::Utilities::Loggable',
+     'WTSI::DNAP::Utilities::JSONCodec',
      'WTSI::NPG::HTS::Annotator',
      'npg_tracking::illumina::run::short_info',
      'npg_tracking::illumina::run::folder';
+
+with 'npg_tracking::illumina::run::long_info';
 
 our $VERSION = '';
 
@@ -54,6 +58,7 @@ has 'ancillary_formats' =>
    },
    documentation => 'The ancillary file formats to be published');
 
+# All these need to be fixed (the builders have arguments!)
 has lane_alignment_files =>
   (isa           => 'ArrayRef',
    is            => 'ro',
@@ -125,6 +130,34 @@ sub positions {
   my ($self) = @_;
 
   return $self->lims_factory->positions($self->id_run);
+}
+
+sub num_total_reads {
+  my ($self, $position, $tag_index) = @_;
+
+  defined $position or
+    $self->logconfess('A defined position argument is required');
+  any { $position } $self->positions or
+    $self->logconfess("Invalid position argument '$position'");
+
+  my $qc_file = $self->_plex_qc_stats_file($position, $tag_index);
+  my $flag_stats = $self->_parse_json_file($qc_file);
+
+  return $flag_stats->{num_total_reads};
+}
+
+sub num_seq_paired_reads {
+  my ($self, $position, $tag_index) = @_;
+
+  defined $position or
+    $self->logconfess('A defined position argument is required');
+  any { $position } $self->positions or
+    $self->logconfess("Invalid position argument '$position'");
+
+  my $qc_file = $self->_plex_qc_stats_file($position, $tag_index);
+  my $flag_stats = $self->_parse_json_file($qc_file);
+
+  return $flag_stats->{num_total_reads};
 }
 
 =head2 list_lane_alignment_files
@@ -498,6 +531,19 @@ sub _publish_alignment_files {
   return $num_processed - $num_errors;
 }
 
+sub _build_run_folder {
+  my ($self) = @_;
+
+  if (! ($self->_given_path or $self->has_id_run or $self->has_name)){
+    $self->logconfess('The run folder cannot be determined because ',
+                      'it was not supplied to the constructor, ',
+                      'no path, id_run or run name were available, ',
+                      'from which it could be inferred');
+  }
+
+  return first { $_ ne q[] } reverse splitdir($self->runfolder_path);
+}
+
 sub _build_collection  {
   my ($self) = @_;
 
@@ -521,6 +567,50 @@ sub _list_directory {
   @file_list = sort map { catfile($path, $_) } @file_list;
 
   return @file_list;
+}
+
+sub _plex_qc_stats_file {
+  my ($self, $position, $tag_index) = @_;
+
+  my $id_run = $self->id_run;
+  my $qc_file_pattern = sprintf '%s_%s\#%d.bam_flagstats.json$',
+    $id_run, $position, $tag_index;
+
+  my @files = grep { m{$qc_file_pattern}msx }
+    @{$self->list_plex_qc_files($position)};
+  my $num_files = scalar @files;
+
+  if ($num_files != 1) {
+    $self->logcroak("Found $num_files QC files for id_run: $id_run, ",
+                    "position: $position, tag_index: $tag_index; ",
+                    pp(\@files));
+  }
+
+  return shift @files;
+}
+
+my $json_value_cache;
+sub _parse_json_file {
+  my ($self, $file) = @_;
+
+  if (exists $json_value_cache->{$file}) {
+    $self->debug("Returning cached JSON value for '$file'");
+  }
+  else {
+    local $INPUT_RECORD_SEPARATOR = undef;
+
+    $self->debug("Parsing JSON value from '$file'");
+
+    open my $fh, '<', $file or
+      $self->error("Failed to open '$file' for reading: ", $ERRNO);
+    my $octets = <$fh>;
+    close $fh or $self->warn("Failed to close '$file'");
+
+    my $json = Encode::decode('UTF-8', $octets, Encode::FB_CROAK);
+    $json_value_cache->{$file} = $self->decode($json);
+  }
+
+  return $json_value_cache->{$file};
 }
 
 __PACKAGE__->meta->make_immutable;
