@@ -224,6 +224,20 @@ sub position : Test(20) {
   }
 }
 
+sub is_restricted_access : Test(20) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  foreach my $format (qw(bam cram)) {
+    foreach my $path (@tagged_paths, @untagged_paths) {
+      my $full_path = $path . ".$format";
+      ok(WTSI::NPG::HTS::AlMapFileDataObject->new
+         ($irods, $full_path)->is_restricted_access,
+         "$full_path is_restricted_access is correct");
+    }
+  }
+}
+
 sub tag_index : Test(20) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -406,6 +420,35 @@ sub count_seq_paired_reads : Test(2) {
                "$format total seq paired reads is correct");
       }
     }
+  } # SKIP samtools
+}
+
+sub is_paired_read : Test(2) {
+ SKIP: {
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 2;
+    }
+
+  TODO: {
+     local $TODO = 'Requires pull request in perl-dnap-utilities';
+
+      my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                        strict_baton_version => 0);
+
+      my $data_file = $run15440_lane1_tag0;
+      foreach my $format (qw(bam cram)) {
+        my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+          (collection  => $irods_tmp_coll,
+           data_object => "$data_file.$format",
+           file_format => $format,
+           id_run      => 1,
+           irods       => $irods,
+           position    => 1);
+
+        # 2 * 2 * 1 tests
+        ok($obj->is_paired_read, "$format total is_paired_read is correct");
+      }
+   }
   } # SKIP samtools
 }
 

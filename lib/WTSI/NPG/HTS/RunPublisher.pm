@@ -16,6 +16,9 @@ use WTSI::NPG::HTS::Publisher;
 use WTSI::NPG::HTS::Types qw(AlMapFileFormat);
 use WTSI::NPG::iRODS;
 
+use WTSI::NPG::iRODS::Metadata;
+
+
 with 'WTSI::DNAP::Utilities::Loggable',
      'WTSI::DNAP::Utilities::JSONCodec',
      'WTSI::NPG::HTS::Annotator',
@@ -58,43 +61,6 @@ has 'ancillary_formats' =>
    },
    documentation => 'The ancillary file formats to be published');
 
-# All these need to be fixed (the builders have arguments!)
-has lane_alignment_files =>
-  (isa           => 'ArrayRef',
-   is            => 'ro',
-   required      => 1,
-   lazy          => 1,
-   builder       => 'list_lane_alignment_files',
-   predicate     => 'has_lane_alignment_files',
-   documentation => 'The lane-level alignment files to be published');
-
-has plex_alignment_files =>
-  (isa           => 'ArrayRef',
-   is            => 'ro',
-   required      => 1,
-   lazy          => 1,
-   builder       => 'list_plex_alignment_files',
-   predicate     => 'has_plex_alignment_files',
-   documentation => 'The plex-level alignment files to be published');
-
-has lane_qc_files =>
-  (isa           => 'ArrayRef',
-   is            => 'ro',
-   required      => 1,
-   lazy          => 1,
-   builder       => 'list_lane_qc_files',
-   predicate     => 'has_lane_qc_files',
-   documentation => 'The lane-level QC files to be published');
-
-has plex_qc_files =>
-  (isa           => 'ArrayRef',
-   is            => 'ro',
-   required      => 1,
-   lazy          => 1,
-   builder       => 'list_plex_qc_files',
-   predicate     => 'has_plex_qc_files',
-   documentation => 'The plex-level QC files to be published');
-
 has 'collection' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -116,6 +82,64 @@ sub BUILD {
   return;
 }
 
+my @CACHING_LANE_METHOD_NAMES = qw(lane_alignment_files lane_qc_files);
+my @CACHING_PLEX_METHOD_NAMES = qw(plex_alignment_files
+                                   plex_qc_files
+                                   plex_ancillary_files);
+
+# Cache of lane-level file lists keyed on method name
+my $LANE_FILES_CACHE = {};
+# Cache of plex-level file lists keyed on method name
+my $PLEX_FILES_CACHE = {};
+
+foreach my $method_name (@CACHING_LANE_METHOD_NAMES) {
+
+  __PACKAGE__->meta->add_method
+    ($method_name,
+     sub { return $LANE_FILES_CACHE->{$method_name} });
+
+  around $method_name => sub {
+    my ($orig, $self) = @_;
+
+    my $uncached_method_name = "list_$method_name";
+    if (exists $LANE_FILES_CACHE->{$method_name}) {
+      $self->debug('Using cached result for ', __PACKAGE__,
+                   "::$uncached_method_name");
+    }
+    else {
+      $LANE_FILES_CACHE->{$method_name} = $self->$uncached_method_name;
+    }
+
+    return $self->$orig;
+  };
+}
+
+foreach my $method_name (@CACHING_PLEX_METHOD_NAMES) {
+
+  __PACKAGE__->meta->add_method
+    ($method_name,
+     sub {
+       my ($self, $position) = @_;
+       return $PLEX_FILES_CACHE->{$method_name}->{$position}
+     });
+
+  around $method_name => sub {
+    my ($orig, $self, $position) = @_;
+
+    my $uncached_method_name = "list_$method_name";
+    if (exists $PLEX_FILES_CACHE->{$method_name}->{$position}) {
+      $self->debug('Using cached result for ', __PACKAGE__,
+                   "::$uncached_method_name($position)");
+    }
+    else {
+      $PLEX_FILES_CACHE->{$method_name}->{$position} =
+        $self->$uncached_method_name($position);
+    }
+
+    return $self->$orig($position);
+  };
+}
+
 =head2 positions
 
   Arg [1]    : None
@@ -133,20 +157,6 @@ sub positions {
 }
 
 sub num_total_reads {
-  my ($self, $position, $tag_index) = @_;
-
-  defined $position or
-    $self->logconfess('A defined position argument is required');
-  any { $position } $self->positions or
-    $self->logconfess("Invalid position argument '$position'");
-
-  my $qc_file = $self->_plex_qc_stats_file($position, $tag_index);
-  my $flag_stats = $self->_parse_json_file($qc_file);
-
-  return $flag_stats->{num_total_reads};
-}
-
-sub num_seq_paired_reads {
   my ($self, $position, $tag_index) = @_;
 
   defined $position or
@@ -365,7 +375,7 @@ sub publish_lane_alignment_files {
   my ($self, $with_spiked_control) = @_;
 
   my $id_run        = $self->id_run;
-  my @files         = @{$self->list_lane_alignment_files};
+  my @files         = @{$self->lane_alignment_files};
   my $num_files     = scalar @files;
   $self->info("Run '$id_run' has $num_files lane-level alignment files");
 
@@ -396,7 +406,7 @@ sub publish_plex_alignment_files {
   my ($self, $position, $with_spiked_control) = @_;
 
   my $id_run = $self->id_run;
-  my @files  = @{$self->list_plex_alignment_files($position)};
+  my @files  = @{$self->plex_alignment_files($position)};
   my $num_files = scalar @files;
   $self->info("Run '$id_run' position '$position' ",
               "has $num_files plex-level alignment files");
@@ -451,7 +461,7 @@ sub publish_plex_ancillary_files {
   my ($self, $position, $with_spiked_control) = @_;
 
   my $id_run = $self->id_run;
-  my @files  = @{$self->list_plex_ancillary_files($position)};
+  my @files  = @{$self->plex_ancillary_files($position)};
   my $num_files = scalar @files;
   $self->info("Run '$id_run' position '$position' ",
               "has $num_files plex-level ancillary files");
@@ -515,6 +525,10 @@ sub _publish_alignment_files {
          data_object => $file,
          irods       => $self->irods);
       $dest = $publisher->publish($file, $obj->str);
+      $obj->set_primary_metadata;
+
+      $obj->add_avu($IS_PAIRED_READ, $self->is_paired_read);
+
       $obj->update_secondary_metadata($self->lims_factory,
                                       $with_spiked_control);
     } catch {
@@ -589,11 +603,13 @@ sub _plex_qc_stats_file {
   return shift @files;
 }
 
-my $json_value_cache;
+# Cache of JSON strings read from files
+my $JSON_VALUE_CACHE;
+
 sub _parse_json_file {
   my ($self, $file) = @_;
 
-  if (exists $json_value_cache->{$file}) {
+  if (exists $JSON_VALUE_CACHE->{$file}) {
     $self->debug("Returning cached JSON value for '$file'");
   }
   else {
@@ -607,10 +623,10 @@ sub _parse_json_file {
     close $fh or $self->warn("Failed to close '$file'");
 
     my $json = Encode::decode('UTF-8', $octets, Encode::FB_CROAK);
-    $json_value_cache->{$file} = $self->decode($json);
+    $JSON_VALUE_CACHE->{$file} = $self->decode($json);
   }
 
-  return $json_value_cache->{$file};
+  return $JSON_VALUE_CACHE->{$file};
 }
 
 __PACKAGE__->meta->make_immutable;

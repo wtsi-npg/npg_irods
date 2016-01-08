@@ -231,7 +231,6 @@ sub is_restricted_access {
                - Run, lane position, and tag index metadata
                - Alignment state
                - Reference path
-               - Read pair state
                - Read count
 
                These values are derived from the data file itself, not
@@ -336,6 +335,17 @@ sub count_reads {
   return $total;
 }
 
+=head2 count_seq_paired_reads
+
+  Arg [1]    : None
+
+  Example    : my $n = $obj->count_seq_paired_reads;
+  Description: Return the total number of paired reads in the iRODS data
+               object using samtools.
+  Returntype : Int
+
+=cut
+
 sub count_seq_paired_reads {
   my ($self) = @_;
 
@@ -351,6 +361,17 @@ sub count_seq_paired_reads {
 
   return $total;
 }
+
+=head2 is_paired_read
+
+  Arg [1]    : None
+
+  Example    : $obj->is_paired_red
+  Description: Return true if the iRODS data object contains any paired
+               reads using samtools.
+  Returntype : Bool
+
+=cut
 
 sub is_paired_read {
   my ($self) = @_;
@@ -383,16 +404,17 @@ sub _read_header {
   return \@header;
 }
 
-my $flagstat_cache;
+my $FLAGSTAT_CACHE;
+
 sub _flagstat {
   my ($self) = @_;
 
   my $path = $self->str;
-  if (not $flagstat_cache) {
-    $flagstat_cache = WTSI::NPG::HTS::Samtools->new(path => "irods:$path");
+  if (not $FLAGSTAT_CACHE) {
+    $FLAGSTAT_CACHE = WTSI::NPG::HTS::Samtools->new(path => "irods:$path");
   }
 
-  return $flagstat_cache;
+  return $FLAGSTAT_CACHE;
 }
 
 __PACKAGE__->meta->make_immutable;

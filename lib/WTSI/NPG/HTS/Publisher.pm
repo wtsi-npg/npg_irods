@@ -4,10 +4,11 @@ use namespace::autoclean;
 use Data::Dump qw(pp);
 use DateTime;
 use English qw(-no_match_vars);
-use File::Spec::Functions qw(catfile splitpath);
+use File::Spec::Functions qw(catdir catfile splitdir splitpath);
 use Moose;
 use Try::Tiny;
 
+use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS;
 
@@ -141,25 +142,53 @@ sub publish_file {
   return $obj->str;
 }
 
-# sub publish_directory {
-#   my ($self, $local_path, $remote_path, $metadata, $timestamp) = @_;
+sub publish_directory {
+  my ($self, $local_path, $remote_path, $metadata, $timestamp) = @_;
 
-#   $self->_check_path_args($local_path, $remote_path);
-#   -d $local_path or
-#     $self->logconfess("The local_path argument '$local_path' ",
-#                       'was not a directory');
+  $self->_check_path_args($local_path, $remote_path);
+  -d $local_path or
+    $self->logconfess("The local_path argument '$local_path' ",
+                      'was not a directory');
 
-#   if (defined $metadata and ref $metadata ne 'ARRAY') {
-#     $self->logconfess('The metadata argument must be an ArrayRef');
-#   }
-#   if (not defined $timestamp) {
-#     $timestamp = DateTime->now;
-#   }
+  if (defined $metadata and ref $metadata ne 'ARRAY') {
+    $self->logconfess('The metadata argument must be an ArrayRef');
+  }
+  if (not defined $timestamp) {
+    $timestamp = DateTime->now;
+  }
 
-#   my $coll = $self->_ensure_collection($remote_path);
+  $remote_path = $self->_ensure_collection_exists($remote_path);
+  my $coll_path = $self->irods->put_collection($local_path, $remote_path);
+  my $coll = WTSI::NPG::iRODS::Collection->new($self->irods, $coll_path);
 
-#   return $coll;
-# }
+  my @meta = $self->make_creation_metadata($self->affiliation_uri,
+                                           $timestamp,
+                                           $self->accountee_uri);
+  if (defined $metadata) {
+    push @meta, @{$metadata};
+  }
+
+  $self->debug("Adding metadata to '$coll_path': ", pp(\@meta));
+
+  my $num_meta_errors = 0;
+  foreach my $avu (@meta) {
+    try {
+      $coll->supersede_multivalue_avus($avu->{attribute}, [$avu->{value}],
+                                       $avu->{units});
+    } catch {
+      $num_meta_errors++;
+      $self->error('Failed to supersede with AVU ', pp($avu), ': ', $_);
+    };
+  }
+
+  if ($num_meta_errors > 0) {
+    $self->logcroak("Failed to update metadata on '$remote_path': ",
+                    "$num_meta_errors errors encountered ",
+                    '(see log for details)');
+  }
+
+  return $coll->str;
+}
 
 sub _check_path_args {
   my ($self, $local_path, $remote_path) = @_;
@@ -169,9 +198,9 @@ sub _check_path_args {
   defined $remote_path or
     $self->logconfess('A defined remote_path argument is required');
 
-  $local_path eq q{} and
+  $local_path eq q[] and
     $self->logconfess('A non-empty local_path argument is required');
-  $remote_path eq q{} and
+  $remote_path eq q[] and
     $self->logconfess('A non-empty remote_path argument is required');
 
   $remote_path =~ m{^/}msx or
@@ -181,7 +210,7 @@ sub _check_path_args {
   return;
 }
 
-sub _ensure_collection {
+sub _ensure_collection_exists {
   my ($self, $remote_path) = @_;
 
   my $collection;
@@ -211,7 +240,7 @@ sub _publish_file_create {
     $self->info("Renaming '$file' to '$obj_name' on publication");
   }
 
-  $self->_ensure_collection($coll);
+  $self->_ensure_collection_exists($coll);
   $self->info("Publishing new object '$remote_path'");
 
   $self->irods->add_object($local_path, $remote_path);

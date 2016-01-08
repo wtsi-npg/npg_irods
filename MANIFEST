@@ -4,6 +4,7 @@ bin/samgen.pl
 Build.PL
 Changes
 etc/log4perl_tests.conf
+lib/WTSI/DNAP/Utilities/Runnable.pm
 lib/WTSI/NPG/HTS/AlMapFileDataObject.pm
 lib/WTSI/NPG/HTS/AncFileDataObject.pm
 lib/WTSI/NPG/HTS/Annotator.pm
@@ -18,7 +19,6 @@ lib/WTSI/NPG/HTS/RunPublisher.pm
 lib/WTSI/NPG/HTS/Samtools.pm
 lib/WTSI/NPG/HTS/Types.pm
 LICENSE
-make_fixtures.pl
 MANIFEST			This list of files
 README
 scripts/irods_paths.sh
@@ -81,6 +81,11 @@ t/data/anc_file_data_object/17550_3#1_quality_cycle_surv.txt
 t/data/anc_file_data_object/17550_3#1_quality_error.txt
 t/data/meta_updater/7915_5#1.sam
 t/data/meta_updater/test_ref.fa
+t/data/meta_updater/test_ref.fa.fai
+t/data/publisher/publish/a.txt
+t/data/publisher/publish/b.txt
+t/data/publisher/publish_directory/a.txt
+t/data/publisher/publish_directory/b.txt
 t/data/publisher/publish_file/a.txt
 t/data/publisher/publish_file/b.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/17550_1.all.seqchksum
@@ -6106,4 +6111,3 @@ t/publisher.t
 t/README
 t/run_publisher.t
 t/samtools.t
-
