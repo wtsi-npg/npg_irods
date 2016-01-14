@@ -79,6 +79,17 @@ sub BUILD {
   return;
 }
 
+=head2 is_restricted_access
+
+  Arg [1]      None
+
+  Example    : $obj->is_restricted_access
+  Description: Return true if the file contains or may contain sensitive
+               information and is not for unrestricted public access.
+  Returntype : Bool
+
+=cut
+
 sub is_restricted_access {
   my ($self) = @_;
 
@@ -87,6 +98,9 @@ sub is_restricted_access {
 
 sub update_secondary_metadata {
   my ($self, $factory, $with_spiked_control) = @_;
+
+  defined $factory or
+    $self->logconfess('A defined factory argument is required');
 
   my $path = $self->str;
 

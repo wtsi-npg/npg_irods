@@ -47,37 +47,68 @@ sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::Publisher');
 }
 
-sub publish_file : Test(33) {
+sub publish : Test(4) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $irods);
+
+  my $local_file_path = "$data_path/publish/a.txt";
+  my $remote_file_path = "$irods_tmp_coll/a.txt";
+  is($publisher->publish($local_file_path, $remote_file_path),
+     $remote_file_path, 'publish, file');
+  ok($irods->is_object($remote_file_path), 'publish, file -> data object');
+
+  my $local_dir_path = "$data_path/publish";
+  my $remote_dir_path = $irods_tmp_coll;
+  is($publisher->publish($local_dir_path, $remote_dir_path),
+     "$remote_dir_path/publish", 'publish, directory');
+  ok($irods->is_collection("$remote_dir_path/"),
+     'publish, directory -> collection');
+}
+
+sub publish_file : Test(36) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   # publish_file with new full path, no metadata, no timestamp
-  pub_new_full_path_no_meta_no_stamp($irods, $data_path, $irods_tmp_coll);
+  pf_new_full_path_no_meta_no_stamp($irods, $data_path, $irods_tmp_coll);
   # publish_file with new full path, some metadata, no timestamp
-  pub_new_full_path_meta_no_stamp($irods, $data_path, $irods_tmp_coll);
+  pf_new_full_path_meta_no_stamp($irods, $data_path, $irods_tmp_coll);
   # publish_file with new full path, no metadata, with timestamp
-  pub_new_full_path_no_meta_stamp($irods, $data_path, $irods_tmp_coll);
+  pf_new_full_path_no_meta_stamp($irods, $data_path, $irods_tmp_coll);
 
   # publish_file with existing full path, no metadata, no timestamp,
   # matching MD5
-  pub_exist_full_path_no_meta_no_stamp_match($irods, $data_path,
-                                             $irods_tmp_coll);
+  pf_exist_full_path_no_meta_no_stamp_match($irods, $data_path,
+                                            $irods_tmp_coll);
   # publish_file with existing full path, some metadata, no timestamp,
   # matching MD5
-  pub_exist_full_path_meta_no_stamp_match($irods, $data_path,
-                                          $irods_tmp_coll);
+  pf_exist_full_path_meta_no_stamp_match($irods, $data_path,
+                                         $irods_tmp_coll);
 
   # publish_file with existing full path, no metadata, no timestamp,
   # non-matching MD5
-  pub_exist_full_path_no_meta_no_stamp_no_match($irods, $data_path,
-                                                $irods_tmp_coll);
+  pf_exist_full_path_no_meta_no_stamp_no_match($irods, $data_path,
+                                               $irods_tmp_coll);
   # publish_file with existing full path, some metadata, no timestamp,
   # non-matching MD5
-  pub_exist_full_path_meta_no_stamp_no_match($irods, $data_path,
-                                             $irods_tmp_coll);
+  pf_exist_full_path_meta_no_stamp_no_match($irods, $data_path,
+                                            $irods_tmp_coll);
 }
 
-sub pub_new_full_path_no_meta_no_stamp {
+sub publish_directory : Test(11) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  # publish_directory with new full path, no metadata, no timestamp
+  pd_new_full_path_no_meta_no_stamp($irods, $data_path, $irods_tmp_coll);
+
+  # publish_file with new full path, some metadata, no timestamp
+  pd_new_full_path_meta_no_stamp($irods, $data_path, $irods_tmp_coll);
+}
+
+sub pf_new_full_path_no_meta_no_stamp {
   my ($irods, $data_path, $coll_path) = @_;
 
   my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $irods);
@@ -85,7 +116,7 @@ sub pub_new_full_path_no_meta_no_stamp {
   # publish_file with new full path, no metadata, no timestamp
   my $timestamp_regex = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}';
   my $local_path_a = "$data_path/publish_file/a.txt";
-  my $remote_path = "$coll_path/pub_new_full_path_no_meta_no_stamp.txt";
+  my $remote_path = "$coll_path/pf_new_full_path_no_meta_no_stamp.txt";
   is($publisher->publish_file($local_path_a, $remote_path),
      $remote_path,
      'publish_file, full path, no additional metadata, default timestamp');
@@ -104,14 +135,14 @@ sub pub_new_full_path_no_meta_no_stamp {
      'New object MD5') or diag explain $obj->metadata;
 }
 
-sub pub_new_full_path_meta_no_stamp {
+sub pf_new_full_path_meta_no_stamp {
   my ($irods, $data_path, $coll_path) = @_;
 
   my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $irods);
 
   # publish_file with new full path, some metadata, no timestamp
   my $local_path_a = "$data_path/publish_file/a.txt";
-  my $remote_path = "$coll_path/pub_new_full_path_meta_no_stamp.txt";
+  my $remote_path = "$coll_path/pf_new_full_path_meta_no_stamp.txt";
   my $additional_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
   my $additional_avu2 = $irods->make_avu($ANALYSIS_UUID,
                                          'abcdefg-01234567890-wxyz');
@@ -123,6 +154,15 @@ sub pub_new_full_path_meta_no_stamp {
 
   my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $remote_path);
 
+ is($obj->get_avu($DCTERMS_CREATOR)->{value}, 'http://www.sanger.ac.uk',
+     'New object creator URI') or diag explain $obj->metadata;
+
+  ok(URI->new($obj->get_avu($DCTERMS_PUBLISHER)->{value}), 'Publisher URI') or
+    diag explain $obj->metadata;
+
+  is($obj->get_avu($FILE_MD5)->{value}, 'a9fdbcfbce13a3d8dee559f58122a31c',
+     'New object MD5') or diag explain $obj->metadata;
+
   is($obj->get_avu($RT_TICKET)->{value}, $additional_avu1->{value},
      'New additional AVU 1') or diag explain $obj->metadata;
 
@@ -130,7 +170,7 @@ sub pub_new_full_path_meta_no_stamp {
      'New additional AVU 2') or diag explain $obj->metadata;
 }
 
-sub pub_new_full_path_no_meta_stamp {
+sub pf_new_full_path_no_meta_stamp {
   my ($irods, $data_path, $coll_path) = @_;
 
   my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $irods);
@@ -138,7 +178,7 @@ sub pub_new_full_path_no_meta_stamp {
   # publish_file with new full path, no metadata, no timestamp
   my $timestamp = DateTime->now;
   my $local_path_a = "$data_path/publish_file/a.txt";
-  my $remote_path = "$coll_path/pub_new_full_path_no_meta_stamp.txt";
+  my $remote_path = "$coll_path/pf_new_full_path_no_meta_stamp.txt";
 
   is($publisher->publish_file($local_path_a, $remote_path, [], $timestamp),
      $remote_path,
@@ -158,7 +198,7 @@ sub pub_new_full_path_no_meta_stamp {
      'New object MD5') or diag explain $obj->metadata;
 }
 
-sub pub_exist_full_path_no_meta_no_stamp_match {
+sub pf_exist_full_path_no_meta_no_stamp_match {
   my ($irods, $data_path, $coll_path) = @_;
 
   my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $irods);
@@ -166,7 +206,7 @@ sub pub_exist_full_path_no_meta_no_stamp_match {
   # publish_file with existing full path, no metadata, no timestamp,
   # matching MD5
   my $local_path_a = "$data_path/publish_file/a.txt";
-  my $remote_path = "$coll_path/pub_exist_full_path_no_meta_no_stamp_match.txt";
+  my $remote_path = "$coll_path/pf_exist_full_path_no_meta_no_stamp_match.txt";
   $publisher->publish_file($local_path_a, $remote_path) or fail;
 
   my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $remote_path);
@@ -181,7 +221,7 @@ sub pub_exist_full_path_no_meta_no_stamp_match {
     diag explain $obj->metadata;
 }
 
-sub pub_exist_full_path_meta_no_stamp_match {
+sub pf_exist_full_path_meta_no_stamp_match {
   my ($irods, $data_path, $coll_path) = @_;
 
   my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $irods);
@@ -189,7 +229,7 @@ sub pub_exist_full_path_meta_no_stamp_match {
   # publish_file with existing full path, some metadata, no timestamp,
   # matching MD5
   my $local_path_a = "$data_path/publish_file/a.txt";
-  my $remote_path = "$coll_path/pub_exist_full_path_meta_no_stamp_match.txt";
+  my $remote_path = "$coll_path/pf_exist_full_path_meta_no_stamp_match.txt";
   my $additional_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
   my $additional_avu2 = $irods->make_avu($ANALYSIS_UUID,
                                          'abcdefg-01234567890-wxyz');
@@ -216,7 +256,7 @@ sub pub_exist_full_path_meta_no_stamp_match {
      'New additional AVU 2') or diag explain $obj->metadata;
 }
 
-sub pub_exist_full_path_no_meta_no_stamp_no_match {
+sub pf_exist_full_path_no_meta_no_stamp_no_match {
   my ($irods, $data_path, $coll_path) = @_;
 
   my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $irods);
@@ -226,7 +266,7 @@ sub pub_exist_full_path_no_meta_no_stamp_no_match {
   my $timestamp_regex = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}';
   my $local_path_a = "$data_path/publish_file/a.txt";
   my $remote_path =
-    "$irods_tmp_coll/pub_exist_full_path_no_meta_no_stamp_no_match";
+    "$irods_tmp_coll/pf_exist_full_path_no_meta_no_stamp_no_match";
   $publisher->publish_file($local_path_a, $remote_path) or fail;
   my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $remote_path);
   ok(!$obj->get_avu($DCTERMS_MODIFIED), 'No modification timestamp before');
@@ -240,7 +280,8 @@ sub pub_exist_full_path_no_meta_no_stamp_no_match {
   like($obj->get_avu($DCTERMS_MODIFIED)->{value},qr{^$timestamp_regex$},
        'Modification AVU present after') or diag explain $obj->metadata;
 }
-sub pub_exist_full_path_meta_no_stamp_no_match {
+
+sub pf_exist_full_path_meta_no_stamp_no_match {
   my ($irods, $data_path, $coll_path) = @_;
 
   my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $irods);
@@ -250,7 +291,7 @@ sub pub_exist_full_path_meta_no_stamp_no_match {
   my $timestamp_regex = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}';
   my $local_path_a = "$data_path/publish_file/a.txt";
   my $remote_path =
-    "$irods_tmp_coll/pub_exist_full_path_meta_no_stamp_no_match.txt";
+    "$irods_tmp_coll/pf_exist_full_path_meta_no_stamp_no_match.txt";
   my $additional_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
   my $additional_avu2 = $irods->make_avu($ANALYSIS_UUID,
                                          'abcdefg-01234567890-wxyz');
@@ -275,6 +316,71 @@ sub pub_exist_full_path_meta_no_stamp_no_match {
 
   is($obj->get_avu($ANALYSIS_UUID)->{value}, $additional_avu2->{value},
      'New additional AVU 2') or diag explain $obj->metadata;
+}
+
+sub pd_new_full_path_no_meta_no_stamp {
+  my ($irods, $data_path, $coll_path) = @_;
+
+  my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $irods);
+
+  # publish_directory with new full path, no metadata, no timestamp
+  my $timestamp_regex = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}';
+  my $local_path = "$data_path/publish_directory";
+
+  my $remote_path = "$coll_path/pd_new_full_path_no_meta_no_stamp";
+  my $sub_coll = "$remote_path/publish_directory";
+  is($publisher->publish_directory($local_path, $remote_path),
+     $sub_coll,
+     'publish_directory, full path, no additional metadata, default timestamp');
+
+  my $coll = WTSI::NPG::iRODS::Collection->new($irods, $sub_coll);
+  like($coll->get_avu($DCTERMS_CREATED)->{value}, qr{^$timestamp_regex$},
+       'New object default creation timestamp') or diag explain $coll->metadata;
+
+  is($coll->get_avu($DCTERMS_CREATOR)->{value}, 'http://www.sanger.ac.uk',
+     'New object creator URI') or diag explain $coll->metadata;
+
+  ok(URI->new($coll->get_avu($DCTERMS_PUBLISHER)->{value}), 'Publisher URI') or
+    diag explain $coll->metadata;
+}
+
+sub pd_new_full_path_meta_no_stamp {
+  my ($irods, $data_path, $coll_path) = @_;
+
+  my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $irods);
+
+  # publish_directory with new full path, no metadata, no timestamp
+  my $timestamp_regex = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}';
+  my $local_path = "$data_path/publish_directory";
+  my $additional_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
+  my $additional_avu2 = $irods->make_avu($ANALYSIS_UUID,
+                                         'abcdefg-01234567890-wxyz');
+
+  my $remote_path = "$coll_path/pd_new_full_path_meta_no_stamp";
+  my $sub_coll = "$remote_path/publish_directory";
+  is($publisher->publish_directory($local_path, $remote_path,
+                                   [$additional_avu1, $additional_avu2]),
+     $sub_coll,
+     'publish_directory, full path, no additional metadata, default timestamp');
+
+  my $coll = WTSI::NPG::iRODS::Collection->new($irods, $sub_coll);
+  like($coll->get_avu($DCTERMS_CREATED)->{value}, qr{^$timestamp_regex$},
+       'New object default creation timestamp') or diag explain $coll->metadata;
+
+  like($coll->get_avu($DCTERMS_CREATED)->{value}, qr{^$timestamp_regex$},
+       'New object default creation timestamp') or diag explain $coll->metadata;
+
+  is($coll->get_avu($DCTERMS_CREATOR)->{value}, 'http://www.sanger.ac.uk',
+     'New object creator URI') or diag explain $coll->metadata;
+
+  ok(URI->new($coll->get_avu($DCTERMS_PUBLISHER)->{value}), 'Publisher URI') or
+    diag explain $coll->metadata;
+
+  is($coll->get_avu($RT_TICKET)->{value}, $additional_avu1->{value},
+     'New additional AVU 1') or diag explain $coll->metadata;
+
+  is($coll->get_avu($ANALYSIS_UUID)->{value}, $additional_avu2->{value},
+     'New additional AVU 2') or diag explain $coll->metadata;
 }
 
 1;

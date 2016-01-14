@@ -204,10 +204,62 @@ sub reference {
   return $reference;
 }
 
+=head2 is_restricted_access
+
+  Arg [1]      None
+
+  Example    : $obj->is_restricted_access
+  Description: Return true if the file contains or may contain sensitive
+               information and is not for unrestricted public access.
+  Returntype : Bool
+
+=cut
+
 sub is_restricted_access {
   my ($self) = @_;
 
   return 1;
+}
+
+=head2 set_primary_metadata
+
+  Arg [1]    : None
+
+  Example    : $obj->set_primary_metadata
+  Description: Set all primary metadata, which are:
+
+               - Run, lane position, and tag index metadata
+               - Alignment state
+               - Reference path
+               - Read count
+
+               These values are derived from the data file itself, not
+               from LIMS. Return $self.
+  Returntype : WTSI::NPG::HTS::AlMapFileDataObject
+
+=cut
+
+sub set_primary_metadata {
+  my ($self) = @_;
+
+  my @avus;
+  push @avus, $self->make_run_metadata($self->id_run, $self->position,
+                                       $self->tag_index);
+  push @avus, $self->make_alignment_metadata($self->is_aligned,
+                                             $self->reference);
+
+  foreach my $avu (@avus) {
+    try {
+      my $attribute = $avu->{attribute};
+      my $value     = $avu->{value};
+      my $units     = $avu->{units};
+      $self->supersede_avus($attribute, $value, $units);
+    } catch {
+      $self->error('Failed to set AVU ', pp($avu), ' on ',  $self->str);
+    };
+  }
+
+  return $self;
 }
 
 =head2 update_secondary_metadata
@@ -219,23 +271,26 @@ sub is_restricted_access {
   Example    : $obj->update_secondary_metadata($schema);
   Description: Update all secondary (LIMS-supplied) metadata and set data
                access permissions. Return $self.
-  Returntype : WTSI::NPG::HTS::HTSFileDataObject
+  Returntype : WTSI::NPG::HTS::AlMapFileDataObject
 
 =cut
 
 sub update_secondary_metadata {
   my ($self, $factory, $with_spiked_control, $filter) = @_;
 
+  defined $factory or
+    $self->logconfess('A defined factory argument is required');
+
   my $path = $self->str;
-  my @meta = $self->make_secondary_metadata($factory,
+  my @avus = $self->make_secondary_metadata($factory,
                                             $self->id_run,
                                             $self->position,
                                             $self->tag_index,
                                             $with_spiked_control);
-  $self->debug("Created metadata AVUs for '$path' : ", pp(\@meta));
+  $self->debug("Created metadata AVUs for '$path' : ", pp(\@avus));
 
   # Collate into lists of values per attribute
-  my %collated_avus = %{$self->collate_avus(@meta)};
+  my %collated_avus = %{$self->collate_avus(@avus)};
 
   # Sorting by attribute to allow repeated updates to be in
   # deterministic order
@@ -255,6 +310,77 @@ sub update_secondary_metadata {
   $self->update_group_permissions;
 
   return $self;
+}
+
+=head2 count_reads
+
+  Arg [1]    : None
+
+  Example    : my $n = $obj->count_reads;
+  Description: Return the total number of reads in the iRODS data object
+               using samtools.
+  Returntype : Int
+
+=cut
+
+sub count_reads {
+  my ($self) = @_;
+
+  my $total;
+  try {
+    my ($num_passed_qc, $num_failed_qc) = $self->_flagstat->num_reads;
+    $total = $num_passed_qc + $num_failed_qc;
+  } catch {
+    my $path = $self->str;
+    $self->error("Failed to count the reads in '$path': ", $_);
+  };
+
+  return $total;
+}
+
+=head2 count_seq_paired_reads
+
+  Arg [1]    : None
+
+  Example    : my $n = $obj->count_seq_paired_reads;
+  Description: Return the total number of paired reads in the iRODS data
+               object using samtools.
+  Returntype : Int
+
+=cut
+
+sub count_seq_paired_reads {
+  my ($self) = @_;
+
+  my $total;
+  try {
+    my ($num_passed_qc, $num_failed_qc) =
+      $self->_flagstat->num_seq_paired_reads;
+    $total = $num_passed_qc + $num_failed_qc;
+  } catch {
+    my $path = $self->str;
+    $self->error("Failed to count the seq paired reads in '$path': ", $_);
+  };
+
+  return $total;
+}
+
+=head2 is_paired_read
+
+  Arg [1]    : None
+
+  Example    : $obj->is_paired_red
+  Description: Return true if the iRODS data object contains any paired
+               reads using samtools.
+  Returntype : Bool
+
+=cut
+
+sub is_paired_read {
+  my ($self) = @_;
+
+  # TODO -- Maybe check for this information in the metadata first?
+  return $self->count_seq_paired_reads > 0;
 }
 
 sub _read_header {
@@ -279,6 +405,19 @@ sub _read_header {
   };
 
   return \@header;
+}
+
+my $FLAGSTAT_CACHE;
+
+sub _flagstat {
+  my ($self) = @_;
+
+  my $path = $self->str;
+  if (not $FLAGSTAT_CACHE) {
+    $FLAGSTAT_CACHE = WTSI::NPG::HTS::Samtools->new(path => "irods:$path");
+  }
+
+  return $FLAGSTAT_CACHE;
 }
 
 __PACKAGE__->meta->make_immutable;

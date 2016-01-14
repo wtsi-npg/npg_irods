@@ -31,7 +31,7 @@ with 'WTSI::DNAP::Utilities::Loggable', 'WTSI::NPG::iRODS::Utilities';
   Arg [2]    : Creation time, DateTime
   Arg [3]    : Publishing person, organization, or service, URI.
 
-  Example    : my @meta = $ann->make_creation_metadata($time, $publisher)
+  Example    : my @avus = $ann->make_creation_metadata($time, $publisher)
   Description: Return a list of metadata AVUs describing the creation of
                an item.
   Returntype : Array[HashRef]
@@ -57,7 +57,7 @@ sub make_creation_metadata {
 
   Arg [1]    : Modification time, DateTime.
 
-  Example    : my @meta = $ann->make_modification_metadata($time)
+  Example    : my @avus = $ann->make_modification_metadata($time)
   Description: Return an array of of metadata AVUs describing the
                modification of an item.
   Returntype : Array[HashRef]
@@ -78,7 +78,7 @@ sub make_modification_metadata {
   Arg [1]    : File name, Str.
   Arg [2]    : Array of valid file suffix strings, Str. Optional
 
-  Example    : my @meta = $ann->make_type_metadata($sample, '.txt', '.csv')
+  Example    : my @avus = $ann->make_type_metadata($sample, '.txt', '.csv')
   Description: Return an array of metadata AVUs describing the file 'type'
                (represented by its suffix).
   Returntype : Array[HashRef]
@@ -89,7 +89,7 @@ sub make_type_metadata {
   my ($self, $file, @suffixes) = @_;
 
   defined $file or $self->logconfess('A defined file argument is required');
-  $file eq q{} and $self->logconfess('A non-empty file argument is required');
+  $file eq q[] and $self->logconfess('A non-empty file argument is required');
 
   if (not @suffixes) {
     @suffixes = @DEFAULT_FILE_SUFFIXES;
@@ -97,20 +97,20 @@ sub make_type_metadata {
 
   my ($basename, $dir, $suffix) = fileparse($file, @suffixes);
 
-  my @meta;
+  my @avus;
   if ($suffix) {
     my ($base_suffix) = $suffix =~ m{^[.]?(.*)}msx;
-    push @meta, $self->make_avu($FILE_TYPE, $base_suffix);
+    push @avus, $self->make_avu($FILE_TYPE, $base_suffix);
   }
 
-  return @meta;
+  return @avus;
 }
 
 =head2 make_md5_metadata
 
   Arg [1]    : Checksum, Str.
 
-  Example    : my @meta = $ann->make_md5_metadata($checksum)
+  Example    : my @avus = $ann->make_md5_metadata($checksum)
   Description: Return an array of metadata AVUs describing the
                file MD5 checksum.
   Returntype : Array[HashRef]
@@ -121,7 +121,7 @@ sub make_md5_metadata {
   my ($self, $md5) = @_;
 
   defined $md5 or $self->logconfess('A defined md5 argument is required');
-  $md5 eq q{} and $self->logconfess('A non-empty md5 argument is required');
+  $md5 eq q[] and $self->logconfess('A non-empty md5 argument is required');
 
   return ($self->make_avu($FILE_MD5, $md5));
 }
@@ -130,7 +130,7 @@ sub make_md5_metadata {
 
   Arg [1]    : string filename
 
-  Example    : my @meta = $ann->make_ticket_metadata($ticket_number)
+  Example    : my @avus = $ann->make_ticket_metadata($ticket_number)
   Description: Return an array of metadata AVUs describing an RT ticket
                relating to the file.
   Returntype : Array[HashRef]
@@ -142,32 +142,11 @@ sub make_ticket_metadata {
 
   defined $ticket_number or
     $self->logconfess('A defined ticket_number argument is required');
-  $ticket_number eq q{} and
+  $ticket_number eq q[] and
     $self->logconfess('A non-empty ticket_number argument is required');
 
   return ($self->make_avu($RT_TICKET, $ticket_number));
 }
-
-## no critic (Subroutines::ProhibitManyArgs)
-sub make_primary_metadata {
-  my ($self, $factory, $id_run, $position, $tag_index,
-      $with_spiked_control) = @_;
-
-  defined $factory or
-    $self->logconfess('A defined factory argument is required');
-  defined $id_run or
-    $self->logconfess('A defined id_run argument is required');
-  defined $position or
-    $self->logconfess('A defined position argument is required');
-
-  my $lims = $factory->make_lims($id_run, $position, $tag_index);
-
-  my @meta;
-  push @meta, $self->make_run_metadata($lims, $with_spiked_control);
-
-  return @meta;
-}
-## use critic
 
 =head2 make_secondary_metadata
 
@@ -176,7 +155,7 @@ sub make_primary_metadata {
   Arg [3]    : Flowcell lane position, Int.
   Arg [4]    : Tag index, Int. Optional.
 
-  Example    : my @meta = $ann->make_secondary_metadata($factory, 3002, 3, 1)
+  Example    : my @avus = $ann->make_secondary_metadata($factory, 3002, 3, 1)
   Description: Return an array of metadata AVUs describing the HTS data
                in the specified run/lane/plex.
   Returntype : Array[HashRef]
@@ -197,42 +176,73 @@ sub make_secondary_metadata {
 
   my $lims = $factory->make_lims($id_run, $position, $tag_index);
 
-  my @meta;
-  push @meta, $self->make_plex_metadata($lims);
-  push @meta, $self->make_consent_metadata($lims);
-  push @meta, $self->make_study_metadata($lims, $with_spiked_control);
-  push @meta, $self->make_sample_metadata($lims, $with_spiked_control);
-  push @meta, $self->make_library_metadata($lims, $with_spiked_control);
+  my @avus;
+  push @avus, $self->make_plex_metadata($lims);
+  push @avus, $self->make_consent_metadata($lims);
+  push @avus, $self->make_study_metadata($lims, $with_spiked_control);
+  push @avus, $self->make_sample_metadata($lims, $with_spiked_control);
+  push @avus, $self->make_library_metadata($lims, $with_spiked_control);
 
   my $hts_element = sprintf 'run: %s, pos: %s, tag_index: %s',
     $id_run, $position, (defined $tag_index ? $tag_index : 'NA');
-  $self->info("Created metadata for $hts_element: ", pp(\@meta));
+  $self->info("Created metadata for $hts_element: ", pp(\@avus));
 
-  return @meta;
+  return @avus;
 }
 ## use critic
 
 =head2 make_run_metadata
 
-  Arg [1]    : A LIMS handle, st::api::lims.
+  Arg [1]      Run identifier, Int.
+  Arg [2]      Lane position, Int.
+  Arg [3]      Tag index, Int. Optional.
 
-  Example    : my @meta = $ann->make_run_metadata($st);
+  Example    : my @avus = $ann->make_run_metadata($st);
   Description: Return HTS run metadata AVUs.
   Returntype : Array[HashRef]
 
 =cut
 
 sub make_run_metadata {
-  my ($self, $lims) = @_;
+  my ($self, $id_run, $position, $tag_index) = @_;
 
-  defined $lims or $self->logconfess('A defined lims argument is required');
+  defined $id_run or
+    $self->logconfess('A defined id_run argument is required');
+  defined $position or
+    $self->logconfess('A defined position argument is required');
 
-  # Map of method name to attribute name under which the result will
-  # be stored.
-  my $method_attr = {id_run    => $ID_RUN,
-                     position  => $POSITION,
-                     tag_index => $TAG_INDEX};
-  return $self->_make_single_value_metadata($lims, $method_attr);
+  my @avus = ($self->make_avu($ID_RUN,   $id_run),
+              $self->make_avu($POSITION, $position));
+  if (defined $tag_index) {
+    push @avus, $self->make_avu($TAG_INDEX, $tag_index);
+  }
+
+  return @avus;
+}
+
+=head2 make_alignment_metadata
+
+  Arg [1]      Alignment flag, Bool.
+  Arg [2]      Reference file path, Str. Optional.
+
+  Example    : my @avus = $ann->make_aligment_metadata(1, '/path/to/ref.fa');
+  Description: Return HTS alignment metadata AVUs.
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_alignment_metadata {
+  my ($self, $is_aligned, $reference) = @_;
+
+  my @avus;
+  if ($is_aligned) {
+    push @avus, $self->make_avu($ALIGNMENT, q[1]);
+  }
+  if ($reference) {
+    push @avus, $self->make_avu($REFERENCE, $reference);
+  }
+
+  return @avus;
 }
 
 =head2 make_study_metadata
@@ -267,7 +277,7 @@ sub make_study_metadata {
   Arg [1]    : A LIMS handle, st::api::lims.
   Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : my @meta = $ann->make_sample_metadata($lims);
+  Example    : my @avus = $ann->make_sample_metadata($lims);
   Description: Return HTS sample metadata AVUs.
   Returntype : Array[HashRef]
 
@@ -296,7 +306,7 @@ sub make_sample_metadata {
 
   Arg [1]    : A LIMS handle, st::api::lims.
 
-  Example    : my @meta = $ann->make_consent_metadata($lims);
+  Example    : my @avus = $ann->make_consent_metadata($lims);
   Description: Return HTS consent metadata AVUs. An AVU will be returned
                only if a true AVU value is present.
   Returntype : Array[HashRef]
@@ -324,7 +334,7 @@ sub make_consent_metadata {
   Arg [1]    : A LIMS handle, st::api::lims.
   Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : my @meta = $ann->make_library_metadata($lims);
+  Example    : my @avus = $ann->make_library_metadata($lims);
   Description: Return HTS library metadata AVUs.
   Returntype : Array[HashRef]
 
@@ -347,7 +357,7 @@ sub make_library_metadata {
 
   Arg [1]    :  A LIMS handle, st::api::lims.
 
-  Example    : my @meta = $ann->make_plex_metadata($lims);
+  Example    : my @avus = $ann->make_plex_metadata($lims);
   Description: Return HTS plex metadata AVUs.
   Returntype : Array[HashRef]
 

@@ -43,7 +43,7 @@ sub iterate : Test(1) {
 
     my @records;
     WTSI::NPG::HTS::Samtools->new
-        (arguments => [q{-H}],
+        (arguments => [q[-H]],
          path      => "$data_path/$data_file.sam")->iterate
            (sub {
               my ($record) = @_;
@@ -64,7 +64,7 @@ sub collect : Test(1) {
        "$data_path/test_ref.fa");
 
     my @collected = WTSI::NPG::HTS::Samtools->new
-      (arguments => [q{-H}],
+      (arguments => [q[-H]],
        path      => "$data_path/$data_file.sam")->collect
          (sub {
             my ($record) = @_;

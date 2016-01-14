@@ -62,20 +62,6 @@ cd /tmp/npg_tracking.git        ; git checkout ${NPG_TRACKING_VERSION}
 cd /tmp/npg_seq_common.git      ; git checkout ${NPG_SEQ_COMMON_VERSION}
 cd /tmp/npg_qc.git              ; git checkout ${NPG_QC_VERSION}
 
-# Fix seq_common
-#rm /tmp/npg_seq_common.git/t/bin/aligners/bwa/current/bwa
-#cp /tmp/npg_seq_common.git/t/bin/bwa /tmp/npg_seq_common.git/t/bin/aligners/bwa/current/bwa
-
-rm /tmp/npg_seq_common.git/t/bin/aligners/bwa/bwa-0.5.8c/bwa
-cp /tmp/npg_seq_common.git/t/bin/bwa /tmp/npg_seq_common.git/t/bin/aligners/bwa/bwa-0.5.8c/bwa
-
-rm -r /tmp/npg_seq_common.git/t/data/references/Homo_sapiens/default
-cp -R /tmp/npg_seq_common.git/t/data/references/Homo_sapiens/NCBI36 /tmp/npg_seq_common.git/t/data/references/Homo_sapiens/default
-
-# These are cruft, apparently
-rm -r /tmp/npg_seq_common.git/t/data/sequence/references2
-
-
 repos="/tmp/perl-dnap-utilities.git /tmp/perl-irods-wrap.git /tmp/ml_warehouse.git /tmp/npg_ml_warehouse.git /tmp/npg_tracking.git /tmp/npg_seq_common.git /tmp/npg_qc.git"
 
 # Install CPAN dependencies. The src libs are on PERL5LIB because of

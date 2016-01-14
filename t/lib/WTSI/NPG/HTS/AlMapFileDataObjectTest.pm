@@ -146,16 +146,20 @@ sub setup_test : Test(setup) {
                          '-o', qq[irods:$irods_tmp_coll/$data_file.bam]],
            path      => "$data_path/$data_file.sam")->run;
 
-      if ($group_tests_enabled) {
-        # Add some test group permissions
         foreach my $format (qw(bam cram)) {
-          $irods->set_object_permissions($WTSI::NPG::iRODS::READ_PERMISSION,
-                                         $public_group,
-                                         "$irods_tmp_coll/$data_file.$format");
+          my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+            ($irods, "$irods_tmp_coll/$data_file.$format");
+
+          $obj->set_primary_metadata;
+
+          # Add some test group permissions
+          if ($group_tests_enabled) {
+            $obj->set_permissions($WTSI::NPG::iRODS::READ_PERMISSION,
+                                  $public_group);
+
           foreach my $group (map { $group_prefix . $_ } (10, 100)) {
-            $irods->set_object_permissions
-              ($WTSI::NPG::iRODS::READ_PERMISSION, $group,
-               "$irods_tmp_coll/$data_file.$format");
+            $obj->set_permissions($WTSI::NPG::iRODS::READ_PERMISSION,
+                                  $group);
           }
         }
       }
@@ -216,6 +220,20 @@ sub position : Test(20) {
       cmp_ok(WTSI::NPG::HTS::AlMapFileDataObject->new
              ($irods, $full_path)->position,
              '==', 3, "$full_path position is correct");
+    }
+  }
+}
+
+sub is_restricted_access : Test(20) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  foreach my $format (qw(bam cram)) {
+    foreach my $path (@tagged_paths, @untagged_paths) {
+      my $full_path = $path . ".$format";
+      ok(WTSI::NPG::HTS::AlMapFileDataObject->new
+         ($irods, $full_path)->is_restricted_access,
+         "$full_path is_restricted_access is correct");
     }
   }
 }
@@ -344,6 +362,84 @@ sub reference : Test(4) {
   } # SKIP samtools
 }
 
+sub count_reads : Test(4) {
+ SKIP: {
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 4;
+    }
+
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                      strict_baton_version => 0);
+
+    foreach my $data_file ($run15440_lane1_tag0, $run15440_lane1_tag81) {
+      foreach my $format (qw(bam cram)) {
+        my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+          (collection  => $irods_tmp_coll,
+           data_object => "$data_file.$format",
+           file_format => $format,
+           id_run      => 1,
+           irods       => $irods,
+           position    => 1);
+
+        # 2 * 2 * 1 tests
+        cmp_ok($obj->count_reads, '==', 9010,
+               "$format total reads is correct");
+      }
+    }
+  } # SKIP samtools
+}
+
+sub count_seq_paired_reads : Test(2) {
+ SKIP: {
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 2;
+    }
+
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                      strict_baton_version => 0);
+
+    my $data_file = $run15440_lane1_tag0;
+    foreach my $format (qw(bam cram)) {
+      my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+        (collection  => $irods_tmp_coll,
+         data_object => "$data_file.$format",
+         file_format => $format,
+         id_run      => 1,
+         irods       => $irods,
+         position    => 1);
+
+      # 2 * 2 * 1 tests
+      cmp_ok($obj->count_seq_paired_reads, '==', 8,
+             "$format total seq paired reads is correct");
+    }
+  } # SKIP samtools
+}
+
+sub is_paired_read : Test(2) {
+ SKIP: {
+    if (not $samtools) {
+      skip 'samtools executable not on the PATH', 2;
+    }
+
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                      strict_baton_version => 0);
+
+    my $data_file = $run15440_lane1_tag0;
+    foreach my $format (qw(bam cram)) {
+      my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+        (collection  => $irods_tmp_coll,
+         data_object => "$data_file.$format",
+         file_format => $format,
+         id_run      => 1,
+         irods       => $irods,
+         position    => 1);
+
+      # 2 * 2 * 1 tests
+      ok($obj->is_paired_read, "$format total is_paired_read is correct");
+    }
+  } # SKIP samtools
+}
+
 sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
  SKIP: {
     if (not $samtools) {
@@ -356,114 +452,118 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
                                       strict_baton_version => 0,);
 
     my $tag0_expected_meta =
-      [{attribute => $LIBRARY_ID,               value     => '4957423'},
-       {attribute => $LIBRARY_ID,               value     => '4957424'},
-       {attribute => $LIBRARY_ID,               value     => '4957425'},
-       {attribute => $LIBRARY_ID,               value     => '4957426'},
-       {attribute => $LIBRARY_ID,               value     => '4957427'},
-       {attribute => $LIBRARY_ID,               value     => '4957428'},
-       {attribute => $LIBRARY_ID,               value     => '4957429'},
-       {attribute => $LIBRARY_ID,               value     => '4957430'},
-       {attribute => $LIBRARY_ID,               value     => '4957431'},
-       {attribute => $LIBRARY_ID,               value     => '4957432'},
-       {attribute => $LIBRARY_ID,               value     => '4957433'},
-       {attribute => $LIBRARY_ID,               value     => '4957434'},
-       {attribute => $LIBRARY_ID,               value     => '4957435'},
-       {attribute => $LIBRARY_ID,               value     => '4957436'},
-       {attribute => $LIBRARY_ID,               value     => '4957437'},
-       {attribute => $LIBRARY_ID,               value     => '4957438'},
-       {attribute => $LIBRARY_ID,               value     => '4957439'},
-       {attribute => $LIBRARY_ID,               value     => '4957440'},
-       {attribute => $LIBRARY_ID,               value     => '4957441'},
-       {attribute => $LIBRARY_ID,               value     => '4957442'},
-       {attribute => $LIBRARY_ID,               value     => '4957443'},
-       {attribute => $LIBRARY_ID,               value     => '4957444'},
-       {attribute => $LIBRARY_ID,               value     => '4957445'},
-       {attribute => $LIBRARY_ID,               value     => '4957446'},
-       {attribute => $LIBRARY_ID,               value     => '4957447'},
-       {attribute => $LIBRARY_ID,               value     => '4957448'},
-       {attribute => $LIBRARY_ID,               value     => '4957449'},
-       {attribute => $LIBRARY_ID,               value     => '4957450'},
-       {attribute => $LIBRARY_ID,               value     => '4957451'},
-       {attribute => $LIBRARY_ID,               value     => '4957452'},
-       {attribute => $LIBRARY_ID,               value     => '4957453'},
-       {attribute => $LIBRARY_ID,               value     => '4957454'},
-       {attribute => $LIBRARY_ID,               value     => '4957455'},
-       {attribute => $QC_STATE,                 value     => '1'},
-       {attribute => $SAMPLE_NAME,              value     => '619s040'},
-       {attribute => $SAMPLE_NAME,              value     => '619s041'},
-       {attribute => $SAMPLE_NAME,              value     => '619s042'},
-       {attribute => $SAMPLE_NAME,              value     => '619s043'},
-       {attribute => $SAMPLE_NAME,              value     => '619s044'},
-       {attribute => $SAMPLE_NAME,              value     => '619s045'},
-       {attribute => $SAMPLE_NAME,              value     => '619s046'},
-       {attribute => $SAMPLE_NAME,              value     => '619s047'},
-       {attribute => $SAMPLE_NAME,              value     => '619s048'},
-       {attribute => $SAMPLE_NAME,              value     => '619s049'},
-       {attribute => $SAMPLE_NAME,              value     => '619s050'},
-       {attribute => $SAMPLE_NAME,              value     => '619s051'},
-       {attribute => $SAMPLE_NAME,              value     => '619s052'},
-       {attribute => $SAMPLE_NAME,              value     => '619s053'},
-       {attribute => $SAMPLE_NAME,              value     => '619s054'},
-       {attribute => $SAMPLE_NAME,              value     => '619s055'},
-       {attribute => $SAMPLE_NAME,              value     => '619s056'},
-       {attribute => $SAMPLE_NAME,              value     => '619s057'},
-       {attribute => $SAMPLE_NAME,              value     => '619s058'},
-       {attribute => $SAMPLE_NAME,              value     => '619s059'},
-       {attribute => $SAMPLE_NAME,              value     => '619s060'},
-       {attribute => $SAMPLE_NAME,              value     => '619s061'},
-       {attribute => $SAMPLE_NAME,              value     => '619s062'},
-       {attribute => $SAMPLE_NAME,              value     => '619s063'},
-       {attribute => $SAMPLE_NAME,              value     => '619s064'},
-       {attribute => $SAMPLE_NAME,              value     => '619s065'},
-       {attribute => $SAMPLE_NAME,              value     => '619s066'},
-       {attribute => $SAMPLE_NAME,              value     => '619s067'},
-       {attribute => $SAMPLE_NAME,              value     => '619s068'},
-       {attribute => $SAMPLE_NAME,              value     => '619s069'},
-       {attribute => $SAMPLE_NAME,              value     => '619s070'},
-       {attribute => $SAMPLE_NAME,              value     => '619s071'},
-       {attribute => $SAMPLE_NAME,              value     => '619s072'},
+      [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $ID_RUN,                   value => '7915'},
+       {attribute => $POSITION,                 value => '5'},
+       {attribute => $LIBRARY_ID,               value => '4957423'},
+       {attribute => $LIBRARY_ID,               value => '4957424'},
+       {attribute => $LIBRARY_ID,               value => '4957425'},
+       {attribute => $LIBRARY_ID,               value => '4957426'},
+       {attribute => $LIBRARY_ID,               value => '4957427'},
+       {attribute => $LIBRARY_ID,               value => '4957428'},
+       {attribute => $LIBRARY_ID,               value => '4957429'},
+       {attribute => $LIBRARY_ID,               value => '4957430'},
+       {attribute => $LIBRARY_ID,               value => '4957431'},
+       {attribute => $LIBRARY_ID,               value => '4957432'},
+       {attribute => $LIBRARY_ID,               value => '4957433'},
+       {attribute => $LIBRARY_ID,               value => '4957434'},
+       {attribute => $LIBRARY_ID,               value => '4957435'},
+       {attribute => $LIBRARY_ID,               value => '4957436'},
+       {attribute => $LIBRARY_ID,               value => '4957437'},
+       {attribute => $LIBRARY_ID,               value => '4957438'},
+       {attribute => $LIBRARY_ID,               value => '4957439'},
+       {attribute => $LIBRARY_ID,               value => '4957440'},
+       {attribute => $LIBRARY_ID,               value => '4957441'},
+       {attribute => $LIBRARY_ID,               value => '4957442'},
+       {attribute => $LIBRARY_ID,               value => '4957443'},
+       {attribute => $LIBRARY_ID,               value => '4957444'},
+       {attribute => $LIBRARY_ID,               value => '4957445'},
+       {attribute => $LIBRARY_ID,               value => '4957446'},
+       {attribute => $LIBRARY_ID,               value => '4957447'},
+       {attribute => $LIBRARY_ID,               value => '4957448'},
+       {attribute => $LIBRARY_ID,               value => '4957449'},
+       {attribute => $LIBRARY_ID,               value => '4957450'},
+       {attribute => $LIBRARY_ID,               value => '4957451'},
+       {attribute => $LIBRARY_ID,               value => '4957452'},
+       {attribute => $LIBRARY_ID,               value => '4957453'},
+       {attribute => $LIBRARY_ID,               value => '4957454'},
+       {attribute => $LIBRARY_ID,               value => '4957455'},
+       {attribute => $QC_STATE,                 value => '1'},
+       {attribute => $SAMPLE_NAME,              value => '619s040'},
+       {attribute => $SAMPLE_NAME,              value => '619s041'},
+       {attribute => $SAMPLE_NAME,              value => '619s042'},
+       {attribute => $SAMPLE_NAME,              value => '619s043'},
+       {attribute => $SAMPLE_NAME,              value => '619s044'},
+       {attribute => $SAMPLE_NAME,              value => '619s045'},
+       {attribute => $SAMPLE_NAME,              value => '619s046'},
+       {attribute => $SAMPLE_NAME,              value => '619s047'},
+       {attribute => $SAMPLE_NAME,              value => '619s048'},
+       {attribute => $SAMPLE_NAME,              value => '619s049'},
+       {attribute => $SAMPLE_NAME,              value => '619s050'},
+       {attribute => $SAMPLE_NAME,              value => '619s051'},
+       {attribute => $SAMPLE_NAME,              value => '619s052'},
+       {attribute => $SAMPLE_NAME,              value => '619s053'},
+       {attribute => $SAMPLE_NAME,              value => '619s054'},
+       {attribute => $SAMPLE_NAME,              value => '619s055'},
+       {attribute => $SAMPLE_NAME,              value => '619s056'},
+       {attribute => $SAMPLE_NAME,              value => '619s057'},
+       {attribute => $SAMPLE_NAME,              value => '619s058'},
+       {attribute => $SAMPLE_NAME,              value => '619s059'},
+       {attribute => $SAMPLE_NAME,              value => '619s060'},
+       {attribute => $SAMPLE_NAME,              value => '619s061'},
+       {attribute => $SAMPLE_NAME,              value => '619s062'},
+       {attribute => $SAMPLE_NAME,              value => '619s063'},
+       {attribute => $SAMPLE_NAME,              value => '619s064'},
+       {attribute => $SAMPLE_NAME,              value => '619s065'},
+       {attribute => $SAMPLE_NAME,              value => '619s066'},
+       {attribute => $SAMPLE_NAME,              value => '619s067'},
+       {attribute => $SAMPLE_NAME,              value => '619s068'},
+       {attribute => $SAMPLE_NAME,              value => '619s069'},
+       {attribute => $SAMPLE_NAME,              value => '619s070'},
+       {attribute => $SAMPLE_NAME,              value => '619s071'},
+       {attribute => $SAMPLE_NAME,              value => '619s072'},
        {attribute => $SAMPLE_COMMON_NAME,
         value     => 'Burkholderia pseudomallei'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '10/96'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '109/96'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '15/96'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '153.0'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '17/96'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '21/96'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '23/96'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '35/96'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '4009-19'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '4033-10'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '457/96'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '488.0'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '490.0'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '497/96'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '504/96'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '6/96'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '77/96'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '78/96'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '79/96'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'D107310-3154'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'D68346-3058'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DB'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DB30729/00'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DB61091/00'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DC'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DR08726/01'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'DR13450/01'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'EM10266/01'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'EM2107'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'I64043-3096'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'K11277244-293'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'P73230-3018'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => 'SOIL'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '10/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '109/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '15/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '153.0'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '17/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '21/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '23/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '35/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '4009-19'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '4033-10'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '457/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '488.0'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '490.0'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '497/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '504/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '6/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '77/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '78/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '79/96'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'D107310-3154'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'D68346-3058'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'DB'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'DB30729/00'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'DB61091/00'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'DC'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'DR08726/01'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'DR13450/01'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'EM10266/01'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'EM2107'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'I64043-3096'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'K11277244-293'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'P73230-3018'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'SOIL'},
        {attribute => $STUDY_NAME,
         value     => 'Burkholderia pseudomallei diversity'},
-       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
-       {attribute => $STUDY_ID,                 value     => '619'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP000251'},
+       {attribute => $STUDY_ID,                 value => '619'},
        {attribute => $STUDY_TITLE,
-        value     => 'Burkholderia pseudomallei diversity'}];
+        value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $TAG_INDEX,                value => '0'}];
 
     my $spiked_control = 0;
 
@@ -494,7 +594,10 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
                                       strict_baton_version => 0,);
 
     my $tag0_expected_meta =
-      [{attribute => $LIBRARY_ID,               value     => '3691209'}, # spike
+      [{attribute => $ALIGNMENT,                value     => '1'},
+       {attribute => $ID_RUN,                   value     => '7915'},
+       {attribute => $POSITION,                 value     => '5'},
+       {attribute => $LIBRARY_ID,               value     => '3691209'}, # spike
        {attribute => $LIBRARY_ID,               value     => '4957423'},
        {attribute => $LIBRARY_ID,               value     => '4957424'},
        {attribute => $LIBRARY_ID,               value     => '4957425'},
@@ -607,7 +710,8 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
        {attribute => $STUDY_ID,                 value     => '198'},
        {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_TITLE,
-        value     => 'Burkholderia pseudomallei diversity'}];
+        value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $TAG_INDEX,                value     => '0'}];
 
     my $spiked_control = 1;
 
@@ -639,18 +743,22 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
                                       strict_baton_version => 0);
 
     my $tag1_expected_meta =
-      [{attribute => $LIBRARY_ID,               value     => '4957423'},
-       {attribute => $QC_STATE,                 value     => '1'},
-       {attribute => $SAMPLE_NAME,              value     => '619s040'},
+      [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $ID_RUN,                   value => '7915'},
+       {attribute => $POSITION,                 value => '5'},
+       {attribute => $LIBRARY_ID,               value => '4957423'},
+       {attribute => $QC_STATE,                 value => '1'},
+       {attribute => $SAMPLE_NAME,              value => '619s040'},
        {attribute => $SAMPLE_COMMON_NAME,
         value     => 'Burkholderia pseudomallei'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '153.0'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '153.0'},
        {attribute => $STUDY_NAME,
         value     => 'Burkholderia pseudomallei diversity'},
-       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
-       {attribute => $STUDY_ID,                 value     => '619'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP000251'},
+       {attribute => $STUDY_ID,                 value => '619'},
        {attribute => $STUDY_TITLE,
-        value     => 'Burkholderia pseudomallei diversity'}];
+        value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $TAG_INDEX,                value => '1'}];
 
     my $spiked_control = 0;
 
@@ -681,18 +789,22 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
                                       strict_baton_version => 0);
 
     my $tag1_expected_meta =
-      [{attribute => $LIBRARY_ID,               value     => '4957423'},
-       {attribute => $QC_STATE,                 value     => '1'},
-       {attribute => $SAMPLE_NAME,              value     => '619s040'},
+      [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $ID_RUN,                   value => '7915'},
+       {attribute => $POSITION,                 value => '5'},
+       {attribute => $LIBRARY_ID,               value => '4957423'},
+       {attribute => $QC_STATE,                 value => '1'},
+       {attribute => $SAMPLE_NAME,              value => '619s040'},
        {attribute => $SAMPLE_COMMON_NAME,
         value     => 'Burkholderia pseudomallei'},
-       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '153.0'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '153.0'},
        {attribute => $STUDY_NAME,
         value     => 'Burkholderia pseudomallei diversity'},
-       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
-       {attribute => $STUDY_ID,                 value     => '619'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP000251'},
+       {attribute => $STUDY_ID,                 value => '619'},
        {attribute => $STUDY_TITLE,
-        value     => 'Burkholderia pseudomallei diversity'}];
+        value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $TAG_INDEX,                value => '1'}];
 
     my $spiked_control = 1;
 
@@ -723,7 +835,10 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
                                       strict_baton_version => 0);
 
     my $tag0_expected_meta =
-      [{attribute => $LIBRARY_ID,               value => '12789790'},
+      [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $ID_RUN,                   value => '15440'},
+       {attribute => $POSITION,                 value => '1'},
+       {attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $LIBRARY_ID,               value => '12789802'},
        {attribute => $LIBRARY_ID,               value => '12789814'},
        {attribute => $LIBRARY_ID,               value => '12789826'},
@@ -746,7 +861,8 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
-        value     => 'Lebanon_LowCov-seq'}];
+        value     => 'Lebanon_LowCov-seq'},
+       {attribute => $TAG_INDEX,                value => '0'}];
 
     my $spiked_control = 0;
 
@@ -777,7 +893,10 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
                                       strict_baton_version => 0);
 
     my $tag0_expected_meta =
-      [{attribute => $LIBRARY_ID,               value => '12789790'},
+      [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $ID_RUN,                   value => '15440'},
+       {attribute => $POSITION,                 value => '1'},
+       {attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $LIBRARY_ID,               value => '12789802'},
        {attribute => $LIBRARY_ID,               value => '12789814'},
        {attribute => $LIBRARY_ID,               value => '12789826'},
@@ -805,7 +924,8 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
        {attribute => $STUDY_ID,                 value => '198'},
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
-        value     => 'Lebanon_LowCov-seq'}];
+        value     => 'Lebanon_LowCov-seq'},
+       {attribute => $TAG_INDEX,                value => '0'}];
 
     my $spiked_control = 1;
 
@@ -837,7 +957,10 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
                                       strict_baton_version => 0);
 
     my $tag81_expected_meta =
-      [{attribute => $LIBRARY_ID,               value => '12789790'},
+      [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $ID_RUN,                   value => '15440'},
+       {attribute => $POSITION,                 value => '1'},
+       {attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $QC_STATE,                 value => '1'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
        {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
@@ -848,7 +971,8 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
-        value     => 'Lebanon_LowCov-seq'}];
+        value     => 'Lebanon_LowCov-seq'},
+       {attribute => $TAG_INDEX,                value => '81'}];
 
     my $spiked_control = 0;
 
@@ -879,7 +1003,10 @@ sub update_secondary_metadata_tag81_spike_human : Test(8) {
                                       strict_baton_version => 0);
 
     my $tag81_expected_meta =
-      [{attribute => $LIBRARY_ID,               value => '12789790'},
+      [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $ID_RUN,                   value => '15440'},
+       {attribute => $POSITION,                 value => '1'},
+       {attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $QC_STATE,                 value => '1'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
        {attribute => $SAMPLE_COMMON_NAME,       value => 'Homo Sapien'},
@@ -890,7 +1017,8 @@ sub update_secondary_metadata_tag81_spike_human : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
-        value     => 'Lebanon_LowCov-seq'}];
+        value     => 'Lebanon_LowCov-seq'},
+       {attribute => $TAG_INDEX,                value => '81'}];
 
     my $spiked_control = 1;
 

@@ -2,9 +2,10 @@ package WTSI::NPG::HTS::RunPublisher;
 
 use namespace::autoclean;
 use Data::Dump qw(pp);
+use English qw(-no_match_vars);
 use File::Basename;
-use List::AllUtils qw(any none);
-use File::Spec::Functions;
+use List::AllUtils qw(any first none);
+use File::Spec::Functions qw(catdir catfile splitdir);
 use Moose;
 use Try::Tiny;
 
@@ -13,16 +14,22 @@ use WTSI::NPG::HTS::AncFileDataObject;
 use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::HTS::Publisher;
 use WTSI::NPG::HTS::Types qw(AlMapFileFormat);
+use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 
+
 with 'WTSI::DNAP::Utilities::Loggable',
+     'WTSI::DNAP::Utilities::JSONCodec',
      'WTSI::NPG::HTS::Annotator',
      'npg_tracking::illumina::run::short_info',
      'npg_tracking::illumina::run::folder';
 
+with 'npg_tracking::illumina::run::long_info';
+
 our $VERSION = '';
 
 our $DEFAULT_ROOT_COLL = '/seq';
+our $DEFAULT_QC_COLL   = 'qc';
 
 has 'irods' =>
   (is            => 'ro',
@@ -54,48 +61,19 @@ has 'ancillary_formats' =>
    },
    documentation => 'The ancillary file formats to be published');
 
-has lane_alignment_files =>
-  (isa           => 'ArrayRef',
-   is            => 'ro',
-   required      => 1,
-   lazy          => 1,
-   builder       => 'list_lane_alignment_files',
-   predicate     => 'has_lane_alignment_files',
-   documentation => 'The lane-level alignment files to be published');
-
-has plex_alignment_files =>
-  (isa           => 'ArrayRef',
-   is            => 'ro',
-   required      => 1,
-   lazy          => 1,
-   builder       => 'list_plex_alignment_files',
-   predicate     => 'has_plex_alignment_files',
-   documentation => 'The plex-level alignment files to be published');
-
-has lane_qc_files =>
-  (isa           => 'ArrayRef',
-   is            => 'ro',
-   required      => 1,
-   lazy          => 1,
-   builder       => 'list_lane_qc_files',
-   predicate     => 'has_lane_qc_files',
-   documentation => 'The lane-level QC files to be published');
-
-has plex_qc_files =>
-  (isa           => 'ArrayRef',
-   is            => 'ro',
-   required      => 1,
-   lazy          => 1,
-   builder       => 'list_plex_qc_files',
-   predicate     => 'has_plex_qc_files',
-   documentation => 'The plex-level QC files to be published');
-
-has 'collection' =>
+has 'dest_collection' =>
   (isa           => 'Str',
    is            => 'ro',
    lazy          => 1,
-   builder       => '_build_collection',
-   documentation => 'The target collection within iRODS to store results');
+   builder       => '_build_dest_collection',
+   documentation => 'The destination collection within iRODS to store data');
+
+has 'qc_dest_collection' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   lazy          => 1,
+   builder       => '_build_qc_dest_collection',
+   documentation => 'The destination collection within iRODS to store QC data');
 
 has 'alt_process' =>
   (isa           => 'Maybe[Str]',
@@ -109,6 +87,67 @@ sub BUILD {
   $self->irods->logger($self->logger);
   $self->lims_factory->logger($self->logger);
   return;
+}
+
+# The list_*_files methods are uncached. The verb in their name
+# suggests activity. The corresponding methods generated here without
+# the list_ prefix are caching.
+my @CACHING_LANE_METHOD_NAMES = qw(lane_alignment_files lane_qc_files);
+my @CACHING_PLEX_METHOD_NAMES = qw(plex_alignment_files
+                                   plex_qc_files
+                                   plex_ancillary_files);
+
+# Cache of lane-level file lists keyed on method name
+my $LANE_FILES_CACHE = {};
+# Cache of plex-level file lists keyed on method name
+my $PLEX_FILES_CACHE = {};
+
+foreach my $method_name (@CACHING_LANE_METHOD_NAMES) {
+
+  __PACKAGE__->meta->add_method
+    ($method_name,
+     sub { return $LANE_FILES_CACHE->{$method_name} });
+
+  around $method_name => sub {
+    my ($orig, $self) = @_;
+
+    my $uncached_method_name = "list_$method_name";
+    if (exists $LANE_FILES_CACHE->{$method_name}) {
+      $self->debug('Using cached result for ', __PACKAGE__,
+                   "::$uncached_method_name");
+    }
+    else {
+      $LANE_FILES_CACHE->{$method_name} = $self->$uncached_method_name;
+    }
+
+    return $self->$orig;
+  };
+}
+
+foreach my $method_name (@CACHING_PLEX_METHOD_NAMES) {
+
+  __PACKAGE__->meta->add_method
+    ($method_name,
+     sub {
+       my ($self, $position) = @_;
+       return $PLEX_FILES_CACHE->{$method_name}->{$position}
+     });
+
+  around $method_name => sub {
+    my ($orig, $self, $position) = @_;
+
+    my $uncached_method_name = "list_$method_name";
+    if (exists $PLEX_FILES_CACHE->{$method_name}->{$position}) {
+      $self->debug('Using cached result for ', __PACKAGE__,
+                   "::$uncached_method_name($position)");
+    }
+    else {
+      $PLEX_FILES_CACHE->{$method_name}->{$position} =
+        $self->$uncached_method_name($position);
+    }
+
+    return $self->$orig($position);
+  };
 }
 
 =head2 positions
@@ -125,6 +164,32 @@ sub positions {
   my ($self) = @_;
 
   return $self->lims_factory->positions($self->id_run);
+}
+
+=head2 num_plex_reads
+
+  Arg [1]    : Lane position, Int.
+  Arg [1]    : Tag index, Int.
+
+  Example    : $pub->num_plex_reads($position, $tag_index);
+  Description: Return the total number of primary, non-supplementary
+               reads.
+  Returntype : Int
+
+=cut
+
+sub num_plex_reads {
+  my ($self, $position, $tag_index) = @_;
+
+  defined $position or
+    $self->logconfess('A defined position argument is required');
+  any { $position } $self->positions or
+    $self->logconfess("Invalid position argument '$position'");
+
+  my $qc_file = $self->_plex_qc_stats_file($position, $tag_index);
+  my $flag_stats = $self->_parse_json_file($qc_file);
+
+  return $flag_stats->{num_total_reads};
 }
 
 =head2 list_lane_alignment_files
@@ -332,7 +397,7 @@ sub publish_lane_alignment_files {
   my ($self, $with_spiked_control) = @_;
 
   my $id_run        = $self->id_run;
-  my @files         = @{$self->list_lane_alignment_files};
+  my @files         = @{$self->lane_alignment_files};
   my $num_files     = scalar @files;
   $self->info("Run '$id_run' has $num_files lane-level alignment files");
 
@@ -363,7 +428,7 @@ sub publish_plex_alignment_files {
   my ($self, $position, $with_spiked_control) = @_;
 
   my $id_run = $self->id_run;
-  my @files  = @{$self->list_plex_alignment_files($position)};
+  my @files  = @{$self->plex_alignment_files($position)};
   my $num_files = scalar @files;
   $self->info("Run '$id_run' position '$position' ",
               "has $num_files plex-level alignment files");
@@ -371,6 +436,7 @@ sub publish_plex_alignment_files {
   my $publisher = WTSI::NPG::HTS::Publisher->new(irods  => $self->irods,
                                                  logger => $self->logger);
   my $num_published = $self->_publish_alignment_files($publisher, \@files,
+                                                      $self->dest_collection,
                                                       $with_spiked_control);
   $self->info("Published $num_published / $num_files plex-level ",
               "alignment files in run '$id_run' position '$position'");
@@ -393,12 +459,23 @@ sub publish_ancillary_files {
   my ($self, $with_spiked_control) = @_;
 
   my $num_published = 0;
+
+  # FIXME -- publish_lane_ancillary_files
+
   foreach my $position ($self->positions) {
     $num_published += $self->publish_plex_ancillary_files
       ($position, $with_spiked_control);
   }
 
   return $num_published;
+}
+
+sub publish_lane_ancillary_files {
+  my ($self, $with_spiked_control) = @_;
+
+  $self->logconfess('Not implemented');
+
+  return;
 }
 
 =head2 publish_plex_alignment_files
@@ -418,55 +495,67 @@ sub publish_plex_ancillary_files {
   my ($self, $position, $with_spiked_control) = @_;
 
   my $id_run = $self->id_run;
-  my @files  = @{$self->list_plex_ancillary_files($position)};
+  my @files  = @{$self->plex_ancillary_files($position)};
   my $num_files = scalar @files;
   $self->info("Run '$id_run' position '$position' ",
               "has $num_files plex-level ancillary files");
 
   my $publisher = WTSI::NPG::HTS::Publisher->new(irods  => $self->irods,
                                                  logger => $self->logger);
-  my $num_published = $self->_publish_ancillary_files($publisher, \@files,
-                                                      $with_spiked_control);
+  my $num_published = $self->_publish_support_files($publisher, \@files,
+                                                    $self->dest_collection,
+                                                    $with_spiked_control);
   $self->info("Published $num_published / $num_files plex-level ",
               "ancillary files in run '$id_run' position '$position'");
 
   return $num_published;
 }
 
-sub _publish_ancillary_files {
-  my ($self, $publisher, $files, $with_spiked_control) = @_;
+sub publish_qc_files {
+  my ($self, $with_spiked_control) = @_;
 
-  my $num_files     = scalar @{$files};
-  my $num_processed = 0;
-  my $num_errors    = 0;
-  foreach my $file (@{$files}) {
-    my $dest = q[];
+  my $num_published = 0;
 
-    try {
-      $num_processed++;
+  # FIXME -- publish_lane_qc_files
 
-      my $obj = WTSI::NPG::HTS::AncFileDataObject->new
-        (collection  => $self->collection,
-         data_object => $file,
-         irods       => $self->irods);
-      $dest = $publisher->publish($file, $obj->str);
-      $obj->update_secondary_metadata;
-    } catch {
-      $num_errors++;
-
-      ## no critic (RegularExpressions::RequireDotMatchAnything)
-      my ($msg) = m{^(.*)$}mx;
-      ## use critic
-      $self->error("Failed to publish '$file' to '$dest' ",
-                   "[$num_processed / $num_files]: ", $msg);
-    };
+  foreach my $position ($self->positions) {
+    $num_published += $self->publish_plex_qc_files
+      ($position, $with_spiked_control);
   }
 
-  return $num_processed - $num_errors;
+  return $num_published;
+}
+
+sub publish_lane_qc_files {
+  my ($self, $with_spiked_control) = @_;
+
+  $self->logconfess('Not implemented');
+
+  return;
+}
+
+sub publish_plex_qc_files {
+  my ($self, $position, $with_spiked_control) = @_;
+
+  my $id_run = $self->id_run;
+  my @files  = @{$self->plex_qc_files($position)};
+  my $num_files = scalar @files;
+  $self->info("Run '$id_run' position '$position' ",
+              "has $num_files plex-level JSON QC files");
+
+  my $publisher = WTSI::NPG::HTS::Publisher->new(irods  => $self->irods,
+                                                 logger => $self->logger);
+  my $num_published = $self->_publish_support_files($publisher, \@files,
+                                                    $self->qc_dest_collection,
+                                                    $with_spiked_control);
+  $self->info("Published $num_published / $num_files plex-level ",
+              "JSON QC files in run '$id_run' position '$position'");
+
+  return $num_published;
 }
 
 sub _publish_alignment_files {
-  my ($self, $publisher, $files, $with_spiked_control) = @_;
+  my ($self, $publisher, $files, $dest_coll, $with_spiked_control) = @_;
 
   my $num_files     = scalar @{$files};
   my $num_processed = 0;
@@ -476,14 +565,20 @@ sub _publish_alignment_files {
 
     try {
       $num_processed++;
-
       my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
-        (collection  => $self->collection,
-         data_object => $file,
+        (collection  => $dest_coll,
+         data_object => fileparse($file),
          irods       => $self->irods);
+
       $dest = $publisher->publish($file, $obj->str);
+
+      # FIXME -- break primary metadata setup out into a new method
+      $obj->set_primary_metadata;
+      $obj->add_avu($IS_PAIRED_READ, $self->is_paired_read);
+
       $obj->update_secondary_metadata($self->lims_factory,
                                       $with_spiked_control);
+      $self->info("Published '$dest' [$num_processed / $num_files]");
     } catch {
       $num_errors++;
 
@@ -495,10 +590,69 @@ sub _publish_alignment_files {
     };
   }
 
+  if ($num_errors > 0) {
+    $self->error("Encountered errors on $num_errors / ",
+                 "$num_processed alignment files processed");
+  }
+
   return $num_processed - $num_errors;
 }
 
-sub _build_collection  {
+sub _publish_support_files {
+  my ($self, $publisher, $files, $dest_coll, $with_spiked_control) = @_;
+
+  my $num_files     = scalar @{$files};
+  my $num_processed = 0;
+  my $num_errors    = 0;
+  foreach my $file (@{$files}) {
+    my $dest = q[];
+
+    try {
+      $num_processed++;
+      my $obj = WTSI::NPG::HTS::AncFileDataObject->new
+        (collection  => $dest_coll,
+         data_object => fileparse($file),
+         irods       => $self->irods);
+
+      $dest = $publisher->publish($file, $obj->str);
+      $obj->update_secondary_metadata($self->lims_factory,
+                                      $with_spiked_control);
+      $self->info("Published '$dest' [$num_processed / $num_files]");
+    } catch {
+      $num_errors++;
+
+      ## no critic (RegularExpressions::RequireDotMatchAnything)
+      my ($msg) = m{^(.*)$}mx;
+      ## use critic
+      $self->error("Failed to publish '$file' to '$dest' ",
+                   "[$num_processed / $num_files]: ", $msg);
+    };
+  }
+
+  if ($num_errors > 0) {
+    $self->error("Encountered errors on $num_errors / ",
+                 "$num_processed ancillary files processed");
+  }
+
+  return $num_processed - $num_errors;
+}
+
+# We are required by npg_tracking::illumina::run::short_info to
+# implment this method
+sub _build_run_folder {
+  my ($self) = @_;
+
+  if (! ($self->_given_path or $self->has_id_run or $self->has_name)){
+    $self->logconfess('The run folder cannot be determined because ',
+                      'it was not supplied to the constructor and ',
+                      'no path, id_run or run name were available, ',
+                      'from which it could be inferred');
+  }
+
+  return first { $_ ne q[] } reverse splitdir($self->runfolder_path);
+}
+
+sub _build_dest_collection  {
   my ($self) = @_;
 
   my @colls = ($DEFAULT_ROOT_COLL, $self->id_run);
@@ -507,6 +661,12 @@ sub _build_collection  {
   }
 
   return catdir(@colls);
+}
+
+sub _build_qc_dest_collection  {
+  my ($self) = @_;
+
+  return catdir($self->dest_collection, $DEFAULT_QC_COLL);
 }
 
 # Return a sorted array of file paths, filtered by a regex.
@@ -521,6 +681,52 @@ sub _list_directory {
   @file_list = sort map { catfile($path, $_) } @file_list;
 
   return @file_list;
+}
+
+sub _plex_qc_stats_file {
+  my ($self, $position, $tag_index) = @_;
+
+  my $id_run = $self->id_run;
+  my $qc_file_pattern = sprintf '%s_%s\#%d.bam_flagstats.json$',
+    $id_run, $position, $tag_index;
+
+  my @files = grep { m{$qc_file_pattern}msx }
+    @{$self->list_plex_qc_files($position)};
+  my $num_files = scalar @files;
+
+  if ($num_files != 1) {
+    $self->logcroak("Found $num_files QC files for id_run: $id_run, ",
+                    "position: $position, tag_index: $tag_index; ",
+                    pp(\@files));
+  }
+
+  return shift @files;
+}
+
+# Cache of JSON strings read from files
+my $JSON_VALUE_CACHE;
+
+sub _parse_json_file {
+  my ($self, $file) = @_;
+
+  if (exists $JSON_VALUE_CACHE->{$file}) {
+    $self->debug("Returning cached JSON value for '$file'");
+  }
+  else {
+    local $INPUT_RECORD_SEPARATOR = undef;
+
+    $self->debug("Parsing JSON value from '$file'");
+
+    open my $fh, '<', $file or
+      $self->error("Failed to open '$file' for reading: ", $ERRNO);
+    my $octets = <$fh>;
+    close $fh or $self->warn("Failed to close '$file'");
+
+    my $json = Encode::decode('UTF-8', $octets, Encode::FB_CROAK);
+    $JSON_VALUE_CACHE->{$file} = $self->decode($json);
+  }
+
+  return $JSON_VALUE_CACHE->{$file};
 }
 
 __PACKAGE__->meta->make_immutable;

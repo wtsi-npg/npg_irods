@@ -162,15 +162,15 @@ sub setup_test : Test(setup) {
 sub teardown_test : Test(teardown) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  # $irods->remove_collection($irods_tmp_coll);
+  $irods->remove_collection($irods_tmp_coll);
 
-  # if ($have_admin_rights) {
-  #   foreach my $group (@groups_added) {
-  #     if ($irods->group_exists($group)) {
-  #       $irods->remove_group($group);
-  #     }
-  #   }
-  # }
+  if ($have_admin_rights) {
+    foreach my $group (@groups_added) {
+      if ($irods->group_exists($group)) {
+        $irods->remove_group($group);
+      }
+    }
+  }
 }
 
 sub require : Test(1) {
