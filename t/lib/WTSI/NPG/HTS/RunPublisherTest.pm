@@ -5,6 +5,7 @@ use warnings;
 
 use Carp;
 use English qw(-no_match_vars);
+use File::Basename;
 use File::Spec::Functions;
 use File::Temp;
 use Log::Log4perl;
@@ -71,7 +72,7 @@ sub setup_test : Test(setup) {
                                     strict_baton_version => 0);
 
   $irods_tmp_coll =
-    $irods->add_collection("HTSRunPublisherTest.$pid.$test_counter");
+    $irods->add_collection("RunPublisherTest.$pid.$test_counter");
   $test_counter++;
 }
 
@@ -101,7 +102,7 @@ sub positions : Test(2) {
   }
 }
 
-sub num_total_reads : Test(36) {
+sub num_plex_reads : Test(36) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -128,10 +129,10 @@ sub num_total_reads : Test(36) {
     my $i = 0;
     foreach my $tag (@tags) {
       my $expected = $expected_read_counts->[$i];
-      my $count = $pub->num_total_reads($position, $tag);
+      my $count = $pub->num_plex_reads($position, $tag);
 
       cmp_ok($count, '==', $expected,
-             "num_total_reads for position $position tag $tag") or
+             "num_plex_reads for position $position tag $tag") or
                diag explain $count;
       $i++;
     }
@@ -159,8 +160,8 @@ sub is_paired_read : Test(2) {
 sub list_plex_alignment_files : Test(16) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my $id_run = 17550;
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
   foreach my $file_format (qw(bam cram)) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
@@ -170,42 +171,16 @@ sub list_plex_alignment_files : Test(16) {
        npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
-    my $lane_tag_counts = {1 => 16,
-                           2 => 12,
-                           3 =>  8,
-                           4 =>  8,
-                           5 =>  5,
-                           6 => 12,
-                           7 =>  6,
-                           8 =>  6};
-    my $lane_yhuman = 6;
-    my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
+    my %position_index =
+      calc_plex_alignment_files($archive_path, $file_format);
 
-    foreach my $position (sort keys %{$lane_tag_counts}) {
-      # All lanes have tag 888
-      my @tags = (0 .. $lane_tag_counts->{$position}, 888);
-
-      my @plex_files;
-      foreach my $tag (@tags) {
-        push @plex_files, sprintf "%s/lane%d/%d_%d#%d.%s",
-          $archive_path, $position, $id_run, $position, $tag, $file_format;
-
-        if ($tag != 888) {
-          push @plex_files, sprintf "%s/lane%d/%d_%d#%d_phix.%s",
-            $archive_path, $position, $id_run, $position, $tag, $file_format;
-        }
-
-        if ($position == $lane_yhuman and $tag != 888) {
-          push @plex_files, sprintf "%s/lane%d/%d_%d#%d_yhuman.%s",
-            $archive_path, $position, $id_run, $position, $tag, $file_format;
-        }
-      }
-
-      my @expected_files = sort @plex_files;
+    foreach my $position (1 .. 8) {
+      my @expected_files = @{$position_index{$position}};
       my $observed_files = $pub->list_plex_alignment_files($position);
-      is_deeply($observed_files, \@expected_files,
-                "Found plex alignment files for lane $position ($file_format)")
-        or diag explain $observed_files;
+       is_deeply($observed_files, \@expected_files,
+                 "Found plex alignment files for lane $position " .
+                 "($file_format)")
+         or diag explain $observed_files;
     }
   }
 }
@@ -215,6 +190,7 @@ sub list_plex_qc_files : Test(16) {
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
   foreach my $file_format (qw(bam cram)) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
@@ -224,80 +200,10 @@ sub list_plex_qc_files : Test(16) {
        npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
-    my $id_run = 17550;
-    my $lane_tag_counts = {1 => 16,
-                           2 => 12,
-                           3 =>  8,
-                           4 =>  8,
-                           5 =>  5,
-                           6 => 12,
-                           7 =>  6,
-                           8 =>  6};
-    my $lane_yhuman = 6;
-    my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
+    my %position_index = calc_plex_qc_files($archive_path);
 
-    my @qc_metrics = qw(adapter bam_flagstats gc_bias gc_fraction insert_size
-                        qX_yield ref_match sequence_error);
-
-    # This enumerates all the edge cases I found in this example
-    # dataset. Rather than simply listing all the expected files in each
-    # case, it allows us to see the scope for normalising the outputs in
-    # future. It makes maintaining the tests easier too.
-    foreach my $position (sort keys %{$lane_tag_counts}) {
-      # All lanes have tag 888
-      my @tags = (0 .. $lane_tag_counts->{$position}, 888);
-
-      my @plex_files;
-      foreach my $tag (@tags) {
-        my @metrics = @qc_metrics;
-        if (not ($tag       == 0                  or
-                 $position   < 5                  or
-                 ($position == 5 and $tag > 4)    or
-                 ($position == 5 and $tag == 888) or
-                 ($position == 6 and $tag == 888) or
-                 $position > 6)) {
-          push @metrics, 'genotype';
-        }
-
-        if ($tag != 888) {
-          # Only for non-phiX tags
-          push @metrics, 'alignment_filter_metrics';
-        }
-
-        foreach my $metric (@metrics) {
-          if ($metric eq 'bam_flagstats') {
-            # In some cases flagstats is named inconsistently (underscore)
-            if ($position == 5 and $tag == 5) {
-              push @plex_files, sprintf '%s/lane%d/qc/%d_%d#%d_%s.json',
-                $archive_path, $position, $id_run, $position, $tag, $metric;
-              push @plex_files, sprintf '%s/lane%d/qc/%d_%d#%d_phix_%s.json',
-                $archive_path, $position, $id_run, $position, $tag, $metric;
-            }
-            elsif ($tag == 888) {
-              push @plex_files, sprintf '%s/lane%d/qc/%d_%d#%d_%s.json',
-                $archive_path, $position, $id_run, $position, $tag, $metric;
-            }
-            else {
-              push @plex_files, sprintf '%s/lane%d/qc/%d_%d#%d.%s.json',
-                $archive_path, $position, $id_run, $position, $tag, $metric;
-              push @plex_files, sprintf '%s/lane%d/qc/%d_%d#%d_phix.%s.json',
-                $archive_path, $position, $id_run, $position, $tag, $metric;
-            }
-
-            # Lane 6 has a yhuman split
-            if ($position == 6 and $tag != 888) {
-              push @plex_files, sprintf '%s/lane%d/qc/%d_%d#%d_yhuman.%s.json',
-                $archive_path, $position, $id_run, $position, $tag, $metric;
-            }
-          }
-          else {
-            push @plex_files, sprintf '%s/lane%d/qc/%d_%d#%d.%s.json',
-              $archive_path, $position, $id_run, $position, $tag, $metric;
-          }
-        }
-      }
-
-      my @expected_files = sort @plex_files;
+    foreach my $position (1 .. 8) {
+      my @expected_files = @{$position_index{$position}};
       my $observed_files = $pub->list_plex_qc_files($position);
       is_deeply($observed_files, \@expected_files,
                 "Found plex QC files for lane $position ($file_format)")
@@ -311,8 +217,9 @@ sub list_plex_ancillary_files : Test(16) {
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
-  foreach my$file_format (qw(bam cram)) {
+  foreach my $file_format (qw(bam cram)) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
@@ -320,164 +227,153 @@ sub list_plex_ancillary_files : Test(16) {
        npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
-    my $id_run = 17550;
-    my $lane_tag_counts = {1 => 16,
-                           2 => 12,
-                           3 =>  8,
-                           4 =>  8,
-                           5 =>  5,
-                           6 => 12,
-                           7 =>  6,
-                           8 =>  6};
-    my $lane_nuc_type = {1 => 'DNA',
-                         2 => 'DNA',
-                         3 => 'RNA',
-                         4 => 'RNA',
-                         5 => 'DNA',
-                         6 => 'DNA',
-                         7 => 'DNA',
-                         8 => 'DNA'};
-    my $lane_yhuman = 6;
-    my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
+    my %position_index = calc_plex_ancillary_files($archive_path);
 
-    my @default_parts = qw(.bamcheck
-                           .flagstat
-                           .seqchksum
-                           .sha512primesums512.seqchksum);
-
-    foreach my $position (sort keys %{$lane_tag_counts}) {
-      # All lanes have tag 888
-      my @tags = (0 .. $lane_tag_counts->{$position}, 888);
-
-      my @plex_files;
-      foreach my $tag (@tags) {
-        foreach my $part (@default_parts) {
-          push @plex_files, sprintf "%s/lane%d/%d_%d#%d%s",
-            $archive_path, $position, $id_run, $position, $tag, $part;
-
-          if ($tag != 888) {
-            push @plex_files, sprintf "%s/lane%d/%d_%d#%d_phix%s",
-              $archive_path, $position, $id_run, $position, $tag, $part;
-          }
-
-          if ($position == $lane_yhuman and $tag != 888) {
-            push @plex_files, sprintf "%s/lane%d/%d_%d#%d_yhuman%s",
-              $archive_path, $position, $id_run, $position, $tag, $part;
-          }
-        }
-
-        foreach my $part (qw(_quality_cycle_caltable.txt
-                             _quality_cycle_surv.txt
-                             _quality_error.txt)) {
-          push @plex_files, sprintf "%s/lane%d/%d_%d#%d%s",
-            $archive_path, $position, $id_run, $position, $tag, $part;
-
-          if ($tag != 888) {
-            push @plex_files, sprintf "%s/lane%d/%d_%d#%d_phix%s",
-              $archive_path, $position, $id_run, $position, $tag, $part;
-          }
-        }
-
-        foreach my $part (qw(.deletions.bed
-                             .insertions.bed
-                             .junctions.bed)) {
-          if ($lane_nuc_type->{$position} eq 'RNA' and
-              $tag != 0                            and
-              $tag != 888) {
-            push @plex_files, sprintf "%s/lane%d/%d_%d#%d%s",
-              $archive_path, $position, $id_run, $position, $tag, $part;
-          }
-        }
-
-        foreach my $part (qw(_F0x900.stats _F0xB00.stats)) {
-          if ($tag != 888) {
-            push @plex_files, sprintf "%s/lane%d/%d_%d#%d%s",
-              $archive_path, $position, $id_run, $position, $tag, $part;
-            push @plex_files, sprintf "%s/lane%d/%d_%d#%d_phix%s",
-              $archive_path, $position, $id_run, $position, $tag, $part;
-
-            if ($position == $lane_yhuman) {
-              push @plex_files, sprintf "%s/lane%d/%d_%d#%d_yhuman%s",
-                $archive_path, $position, $id_run, $position, $tag, $part;
-            }
-          }
-        }
-      }
-
-      # These files are missing from the example dataset (because they
-      # are missing in production)
-      if ($position == 5) {
-        my %missing = map { $_ => 1 }
-                      map { sprintf '%s/lane%d/17550_%d#5%s',
-                            $archive_path, $position, $position, $_ }
-                      qw(_F0x900.stats
-                         _F0xB00.stats
-                         _quality_cycle_surv.txt
-                         _quality_cycle_caltable.txt
-                         _quality_error.txt
-                         _phix_F0x900.stats
-                         _phix_F0xB00.stats);
-        @plex_files = grep { not $missing{$_} } @plex_files;
-      }
-
-      my @expected_files = sort @plex_files;
+    foreach my $position (1 .. 8) {
+      my @expected_files = @{$position_index{$position}};
       my $observed_files = $pub->list_plex_ancillary_files($position);
       is_deeply($observed_files, \@expected_files,
-                "Found plex ancillary files for lane $position ($file_format)")
+                "Found plex ancillary files for lane $position " .
+                "($file_format)")
         or diag explain $observed_files;
     }
   }
 }
 
-sub publish_plex_alignment_files : Test(2) {
+sub publish_plex_alignment_files : Test(4) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
-    # Omitting bam
+    # Omitting bam to reduce runtime
     foreach my $file_format (qw(cram)) {
-      my $pub = WTSI::NPG::HTS::RunPublisher->new
-        (collection     => "$irods_tmp_coll/publish_alignment_files",
-         file_format    => $file_format,
-         irods          => $irods,
-         lims_factory   => $lims_factory,
-         npgqc_schema   => $qc_schema,
-         runfolder_path => $runfolder_path);
+      my $dest_coll = "$irods_tmp_coll/publish_plex_alignment_files/$position";
 
-      ok($pub->publish_plex_alignment_files($position),
-         "Published position $position $file_format alignment files");
+      my $pub = WTSI::NPG::HTS::RunPublisher->new
+        (dest_collection => $dest_coll,
+         file_format     => $file_format,
+         irods           => $irods,
+         lims_factory    => $lims_factory,
+         npgqc_schema    => $qc_schema,
+         runfolder_path  => $runfolder_path);
+
+      my %position_index =
+        calc_plex_alignment_files($archive_path, $file_format);
+
+      my $num_expected  = scalar @{$position_index{$position}};
+      my $num_published = $pub->publish_plex_alignment_files($position);
+
+      cmp_ok($num_published, '==', $num_expected,
+             "Published $num_expected position $position " .
+             "$file_format alignment files");
+
+      my @expected_paths = map {
+        catfile($dest_coll, scalar fileparse($_))
+      } @{$position_index{$position}};
+
+      my ($observed_paths) = $irods->list_collection($dest_coll);
+      my @observed_paths = sort @{$observed_paths};
+
+      is_deeply(\@observed_paths, \@expected_paths,
+                "Published correctly named position $position " .
+                "$file_format alignment files") or
+                  diag explain $observed_paths;
     }
   }
 }
 
-sub publish_plex_ancillary_files : Test(2) {
+sub publish_plex_ancillary_files : Test(4) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
-    # Omitting bam
+    # Omitting bam to reduce runtime
     foreach my $file_format (qw(cram)) {
+      my $dest_coll = "$irods_tmp_coll/publish_plex_ancillary_files/$position";
       my $pub = WTSI::NPG::HTS::RunPublisher->new
-        (collection     => "$irods_tmp_coll/publish_ancillary_files",
-         file_format    => $file_format,
-         irods          => $irods,
-         lims_factory   => $lims_factory,
-         npgqc_schema   => $qc_schema,
-         runfolder_path => $runfolder_path);
+        (dest_collection => $dest_coll,
+         file_format     => $file_format,
+         irods           => $irods,
+         lims_factory    => $lims_factory,
+         npgqc_schema    => $qc_schema,
+         runfolder_path  => $runfolder_path);
 
-      ok($pub->publish_plex_ancillary_files($position),
-         "Published position $position $file_format ancillary files");
+      my %position_index = calc_plex_ancillary_files($archive_path);
+
+      my $num_expected  = scalar @{$position_index{$position}};
+      my $num_published = $pub->publish_plex_ancillary_files($position);
+      cmp_ok($num_published, '==', $num_expected,
+             "Published $num_expected position $position " .
+             "$file_format ancillary files");
+
+      my @expected_paths = map {
+        catfile($dest_coll, scalar fileparse($_))
+      } @{$position_index{$position}};
+
+      my ($observed_paths) = $irods->list_collection($dest_coll);
+      my @observed_paths = sort @{$observed_paths};
+
+      is_deeply(\@observed_paths, \@expected_paths,
+                "Published correctly named position $position " .
+                "$file_format ancillary files") or
+                  diag explain $observed_paths;
     }
   }
 }
 
-sub collection : Test(4) {
+sub publish_plex_qc_files : Test(4) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
+
+  # Position 1 is DNA, position 3 is RNA
+  foreach my $position (1, 3) {
+    # Omitting bam to reduce runtime
+    foreach my $file_format (qw(cram)) {
+      my $dest_coll = "$irods_tmp_coll/publish_plex_qc_files/$position";
+      my $pub = WTSI::NPG::HTS::RunPublisher->new
+        (dest_collection => $dest_coll,
+         file_format     => $file_format,
+         irods           => $irods,
+         lims_factory    => $lims_factory,
+         npgqc_schema    => $qc_schema,
+         runfolder_path  => $runfolder_path);
+
+      my %position_index = calc_plex_qc_files($archive_path);
+
+      my $num_expected  = scalar @{$position_index{$position}};
+      my $num_published = $pub->publish_plex_qc_files($position);
+      cmp_ok($num_published, '==', $num_expected,
+             "Published $num_expected position $position " .
+             "$file_format QC files");
+
+      my $qc_coll = catfile($dest_coll, q[qc]);
+      my @expected_paths = map {
+        catfile($qc_coll, scalar fileparse($_))
+      } @{$position_index{$position}};
+
+      my ($observed_paths) = $irods->list_collection($qc_coll);
+      my @observed_paths = sort @{$observed_paths};
+
+      is_deeply(\@observed_paths, \@expected_paths,
+                "Published correctly named position $position " .
+                "$file_format QC files") or
+                  diag explain $observed_paths;
+    }
+  }
+}
+
+sub dest_collection : Test(4) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -491,18 +387,256 @@ sub collection : Test(4) {
        npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
-    is($pub1->collection, '/seq/5174', 'Default collection');
+    is($pub1->dest_collection, '/seq/5174', 'Default dest collection');
 
     my $pub2 = WTSI::NPG::HTS::RunPublisher->new
-      (collection     => '/a/b/c',
-       file_format    => $file_format,
-       irods          => $irods,
-       lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
-       runfolder_path => $runfolder_path);
+      (dest_collection => '/a/b/c',
+       file_format     => $file_format,
+       irods           => $irods,
+       lims_factory    => $lims_factory,
+       npgqc_schema    => $qc_schema,
+       runfolder_path  => $runfolder_path);
 
-    is($pub2->collection, '/a/b/c', 'Custom collection');
+    is($pub2->dest_collection, '/a/b/c', 'Custom dest collection');
   }
+}
+
+sub calc_plex_alignment_files {
+  my ($root_path, $file_format) = @_;
+
+  my %position_index;
+
+  my $id_run = 17550;
+  my $lane_tag_counts = {1 => 16,
+                         2 => 12,
+                         3 =>  8,
+                         4 =>  8,
+                         5 =>  5,
+                         6 => 12,
+                         7 =>  6,
+                         8 =>  6};
+  my $lane_yhuman = 6;
+
+  foreach my $position (sort keys %{$lane_tag_counts}) {
+    # All lanes have tag 888
+    my @tags = (0 .. $lane_tag_counts->{$position}, 888);
+
+      my @plex_files;
+    foreach my $tag (@tags) {
+      push @plex_files, sprintf "%s/lane%d/%d_%d#%d.%s",
+        $root_path, $position, $id_run, $position, $tag, $file_format;
+
+      if ($tag != 888) {
+        push @plex_files, sprintf "%s/lane%d/%d_%d#%d_phix.%s",
+          $root_path, $position, $id_run, $position, $tag, $file_format;
+      }
+
+      if ($position == $lane_yhuman and $tag != 888) {
+        push @plex_files, sprintf "%s/lane%d/%d_%d#%d_yhuman.%s",
+          $root_path, $position, $id_run, $position, $tag, $file_format;
+      }
+    }
+
+    @plex_files = sort @plex_files;
+    $position_index{$position} = \@plex_files;
+  }
+
+  return %position_index;
+}
+
+sub calc_plex_qc_files {
+  my ($root_path) = @_;
+
+  my %position_index;
+
+  my $id_run = 17550;
+  my $lane_tag_counts = {1 => 16,
+                         2 => 12,
+                         3 =>  8,
+                         4 =>  8,
+                         5 =>  5,
+                         6 => 12,
+                         7 =>  6,
+                         8 =>  6};
+  my $lane_yhuman = 6;
+
+  my @qc_metrics = qw(adapter bam_flagstats gc_bias gc_fraction insert_size
+                      qX_yield ref_match sequence_error);
+
+  # This enumerates all the edge cases I found in this example
+  # dataset. Rather than simply listing all the expected files in each
+  # case, it allows us to see the scope for normalising the outputs in
+  # future. It makes maintaining the tests easier too.
+  foreach my $position (sort keys %{$lane_tag_counts}) {
+    # All lanes have tag 888
+    my @tags = (0 .. $lane_tag_counts->{$position}, 888);
+
+    my @plex_files;
+    foreach my $tag (@tags) {
+      my @metrics = @qc_metrics;
+      if (not ($tag       == 0                  or
+               $position   < 5                  or
+               ($position == 5 and $tag > 4)    or
+               ($position == 5 and $tag == 888) or
+               ($position == 6 and $tag == 888) or
+               $position > 6)) {
+        push @metrics, 'genotype';
+      }
+
+      if ($tag != 888) {
+        # Only for non-phiX tags
+        push @metrics, 'alignment_filter_metrics';
+      }
+
+      foreach my $metric (@metrics) {
+        if ($metric eq 'bam_flagstats') {
+          # In some cases flagstats is named inconsistently (underscore)
+          if ($position == 5 and $tag == 5) {
+            push @plex_files, sprintf '%s/lane%d/qc/%d_%d#%d_%s.json',
+              $root_path, $position, $id_run, $position, $tag, $metric;
+            push @plex_files, sprintf '%s/lane%d/qc/%d_%d#%d_phix_%s.json',
+              $root_path, $position, $id_run, $position, $tag, $metric;
+          }
+          elsif ($tag == 888) {
+            push @plex_files, sprintf '%s/lane%d/qc/%d_%d#%d_%s.json',
+              $root_path, $position, $id_run, $position, $tag, $metric;
+          }
+          else {
+            push @plex_files, sprintf '%s/lane%d/qc/%d_%d#%d.%s.json',
+              $root_path, $position, $id_run, $position, $tag, $metric;
+            push @plex_files, sprintf '%s/lane%d/qc/%d_%d#%d_phix.%s.json',
+              $root_path, $position, $id_run, $position, $tag, $metric;
+          }
+
+          # Lane 6 has a yhuman split
+          if ($position == 6 and $tag != 888) {
+            push @plex_files, sprintf '%s/lane%d/qc/%d_%d#%d_yhuman.%s.json',
+              $root_path, $position, $id_run, $position, $tag, $metric;
+          }
+        }
+        else {
+          push @plex_files, sprintf '%s/lane%d/qc/%d_%d#%d.%s.json',
+            $root_path, $position, $id_run, $position, $tag, $metric;
+        }
+      }
+    }
+
+    @plex_files = sort @plex_files;
+    $position_index{$position} = \@plex_files;
+  }
+
+  return %position_index;
+}
+
+sub calc_plex_ancillary_files {
+  my ($root_path) = @_;
+
+  my %position_index;
+
+  my $id_run = 17550;
+  my $lane_tag_counts = {1 => 16,
+                         2 => 12,
+                         3 =>  8,
+                         4 =>  8,
+                         5 =>  5,
+                         6 => 12,
+                         7 =>  6,
+                         8 =>  6};
+  my $lane_nuc_type = {1 => 'DNA',
+                       2 => 'DNA',
+                       3 => 'RNA',
+                       4 => 'RNA',
+                       5 => 'DNA',
+                       6 => 'DNA',
+                       7 => 'DNA',
+                       8 => 'DNA'};
+  my $lane_yhuman = 6;
+
+  my @default_parts = qw(.bamcheck
+                         .flagstat
+                         .seqchksum
+                         .sha512primesums512.seqchksum);
+
+  foreach my $position (sort keys %{$lane_tag_counts}) {
+    # All lanes have tag 888
+    my @tags = (0 .. $lane_tag_counts->{$position}, 888);
+
+    my @plex_files;
+    foreach my $tag (@tags) {
+      foreach my $part (@default_parts) {
+        push @plex_files, sprintf "%s/lane%d/%d_%d#%d%s",
+          $root_path, $position, $id_run, $position, $tag, $part;
+
+        if ($tag != 888) {
+          push @plex_files, sprintf "%s/lane%d/%d_%d#%d_phix%s",
+            $root_path, $position, $id_run, $position, $tag, $part;
+        }
+
+        if ($position == $lane_yhuman and $tag != 888) {
+          push @plex_files, sprintf "%s/lane%d/%d_%d#%d_yhuman%s",
+            $root_path, $position, $id_run, $position, $tag, $part;
+        }
+      }
+
+      foreach my $part (qw(_quality_cycle_caltable.txt
+                           _quality_cycle_surv.txt
+                           _quality_error.txt)) {
+        push @plex_files, sprintf "%s/lane%d/%d_%d#%d%s",
+          $root_path, $position, $id_run, $position, $tag, $part;
+
+        if ($tag != 888) {
+          push @plex_files, sprintf "%s/lane%d/%d_%d#%d_phix%s",
+            $root_path, $position, $id_run, $position, $tag, $part;
+        }
+      }
+
+      foreach my $part (qw(.deletions.bed
+                           .insertions.bed
+                           .junctions.bed)) {
+        if ($lane_nuc_type->{$position} eq 'RNA' and
+            $tag != 0                            and
+            $tag != 888) {
+          push @plex_files, sprintf "%s/lane%d/%d_%d#%d%s",
+            $root_path, $position, $id_run, $position, $tag, $part;
+        }
+      }
+
+      foreach my $part (qw(_F0x900.stats _F0xB00.stats)) {
+        if ($tag != 888) {
+          push @plex_files, sprintf "%s/lane%d/%d_%d#%d%s",
+            $root_path, $position, $id_run, $position, $tag, $part;
+          push @plex_files, sprintf "%s/lane%d/%d_%d#%d_phix%s",
+            $root_path, $position, $id_run, $position, $tag, $part;
+
+          if ($position == $lane_yhuman) {
+            push @plex_files, sprintf "%s/lane%d/%d_%d#%d_yhuman%s",
+              $root_path, $position, $id_run, $position, $tag, $part;
+          }
+        }
+      }
+    }
+
+    # These files are missing from the example dataset (because they
+    # are missing in production)
+    if ($position == 5) {
+      my %missing = map { $_ => 1 }
+        map { sprintf '%s/lane%d/17550_%d#5%s',
+              $root_path, $position, $position, $_ }
+        qw(_F0x900.stats
+           _F0xB00.stats
+           _quality_cycle_surv.txt
+           _quality_cycle_caltable.txt
+           _quality_error.txt
+           _phix_F0x900.stats
+           _phix_F0xB00.stats);
+      @plex_files = grep { not $missing{$_} } @plex_files;
+    }
+
+    @plex_files = sort @plex_files;
+    $position_index{$position} = \@plex_files;
+  }
+
+  return %position_index;
 }
 
 1;

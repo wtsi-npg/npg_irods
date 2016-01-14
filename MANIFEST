@@ -4,7 +4,6 @@ bin/samgen.pl
 Build.PL
 Changes
 etc/log4perl_tests.conf
-lib/WTSI/DNAP/Utilities/Runnable.pm
 lib/WTSI/NPG/HTS/AlMapFileDataObject.pm
 lib/WTSI/NPG/HTS/AncFileDataObject.pm
 lib/WTSI/NPG/HTS/Annotator.pm
@@ -29,6 +28,7 @@ scripts/travis_install.sh
 scripts/travis_script.sh
 t/almap_file_data_object.t
 t/anc_file_data_object.t
+t/annotator.t
 t/compile_scripts.t
 t/critic.t
 t/data/almap_file_data_object/15440_1#0.sam
@@ -36,7 +36,6 @@ t/data/almap_file_data_object/15440_1#81.sam
 t/data/almap_file_data_object/7915_5#0.sam
 t/data/almap_file_data_object/7915_5#1.sam
 t/data/almap_file_data_object/test_ref.fa
-t/data/almap_file_data_object/test_ref.fa.fai
 t/data/anc_file_data_object/17550_3#0.bam_flagstats.json
 t/data/anc_file_data_object/17550_3#0.bamcheck
 t/data/anc_file_data_object/17550_3#0.flagstat
@@ -81,7 +80,6 @@ t/data/anc_file_data_object/17550_3#1_quality_cycle_surv.txt
 t/data/anc_file_data_object/17550_3#1_quality_error.txt
 t/data/meta_updater/7915_5#1.sam
 t/data/meta_updater/test_ref.fa
-t/data/meta_updater/test_ref.fa.fai
 t/data/publisher/publish/a.txt
 t/data/publisher/publish/b.txt
 t/data/publisher/publish_directory/a.txt
@@ -6100,6 +6098,7 @@ t/fixtures/npgqc/Fastqcheck.yml
 t/fixtures/npgqc/MqcOutcomeDict.yml
 t/lib/WTSI/NPG/HTS/AlMapFileDataObjectTest.pm
 t/lib/WTSI/NPG/HTS/AncFileDataObjectTest.pm
+t/lib/WTSI/NPG/HTS/AnnotatorTest.pm
 t/lib/WTSI/NPG/HTS/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/HTS/PublisherTest.pm
 t/lib/WTSI/NPG/HTS/RunPublisherTest.pm
@@ -6111,3 +6110,4 @@ t/publisher.t
 t/README
 t/run_publisher.t
 t/samtools.t
+

@@ -25,7 +25,6 @@ has 'irods' =>
      return WTSI::NPG::iRODS->new;
    });
 
-
 sub BUILD {
   my ($self) = @_;
 
@@ -119,19 +118,7 @@ sub publish_file {
                                          $remote_path, $timestamp);
     }
 
-    my $num_meta_errors = 0;
-    if (defined $metadata) {
-      foreach my $avu (@{$metadata}) {
-        try {
-          $obj->supersede_multivalue_avus($avu->{attribute}, [$avu->{value}],
-                                          $avu->{units});
-        } catch {
-          $num_meta_errors++;
-          $self->error('Failed to supersede with AVU ', pp($avu), ': ', $_);
-        };
-      }
-    }
-
+    my $num_meta_errors = $self->_supersede_multivalue($obj, $metadata);
     if ($num_meta_errors > 0) {
        $self->logcroak("Failed to update metadata on '$remote_path': ",
                        "$num_meta_errors errors encountered ",
@@ -168,19 +155,7 @@ sub publish_directory {
     push @meta, @{$metadata};
   }
 
-  $self->debug("Adding metadata to '$coll_path': ", pp(\@meta));
-
-  my $num_meta_errors = 0;
-  foreach my $avu (@meta) {
-    try {
-      $coll->supersede_multivalue_avus($avu->{attribute}, [$avu->{value}],
-                                       $avu->{units});
-    } catch {
-      $num_meta_errors++;
-      $self->error('Failed to supersede with AVU ', pp($avu), ': ', $_);
-    };
-  }
-
+  my $num_meta_errors = $self->_supersede_multivalue($coll, \@meta);
   if ($num_meta_errors > 0) {
     $self->logcroak("Failed to update metadata on '$remote_path': ",
                     "$num_meta_errors errors encountered ",
@@ -315,7 +290,8 @@ sub _publish_file_overwrite {
                              $avu->{units});
       } catch {
         $num_meta_errors++;
-        $self->error('Failed to supersede with AVU ', pp($avu), ': ', $_);
+        $self->error(q[Failed to supersede on '], $obj->str, q[' with AVU ],
+                     pp($avu), q[: ], $_);
       };
     }
 
@@ -348,6 +324,26 @@ sub _publish_file_overwrite {
   }
 
   return $obj;
+}
+
+sub _supersede_multivalue {
+  my ($self, $item, $metadata) = @_;
+
+  $self->debug(q[Setting metadata on '], $item->str, q[': ], pp($metadata));
+
+  my $num_meta_errors = 0;
+  foreach my $avu (@{$metadata}) {
+    try {
+      $item->supersede_multivalue_avus($avu->{attribute}, [$avu->{value}],
+                                       $avu->{units});
+    } catch {
+      $num_meta_errors++;
+      $self->error(q[Failed to supersede on '], $item->str, q[' with AVU ],
+                   pp($avu), q[: ], $_);
+    };
+  }
+
+  return $num_meta_errors;
 }
 
 no Moose;

@@ -278,6 +278,9 @@ sub set_primary_metadata {
 sub update_secondary_metadata {
   my ($self, $factory, $with_spiked_control, $filter) = @_;
 
+  defined $factory or
+    $self->logconfess('A defined factory argument is required');
+
   my $path = $self->str;
   my @avus = $self->make_secondary_metadata($factory,
                                             $self->id_run,

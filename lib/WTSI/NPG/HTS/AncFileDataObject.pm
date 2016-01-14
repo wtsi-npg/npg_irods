@@ -99,6 +99,9 @@ sub is_restricted_access {
 sub update_secondary_metadata {
   my ($self, $factory, $with_spiked_control) = @_;
 
+  defined $factory or
+    $self->logconfess('A defined factory argument is required');
+
   my $path = $self->str;
 
   if ($self->is_restricted_access) {
