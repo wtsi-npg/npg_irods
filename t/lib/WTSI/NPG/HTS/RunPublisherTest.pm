@@ -14,6 +14,8 @@ use Test::More;
 use base qw(WTSI::NPG::HTS::Test);
 
 use WTSI::NPG::HTS::RunPublisher;
+use WTSI::NPG::iRODS::DataObject;
+use WTSI::NPG::iRODS::Metadata;
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
@@ -21,6 +23,7 @@ Log::Log4perl::init('./etc/log4perl_tests.conf');
   package TestDB;
   use Moose;
 
+  # FIXME -- handle UTF-8 correctly in its private testdb
   with 'npg_testing::db';
 }
 
@@ -44,6 +47,7 @@ sub setup_databases : Test(startup) {
     # create_test_db produces warnings during expected use, which
     # appear mixed with test output in the terminal
     local $SIG{__WARN__} = sub { };
+    # FIXME -- test_dbattr currently does nothing wrt UTF-8
     $qc_schema = TestDB->new(test_dbattr => $qc_attr)->create_test_db
       ('npg_qc::Schema', "$fixture_path/npgqc", $qc_db_file);
   }
@@ -54,6 +58,7 @@ sub setup_databases : Test(startup) {
 
   {
     local $SIG{__WARN__} = sub { };
+    # FIXME -- test_dbattr currently does nothing wrt UTF-8
     $wh_schema = TestDB->new(test_dbattr => $wh_attr)->create_test_db
       ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
        $wh_db_file);
@@ -185,6 +190,34 @@ sub list_plex_alignment_files : Test(16) {
   }
 }
 
+sub list_plex_index_files : Test(16) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
+
+  foreach my $file_format (qw(bam cram)) {
+    my $pub = WTSI::NPG::HTS::RunPublisher->new
+      (file_format    => $file_format,
+       irods          => $irods,
+       lims_factory   => $lims_factory,
+       npgqc_schema   => $qc_schema,
+       runfolder_path => $runfolder_path);
+
+    my %position_index =
+      calc_plex_index_files($archive_path, $file_format);
+
+    foreach my $position (1 .. 8) {
+      my @expected_files = @{$position_index{$position}};
+      my $observed_files = $pub->list_plex_index_files($position);
+      is_deeply($observed_files, \@expected_files,
+                "Found plex index files for lane $position " .
+                "($file_format)")
+        or diag explain $observed_files;
+    }
+  }
+}
+
 sub list_plex_qc_files : Test(16) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -240,7 +273,7 @@ sub list_plex_ancillary_files : Test(16) {
   }
 }
 
-sub publish_plex_alignment_files : Test(4) {
+sub publish_plex_alignment_files : Test(106) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -282,6 +315,116 @@ sub publish_plex_alignment_files : Test(4) {
                 "Published correctly named position $position " .
                 "$file_format alignment files") or
                   diag explain $observed_paths;
+    }
+  }
+
+  my $tag_count = 16;
+  my $expected_read_counts = [3334934,  # tag 0
+                              71488156, 29817458, 15354480, 33948370,
+                              33430552, 24094786, 32604688, 26749430,
+                              27668866, 30775624, 33480806, 40965140,
+                              32087634, 37315470, 27193418, 31538878,
+                              1757876]; # tag 888
+  # Other tags
+  my @tags = (1 .. $tag_count, 888);
+
+  my $i = 1;
+  foreach my $tag (@tags) {
+    my $expected_read_count = $expected_read_counts->[$i];
+
+    my @paths = $irods->find_objects_by_meta($irods_tmp_coll,
+                                             [lane      => 1],
+                                             [tag_index => $tag],
+                                             [type      => 'cram'],
+                                             [target    => 1]);
+
+    cmp_ok(scalar @paths, '==', 1, "position: 1, tag $tag found");
+    my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $paths[0]);
+
+    my @created = $obj->find_in_metadata($DCTERMS_CREATED);
+    cmp_ok(scalar @created, '==', 1, "tag $tag created metadata present");
+    my @creator = $obj->find_in_metadata($DCTERMS_CREATOR);
+    cmp_ok(scalar @creator, '==', 1, "tag $tag creator metadata present");
+    my @publisher = $obj->find_in_metadata($DCTERMS_PUBLISHER);
+    cmp_ok(scalar @publisher, '==', 1, "tag $tag publisher metadata present");
+
+    is_deeply([$obj->get_avu($IS_PAIRED_READ)],
+              [{attribute => $IS_PAIRED_READ,
+                value     => 1}],
+              "tag $tag paired_read metadata correct");
+
+    is_deeply([$obj->find_in_metadata($TOTAL_READS)],
+              [{attribute => $TOTAL_READS,
+                value     => $expected_read_count}],
+              "tag $tag total_reads metadata correct");
+    $i++;
+  }
+}
+
+sub publish_plex_index_files : Test(166) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
+
+  # Position 1 is DNA, position 3 is RNA
+  foreach my $position (1, 3) {
+    # Omitting bam to reduce runtime
+    foreach my $file_format (qw(cram)) {
+      my $dest_coll = "$irods_tmp_coll/publish_plex_index_files/$position";
+
+      my $pub = WTSI::NPG::HTS::RunPublisher->new
+        (dest_collection => $dest_coll,
+         file_format     => $file_format,
+         irods           => $irods,
+         lims_factory    => $lims_factory,
+         npgqc_schema    => $qc_schema,
+         runfolder_path  => $runfolder_path);
+
+      my %position_index =
+        calc_plex_index_files($archive_path, $file_format);
+
+      my $num_expected  = scalar @{$position_index{$position}};
+      my $num_published = $pub->publish_plex_index_files($position);
+
+      cmp_ok($num_published, '==', $num_expected,
+             "Published $num_expected position $position " .
+             "$file_format index files");
+
+      my @expected_paths = map {
+        catfile($dest_coll, scalar fileparse($_))
+      } @{$position_index{$position}};
+
+      my ($observed_paths) = $irods->list_collection($dest_coll);
+      my @observed_paths = sort @{$observed_paths};
+
+      is_deeply(\@observed_paths, \@expected_paths,
+                "Published correctly named position $position " .
+                "$file_format index files") or
+                  diag explain $observed_paths;
+    }
+  }
+
+  foreach my $position (1, 3) {
+    # Omitting bam to reduce runtime
+    foreach my $type (qw(crai)) {
+      my $dest_coll = "$irods_tmp_coll/publish_plex_index_files/$position";
+      my @paths = $irods->find_objects_by_meta($dest_coll, [type => $type]);
+
+      foreach my $path (@paths) {
+        my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $path);
+        my $file_name = fileparse($obj->str);
+        my @created = $obj->find_in_metadata($DCTERMS_CREATED);
+        cmp_ok(scalar @created, '==', 1,
+               "$file_name created metadata present");
+        my @creator = $obj->find_in_metadata($DCTERMS_CREATOR);
+        cmp_ok(scalar @creator, '==', 1,
+               "$file_name creator metadata present");
+        my @publisher = $obj->find_in_metadata($DCTERMS_PUBLISHER);
+        cmp_ok(scalar @publisher, '==', 1,
+               "$file_name publisher metadata present");
+      }
     }
   }
 }
@@ -434,6 +577,63 @@ sub calc_plex_alignment_files {
       if ($position == $lane_yhuman and $tag != 888) {
         push @plex_files, sprintf "%s/lane%d/%d_%d#%d_yhuman.%s",
           $root_path, $position, $id_run, $position, $tag, $file_format;
+      }
+    }
+
+    @plex_files = sort @plex_files;
+    $position_index{$position} = \@plex_files;
+  }
+
+  return %position_index;
+}
+
+sub calc_plex_index_files {
+  my ($root_path, $file_format) = @_;
+
+  my %position_index;
+
+  my $id_run = 17550;
+  my $lane_tag_counts = {1 => 16,
+                         2 => 12,
+                         3 =>  8,
+                         4 =>  8,
+                         5 =>  5,
+                         6 => 12,
+                         7 =>  6,
+                         8 =>  6};
+  my $lane_yhuman = 6;
+
+  my $index_suffix;
+  if ($file_format eq 'bam') {
+    $index_suffix = 'bai';
+  }
+  elsif ($file_format eq 'cram') {
+    $index_suffix = 'cram.crai';
+  }
+  else {
+    fail "Unknown file format '$file_format'";
+  }
+
+  foreach my $position (sort keys %{$lane_tag_counts}) {
+    # All lanes have tag 888
+    my @tags = (0 .. $lane_tag_counts->{$position}, 888);
+
+    my @plex_files;
+    foreach my $tag (@tags) {
+      if ($position != 5 or
+          ($position == 5 and $tag != 5)) {
+        push @plex_files, sprintf "%s/lane%d/%d_%d#%d.%s",
+          $root_path, $position, $id_run, $position, $tag, $index_suffix;
+      }
+
+      if ($tag != 888) {
+        push @plex_files, sprintf "%s/lane%d/%d_%d#%d_phix.%s",
+          $root_path, $position, $id_run, $position, $tag, $index_suffix;
+      }
+
+      if ($position == $lane_yhuman and $tag != 888) {
+        push @plex_files, sprintf "%s/lane%d/%d_%d#%d_yhuman.%s",
+          $root_path, $position, $id_run, $position, $tag, $index_suffix;
       }
     }
 

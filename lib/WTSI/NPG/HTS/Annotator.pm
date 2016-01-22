@@ -7,12 +7,13 @@ use File::Basename;
 use Moose::Role;
 
 use WTSI::NPG::iRODS::Metadata;
+use WTSI::DNAP::Utilities::Params qw(function_params);
 
 our $VERSION = '';
 
 our @GENERAL_PURPOSE_SUFFIXES = qw(.csv .tif .tsv  .txt .xls .xlsx .xml);
 our @GENO_DATA_SUFFIXES       = qw(.gtc .idat);
-our @HTS_DATA_SUFFIXES        = qw(.bam .cram);
+our @HTS_DATA_SUFFIXES        = qw(.bam .cram .bai .crai);
 our @HTS_ANCILLARY_SUFFIXES   = qw(.bamcheck .bed .flagstat .seqchksum
                                    .stats .xml);
 
@@ -20,6 +21,9 @@ our @DEFAULT_FILE_SUFFIXES = (@GENERAL_PURPOSE_SUFFIXES,
                               @GENO_DATA_SUFFIXES,
                               @HTS_DATA_SUFFIXES,
                               @HTS_ANCILLARY_SUFFIXES);
+
+our $YHUMAN      = qw(yhuman);      # FIXME
+our $ALT_PROCESS = qw(alt_process); # FIXME
 
 with 'WTSI::DNAP::Utilities::Loggable', 'WTSI::NPG::iRODS::Utilities';
 
@@ -41,16 +45,17 @@ with 'WTSI::DNAP::Utilities::Loggable', 'WTSI::NPG::iRODS::Utilities';
 sub make_creation_metadata {
   my ($self, $creator, $creation_time, $publisher) = @_;
 
-  defined $creation_time or
+  defined $creator or
     $self->logconfess('A defined creator argument is required');
   defined $creation_time or
     $self->logconfess('A defined creation_time argument is required');
   defined $publisher or
     $self->logconfess('A defined publisher argument is required');
 
-  return ($self->make_avu($DCTERMS_CREATOR,   $creator->as_string),
-          $self->make_avu($DCTERMS_CREATED,   $creation_time->iso8601),
-          $self->make_avu($DCTERMS_PUBLISHER, $publisher->as_string));
+  return
+    ($self->make_avu($DCTERMS_CREATOR,   $creator->as_string),
+     $self->make_avu($DCTERMS_CREATED,   $creation_time->iso8601),
+     $self->make_avu($DCTERMS_PUBLISHER, $publisher->as_string));
 }
 
 =head2 make_modification_metadata
@@ -148,6 +153,158 @@ sub make_ticket_metadata {
   return ($self->make_avu($RT_TICKET, $ticket_number));
 }
 
+{
+  my $params = function_params(4, qw[id_run position tag_index
+                                     is_paired_read is_aligned reference
+                                     alt_process align_filter]);
+  sub make_primary_metadata {
+    my ($self, $id_run, $position, $num_reads) = $params->parse(@_);
+
+    defined $id_run or
+      $self->logconfess('A defined id_run argument is required');
+    defined $position or
+      $self->logconfess('A defined position argument is required');
+    defined $num_reads or
+      $self->logconfess('A defined num_reads argument is required');
+
+    my @avus;
+    push @avus, $self->make_run_metadata
+      ($id_run, $position, $num_reads,
+       is_paired_read => $params->is_paired_read,
+       tag_index      => $params->tag_index);
+
+    push @avus, $self->make_target_metadata($params->tag_index,
+                                            $params->align_filter,
+                                            $params->alt_process);
+
+    push @avus, $self->make_alignment_metadata
+      ($num_reads, $params->reference, $params->is_aligned,
+       align_filter => $params->align_filter);
+
+    if ($params->alt_process) {
+      push @avus, $self->make_alt_metadata($params->alt_process);
+    }
+
+    return @avus;
+  }
+}
+
+=head2 make_run_metadata
+
+  Arg [1]      Run identifier, Int.
+  Arg [2]      Lane position, Int.
+  Arg [3]      Tag index, Int. Optional.
+
+  Example    : my @avus = $ann->make_run_metadata($st);
+  Description: Return HTS run metadata AVUs.
+  Returntype : Array[HashRef]
+
+=cut
+
+{
+  my $params = function_params(4, qw(is_paired_read tag_index));
+
+  sub make_run_metadata {
+    my ($self, $id_run, $position, $num_reads) = $params->parse(@_);
+
+    defined $id_run or
+      $self->logconfess('A defined id_run argument is required');
+    defined $position or
+      $self->logconfess('A defined position argument is required');
+    defined $num_reads or
+      $self->logconfess('A defined num_reads argument is required');
+
+    defined $params->is_paired_read or
+      $self->logconfess('A defined is_paired_read argument is required');
+
+    my @avus = ($self->make_avu($ID_RUN,   $id_run),
+                $self->make_avu($POSITION, $position));
+
+    push @avus, $self->make_avu($TOTAL_READS, $num_reads);
+    push @avus, $self->make_avu($IS_PAIRED_READ, $params->is_paired_read);
+
+    if (defined $params->tag_index) {
+      push @avus, $self->make_avu($TAG_INDEX, $params->tag_index);
+    }
+
+    return @avus;
+  }
+}
+
+=head2 make_alignment_metadata
+
+  Arg [1]      Alignment flag, Bool.
+  Arg [2]      Reference file path, Str. Optional.
+
+  Example    : my @avus = $ann->make_aligment_metadata(1, '/path/to/ref.fa');
+  Description: Return HTS alignment metadata AVUs.
+  Returntype : Array[HashRef]
+
+=cut
+
+{
+  my $params = function_params(4, qw(align_filter));
+
+  sub make_alignment_metadata {
+    my ($self, $num_reads, $reference, $is_aligned) = $params->parse(@_);
+
+    # If there are no reads, yet the data have passed through an
+    # aligner, it has been "aligned" i.e. has undergone an alignment
+    # process without producing a result. However, this flag indicates
+    # whether an alignment result has been obtained.
+    $num_reads ||= 0;
+    my $alignment = ($is_aligned and $num_reads > 0) ? 1 : 0;
+    my @avus = ($self->make_avu($ALIGNMENT, $alignment));
+
+    # A reference may be obtained from BAM/CRAM header in cases where
+    # the data are not aligned e.g. where the data were aligned to
+    # that reference some point in the past and have since been
+    # post-processed.
+    #
+    # Therefore the reference metadata are only added when the
+    # is_aligned argument is true.
+    if ($is_aligned and $reference) {
+      push @avus, $self->make_avu($REFERENCE, $reference);
+    }
+    if (defined $params->align_filter) {
+      push @avus, $self->make_avu('alignment_filter', $params->align_filter);
+    }
+
+    return @avus;
+  }
+}
+
+sub make_target_metadata {
+  my ($self, $tag_index, $align_filter, $alt_process) = @_;
+
+  defined $tag_index or
+    $self->logconfess('A defined tag_index argument is required');
+
+  my $target = 1;
+  if (($tag_index == 0) or ($align_filter and $align_filter ne $YHUMAN)) {
+    $target = 0;
+  }
+  elsif ($alt_process) {
+    $target = 0;
+  }
+
+  my @avus = ($self->make_avu($TARGET, $target));
+  if ($alt_process) {
+    push @avus, $self->make_avu($ALT_TARGET, 1);
+  }
+
+  return @avus;
+}
+
+sub make_alt_metadata {
+  my ($self, $alt_process) = @_;
+
+  defined $alt_process or
+    $self->logconfess('A defined alt_process argument is required');
+
+  return ($self->make_avu($ALT_PROCESS, $alt_process));
+}
+
 =head2 make_secondary_metadata
 
   Arg [1]    : Factory for st:api::lims objects, WTSI::NPG::HTS::LIMSFactory.
@@ -162,87 +319,40 @@ sub make_ticket_metadata {
 
 =cut
 
-## no critic (Subroutines::ProhibitManyArgs)
-sub make_secondary_metadata {
-  my ($self, $factory, $id_run, $position, $tag_index,
-      $with_spiked_control) = @_;
+{
+  my $params = function_params(1, qw[factory id_run position tag_index
+                                     with_spiked_control]);
 
-  defined $factory or
-    $self->logconfess('A defined factory argument is required');
-  defined $id_run or
-    $self->logconfess('A defined id_run argument is required');
-  defined $position or
-    $self->logconfess('A defined position argument is required');
+  sub make_secondary_metadata {
+    my ($self) = $params->parse(@_);
 
-  my $lims = $factory->make_lims($id_run, $position, $tag_index);
+    defined $params->factory or
+      $self->logconfess('A defined factory argument is required');
+    defined $params->id_run or
+      $self->logconfess('A defined id_run argument is required');
+    defined $params->position or
+      $self->logconfess('A defined position argument is required');
 
-  my @avus;
-  push @avus, $self->make_plex_metadata($lims);
-  push @avus, $self->make_consent_metadata($lims);
-  push @avus, $self->make_study_metadata($lims, $with_spiked_control);
-  push @avus, $self->make_sample_metadata($lims, $with_spiked_control);
-  push @avus, $self->make_library_metadata($lims, $with_spiked_control);
+    my $lims = $params->factory->make_lims($params->id_run, $params->position,
+                                           $params->tag_index);
 
-  my $hts_element = sprintf 'run: %s, pos: %s, tag_index: %s',
-    $id_run, $position, (defined $tag_index ? $tag_index : 'NA');
-  $self->info("Created metadata for $hts_element: ", pp(\@avus));
+    my @avus;
+    push @avus, $self->make_plex_metadata($lims);
+    push @avus, $self->make_consent_metadata($lims);
+    push @avus, $self->make_study_metadata
+      ($lims, $params->with_spiked_control);
+    push @avus, $self->make_sample_metadata
+      ($lims, $params->with_spiked_control);
+    push @avus, $self->make_library_metadata
+      ($lims, $params->with_spiked_control);
 
-  return @avus;
-}
-## use critic
+    my $hts_element = sprintf 'run: %s, pos: %s, tag_index: %s',
+      $params->id_run, $params->position,
+      (defined $params->tag_index ? $params->tag_index : 'NA');
+    $self->info("Created metadata for $hts_element: ", pp(\@avus));
 
-=head2 make_run_metadata
-
-  Arg [1]      Run identifier, Int.
-  Arg [2]      Lane position, Int.
-  Arg [3]      Tag index, Int. Optional.
-
-  Example    : my @avus = $ann->make_run_metadata($st);
-  Description: Return HTS run metadata AVUs.
-  Returntype : Array[HashRef]
-
-=cut
-
-sub make_run_metadata {
-  my ($self, $id_run, $position, $tag_index) = @_;
-
-  defined $id_run or
-    $self->logconfess('A defined id_run argument is required');
-  defined $position or
-    $self->logconfess('A defined position argument is required');
-
-  my @avus = ($self->make_avu($ID_RUN,   $id_run),
-              $self->make_avu($POSITION, $position));
-  if (defined $tag_index) {
-    push @avus, $self->make_avu($TAG_INDEX, $tag_index);
+    return @avus;
   }
-
-  return @avus;
-}
-
-=head2 make_alignment_metadata
-
-  Arg [1]      Alignment flag, Bool.
-  Arg [2]      Reference file path, Str. Optional.
-
-  Example    : my @avus = $ann->make_aligment_metadata(1, '/path/to/ref.fa');
-  Description: Return HTS alignment metadata AVUs.
-  Returntype : Array[HashRef]
-
-=cut
-
-sub make_alignment_metadata {
-  my ($self, $is_aligned, $reference) = @_;
-
-  my @avus;
-  if ($is_aligned) {
-    push @avus, $self->make_avu($ALIGNMENT, q[1]);
-  }
-  if ($reference) {
-    push @avus, $self->make_avu($REFERENCE, $reference);
-  }
-
-  return @avus;
 }
 
 =head2 make_study_metadata

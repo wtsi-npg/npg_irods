@@ -17,7 +17,6 @@ use WTSI::NPG::HTS::Types qw(AlMapFileFormat);
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 
-
 with 'WTSI::DNAP::Utilities::Loggable',
      'WTSI::DNAP::Utilities::JSONCodec',
      'WTSI::NPG::HTS::Annotator',
@@ -30,6 +29,11 @@ our $VERSION = '';
 
 our $DEFAULT_ROOT_COLL = '/seq';
 our $DEFAULT_QC_COLL   = 'qc';
+
+our $BAM_FILE_FORMAT   = 'bam';
+our $BAM_INDEX_FORMAT  = 'bai';
+our $CRAM_FILE_FORMAT  = 'cram';
+our $CRAM_INDEX_FORMAT = 'crai';
 
 has 'irods' =>
   (is            => 'ro',
@@ -78,6 +82,7 @@ has 'qc_dest_collection' =>
 has 'alt_process' =>
   (isa           => 'Maybe[Str]',
    is            => 'ro',
+   required      => 0,
    documentation => 'Non-standard process used');
 
 sub BUILD {
@@ -92,8 +97,10 @@ sub BUILD {
 # The list_*_files methods are uncached. The verb in their name
 # suggests activity. The corresponding methods generated here without
 # the list_ prefix are caching.
-my @CACHING_LANE_METHOD_NAMES = qw(lane_alignment_files lane_qc_files);
+my @CACHING_LANE_METHOD_NAMES = qw(lane_alignment_files
+                                   lane_qc_files);
 my @CACHING_PLEX_METHOD_NAMES = qw(plex_alignment_files
+                                   plex_index_files
                                    plex_qc_files
                                    plex_ancillary_files);
 
@@ -192,6 +199,24 @@ sub num_plex_reads {
   return $flag_stats->{num_total_reads};
 }
 
+sub index_format {
+  my ($self) = @_;
+
+  my $index_format;
+  if ($self->file_format eq $BAM_FILE_FORMAT) {
+    $index_format = $BAM_INDEX_FORMAT;
+  }
+  elsif ($self->file_format eq $CRAM_FILE_FORMAT) {
+    $index_format = $CRAM_INDEX_FORMAT;
+  }
+  else {
+    $self->logconfess('The index format corresponding to HTS file format ',
+                      $self->file_format, ' is unknown');
+  }
+
+  return $index_format;
+}
+
 =head2 list_lane_alignment_files
 
   Arg [1]    : None
@@ -255,6 +280,38 @@ sub list_plex_alignment_files {
                "matching pattern '$plex_file_pattern'");
   my @file_list = $self->_list_directory($archive_path, $plex_file_pattern);
   $self->debug("Found plex alignment files for run '$id_run' position ",
+               "'$position' in '$archive_path': ", pp(\@file_list));
+
+  return \@file_list;
+}
+
+sub list_plex_index_files {
+  my ($self, $position) = @_;
+
+  defined $position or
+    $self->logconfess('A defined position argument is required');
+  any { $position } $self->positions or
+    $self->logconfess("Invalid position argument '$position'");
+
+  my $id_run = $self->id_run;
+  my $archive_path = $self->lane_archive_path($position);
+  my $file_format = $self->file_format;
+
+  my $plex_file_pattern;
+  if ($file_format eq $BAM_FILE_FORMAT) {
+    $plex_file_pattern = sprintf '^%d_%d.*\.%s$',
+      $id_run, $position, $self->index_format;
+  }
+  elsif ($file_format eq $CRAM_FILE_FORMAT) {
+    $plex_file_pattern = sprintf '^%d_%d.*\.%s\.%s$',
+      $id_run, $position, $file_format, $self->index_format;
+  }
+  else {
+    $self->logconfess("Invalid HTS file format for indexing '$file_format'");
+  }
+
+  my @file_list = $self->_list_directory($archive_path, $plex_file_pattern);
+  $self->debug("Found plex index files for run '$id_run' position ",
                "'$position' in '$archive_path': ", pp(\@file_list));
 
   return \@file_list;
@@ -444,6 +501,49 @@ sub publish_plex_alignment_files {
   return $num_published;
 }
 
+sub publish_index_files {
+  my ($self, $with_spiked_control) = @_;
+
+  my $num_published = 0;
+
+  # FIXME -- publish_lane_index_files
+
+  foreach my $position ($self->positions) {
+    $num_published += $self->publish_index_files
+      ($position, $with_spiked_control);
+  }
+
+  return $num_published;
+}
+
+sub publish_lane_index_files {
+  my ($self, $with_spiked_control) = @_;
+
+  $self->logconfess('Not implemented');
+
+  return;
+}
+
+sub publish_plex_index_files {
+  my ($self, $position, $with_spiked_control) = @_;
+
+  my $id_run = $self->id_run;
+  my @files  = @{$self->plex_index_files($position)};
+  my $num_files = scalar @files;
+  $self->info("Run '$id_run' position '$position' ",
+              "has $num_files plex-level index files");
+
+  my $publisher = WTSI::NPG::HTS::Publisher->new(irods  => $self->irods,
+                                                 logger => $self->logger);
+  my $num_published = $self->_publish_support_files($publisher, \@files,
+                                                    $self->dest_collection,
+                                                    $with_spiked_control);
+  $self->info("Published $num_published / $num_files plex-level ",
+              "index files in run '$id_run' position '$position'");
+
+  return $num_published;
+}
+
 =head2 publish_ancillary_files
 
   Arg [1]    : HTS data has spiked control, Bool. Optional.
@@ -570,11 +670,21 @@ sub _publish_alignment_files {
          data_object => fileparse($file),
          irods       => $self->irods);
 
-      $dest = $publisher->publish($file, $obj->str);
+      $dest = $obj->str;
+      $dest = $publisher->publish($file, $dest);
 
       # FIXME -- break primary metadata setup out into a new method
-      $obj->set_primary_metadata;
-      $obj->add_avu($IS_PAIRED_READ, $self->is_paired_read);
+
+      my $num_reads = $self->num_plex_reads($obj->position, $obj->tag_index);
+      my @avus = $self->make_primary_metadata
+        ($self->id_run, $obj->position, $num_reads,
+         tag_index      => $obj->tag_index,
+         is_paired_read => $self->is_paired_read,
+         is_aligned     => $obj->is_aligned,
+         reference      => $obj->reference,
+         align_filter   => $obj->align_filter,
+         alt_process    => $self->alt_process);
+      $self->_set_metadata($obj, @avus);
 
       $obj->update_secondary_metadata($self->lims_factory,
                                       $with_spiked_control);
@@ -614,7 +724,14 @@ sub _publish_support_files {
          data_object => fileparse($file),
          irods       => $self->irods);
 
-      $dest = $publisher->publish($file, $obj->str);
+      $dest = $obj->str;
+      $dest = $publisher->publish($file, $dest);
+
+      if (defined $self->alt_process) {
+        my @avus = $self->make_alt_metadata($self->alt_process);
+        $self->_set_metadata($obj, @avus);
+      }
+
       $obj->update_secondary_metadata($self->lims_factory,
                                       $with_spiked_control);
       $self->info("Published '$dest' [$num_processed / $num_files]");
@@ -656,7 +773,7 @@ sub _build_dest_collection  {
   my ($self) = @_;
 
   my @colls = ($DEFAULT_ROOT_COLL, $self->id_run);
-  if ($self->alt_process) {
+  if (defined $self->alt_process) {
     push @colls, $self->alt_process
   }
 
@@ -667,6 +784,23 @@ sub _build_qc_dest_collection  {
   my ($self) = @_;
 
   return catdir($self->dest_collection, $DEFAULT_QC_COLL);
+}
+
+sub _set_metadata {
+  my ($self, $target, @avus) = @_;
+
+  foreach my $avu (@avus) {
+    try {
+      my $attribute = $avu->{attribute};
+      my $value     = $avu->{value};
+      my $units     = $avu->{units};
+      $target->supersede_avus($attribute, $value, $units);
+    } catch {
+      $self->error('Failed to set AVU ', pp($avu), ' on ',  $target->str);
+    };
+  }
+
+  return $target;
 }
 
 # Return a sorted array of file paths, filtered by a regex.
