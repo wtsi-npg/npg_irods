@@ -7,6 +7,7 @@ use MooseX::Types::Moose qw(ArrayRef Str);
 use MooseX::Types -declare =>
   [qw(
        AlMapFileFormat
+       AlMapIndexFormat
        MetaAttr
        ArrayRefOfMetaAttr
     )];
@@ -17,6 +18,11 @@ subtype AlMapFileFormat,
   as Str,
   where { m{^(cram|bam)$}msx },
   message { "'$_' is not a valid HTS file format" };
+
+subtype AlMapIndexFormat,
+  as Str,
+  where { m{^(craa|bai)$}msx },
+  message { "'$_' is not a valid HTS index file format" };
 
 subtype MetaAttr,
   as Str,

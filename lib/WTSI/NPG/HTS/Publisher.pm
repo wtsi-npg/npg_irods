@@ -346,6 +346,8 @@ sub _supersede_multivalue {
   return $num_meta_errors;
 }
 
+__PACKAGE__->meta->make_immutable;
+
 no Moose;
 
 1;

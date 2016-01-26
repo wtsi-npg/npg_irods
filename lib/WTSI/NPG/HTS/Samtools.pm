@@ -176,11 +176,12 @@ sub _build_samtools {
   }
 }
 
-my $flagstat_cache = {};
+# my $flagstat_cache = {};
 sub _flagstat {
   my ($self) = @_;
 
-  if (not keys %{$flagstat_cache}) {
+  my $flagstat_cache = {};
+  # if (not keys %{$flagstat_cache}) {
     my $p = $self->path;
 
     # FIXME -- this filter may need to be moved else where (to caller?)
@@ -190,7 +191,7 @@ sub _flagstat {
        logger     => $self->logger);
     my $flagstat = WTSI::DNAP::Utilities::Runnable->new
       (arguments  => ['flagstat', q[-]],
-     executable => $self->executable,
+       executable => $self->executable,
        logger     => $self->logger);
 
     my @stats = $view->pipe($flagstat)->split_stdout;
@@ -205,7 +206,7 @@ sub _flagstat {
         $flagstat_cache->{$SEQ_PAIRED_FAILED} = $2;
         next;
       }
-    }
+    # }
   }
 
   return $flagstat_cache;

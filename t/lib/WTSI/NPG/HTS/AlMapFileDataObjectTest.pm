@@ -150,7 +150,21 @@ sub setup_test : Test(setup) {
           my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
             ($irods, "$irods_tmp_coll/$data_file.$format");
 
-          $obj->set_primary_metadata;
+          my $num_reads = 10000;
+          my @avus;
+          push @avus, $obj->make_primary_metadata
+            ($obj->id_run, $obj->position, $num_reads,
+             tag_index      => $obj->tag_index,
+             is_paired_read => 1,
+             is_aligned     => $obj->is_aligned,
+             reference      => $obj->reference);
+
+          foreach my $avu (@avus) {
+            my $attribute = $avu->{attribute};
+            my $value     = $avu->{value};
+            my $units     = $avu->{units};
+            $obj->supersede_avus($attribute, $value, $units);
+          }
 
           # Add some test group permissions
           if ($group_tests_enabled) {
@@ -362,84 +376,6 @@ sub reference : Test(4) {
   } # SKIP samtools
 }
 
-sub count_reads : Test(4) {
- SKIP: {
-    if (not $samtools) {
-      skip 'samtools executable not on the PATH', 4;
-    }
-
-    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                      strict_baton_version => 0);
-
-    foreach my $data_file ($run15440_lane1_tag0, $run15440_lane1_tag81) {
-      foreach my $format (qw(bam cram)) {
-        my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
-          (collection  => $irods_tmp_coll,
-           data_object => "$data_file.$format",
-           file_format => $format,
-           id_run      => 1,
-           irods       => $irods,
-           position    => 1);
-
-        # 2 * 2 * 1 tests
-        cmp_ok($obj->count_reads, '==', 9010,
-               "$format total reads is correct");
-      }
-    }
-  } # SKIP samtools
-}
-
-sub count_seq_paired_reads : Test(2) {
- SKIP: {
-    if (not $samtools) {
-      skip 'samtools executable not on the PATH', 2;
-    }
-
-    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                      strict_baton_version => 0);
-
-    my $data_file = $run15440_lane1_tag0;
-    foreach my $format (qw(bam cram)) {
-      my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
-        (collection  => $irods_tmp_coll,
-         data_object => "$data_file.$format",
-         file_format => $format,
-         id_run      => 1,
-         irods       => $irods,
-         position    => 1);
-
-      # 2 * 2 * 1 tests
-      cmp_ok($obj->count_seq_paired_reads, '==', 8,
-             "$format total seq paired reads is correct");
-    }
-  } # SKIP samtools
-}
-
-sub is_paired_read : Test(2) {
- SKIP: {
-    if (not $samtools) {
-      skip 'samtools executable not on the PATH', 2;
-    }
-
-    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                      strict_baton_version => 0);
-
-    my $data_file = $run15440_lane1_tag0;
-    foreach my $format (qw(bam cram)) {
-      my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
-        (collection  => $irods_tmp_coll,
-         data_object => "$data_file.$format",
-         file_format => $format,
-         id_run      => 1,
-         irods       => $irods,
-         position    => 1);
-
-      # 2 * 2 * 1 tests
-      ok($obj->is_paired_read, "$format total is_paired_read is correct");
-    }
-  } # SKIP samtools
-}
-
 sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
  SKIP: {
     if (not $samtools) {
@@ -454,6 +390,7 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
     my $tag0_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => $ID_RUN,                   value => '7915'},
+       {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '5'},
        {attribute => $LIBRARY_ID,               value => '4957423'},
        {attribute => $LIBRARY_ID,               value => '4957424'},
@@ -563,7 +500,9 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
        {attribute => $STUDY_ID,                 value => '619'},
        {attribute => $STUDY_TITLE,
         value     => 'Burkholderia pseudomallei diversity'},
-       {attribute => $TAG_INDEX,                value => '0'}];
+       {attribute => $TAG_INDEX,                value => '0'},
+       {attribute => $TARGET,                   value => '0'}, # target 0
+       {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 0;
 
@@ -596,6 +535,7 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
     my $tag0_expected_meta =
       [{attribute => $ALIGNMENT,                value     => '1'},
        {attribute => $ID_RUN,                   value     => '7915'},
+       {attribute => $IS_PAIRED_READ,           value     => '1'},
        {attribute => $POSITION,                 value     => '5'},
        {attribute => $LIBRARY_ID,               value     => '3691209'}, # spike
        {attribute => $LIBRARY_ID,               value     => '4957423'},
@@ -711,7 +651,9 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
        {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_TITLE,
         value     => 'Burkholderia pseudomallei diversity'},
-       {attribute => $TAG_INDEX,                value     => '0'}];
+       {attribute => $TAG_INDEX,                value     => '0'},
+       {attribute => $TARGET,                   value     => '0'}, # target 0
+       {attribute => $TOTAL_READS,              value     => '10000'}];
 
     my $spiked_control = 1;
 
@@ -745,6 +687,7 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
     my $tag1_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => $ID_RUN,                   value => '7915'},
+       {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '5'},
        {attribute => $LIBRARY_ID,               value => '4957423'},
        {attribute => $QC_STATE,                 value => '1'},
@@ -758,7 +701,9 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
        {attribute => $STUDY_ID,                 value => '619'},
        {attribute => $STUDY_TITLE,
         value     => 'Burkholderia pseudomallei diversity'},
-       {attribute => $TAG_INDEX,                value => '1'}];
+       {attribute => $TAG_INDEX,                value => '1'},
+       {attribute => $TARGET,                   value => '1'},
+       {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 0;
 
@@ -791,6 +736,7 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
     my $tag1_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => $ID_RUN,                   value => '7915'},
+       {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '5'},
        {attribute => $LIBRARY_ID,               value => '4957423'},
        {attribute => $QC_STATE,                 value => '1'},
@@ -804,7 +750,9 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
        {attribute => $STUDY_ID,                 value => '619'},
        {attribute => $STUDY_TITLE,
         value     => 'Burkholderia pseudomallei diversity'},
-       {attribute => $TAG_INDEX,                value => '1'}];
+       {attribute => $TAG_INDEX,                value => '1'},
+       {attribute => $TARGET,                   value => '1'},
+       {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 1;
 
@@ -837,6 +785,7 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
     my $tag0_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => $ID_RUN,                   value => '15440'},
+       {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '1'},
        {attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $LIBRARY_ID,               value => '12789802'},
@@ -862,7 +811,9 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
         value     => 'Lebanon_LowCov-seq'},
-       {attribute => $TAG_INDEX,                value => '0'}];
+       {attribute => $TAG_INDEX,                value => '0'},
+       {attribute => $TARGET,                   value => '0'}, # target 0
+       {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 0;
 
@@ -895,6 +846,7 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
     my $tag0_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => $ID_RUN,                   value => '15440'},
+       {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '1'},
        {attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $LIBRARY_ID,               value => '12789802'},
@@ -925,7 +877,9 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
         value     => 'Lebanon_LowCov-seq'},
-       {attribute => $TAG_INDEX,                value => '0'}];
+       {attribute => $TAG_INDEX,                value => '0'},
+       {attribute => $TARGET,                   value => '0'}, # target 0
+       {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 1;
 
@@ -959,6 +913,7 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
     my $tag81_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => $ID_RUN,                   value => '15440'},
+       {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '1'},
        {attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $QC_STATE,                 value => '1'},
@@ -972,7 +927,9 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
         value     => 'Lebanon_LowCov-seq'},
-       {attribute => $TAG_INDEX,                value => '81'}];
+       {attribute => $TAG_INDEX,                value => '81'},
+       {attribute => $TARGET,                   value => '1'},
+       {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 0;
 
@@ -1005,6 +962,7 @@ sub update_secondary_metadata_tag81_spike_human : Test(8) {
     my $tag81_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => $ID_RUN,                   value => '15440'},
+       {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '1'},
        {attribute => $LIBRARY_ID,               value => '12789790'},
        {attribute => $QC_STATE,                 value => '1'},
@@ -1018,7 +976,9 @@ sub update_secondary_metadata_tag81_spike_human : Test(8) {
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
         value     => 'Lebanon_LowCov-seq'},
-       {attribute => $TAG_INDEX,                value => '81'}];
+       {attribute => $TAG_INDEX,                value => '81'},
+       {attribute => $TARGET,                   value => '1'},
+       {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 1;
 

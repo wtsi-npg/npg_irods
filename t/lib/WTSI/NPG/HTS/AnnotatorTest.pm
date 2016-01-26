@@ -35,9 +35,8 @@ sub make_creation_metadata : Test(4) {
                    value     => $time->iso8601},
                   {attribute => $DCTERMS_PUBLISHER,
                    value     => $publisher->as_string});
-  my @observed = TestAnnotator->new->make_creation_metadata($creator,
-                                                            $time,
-                                                            $publisher);
+  my @observed = TestAnnotator->new->make_creation_metadata
+    ($creator, $time, $publisher);
 
   is_deeply(\@observed, \@expected) or diag explain \@observed;
 

@@ -4,6 +4,8 @@ bin/samgen.pl
 Build.PL
 Changes
 etc/log4perl_tests.conf
+lib/WTSI/DNAP/Utilities/Params.pm
+lib/WTSI/DNAP/Utilities/ParamsParser.pm
 lib/WTSI/NPG/HTS/AlMapFileDataObject.pm
 lib/WTSI/NPG/HTS/AncFileDataObject.pm
 lib/WTSI/NPG/HTS/Annotator.pm
@@ -6096,6 +6098,7 @@ t/fixtures/npgqc/CacheQuery.yml
 t/fixtures/npgqc/ClusterDensity.yml
 t/fixtures/npgqc/Fastqcheck.yml
 t/fixtures/npgqc/MqcOutcomeDict.yml
+t/lib/WTSI/DNAP/Utilities/ParamsTest.pm
 t/lib/WTSI/NPG/HTS/AlMapFileDataObjectTest.pm
 t/lib/WTSI/NPG/HTS/AncFileDataObjectTest.pm
 t/lib/WTSI/NPG/HTS/AnnotatorTest.pm
@@ -6105,6 +6108,7 @@ t/lib/WTSI/NPG/HTS/RunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/SamtoolsTest.pm
 t/lib/WTSI/NPG/HTS/Test.pm
 t/meta_updater.t
+t/params.t
 t/perlcriticrc
 t/publisher.t
 t/README
