@@ -21,7 +21,7 @@ subtype AlMapFileFormat,
 
 subtype AlMapIndexFormat,
   as Str,
-  where { m{^(craa|bai)$}msx },
+  where { m{^(crai|bai)$}msx },
   message { "'$_' is not a valid HTS index file format" };
 
 subtype MetaAttr,
