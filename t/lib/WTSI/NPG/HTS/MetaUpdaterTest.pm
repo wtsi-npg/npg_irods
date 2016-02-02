@@ -1,5 +1,7 @@
 package WTSI::NPG::HTS::MetaUpdaterTest;
 
+use utf8;
+
 use strict;
 use warnings;
 
@@ -30,9 +32,10 @@ my $test_counter = 0;
 my $data_path = './t/data/meta_updater';
 my $fixture_path = "./t/fixtures";
 
+my $utf8_extra = '[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]';
+
 my $db_dir = File::Temp->newdir;
-my $wh_attr = {RaiseError    => 1,
-               on_connect_do => 'PRAGMA encoding = "UTF-8"'};
+
 my $wh_schema;
 my $lims_factory;
 
@@ -45,17 +48,9 @@ my $pid = $PID;
 
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
-  my $wh_attr = {RaiseError    => 1,
-                 on_connect_do => 'PRAGMA encoding = "UTF-8"'};
-
-  {
-    # create_test_db produces warnings during expected use, which
-    # appear mixed with test output in the terminal
-    local $SIG{__WARN__} = sub { };
-    $wh_schema = TestDB->new(test_dbattr => $wh_attr)->create_test_db
-      ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
-       $wh_db_file);
-  }
+  $wh_schema = TestDB->new(verbose => 0)->create_test_db
+    ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
+     $wh_db_file);
 
   $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 }
@@ -133,7 +128,7 @@ sub update_secondary_metadata : Test(3) {
          {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
          {attribute => $STUDY_ID,                 value     => '619'},
          {attribute => $STUDY_TITLE,
-          value     => 'Burkholderia pseudomallei diversity'}];
+          value     => 'Burkholderia pseudomallei diversity' . $utf8_extra}];
 
       my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
         (collection  => $irods_tmp_coll,

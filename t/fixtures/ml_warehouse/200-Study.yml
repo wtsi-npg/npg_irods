@@ -31,7 +31,7 @@
   remove_x_and_autosomes: 0
   separate_y_chromosome_data: 1
   state: active
-  study_title: Transcriptional response of Kolf2 intestinal organoids to IL-22
+  study_title: 'Transcriptional response of Kolf2 intestinal organoids to IL-22[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
   study_type: Transcriptome Analysis
   study_visibility: Hold
   uuid_study_lims: 6b316fe0-45b4-11e5-af59-68b59976a382
@@ -67,7 +67,7 @@
   remove_x_and_autosomes: 0
   separate_y_chromosome_data: 0
   state: active
-  study_title: RNA sequencing of mouse haemopoietic cells 2014/15
+  study_title: 'RNA sequencing of mouse haemopoietic cells 2014/15[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
   study_type: Cancer Genomics
   study_visibility: Hold
   uuid_study_lims: acd495a0-343d-11e4-aa9b-68b59976a382
@@ -103,7 +103,7 @@
   remove_x_and_autosomes: 0
   separate_y_chromosome_data: 0
   state: active
-  study_title: Lebanon_LowCov-seq
+  study_title: 'Lebanon_LowCov-seq[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
   study_type: Whole Genome Sequencing
   study_visibility: Hold
   uuid_study_lims: 146f0ac0-a3b0-11e3-b2a7-68b59976a382
@@ -139,7 +139,7 @@
   remove_x_and_autosomes: 0
   separate_y_chromosome_data: 0
   state: active
-  study_title: 'Analysis of the chromatin state of mouse stem and progenitor cell compartment      '
+  study_title: 'Analysis of the chromatin state of mouse stem and progenitor cell compartment      [UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
   study_type: Cancer Genomics
   study_visibility: Hold
   uuid_study_lims: e29286f0-79d7-11e3-876e-68b59976a382
@@ -211,7 +211,7 @@
   remove_x_and_autosomes: 0
   separate_y_chromosome_data: 0
   state: active
-  study_title: Transcriptome profiling of zebrafish tcf3a and tcf3b knockout embryos
+  study_title: 'Transcriptome profiling of zebrafish tcf3a and tcf3b knockout embryos[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
   study_type: Transcriptome Analysis
   study_visibility: Hold
   uuid_study_lims: 7e285fe0-312e-11e5-b214-68b59976a382
@@ -247,7 +247,7 @@
   remove_x_and_autosomes: 0
   separate_y_chromosome_data: 0
   state: active
-  study_title: Burkholderia pseudomallei diversity
+  study_title: 'Burkholderia pseudomallei diversity[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
   study_type: Whole Genome Sequencing
   study_visibility: Hold
   uuid_study_lims: 2e5202a4-a557-11df-8092-00144f01a414
@@ -283,7 +283,7 @@
   remove_x_and_autosomes: 0
   separate_y_chromosome_data: 0
   state: active
-  study_title: T19 Tibet
+  study_title: 'T19 Tibet[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
   study_type: Whole Genome Sequencing
   study_visibility: Public
   uuid_study_lims: 0e3c3470-da46-11e4-808c-68b59976a382
@@ -319,7 +319,7 @@
   remove_x_and_autosomes: 0
   separate_y_chromosome_data: 0
   state: active
-  study_title: RNASeq stable cell lines
+  study_title: 'RNASeq stable cell lines[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
   study_type: Transcriptome Analysis
   study_visibility: Hold
   uuid_study_lims: 44a66b90-2bcf-11e5-a6a1-68b59976a382

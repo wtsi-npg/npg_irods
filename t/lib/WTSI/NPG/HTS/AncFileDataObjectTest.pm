@@ -1,5 +1,7 @@
 package WTSI::NPG::HTS::AncFileDataObjectTest;
 
+use utf8;
+
 use strict;
 use warnings;
 
@@ -32,8 +34,7 @@ my $test_counter = 0;
 my $data_path = './t/data/anc_file_data_object';
 my $fixture_path = "./t/fixtures";
 
-my $wh_attr = {RaiseError    => 1,
-               on_connect_do => 'PRAGMA encoding = "UTF-8"'};
+my $utf8_extra = '[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]';
 
 my $db_dir = File::Temp->newdir;
 my $wh_schema;
@@ -99,17 +100,9 @@ foreach my $format (sort keys %$formats) {
 
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
-  my $wh_attr = {RaiseError    => 1,
-                 on_connect_do => 'PRAGMA encoding = "UTF-8"'};
-
-  {
-    # create_test_db produces warnings during expected use, which
-    # appear mixed with test output in the terminal
-    local $SIG{__WARN__} = sub { };
-    $wh_schema = TestDB->new(test_dbattr => $wh_attr)->create_test_db
-      ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
-       $wh_db_file);
-  }
+  $wh_schema = TestDB->new(verbose => 0)->create_test_db
+    ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
+     $wh_db_file);
 
   $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 }
@@ -247,7 +240,7 @@ sub tag_index : Test(120) {
   }
 }
 
-sub align_filter : Test(120) {
+sub alignment_filter : Test(120) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -258,10 +251,10 @@ sub align_filter : Test(120) {
         my ($expected) = $path =~ m{_((human|nonhuman|yhuman|phix))};
         my $exp_str = defined $expected ? $expected : 'undef';
 
-        my $align_filter = WTSI::NPG::HTS::AncFileDataObject->new
-          ($irods, $full_path)->align_filter;
+        my $alignment_filter = WTSI::NPG::HTS::AncFileDataObject->new
+          ($irods, $full_path)->alignment_filter;
 
-        is($align_filter, $expected,
+        is($alignment_filter, $expected,
            "$full_path align filter '$exp_str' is correct");
       }
     }
@@ -280,7 +273,8 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(72) {
      {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP006862'},
      {attribute => $STUDY_ID,                 value     => '3291'},
      {attribute => $STUDY_TITLE,
-      value     => 'RNA sequencing of mouse haemopoietic cells 2014/15'}];
+      value     =>
+      'RNA sequencing of mouse haemopoietic cells 2014/15' . $utf8_extra}];
 
   my $spiked_control = 0;
 
@@ -320,7 +314,8 @@ sub update_secondary_metadata_tag1_no_spike_human : Test(84) {
      {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP006862'},
      {attribute => $STUDY_ID,                 value     => '3291'},
      {attribute => $STUDY_TITLE,
-      value     => 'RNA sequencing of mouse haemopoietic cells 2014/15'}];
+      value     =>
+      'RNA sequencing of mouse haemopoietic cells 2014/15' . $utf8_extra}];
 
   my $spiked_control = 0;
 

@@ -15,17 +15,23 @@ our $VERSION = '';
 # records.
 our $DEFAULT_REFERENCE_REGEX = qr{\/(nfs|lustre)\/\S+\/references}mxs;
 
+our $HUMAN   = qw(human);   # FIXME
+our $YHUMAN  = qw(yhuman);  # FIXME
+our $XAHUMAN = qw(xahuman); # FIXME
+
+our $PUBLIC  = qw(public);  # FIXME
+
 extends 'WTSI::NPG::iRODS::DataObject';
 
 with 'WTSI::NPG::HTS::RunComponent', 'WTSI::NPG::HTS::FilenameParser',
   'WTSI::NPG::HTS::HeaderParser', 'WTSI::NPG::HTS::AVUCollator',
   'WTSI::NPG::HTS::Annotator';
 
-has 'align_filter' =>
+has 'alignment_filter' =>
   (isa           => 'Maybe[Str]',
    is            => 'ro',
    required      => 0,
-   writer        => '_set_align_filter',
+   writer        => '_set_alignment_filter',
    documentation => 'The align filter, parsed from the iRODS path');
 
 has 'file_format' =>
@@ -61,7 +67,7 @@ has '+tag_index' =>
 sub BUILD {
   my ($self) = @_;
 
-  my ($id_run, $position, $tag_index, $align_filter, $file_format) =
+  my ($id_run, $position, $tag_index, $alignment_filter, $file_format) =
     $self->parse_file_name($self->str);
 
   if (not defined $self->id_run) {
@@ -82,8 +88,8 @@ sub BUILD {
     $self->_set_file_format($file_format);
   }
 
-  if (not defined $self->align_filter) {
-    $self->_set_align_filter($align_filter);
+  if (not defined $self->alignment_filter) {
+    $self->_set_alignment_filter($alignment_filter);
   }
 
   if (not defined $self->tag_index) {
@@ -210,6 +216,11 @@ sub reference {
   Example    : $obj->is_restricted_access
   Description: Return true if the file contains or may contain sensitive
                information and is not for unrestricted public access.
+
+               Access restriction is determined by two criteria; the
+               alignment_filter metadata and the study_id metadata. If
+               the former indicates non-consented human data or the latter
+               indicates any study restriction, this method will return true.
   Returntype : Bool
 
 =cut
@@ -217,7 +228,36 @@ sub reference {
 sub is_restricted_access {
   my ($self) = @_;
 
-  return 1;
+  return $self->contains_nonconsented_human or $self->get_expected_groups;
+}
+
+=head2 contains_nonconsented_human
+
+  Arg [1]      None
+
+  Example    : $obj->contains_nonconsented_human
+  Description: Return true if the file contains human data not having
+               explicit consent. This is indicated by alignment results
+               returned by the alignment_filter method.
+
+  Returntype : Bool
+
+=cut
+
+sub contains_nonconsented_human {
+  my ($self) = @_;
+
+  my $af = $self->alignment_filter;
+  my $contains_consented_human;
+  if ($af and ($af eq $HUMAN or $af eq $XAHUMAN)) {
+    $contains_consented_human = 1;
+    $self->debug("$af indicates nonconsented human");
+  }
+  else {
+    $contains_consented_human = 0;
+  }
+
+  return $contains_consented_human;
 }
 
 =head2 update_secondary_metadata
@@ -241,9 +281,7 @@ sub update_secondary_metadata {
 
   my $path = $self->str;
   my @avus = $self->make_secondary_metadata
-    (factory             => $factory,
-     id_run              => $self->id_run,
-     position            => $self->position,
+    ($factory, $self->id_run, $self->position,
      tag_index           => $self->tag_index,
      with_spiked_control => $with_spiked_control);
   $self->debug("Created metadata AVUs for '$path' : ", pp(\@avus));
@@ -270,6 +308,19 @@ sub update_secondary_metadata {
 
   return $self;
 }
+
+
+before 'update_group_permissions' => sub {
+  my ($self) = @_;
+
+  # If the data contains any non-consented human data, or we are
+  # expecting to set groups restricting general access, then remove
+  # access for the public group.
+  if ($self->is_restricted_access) {
+    $self->debug(qq[Removing $PUBLIC access to '], $self->str, q[']);
+    $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION, $PUBLIC);
+  }
+};
 
 sub _read_header {
   my ($self) = @_;
@@ -318,7 +369,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

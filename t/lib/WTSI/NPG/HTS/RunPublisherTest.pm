@@ -25,7 +25,6 @@ Log::Log4perl::init('./etc/log4perl_tests.conf');
   package TestDB;
   use Moose;
 
-  # FIXME -- handle UTF-8 correctly in its private testdb
   with 'npg_testing::db';
 }
 
@@ -44,27 +43,13 @@ my $pid = $PID;
 
 sub setup_databases : Test(startup) {
   my $qc_db_file = catfile($db_dir, 'npg_qc.db');
-  my $qc_attr = {RaiseError => 1};
-  {
-    # create_test_db produces warnings during expected use, which
-    # appear mixed with test output in the terminal
-    local $SIG{__WARN__} = sub { };
-    # FIXME -- test_dbattr currently does nothing wrt UTF-8
-    $qc_schema = TestDB->new(test_dbattr => $qc_attr)->create_test_db
-      ('npg_qc::Schema', "$fixture_path/npgqc", $qc_db_file);
-  }
+  $qc_schema = TestDB->new(verbose => 0)->create_test_db
+    ('npg_qc::Schema', "$fixture_path/npgqc", $qc_db_file);
 
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
-  my $wh_attr = {RaiseError    => 1,
-                 on_connect_do => 'PRAGMA encoding = "UTF-8"'};
-
-  {
-    local $SIG{__WARN__} = sub { };
-    # FIXME -- test_dbattr currently does nothing wrt UTF-8
-    $wh_schema = TestDB->new(test_dbattr => $wh_attr)->create_test_db
-      ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
-       $wh_db_file);
-  }
+  $wh_schema = TestDB->new(verbose => 0)->create_test_db
+    ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
+     $wh_db_file);
 
   $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 }

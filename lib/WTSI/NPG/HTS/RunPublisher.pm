@@ -31,7 +31,7 @@ our $VERSION = '';
 our $DEFAULT_ROOT_COLL = '/seq';
 our $DEFAULT_QC_COLL   = 'qc';
 
-# Alignemtne and index file suffixes
+# Alignment and index file suffixes
 our $BAM_FILE_FORMAT   = 'bam';
 our $BAM_INDEX_FORMAT  = 'bai';
 our $CRAM_FILE_FORMAT  = 'cram';
@@ -941,12 +941,12 @@ sub _publish_alignment_files {
       # FIXME -- break primary metadata setup out into a new method
       my @avus = $self->make_primary_metadata
         ($self->id_run, $position, $num_reads,
-         tag_index      => $obj->tag_index,
-         is_paired_read => $self->is_paired_read,
-         is_aligned     => $obj->is_aligned,
-         reference      => $obj->reference,
-         align_filter   => $obj->align_filter,
-         alt_process    => $self->alt_process);
+         tag_index        => $obj->tag_index,
+         is_paired_read   => $self->is_paired_read,
+         is_aligned       => $obj->is_aligned,
+         reference        => $obj->reference,
+         alignment_filter => $obj->alignment_filter,
+         alt_process      => $self->alt_process);
       $self->_set_metadata($obj, @avus);
 
       $obj->update_secondary_metadata($self->lims_factory,
@@ -1230,7 +1230,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

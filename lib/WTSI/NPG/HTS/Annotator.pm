@@ -23,6 +23,7 @@ our @DEFAULT_FILE_SUFFIXES = (@GENERAL_PURPOSE_SUFFIXES,
 our $SUFFIX_PATTERN = join q[|], @DEFAULT_FILE_SUFFIXES;
 our $SUFFIX_REGEX   = qr{[.]($SUFFIX_PATTERN)$}msx;
 
+# FIXME -- use controlled vocabulary
 our $YHUMAN      = qw(yhuman);      # FIXME -- add to WTSI::NPG::iRODS::Metadata
 our $ALT_PROCESS = qw(alt_process); # FIXME -- add to WTSI::NPG::iRODS::Metadata
 
@@ -165,12 +166,12 @@ sub make_ticket_metadata {
   Arg [2]    : Lane position, Int.
   Arg [3]    : Total number of reads (non-secondary/supplementary), Int.
 
-  Named args : tag_index       Tag index, Int. Optional.
-               is_paired_read  Run is paired, Bool. Optional.
-               is_aligned      Run is aligned, Bool. Optional.
-               reference       Alignment reference name, Str. Optional.
-               alt_process     Alternative process name, Str. Optional.
-               align_filter    Alignment filter name, Str. Optional.
+  Named args : tag_index        Tag index, Int. Optional.
+               is_paired_read   Run is paired, Bool. Optional.
+               is_aligned       Run is aligned, Bool. Optional.
+               reference        Reference file path, Str. Optional.
+               alt_process      Alternative process name, Str. Optional.
+               alignment_filter Alignment filter name, Str. Optional.
 
   Example    : my @avus = $ann->make_primary_metadata
                    ($id_run, $position, $num_reads,
@@ -187,7 +188,7 @@ sub make_ticket_metadata {
 
 {
   my $params = function_params(4, qw[tag_index is_paired_read is_aligned
-                                     reference alt_process align_filter]);
+                                     reference alt_process alignment_filter]);
   sub make_primary_metadata {
     my ($self, $id_run, $position, $num_reads) = $params->parse(@_);
 
@@ -205,12 +206,12 @@ sub make_ticket_metadata {
        tag_index      => $params->tag_index);
 
     push @avus, $self->make_target_metadata($params->tag_index,
-                                            $params->align_filter,
+                                            $params->alignment_filter,
                                             $params->alt_process);
 
     push @avus, $self->make_alignment_metadata
       ($num_reads, $params->reference, $params->is_aligned,
-       align_filter => $params->align_filter);
+       alignment_filter => $params->alignment_filter);
 
     if ($params->alt_process) {
       push @avus, $self->make_alt_metadata($params->alt_process);
@@ -224,9 +225,17 @@ sub make_ticket_metadata {
 
   Arg [1]      Run identifier, Int.
   Arg [2]      Lane position, Int.
-  Arg [3]      Tag index, Int. Optional.
+  Arg [3]      Number of (non-secondardy/supplementary) reads present, Int.
+               Optional.
 
-  Example    : my @avus = $ann->make_run_metadata($st);
+  Named args:  is_paired_read  Run is paired, Bool. Required.
+               tag_index       Tag index, Int.
+
+  Example    : my @avus = $ann->make_run_metadata
+                   ($id_run, $position, $num_reads,
+                    is_paired_read => 1,
+                    tag_index      => $tag_index);
+
   Description: Return HTS run metadata AVUs.
   Returntype : Array[HashRef]
 
@@ -264,17 +273,23 @@ sub make_ticket_metadata {
 
 =head2 make_alignment_metadata
 
-  Arg [1]      Alignment flag, Bool.
-  Arg [2]      Reference file path, Str. Optional.
+  Arg [1]      Number of (non-secondardy/supplementary) reads present, Int.
+  Arg [2]      Reference file path, Str.
+  Arg [3]      Run is aligned, Bool. Optional.
 
-  Example    : my @avus = $ann->make_aligment_metadata(1, '/path/to/ref.fa');
+  Named args : alignment_filter Alignment filter name, Str. Optional.
+
+  Example    : my @avus = $ann->make_aligment_metadata
+                   ($num_reads, '/path/to/ref.fa', $is_algined,
+                    alignment_filter => 'xahuman');
+
   Description: Return HTS alignment metadata AVUs.
   Returntype : Array[HashRef]
 
 =cut
 
 {
-  my $params = function_params(4, qw(align_filter));
+  my $params = function_params(4, qw(alignment_filter));
 
   sub make_alignment_metadata {
     my ($self, $num_reads, $reference, $is_aligned) = $params->parse(@_);
@@ -297,20 +312,33 @@ sub make_ticket_metadata {
     if ($is_aligned and $reference) {
       push @avus, $self->make_avu($REFERENCE, $reference);
     }
-    if (defined $params->align_filter) {
-      push @avus, $self->make_avu('alignment_filter', $params->align_filter);
+    if (defined $params->alignment_filter) {
+      push @avus, $self->make_avu('alignment_filter',
+                                  $params->alignment_filter);
     }
 
     return @avus;
   }
 }
 
+=head2 make_target_metadata
+
+  Arg [1]      Tag index, Int. Optional.
+  Arg [1]      Alignment filter name, Str. Optional.
+  Arg [1]      Alternate process name, Str. Optional.
+
+  Example    : my @avus = $ann->make_alt_metadata('my_r&d_process');
+  Description: Return HTS alternate process metadata AVUs.
+  Returntype : Array[HashRef]
+
+=cut
+
 sub make_target_metadata {
-  my ($self, $tag_index, $align_filter, $alt_process) = @_;
+  my ($self, $tag_index, $alignment_filter, $alt_process) = @_;
 
   my $target = 1;
   if ((defined $tag_index and $tag_index == 0) or
-      ($align_filter and $align_filter ne $YHUMAN)) {
+      ($alignment_filter and $alignment_filter ne $YHUMAN)) {
     $target = 0;
   }
   elsif ($alt_process) {
@@ -324,6 +352,16 @@ sub make_target_metadata {
 
   return @avus;
 }
+
+=head2 make_alt_metadata
+
+  Arg [1]      Alternate process name, Str.
+
+  Example    : my @avus = $ann->make_alt_metadata('my_r&d_process');
+  Description: Return HTS alternate process metadata AVUs.
+  Returntype : Array[HashRef]
+
+=cut
 
 sub make_alt_metadata {
   my ($self, $alt_process) = @_;
@@ -339,9 +377,13 @@ sub make_alt_metadata {
   Arg [1]    : Factory for st:api::lims objects, WTSI::NPG::HTS::LIMSFactory.
   Arg [2]    : Run identifier, Int.
   Arg [3]    : Flowcell lane position, Int.
-  Arg [4]    : Tag index, Int. Optional.
 
-  Example    : my @avus = $ann->make_secondary_metadata($factory, 3002, 3, 1)
+  Named args : tag_index            Tag index, Int. Optional.
+               with_spiked_control  Bool.
+
+  Example    : my @avus = $ann->make_secondary_metadata
+                   ($factory, $id_run, $position, tag_index => $tag_index)
+
   Description: Return an array of metadata AVUs describing the HTS data
                in the specified run/lane/plex.
   Returntype : Array[HashRef]
@@ -349,21 +391,19 @@ sub make_alt_metadata {
 =cut
 
 {
-  my $params = function_params(1, qw[factory id_run position tag_index
-                                     with_spiked_control]);
+  my $params = function_params(4, qw[tag_index with_spiked_control]);
 
   sub make_secondary_metadata {
-    my ($self) = $params->parse(@_);
+    my ($self, $factory, $id_run, $position) = $params->parse(@_);
 
-    defined $params->factory or
+    defined $factory or
       $self->logconfess('A defined factory argument is required');
-    defined $params->id_run or
+    defined $id_run or
       $self->logconfess('A defined id_run argument is required');
-    defined $params->position or
+    defined $position or
       $self->logconfess('A defined position argument is required');
 
-    my $lims = $params->factory->make_lims($params->id_run, $params->position,
-                                           $params->tag_index);
+    my $lims = $factory->make_lims($id_run, $position, $params->tag_index);
 
     my @avus;
     push @avus, $self->make_plex_metadata($lims);
@@ -376,7 +416,7 @@ sub make_alt_metadata {
       ($lims, $params->with_spiked_control);
 
     my $hts_element = sprintf 'run: %s, pos: %s, tag_index: %s',
-      $params->id_run, $params->position,
+      $id_run, $position,
       (defined $params->tag_index ? $params->tag_index : 'NA');
     $self->info("Created metadata for $hts_element: ", pp(\@avus));
 
@@ -525,10 +565,6 @@ sub _make_single_value_metadata {
 
     if (defined $value) {
       $self->debug("st::api::lims::$method_name returned ", $value);
-
-      $attr  = decode('UTF-8', $attr,  Encode::FB_CROAK); # FIXME
-      $value = decode('UTF-8', $value, Encode::FB_CROAK); # FIXME
-
       push @avus, $self->make_avu($attr, $value);
     }
     else {
@@ -547,15 +583,10 @@ sub _make_multi_value_metadata {
   my @avus;
   foreach my $method_name (sort keys %{$method_attr}) {
     my $attr = $method_attr->{$method_name};
-
-    $attr = decode('UTF-8', $attr,  Encode::FB_CROAK); # FIXME
-
     my @values = $lims->$method_name($with_spiked_control);
     $self->debug("st::api::lims::$method_name returned ", pp(\@values));
 
     foreach my $value (@values) {
-      $value = decode('UTF-8', $value, Encode::FB_CROAK); # FIXME
-
       push @avus, $self->make_avu($attr, $value);
     }
   }
@@ -583,7 +614,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
