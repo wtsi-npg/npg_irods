@@ -3,7 +3,6 @@ package WTSI::NPG::HTS::Annotator;
 use Data::Dump qw(pp);
 use DateTime;
 use Encode; # FIXME
-use File::Basename;
 use Moose::Role;
 
 use WTSI::NPG::iRODS::Metadata;
@@ -11,19 +10,21 @@ use WTSI::DNAP::Utilities::Params qw(function_params);
 
 our $VERSION = '';
 
-our @GENERAL_PURPOSE_SUFFIXES = qw(.csv .tif .tsv  .txt .xls .xlsx .xml);
-our @GENO_DATA_SUFFIXES       = qw(.gtc .idat);
-our @HTS_DATA_SUFFIXES        = qw(.bam .cram .bai .crai);
-our @HTS_ANCILLARY_SUFFIXES   = qw(.bamcheck .bed .flagstat .seqchksum
-                                   .stats .xml);
+our @GENERAL_PURPOSE_SUFFIXES = qw(csv tif tsv txt xls xlsx xml);
+our @GENO_DATA_SUFFIXES       = qw(gtc idat);
+our @HTS_DATA_SUFFIXES        = qw(bam cram bai crai);
+our @HTS_ANCILLARY_SUFFIXES   = qw(bamcheck bed flagstat json seqchksum
+                                   stats xml);
 
 our @DEFAULT_FILE_SUFFIXES = (@GENERAL_PURPOSE_SUFFIXES,
                               @GENO_DATA_SUFFIXES,
                               @HTS_DATA_SUFFIXES,
                               @HTS_ANCILLARY_SUFFIXES);
+our $SUFFIX_PATTERN = join q[|], @DEFAULT_FILE_SUFFIXES;
+our $SUFFIX_REGEX   = qr{[.]($SUFFIX_PATTERN)$}msx;
 
-our $YHUMAN      = qw(yhuman);      # FIXME
-our $ALT_PROCESS = qw(alt_process); # FIXME
+our $YHUMAN      = qw(yhuman);      # FIXME -- add to WTSI::NPG::iRODS::Metadata
+our $ALT_PROCESS = qw(alt_process); # FIXME -- add to WTSI::NPG::iRODS::Metadata
 
 with 'WTSI::DNAP::Utilities::Loggable', 'WTSI::NPG::iRODS::Utilities';
 
@@ -100,12 +101,16 @@ sub make_type_metadata {
     @suffixes = @DEFAULT_FILE_SUFFIXES;
   }
 
-  my ($basename, $dir, $suffix) = fileparse($file, @suffixes);
+  my ($suffix) = $file =~ $SUFFIX_REGEX;
 
   my @avus;
   if ($suffix) {
     my ($base_suffix) = $suffix =~ m{^[.]?(.*)}msx;
+    $self->debug("Parsed base suffix of '$file' as '$base_suffix'");
     push @avus, $self->make_avu($FILE_TYPE, $base_suffix);
+  }
+  else {
+    $self->debug("Did not parse a suffix from '$file'");
   }
 
   return @avus;
@@ -153,10 +158,36 @@ sub make_ticket_metadata {
   return ($self->make_avu($RT_TICKET, $ticket_number));
 }
 
+
+=head2 make_primary_metadata
+
+  Arg [1]    : Run identifier, Int.
+  Arg [2]    : Lane position, Int.
+  Arg [3]    : Total number of reads (non-secondary/supplementary), Int.
+
+  Named args : tag_index       Tag index, Int. Optional.
+               is_paired_read  Run is paired, Bool. Optional.
+               is_aligned      Run is aligned, Bool. Optional.
+               reference       Alignment reference name, Str. Optional.
+               alt_process     Alternative process name, Str. Optional.
+               align_filter    Alignment filter name, Str. Optional.
+
+  Example    : my @avus = $ann->make_primary_metadata
+                   ($id_run, $position, $num_reads,
+                    tag_index      => $tag_index,
+                    is_paired_read => 1,
+                    is_aligned     => 1,
+                    reference      => $reference)
+
+  Description: Return a list of metadata AVUs describing a sequencing run
+               component.
+  Returntype : Array[HashRef]
+
+=cut
+
 {
-  my $params = function_params(4, qw[id_run position tag_index
-                                     is_paired_read is_aligned reference
-                                     alt_process align_filter]);
+  my $params = function_params(4, qw[tag_index is_paired_read is_aligned
+                                     reference alt_process align_filter]);
   sub make_primary_metadata {
     my ($self, $id_run, $position, $num_reads) = $params->parse(@_);
 
@@ -277,11 +308,9 @@ sub make_ticket_metadata {
 sub make_target_metadata {
   my ($self, $tag_index, $align_filter, $alt_process) = @_;
 
-  defined $tag_index or
-    $self->logconfess('A defined tag_index argument is required');
-
   my $target = 1;
-  if (($tag_index == 0) or ($align_filter and $align_filter ne $YHUMAN)) {
+  if ((defined $tag_index and $tag_index == 0) or
+      ($align_filter and $align_filter ne $YHUMAN)) {
     $target = 0;
   }
   elsif ($alt_process) {
@@ -519,7 +548,7 @@ sub _make_multi_value_metadata {
   foreach my $method_name (sort keys %{$method_attr}) {
     my $attr = $method_attr->{$method_name};
 
-    $attr  = decode('UTF-8', $attr,  Encode::FB_CROAK); # FIXME
+    $attr = decode('UTF-8', $attr,  Encode::FB_CROAK); # FIXME
 
     my @values = $lims->$method_name($with_spiked_control);
     $self->debug("st::api::lims::$method_name returned ", pp(\@values));

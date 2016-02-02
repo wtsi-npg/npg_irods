@@ -247,6 +247,37 @@
   supplier_name: ~
   taxon_id: 28450
   uuid_sample_lims: a8b4ebaa-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS985092
+  cohort: HIMAL
+  common_name: Homo Sapien
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: Bhutan
+  created: 2011-07-22 15:49:19
+  deleted_at: ~
+  description: 'KurtÃ¶p,,'
+  donor_id: HPG5197262
+  ethnicity: Bhutanese
+  father: ~
+  gender: Male
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1243947
+  id_sample_tmp: 1226053
+  last_updated: 2015-11-25 16:43:05
+  mother: ~
+  name: HPG5197262
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-25 16:43:05
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: HPG5197262
+  strain: ~
+  supplier_name: Him1579
+  taxon_id: 9606
+  uuid_sample_lims: 295a485a-b47a-11e0-9fc9-005056a8007b
 - accession_number: ~
   cohort: ~
   common_name: Homo sapiens
@@ -495,6 +526,37 @@
   supplier_name: ~
   taxon_id: 9606
   uuid_sample_lims: cd21f520-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS984054
+  cohort: HIMAL
+  common_name: Homo Sapien
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: Nepal
+  created: 2011-07-22 15:49:16
+  deleted_at: ~
+  description: Thakali
+  donor_id: HPG5196941
+  ethnicity: Nepalese
+  father: ~
+  gender: Male
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1243805
+  id_sample_tmp: 1225911
+  last_updated: 2015-11-25 15:27:53
+  mother: ~
+  name: HPG5196941
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-25 15:27:53
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: HPG5196941
+  strain: ~
+  supplier_name: Him0424
+  taxon_id: 9606
+  uuid_sample_lims: 27bcc6da-b47a-11e0-a80f-00144f2062b0
 - accession_number: ERS793072
   cohort: ~
   common_name: Gallus gallus
@@ -1115,6 +1177,37 @@
   supplier_name: IHMX1_1D
   taxon_id: 10090
   uuid_sample_lims: 83e342b0-41a0-11e5-998e-3c4a9275d6c6
+- accession_number: ERS942344
+  cohort: HIMAL
+  common_name: Homo Sapien
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: Bhutan
+  created: 2011-07-22 15:49:19
+  deleted_at: ~
+  description: 'KurtÃ¶p,,'
+  donor_id: HPG5197259
+  ethnicity: Bhutanese
+  father: ~
+  gender: Male
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1243941
+  id_sample_tmp: 1226047
+  last_updated: 2015-10-26 14:28:01
+  mother: ~
+  name: HPG5197259
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-10-26 14:28:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: HPG5197259
+  strain: ~
+  supplier_name: Him1576
+  taxon_id: 9606
+  uuid_sample_lims: 29411588-b47a-11e0-9fc9-005056a8007b
 - accession_number: ERS793068
   cohort: ~
   common_name: Homo sapiens
@@ -1859,6 +1952,37 @@
   supplier_name: ~
   taxon_id: 28450
   uuid_sample_lims: a8b59b86-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS985077
+  cohort: HIMAL
+  common_name: Homo Sapien
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: Nepal
+  created: 2011-07-22 15:49:16
+  deleted_at: ~
+  description: Thakali
+  donor_id: HPG5196944
+  ethnicity: Nepalese
+  father: ~
+  gender: Male
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1243819
+  id_sample_tmp: 1225925
+  last_updated: 2015-11-25 16:38:46
+  mother: ~
+  name: HPG5196944
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-25 16:38:46
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: HPG5196944
+  strain: ~
+  supplier_name: Him0427
+  taxon_id: 9606
+  uuid_sample_lims: 27e24f2c-b47a-11e0-a80f-00144f2062b0
 - accession_number: ERS429034
   cohort: ~
   common_name: Homo Sapien
@@ -2200,6 +2324,37 @@
   supplier_name: ~
   taxon_id: 28450
   uuid_sample_lims: a8b5db46-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS985079
+  cohort: HIMAL
+  common_name: Homo Sapien
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: Nepal
+  created: 2011-07-22 15:49:17
+  deleted_at: ~
+  description: Thakali
+  donor_id: HPG5196948
+  ethnicity: Nepalese
+  father: ~
+  gender: Male
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1243841
+  id_sample_tmp: 1225947
+  last_updated: 2015-11-25 16:40:17
+  mother: ~
+  name: HPG5196948
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-25 16:40:17
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: HPG5196948
+  strain: ~
+  supplier_name: Him0439
+  taxon_id: 9606
+  uuid_sample_lims: 28341eba-b47a-11e0-a80f-00144f2062b0
 - accession_number: ~
   cohort: ~
   common_name: Homo sapiens
@@ -2851,6 +3006,37 @@
   supplier_name: tcf3a_hom_3b_het_G3
   taxon_id: 7955
   uuid_sample_lims: a342f880-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS985090
+  cohort: HIMAL
+  common_name: Homo Sapien
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: Bhutan
+  created: 2011-07-22 15:49:18
+  deleted_at: ~
+  description: 'KurtÃ¶p,,'
+  donor_id: HPG5197243
+  ethnicity: Bhutanese
+  father: ~
+  gender: Male
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1243883
+  id_sample_tmp: 1225989
+  last_updated: 2015-11-25 16:41:04
+  mother: ~
+  name: HPG5197243
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-25 16:41:05
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: HPG5197243
+  strain: ~
+  supplier_name: Him1554
+  taxon_id: 9606
+  uuid_sample_lims: 28b64b88-b47a-11e0-9fc9-005056a8007b
 - accession_number: ~
   cohort: ~
   common_name: Homo sapiens
@@ -2882,6 +3068,37 @@
   supplier_name: ~
   taxon_id: 9606
   uuid_sample_lims: cd40a0b0-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS985078
+  cohort: HIMAL
+  common_name: Homo Sapien
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: Nepal
+  created: 2011-07-22 15:49:17
+  deleted_at: ~
+  description: Thakali
+  donor_id: HPG5196946
+  ethnicity: Nepalese
+  father: ~
+  gender: Male
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1243829
+  id_sample_tmp: 1225935
+  last_updated: 2015-11-25 16:39:29
+  mother: ~
+  name: HPG5196946
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-25 16:39:29
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: HPG5196946
+  strain: ~
+  supplier_name: Him0437
+  taxon_id: 9606
+  uuid_sample_lims: 27f1b728-b47a-11e0-a80f-00144f2062b0
 - accession_number: ERS804064
   cohort: ~
   common_name: Danio rerio
@@ -3068,6 +3285,37 @@
   supplier_name: tcf3b_hom_H2
   taxon_id: 7955
   uuid_sample_lims: a30f1740-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS985091
+  cohort: HIMAL
+  common_name: Homo Sapien
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: Bhutan
+  created: 2011-07-22 15:49:18
+  deleted_at: ~
+  description: 'KurtÃ¶p,,'
+  donor_id: ~
+  ethnicity: Bhutanese
+  father: ~
+  gender: Male
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1243918
+  id_sample_tmp: 1226024
+  last_updated: 2015-11-25 16:41:47
+  mother: ~
+  name: HPG5197252
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-25 16:41:47
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: HPG5197252
+  strain: ~
+  supplier_name: Him1568
+  taxon_id: 9606
+  uuid_sample_lims: 29057db6-b47a-11e0-9fc9-005056a8007b
 - accession_number: ERS012334
   cohort: ~
   common_name: Burkholderia pseudomallei

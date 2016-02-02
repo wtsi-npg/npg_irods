@@ -23,9 +23,10 @@
   id_lims: SQSCP
   id_study_lims: 3784
   id_study_tmp: 3758
-  last_updated: 2015-10-07 12:12:29
+  last_updated: 2016-01-20 14:12:12
   name: I2134 Transcriptional response of Kolf2 intestinal organoids to IL-22 (GD)
-  recorded_at: 2015-10-07 12:12:29
+  prelim_id: I2134
+  recorded_at: 2016-01-20 14:12:12
   reference_genome: Homo_sapiens (GRCh38_15)
   remove_x_and_autosomes: 0
   separate_y_chromosome_data: 1
@@ -58,9 +59,10 @@
   id_lims: SQSCP
   id_study_lims: 3291
   id_study_tmp: 3258
-  last_updated: 2015-10-07 12:09:33
+  last_updated: 2015-12-08 08:33:12
   name: RNA sequencing of mouse haemopoietic cells 2014/15
-  recorded_at: 2015-10-07 12:09:34
+  prelim_id: ~
+  recorded_at: 2015-12-08 08:33:13
   reference_genome: Mus_musculus (GRCm38 + ensembl_75_transcriptome)
   remove_x_and_autosomes: 0
   separate_y_chromosome_data: 0
@@ -95,6 +97,7 @@
   id_study_tmp: 2934
   last_updated: 2015-10-07 12:04:54
   name: SEQCAP_Lebanon_LowCov-seq
+  prelim_id: ~
   recorded_at: 2015-10-07 12:04:54
   reference_genome: Homo_sapiens (1000Genomes_hs37d5)
   remove_x_and_autosomes: 0
@@ -130,6 +133,7 @@
   id_study_tmp: 2872
   last_updated: 2015-10-07 12:04:27
   name: Analysis of the chromatin state of mouse stem and progenitor cell compartment
+  prelim_id: ~
   recorded_at: 2015-10-07 12:04:27
   reference_genome: Mus_musculus (GRCm38)
   remove_x_and_autosomes: 0
@@ -165,6 +169,7 @@
   id_study_tmp: 177
   last_updated: 2015-10-07 11:19:55
   name: Illumina Controls
+  prelim_id: ~
   recorded_at: 2015-10-07 11:19:55
   reference_genome: ' '
   remove_x_and_autosomes: 0
@@ -200,6 +205,7 @@
   id_study_tmp: 3722
   last_updated: 2015-10-07 12:12:19
   name: Transcriptome profiling of zebrafish tcf3a and tcf3b knockout embryos
+  prelim_id: ~
   recorded_at: 2015-10-07 12:12:19
   reference_genome: Danio_rerio (zv9)
   remove_x_and_autosomes: 0
@@ -233,9 +239,10 @@
   id_lims: SQSCP
   id_study_lims: 619
   id_study_tmp: 594
-  last_updated: 2015-10-07 11:22:41
+  last_updated: 2016-01-20 14:11:33
   name: Burkholderia pseudomallei diversity
-  recorded_at: 2015-10-07 11:22:41
+  prelim_id: ~
+  recorded_at: 2016-01-20 14:11:36
   reference_genome: ' '
   remove_x_and_autosomes: 0
   separate_y_chromosome_data: 0
@@ -244,6 +251,42 @@
   study_type: Whole Genome Sequencing
   study_visibility: Hold
   uuid_study_lims: 2e5202a4-a557-11df-8092-00144f01a414
+- abbreviation: 3606STDY
+  abstract: 'We propose to sequence 35 Tibetan samples to provide a comparative dataset for a project examining Himalayan samples (I1911). Tibetans have been studied in several ways such as their adaptations to high altitude life, although not, thus far, at the genome sequence level. We chose this number of individuals because similar numbers will be sequenced from many African, European and HGDP populations, and thus the Tibetan data can also be included in many other analyses.'
+  accession_number: ERP010096
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 1
+  contaminated_human_dna: 0
+  created: 2015-04-03 21:11:54
+  data_access_group: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: Sequencing of 35 individuals from Tibet to study the demographic history of the region
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: ~
+  ethically_approved: 1
+  faculty_sponsor: Chris Tyler-Smith
+  id_lims: SQSCP
+  id_study_lims: 3606
+  id_study_tmp: 3570
+  last_updated: 2015-10-26 10:44:47
+  name: IHTP_MWGS T19_Tibet
+  prelim_id: ~
+  recorded_at: 2015-10-26 10:44:47
+  reference_genome: Homo_sapiens (GRCh38_full_analysis_set_plus_decoy_hla)
+  remove_x_and_autosomes: 0
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: T19 Tibet
+  study_type: Whole Genome Sequencing
+  study_visibility: Public
+  uuid_study_lims: 0e3c3470-da46-11e4-808c-68b59976a382
 - abbreviation: 3745STDY
   abstract: RNA-seq study on stably transfected cell lines
   accession_number: ERP011057
@@ -268,9 +311,10 @@
   id_lims: SQSCP
   id_study_lims: 3745
   id_study_tmp: 3718
-  last_updated: 2015-10-07 12:12:19
+  last_updated: 2016-01-20 14:12:11
   name: RNASeq stable cell lines (PK)
-  recorded_at: 2015-10-07 12:12:19
+  prelim_id: ~
+  recorded_at: 2016-01-20 14:12:11
   reference_genome: ' '
   remove_x_and_autosomes: 0
   separate_y_chromosome_data: 0

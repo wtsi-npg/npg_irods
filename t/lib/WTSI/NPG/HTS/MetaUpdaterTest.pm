@@ -113,7 +113,7 @@ sub update_secondary_metadata : Test(3) {
 
     my $updater = WTSI::NPG::HTS::MetaUpdater->new
       (irods       => $irods,
-      lims_factory => $lims_factory);
+       lims_factory => $lims_factory);
 
     # 1 test
     cmp_ok($updater->update_secondary_metadata(\@paths_to_update),
