@@ -7,6 +7,7 @@ use File::Basename;
 use List::AllUtils qw(any first none);
 use File::Spec::Functions qw(catdir catfile splitdir);
 use Moose;
+use MooseX::StrictConstructor;
 use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw(function_params);

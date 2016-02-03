@@ -85,7 +85,7 @@ sub positions : Test(2) {
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     is_deeply([$pub->positions], [1 .. 8],
@@ -116,7 +116,7 @@ sub num_reads : Test(52) {
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $lane_runfolder_path);
 
     foreach my $lane_position (1 .. 8) {
@@ -146,7 +146,7 @@ sub num_reads : Test(52) {
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $plex_runfolder_path);
 
     my @tags = (0 .. $tag_count, 888);
@@ -175,7 +175,7 @@ sub is_paired_read : Test(2) {
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     ok($pub->is_paired_read, "$runfolder_path is paired read");
@@ -193,7 +193,7 @@ sub list_lane_alignment_files : Test(16) {
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index = calc_lane_alignment_files($archive_path, $file_format);
@@ -219,7 +219,7 @@ sub list_plex_alignment_files : Test(16) {
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index =
@@ -247,7 +247,7 @@ sub list_lane_index_files : Test(16) {
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index = calc_lane_index_files($archive_path, $file_format);
@@ -273,7 +273,7 @@ sub list_plex_index_files : Test(16) {
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index =
@@ -301,7 +301,7 @@ sub list_lane_qc_files : Test(16) {
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index = calc_lane_qc_files($archive_path, $file_format);
@@ -328,7 +328,7 @@ sub list_plex_qc_files : Test(16) {
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index = calc_plex_qc_files($archive_path);
@@ -354,7 +354,7 @@ sub list_lane_ancillary_files : Test(16) {
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index = calc_lane_ancillary_files($archive_path, $file_format);
@@ -381,7 +381,7 @@ sub list_plex_ancillary_files : Test(16) {
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index = calc_plex_ancillary_files($archive_path);
@@ -412,7 +412,7 @@ sub publish_lane_alignment_files : Test(168) {
        file_format     => $file_format,
        irods           => $irods,
        lims_factory    => $lims_factory,
-       npgqc_schema    => $qc_schema,
+       # npgqc_schema    => $qc_schema,
        runfolder_path  => $runfolder_path);
 
     my %position_index = calc_lane_alignment_files($archive_path, $file_format);
@@ -495,7 +495,7 @@ sub publish_plex_alignment_files : Test(487) {
          file_format     => $file_format,
          irods           => $irods,
          lims_factory    => $lims_factory,
-         npgqc_schema    => $qc_schema,
+         # npgqc_schema    => $qc_schema,
          runfolder_path  => $runfolder_path);
 
       my %position_index =
@@ -577,7 +577,7 @@ sub publish_lane_index_files : Test(96) {
        file_format     => $file_format,
        irods           => $irods,
        lims_factory    => $lims_factory,
-       npgqc_schema    => $qc_schema,
+       # npgqc_schema    => $qc_schema,
        runfolder_path  => $runfolder_path);
 
     my %position_index = calc_lane_index_files($archive_path, $file_format);
@@ -625,7 +625,7 @@ sub publish_plex_index_files : Test(274) {
          file_format     => $file_format,
          irods           => $irods,
          lims_factory    => $lims_factory,
-         npgqc_schema    => $qc_schema,
+         # npgqc_schema    => $qc_schema,
          runfolder_path  => $runfolder_path);
 
       my %position_index =
@@ -670,7 +670,7 @@ sub publish_lane_ancillary_files : Test(776) {
        file_format     => $file_format,
        irods           => $irods,
        lims_factory    => $lims_factory,
-       npgqc_schema    => $qc_schema,
+       # npgqc_schema    => $qc_schema,
        runfolder_path  => $runfolder_path);
 
     my %position_index = calc_lane_ancillary_files($archive_path, $file_format);
@@ -717,7 +717,7 @@ sub publish_plex_ancillary_files : Test(2534) {
          file_format     => $file_format,
          irods           => $irods,
          lims_factory    => $lims_factory,
-         npgqc_schema    => $qc_schema,
+         # npgqc_schema    => $qc_schema,
          runfolder_path  => $runfolder_path);
 
       my %position_index = calc_plex_ancillary_files($archive_path);
@@ -763,7 +763,7 @@ sub publish_plex_qc_files : Test(2212) {
          file_format     => $file_format,
          irods           => $irods,
          lims_factory    => $lims_factory,
-         npgqc_schema    => $qc_schema,
+         # npgqc_schema    => $qc_schema,
          runfolder_path  => $runfolder_path);
 
       my %position_index = calc_plex_qc_files($archive_path);
@@ -815,7 +815,7 @@ sub publish_plex_alignment_files_alt_process : Test(598) {
          file_format     => $file_format,
          irods           => $irods,
          lims_factory    => $lims_factory,
-         npgqc_schema    => $qc_schema,
+         # npgqc_schema    => $qc_schema,
          runfolder_path  => $runfolder_path);
 
       my %position_index =
@@ -858,7 +858,7 @@ sub dest_collection : Test(8) {
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
     is($pub1->dest_collection, '/seq/5174', 'Default dest collection');
 
@@ -867,7 +867,7 @@ sub dest_collection : Test(8) {
        file_format     => $file_format,
        irods           => $irods,
        lims_factory    => $lims_factory,
-       npgqc_schema    => $qc_schema,
+       # npgqc_schema    => $qc_schema,
        runfolder_path  => $runfolder_path);
     is($pub2->dest_collection, '/a/b/c', 'Custom dest collection');
 
@@ -877,7 +877,7 @@ sub dest_collection : Test(8) {
        file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
     is($pub3->dest_collection, '/seq/5174/x',
        'Default alt_process destination has process appended to collection');
@@ -888,7 +888,7 @@ sub dest_collection : Test(8) {
        file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       npgqc_schema   => $qc_schema,
+       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
     is($pub4->dest_collection, '/a/b/c',
        'Custom alt_process destination uses the provided collection');

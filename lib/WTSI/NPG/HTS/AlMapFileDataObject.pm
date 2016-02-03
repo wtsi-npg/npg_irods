@@ -6,11 +6,11 @@ use List::AllUtils qw(any none uniq);
 use Moose;
 use Try::Tiny;
 
-use WTSI::NPG::HTS::Samtools;
 use WTSI::NPG::HTS::Types qw(AlMapFileFormat);
 
 our $VERSION = '';
 
+our $DEFAULT_SAMTOOLS_EXECUTABLE = 'samtools';
 # Regex for matching to reference sequence paths in HTS file header PG
 # records.
 our $DEFAULT_REFERENCE_REGEX = qr{\/(nfs|lustre)\/\S+\/references}mxs;
@@ -26,6 +26,10 @@ extends 'WTSI::NPG::iRODS::DataObject';
 with 'WTSI::NPG::HTS::RunComponent', 'WTSI::NPG::HTS::FilenameParser',
   'WTSI::NPG::HTS::HeaderParser', 'WTSI::NPG::HTS::AVUCollator',
   'WTSI::NPG::HTS::Annotator';
+
+## no critic (ErrorHandling::RequireCheckingReturnValueOfEval)
+eval { with 'npg_common::roles::software_location' };
+## critic
 
 has 'alignment_filter' =>
   (isa           => 'Maybe[Str]',
@@ -325,14 +329,26 @@ before 'update_group_permissions' => sub {
 sub _read_header {
   my ($self) = @_;
 
+  my $samtools;
+  if ($self->can('samtools_cmd')) {
+    $self->debug('Using npg_common::roles::software_location to find ',
+                 'samtools: ', $self->samtools_cmd);
+    $samtools = $self->samtools_cmd;
+  }
+  else {
+    $self->debug('Using the default samtools executable on PATH: ',
+                 $DEFAULT_SAMTOOLS_EXECUTABLE);
+    $samtools = $DEFAULT_SAMTOOLS_EXECUTABLE;
+  }
+
   my @header;
   my $path = $self->str;
 
   try {
-    push @header, WTSI::NPG::HTS::Samtools->new
-      (arguments  => ['-H'],
-       path       => "irods:$path",
-       logger     => $self->logger)->collect;
+    push @header, WTSI::DNAP::Utilities::Runnable->new
+      (arguments  => [qw[view -H], qq[irods:$path]],
+       executable => $samtools,
+       logger     => $self->logger)->run->split_stdout;
   } catch {
     # No logger is set on samtools directly to avoid noisy stack
     # traces when a file can't be read. Instead, any error information
