@@ -82,10 +82,10 @@ sub positions : Test(2) {
 
   foreach my $file_format (qw(bam cram)) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
-      (file_format  => $file_format,
-       irods        => $irods,
-       lims_factory => $lims_factory,
-       npgqc_schema => $qc_schema,
+      (file_format    => $file_format,
+       irods          => $irods,
+       lims_factory   => $lims_factory,
+       npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     is_deeply([$pub->positions], [1 .. 8],
@@ -420,9 +420,10 @@ sub publish_lane_alignment_files : Test(168) {
     foreach my $position (1 .. 8) {
       my @expected_files = @{$position_index{$position}};
       my $num_expected  = scalar @expected_files;
-      my $num_published = $pub->publish_lane_alignment_files($position);
+      my ($num_files, $num_processed, $num_errors) =
+        $pub->publish_lane_alignment_files($position);
 
-      cmp_ok($num_published, '==', $num_expected,
+      cmp_ok($num_processed, '==', $num_expected,
              "Published $num_expected $file_format lane " .
              "$position alignment files");
 
@@ -501,8 +502,10 @@ sub publish_plex_alignment_files : Test(487) {
         calc_plex_alignment_files($archive_path, $file_format);
 
       my $num_expected  = scalar @{$position_index{$position}};
-      my $num_published = $pub->publish_plex_alignment_files($position);
-      cmp_ok($num_published, '==', $num_expected,
+      my ($num_files, $num_processed, $num_errors) =
+        $pub->publish_plex_alignment_files($position);
+
+      cmp_ok($num_processed, '==', $num_expected,
              "Published $num_expected position $position " .
              "$file_format alignment files");
 
@@ -581,9 +584,10 @@ sub publish_lane_index_files : Test(96) {
 
     foreach my $position (1 .. 8) {
       my $num_expected  = scalar @{$position_index{$position}};
-      my $num_published = $pub->publish_lane_index_files($position);
+      my ($num_files, $num_processed, $num_errors) =
+        $pub->publish_lane_index_files($position);
 
-      cmp_ok($num_published, '==', $num_expected,
+      cmp_ok($num_processed, '==', $num_expected,
              "Published $num_expected $file_format lane " .
              "$position index files");
 
@@ -628,8 +632,10 @@ sub publish_plex_index_files : Test(274) {
         calc_plex_index_files($archive_path, $file_format);
 
       my $num_expected  = scalar @{$position_index{$position}};
-      my $num_published = $pub->publish_plex_index_files($position);
-      cmp_ok($num_published, '==', $num_expected,
+      my ($num_files, $num_processed, $num_errors) =
+        $pub->publish_plex_index_files($position);
+
+      cmp_ok($num_processed, '==', $num_expected,
              "Published $num_expected position $position " .
              "$file_format index files");
 
@@ -671,9 +677,10 @@ sub publish_lane_ancillary_files : Test(776) {
 
     foreach my $position (1 .. 8) {
       my $num_expected  = scalar @{$position_index{$position}};
-      my $num_published = $pub->publish_lane_ancillary_files($position);
+      my ($num_files, $num_processed, $num_errors) =
+        $pub->publish_lane_ancillary_files($position);
 
-      cmp_ok($num_published, '==', $num_expected,
+      cmp_ok($num_processed, '==', $num_expected,
              "Published $num_expected $file_format lane " .
              "$position ancillary files");
 
@@ -716,8 +723,10 @@ sub publish_plex_ancillary_files : Test(2534) {
       my %position_index = calc_plex_ancillary_files($archive_path);
 
       my $num_expected  = scalar @{$position_index{$position}};
-      my $num_published = $pub->publish_plex_ancillary_files($position);
-      cmp_ok($num_published, '==', $num_expected,
+      my ($num_files, $num_processed, $num_errors) =
+        $pub->publish_plex_ancillary_files($position);
+
+      cmp_ok($num_processed, '==', $num_expected,
              "Published $num_expected position $position " .
              "$file_format ancillary files");
 
@@ -760,13 +769,14 @@ sub publish_plex_qc_files : Test(2212) {
       my %position_index = calc_plex_qc_files($archive_path);
 
       my $num_expected  = scalar @{$position_index{$position}};
-      my $num_published = $pub->publish_plex_qc_files($position);
-      cmp_ok($num_published, '==', $num_expected,
+      my ($num_files, $num_processed, $num_errors) =
+        $pub->publish_plex_qc_files($position);
+
+      cmp_ok($num_processed, '==', $num_expected,
              "Published $num_expected position $position " .
              "$file_format QC files");
 
       my $qc_coll = catfile($dest_coll, q[qc]);
-
 
       my $pos_pattern = sprintf '%d_%d#\d+', $pub->id_run, $position;
       my @expected_paths =
@@ -812,9 +822,10 @@ sub publish_plex_alignment_files_alt_process : Test(598) {
         calc_plex_alignment_files($archive_path, $file_format);
 
       my $num_expected  = scalar @{$position_index{$position}};
-      my $num_published = $pub->publish_plex_alignment_files($position);
+      my ($num_files, $num_processed, $num_errors) =
+        $pub->publish_plex_alignment_files($position);
 
-      cmp_ok($num_published, '==', $num_expected,
+      cmp_ok($num_processed, '==', $num_expected,
              "Published $num_expected position $position " .
              "$file_format alignment files");
 
