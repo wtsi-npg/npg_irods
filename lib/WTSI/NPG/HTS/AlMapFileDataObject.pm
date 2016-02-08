@@ -1,12 +1,12 @@
 package WTSI::NPG::HTS::AlMapFileDataObject;
 
 use namespace::autoclean;
-use Data::Dump qw(pp);
-use List::AllUtils qw(any none uniq);
+use Data::Dump qw[pp];
+use List::AllUtils qw[any none uniq];
 use Moose;
 use Try::Tiny;
 
-use WTSI::NPG::HTS::Types qw(AlMapFileFormat);
+use WTSI::NPG::HTS::Types qw[AlMapFileFormat];
 
 our $VERSION = '';
 
@@ -15,20 +15,23 @@ our $DEFAULT_SAMTOOLS_EXECUTABLE = 'samtools';
 # records.
 our $DEFAULT_REFERENCE_REGEX = qr{\/(nfs|lustre)\/\S+\/references}mxs;
 
-our $HUMAN   = qw(human);   # FIXME
-our $YHUMAN  = qw(yhuman);  # FIXME
-our $XAHUMAN = qw(xahuman); # FIXME
-
-our $PUBLIC  = qw(public);  # FIXME
+our $HUMAN   = 'human';   # FIXME
+our $YHUMAN  = 'yhuman';  # FIXME
+our $XAHUMAN = 'xahuman'; # FIXME
+our $PUBLIC  = 'public';  # FIXME
 
 extends 'WTSI::NPG::iRODS::DataObject';
 
-with 'WTSI::NPG::HTS::RunComponent', 'WTSI::NPG::HTS::FilenameParser',
-  'WTSI::NPG::HTS::HeaderParser', 'WTSI::NPG::HTS::AVUCollator',
-  'WTSI::NPG::HTS::Annotator';
+with qw[
+         WTSI::NPG::HTS::RunComponent
+         WTSI::NPG::HTS::FilenameParser
+         WTSI::NPG::HTS::HeaderParser
+         WTSI::NPG::HTS::AVUCollator
+         WTSI::NPG::HTS::Annotator
+       ];
 
 ## no critic (ErrorHandling::RequireCheckingReturnValueOfEval)
-eval { with 'npg_common::roles::software_location' };
+eval { with qw[npg_common::roles::software_location] };
 ## critic
 
 has 'alignment_filter' =>
@@ -225,6 +228,10 @@ sub reference {
                alignment_filter metadata and the study_id metadata. If
                the former indicates non-consented human data or the latter
                indicates any study restriction, this method will return true.
+
+               Note that for checking the study restriction, the data object
+               must have reached iRODS; if it isn't present, there will be
+               no check.
   Returntype : Bool
 
 =cut
@@ -232,7 +239,8 @@ sub reference {
 sub is_restricted_access {
   my ($self) = @_;
 
-  return $self->contains_nonconsented_human or $self->get_expected_groups;
+  return ($self->contains_nonconsented_human or
+          ($self->is_present and $self->expected_groups));
 }
 
 =head2 contains_nonconsented_human
@@ -313,7 +321,6 @@ sub update_secondary_metadata {
   return $self;
 }
 
-
 before 'update_group_permissions' => sub {
   my ($self) = @_;
 
@@ -321,8 +328,11 @@ before 'update_group_permissions' => sub {
   # expecting to set groups restricting general access, then remove
   # access for the public group.
   if ($self->is_restricted_access) {
-    $self->debug(qq[Removing $PUBLIC access to '], $self->str, q[']);
+    $self->info(qq[Removing $PUBLIC access to '], $self->str, q[']);
     $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION, $PUBLIC);
+  }
+  else {
+    $self->info(qq[Allowing $PUBLIC access to '], $self->str, q[']);
   }
 };
 
@@ -346,7 +356,7 @@ sub _read_header {
 
   try {
     push @header, WTSI::DNAP::Utilities::Runnable->new
-      (arguments  => [qw[view -H], qq[irods:$path]],
+      (arguments  => [qw[view -H], "irods:$path"],
        executable => $samtools,
        logger     => $self->logger)->run->split_stdout;
   } catch {

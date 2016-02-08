@@ -1,11 +1,11 @@
 package WTSI::NPG::HTS::Publisher;
 
 use namespace::autoclean;
-use Data::Dump qw(pp);
+use Data::Dump qw[pp];
 use DateTime;
-use English qw(-no_match_vars);
-use File::Spec::Functions qw(catdir catfile splitdir splitpath);
-use List::AllUtils qw(any);
+use English qw[-no_match_vars];
+use File::Spec::Functions qw[catdir catfile splitdir splitpath];
+use List::AllUtils qw[any];
 use Moose;
 use Try::Tiny;
 
@@ -13,8 +13,11 @@ use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS;
 
-with 'WTSI::DNAP::Utilities::Loggable', 'WTSI::NPG::Accountable',
-  'WTSI::NPG::HTS::Annotator';
+with qw[
+         WTSI::DNAP::Utilities::Loggable
+         WTSI::NPG::Accountable
+         WTSI::NPG::HTS::Annotator
+       ];
 
 our $VERSION = '';
 
@@ -29,7 +32,7 @@ has 'require_md5_cache' =>
   (is            => 'ro',
    isa           => 'ArrayRef[Str]',
    required      => 1,
-   default       => sub { return [qw(bam cram)] },
+   default       => sub { return [qw[bam cram]] },
    documentation => 'A list of file suffixes for which MD5 cache files ' .
                     'must be provided and will not be created on the fly.');
 

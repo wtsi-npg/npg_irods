@@ -1,23 +1,27 @@
 package WTSI::NPG::HTS::AncFileDataObject;
 
 use namespace::autoclean;
-use Data::Dump qw(pp);
-use List::AllUtils qw(any);
+use Data::Dump qw[pp];
+use List::AllUtils qw[any];
 use Moose;
 use Try::Tiny;
 
 our $VERSION = '';
 
-our $PUBLIC = qw(public); # FIXME
+our $PUBLIC = 'public'; # FIXME
 
 # The contents of BED and JSON formatted file are sensitive and are
 # given restricted access
-our @RESTRICTED_ANCILLARY_FORMATS = qw(bed json);
+our @RESTRICTED_ANCILLARY_FORMATS = qw[bed json];
 
 extends 'WTSI::NPG::iRODS::DataObject';
 
-with 'WTSI::NPG::HTS::RunComponent', 'WTSI::NPG::HTS::FilenameParser',
-  'WTSI::NPG::HTS::AVUCollator', 'WTSI::NPG::HTS::Annotator';
+with qw[
+         WTSI::NPG::HTS::RunComponent
+         WTSI::NPG::HTS::FilenameParser
+         WTSI::NPG::HTS::AVUCollator
+         WTSI::NPG::HTS::Annotator
+       ];
 
 has 'alignment_filter' =>
   (isa           => 'Maybe[Str]',
@@ -134,12 +138,12 @@ sub update_secondary_metadata {
       };
     }
 
-    $self->debug("Setting study-defined access for restricted file '$path'");
+    $self->info("Setting study-defined access for restricted file '$path'");
     $self->update_group_permissions;
   }
   else {
     $self->update_group_permissions;
-    $self->debug("Setting public access for unrestricted file '$path'");
+    $self->info("Setting public access for unrestricted file '$path'");
     $self->set_permissions($WTSI::NPG::iRODS::READ_PERMISSION, 'public');
   }
 
@@ -153,8 +157,11 @@ before 'update_group_permissions' => sub {
   # expecting to set groups restricting general access, then remove
   # access for the public group.
   if ($self->is_restricted_access) {
-    $self->debug(qq[Removing $PUBLIC access to '], $self->str, q[']);
+    $self->info(qq[Removing $PUBLIC access to '], $self->str, q[']);
     $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION, $PUBLIC);
+  }
+  else {
+    $self->info(qq[Allowing $PUBLIC access to '], $self->str, q[']);
   }
 };
 

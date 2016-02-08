@@ -17,7 +17,6 @@ lib/WTSI/NPG/HTS/MetaUpdater.pm
 lib/WTSI/NPG/HTS/Publisher.pm
 lib/WTSI/NPG/HTS/RunComponent.pm
 lib/WTSI/NPG/HTS/RunPublisher.pm
-lib/WTSI/NPG/HTS/Samtools.pm
 lib/WTSI/NPG/HTS/Types.pm
 LICENSE
 MANIFEST			This list of files
@@ -6836,7 +6835,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/pb_align_18448_8_flagstat.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/seq_alignment_18448_20151214-085833_386170
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/RunInfo.xml
-t/data/samtools/7915_5#1.sam
 t/fixtures/ml_warehouse/200-Sample.yml
 t/fixtures/ml_warehouse/200-Study.yml
 t/fixtures/ml_warehouse/300-IseqFlowcell.yml
@@ -6853,7 +6851,6 @@ t/lib/WTSI/NPG/HTS/AnnotatorTest.pm
 t/lib/WTSI/NPG/HTS/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/HTS/PublisherTest.pm
 t/lib/WTSI/NPG/HTS/RunPublisherTest.pm
-t/lib/WTSI/NPG/HTS/SamtoolsTest.pm
 t/lib/WTSI/NPG/HTS/Test.pm
 t/meta_updater.t
 t/params.t
@@ -6861,5 +6858,4 @@ t/perlcriticrc
 t/publisher.t
 t/README
 t/run_publisher.t
-t/samtools.t
 

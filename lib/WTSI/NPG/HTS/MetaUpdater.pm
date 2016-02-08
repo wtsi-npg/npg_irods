@@ -7,7 +7,7 @@ use Try::Tiny;
 use WTSI::NPG::HTS::AlMapFileDataObject;
 use WTSI::NPG::iRODS;
 
-with 'WTSI::DNAP::Utilities::Loggable';
+with qw[WTSI::DNAP::Utilities::Loggable];
 
 our $VERSION = '';
 

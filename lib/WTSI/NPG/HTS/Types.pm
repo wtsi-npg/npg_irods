@@ -2,15 +2,15 @@ package WTSI::NPG::HTS::Types;
 
 use strict;
 use warnings;
-use MooseX::Types::Moose qw(ArrayRef Str);
+use MooseX::Types::Moose qw[ArrayRef Str];
 
 use MooseX::Types -declare =>
-  [qw(
+  [qw[
        AlMapFileFormat
        AlMapIndexFormat
        MetaAttr
        ArrayRefOfMetaAttr
-    )];
+     ]];
 
 our $VERSION = '';
 

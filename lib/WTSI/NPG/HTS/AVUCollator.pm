@@ -1,11 +1,23 @@
 package WTSI::NPG::HTS::AVUCollator;
 
-use Data::Dump qw(pp);
+use Data::Dump qw[pp];
 use Moose::Role;
 
 our $VERSION = '';
 
-with 'WTSI::DNAP::Utilities::Loggable';
+with qw[WTSI::DNAP::Utilities::Loggable];
+
+=head2 collate_avus
+
+  Arg [1]    : AVUs to collate, Array[HashRef]
+
+  Example    : my $collated = $self->collate_avus(@avus)
+  Description: Collate the values of all the argument AVUs having the same
+               attribute into an ArrayRef. Return a HashRef of these
+               ArrayRefs where each key is the corresponding attribute.
+  Returntype : HashRef[ArrayRef]
+
+=cut
 
 sub collate_avus {
   my ($self, @avus) = @_;
@@ -33,6 +45,12 @@ sub collate_avus {
       $collated_avus{$attr} = [$value];
     }
   }
+
+  # foreach my $attr (keys %collated_avus) {
+  #   my @values = @{$collated_avus{$attr}};
+  #   @values = sort @values;
+  #   $collated_avus{$attr} = \@values;
+  # }
 
   $self->debug('Collated ', scalar @avus, ' AVUs into ',
                scalar keys %collated_avus, ' lists');

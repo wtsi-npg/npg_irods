@@ -2,7 +2,7 @@ package WTSI::NPG::HTS::HeaderParser;
 
 use Moose::Role;
 
-with 'WTSI::DNAP::Utilities::Loggable';
+with qw[WTSI::DNAP::Utilities::Loggable];
 
 our $VERSION = '';
 

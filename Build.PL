@@ -10,8 +10,8 @@ use WTSI::DNAP::Utilities::Build;
 
 my $build = WTSI::DNAP::Utilities::Build->new
   (module_name        => 'npg_irods',
-   dist_author        => q(NPG <npg@sanger.ac.uk>),
-   dist_abstract      => q(NPG iRODS data/metadata loading and update tools),
+   dist_author        => 'NPG <npg@sanger.ac.uk>',
+   dist_abstract      => 'NPG iRODS data/metadata loading and update tools',
    dist_version       => WTSI::DNAP::Utilities::Build->report_version,
    license            => 'gpl',
    configure_requires =>

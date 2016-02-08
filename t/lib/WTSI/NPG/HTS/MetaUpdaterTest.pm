@@ -5,17 +5,17 @@ use utf8;
 use strict;
 use warnings;
 
-use English qw(-no_match_vars);
+use English qw[-no_match_vars];
 use File::Spec::Functions;
 use Log::Log4perl;
 use Test::More;
 
-use base qw(WTSI::NPG::HTS::Test);
+use base qw[WTSI::NPG::HTS::Test];
 
+use WTSI::DNAP::Utilities::Runnable;
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::HTS::MetaUpdater;
-use WTSI::NPG::HTS::Samtools;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 
@@ -28,27 +28,27 @@ Log::Log4perl::init('./etc/log4perl_tests.conf');
   with 'npg_testing::db';
 }
 
+my $pid          = $PID;
 my $test_counter = 0;
-my $data_path = './t/data/meta_updater';
+my $data_path    = './t/data/meta_updater';
 my $fixture_path = "./t/fixtures";
 
 my $utf8_extra = '[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]';
 
 my $db_dir = File::Temp->newdir;
-
 my $wh_schema;
 my $lims_factory;
 
-my $data_file = '7915_5#1';
+my $data_file      = '7915_5#1';
 my $reference_file = 'test_ref.fa';
 my $irods_tmp_coll;
-my $samtools = `which samtools`;
 
-my $pid = $PID;
+my $samtools_available = `which samtools`;
 
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
-  $wh_schema = TestDB->new(verbose => 0)->create_test_db
+  $wh_schema = TestDB->new(sqlite_utf8_enabled => 1,
+                           verbose             => 0)->create_test_db
     ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
      $wh_db_file);
 
@@ -67,18 +67,20 @@ sub setup_test : Test(setup) {
     $irods->add_collection("MetaUpdaterTest.$pid.$test_counter");
   $test_counter++;
 
-  if ($samtools) {
-    WTSI::NPG::HTS::Samtools->new
-        (arguments => ['view', '-C',
-                       '-T', qq[$data_path/$reference_file],
-                       '-o', qq[irods:$irods_tmp_coll/$data_file.cram]],
-         path      => "$data_path/$data_file.sam")->run;
+  if ($samtools_available) {
+    WTSI::DNAP::Utilities::Runnable->new
+        (arguments  => ['view', '-C',
+                        '-T', "$data_path/$reference_file",
+                        '-o', "irods:$irods_tmp_coll/$data_file.cram",
+                        "$data_path/$data_file.sam"],
+         executable => 'samtools')->run;
 
-    WTSI::NPG::HTS::Samtools->new
-        (arguments => ['view', '-b',
-                       '-T', qq[$data_path/$reference_file],
-                       '-o', qq[irods:$irods_tmp_coll/$data_file.bam]],
-         path      => "$data_path/$data_file.sam")->run;
+    WTSI::DNAP::Utilities::Runnable->new
+        (arguments  => ['view', '-b',
+                        '-T', "$data_path/$reference_file",
+                        '-o', "irods:$irods_tmp_coll/$data_file.bam",
+                        "$data_path/$data_file.sam"],
+         executable => 'samtools')->run;
   }
 }
 
@@ -94,7 +96,7 @@ sub require : Test(1) {
 
 sub update_secondary_metadata : Test(3) {
  SKIP: {
-    if (not $samtools) {
+    if (not $samtools_available) {
       skip 'samtools executable not on the PATH', 3;
     }
 
@@ -102,7 +104,7 @@ sub update_secondary_metadata : Test(3) {
                                       strict_baton_version => 0);
 
     my @paths_to_update;
-    foreach my $format (qw(bam cram)) {
+    foreach my $format (qw[bam cram]) {
       push @paths_to_update, "$irods_tmp_coll/$data_file.$format";
     }
 
@@ -115,7 +117,7 @@ sub update_secondary_metadata : Test(3) {
            '==', scalar @paths_to_update,
            'All iRODS paths processed without errors');
 
-    foreach my $format (qw(bam cram)) {
+    foreach my $format (qw[bam cram]) {
       my $expected_meta =
         [{attribute => $LIBRARY_ID,               value     => '4957423'},
          {attribute => $QC_STATE,                 value     => '1'},
@@ -130,9 +132,10 @@ sub update_secondary_metadata : Test(3) {
          {attribute => $STUDY_TITLE,
           value     => 'Burkholderia pseudomallei diversity' . $utf8_extra}];
 
+      my $file_name = "$data_file.$format";
       my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
         (collection  => $irods_tmp_coll,
-         data_object => "$data_file.$format",
+         data_object => $file_name,
          irods       => $irods);
 
       # 2 tests

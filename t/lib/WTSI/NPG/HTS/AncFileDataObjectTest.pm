@@ -30,8 +30,9 @@ use WTSI::NPG::iRODS;
   with 'npg_testing::db';
 }
 
+my $pid          = $PID;
 my $test_counter = 0;
-my $data_path = './t/data/anc_file_data_object';
+my $data_path    = './t/data/anc_file_data_object';
 my $fixture_path = "./t/fixtures";
 
 my $utf8_extra = '[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]';
@@ -43,7 +44,7 @@ my $lims_factory;
 my $irods_tmp_coll;
 
 my $have_admin_rights =
-  system(qq{$WTSI::NPG::iRODS::IADMIN lu >/dev/null 2>&1}) == 0;
+  system(qq[$WTSI::NPG::iRODS::IADMIN lu >/dev/null 2>&1]) == 0;
 
 # The public group
 my $public_group = 'public';
@@ -71,7 +72,7 @@ my @groups_added;
 # Enable group tests
 my $group_tests_enabled = 0;
 
-my $pid = $PID;
+
 
 my $formats = {bamcheck  => [q[]],
                bed       => ['.deletions', '.insertions', '.junctions'],
@@ -100,7 +101,8 @@ foreach my $format (sort keys %$formats) {
 
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
-  $wh_schema = TestDB->new(verbose => 0)->create_test_db
+  $wh_schema = TestDB->new(sqlite_utf8_enabled => 1,
+                           verbose             => 0)->create_test_db
     ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
      $wh_db_file);
 
@@ -324,7 +326,7 @@ sub update_secondary_metadata_tag1_no_spike_human : Test(84) {
 
     my @expected_metadata;
     my @expected_groups_after;
-    if (any { $suffix eq $_ } ('.bed', '.json')) {
+    if (any { $suffix eq $_ } (qw[.bed .json])) {
       push @expected_metadata, @$tag1_expected_meta;
       push @expected_groups_after, 'ss_3291';
     }

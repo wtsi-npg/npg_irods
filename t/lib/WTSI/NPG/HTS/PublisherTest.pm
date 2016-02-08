@@ -4,9 +4,9 @@ use strict;
 use warnings;
 
 use Carp;
-use Data::Dump qw(pp);
-use English qw(-no_match_vars);
-use File::Copy::Recursive qw(dircopy);
+use Data::Dump qw[pp];
+use English qw[-no_match_vars];
+use File::Copy::Recursive qw[dircopy];
 use File::Spec::Functions;
 use File::Temp;
 use Log::Log4perl;
@@ -14,7 +14,7 @@ use Test::Exception;
 use Test::More;
 use URI;
 
-use base qw(WTSI::NPG::HTS::Test);
+use base qw[WTSI::NPG::HTS::Test];
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
@@ -22,21 +22,20 @@ use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::HTS::Publisher;
 
+my $pid          = $PID;
 my $test_counter = 0;
-my $data_path = './t/data/publisher';
+my $data_path    = './t/data/publisher';
 
 my $tmp_data_path;
-
-my $cwc;
 my $irods_tmp_coll;
-
-my $pid = $PID;
+my $cwc;
 
 sub setup_test : Test(setup) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   $cwc = $irods->working_collection;
 
+  # Prepare a copy of the test data because the tests will modify it
   $tmp_data_path = File::Temp->newdir;
   dircopy($data_path, $tmp_data_path) or
     croak "Failed to copy test data from $data_path to $tmp_data_path";
@@ -48,6 +47,7 @@ sub setup_test : Test(setup) {
 sub teardown_test : Test(teardown) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
+  # Delete the copy of the test data
   undef $tmp_data_path;
 
   $irods->working_collection($cwc);
@@ -64,13 +64,13 @@ sub publish : Test(6) {
 
   my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $irods);
 
-  my $local_file_path = "$tmp_data_path/publish/a.txt";
+  my $local_file_path  = "$tmp_data_path/publish/a.txt";
   my $remote_file_path = "$irods_tmp_coll/a.txt";
   is($publisher->publish($local_file_path, $remote_file_path),
      $remote_file_path, 'publish, file');
   ok($irods->is_object($remote_file_path), 'publish, file -> data object');
 
-  my $local_dir_path = "$tmp_data_path/publish";
+  my $local_dir_path  = "$tmp_data_path/publish";
   my $remote_dir_path = $irods_tmp_coll;
   is($publisher->publish($local_dir_path, $remote_dir_path),
      "$remote_dir_path/publish", 'publish, directory');

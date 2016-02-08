@@ -4,14 +4,14 @@ use strict;
 use warnings;
 
 use Carp;
-use English qw(-no_match_vars);
+use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions;
 use File::Temp;
 use Log::Log4perl;
 use Test::More;
 
-use base qw(WTSI::NPG::HTS::Test);
+use base qw[WTSI::NPG::HTS::Test];
 
 use WTSI::NPG::HTS::AlMapFileDataObject;
 use WTSI::NPG::HTS::AncFileDataObject;
@@ -28,26 +28,21 @@ Log::Log4perl::init('./etc/log4perl_tests.conf');
   with 'npg_testing::db';
 }
 
+my $pid          = $PID;
 my $test_counter = 0;
-my $data_path = 't/data/run_publisher';
+my $data_path    = 't/data/run_publisher';
 my $fixture_path = "t/fixtures";
+my $db_dir       = File::Temp->newdir;
 
-my $db_dir = File::Temp->newdir;
-my $qc_schema;
 my $wh_schema;
 my $lims_factory;
 
 my $irods_tmp_coll;
 
-my $pid = $PID;
-
 sub setup_databases : Test(startup) {
-  my $qc_db_file = catfile($db_dir, 'npg_qc.db');
-  $qc_schema = TestDB->new(verbose => 0)->create_test_db
-    ('npg_qc::Schema', "$fixture_path/npgqc", $qc_db_file);
-
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
-  $wh_schema = TestDB->new(verbose => 0)->create_test_db
+  $wh_schema = TestDB->new(sqlite_utf8_enabled => 1,
+                           verbose             => 0)->create_test_db
     ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
      $wh_db_file);
 
@@ -55,7 +50,6 @@ sub setup_databases : Test(startup) {
 }
 
 sub teardown_databases : Test(shutdown) {
-  $qc_schema->storage->disconnect;
   $wh_schema->storage->disconnect;
 }
 
@@ -80,12 +74,11 @@ sub positions : Test(2) {
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
 
-  foreach my $file_format (qw(bam cram)) {
+  foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     is_deeply([$pub->positions], [1 .. 8],
@@ -111,12 +104,11 @@ sub num_reads : Test(52) {
                                    883399526,
                                    899795972];
 
-  foreach my $file_format (qw(bam cram)) {
+  foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $lane_runfolder_path);
 
     foreach my $lane_position (1 .. 8) {
@@ -141,12 +133,11 @@ sub num_reads : Test(52) {
                                    32087634, 37315470, 27193418, 31538878,
                                    1757876]; # tag 888
 
-  foreach my $file_format (qw(bam cram)) {
+  foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $plex_runfolder_path);
 
     my @tags = (0 .. $tag_count, 888);
@@ -170,12 +161,11 @@ sub is_paired_read : Test(2) {
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
 
-  foreach my $file_format (qw(bam cram)) {
+  foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     ok($pub->is_paired_read, "$runfolder_path is paired read");
@@ -188,12 +178,11 @@ sub list_lane_alignment_files : Test(16) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
 
-  foreach my $file_format (qw(bam cram)) {
+  foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index = calc_lane_alignment_files($archive_path, $file_format);
@@ -214,12 +203,11 @@ sub list_plex_alignment_files : Test(16) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
-  foreach my $file_format (qw(bam cram)) {
+  foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index =
@@ -242,12 +230,11 @@ sub list_lane_index_files : Test(16) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
 
-  foreach my $file_format (qw(bam cram)) {
+  foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index = calc_lane_index_files($archive_path, $file_format);
@@ -268,12 +255,11 @@ sub list_plex_index_files : Test(16) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
-  foreach my $file_format (qw(bam cram)) {
+  foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index =
@@ -296,12 +282,11 @@ sub list_lane_qc_files : Test(16) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
 
-  foreach my $file_format (qw(bam cram)) {
+  foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index = calc_lane_qc_files($archive_path, $file_format);
@@ -323,12 +308,11 @@ sub list_plex_qc_files : Test(16) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
-  foreach my $file_format (qw(bam cram)) {
+  foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index = calc_plex_qc_files($archive_path);
@@ -349,12 +333,11 @@ sub list_lane_ancillary_files : Test(16) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
 
-  foreach my $file_format (qw(bam cram)) {
+  foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index = calc_lane_ancillary_files($archive_path, $file_format);
@@ -376,12 +359,11 @@ sub list_plex_ancillary_files : Test(16) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
-  foreach my $file_format (qw(bam cram)) {
+  foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
 
     my %position_index = calc_plex_ancillary_files($archive_path);
@@ -404,7 +386,7 @@ sub publish_lane_alignment_files : Test(168) {
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
 
   # Omitting bam to reduce runtime
-  foreach my $file_format (qw(cram)) {
+  foreach my $file_format (qw[cram]) {
     my $dest_coll = "$irods_tmp_coll/publish_lane_alignment_files";
 
     my $pub = WTSI::NPG::HTS::RunPublisher->new
@@ -412,7 +394,6 @@ sub publish_lane_alignment_files : Test(168) {
        file_format     => $file_format,
        irods           => $irods,
        lims_factory    => $lims_factory,
-       # npgqc_schema    => $qc_schema,
        runfolder_path  => $runfolder_path);
 
     my %position_index = calc_lane_alignment_files($archive_path, $file_format);
@@ -487,7 +468,7 @@ sub publish_plex_alignment_files : Test(487) {
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
     # Omitting bam to reduce runtime
-    foreach my $file_format (qw(cram)) {
+    foreach my $file_format (qw[cram]) {
       my $dest_coll = "$irods_tmp_coll/publish_plex_alignment_files/$position";
 
       my $pub = WTSI::NPG::HTS::RunPublisher->new
@@ -495,7 +476,6 @@ sub publish_plex_alignment_files : Test(487) {
          file_format     => $file_format,
          irods           => $irods,
          lims_factory    => $lims_factory,
-         # npgqc_schema    => $qc_schema,
          runfolder_path  => $runfolder_path);
 
       my %position_index =
@@ -569,7 +549,7 @@ sub publish_lane_index_files : Test(96) {
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
 
   # Omitting bam to reduce runtime
-  foreach my $file_format (qw(cram)) {
+  foreach my $file_format (qw[cram]) {
     my $dest_coll = "$irods_tmp_coll/publish_lane_index_files";
 
     my $pub = WTSI::NPG::HTS::RunPublisher->new
@@ -577,7 +557,6 @@ sub publish_lane_index_files : Test(96) {
        file_format     => $file_format,
        irods           => $irods,
        lims_factory    => $lims_factory,
-       # npgqc_schema    => $qc_schema,
        runfolder_path  => $runfolder_path);
 
     my %position_index = calc_lane_index_files($archive_path, $file_format);
@@ -617,7 +596,7 @@ sub publish_plex_index_files : Test(274) {
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
     # Omitting bam to reduce runtime
-    foreach my $file_format (qw(cram)) {
+    foreach my $file_format (qw[cram]) {
       my $dest_coll = "$irods_tmp_coll/publish_plex_index_files/$position";
 
       my $pub = WTSI::NPG::HTS::RunPublisher->new
@@ -625,7 +604,6 @@ sub publish_plex_index_files : Test(274) {
          file_format     => $file_format,
          irods           => $irods,
          lims_factory    => $lims_factory,
-         # npgqc_schema    => $qc_schema,
          runfolder_path  => $runfolder_path);
 
       my %position_index =
@@ -662,7 +640,7 @@ sub publish_lane_ancillary_files : Test(776) {
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
 
   # Omitting bam to reduce runtime
-  foreach my $file_format (qw(cram)) {
+  foreach my $file_format (qw[cram]) {
     my $dest_coll = "$irods_tmp_coll/publish_lane_ancillary_files";
 
     my $pub = WTSI::NPG::HTS::RunPublisher->new
@@ -670,7 +648,6 @@ sub publish_lane_ancillary_files : Test(776) {
        file_format     => $file_format,
        irods           => $irods,
        lims_factory    => $lims_factory,
-       # npgqc_schema    => $qc_schema,
        runfolder_path  => $runfolder_path);
 
     my %position_index = calc_lane_ancillary_files($archive_path, $file_format);
@@ -710,14 +687,13 @@ sub publish_plex_ancillary_files : Test(2534) {
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
     # Omitting bam to reduce runtime
-    foreach my $file_format (qw(cram)) {
+    foreach my $file_format (qw[cram]) {
       my $dest_coll = "$irods_tmp_coll/publish_plex_ancillary_files/$position";
       my $pub = WTSI::NPG::HTS::RunPublisher->new
         (dest_collection => $dest_coll,
          file_format     => $file_format,
          irods           => $irods,
          lims_factory    => $lims_factory,
-         # npgqc_schema    => $qc_schema,
          runfolder_path  => $runfolder_path);
 
       my %position_index = calc_plex_ancillary_files($archive_path);
@@ -756,14 +732,13 @@ sub publish_plex_qc_files : Test(2212) {
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
     # Omitting bam to reduce runtime
-    foreach my $file_format (qw(cram)) {
+    foreach my $file_format (qw[cram]) {
       my $dest_coll = "$irods_tmp_coll/publish_plex_qc_files/$position";
       my $pub = WTSI::NPG::HTS::RunPublisher->new
         (dest_collection => $dest_coll,
          file_format     => $file_format,
          irods           => $irods,
          lims_factory    => $lims_factory,
-         # npgqc_schema    => $qc_schema,
          runfolder_path  => $runfolder_path);
 
       my %position_index = calc_plex_qc_files($archive_path);
@@ -806,7 +781,7 @@ sub publish_plex_alignment_files_alt_process : Test(598) {
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
     # Omitting bam to reduce runtime
-    foreach my $file_format (qw(cram)) {
+    foreach my $file_format (qw[cram]) {
       my $dest_coll = "$irods_tmp_coll/alt_process/$position";
 
       my $pub = WTSI::NPG::HTS::RunPublisher->new
@@ -815,7 +790,6 @@ sub publish_plex_alignment_files_alt_process : Test(598) {
          file_format     => $file_format,
          irods           => $irods,
          lims_factory    => $lims_factory,
-         # npgqc_schema    => $qc_schema,
          runfolder_path  => $runfolder_path);
 
       my %position_index =
@@ -853,12 +827,11 @@ sub dest_collection : Test(8) {
 
   my $runfolder_path = "$data_path/sequence/100818_IL32_05174";
 
-  foreach my $file_format (qw(bam cram)) {
+  foreach my $file_format (qw[bam cram]) {
     my $pub1 = WTSI::NPG::HTS::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
     is($pub1->dest_collection, '/seq/5174', 'Default dest collection');
 
@@ -867,7 +840,6 @@ sub dest_collection : Test(8) {
        file_format     => $file_format,
        irods           => $irods,
        lims_factory    => $lims_factory,
-       # npgqc_schema    => $qc_schema,
        runfolder_path  => $runfolder_path);
     is($pub2->dest_collection, '/a/b/c', 'Custom dest collection');
 
@@ -877,7 +849,6 @@ sub dest_collection : Test(8) {
        file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
     is($pub3->dest_collection, '/seq/5174/x',
        'Default alt_process destination has process appended to collection');
@@ -888,7 +859,6 @@ sub dest_collection : Test(8) {
        file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
-       # npgqc_schema   => $qc_schema,
        runfolder_path => $runfolder_path);
     is($pub4->dest_collection, '/a/b/c',
        'Custom alt_process destination uses the provided collection');
@@ -1052,11 +1022,11 @@ sub calc_lane_qc_files {
   my %position_index;
 
   my $id_run = 18448;
-  my @qc_metrics = qw(adapter alignment_filter_metrics bam_flagstats
+  my @qc_metrics = qw[adapter alignment_filter_metrics bam_flagstats
                       gc_bias gc_fraction genotype insert_size qX_yield
                       ref_match sequence_error sequence_summary spatial_filter
-                      verify_bam_id);
-  my @qc_parts = qw(_F0x900.samtools_stats _F0xB00.samtools_stats);
+                      verify_bam_id];
+  my @qc_parts = qw[_F0x900.samtools_stats _F0xB00.samtools_stats];
 
 
   foreach my $position (1 .. 8) {
@@ -1102,8 +1072,8 @@ sub calc_plex_qc_files {
                          8 =>  6};
   my $lane_yhuman = 6;
 
-  my @qc_metrics = qw(adapter bam_flagstats gc_bias gc_fraction insert_size
-                      qX_yield ref_match sequence_error);
+  my @qc_metrics = qw[adapter bam_flagstats gc_bias gc_fraction insert_size
+                      qX_yield ref_match sequence_error];
 
   # This enumerates all the edge cases I found in this example
   # dataset. Rather than simply listing all the expected files in each
@@ -1176,7 +1146,7 @@ sub calc_lane_ancillary_files {
   my %position_index;
 
   my $id_run = 18448;
-  my @default_parts = qw(.bamcheck
+  my @default_parts = qw[.bamcheck
                          .flagstat
                          .seqchksum
                          .sha512primesums512.seqchksum
@@ -1184,7 +1154,7 @@ sub calc_lane_ancillary_files {
                          _quality_cycle_surv.txt
                          _quality_error.txt
                          _F0x900.stats
-                         _F0xB00.stats);
+                         _F0xB00.stats];
 
   foreach my $position (1 .. 8) {
     my @lane_files;
@@ -1229,10 +1199,10 @@ sub calc_plex_ancillary_files {
                        8 => 'DNA'};
   my $lane_yhuman = 6;
 
-  my @default_parts = qw(.bamcheck
+  my @default_parts = qw[.bamcheck
                          .flagstat
                          .seqchksum
-                         .sha512primesums512.seqchksum);
+                         .sha512primesums512.seqchksum];
 
   foreach my $position (sort keys %{$lane_tag_counts}) {
     # All lanes have tag 888
@@ -1255,9 +1225,9 @@ sub calc_plex_ancillary_files {
         }
       }
 
-      foreach my $part (qw(_quality_cycle_caltable.txt
+      foreach my $part (qw[_quality_cycle_caltable.txt
                            _quality_cycle_surv.txt
-                           _quality_error.txt)) {
+                           _quality_error.txt]) {
         push @plex_files, sprintf '%s/lane%d/%d_%d#%d%s',
           $root_path, $position, $id_run, $position, $tag, $part;
 
@@ -1267,9 +1237,9 @@ sub calc_plex_ancillary_files {
         }
       }
 
-      foreach my $part (qw(.deletions.bed
+      foreach my $part (qw[.deletions.bed
                            .insertions.bed
-                           .junctions.bed)) {
+                           .junctions.bed]) {
         if ($lane_nuc_type->{$position} eq 'RNA' and
             $tag != 0                            and
             $tag != 888) {
@@ -1278,7 +1248,7 @@ sub calc_plex_ancillary_files {
         }
       }
 
-      foreach my $part (qw(_F0x900.stats _F0xB00.stats)) {
+      foreach my $part (qw[_F0x900.stats _F0xB00.stats]) {
         if ($tag != 888) {
           push @plex_files, sprintf '%s/lane%d/%d_%d#%d%s',
             $root_path, $position, $id_run, $position, $tag, $part;
@@ -1299,13 +1269,13 @@ sub calc_plex_ancillary_files {
       my %missing = map { $_ => 1 }
         map { sprintf '%s/lane%d/17550_%d#5%s',
               $root_path, $position, $position, $_ }
-        qw(_F0x900.stats
+        qw[_F0x900.stats
            _F0xB00.stats
            _quality_cycle_surv.txt
            _quality_cycle_caltable.txt
            _quality_error.txt
            _phix_F0x900.stats
-           _phix_F0xB00.stats);
+           _phix_F0xB00.stats];
       @plex_files = grep { not $missing{$_} } @plex_files;
     }
 

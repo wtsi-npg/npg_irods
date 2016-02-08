@@ -3,7 +3,7 @@ package WTSI::NPG::HTS::Test;
 use strict;
 use warnings;
 
-use base qw(Test::Class);
+use base qw[Test::Class];
 use Test::More;
 
 # Run full tests (requiring a test iRODS server) only if TEST_AUTHOR
@@ -11,7 +11,7 @@ use Test::More;
 sub runtests {
   my ($self) = @_;
 
-  my $env_file = $ENV{'WTSI_NPG_iRODS_Test_irodsEnvFile'} || q{};
+  my $env_file = $ENV{'WTSI_NPG_iRODS_Test_irodsEnvFile'} || q[];
   if (not $env_file) {
     if ($ENV{TEST_AUTHOR}) {
       die 'Environment variable WTSI_NPG_iRODS_Test_irodsEnvFile was not set';

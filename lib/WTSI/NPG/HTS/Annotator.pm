@@ -1,20 +1,19 @@
 package WTSI::NPG::HTS::Annotator;
 
-use Data::Dump qw(pp);
+use Data::Dump qw[pp];
 use DateTime;
-use Encode; # FIXME
 use Moose::Role;
 
 use WTSI::NPG::iRODS::Metadata;
-use WTSI::DNAP::Utilities::Params qw(function_params);
+use WTSI::DNAP::Utilities::Params qw[function_params];
 
 our $VERSION = '';
 
-our @GENERAL_PURPOSE_SUFFIXES = qw(csv tif tsv txt xls xlsx xml);
-our @GENO_DATA_SUFFIXES       = qw(gtc idat);
-our @HTS_DATA_SUFFIXES        = qw(bam cram bai crai);
-our @HTS_ANCILLARY_SUFFIXES   = qw(bamcheck bed flagstat json seqchksum
-                                   stats xml);
+our @GENERAL_PURPOSE_SUFFIXES = qw[csv tif tsv txt xls xlsx xml];
+our @GENO_DATA_SUFFIXES       = qw[gtc idat];
+our @HTS_DATA_SUFFIXES        = qw[bam cram bai crai];
+our @HTS_ANCILLARY_SUFFIXES   = qw[bamcheck bed flagstat json seqchksum
+                                   stats xml];
 
 our @DEFAULT_FILE_SUFFIXES = (@GENERAL_PURPOSE_SUFFIXES,
                               @GENO_DATA_SUFFIXES,
@@ -24,10 +23,13 @@ our $SUFFIX_PATTERN = join q[|], @DEFAULT_FILE_SUFFIXES;
 our $SUFFIX_REGEX   = qr{[.]($SUFFIX_PATTERN)$}msx;
 
 # FIXME -- use controlled vocabulary
-our $YHUMAN      = qw(yhuman);      # FIXME -- add to WTSI::NPG::iRODS::Metadata
-our $ALT_PROCESS = qw(alt_process); # FIXME -- add to WTSI::NPG::iRODS::Metadata
+our $YHUMAN      = 'yhuman';      # FIXME -- add to WTSI::NPG::iRODS::Metadata
+our $ALT_PROCESS = 'alt_process'; # FIXME -- add to WTSI::NPG::iRODS::Metadata
 
-with 'WTSI::DNAP::Utilities::Loggable', 'WTSI::NPG::iRODS::Utilities';
+with qw[
+         WTSI::DNAP::Utilities::Loggable
+         WTSI::NPG::iRODS::Utilities
+       ];
 
 # See http://dublincore.org/documents/dcmi-terms/
 
@@ -313,7 +315,7 @@ sub make_ticket_metadata {
       push @avus, $self->make_avu($REFERENCE, $reference);
     }
     if (defined $params->alignment_filter) {
-      push @avus, $self->make_avu('alignment_filter',
+      push @avus, $self->make_avu($ALIGNMENT_FILTER,
                                   $params->alignment_filter);
     }
 

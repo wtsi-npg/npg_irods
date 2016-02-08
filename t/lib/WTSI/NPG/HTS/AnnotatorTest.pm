@@ -7,7 +7,7 @@ use Test::More;
 use Test::Exception;
 use URI;
 
-use base qw(WTSI::NPG::HTS::Test);
+use base qw[WTSI::NPG::HTS::Test];
 
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::HTS::Annotator;

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use FindBin qw($Bin);
+use FindBin qw[$Bin];
 use lib (-d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib");
 
 use File::Basename;
@@ -84,7 +84,7 @@ $ref_start <= $ref_end or pod2usage
    -exitval => 2);
 
 my $sam;
-my $ref_path = q{.};
+my $ref_path = q[.];
 if ($output) {
   open $sam, '>', $output or die "Failed to open $output: $!\n";
 
@@ -132,8 +132,8 @@ foreach my $name (@ref_names) {
     my $pos   = $i;
     my $mapq  = $DEFAULT_MAPPING_QUALITY;
     my $seq   = substr $refs{$name}, $pos - 1, $read_len;
-    my $qual  = q{I} x $read_len;
-    my $cigar = $read_len . q{M};
+    my $qual  = q[I] x $read_len;
+    my $cigar = $read_len . q[M];
 
     write_sam_record($sam, $qname, $flag, $rname, $pos, $mapq, $seq,
                      $qual, $cigar);
@@ -163,12 +163,12 @@ sub write_sam_record {
   my ($fh, $qname, $flag, $rname, $pos, $mapq,
       $seq, $qual, $cigar, $rnext, $pnext, $tlen) = @_;
 
-  $seq   ||= q{*};
-  $qual  ||= q{*};
-  $cigar ||= q{*};
-  $rnext ||= q{*};
-  $pnext ||= q{0};
-  $tlen  ||= q{0};
+  $seq   ||= q[*];
+  $qual  ||= q[*];
+  $cigar ||= q[*];
+  $rnext ||= q[*];
+  $pnext ||= q[0];
+  $tlen  ||= q[0];
 
   print $fh join("\t", $qname, $flag, $rname, $pos, $mapq, $cigar,
                  $rnext, $pnext, $tlen, $seq, $qual), "\n"
@@ -191,8 +191,8 @@ sub write_fasta {
 sub rand_seq {
   my ($len) = @_;
 
-  my @dna_bases = qw(A C G T);
-  my $seq = q{};
+  my @dna_bases = qw[A C G T];
+  my $seq = q[];
 
   ## no critic (ControlStructures::ProhibitCStyleForLoops)
   for (my $i = 0; $i < $len; $i++) {

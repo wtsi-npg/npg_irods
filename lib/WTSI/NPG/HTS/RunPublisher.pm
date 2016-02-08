@@ -1,31 +1,33 @@
 package WTSI::NPG::HTS::RunPublisher;
 
 use namespace::autoclean;
-use Data::Dump qw(pp);
-use English qw(-no_match_vars);
+use Data::Dump qw[pp];
+use English qw[-no_match_vars];
 use File::Basename;
-use List::AllUtils qw(any first none);
-use File::Spec::Functions qw(catdir catfile splitdir);
+use List::AllUtils qw[any first none];
+use File::Spec::Functions qw[catdir catfile splitdir];
 use Moose;
 use MooseX::StrictConstructor;
 use Try::Tiny;
 
-use WTSI::DNAP::Utilities::Params qw(function_params);
+use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::AlMapFileDataObject;
 use WTSI::NPG::HTS::AncFileDataObject;
 use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::HTS::Publisher;
-use WTSI::NPG::HTS::Types qw(AlMapFileFormat);
+use WTSI::NPG::HTS::Types qw[AlMapFileFormat];
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 
-with 'WTSI::DNAP::Utilities::Loggable',
-     'WTSI::DNAP::Utilities::JSONCodec',
-     'WTSI::NPG::HTS::Annotator',
-     'npg_tracking::illumina::run::short_info',
-     'npg_tracking::illumina::run::folder';
+with qw[
+         WTSI::DNAP::Utilities::Loggable
+         WTSI::DNAP::Utilities::JSONCodec
+         WTSI::NPG::HTS::Annotator
+         npg_tracking::illumina::run::short_info
+         npg_tracking::illumina::run::folder
+       ];
 
-with 'npg_tracking::illumina::run::long_info';
+with qw[npg_tracking::illumina::run::long_info];
 
 our $VERSION = '';
 
@@ -76,7 +78,7 @@ has 'ancillary_formats' =>
    required      => 1,
    lazy          => 1,
    default       => sub {
-     return [qw(bed bamcheck flagstat stats txt seqchksum)];
+     return [qw[bed bamcheck flagstat stats txt seqchksum]];
    },
    documentation => 'The ancillary file formats to be published');
 
@@ -113,14 +115,14 @@ sub BUILD {
 # suggests activity. The corresponding methods generated here without
 # the list_ prefix are caching. We are not using attributes here
 # because the plex-level accessors have a position parameter.
-my @CACHING_LANE_METHOD_NAMES = qw(lane_alignment_files
+my @CACHING_LANE_METHOD_NAMES = qw[lane_alignment_files
                                    lane_index_files
                                    lane_qc_files
-                                   lane_ancillary_files);
-my @CACHING_PLEX_METHOD_NAMES = qw(plex_alignment_files
+                                   lane_ancillary_files];
+my @CACHING_PLEX_METHOD_NAMES = qw[plex_alignment_files
                                    plex_index_files
                                    plex_qc_files
-                                   plex_ancillary_files);
+                                   plex_ancillary_files];
 
 # Cache of lane-level file lists keyed on method name
 my $LANE_FILES_CACHE = {};
@@ -195,9 +197,9 @@ sub positions {
 sub is_plexed {
   my ($self, $position) = @_;
 
-  $position = $self->_check_position($position);
+  my $pos = $self->_check_position($position);
 
-  return -d $self->lane_archive_path($position);
+  return -d $self->lane_archive_path($pos);
 }
 
 =head2 num_reads
@@ -216,17 +218,17 @@ sub is_plexed {
 sub num_reads {
   my ($self, $position, $tag_index) = @_;
 
-  $position = $self->_check_position($position);
+  my $pos = $self->_check_position($position);
 
   my $qc_file;
-  if ($self->is_plexed($position)) {
+  if ($self->is_plexed($pos)) {
     defined $tag_index or
       $self->logconfess('A defined tag_index argument is required');
-    $qc_file = $self->_plex_qc_stats_file($position, $tag_index);
+    $qc_file = $self->_plex_qc_stats_file($pos, $tag_index);
 
   }
   else {
-    $qc_file = $self->_lane_qc_stats_file($position);
+    $qc_file = $self->_lane_qc_stats_file($pos);
   }
 
   my $num_reads;
@@ -274,14 +276,15 @@ sub index_format {
 sub list_lane_alignment_files {
   my ($self, $position) = @_;
 
+  my $pos;
   if (defined $position) {
-    $position = $self->_check_position($position);
+    $pos = $self->_check_position($position);
   }
 
   my $id_run        = $self->id_run;
   my $archive_path = $self->archive_path;
 
-  my $positions_pattern = $self->_positions_pattern($position);
+  my $positions_pattern = $self->_positions_pattern($pos);
   my $lane_file_pattern = sprintf '^%d_%s.*[.]%s$',
     $id_run, $positions_pattern, $self->file_format;
 
@@ -313,23 +316,23 @@ sub list_lane_alignment_files {
 sub list_plex_alignment_files {
   my ($self, $position) = @_;
 
-  $position = $self->_check_position($position);
+  my $pos = $self->_check_position($position);
 
   my $id_run       = $self->id_run;
-  my $archive_path = $self->lane_archive_path($position);
+  my $archive_path = $self->lane_archive_path($pos);
 
   my $plex_file_pattern = sprintf '^%d_%d.*[.]%s$',
-    $id_run, $position, $self->file_format;
+    $id_run, $pos, $self->file_format;
 
   $self->debug("Finding plex alignment files for run '$id_run' position ",
-               "'$position' in '$archive_path' ",
+               "'$pos' in '$archive_path' ",
                "matching pattern '$plex_file_pattern'");
 
   my @file_list = $self->_list_directory($archive_path, $plex_file_pattern);
   @file_list = sort @file_list;
 
   $self->debug("Found plex alignment files for run '$id_run' position ",
-               "'$position' in '$archive_path': ", pp(\@file_list));
+               "'$pos' in '$archive_path': ", pp(\@file_list));
 
   return \@file_list;
 }
@@ -350,15 +353,16 @@ sub list_plex_alignment_files {
 sub list_lane_index_files {
   my ($self, $position) = @_;
 
+  my $pos;
   if (defined $position) {
-    $position = $self->_check_position($position);
+    $pos = $self->_check_position($position);
   }
 
   my $id_run       = $self->id_run;
   my $archive_path = $self->archive_path;
   my $file_format  = $self->file_format;
 
-  my $positions_pattern = $self->_positions_pattern($position);
+  my $positions_pattern = $self->_positions_pattern($pos);
   my $lane_file_pattern;
   if ($file_format eq $BAM_FILE_FORMAT) {
     $lane_file_pattern = sprintf '^%d_%s.*[.]%s$',
@@ -400,20 +404,20 @@ sub list_lane_index_files {
 sub list_plex_index_files {
   my ($self, $position) = @_;
 
-  $position = $self->_check_position($position);
+  my $pos = $self->_check_position($position);
 
   my $id_run       = $self->id_run;
-  my $archive_path = $self->lane_archive_path($position);
+  my $archive_path = $self->lane_archive_path($pos);
   my $file_format  = $self->file_format;
 
   my $plex_file_pattern;
   if ($file_format eq $BAM_FILE_FORMAT) {
     $plex_file_pattern = sprintf '^%d_%d.*[.]%s$',
-      $id_run, $position, $self->index_format;
+      $id_run, $pos, $self->index_format;
   }
   elsif ($file_format eq $CRAM_FILE_FORMAT) {
     $plex_file_pattern = sprintf '^%d_%d.*[.]%s[.]%s$',
-      $id_run, $position, $file_format, $self->index_format;
+      $id_run, $pos, $file_format, $self->index_format;
   }
   else {
     $self->logconfess("Invalid HTS file format for indexing '$file_format'");
@@ -423,7 +427,7 @@ sub list_plex_index_files {
   @file_list = sort @file_list;
 
   $self->debug("Found plex index files for run '$id_run' position ",
-               "'$position' in '$archive_path': ", pp(\@file_list));
+               "'$pos' in '$archive_path': ", pp(\@file_list));
 
   return \@file_list;
 }
@@ -444,15 +448,16 @@ sub list_plex_index_files {
 sub list_lane_qc_files {
   my ($self, $position) = @_;
 
+  my $pos;
   if (defined $position) {
-    $position = $self->_check_position($position);
+    $pos = $self->_check_position($position);
   }
 
   my $id_run      = $self->id_run;
   my $qc_path     = $self->qc_path;
   my $file_format = 'json';
 
-  my $positions_pattern = $self->_positions_pattern($position);
+  my $positions_pattern = $self->_positions_pattern($pos);
   my $lane_file_pattern = sprintf '^%d_%s.*[.]%s$',
     $id_run, $positions_pattern, $file_format;
 
@@ -484,24 +489,24 @@ sub list_lane_qc_files {
 sub list_plex_qc_files {
   my ($self, $position) = @_;
 
-  $position = $self->_check_position($position);
+  my $pos = $self->_check_position($position);
 
   my $id_run      = $self->id_run;
-  my $qc_path     = $self->lane_qc_path($position);
+  my $qc_path     = $self->lane_qc_path($pos);
   my $file_format = 'json';
 
   my $plex_file_pattern = sprintf '^%d_%d.*[.]%s$',
     $id_run, $position, $file_format;
 
   $self->debug("Finding plex QC files for run '$id_run' position ",
-               "'$position' in '$qc_path' matching pattern ",
+               "'$pos' in '$qc_path' matching pattern ",
                "'$plex_file_pattern'");
 
   my @file_list = $self->_list_directory($qc_path, $plex_file_pattern);
   @file_list = sort @file_list;
 
   $self->debug("Found plex QC files for run '$id_run' position ",
-               "'$position' in '$qc_path': ", pp(\@file_list));
+               "'$pos' in '$qc_path': ", pp(\@file_list));
 
   return \@file_list;
 }
@@ -522,14 +527,15 @@ sub list_plex_qc_files {
 sub list_lane_ancillary_files {
   my ($self, $position) = @_;
 
+  my $pos;
   if (defined $position) {
-    $position = $self->_check_position($position);
+    $pos = $self->_check_position($position);
   }
 
   my $id_run = $self->id_run;
   my $archive_path = $self->archive_path;
 
-  my $positions_pattern = $self->_positions_pattern($position);
+  my $positions_pattern = $self->_positions_pattern($pos);
   my $suffix_pattern    = sprintf '(%s)',
     join q[|], @{$self->ancillary_formats};
   my $lane_file_pattern = sprintf '^%d_%s.*[.]%s$',
@@ -553,18 +559,18 @@ sub list_lane_ancillary_files {
 sub list_plex_ancillary_files {
   my ($self, $position) = @_;
 
-  $position = $self->_check_position($position);
+  my $pos = $self->_check_position($position);
 
   my $id_run       = $self->id_run;
-  my $archive_path = $self->lane_archive_path($position);
+  my $archive_path = $self->lane_archive_path($pos);
 
   my $suffix_pattern    = sprintf '(%s)',
     join q[|], @{$self->ancillary_formats};
   my $plex_file_pattern = sprintf '^%d_%d.*[.]%s$',
-    $id_run, $position, $suffix_pattern;
+    $id_run, $pos, $suffix_pattern;
 
   $self->debug("Finding plex ancillary files for run '$id_run' position ",
-               "'$position' in '$archive_path' ",
+               "'$pos' in '$archive_path' ",
                "matching pattern '$plex_file_pattern'");
 
   my @file_list = $self->_list_directory($archive_path, $plex_file_pattern);
@@ -574,7 +580,7 @@ sub list_plex_ancillary_files {
   @file_list = sort @file_list;
 
   $self->debug("Found plex ancillary files for run '$id_run' position ",
-               "'$position' in '$archive_path': ", pp(\@file_list));
+               "'$pos' in '$archive_path': ", pp(\@file_list));
 
   return \@file_list;
 }
@@ -593,7 +599,7 @@ sub list_plex_ancillary_files {
 
     foreach my $category (@FILE_CATEGORIES) {
       my ($nf, $np, $ne) =
-        $self->_publish_file_category($ALIGNMENT_CATEGORY,
+        $self->_publish_file_category($category,
                                       $positions,
                                       $params->with_spiked_control);
       $num_files     += $nf;
@@ -613,8 +619,8 @@ sub list_plex_ancillary_files {
                with_spiked_control  Bool. Optional
 
   Example    : my $num_published = $pub->publish_alignment_files
-  Description: Publish the alignment files (lane- or plex-level) to
-               iRODS. Return the number of files published without error.
+  Description: Publish alignment files (lane- or plex-level) to
+               iRODS.  Return the number of files published without error.
                If the positions argument is supplied, only those positions
                will be published. The default is to publish all positions.
   Returntype : Int
@@ -637,36 +643,39 @@ sub list_plex_ancillary_files {
 
 =head2 publish_lane_alignment_files
 
-  Arg [1]    : HTS data has spiked control, Bool. Optional.
+  Arg [1]    : Lane position, Int.
+  Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : my $num_published = $pub->publish_lane_alignment_files
-  Description: Publish all the lane-level alignment files to iRODS.
-               Return the number of files published without error.
-  Returntype : Int
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_lane_alignment_files(8)
+  Description: Publish lane-level alignment files to iRODS.
+               Return the number of files, the number published and
+               the number of errors.
+  Returntype : Array[Int]
 
 =cut
 
 sub publish_lane_alignment_files {
   my ($self, $position, $with_spiked_control) = @_;
 
-  $position = $self->_check_position($position);
+  my $pos = $self->_check_position($position);
 
   my $id_run = $self->id_run;
   my $num_files;
   my $num_processed;
   my $num_errors;
 
-  if (not $self->is_plexed($position)) {
+  if (not $self->is_plexed($pos)) {
     ($num_files, $num_processed, $num_errors) =
-      $self->_publish_alignment_files($position,
-                                      $self->lane_alignment_files($position),
+      $self->_publish_alignment_files($pos,
+                                      $self->lane_alignment_files($pos),
                                       $self->dest_collection,
                                       $with_spiked_control);
     $self->info("Published $num_processed / $num_files lane-level ",
                 "alignment files in run '$id_run'");
   }
   else {
-    $self->logconfess("Attempted to publish position $position plex-level ",
+    $self->logconfess("Attempted to publish position '$pos' plex-level ",
                       "alignment files in run '$id_run'; ",
                       'the position is not plexed');
   }
@@ -679,35 +688,36 @@ sub publish_lane_alignment_files {
   Arg [1]    : Lane position, Int.
   Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : my $num_published = $pub->publish_plex_alignment_files(8)
-  Description: Publish all the plex-level alignment files in the
-               specified lane to iRODS.  Return the number of files
-               published without error.
-  Returntype : Int
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_plex_alignment_files(8)
+  Description: Publish plex-level alignment files in the
+               specified lane to iRODS.  Return the number of files,
+               the number published and the number of errors.
+  Returntype : Array[Int]
 
 =cut
 
 sub publish_plex_alignment_files {
   my ($self, $position, $with_spiked_control) = @_;
 
-  $position = $self->_check_position($position);
+  my $pos = $self->_check_position($position);
 
   my $id_run = $self->id_run;
   my $num_files;
   my $num_processed;
   my $num_errors;
 
-  if ($self->is_plexed($position)) {
+  if ($self->is_plexed($pos)) {
     ($num_files, $num_processed, $num_errors) =
-      $self->_publish_alignment_files($position,
+      $self->_publish_alignment_files($pos,
                                       $self->plex_alignment_files($position),
                                       $self->dest_collection,
                                       $with_spiked_control);
     $self->info("Published $num_processed / $num_files plex-level ",
-                "alignment files in run '$id_run' position '$position'");
+                "alignment files in run '$id_run' position '$pos'");
   }
   else {
-    $self->logconfess("Attempted to publish position $position lane-level ",
+    $self->logconfess("Attempted to publish position '$pos' lane-level ",
                       "alignment files in run '$id_run'; ",
                       'the position is plexed');
   }
@@ -722,12 +732,14 @@ sub publish_plex_alignment_files {
   Named args : positions            ArrayRef[Int]. Optional.
                with_spiked_control  Bool. Optional
 
-  Example    : my $num_published = $pub->publish_index_files
-  Description: Publish the index files (lane- or plex-level) to
-               iRODS. Return the number of files published without error.
-               If the positions argument is supplied, only those positions
-               will be published. The default is to publish all positions.
-  Returntype : Int
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_index_files
+  Description: Publish index files (lane- or plex-level) to
+               iRODS.  If the positions argument is supplied, only those
+               positions will be published. The default is to publish all
+               positions.  Return the number of files, the number published
+               and the number of errors.
+  Returntype : Array[Int]
 
 =cut
 
@@ -745,14 +757,17 @@ sub publish_plex_alignment_files {
   }
 }
 
-=head2 publish_lane_ancillary_files
+=head2 publish_lane_index_files
 
-  Arg [1]    : HTS data has spiked control, Bool. Optional.
+  Arg [1]    : Lane position, Int.
+  Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : my $num_published = $pub->publish_plex_ancillary_files
-  Description: Publish all the lane-level ancillary files to iRODS. Return
-               the number of files published without error.
-  Returntype : Int
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_plex_ancillary_files(8)
+  Description: Publish lane-level ancillary files to iRODS.
+               Return the number of files, the number published and
+               the number of errors.
+  Returntype : Array[Int]
 
 =cut
 
@@ -766,14 +781,17 @@ sub publish_lane_index_files {
                                             $with_spiked_control);
 }
 
-=head2 publish_plex_ancillary_files
+=head2 publish_plex_index_files
 
-  Arg [1]    : HTS data has spiked control, Bool. Optional.
+  Arg [1]    : Lane position, Int.
+  Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : my $num_published = $pub->publish_plex_ancillary_files
-  Description: Publish all the plex-level ancillary files to iRODS. Return
-               the number of files published without error.
-  Returntype : Int
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_plex_ancillary_files(8)
+  Description: Publish plex-level ancillary files to iRODS.
+               Return the number of files, the number published and
+               the number of errors.
+  Returntype : Array[Int]
 
 =cut
 
@@ -794,12 +812,14 @@ sub publish_plex_index_files {
   Named args : positions            ArrayRef[Int]. Optional.
                with_spiked_control  Bool. Optional
 
-  Example    : my $num_published = $pub->publish_ancillary_files
-  Description: Publish the ancillary files (lane- or plex-level) to
-               iRODS. Return the number of files published without error.
-               If the positions argument is supplied, only those positions
-               will be published. The default is to publish all positions.
-  Returntype : Int
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_ancillary_files
+  Description: Publish ancillary files (lane- or plex-level) to
+               iRODS.  If the positions argument is supplied, only those
+               positions will be published. The default is to publish all
+               positions.  Return the number of files,
+               the number published and the number of errors.
+  Returntype : Array[Int]
 
 =cut
 
@@ -822,11 +842,12 @@ sub publish_plex_index_files {
   Arg [1]    : Lane position, Int.
   Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : my $num_published = $pub->publish_lane_ancillary_files(8)
-  Description: Publish all the lane-level ancillary files in the
-               specified lane to iRODS.  Return the number of files
-               published without error.
-  Returntype : Int
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_lane_ancillary_files(8)
+  Description: Publish lane-level ancillary files in the
+               specified lane to iRODS.  Return the number of files,
+               the number published and the number of errors.
+  Returntype : Array[Int]
 
 =cut
 
@@ -846,11 +867,12 @@ sub publish_lane_ancillary_files {
   Arg [1]    : Lane position, Int.
   Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : my $num_published = $pub->publish_plex_ancillary_files(8)
-  Description: Publish all the plex-level ancillary files in the
-               specified lane to iRODS.  Return the number of files
-               published without error.
-  Returntype : Int
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_plex_ancillary_files(8)
+  Description: Publish plex-level ancillary files in the
+               specified lane to iRODS.  Return the number of files,
+               the number published and the number of errors.
+  Returntype : Array[Int]
 
 =cut
 
@@ -872,12 +894,14 @@ sub publish_plex_ancillary_files {
   Named args : positions            ArrayRef[Int]. Optional.
                with_spiked_control  Bool. Optional
 
-  Example    : my $num_published = $pub->publish_qc_files
-  Description: Publish the qc files (lane- or plex-level) to
-               iRODS. Return the number of files published without error.
-               If the positions argument is supplied, only those positions
-               will be published. The default is to publish all positions.
-  Returntype : Int
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_qc_files
+  Description: Publish qc files (lane- or plex-level) to
+               iRODS.  If the positions argument is supplied, only those
+               positions will be published.  The default is to publish all
+               positions.  Return the number of files,
+               the number published and the number of errors.
+  Returntype : Array[Int]
 
 =cut
 
@@ -900,11 +924,12 @@ sub publish_plex_ancillary_files {
   Arg [1]    : Lane position, Int.
   Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : my $num_published = $pub->publish_lane_qc_files(8)
-  Description: Publish all the lane-level QC files in the
-               specified lane to iRODS.  Return the number of files
-               published without error.
-  Returntype : Int
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_lane_qc_files(8)
+  Description: Publish lane-level QC files in the
+               specified lane to iRODS.  Return the number of files,
+               the number published and the number of errors.
+  Returntype : Array[Int]
 
 =cut
 
@@ -923,11 +948,12 @@ sub publish_lane_qc_files {
   Arg [1]    : Lane position, Int.
   Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : my $num_published = $pub->publish_plex_qc_files(8)
-  Description: Publish all the plex-level QC files in the
-               specified lane to iRODS.  Return the number of files
-               published without error.
-  Returntype : Int
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_plex_qc_files(8)
+  Description: Publish plex-level QC files in the
+               specified lane to iRODS.  Return the number of files,
+               the number published and the number of errors.
+  Returntype : Array[Int]
 
 =cut
 
@@ -941,7 +967,7 @@ sub publish_plex_qc_files {
                                              $with_spiked_control);
 }
 
-# Check that a position argument is valid
+# Check that a position argument is given and valid
 sub _check_position {
   my ($self, $position) = @_;
 
@@ -957,9 +983,15 @@ sub _check_position {
 sub _positions_pattern {
   my ($self, $position) = @_;
 
-  $position = $self->_check_position($position);
-  return defined $position ? "$position" :
-    join q[], q([), $self->positions, q(]);
+  my $pattern;
+  if (defined $position) {
+    $pattern = $self->_check_position($position);
+  }
+  else {
+    $pattern = sprintf '[%s]', join q[], $self->positions;
+  }
+
+  return $pattern;
 }
 
 # A dispatcher to call the correct method for a given file category
@@ -984,14 +1016,17 @@ sub _publish_file_category {
   my $num_processed;
   my $num_errors;
 
-  foreach my $position (@{$positions}) {
-    my ($nf, $np, $ne);
+  $self->info("Publishing $category files for positions: ", pp($positions));
 
-    if ($self->is_plexed($position)) {
-      ($nf, $np, $ne) = $self->$plex_method($position, $with_spiked_control);
+  foreach my $position (@{$positions}) {
+    my $pos = $self->_check_position($position);
+
+    my ($nf, $np, $ne);
+    if ($self->is_plexed($pos)) {
+      ($nf, $np, $ne) = $self->$plex_method($pos, $with_spiked_control);
     }
     else {
-      ($nf, $np, $ne) = $self->$lane_method($position, $with_spiked_control);
+      ($nf, $np, $ne) = $self->$lane_method($pos, $with_spiked_control);
     }
 
     $num_files     += $nf;
@@ -1005,6 +1040,8 @@ sub _publish_file_category {
 # Backend alignment file publisher
 sub _publish_alignment_files {
   my ($self, $position, $files, $dest_coll, $with_spiked_control) = @_;
+
+  my $pos = $self->_check_position($position);
 
   my $publisher = WTSI::NPG::HTS::Publisher->new(irods  => $self->irods,
                                                  logger => $self->logger);
@@ -1020,23 +1057,24 @@ sub _publish_alignment_files {
       my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
         (collection  => $dest_coll,
          data_object => fileparse($file),
-         irods       => $self->irods);
+         irods       => $self->irods,
+         logger      => $self->logger);
 
       $dest = $obj->str;
       $dest = $publisher->publish($file, $dest);
 
-      # FIXME -- can remove the is_plexed check?
+      # FIXME -- can we remove the is_plexed check?
       my $num_reads;
-      if ($self->is_plexed($position)) {
-        $num_reads = $self->num_reads($position, $obj->tag_index);
+      if ($self->is_plexed($pos)) {
+        $num_reads = $self->num_reads($pos, $obj->tag_index);
       }
       else {
-        $num_reads = $self->num_reads($position);
+        $num_reads = $self->num_reads($pos);
       }
 
       # FIXME -- break primary metadata setup out into a new method
       my @avus = $self->make_primary_metadata
-        ($self->id_run, $position, $num_reads,
+        ($self->id_run, $pos, $num_reads,
          tag_index        => $obj->tag_index,
          is_paired_read   => $self->is_paired_read,
          is_aligned       => $obj->is_aligned,
@@ -1073,22 +1111,22 @@ sub _publish_lane_support_files {
   my ($self, $position, $files, $dest_collection, $description,
       $with_spiked_control) = @_;
 
-  $position = $self->_check_position($position);
+  my $pos = $self->_check_position($position);
 
   my $id_run = $self->id_run;
   my $num_files;
   my $num_processed;
   my $num_errors;
 
-  if (not $self->is_plexed($position)) {
+  if (not $self->is_plexed($pos)) {
     ($num_files, $num_processed, $num_errors) =
       $self->_publish_support_files($files, $dest_collection,
                                     $with_spiked_control);
     $self->info("Published $num_processed / $num_files lane-level ",
-                "$description files in run '$id_run' position '$position'");
+                "$description files in run '$id_run' position '$pos'");
   }
   else {
-    $self->logconfess("Attempted to publish position $position lane-level ",
+    $self->logconfess("Attempted to publish position '$pos' lane-level ",
                       "$description files in run '$id_run'; ",
                       'the position is plexed');
   }
@@ -1103,22 +1141,22 @@ sub _publish_plex_support_files {
   my ($self, $position, $files, $dest_collection, $description,
       $with_spiked_control) = @_;
 
-  $position = $self->_check_position($position);
+  my $pos = $self->_check_position($position);
 
   my $id_run = $self->id_run;
   my $num_files;
   my $num_processed;
   my $num_errors;
 
-  if ($self->is_plexed($position)) {
+  if ($self->is_plexed($pos)) {
     ($num_files, $num_processed, $num_errors) =
       $self->_publish_support_files($files, $dest_collection,
                                     $with_spiked_control);
     $self->info("Published $num_processed / $num_files plex-level ",
-                "$description files in run '$id_run' position '$position'");
+                "$description files in run '$id_run' position '$pos'");
   }
   else {
-    $self->logconfess("Attempted to publish position $position lane-level ",
+    $self->logconfess("Attempted to publish position '$pos' lane-level ",
                       "$description files in run '$id_run'; ",
                       'the position is not plexed');
   }

@@ -1,15 +1,15 @@
 package WTSI::NPG::HTS::LIMSFactory;
 
-use List::AllUtils qw(any);
+use List::AllUtils qw[any];
 use Moose;
 
-use npg_tracking::util::types qw(:all);
+use npg_tracking::util::types qw[:all];
 use st::api::lims;
 use st::api::lims::ml_warehouse;
 
 our $VERSION = '';
 
-with 'WTSI::DNAP::Utilities::Loggable';
+with qw[WTSI::DNAP::Utilities::Loggable];
 
 has 'mlwh_schema' =>
   (is            => 'ro',
