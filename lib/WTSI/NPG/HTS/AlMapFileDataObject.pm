@@ -1,31 +1,44 @@
 package WTSI::NPG::HTS::AlMapFileDataObject;
 
 use namespace::autoclean;
-use Data::Dump qw(pp);
-use List::AllUtils qw(any none uniq);
+use Data::Dump qw[pp];
+use List::AllUtils qw[any none uniq];
 use Moose;
 use Try::Tiny;
 
-use WTSI::NPG::HTS::Samtools;
-use WTSI::NPG::HTS::Types qw(AlMapFileFormat);
+use WTSI::NPG::HTS::Types qw[AlMapFileFormat];
 
 our $VERSION = '';
 
+our $DEFAULT_SAMTOOLS_EXECUTABLE = 'samtools';
 # Regex for matching to reference sequence paths in HTS file header PG
 # records.
 our $DEFAULT_REFERENCE_REGEX = qr{\/(nfs|lustre)\/\S+\/references}mxs;
 
+our $HUMAN   = 'human';   # FIXME
+our $YHUMAN  = 'yhuman';  # FIXME
+our $XAHUMAN = 'xahuman'; # FIXME
+our $PUBLIC  = 'public';  # FIXME
+
 extends 'WTSI::NPG::iRODS::DataObject';
 
-with 'WTSI::NPG::HTS::RunComponent', 'WTSI::NPG::HTS::FilenameParser',
-  'WTSI::NPG::HTS::HeaderParser', 'WTSI::NPG::HTS::AVUCollator',
-  'WTSI::NPG::HTS::Annotator';
+with qw[
+         WTSI::NPG::HTS::RunComponent
+         WTSI::NPG::HTS::FilenameParser
+         WTSI::NPG::HTS::HeaderParser
+         WTSI::NPG::HTS::AVUCollator
+         WTSI::NPG::HTS::Annotator
+       ];
 
-has 'align_filter' =>
+## no critic (ErrorHandling::RequireCheckingReturnValueOfEval)
+eval { with qw[npg_common::roles::software_location] };
+## critic
+
+has 'alignment_filter' =>
   (isa           => 'Maybe[Str]',
    is            => 'ro',
    required      => 0,
-   writer        => '_set_align_filter',
+   writer        => '_set_alignment_filter',
    documentation => 'The align filter, parsed from the iRODS path');
 
 has 'file_format' =>
@@ -61,7 +74,7 @@ has '+tag_index' =>
 sub BUILD {
   my ($self) = @_;
 
-  my ($id_run, $position, $tag_index, $align_filter, $file_format) =
+  my ($id_run, $position, $tag_index, $alignment_filter, $file_format) =
     $self->parse_file_name($self->str);
 
   if (not defined $self->id_run) {
@@ -82,8 +95,8 @@ sub BUILD {
     $self->_set_file_format($file_format);
   }
 
-  if (not defined $self->align_filter) {
-    $self->_set_align_filter($align_filter);
+  if (not defined $self->alignment_filter) {
+    $self->_set_alignment_filter($alignment_filter);
   }
 
   if (not defined $self->tag_index) {
@@ -210,6 +223,15 @@ sub reference {
   Example    : $obj->is_restricted_access
   Description: Return true if the file contains or may contain sensitive
                information and is not for unrestricted public access.
+
+               Access restriction is determined by two criteria; the
+               alignment_filter metadata and the study_id metadata. If
+               the former indicates non-consented human data or the latter
+               indicates any study restriction, this method will return true.
+
+               Note that for checking the study restriction, the data object
+               must have reached iRODS; if it isn't present, there will be
+               no check.
   Returntype : Bool
 
 =cut
@@ -217,7 +239,37 @@ sub reference {
 sub is_restricted_access {
   my ($self) = @_;
 
-  return 1;
+  return ($self->contains_nonconsented_human or
+          ($self->is_present and $self->expected_groups));
+}
+
+=head2 contains_nonconsented_human
+
+  Arg [1]      None
+
+  Example    : $obj->contains_nonconsented_human
+  Description: Return true if the file contains human data not having
+               explicit consent. This is indicated by alignment results
+               returned by the alignment_filter method.
+
+  Returntype : Bool
+
+=cut
+
+sub contains_nonconsented_human {
+  my ($self) = @_;
+
+  my $af = $self->alignment_filter;
+  my $contains_consented_human;
+  if ($af and ($af eq $HUMAN or $af eq $XAHUMAN)) {
+    $contains_consented_human = 1;
+    $self->debug("$af indicates nonconsented human");
+  }
+  else {
+    $contains_consented_human = 0;
+  }
+
+  return $contains_consented_human;
 }
 
 =head2 update_secondary_metadata
@@ -241,9 +293,7 @@ sub update_secondary_metadata {
 
   my $path = $self->str;
   my @avus = $self->make_secondary_metadata
-    (factory             => $factory,
-     id_run              => $self->id_run,
-     position            => $self->position,
+    ($factory, $self->id_run, $self->position,
      tag_index           => $self->tag_index,
      with_spiked_control => $with_spiked_control);
   $self->debug("Created metadata AVUs for '$path' : ", pp(\@avus));
@@ -271,17 +321,44 @@ sub update_secondary_metadata {
   return $self;
 }
 
+before 'update_group_permissions' => sub {
+  my ($self) = @_;
+
+  # If the data contains any non-consented human data, or we are
+  # expecting to set groups restricting general access, then remove
+  # access for the public group.
+  if ($self->is_restricted_access) {
+    $self->info(qq[Removing $PUBLIC access to '], $self->str, q[']);
+    $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION, $PUBLIC);
+  }
+  else {
+    $self->info(qq[Allowing $PUBLIC access to '], $self->str, q[']);
+  }
+};
+
 sub _read_header {
   my ($self) = @_;
+
+  my $samtools;
+  if ($self->can('samtools_cmd')) {
+    $self->debug('Using npg_common::roles::software_location to find ',
+                 'samtools: ', $self->samtools_cmd);
+    $samtools = $self->samtools_cmd;
+  }
+  else {
+    $self->debug('Using the default samtools executable on PATH: ',
+                 $DEFAULT_SAMTOOLS_EXECUTABLE);
+    $samtools = $DEFAULT_SAMTOOLS_EXECUTABLE;
+  }
 
   my @header;
   my $path = $self->str;
 
   try {
-    push @header, WTSI::NPG::HTS::Samtools->new
-      (arguments  => ['-H'],
-       path       => "irods:$path",
-       logger     => $self->logger)->collect;
+    push @header, WTSI::DNAP::Utilities::Runnable->new
+      (arguments  => [qw[view -H], "irods:$path"],
+       executable => $samtools,
+       logger     => $self->logger)->run->split_stdout;
   } catch {
     # No logger is set on samtools directly to avoid noisy stack
     # traces when a file can't be read. Instead, any error information
@@ -318,7 +395,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

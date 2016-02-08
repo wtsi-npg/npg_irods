@@ -3,8 +3,8 @@ package WTSI::DNAP::Utilities::Params;
 use strict;
 use warnings;
 
-use Exporter qw(import);
-our @EXPORT_OK = qw(function_params method_params);
+use Exporter qw[import];
+our @EXPORT_OK = qw[function_params method_params];
 
 use WTSI::DNAP::Utilities::ParamsParser;
 
@@ -57,7 +57,7 @@ WTSI::DNAP::Utilities::Params
 
 =head1 DESCRIPTION
 
-
+A named parameter parser interface for functions.
 
 =head1 AUTHOR
 

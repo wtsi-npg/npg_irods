@@ -3,15 +3,18 @@ package WTSI::NPG::HTS::PublisherTest;
 use strict;
 use warnings;
 
-use Data::Dump qw(pp);
-use English qw(-no_match_vars);
+use Carp;
+use Data::Dump qw[pp];
+use English qw[-no_match_vars];
+use File::Copy::Recursive qw[dircopy];
 use File::Spec::Functions;
 use File::Temp;
 use Log::Log4perl;
+use Test::Exception;
 use Test::More;
 use URI;
 
-use base qw(WTSI::NPG::HTS::Test);
+use base qw[WTSI::NPG::HTS::Test];
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
@@ -19,18 +22,23 @@ use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::HTS::Publisher;
 
+my $pid          = $PID;
 my $test_counter = 0;
-my $data_path = './t/data/publisher';
+my $data_path    = './t/data/publisher';
 
-my $cwc;
+my $tmp_data_path;
 my $irods_tmp_coll;
-
-my $pid = $PID;
+my $cwc;
 
 sub setup_test : Test(setup) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   $cwc = $irods->working_collection;
+
+  # Prepare a copy of the test data because the tests will modify it
+  $tmp_data_path = File::Temp->newdir;
+  dircopy($data_path, $tmp_data_path) or
+    croak "Failed to copy test data from $data_path to $tmp_data_path";
 
   $irods_tmp_coll = $irods->add_collection("PublisherTest.$pid.$test_counter");
   $test_counter++;
@@ -39,6 +47,9 @@ sub setup_test : Test(setup) {
 sub teardown_test : Test(teardown) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
+  # Delete the copy of the test data
+  undef $tmp_data_path;
+
   $irods->working_collection($cwc);
   $irods->remove_collection($irods_tmp_coll);
 }
@@ -47,25 +58,36 @@ sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::Publisher');
 }
 
-sub publish : Test(4) {
+sub publish : Test(6) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $irods);
 
-  my $local_file_path = "$data_path/publish/a.txt";
+  my $local_file_path  = "$tmp_data_path/publish/a.txt";
   my $remote_file_path = "$irods_tmp_coll/a.txt";
   is($publisher->publish($local_file_path, $remote_file_path),
      $remote_file_path, 'publish, file');
   ok($irods->is_object($remote_file_path), 'publish, file -> data object');
 
-  my $local_dir_path = "$data_path/publish";
+  my $local_dir_path  = "$tmp_data_path/publish";
   my $remote_dir_path = $irods_tmp_coll;
   is($publisher->publish($local_dir_path, $remote_dir_path),
      "$remote_dir_path/publish", 'publish, directory');
   ok($irods->is_collection("$remote_dir_path/"),
      'publish, directory -> collection');
+
+  dies_ok {
+    $publisher->publish("$tmp_data_path/publish/c.bam",
+                        "$irods_tmp_coll/c.bam")
+  } 'publish, bam no MD5 fails';
+
+  dies_ok {
+    $publisher->publish("$tmp_data_path/publish/c.cram",
+                        "$irods_tmp_coll/c.cram")
+  } 'publish, cram no MD5 fails';
 }
+
 
 sub publish_file : Test(36) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -115,7 +137,7 @@ sub pf_new_full_path_no_meta_no_stamp {
 
   # publish_file with new full path, no metadata, no timestamp
   my $timestamp_regex = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}';
-  my $local_path_a = "$data_path/publish_file/a.txt";
+  my $local_path_a = "$tmp_data_path/publish_file/a.txt";
   my $remote_path = "$coll_path/pf_new_full_path_no_meta_no_stamp.txt";
   is($publisher->publish_file($local_path_a, $remote_path),
      $remote_path,
@@ -141,7 +163,7 @@ sub pf_new_full_path_meta_no_stamp {
   my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $irods);
 
   # publish_file with new full path, some metadata, no timestamp
-  my $local_path_a = "$data_path/publish_file/a.txt";
+  my $local_path_a = "$tmp_data_path/publish_file/a.txt";
   my $remote_path = "$coll_path/pf_new_full_path_meta_no_stamp.txt";
   my $additional_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
   my $additional_avu2 = $irods->make_avu($ANALYSIS_UUID,
@@ -177,7 +199,7 @@ sub pf_new_full_path_no_meta_stamp {
 
   # publish_file with new full path, no metadata, no timestamp
   my $timestamp = DateTime->now;
-  my $local_path_a = "$data_path/publish_file/a.txt";
+  my $local_path_a = "$tmp_data_path/publish_file/a.txt";
   my $remote_path = "$coll_path/pf_new_full_path_no_meta_stamp.txt";
 
   is($publisher->publish_file($local_path_a, $remote_path, [], $timestamp),
@@ -205,7 +227,7 @@ sub pf_exist_full_path_no_meta_no_stamp_match {
 
   # publish_file with existing full path, no metadata, no timestamp,
   # matching MD5
-  my $local_path_a = "$data_path/publish_file/a.txt";
+  my $local_path_a = "$tmp_data_path/publish_file/a.txt";
   my $remote_path = "$coll_path/pf_exist_full_path_no_meta_no_stamp_match.txt";
   $publisher->publish_file($local_path_a, $remote_path) or fail;
 
@@ -228,7 +250,7 @@ sub pf_exist_full_path_meta_no_stamp_match {
 
   # publish_file with existing full path, some metadata, no timestamp,
   # matching MD5
-  my $local_path_a = "$data_path/publish_file/a.txt";
+  my $local_path_a = "$tmp_data_path/publish_file/a.txt";
   my $remote_path = "$coll_path/pf_exist_full_path_meta_no_stamp_match.txt";
   my $additional_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
   my $additional_avu2 = $irods->make_avu($ANALYSIS_UUID,
@@ -264,7 +286,7 @@ sub pf_exist_full_path_no_meta_no_stamp_no_match {
   # publish_file with existing full path, no metadata, no timestamp,
   # non-matching MD5
   my $timestamp_regex = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}';
-  my $local_path_a = "$data_path/publish_file/a.txt";
+  my $local_path_a = "$tmp_data_path/publish_file/a.txt";
   my $remote_path =
     "$irods_tmp_coll/pf_exist_full_path_no_meta_no_stamp_no_match";
   $publisher->publish_file($local_path_a, $remote_path) or fail;
@@ -289,7 +311,7 @@ sub pf_exist_full_path_meta_no_stamp_no_match {
   # publish_file with existing full path, some metadata, no timestamp,
   # non-matching MD5
   my $timestamp_regex = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}';
-  my $local_path_a = "$data_path/publish_file/a.txt";
+  my $local_path_a = "$tmp_data_path/publish_file/a.txt";
   my $remote_path =
     "$irods_tmp_coll/pf_exist_full_path_meta_no_stamp_no_match.txt";
   my $additional_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
@@ -325,7 +347,7 @@ sub pd_new_full_path_no_meta_no_stamp {
 
   # publish_directory with new full path, no metadata, no timestamp
   my $timestamp_regex = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}';
-  my $local_path = "$data_path/publish_directory";
+  my $local_path = "$tmp_data_path/publish_directory";
 
   my $remote_path = "$coll_path/pd_new_full_path_no_meta_no_stamp";
   my $sub_coll = "$remote_path/publish_directory";
@@ -351,7 +373,7 @@ sub pd_new_full_path_meta_no_stamp {
 
   # publish_directory with new full path, no metadata, no timestamp
   my $timestamp_regex = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}';
-  my $local_path = "$data_path/publish_directory";
+  my $local_path = "$tmp_data_path/publish_directory";
   my $additional_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
   my $additional_avu2 = $irods->make_avu($ANALYSIS_UUID,
                                          'abcdefg-01234567890-wxyz');

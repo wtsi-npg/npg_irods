@@ -4,9 +4,11 @@ use strict;
 use warnings;
 use Moose::Role;
 
-use npg_tracking::util::types qw(NpgTrackingRunId
-                                 NpgTrackingLaneNumber
-                                 NpgTrackingTagIndex);
+use npg_tracking::util::types qw[
+                                  NpgTrackingRunId
+                                  NpgTrackingLaneNumber
+                                  NpgTrackingTagIndex
+                                ];
 
 our $VERSION = '';
 

@@ -34,6 +34,7 @@ sub parse_file_name {
 
   my ($file_name, $directories, $suffix) = fileparse($path);
 
+  # FIXME -- use controlled vocabulary
   my $splits = qr{(human|nonhuman|xahuman|yhuman|phix)}msx;
 
   my ($id_run, $position,
@@ -45,17 +46,17 @@ sub parse_file_name {
                          (\d+)             # Run ID
                          _                 # Separator
                          (\d)              # Position
-                         (_$splits)?       # Old align filter
+                         (_$splits)?       # Old alignment filter
                          (\#(\d+))?        # Tag index
-                         (_$splits)?       # Align filter
+                         (_$splits)?       # Alignment filter
                          (\S+)?            # Ancillary
                          [.](\S+)$         # File format
                      }mxs;
 
   my $tag_index    = $tag_index2;
-  my $align_filter = $old_align_filter2 || $align_filter2;
+  my $alignment_filter = $old_align_filter2 || $align_filter2;
 
-  return ($id_run, $position, $tag_index, $align_filter, $format);
+  return ($id_run, $position, $tag_index, $alignment_filter, $format);
 }
 
 no Moose::Role;

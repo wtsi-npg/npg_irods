@@ -2,7 +2,7 @@ package WTSI::DNAP::Utilities::ParamsParser;
 
 use namespace::autoclean;
 use Carp;
-use Data::Dump qw(pp);
+use Data::Dump qw[pp];
 use List::AllUtils;
 use Moose::Role;
 

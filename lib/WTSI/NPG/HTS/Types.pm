@@ -2,15 +2,15 @@ package WTSI::NPG::HTS::Types;
 
 use strict;
 use warnings;
-use MooseX::Types::Moose qw(ArrayRef Str);
+use MooseX::Types::Moose qw[ArrayRef Str];
 
 use MooseX::Types -declare =>
-  [qw(
+  [qw[
        AlMapFileFormat
        AlMapIndexFormat
        MetaAttr
        ArrayRefOfMetaAttr
-    )];
+     ]];
 
 our $VERSION = '';
 
@@ -21,7 +21,7 @@ subtype AlMapFileFormat,
 
 subtype AlMapIndexFormat,
   as Str,
-  where { m{^(craa|bai)$}msx },
+  where { m{^(crai|bai)$}msx },
   message { "'$_' is not a valid HTS index file format" };
 
 subtype MetaAttr,
@@ -51,7 +51,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

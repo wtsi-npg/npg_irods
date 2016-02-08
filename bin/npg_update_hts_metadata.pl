@@ -2,10 +2,10 @@
 
 use strict;
 use warnings;
-use FindBin qw($Bin);
+use FindBin qw[$Bin];
 use lib (-d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib");
 
-use Data::Dump qw(pp);
+use Data::Dump qw[pp];
 use Getopt::Long;
 use Log::Log4perl;
 use Log::Log4perl::Level;
@@ -14,10 +14,12 @@ use Pod::Usage;
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::DriRODS;
 use WTSI::NPG::HTS::MetaUpdater;
-use WTSI::NPG::iRODS::Metadata qw($FILE_TYPE
-                                  $ID_RUN
-                                  $POSITION
-                                  $TAG_INDEX);
+use WTSI::NPG::iRODS::Metadata qw[
+                                   $FILE_TYPE
+                                   $ID_RUN
+                                   $POSITION
+                                   $TAG_INDEX
+                                 ];
 use WTSI::NPG::iRODS;
 
 our $VERSION = '';
@@ -56,7 +58,7 @@ GetOptions('debug'                 => \$debug,
            'tag-index|tag_index=i' => \$tag_index,
            'verbose'               => \$verbose,
            'zone=s',               => \$zone,
-           q{}                     => \$stdio);
+           q[]                     => \$stdio);
 
 # Process CLI arguments
 if ($log4perl_config) {

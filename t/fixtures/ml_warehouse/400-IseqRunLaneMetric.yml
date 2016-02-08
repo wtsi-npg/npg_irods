@@ -23,7 +23,7 @@
   run_pending: 2012-05-02 08:47:59
   tags_decode_cv: 71.43
   tags_decode_percent: 97.03
-  unexpected_tags_percent: 0.21
+  unexpected_tags_percent: 0.01
 - cancelled: 0
   cycles: 208
   flowcell_barcode: HBF2DADXX
@@ -48,7 +48,7 @@
   run_pending: 2015-02-04 11:39:20
   tags_decode_cv: 2.80
   tags_decode_percent: 97.14
-  unexpected_tags_percent: 0.03
+  unexpected_tags_percent: 0.00
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -73,7 +73,7 @@
   run_pending: 2015-09-10 09:50:41
   tags_decode_cv: 34.47
   tags_decode_percent: 99.37
-  unexpected_tags_percent: 0.06
+  unexpected_tags_percent: 0.00
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -98,7 +98,7 @@
   run_pending: 2015-09-10 09:50:41
   tags_decode_cv: 8.75
   tags_decode_percent: 99.31
-  unexpected_tags_percent: 0.05
+  unexpected_tags_percent: 0.00
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -123,7 +123,7 @@
   run_pending: 2015-09-10 09:50:41
   tags_decode_cv: 5.02
   tags_decode_percent: 99.34
-  unexpected_tags_percent: 0.04
+  unexpected_tags_percent: 0.00
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -148,7 +148,7 @@
   run_pending: 2015-09-10 09:50:41
   tags_decode_cv: 5.03
   tags_decode_percent: 99.32
-  unexpected_tags_percent: 0.04
+  unexpected_tags_percent: 0.00
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -173,7 +173,7 @@
   run_pending: 2015-09-10 09:50:41
   tags_decode_cv: 11.19
   tags_decode_percent: 99.24
-  unexpected_tags_percent: 0.04
+  unexpected_tags_percent: 0.00
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -198,7 +198,7 @@
   run_pending: 2015-09-10 09:50:41
   tags_decode_cv: 5.57
   tags_decode_percent: 99.37
-  unexpected_tags_percent: 0.06
+  unexpected_tags_percent: 0.00
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -223,7 +223,7 @@
   run_pending: 2015-09-10 09:50:41
   tags_decode_cv: 29.03
   tags_decode_percent: 97.91
-  unexpected_tags_percent: 0.04
+  unexpected_tags_percent: 0.00
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -248,4 +248,204 @@
   run_pending: 2015-09-10 09:50:41
   tags_decode_cv: 35.15
   tags_decode_percent: 97.60
-  unexpected_tags_percent: 0.06
+  unexpected_tags_percent: 0.00
+- cancelled: 0
+  cycles: 302
+  flowcell_barcode: HHH55CCXX
+  id_run: 18448
+  instrument_model: HiSeqX
+  instrument_name: HX3
+  paired_read: 1
+  pf_bases: ~
+  pf_cluster_count: ~
+  pf_cluster_density: 1663692.562
+  position: 1
+  q20_yield_kb_forward_read: 64513603
+  q20_yield_kb_reverse_read: 61137479
+  q30_yield_kb_forward_read: 62662803
+  q30_yield_kb_reverse_read: 56439686
+  q40_yield_kb_forward_read: 53210502
+  q40_yield_kb_reverse_read: 41486147
+  qc_complete: 2016-01-04 10:11:25
+  raw_cluster_count: ~
+  raw_cluster_density: 2355119.250
+  run_complete: 2015-12-14 08:07:13
+  run_pending: 2015-12-11 11:38:14
+  tags_decode_cv: ~
+  tags_decode_percent: ~
+  unexpected_tags_percent: ~
+- cancelled: 0
+  cycles: 302
+  flowcell_barcode: HHH55CCXX
+  id_run: 18448
+  instrument_model: HiSeqX
+  instrument_name: HX3
+  paired_read: 1
+  pf_bases: ~
+  pf_cluster_count: ~
+  pf_cluster_density: 1638961.250
+  position: 2
+  q20_yield_kb_forward_read: 63924174
+  q20_yield_kb_reverse_read: 61095897
+  q30_yield_kb_forward_read: 61957276
+  q30_yield_kb_reverse_read: 56628670
+  q40_yield_kb_forward_read: 52253914
+  q40_yield_kb_reverse_read: 41978794
+  qc_complete: 2016-01-04 10:11:25
+  raw_cluster_count: ~
+  raw_cluster_density: 2355119.250
+  run_complete: 2015-12-14 08:07:13
+  run_pending: 2015-12-11 11:38:14
+  tags_decode_cv: ~
+  tags_decode_percent: ~
+  unexpected_tags_percent: ~
+- cancelled: 0
+  cycles: 302
+  flowcell_barcode: HHH55CCXX
+  id_run: 18448
+  instrument_model: HiSeqX
+  instrument_name: HX3
+  paired_read: 1
+  pf_bases: ~
+  pf_cluster_count: ~
+  pf_cluster_density: 1741735.812
+  position: 3
+  q20_yield_kb_forward_read: 67127813
+  q20_yield_kb_reverse_read: 64097057
+  q30_yield_kb_forward_read: 65058096
+  q30_yield_kb_reverse_read: 59410391
+  q40_yield_kb_forward_read: 55261437
+  q40_yield_kb_reverse_read: 44454411
+  qc_complete: 2016-01-04 10:11:25
+  raw_cluster_count: ~
+  raw_cluster_density: 2355119.250
+  run_complete: 2015-12-14 08:07:13
+  run_pending: 2015-12-11 11:38:14
+  tags_decode_cv: ~
+  tags_decode_percent: ~
+  unexpected_tags_percent: ~
+- cancelled: 0
+  cycles: 302
+  flowcell_barcode: HHH55CCXX
+  id_run: 18448
+  instrument_model: HiSeqX
+  instrument_name: HX3
+  paired_read: 1
+  pf_bases: ~
+  pf_cluster_count: ~
+  pf_cluster_density: 1739668.188
+  position: 4
+  q20_yield_kb_forward_read: 66626987
+  q20_yield_kb_reverse_read: 63618907
+  q30_yield_kb_forward_read: 64572712
+  q30_yield_kb_reverse_read: 58898794
+  q40_yield_kb_forward_read: 54712192
+  q40_yield_kb_reverse_read: 43849161
+  qc_complete: 2016-01-04 10:11:25
+  raw_cluster_count: ~
+  raw_cluster_density: 2355119.250
+  run_complete: 2015-12-14 08:07:13
+  run_pending: 2015-12-11 11:38:14
+  tags_decode_cv: ~
+  tags_decode_percent: ~
+  unexpected_tags_percent: ~
+- cancelled: 0
+  cycles: 302
+  flowcell_barcode: HHH55CCXX
+  id_run: 18448
+  instrument_model: HiSeqX
+  instrument_name: HX3
+  paired_read: 1
+  pf_bases: ~
+  pf_cluster_count: ~
+  pf_cluster_density: 1666046.938
+  position: 5
+  q20_yield_kb_forward_read: 64932369
+  q20_yield_kb_reverse_read: 61999080
+  q30_yield_kb_forward_read: 62865733
+  q30_yield_kb_reverse_read: 57399148
+  q40_yield_kb_forward_read: 52865882
+  q40_yield_kb_reverse_read: 42466036
+  qc_complete: 2016-01-04 10:11:25
+  raw_cluster_count: ~
+  raw_cluster_density: 2355119.250
+  run_complete: 2015-12-14 08:07:13
+  run_pending: 2015-12-11 11:38:14
+  tags_decode_cv: ~
+  tags_decode_percent: ~
+  unexpected_tags_percent: ~
+- cancelled: 0
+  cycles: 302
+  flowcell_barcode: HHH55CCXX
+  id_run: 18448
+  instrument_model: HiSeqX
+  instrument_name: HX3
+  paired_read: 1
+  pf_bases: ~
+  pf_cluster_count: ~
+  pf_cluster_density: 1736366.438
+  position: 6
+  q20_yield_kb_forward_read: 66966319
+  q20_yield_kb_reverse_read: 64365869
+  q30_yield_kb_forward_read: 65047120
+  q30_yield_kb_reverse_read: 60257409
+  q40_yield_kb_forward_read: 55451128
+  q40_yield_kb_reverse_read: 45809326
+  qc_complete: 2016-01-04 10:11:25
+  raw_cluster_count: ~
+  raw_cluster_density: 2355119.250
+  run_complete: 2015-12-14 08:07:13
+  run_pending: 2015-12-11 11:38:14
+  tags_decode_cv: ~
+  tags_decode_percent: ~
+  unexpected_tags_percent: ~
+- cancelled: 0
+  cycles: 302
+  flowcell_barcode: HHH55CCXX
+  id_run: 18448
+  instrument_model: HiSeqX
+  instrument_name: HX3
+  paired_read: 1
+  pf_bases: ~
+  pf_cluster_count: ~
+  pf_cluster_density: 1738790.375
+  position: 7
+  q20_yield_kb_forward_read: 66164840
+  q20_yield_kb_reverse_read: 63392549
+  q30_yield_kb_forward_read: 64336334
+  q30_yield_kb_reverse_read: 59197951
+  q40_yield_kb_forward_read: 54855190
+  q40_yield_kb_reverse_read: 44787479
+  qc_complete: 2016-01-04 10:11:25
+  raw_cluster_count: ~
+  raw_cluster_density: 2355119.250
+  run_complete: 2015-12-14 08:07:13
+  run_pending: 2015-12-11 11:38:14
+  tags_decode_cv: ~
+  tags_decode_percent: ~
+  unexpected_tags_percent: ~
+- cancelled: 0
+  cycles: 302
+  flowcell_barcode: HHH55CCXX
+  id_run: 18448
+  instrument_model: HiSeqX
+  instrument_name: HX3
+  paired_read: 1
+  pf_bases: ~
+  pf_cluster_count: ~
+  pf_cluster_density: 1728434.250
+  position: 8
+  q20_yield_kb_forward_read: 67440120
+  q20_yield_kb_reverse_read: 64748037
+  q30_yield_kb_forward_read: 65645398
+  q30_yield_kb_reverse_read: 60537344
+  q40_yield_kb_forward_read: 56188595
+  q40_yield_kb_reverse_read: 46041515
+  qc_complete: 2016-01-04 10:11:25
+  raw_cluster_count: ~
+  raw_cluster_density: 2355119.250
+  run_complete: 2015-12-14 08:07:13
+  run_pending: 2015-12-11 11:38:14
+  tags_decode_cv: ~
+  tags_decode_percent: ~
+  unexpected_tags_percent: ~

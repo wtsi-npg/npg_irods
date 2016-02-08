@@ -1,27 +1,33 @@
 package WTSI::NPG::HTS::AncFileDataObject;
 
 use namespace::autoclean;
-use Data::Dump qw(pp);
-use List::AllUtils qw(any);
+use Data::Dump qw[pp];
+use List::AllUtils qw[any];
 use Moose;
 use Try::Tiny;
 
 our $VERSION = '';
 
+our $PUBLIC = 'public'; # FIXME
+
 # The contents of BED and JSON formatted file are sensitive and are
 # given restricted access
-our @RESTRICTED_ANCILLARY_FORMATS = qw(bed json);
+our @RESTRICTED_ANCILLARY_FORMATS = qw[bed json];
 
 extends 'WTSI::NPG::iRODS::DataObject';
 
-with 'WTSI::NPG::HTS::RunComponent', 'WTSI::NPG::HTS::FilenameParser',
-  'WTSI::NPG::HTS::AVUCollator', 'WTSI::NPG::HTS::Annotator';
+with qw[
+         WTSI::NPG::HTS::RunComponent
+         WTSI::NPG::HTS::FilenameParser
+         WTSI::NPG::HTS::AVUCollator
+         WTSI::NPG::HTS::Annotator
+       ];
 
-has 'align_filter' =>
+has 'alignment_filter' =>
   (isa           => 'Maybe[Str]',
    is            => 'ro',
    required      => 0,
-   writer        => '_set_align_filter',
+   writer        => '_set_alignment_filter',
    documentation => 'The align filter, parsed from the iRODS path');
 
 has 'file_format' =>
@@ -47,7 +53,7 @@ has '+tag_index' =>
 sub BUILD {
   my ($self) = @_;
 
-  my ($id_run, $position, $tag_index, $align_filter, $file_format) =
+  my ($id_run, $position, $tag_index, $alignment_filter, $file_format) =
     $self->parse_file_name($self->str);
 
   if (not defined $self->id_run) {
@@ -68,8 +74,8 @@ sub BUILD {
     $self->_set_file_format($file_format);
   }
 
-  if (not defined $self->align_filter) {
-    $self->_set_align_filter($align_filter);
+  if (not defined $self->alignment_filter) {
+    $self->_set_alignment_filter($alignment_filter);
   }
 
   if (not defined $self->tag_index) {
@@ -132,17 +138,32 @@ sub update_secondary_metadata {
       };
     }
 
-    $self->debug("Setting study-defined access for restricted file '$path'");
+    $self->info("Setting study-defined access for restricted file '$path'");
     $self->update_group_permissions;
   }
   else {
     $self->update_group_permissions;
-    $self->debug("Setting public access for unrestricted file '$path'");
+    $self->info("Setting public access for unrestricted file '$path'");
     $self->set_permissions($WTSI::NPG::iRODS::READ_PERMISSION, 'public');
   }
 
   return $self;
 }
+
+before 'update_group_permissions' => sub {
+  my ($self) = @_;
+
+  # If the data contains any non-consented human data, or we are
+  # expecting to set groups restricting general access, then remove
+  # access for the public group.
+  if ($self->is_restricted_access) {
+    $self->info(qq[Removing $PUBLIC access to '], $self->str, q[']);
+    $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION, $PUBLIC);
+  }
+  else {
+    $self->info(qq[Allowing $PUBLIC access to '], $self->str, q[']);
+  }
+};
 
 __PACKAGE__->meta->make_immutable;
 
@@ -166,7 +187,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

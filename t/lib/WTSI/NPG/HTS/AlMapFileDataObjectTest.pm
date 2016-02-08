@@ -1,23 +1,25 @@
 package WTSI::NPG::HTS::AlMapFileDataObjectTest;
 
+use utf8;
+
 use strict;
 use warnings;
 
 use Carp;
-use English qw(-no_match_vars);
+use English qw[-no_match_vars];
 use File::Spec::Functions;
 use File::Temp;
 use Log::Log4perl;
 use Test::More;
 
-use base qw(WTSI::NPG::HTS::Test);
+use base qw[WTSI::NPG::HTS::Test];
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
+use WTSI::DNAP::Utilities::Runnable;
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::HTS::AlMapFileDataObject;
 use WTSI::NPG::HTS::LIMSFactory;
-use WTSI::NPG::HTS::Samtools;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 
@@ -28,12 +30,12 @@ use WTSI::NPG::iRODS;
   with 'npg_testing::db';
 }
 
+my $pid          = $PID;
 my $test_counter = 0;
-my $data_path = './t/data/almap_file_data_object';
+my $data_path    = './t/data/almap_file_data_object';
 my $fixture_path = "./t/fixtures";
 
-my $wh_attr = {RaiseError    => 1,
-               on_connect_do => 'PRAGMA encoding = "UTF-8"'};
+my $utf8_extra = '[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]';
 
 my $db_dir = File::Temp->newdir;
 my $wh_schema;
@@ -47,10 +49,10 @@ my $run15440_lane1_tag81 = '15440_1#81';
 
 my $reference_file = 'test_ref.fa';
 my $irods_tmp_coll;
-my $samtools = `which samtools`;
+my $samtools_available = `which samtools`;
 
 my $have_admin_rights =
-  system(qq{$WTSI::NPG::iRODS::IADMIN lu >/dev/null 2>&1}) == 0;
+  system(qq[$WTSI::NPG::iRODS::IADMIN lu >/dev/null 2>&1]) == 0;
 
 # The public group
 my $public_group = 'public';
@@ -83,21 +85,12 @@ my $ref_filter = sub {
   return $line =~ m{$ref_regex}msx;
 };
 
-my $pid = $PID;
-
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
-  my $wh_attr = {RaiseError    => 1,
-                 on_connect_do => 'PRAGMA encoding = "UTF-8"'};
-
-  {
-    # create_test_db produces warnings during expected use, which
-    # appear mixed with test output in the terminal
-    local $SIG{__WARN__} = sub { };
-    $wh_schema = TestDB->new(test_dbattr => $wh_attr)->create_test_db
-      ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
-       $wh_db_file);
-  }
+  $wh_schema = TestDB->new(sqlite_utf8_enabled => 1,
+                           verbose             => 0)->create_test_db
+    ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
+     $wh_db_file);
 
   $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 }
@@ -131,22 +124,23 @@ sub setup_test : Test(setup) {
     $group_tests_enabled = 1;
   }
 
-  if ($samtools) {
+  if ($samtools_available) {
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1,
                            $run15440_lane1_tag0, $run15440_lane1_tag81) {
-      WTSI::NPG::HTS::Samtools->new
-          (arguments => ['view', '-C',
-                         '-T', qq[$data_path/$reference_file],
-                         '-o', qq[irods:$irods_tmp_coll/$data_file.cram]],
-           path      => "$data_path/$data_file.sam")->run;
+      WTSI::DNAP::Utilities::Runnable->new
+          (arguments  => ['view', '-C',
+                          '-T', "$data_path/$reference_file",
+                          '-o', "irods:$irods_tmp_coll/$data_file.cram",
+                                "$data_path/$data_file.sam"],
+           executable => 'samtools')->run;
+      WTSI::DNAP::Utilities::Runnable->new
+          (arguments  => ['view', '-b',
+                          '-T', "$data_path/$reference_file",
+                          '-o', "irods:$irods_tmp_coll/$data_file.bam",
+                                "$data_path/$data_file.sam"],
+           executable => 'samtools')->run;
 
-      WTSI::NPG::HTS::Samtools->new
-          (arguments => ['view', '-b',
-                         '-T', qq[$data_path/$reference_file],
-                         '-o', qq[irods:$irods_tmp_coll/$data_file.bam]],
-           path      => "$data_path/$data_file.sam")->run;
-
-        foreach my $format (qw(bam cram)) {
+        foreach my $format (qw[bam cram]) {
           my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
             ($irods, "$irods_tmp_coll/$data_file.$format");
 
@@ -202,19 +196,21 @@ sub require : Test(1) {
 my @tagged_paths   = ('/seq/17550/17550_3#1',
                       '/seq/17550/17550_3#1_human',
                       '/seq/17550/17550_3#1_nonhuman',
+                      '/seq/17550/17550_3#1_xahuman',
                       '/seq/17550/17550_3#1_yhuman',
                       '/seq/17550/17550_3#1_phix');
 my @untagged_paths = ('/seq/17550/17550_3',
                       '/seq/17550/17550_3_human',
                       '/seq/17550/17550_3_nonhuman',
+                      '/seq/17550/17550_3_xahuman',
                       '/seq/17550/17550_3_yhuman',
                       '/seq/17550/17550_3_phix');
 
-sub id_run : Test(20) {
+sub id_run : Test(24) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  foreach my $format (qw(bam cram)) {
+  foreach my $format (qw[bam cram]) {
     foreach my $path (@tagged_paths, @untagged_paths) {
       my $full_path = $path . ".$format";
       cmp_ok(WTSI::NPG::HTS::AlMapFileDataObject->new
@@ -224,13 +220,13 @@ sub id_run : Test(20) {
   }
 }
 
-sub position : Test(20) {
+sub position : Test(24) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   foreach my $format (qw(bam cram)) {
     foreach my $path (@tagged_paths, @untagged_paths) {
-      my $full_path = $path . ".$format";
+      my $full_path = "$path.$format";
       cmp_ok(WTSI::NPG::HTS::AlMapFileDataObject->new
              ($irods, $full_path)->position,
              '==', 3, "$full_path position is correct");
@@ -238,36 +234,76 @@ sub position : Test(20) {
   }
 }
 
-sub is_restricted_access : Test(20) {
+sub contains_nonconsented_human : Test(24) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  foreach my $format (qw(bam cram)) {
+  foreach my $format (qw[bam cram]) {
     foreach my $path (@tagged_paths, @untagged_paths) {
-      my $full_path = $path . ".$format";
-      ok(WTSI::NPG::HTS::AlMapFileDataObject->new
-         ($irods, $full_path)->is_restricted_access,
-         "$full_path is_restricted_access is correct");
+      my $full_path = "$path.$format";
+      my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new($irods, $full_path);
+      my $af = $obj->alignment_filter;
+
+      if (not $af) {
+        ok(!$obj->contains_nonconsented_human,
+           "$full_path is not nonconsented human");
+      }
+      elsif ($af eq 'nonhuman' or
+             $af eq 'yhuman'   or
+             $af eq 'phix') {
+        ok(!$obj->contains_nonconsented_human,
+           "$full_path is not nonconsented human ($af)");
+      }
+      elsif ($af eq 'human' or
+             $af eq 'xahuman') {
+        ok($obj->contains_nonconsented_human,
+           "$full_path is nonconsented human ($af)");
+      }
+      else {
+        fail "Unexpected alignment_filter '$af'";
+      }
     }
   }
 }
 
-sub tag_index : Test(20) {
+sub is_restricted_access : Test(24) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  foreach my $format (qw(bam cram)) {
+  # Without any study metadata information
+  foreach my $format (qw[bam cram]) {
+    foreach my $path (@tagged_paths, @untagged_paths) {
+      my $full_path = "$path.$format";
+      my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new($irods, $full_path);
+      my $af = $obj->alignment_filter;
+
+      if ($af and ($af eq 'human' or
+                   $af eq 'xahuman')) {
+        ok($obj->is_restricted_access, "$full_path is restricted_access");
+      }
+      else {
+        ok(!$obj->is_restricted_access, "$full_path is not restricted_access");
+      }
+    }
+  }
+}
+
+sub tag_index : Test(24) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  foreach my $format (qw[bam cram]) {
     foreach my $path (@tagged_paths) {
-      my $full_path = $path . ".$format";
+      my $full_path = "$path.$format";
       cmp_ok(WTSI::NPG::HTS::AlMapFileDataObject->new
              ($irods, $full_path)->tag_index,
              '==', 1, "$full_path tag_index is correct");
     }
   }
 
-  foreach my $format (qw(bam cram)) {
+  foreach my $format (qw[bam cram]) {
     foreach my $path (@untagged_paths) {
-      my $full_path = $path . ".$format";
+      my $full_path = "$path.$format";
       isnt(defined WTSI::NPG::HTS::AlMapFileDataObject->new
            ($irods, $full_path)->tag_index,
            "$full_path tag_index is correct");
@@ -275,26 +311,28 @@ sub tag_index : Test(20) {
   }
 }
 
-sub align_filter : Test(20) {
+sub alignment_filter : Test(24) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  foreach my $format (qw(bam cram)) {
+  foreach my $format (qw[bam cram]) {
     foreach my $path (@tagged_paths, @untagged_paths) {
-      my $full_path = $path . ".$format";
-      my ($expected) = $path =~ m{_((human|nonhuman|yhuman|phix))};
+      my $full_path = "$path.$format";
+      # FIXME -- use controlled vocbulary
+      my ($expected) = $path =~ m{_((human|nonhuman|xahuman|yhuman|phix))};
 
-      my $align_filter = WTSI::NPG::HTS::AlMapFileDataObject->new
-        ($irods, $full_path)->align_filter;
+      my $alignment_filter = WTSI::NPG::HTS::AlMapFileDataObject->new
+        ($irods, $full_path)->alignment_filter;
 
-      is($align_filter, $expected, "$full_path align_filter is correct");
+      is($alignment_filter, $expected,
+         "$full_path alignment_filter is correct");
     }
   }
 }
 
 sub header : Test(8) {
  SKIP: {
-    if (not $samtools) {
+    if (not $samtools_available) {
       skip 'samtools executable not on the PATH', 8;
     }
 
@@ -302,10 +340,11 @@ sub header : Test(8) {
                                       strict_baton_version => 0);
 
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
-      foreach my $format (qw(bam cram)) {
+      foreach my $format (qw[bam cram]) {
+        my $file_name = "$data_file.$format";
         my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
           (collection  => $irods_tmp_coll,
-           data_object => "$data_file.$format",
+           data_object => $file_name,
            file_format => $format,
            id_run      => 1,
            irods       => $irods,
@@ -325,7 +364,7 @@ sub header : Test(8) {
 
 sub is_aligned : Test(4) {
  SKIP: {
-    if (not $samtools) {
+    if (not $samtools_available) {
       skip 'samtools executable not on the PATH', 4;
     }
 
@@ -333,10 +372,11 @@ sub is_aligned : Test(4) {
                                       strict_baton_version => 0);
 
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
-      foreach my $format (qw(bam cram)) {
+      foreach my $format (qw[bam cram]) {
+        my $file_name = "$data_file.$format";
         my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
           (collection  => $irods_tmp_coll,
-           data_object => "$data_file.$format",
+           data_object => $file_name,
            file_format => $format,
            id_run      => 1,
            irods       => $irods,
@@ -351,7 +391,7 @@ sub is_aligned : Test(4) {
 
 sub reference : Test(4) {
  SKIP: {
-    if (not $samtools) {
+    if (not $samtools_available) {
       skip 'samtools executable not on the PATH', 4;
     }
 
@@ -359,10 +399,11 @@ sub reference : Test(4) {
                                       strict_baton_version => 0);
 
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
-      foreach my $format (qw(bam cram)) {
+      foreach my $format (qw[bam cram]) {
+        my $file_name = "$data_file.$format";
         my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
           (collection  => $irods_tmp_coll,
-           data_object => "$data_file.$format",
+           data_object => $file_name,
            file_format => $format,
            id_run      => 1,
            irods       => $irods,
@@ -378,7 +419,7 @@ sub reference : Test(4) {
 
 sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
  SKIP: {
-    if (not $samtools) {
+    if (not $samtools_available) {
       skip 'samtools executable not on the PATH', 8;
     }
 
@@ -499,14 +540,14 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP000251'},
        {attribute => $STUDY_ID,                 value => '619'},
        {attribute => $STUDY_TITLE,
-        value     => 'Burkholderia pseudomallei diversity'},
+        value     => 'Burkholderia pseudomallei diversity' . $utf8_extra},
        {attribute => $TAG_INDEX,                value => '0'},
        {attribute => $TARGET,                   value => '0'}, # target 0
        {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 0;
 
-    foreach my $format (qw(bam cram)) {
+    foreach my $format (qw[bam cram]) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run7915_lane5_tag0,
@@ -523,7 +564,7 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
 
 sub update_secondary_metadata_tag0_spike_bact : Test(8) {
  SKIP: {
-    if (not $samtools) {
+    if (not $samtools_available) {
       skip 'samtools executable not on the PATH', 8;
     }
 
@@ -650,14 +691,14 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
        {attribute => $STUDY_ID,                 value     => '198'},
        {attribute => $STUDY_ID,                 value     => '619'},
        {attribute => $STUDY_TITLE,
-        value     => 'Burkholderia pseudomallei diversity'},
+        value     => 'Burkholderia pseudomallei diversity' . $utf8_extra},
        {attribute => $TAG_INDEX,                value     => '0'},
        {attribute => $TARGET,                   value     => '0'}, # target 0
        {attribute => $TOTAL_READS,              value     => '10000'}];
 
     my $spiked_control = 1;
 
-    foreach my $format (qw(bam cram)) {
+    foreach my $format (qw[bam cram]) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run7915_lane5_tag0,
@@ -675,7 +716,7 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
 
 sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
  SKIP: {
-    if (not $samtools) {
+    if (not $samtools_available) {
       skip 'samtools executable not on the PATH', 8;
     }
 
@@ -700,14 +741,14 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP000251'},
        {attribute => $STUDY_ID,                 value => '619'},
        {attribute => $STUDY_TITLE,
-        value     => 'Burkholderia pseudomallei diversity'},
+        value     => 'Burkholderia pseudomallei diversity' . $utf8_extra},
        {attribute => $TAG_INDEX,                value => '1'},
        {attribute => $TARGET,                   value => '1'},
        {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 0;
 
-    foreach my $format (qw(bam cram)) {
+    foreach my $format (qw[bam cram]) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run7915_lane5_tag1,
@@ -724,7 +765,7 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
 
 sub update_secondary_metadata_tag1_spike_bact : Test(8) {
  SKIP: {
-    if (not $samtools) {
+    if (not $samtools_available) {
       skip 'samtools executable not on the PATH', 8;
     }
 
@@ -749,14 +790,14 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP000251'},
        {attribute => $STUDY_ID,                 value => '619'},
        {attribute => $STUDY_TITLE,
-        value     => 'Burkholderia pseudomallei diversity'},
+        value     => 'Burkholderia pseudomallei diversity' . $utf8_extra},
        {attribute => $TAG_INDEX,                value => '1'},
        {attribute => $TARGET,                   value => '1'},
        {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 1;
 
-    foreach my $format (qw(bam cram)) {
+    foreach my $format (qw[bam cram]) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run7915_lane5_tag1,
@@ -773,7 +814,7 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
 
 sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
  SKIP: {
-    if (not $samtools) {
+    if (not $samtools_available) {
       skip 'samtools executable not on the PATH', 8;
     }
 
@@ -810,14 +851,14 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
-        value     => 'Lebanon_LowCov-seq'},
+        value     => 'Lebanon_LowCov-seq' . $utf8_extra},
        {attribute => $TAG_INDEX,                value => '0'},
        {attribute => $TARGET,                   value => '0'}, # target 0
        {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 0;
 
-    foreach my $format (qw(bam cram)) {
+    foreach my $format (qw[bam cram]) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run15440_lane1_tag0,
@@ -834,7 +875,7 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
 
 sub update_secondary_metadata_tag0_spike_human : Test(8) {
  SKIP: {
-    if (not $samtools) {
+    if (not $samtools_available) {
       skip 'samtools executable not on the PATH', 8;
     }
 
@@ -876,14 +917,14 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
        {attribute => $STUDY_ID,                 value => '198'},
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
-        value     => 'Lebanon_LowCov-seq'},
+        value     => 'Lebanon_LowCov-seq' . $utf8_extra},
        {attribute => $TAG_INDEX,                value => '0'},
        {attribute => $TARGET,                   value => '0'}, # target 0
        {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 1;
 
-    foreach my $format (qw(bam cram)) {
+    foreach my $format (qw[bam cram]) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run15440_lane1_tag0,
@@ -901,7 +942,7 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
 
 sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
  SKIP: {
-    if (not $samtools) {
+    if (not $samtools_available) {
       skip 'samtools executable not on the PATH', 8;
     }
 
@@ -926,14 +967,14 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
-        value     => 'Lebanon_LowCov-seq'},
+        value     => 'Lebanon_LowCov-seq' . $utf8_extra},
        {attribute => $TAG_INDEX,                value => '81'},
        {attribute => $TARGET,                   value => '1'},
        {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 0;
 
-    foreach my $format (qw(bam cram)) {
+    foreach my $format (qw[bam cram]) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run15440_lane1_tag81,
@@ -950,7 +991,7 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
 
 sub update_secondary_metadata_tag81_spike_human : Test(8) {
  SKIP: {
-    if (not $samtools) {
+    if (not $samtools_available) {
       skip 'samtools executable not on the PATH', 8;
     }
 
@@ -975,14 +1016,14 @@ sub update_secondary_metadata_tag81_spike_human : Test(8) {
        {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP005180'},
        {attribute => $STUDY_ID,                 value => '2967'},
        {attribute => $STUDY_TITLE,
-        value     => 'Lebanon_LowCov-seq'},
+        value     => 'Lebanon_LowCov-seq' . $utf8_extra},
        {attribute => $TAG_INDEX,                value => '81'},
        {attribute => $TARGET,                   value => '1'},
        {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 1;
 
-    foreach my $format (qw(bam cram)) {
+    foreach my $format (qw[bam cram]) {
       # 2 * 4 tests
       test_metadata_update($irods, $irods_tmp_coll, $ref_filter,
                            {data_file              => $run15440_lane1_tag81,
@@ -1009,9 +1050,10 @@ sub test_metadata_update {
   my $exp_grp_before = $args->{expected_groups_before};
   my $exp_grp_after  = $args->{expected_groups_after};
 
+  my $file_name = "$data_file.$format";
   my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
     (collection  => $working_coll,
-     data_object => "$data_file.$format",
+     data_object => $file_name,
      irods       => $irods);
   my $tag = $obj->tag_index;
 
