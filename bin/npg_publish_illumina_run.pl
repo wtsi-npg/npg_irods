@@ -12,8 +12,6 @@ use Log::Log4perl;
 use Log::Log4perl::Level;
 use Pod::Usage;
 
-use npg_qc::Schema;
-
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::DriRODS;
 use WTSI::NPG::HTS::LIMSFactory;
