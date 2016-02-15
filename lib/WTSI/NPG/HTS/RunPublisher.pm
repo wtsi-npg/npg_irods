@@ -1360,6 +1360,41 @@ WTSI::NPG::HTS::RunPublisher
 Publishes alignment, QC and ancillary files to iRODS, adds metadata and
 sets permissions.
 
+An instance of RunPublisher is responsible for copying Illumina
+sequencing data from the instrument run folder to a collection in
+iRODS for a single, specific run, in a single output format (e.g. BAM,
+CRAM).
+
+Data files are divided into four categories:
+
+ - alignment files; the sequencing reads in BAM or CRAM format.
+ - alignment index files; indices in the relevant format
+ - ancillary files; files containing information about the run
+ - QC JSON files; JSON files containing information about the run
+
+A RunPublisher provides methods to list the complement of these
+categories and to copy ("publish") them. Each of these list or publish
+operations may be restricted to a specific instrument lane position.
+
+As part of the copying process, metadata are added to, or updated on,
+the files in iRODS. Following the metadata update, access permissions
+are set. The information to do both of these operations is provided by
+an instance of st::api::lims.
+
+If a run is published multiple times to the same destination
+collection, the following take place:
+
+ - the RunPublisher checks local (run folder) file checksums against
+   remote (iRODS) checksums and will not make unnecessary updates
+
+ - if a local file has changed, the copy in iRODS will be overwritten
+   and additional metadata indicating the time of the update will be
+   added
+
+ - the RunPublisher will proceed to make metadata and permissions
+   changes to synchronise with the metadata supplied by st::api::lims,
+   even if no files have been modified
+
 =head1 AUTHOR
 
 Keith James <kdj@sanger.ac.uk>

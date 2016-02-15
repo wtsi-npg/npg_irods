@@ -138,7 +138,8 @@ if (@data_objs) {
 
 $log->info("Updated metadata on $num_updated files");
 
-
+# FIXME -- update the query to find permissions restricted JSON QC
+# files and bed files
 sub _make_irods_query {
   my ($q_id_run, $q_max_id_run, $q_min_id_run, $q_position, $q_tag_index) = @_;
 
