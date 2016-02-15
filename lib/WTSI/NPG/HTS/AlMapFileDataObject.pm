@@ -2,30 +2,31 @@ package WTSI::NPG::HTS::AlMapFileDataObject;
 
 use namespace::autoclean;
 use Data::Dump qw[pp];
+use Encode qw[decode];
+use English qw[-no_match_vars];
 use List::AllUtils qw[any none uniq];
 use Moose;
 use Try::Tiny;
 
+use WTSI::NPG::HTS::HeaderParser;
 use WTSI::NPG::HTS::Types qw[AlMapFileFormat];
 
 our $VERSION = '';
 
 our $DEFAULT_SAMTOOLS_EXECUTABLE = 'samtools';
-# Regex for matching to reference sequence paths in HTS file header PG
-# records.
-our $DEFAULT_REFERENCE_REGEX = qr{\/(nfs|lustre)\/\S+\/references}mxs;
 
 our $HUMAN   = 'human';   # FIXME
 our $YHUMAN  = 'yhuman';  # FIXME
 our $XAHUMAN = 'xahuman'; # FIXME
 our $PUBLIC  = 'public';  # FIXME
 
+our $SQ = 'SQ';
+
 extends 'WTSI::NPG::iRODS::DataObject';
 
 with qw[
          WTSI::NPG::HTS::RunComponent
          WTSI::NPG::HTS::FilenameParser
-         WTSI::NPG::HTS::HeaderParser
          WTSI::NPG::HTS::AVUCollator
          WTSI::NPG::HTS::Annotator
        ];
@@ -71,8 +72,13 @@ has '+tag_index' =>
    documentation => 'The tag_index, parsed from the iRODS path');
 # end
 
+my $header_parser;
+
 sub BUILD {
   my ($self) = @_;
+
+  # Parsing the file name could be delayed because the parsed values
+  # are not required for all operations
 
   my ($id_run, $position, $tag_index, $alignment_filter, $file_format) =
     $self->parse_file_name($self->str);
@@ -103,6 +109,8 @@ sub BUILD {
     $self->_set_tag_index($tag_index);
   }
 
+  $header_parser = WTSI::NPG::HTS::HeaderParser->new(logger => $self->logger);
+
   return;
 }
 
@@ -132,7 +140,7 @@ sub is_aligned {
   my ($self) = @_;
 
   my $is_aligned = 0;
-  my @sq = $self->get_records($self->header, 'SQ');
+  my @sq = $header_parser->get_records($self->header, $SQ);
   if (@sq) {
     $self->debug($self->str, ' has SQ record: ', $sq[0]);
     $is_aligned = 1;
@@ -143,22 +151,27 @@ sub is_aligned {
 
 =head2 reference
 
-  Arg [1]      A callback to be executed on each line of BWA @PG line
-               of the BAM/CRAM header, CodeRef. Optional, defaults to
-               a filter that matches on the default reference regex,
-               CodeRef.
+  Arg [1]      A callback to be executed on each PG line of the BAM/CRAM
+               header, CodeRef. Optional, defaults to a filter that matches
+               on the default reference regex.
 
   Example    : my $reference = $obj->reference(sub {
                   return $_[0] =~ /my_reference/
                })
-  Description: Return the reference path used in alignment. The reference
-               path is parsed from the last BWA @PG line in the header
-               by a simple split on whitespace, followed by application of
-               the filter.
+  Description: Return the reference path used in alignment, if the data
+               are aligned, or undef otherwise.
+
+               The reference path is taken from the last aligner PG
+               record in the PP <- PG graph, or from the last aligner
+               PG line in the headeri if the graph cannot be resolved
+               into a single, unbranched walk from root to leaf.
+
+               The reference path is parsed from CL value of the PG line
+               by a simple split on whitespace, followed by application
+               of the filter.
 
                This will give incorrect results if the reference path
                contains whitespace.
-
   Returntype : Bool
 
 =cut
@@ -166,75 +179,13 @@ sub is_aligned {
 sub reference {
   my ($self, $filter) = @_;
 
-  defined $filter and ref $filter ne 'CODE' and
-    $self->logconfess('The filter argument must be a CodeRef');
-
-  $filter ||= sub {
-    return $_[0] =~ m{$DEFAULT_REFERENCE_REGEX}msx;
-  };
-
-  # FIXME -- this header analysis needs to be replaced
-
-  # This filter was cribbed from the existing code. I don't understand
-  # why the bwa_sam header ID record is significant.
-  my $last_bwa_pg_line;
-
-  foreach my $header_record ($self->get_records($self->header, 'PG')) {
-    my @id = $self->get_values($header_record, 'ID');
-    my @cl = $self->get_values($header_record, 'CL');
-
-    if (any  { m{^bwa}msx     } @id and
-        none { m{^bwa_sam}msx } @id and
-        @cl) {
-      $self->debug($self->str, " has BWA PG line: $header_record");
-      $last_bwa_pg_line = $header_record;
-    }
-  }
-
   my $reference;
-  if ($last_bwa_pg_line) {
-    # Note the uniq filter; the correct reference may appear multiple
-    # times in the PG header record's CL values.
-    my @elts;
-    foreach my $cl ($self->get_values($last_bwa_pg_line, 'CL')) {
-      push @elts, split m{\s+}msx, $cl;
-    }
-
-    @elts = uniq grep { $filter->($_) } @elts;
-    my $num_elts = scalar @elts;
-
-    if ($num_elts == 1) {
-      $self->debug(q[Found reference '], $elts[0], q[' for ], $self->str);
-      $reference = $elts[0];
-    }
-    elsif ($num_elts > 1) {
-      $self->logconfess("Reference filter matched $num_elts elements in PG ",
-                        "record '$last_bwa_pg_line': ", pp(\@elts));
-    }
+  if ($self->is_aligned) {
+    $reference = $header_parser->alignment_reference($self->header, $filter);
   }
 
   return $reference;
 }
-
-=head2 is_restricted_access
-
-  Arg [1]      None
-
-  Example    : $obj->is_restricted_access
-  Description: Return true if the file contains or may contain sensitive
-               information and is not for unrestricted public access.
-
-               Access restriction is determined by two criteria; the
-               alignment_filter metadata and the study_id metadata. If
-               the former indicates non-consented human data or the latter
-               indicates any study restriction, this method will return true.
-
-               Note that for checking the study restriction, the data object
-               must have reached iRODS; if it isn't present, there will be
-               no check.
-  Returntype : Bool
-
-=cut
 
 sub is_restricted_access {
   my ($self) = @_;
@@ -355,10 +306,21 @@ sub _read_header {
   my $path = $self->str;
 
   try {
-    push @header, WTSI::DNAP::Utilities::Runnable->new
+    my $run = WTSI::DNAP::Utilities::Runnable->new
       (arguments  => [qw[view -H], "irods:$path"],
        executable => $samtools,
-       logger     => $self->logger)->run->split_stdout;
+       logger     => $self->logger)->run;
+
+    my $stdout = ${$run->stdout};
+    my $header = q[];
+    try {
+      $header = decode('UTF-8', $stdout, Encode::FB_CROAK);
+    } catch {
+      $self->warn("Non UTF-8 data in the header of '$path'");
+      $header = $stdout;
+    };
+
+    push @header, split $INPUT_RECORD_SEPARATOR, $header;
   } catch {
     # No logger is set on samtools directly to avoid noisy stack
     # traces when a file can't be read. Instead, any error information
