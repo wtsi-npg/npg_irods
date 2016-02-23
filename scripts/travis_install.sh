@@ -50,8 +50,7 @@ git clone https://github.com/wtsi-npg/perl-dnap-utilities.git perl-dnap-utilitie
 git clone https://github.com/wtsi-npg/perl-irods-wrap.git perl-irods-wrap.git
 git clone https://github.com/wtsi-npg/ml_warehouse.git ml_warehouse.git
 git clone https://github.com/wtsi-npg/npg_ml_warehouse.git npg_ml_warehouse.git
-# git clone https://github.com/wtsi-npg/npg_tracking.git npg_tracking.git
-git clone https://github.com/keithj/npg_tracking.git npg_tracking.git
+git clone https://github.com/wtsi-npg/npg_tracking.git npg_tracking.git
 git clone https://github.com/wtsi-npg/npg_seq_common.git npg_seq_common.git
 git clone https://github.com/wtsi-npg/npg_qc.git npg_qc.git
 
