@@ -38,13 +38,15 @@ my $build = WTSI::DNAP::Utilities::Build->new
     'MooseX::Types'                 => '>= 0.45',
     'MooseX::StrictConstructor'     => 0,
     'Try::Tiny'                     => '>= 0.12',
-    'WTSI::DNAP::Utilities'         => '>= 0.4.2',
-    'WTSI::NPG::iRODS'              => '>= 1.8.0',
-    'WTSI::DNAP::Warehouse::Schema' => '>= 1.1'
+    'WTSI::DNAP::Utilities'         => '>= 0.5.0',   # perl-dnap-utilities
+    'WTSI::NPG::iRODS'              => '>= 2.0.2',   # perl-irods-wrap
+    'WTSI::DNAP::Warehouse::Schema' => '>= 1.8',     # ml_warehouse
+    'st::api::lims'                 => '>= 85.1',    # npg_tracking
+    'st::api::lims::ml_warehouse'   => '>= 38.0'     # npg_ml_warehouse
    },
    recommends =>
    {
-    'npg_common::roles::software_location' => 0
+    'npg_common::roles::software_location' => 0      # npg_seq_common
    }
   );
 
