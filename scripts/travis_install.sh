@@ -30,15 +30,15 @@ sudo ldconfig
 wget -q https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/htslib-${HTSLIB_VERSION}.tar.bz2 -O /tmp/htslib-${HTSLIB_VERSION}.tar.bz2
 tar xfj /tmp/htslib-${HTSLIB_VERSION}.tar.bz2 -C /tmp
 cd /tmp/htslib-${HTSLIB_VERSION}
-./configure --with-irods=$IRODS_HOME
-perl -i -ple 's{(\$\(CC\)) \s+ (\$\(LDFLAGS\) \s+ -o \s+ \$\@ \s+ test/hfile.o \s+ libhts.a \s+ \$\(LDLIBS\) \s+ -lz)}{$1 -pthread $2}smx' Makefile
+./configure --with-irods=$IRODS_HOME --enable-plugins
 make
 
 wget -q https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 -O /tmp/samtools-${SAMTOOLS_VERSION}.tar.bz2
 tar xfj /tmp/samtools-${SAMTOOLS_VERSION}.tar.bz2 -C /tmp
 cd /tmp/samtools-${SAMTOOLS_VERSION}
-make HTSDIR=/tmp/htslib-${HTSLIB_VERSION} LDFLAGS="-L${IRODS_HOME}/lib/core/obj" LDLIBS="-lRodsAPIs -lgssapi_krb5"
-sudo make HTSDIR=/tmp/htslib-${HTSLIB_VERSION} install
+./configure --enable-plugins --with-plugin-path=/tmp/htslib-${HTSLIB_VERSION}
+make all plugins-htslib
+sudo make install
 
 # CPAN
 cpanm --quiet --notest Alien::Tidyp # For npg_tracking
