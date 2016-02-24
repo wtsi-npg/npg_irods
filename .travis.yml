@@ -4,6 +4,7 @@ language: perl
 
 perl:
   - "5.16"
+  - "5.22"
 
 addons:
   postgresql: "9.3"
@@ -12,16 +13,16 @@ env:
   global:
     - PGVERSION="9.3"
     - JANSSON_VERSION="2.7"
-    - DNAP_UTILITIES_VERSION="devel"
+    - DNAP_UTILITIES_VERSION="0.5.0"
     - DNAP_WAREHOUSE_VERSION="1.8"
     - IRODS_WRAP_VERSION="2.0.3"
     - NPG_ML_WAREHOUSE_VERSION="38.0"
-    - NPG_QC_VERSION="59.8"
+    - NPG_QC_VERSION="60.0"
     - NPG_SEQ_COMMON_VERSION="50.8"
-    - NPG_TRACKING_VERSION="utf8-test-support"
+    - NPG_TRACKING_VERSION="85.1"
     - BATON_VERSION="0.16.1"
-    - SAMTOOLS_VERSION="1.2"
-    - HTSLIB_VERSION="1.2.1"
+    - SAMTOOLS_VERSION="1.3"
+    - HTSLIB_VERSION="1.3"
 
 before_install:
   - ./scripts/travis_before_install.sh
