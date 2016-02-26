@@ -193,7 +193,6 @@ sub positions {
 
 =cut
 
-
 sub is_plexed {
   my ($self, $position) = @_;
 
@@ -207,39 +206,51 @@ sub is_plexed {
   Arg [1]    : Lane position, Int.
   Arg [2]    : Tag index, Int. Required for plexed positions.
 
+  Named args : tag_index            Tag index, Int. Required for
+                                    plexed positions.
+               alignment_filter     Alignment filter name. Optional.
+                                    Used to request the number of reads
+                                    for a particular alignment filter.
+
   Example    : my $num_lane_reads = $pub->num_reads($position1)
-               my $num_plex_reads = $pub->num_reads($position2)
+               my $num_plex_reads = $pub->num_reads($position2,
+                                                    tag_index        => 1,
+                                                    alignment_filter => 'phix')
   Description: Return the total number of primary, non-supplementary
                reads.
   Returntype : Int
 
 =cut
 
-sub num_reads {
-  my ($self, $position, $tag_index) = @_;
+{
+  my $params = function_params(2, qw(alignment_filter tag_index));
 
-  my $pos = $self->_check_position($position);
+  sub num_reads {
+    my ($self, $position) = $params->parse(@_);
 
-  my $qc_file;
-  if ($self->is_plexed($pos)) {
-    defined $tag_index or
-      $self->logconfess('A defined tag_index argument is required');
-    $qc_file = $self->_plex_qc_stats_file($pos, $tag_index);
+    my $pos = $self->_check_position($position);
 
-  }
-  else {
-    $qc_file = $self->_lane_qc_stats_file($pos);
-  }
-
-  my $num_reads;
-  if ($qc_file) {
-    my $flag_stats = $self->_parse_json_file($qc_file);
-    if ($flag_stats) {
-      $num_reads = $flag_stats->{$NUM_READS_JSON_PROPERTY};
+    my $qc_file;
+    if ($self->is_plexed($pos)) {
+      defined $params->tag_index or
+        $self->logconfess('A defined tag_index argument is required');
+      $qc_file = $self->_plex_qc_stats_file($pos, $params->tag_index,
+                                            $params->alignment_filter);
     }
-  }
+    else {
+      $qc_file = $self->_lane_qc_stats_file($pos, $params->alignment_filter);
+    }
 
-  return $num_reads
+    my $num_reads;
+    if ($qc_file) {
+      my $flag_stats = $self->_parse_json_file($qc_file);
+      if ($flag_stats) {
+        $num_reads = $flag_stats->{$NUM_READS_JSON_PROPERTY};
+      }
+    }
+
+    return $num_reads
+  }
 }
 
 sub index_format {
@@ -1066,10 +1077,14 @@ sub _publish_alignment_files {
       # FIXME -- can we remove the is_plexed check?
       my $num_reads;
       if ($self->is_plexed($pos)) {
-        $num_reads = $self->num_reads($pos, $obj->tag_index);
+        $num_reads = $self->num_reads
+          ($pos, alignment_filter => $obj->alignment_filter,
+                 tag_index        => $obj->tag_index);
+
       }
       else {
-        $num_reads = $self->num_reads($pos);
+        $num_reads = $self->num_reads
+          ($pos, alignment_filter => $obj->alignment_filter);
       }
 
       # FIXME -- break primary metadata setup out into a new method
@@ -1279,11 +1294,13 @@ sub _list_directory {
 }
 
 sub _lane_qc_stats_file {
-  my ($self, $position) = @_;
+  my ($self, $position, $alignment_filter) = @_;
+
+  my $af_suffix = $alignment_filter ? "_$alignment_filter" : q[];
 
   my $id_run = $self->id_run;
-  my $qc_file_pattern = sprintf '%s_%d.bam_flagstats.json$',
-    $id_run, $position;
+  my $qc_file_pattern = sprintf '%s_%d%s.bam_flagstats.json$',
+    $id_run, $position, $af_suffix;
 
   my @files = grep { m{$qc_file_pattern}msx }
     @{$self->list_lane_qc_files($position)};
@@ -1298,11 +1315,13 @@ sub _lane_qc_stats_file {
 }
 
 sub _plex_qc_stats_file {
-  my ($self, $position, $tag_index) = @_;
+  my ($self, $position, $tag_index, $alignment_filter) = @_;
+
+  my $af_suffix = $alignment_filter ? "_$alignment_filter" : q[];
 
   my $id_run = $self->id_run;
-  my $qc_file_pattern = sprintf '%s_%d\#%d.bam_flagstats.json$',
-    $id_run, $position, $tag_index;
+  my $qc_file_pattern = sprintf '%s_%d\#%d%s.bam_flagstats.json$',
+    $id_run, $position, $tag_index, $af_suffix;
 
   my @files = grep { m{$qc_file_pattern}msx }
     @{$self->list_plex_qc_files($position)};

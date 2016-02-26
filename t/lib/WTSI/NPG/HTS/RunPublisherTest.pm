@@ -87,7 +87,7 @@ sub positions : Test(2) {
   }
 }
 
-sub num_reads : Test(52) {
+sub num_reads : Test(102) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -120,6 +120,32 @@ sub num_reads : Test(52) {
     }
   }
 
+  # Lane-level alignment filter
+  my $lane_phix_expected_read_counts = [13311044,
+                                        12289198,
+                                        14731576,
+                                        13273222,
+                                        12145720,
+                                        13836878,
+                                        13586652,
+                                        13564700];
+  foreach my $file_format (qw[bam cram]) {
+    my $pub = WTSI::NPG::HTS::RunPublisher->new
+      (file_format    => $file_format,
+       irods          => $irods,
+       lims_factory   => $lims_factory,
+       runfolder_path => $lane_runfolder_path);
+
+    foreach my $lane_position (1 .. 8) {
+      my $expected = $lane_phix_expected_read_counts->[$lane_position - 1];
+      my $count    = $pub->num_reads($lane_position,
+                                     alignment_filter => 'phix');
+      cmp_ok($count, '==', $expected,
+             "num_reads for $file_format position $lane_position phix") or
+               diag explain $count;
+    }
+  }
+
   # Plex-level
   my $plex_runfolder_path =
     "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
@@ -145,11 +171,45 @@ sub num_reads : Test(52) {
     my $i = 0;
     foreach my $tag (@tags) {
       my $expected = $plex_expected_read_counts->[$i];
-      my $count    = $pub->num_reads($plex_position, $tag);
+      my $count    = $pub->num_reads($plex_position, tag_index => $tag);
 
       cmp_ok($count, '==', $expected,
              "num_reads for $file_format position $plex_position tag $tag") or
                diag explain $count;
+      $i++;
+    }
+  }
+
+  # Plex-level alignment filter
+  my $plex_phix_expected_read_counts = [32924, # tag 0
+                                        # tag 1 has no JSON file
+                                        94,   8, 22, 52,
+                                        # tag 8 has no JSON file
+                                        28, 110, 50, 20,
+                                        22,  20, 24, 18,
+                                        24,  12, 24, 18,
+                                       ]; # tag 888 has no JSON file
+
+  foreach my $file_format (qw[bam cram]) {
+    my $pub = WTSI::NPG::HTS::RunPublisher->new
+      (file_format    => $file_format,
+       irods          => $irods,
+       lims_factory   => $lims_factory,
+       runfolder_path => $plex_runfolder_path);
+
+    my @tags = (0 .. $tag_count);
+
+    my $i = 0;
+    foreach my $tag (@tags) {
+      my $expected = $plex_phix_expected_read_counts->[$i];
+      my $count    = $pub->num_reads($plex_position,
+                                     alignment_filter => 'phix',
+                                     tag_index        => $tag);
+
+      cmp_ok($count, '==', $expected,
+             "num_reads for $file_format position $plex_position " .
+             "tag $tag phix")
+        or diag explain $count;
       $i++;
     }
   }
