@@ -86,13 +86,16 @@ my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
 # Make this an optional argument (construct within the publisher)
 my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
-my $publisher = WTSI::NPG::HTS::RunPublisher->new
-  (dest_collection => $collection,
-   file_format     => $file_format,
-   irods           => $irods,
-   lims_factory    => $lims_factory,
-   logger          => $log,
-   runfolder_path  => $runfolder_path);
+my @initargs = (file_format     => $file_format,
+                irods           => $irods,
+                lims_factory    => $lims_factory,
+                logger          => $log,
+                runfolder_path  => $runfolder_path);
+if ($collection) {
+  push @initargs, dest_collection => $collection;
+}
+
+my $publisher = WTSI::NPG::HTS::RunPublisher->new(@initargs);
 
 my ($num_files, $num_published, $num_errors) = (0, 0, 0);
 my $increment_counts = sub {
@@ -153,26 +156,28 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
   [--alignment] [--index] [--ancillary] [--qc]
   [--debug] [--verbose] [--logconf <path>]
 
-Options:
-  --alignment       Load alignment files. Optional, defaults to true.
-  --ancillary       Load ancillary (any file other than alignment, index or
-                    JSON). Optional, defaults to true.
-  --collection      The destination collection in iRODS. Optional, defaults
-                    to /seq/<id_run>/.
-  --debug           Enable debug level logging. Optional, defaults to false.
-  --file-format
-  --file_format     Load alignment files of this format. Optional, defaults
-                    to CRAM format.
-  --help            Display help.
-  --index           Load alignment index files. Optional, defaults to true.
-  --position        A sequencing lane/position to load. This option may be
-                    supplied multiple times to load multiple lanes.
-                    Optional, defaults to loading all available lanes.
-  --qc              Load QC JSON files. Optional, defaults to true.
-  --runfolder-path
-  --runfolder_path  The instrument runfolder path to load.
-  --logconf         A log4perl configuration file. Optional.
-  --verbose         Print messages while processing. Optional.
+ Options:
+   --alignment       Load alignment files. Optional, defaults to true.
+   --ancillary       Load ancillary (any file other than alignment, index
+                     or JSON). Optional, defaults to true.
+   --collection      The destination collection in iRODS. Optional,
+                     defaults to /seq/<id_run>/.
+   --debug           Enable debug level logging. Optional, defaults to
+                     false.
+   --file-format
+   --file_format     Load alignment files of this format. Optional,
+                     defaults to CRAM format.
+   --help            Display help.
+   --index           Load alignment index files. Optional, defaults to
+                     true.
+   --position        A sequencing lane/position to load. This option may
+                     be supplied multiple times to load multiple lanes.
+                     Optional, defaults to loading all available lanes.
+   --qc              Load QC JSON files. Optional, defaults to true.
+   --runfolder-path
+   --runfolder_path  The instrument runfolder path to load.
+   --logconf         A log4perl configuration file. Optional.
+   --verbose         Print messages while processing. Optional.
 
 =head1 DESCRIPTION
 
