@@ -46,6 +46,10 @@ A run component is a subset of an Illumina sequencing run's alignment
 or ancillary data, identified by run, lane position and (optionally)
 sequencing tag index.
 
+This roles exists because We can't extend npg_tracking::glossary::run
+or npg_tracking::glossary::lane to make objects that do not require
+id_run or position; that would violate Liskov.
+
 =head1 AUTHOR
 
 Keith James <kdj@sanger.ac.uk>

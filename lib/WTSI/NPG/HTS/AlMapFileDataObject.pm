@@ -15,11 +15,12 @@ our $VERSION = '';
 
 our $DEFAULT_SAMTOOLS_EXECUTABLE = 'samtools';
 
+# Sequence alignment filters
 our $HUMAN   = 'human';   # FIXME
 our $YHUMAN  = 'yhuman';  # FIXME
 our $XAHUMAN = 'xahuman'; # FIXME
-our $PUBLIC  = 'public';  # FIXME
 
+# SAM SQ header tag
 our $SQ = 'SQ';
 
 extends 'WTSI::NPG::iRODS::DataObject';
@@ -57,7 +58,6 @@ has 'header' =>
    clearer       => 'clear_header',
    documentation => 'The HTS file header (or excerpts of it)');
 
-# begin -- from WTSI::NPG::HTS::FilenameParser
 has '+id_run' =>
   (writer        => '_set_id_run',
    documentation => 'The run ID, parsed from the iRODS path');
@@ -70,7 +70,6 @@ has '+position' =>
 has '+tag_index' =>
   (writer        => '_set_tag_index',
    documentation => 'The tag_index, parsed from the iRODS path');
-# end
 
 my $header_parser;
 
@@ -80,6 +79,7 @@ sub BUILD {
   # Parsing the file name could be delayed because the parsed values
   # are not required for all operations
 
+  # WTSI::NPG::HTS::FilenameParser
   my ($id_run, $position, $tag_index, $alignment_filter, $file_format) =
     $self->parse_file_name($self->str);
 
@@ -279,11 +279,14 @@ before 'update_group_permissions' => sub {
   # expecting to set groups restricting general access, then remove
   # access for the public group.
   if ($self->is_restricted_access) {
-    $self->info(qq[Removing $PUBLIC access to '], $self->str, q[']);
-    $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION, $PUBLIC);
+    $self->info(qq[Removing $WTSI::NPG::iRODS::PUBLIC_GROUP access to '],
+                $self->str, q[']);
+    $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION,
+                           $WTSI::NPG::iRODS::PUBLIC_GROUP);
   }
   else {
-    $self->info(qq[Allowing $PUBLIC access to '], $self->str, q[']);
+    $self->info(qq[Allowing $WTSI::NPG::iRODS::PUBLIC_GROUP access to '],
+                $self->str, q[']);
   }
 };
 

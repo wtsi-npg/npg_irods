@@ -8,8 +8,6 @@ use Try::Tiny;
 
 our $VERSION = '';
 
-our $PUBLIC = 'public'; # FIXME
-
 # The contents of BED and JSON formatted file are sensitive and are
 # given restricted access
 our @RESTRICTED_ANCILLARY_FORMATS = qw[bed json];
@@ -144,7 +142,8 @@ sub update_secondary_metadata {
   else {
     $self->update_group_permissions;
     $self->info("Setting public access for unrestricted file '$path'");
-    $self->set_permissions($WTSI::NPG::iRODS::READ_PERMISSION, 'public');
+    $self->set_permissions($WTSI::NPG::iRODS::READ_PERMISSION,
+                           $WTSI::NPG::iRODS::PUBLIC_GROUP);
   }
 
   return $self;
@@ -157,11 +156,14 @@ before 'update_group_permissions' => sub {
   # expecting to set groups restricting general access, then remove
   # access for the public group.
   if ($self->is_restricted_access) {
-    $self->info(qq[Removing $PUBLIC access to '], $self->str, q[']);
-    $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION, $PUBLIC);
+    $self->info(qq[Removing $WTSI::NPG::iRODS::PUBLIC_GROUP access to '],
+                $self->str, q[']);
+    $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION,
+                           $WTSI::NPG::iRODS::PUBLIC_GROUP);
   }
   else {
-    $self->info(qq[Allowing $PUBLIC access to '], $self->str, q[']);
+    $self->info(qq[Allowing $WTSI::NPG::iRODS::PUBLIC_GROUP access to '],
+                $self->str, q[']);
   }
 };
 

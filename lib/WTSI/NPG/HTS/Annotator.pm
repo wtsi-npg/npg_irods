@@ -22,9 +22,8 @@ our @DEFAULT_FILE_SUFFIXES = (@GENERAL_PURPOSE_SUFFIXES,
 our $SUFFIX_PATTERN = join q[|], @DEFAULT_FILE_SUFFIXES;
 our $SUFFIX_REGEX   = qr{[.]($SUFFIX_PATTERN)$}msx;
 
-# FIXME -- use controlled vocabulary
-our $YHUMAN      = 'yhuman';      # FIXME -- add to WTSI::NPG::iRODS::Metadata
-our $ALT_PROCESS = 'alt_process'; # FIXME -- add to WTSI::NPG::iRODS::Metadata
+# Sequence alignment filters
+our $YHUMAN = 'yhuman';  # FIXME
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
@@ -472,12 +471,14 @@ sub make_sample_metadata {
   # Map of method name to attribute name under which the result will
   # be stored.
   my $method_attr =
-    {sample_names          => $SAMPLE_NAME,
-     sample_public_names   => $SAMPLE_PUBLIC_NAME,
-     sample_common_names   => $SAMPLE_COMMON_NAME,
-     sample_supplier_names => $SAMPLE_SUPPLIER_NAME,
-     sample_cohorts        => $SAMPLE_COHORT,
-     sample_donor_ids      => $SAMPLE_DONOR_ID};
+    {sample_accession_numbers => $SAMPLE_ACCESSION_NUMBER,
+     sample_ids               => $SAMPLE_ID,
+     sample_names             => $SAMPLE_NAME,
+     sample_public_names      => $SAMPLE_PUBLIC_NAME,
+     sample_common_names      => $SAMPLE_COMMON_NAME,
+     sample_supplier_names    => $SAMPLE_SUPPLIER_NAME,
+     sample_cohorts           => $SAMPLE_COHORT,
+     sample_donor_ids         => $SAMPLE_DONOR_ID};
 
   return $self->_make_multi_value_metadata($lims, $method_attr,
                                            $with_spiked_control);

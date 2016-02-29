@@ -232,6 +232,28 @@ sub is_paired_read : Test(2) {
   }
 }
 
+sub list_xml_files : Test(2) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+
+  foreach my $file_format (qw[bam cram]) {
+    my $pub = WTSI::NPG::HTS::RunPublisher->new
+      (file_format    => $file_format,
+       irods          => $irods,
+       lims_factory   => $lims_factory,
+       runfolder_path => $runfolder_path);
+
+    my @expected_files = ("$runfolder_path/RunInfo.xml",
+                          "$runfolder_path/runParameters.xml");
+    my $observed_files = $pub->list_xml_files;
+    is_deeply($observed_files, \@expected_files,
+              "Found XML files ($file_format)")
+        or diag explain $observed_files;
+  }
+}
+
 sub list_lane_alignment_files : Test(16) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -436,6 +458,39 @@ sub list_plex_ancillary_files : Test(16) {
                 "($file_format)")
         or diag explain $observed_files;
     }
+  }
+}
+
+sub publish_xml_files : Test(12) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
+
+  my $dest_coll = "$irods_tmp_coll/publish_xml_files";
+
+  my $pub = WTSI::NPG::HTS::RunPublisher->new
+    (dest_collection => $dest_coll,
+     file_format     => 'cram',
+     irods           => $irods,
+     lims_factory    => $lims_factory,
+     runfolder_path  => $runfolder_path);
+
+  my @expected_paths = ("$dest_coll/RunInfo.xml",
+                        "$dest_coll/runParameters.xml");
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_xml_files;
+  cmp_ok($num_processed, '==', 2, 'Published 2 XML files');
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll, '[.]xml$');
+  is_deeply(\@observed_paths, \@expected_paths,
+            "Published correctly named XML files") or
+              diag explain \@observed_paths;
+
+  check_common_metadata($irods, @observed_paths);
+
+  foreach my $path (@observed_paths) {
+    my $obj = WTSI::NPG::HTS::XMLFileDataObject->new($irods, $path);
+    cmp_ok($obj->get_avu($ID_RUN), 18448, "$path id_run metadata present");
   }
 }
 
