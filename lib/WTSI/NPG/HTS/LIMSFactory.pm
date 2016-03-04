@@ -2,6 +2,7 @@ package WTSI::NPG::HTS::LIMSFactory;
 
 use List::AllUtils qw[any];
 use Moose;
+use MooseX::StrictConstructor;
 
 use npg_tracking::util::types qw[:all];
 use st::api::lims;
@@ -17,6 +18,17 @@ has 'mlwh_schema' =>
    required      => 1,
    documentation => 'A ML warehouse handle to obtain secondary metadata');
 
+=head2 positions
+
+  Arg [1]      Run identifier, Int.
+
+  Example    : my @positions = $factory->positions(17750)
+  Description: Return the valid lane positions of a run, sorted in
+               ascending order.
+  Returntype : Array[Int]
+
+=cut
+
 sub positions {
   my ($self, $id_run) = @_;
 
@@ -28,6 +40,19 @@ sub positions {
 
   return @positions;
 }
+
+=head2 tag_indices
+
+  Arg [1]      Run identifier, Int.
+  Arg [2]      Lane position, Int.
+
+  Example    : my @tag_indices = $factory->tag_indices(17750, 1)
+  Description: Return the valid tag indices of a lane, sorted in
+               ascending order.
+  Returntype : Array[Int]
+
+=cut
+
 
 sub tag_indices {
   my ($self, $id_run, $position) = @_;
@@ -46,7 +71,7 @@ sub tag_indices {
 =head2 make_lims
 
   Arg [1]      Run identifier, Int.
-  Arg [2]      Lane position, Int.
+  Arg [2]      Lane position, Int. Optional.
   Arg [3]      Tag index, Int. Optional.
 
   Example    : my $lims = $factory->make_lims(17750, 1, 0)

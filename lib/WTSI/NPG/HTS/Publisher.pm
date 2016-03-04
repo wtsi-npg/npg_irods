@@ -13,13 +13,13 @@ use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS;
 
+our $VERSION = '';
+
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::Accountable
          WTSI::NPG::HTS::Annotator
        ];
-
-our $VERSION = '';
 
 has 'irods' =>
   (is            => 'ro',
@@ -42,6 +42,25 @@ sub BUILD {
   $self->irods->logger($self->logger);
   return;
 }
+
+=head2 publish
+
+  Arg [1]    : Path to local file for directory, Str.
+  Arg [2]    : Path to destination in iRODS, Str.
+  Arg [3]    : Custom metadata AVUs to add, ArrayRef[HashRef].
+  Arg [4]    : Timestamp to use in metadata, DateTime. Optional, defaults
+               to current time.
+
+  Example    : my $path = $pub->publish('./local/file.txt',
+                                        '/zone/path/file.txt',
+                                        [{attribute => 'x',
+                                          value     => 'y'}])
+  Description: Publish a local file or directory to iRODS, detecting which
+               has been passed as an argument and then delegating to
+               'publish_file' or 'publish_directory' as appropriate.
+  Returntype : Str
+
+=cut
 
 sub publish {
   my ($self, $local_path, $remote_path, $metadata, $timestamp) = @_;
@@ -139,6 +158,29 @@ sub publish_file {
 
   return $obj->str;
 }
+
+=head2 publish_directory
+
+  Arg [1]    : Path to local directory, Str.
+  Arg [2]    : Path to destination in iRODS, Str.
+  Arg [3]    : Custom metadata AVUs to add, ArrayRef[HashRef].
+  Arg [4]    : Timestamp to use in metadata, DateTime. Optional, defaults
+               to current time.
+
+  Example    : my $path = $pub->publish_directory('./local/dir',
+                                                  '/zone/path',
+                                                  [{attribute => 'x',
+                                                    value     => 'y'}])
+  Description: Publish a local directory to iRODS, create and/or supersede
+               metadata (both default and custom) and update permissions,
+               returning the absolute path of the published collection.
+
+               The local directory will be inserted into the destination
+               collection as a new sub-collection. No checks are made on the
+               files with in the new collection.
+  Returntype : Str
+
+=cut
 
 sub publish_directory {
   my ($self, $local_path, $remote_path, $metadata, $timestamp) = @_;

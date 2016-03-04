@@ -1,61 +1,45 @@
 package WTSI::NPG::HTS::XMLFileDataObject;
 
 use namespace::autoclean;
-use Data::Dump qw[pp];
-use List::AllUtils qw[any];
 use Moose;
-use Try::Tiny;
+use MooseX::StrictConstructor;
+
+use WTSI::NPG::iRODS::Metadata qw[$ID_RUN];
 
 our $VERSION = '';
 
-extends 'WTSI::NPG::iRODS::DataObject';
+extends 'WTSI::NPG::HTS::DataObject';
 
-with qw[
-         npg_tracking::glossary::run
-       ];
+with 'WTSI::NPG::HTS::RunComponent';
 
-=head2 is_restricted_access
+has '+is_restricted_access' =>
+  (is            => 'ro');
 
-  Arg [1]      None
+has '+primary_metadata' =>
+  (is            => 'ro');
 
-  Example    : $obj->is_restricted_access
-  Description: Return true if the file contains or may contain sensitive
-               information and is not for unrestricted public access.
-  Returntype : Bool
+sub BUILD {
+  my ($self) = @_;
 
-=cut
+  # Modifying read-only attribute
+  push @{$self->primary_metadata}, $ID_RUN;
 
-sub is_restricted_access {
+  return;
+}
+
+override 'update_secondary_metadata' => sub {
+  my ($self) = @_;
+
+  # Nothing to add
+
+  return $self;
+};
+
+sub _build_is_restricted_access {
   my ($self) = @_;
 
   return 0;
 }
-
-sub update_secondary_metadata {
-  my ($self) = @_;
-
-  $self->update_group_permissions;
-
-  return $self;
-}
-
-before 'update_group_permissions' => sub {
-  my ($self) = @_;
-
-  # If the data contains any non-consented human data, or we are
-  # expecting to set groups restricting general access, then remove
-  # access for the public group.
-  if ($self->is_restricted_access) {
-    $self->info(qq[Removing $WTSI::NPG::iRODS::PUBLIC_GROUP access to '],
-                $self->str, q[']);
-    $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION,
-                           $WTSI::NPG::iRODS::PUBLIC_GROUP);
-  }
-  else {
-    $self->info(qq[Allowing $WTSI::NPG::iRODS::PUBLIC_GROUP access to '],
-                $self->str, q[']);
-  }
-};
 
 __PACKAGE__->meta->make_immutable;
 

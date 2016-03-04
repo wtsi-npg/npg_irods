@@ -1,7 +1,5 @@
 package WTSI::NPG::HTS::AncFileDataObjectTest;
 
-use utf8;
-
 use strict;
 use warnings;
 
@@ -30,12 +28,17 @@ use WTSI::NPG::iRODS;
   with 'npg_testing::db';
 }
 
+{
+  package TestAnnotator;
+  use Moose;
+
+  with 'WTSI::NPG::HTS::Annotator';
+}
+
 my $pid          = $PID;
 my $test_counter = 0;
 my $data_path    = './t/data/anc_file_data_object';
 my $fixture_path = "./t/fixtures";
-
-my $utf8_extra = '[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]';
 
 my $db_dir = File::Temp->newdir;
 my $wh_schema;
@@ -71,8 +74,6 @@ push @irods_groups, $public_group;
 my @groups_added;
 # Enable group tests
 my $group_tests_enabled = 0;
-
-
 
 my $formats = {bamcheck  => [q[]],
                bed       => ['.deletions', '.insertions', '.junctions'],
@@ -267,39 +268,33 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(72) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     group_prefix         => $group_prefix,
                                     group_filter         => $group_filter,
-                                    strict_baton_version => 0,);
+                                    strict_baton_version => 0);
 
-  my $tag1_expected_meta =
-    [{attribute => $STUDY_NAME,
-      value     => 'RNA sequencing of mouse haemopoietic cells 2014/15'},
-     {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP006862'},
-     {attribute => $STUDY_ID,                 value     => '3291'},
-     {attribute => $STUDY_TITLE,
-      value     =>
-      'RNA sequencing of mouse haemopoietic cells 2014/15' . $utf8_extra}];
+  my $tag0_expected_meta = [{attribute => $STUDY_ID, value => '3291'}];
 
   my $spiked_control = 0;
 
   foreach my $data_file (@tag0_files) {
     my ($name, $path, $suffix) = fileparse($data_file, '.bed', '.json');
 
-    my @expected_metadata;
+    my @expected_groups_before = ($public_group, 'ss_10', 'ss_100');
     my @expected_groups_after;
+
+    my @expected_metadata;
     if (any { $suffix eq $_ } ('.bed', '.json')) {
-      push @expected_metadata, @$tag1_expected_meta;
-      push @expected_groups_after, 'ss_3291';
+      push @expected_metadata, @$tag0_expected_meta;
+      @expected_groups_after = ('ss_3291');
     }
     else {
-      push @expected_groups_after, $public_group;
+      @expected_groups_after = @expected_groups_before;
     }
 
-    test_metadata_update($irods, "$irods_tmp_coll/anc_file_data_object",
+    test_metadata_update($irods, $lims_factory,
+                         "$irods_tmp_coll/anc_file_data_object",
                          {data_file              => $data_file,
                           spiked_control         => $spiked_control,
                           expected_metadata      => \@expected_metadata,
-                          expected_groups_before => [$public_group,
-                                                     'ss_10',
-                                                     'ss_100'],
+                          expected_groups_before => \@expected_groups_before,
                           expected_groups_after  => \@expected_groups_after});
   }
 }
@@ -308,45 +303,39 @@ sub update_secondary_metadata_tag1_no_spike_human : Test(84) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     group_prefix         => $group_prefix,
                                     group_filter         => $group_filter,
-                                    strict_baton_version => 0,);
+                                    strict_baton_version => 0);
 
-  my $tag1_expected_meta =
-    [{attribute => $STUDY_NAME,
-      value     => 'RNA sequencing of mouse haemopoietic cells 2014/15'},
-     {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP006862'},
-     {attribute => $STUDY_ID,                 value     => '3291'},
-     {attribute => $STUDY_TITLE,
-      value     =>
-      'RNA sequencing of mouse haemopoietic cells 2014/15' . $utf8_extra}];
+  my $tag1_expected_meta = [{attribute => $STUDY_ID, value => '3291'}];
 
   my $spiked_control = 0;
 
   foreach my $data_file (@tag1_files) {
     my ($name, $path, $suffix) = fileparse($data_file, '.bed', '.json');
 
-    my @expected_metadata;
+    my @expected_groups_before = ($public_group, 'ss_10', 'ss_100');
     my @expected_groups_after;
+
+    my @expected_metadata;
     if (any { $suffix eq $_ } (qw[.bed .json])) {
       push @expected_metadata, @$tag1_expected_meta;
-      push @expected_groups_after, 'ss_3291';
+      @expected_groups_after = ('ss_3291');
     }
     else {
-      push @expected_groups_after, $public_group;
+      @expected_groups_after = @expected_groups_before;
     }
 
-    test_metadata_update($irods, "$irods_tmp_coll/anc_file_data_object",
+    test_metadata_update($irods, $lims_factory,
+                         "$irods_tmp_coll/anc_file_data_object",
                          {data_file              => $data_file,
                           spiked_control         => $spiked_control,
                           expected_metadata      => \@expected_metadata,
-                          expected_groups_before => [$public_group,
-                                                     'ss_10',
-                                                     'ss_100'],
+                          expected_groups_before => \@expected_groups_before,
                           expected_groups_after  => \@expected_groups_after});
   }
 }
 
 sub test_metadata_update {
-  my ($irods, $working_coll, $args) = @_;
+  my ($irods, $lims_factory, $working_coll, $args) = @_;
 
   ref $args eq 'HASH' or croak "The arguments must be a HashRef";
 
@@ -362,8 +351,13 @@ sub test_metadata_update {
      irods       => $irods);
   my $tag = $obj->tag_index;
 
+  my $lims = $lims_factory->make_lims($obj->id_run, $obj->position,
+                                      $obj->tag_index);
+  my @secondary_avus =
+    TestAnnotator->new->make_study_id_metadata($lims, $spiked);
+
   my @groups_before = $obj->get_groups;
-  ok($obj->update_secondary_metadata($lims_factory, $spiked,),
+  ok($obj->update_secondary_metadata(@secondary_avus),
      "Secondary metadata ran; $data_file, tag: $tag, spiked: $spiked");
   my @groups_after = $obj->get_groups;
 

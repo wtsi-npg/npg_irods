@@ -11,12 +11,10 @@ use MooseX::StrictConstructor;
 use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
-use WTSI::NPG::HTS::AlMapFileDataObject;
-use WTSI::NPG::HTS::AncFileDataObject;
+use WTSI::NPG::HTS::IlluminaObjFactory;
 use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::HTS::Publisher;
 use WTSI::NPG::HTS::Types qw[AlMapFileFormat];
-use WTSI::NPG::HTS::XMLFileDataObject;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 
@@ -60,6 +58,13 @@ has 'irods' =>
    isa           => 'WTSI::NPG::iRODS',
    required      => 1,
    documentation => 'An iRODS handle to run searches and perform updates');
+
+has 'obj_factory' =>
+  (is            => 'ro',
+   isa           => 'WTSI::NPG::HTS::DataObjectFactory',
+   required      => 1,
+   builder       => '_build_obj_factory',
+   documentation => 'A factory building data objects from files');
 
 has 'lims_factory' =>
   (is            => 'ro',
@@ -105,6 +110,23 @@ has 'alt_process' =>
    required      => 0,
    documentation => 'Non-standard process used');
 
+has '_path_cache' =>
+  (isa           => 'HashRef',
+   is            => 'ro',
+   required      => 1,
+   default       => sub { return {} },
+   init_arg      => undef,
+   documentation => 'Caches of file paths read from disk, indexed by method');
+
+has '_json_cache' =>
+  (isa           => 'HashRef',
+   is            => 'ro',
+   required      => 1,
+   default       => sub { return {} },
+   init_arg      => undef,
+   documentation => 'Cache of JSON data read from disk, indexed by path');
+
+
 sub BUILD {
   my ($self) = @_;
 
@@ -127,47 +149,29 @@ my @CACHING_PLEX_METHOD_NAMES = qw[plex_alignment_files
                                    plex_qc_files
                                    plex_ancillary_files];
 
-# Cache of lane-level file lists keyed on method name
-my $LANE_FILES_CACHE = {};
-# Cache of plex-level file lists keyed on method name
-my $PLEX_FILES_CACHE = {};
-
-sub _make_caching_method {
-  my ($method_name, $cache) = @_;
-
+foreach my $method_name (@CACHING_LANE_METHOD_NAMES,
+                         @CACHING_PLEX_METHOD_NAMES) {
   __PACKAGE__->meta->add_method
     ($method_name,
      sub {
        my ($self, $position) = @_;
-       $position = $self->_check_position($position);
-       return $cache->{$method_name}->{$position}
+
+       my $cache = $self->_path_cache;
+       if (exists $cache->{$method_name}->{$position}) {
+         $self->debug('Using cached result for ', __PACKAGE__,
+                      "::$method_name($position)");
+       }
+       else {
+         $self->debug('Caching result for ', __PACKAGE__,
+                      "::$method_name($position)");
+
+         my $uncached_method_name = "list_$method_name";
+         $cache->{$method_name}->{$position} =
+           $self->$uncached_method_name($position);
+       }
+
+       return $cache->{$method_name}->{$position};
      });
-
-  around $method_name => sub {
-    my ($orig, $self, $position) = @_;
-
-    my $uncached_method_name = "list_$method_name";
-    if (exists $cache->{$method_name}->{$position}) {
-      $self->debug('Using cached result for ', __PACKAGE__,
-                   "::$uncached_method_name($position)");
-    }
-    else {
-      $cache->{$method_name}->{$position} =
-        $self->$uncached_method_name($position);
-    }
-
-    return $self->$orig($position);
-  };
-
-  return;
-}
-
-foreach my $method_name (@CACHING_LANE_METHOD_NAMES) {
-  _make_caching_method($method_name, $LANE_FILES_CACHE);
-}
-
-foreach my $method_name (@CACHING_PLEX_METHOD_NAMES) {
-  _make_caching_method($method_name, $PLEX_FILES_CACHE);
 }
 
 =head2 positions
@@ -226,7 +230,9 @@ sub is_plexed {
 =cut
 
 {
-  my $params = function_params(2, qw(alignment_filter tag_index));
+  my $positional = 2;
+  my @named      = qw[alignment_filter tag_index];
+  my $params = function_params($positional, @named);
 
   sub num_reads {
     my ($self, $position) = $params->parse(@_);
@@ -552,14 +558,17 @@ sub list_plex_ancillary_files {
 =cut
 
 {
-  my $params = function_params(1, qw[positions with_spiked_control]);
+  my $positional = 1;
+  my @named      = qw[positions with_spiked_control];
+  my $params = function_params($positional, @named);
 
   sub publish_files {
     my ($self) = $params->parse(@_);
 
     my $positions = $params->positions || [$self->positions];
 
-    # XML files do not have a category
+    # XML files do not have a lane position; they belong to the entire
+    # run
     my ($num_files, $num_processed, $num_errors) = $self->publish_xml_files;
 
     foreach my $category (@FILE_CATEGORIES) {
@@ -613,7 +622,9 @@ sub publish_xml_files {
 =cut
 
 {
-  my $params = function_params(1, qw[positions with_spiked_control]);
+  my $positional = 1;
+  my @named      = qw[positions with_spiked_control];
+  my $params = function_params($positional, @named);
 
   sub publish_alignment_files {
     my ($self) = $params->parse(@_);
@@ -729,7 +740,9 @@ sub publish_plex_alignment_files {
 =cut
 
 {
-  my $params = function_params(1, qw[positions with_spiked_control]);
+  my $positional = 1;
+  my @named      = qw[positions with_spiked_control];
+  my $params = function_params($positional, @named);
 
   sub publish_index_files {
     my ($self) = $params->parse(@_);
@@ -809,7 +822,9 @@ sub publish_plex_index_files {
 =cut
 
 {
-  my $params = function_params(1, qw[positions with_spiked_control]);
+  my $positional  = 1;
+  my @named       = qw[positions with_spiked_control];
+  my $params = function_params($positional, @named);
 
   sub publish_ancillary_files {
     my ($self) = $params->parse(@_);
@@ -821,9 +836,6 @@ sub publish_plex_index_files {
                                          $params->with_spiked_control);
   }
 }
-
-# publish_run_ancillary_files ?
-
 
 =head2 publish_lane_ancillary_files
 
@@ -894,7 +906,9 @@ sub publish_plex_ancillary_files {
 =cut
 
 {
-  my $params = function_params(1, qw[positions with_spiked_control]);
+  my $positional = 1;
+  my @named      = qw[positions with_spiked_control];
+  my $params = function_params($positional, @named);
 
   sub publish_qc_files {
     my ($self) = $params->parse(@_);
@@ -924,8 +938,7 @@ sub publish_plex_ancillary_files {
 sub publish_lane_qc_files {
   my ($self, $position, $with_spiked_control) = @_;
 
-  return $self->_publish_lane_support_files($self->id_run,
-                                            $position,
+  return $self->_publish_lane_support_files($position,
                                             $self->lane_qc_files($position),
                                             $self->qc_dest_collection,
                                             $QC_CATEGORY,
@@ -1045,31 +1058,18 @@ sub _publish_alignment_files {
       $num_processed++;
 
       # Currently these determine their own id_run, position, plex and
-      # alignment_filter by parsing their own file name
-      my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
-        (collection  => $dest_coll,
-         data_object => fileparse($file),
-         irods       => $self->irods,
-         logger      => $self->logger);
-
+      # alignment_filter by parsing their own file name. We should
+      # really pass this information to the factory
+      my $obj = $self->obj_factory->make_data_object($dest_coll, $file);
       $dest = $obj->str;
       $dest = $publisher->publish($file, $dest);
 
-      # FIXME -- can we remove the is_plexed check?
-      my $num_reads;
-      if ($self->is_plexed($pos)) {
-        $num_reads = $self->num_reads
-          ($pos, alignment_filter => $obj->alignment_filter,
-                 tag_index        => $obj->tag_index);
+      my $num_reads = $self->num_reads
+        ($pos,
+         alignment_filter => $obj->alignment_filter,
+         tag_index        => $obj->tag_index);
 
-      }
-      else {
-        $num_reads = $self->num_reads
-          ($pos, alignment_filter => $obj->alignment_filter);
-      }
-
-      # FIXME -- break primary metadata setup out into a new method
-      my @avus = $self->make_primary_metadata
+      my @pri = $self->make_primary_metadata
         ($self->id_run, $pos, $num_reads,
          tag_index        => $obj->tag_index,
          is_paired_read   => $self->is_paired_read,
@@ -1077,10 +1077,16 @@ sub _publish_alignment_files {
          reference        => $obj->reference,
          alignment_filter => $obj->alignment_filter,
          alt_process      => $self->alt_process);
-      $self->_set_metadata($obj, @avus);
+      $self->debug("Created primary metadata AVUs for '$dest': ", pp(\@pri));
+      $obj->set_primary_metadata(@pri);
 
-      $obj->update_secondary_metadata($self->lims_factory,
-                                      $with_spiked_control);
+      my @sec = $self->make_secondary_metadata
+        ($self->lims_factory, $self->id_run, $pos,
+         tag_index           => $obj->tag_index,
+         with_spiked_control => $with_spiked_control);
+      $self->debug("Created secondary metadata AVUs for '$dest': ", pp(\@sec));
+      $obj->update_secondary_metadata(@sec);
+
       $self->info("Published '$dest' [$num_processed / $num_files]");
     } catch {
       $num_errors++;
@@ -1165,6 +1171,10 @@ sub _publish_plex_support_files {
 sub _publish_support_files {
   my ($self, $files, $dest_coll, $with_spiked_control) = @_;
 
+  defined $files or
+    $self->logconfess('A defined files argument is required');
+  ref $files eq 'ARRAY' or
+    $self->logconfess('The files argument must be an ArrayRef');
   defined $dest_coll or
     $self->logconfess('A defined dest_coll argument is required');
 
@@ -1180,33 +1190,26 @@ sub _publish_support_files {
     try {
       $num_processed++;
 
-      # This XML vs. other dispatch is ugly
-      my $obj;
-      my $filename = fileparse($file);
-      if ($filename =~ m{[.]xml$}msxi) {
-        $obj = WTSI::NPG::HTS::XMLFileDataObject->new
-          (collection  => $dest_coll,
-           data_object => $filename,
-           id_run      => $self->id_run,
-           irods       => $self->irods);
-      }
-      else {
-        $obj = WTSI::NPG::HTS::AncFileDataObject->new
-          (collection  => $dest_coll,
-           data_object => $filename,
-           irods       => $self->irods);
-      }
-
+      my $obj = $self->obj_factory->make_data_object($dest_coll, $file,
+                                                     id_run => $self->id_run);
       $dest = $obj->str;
       $dest = $publisher->publish($file, $dest);
 
+      my @primary_avus = ($self->make_avu($ID_RUN, $self->id_run));
       if (defined $self->alt_process) {
-        my @avus = $self->make_alt_metadata($self->alt_process);
-        $self->_set_metadata($obj, @avus);
+        push @primary_avus, $self->make_alt_metadata($self->alt_process);
       }
+      $obj->set_primary_metadata(@primary_avus);
 
-      $obj->update_secondary_metadata($self->lims_factory,
-                                      $with_spiked_control);
+      my $lims = $self->lims_factory->make_lims($obj->id_run,
+                                                $obj->position,
+                                                $obj->tag_index);
+      # Sufficient study metadata to set their permissions, if they are
+      # restricted.
+      my @secondary_avus = $self->make_study_id_metadata
+        ($lims, $with_spiked_control);
+      $obj->update_secondary_metadata(@secondary_avus);
+
       $self->info("Published '$dest' [$num_processed / $num_files]");
     } catch {
       $num_errors++;
@@ -1259,21 +1262,11 @@ sub _build_qc_dest_collection  {
   return catdir($self->dest_collection, $DEFAULT_QC_COLL);
 }
 
-sub _set_metadata {
-  my ($self, $target, @avus) = @_;
+sub _build_obj_factory {
+  my ($self) = @_;
 
-  foreach my $avu (@avus) {
-    try {
-      my $attribute = $avu->{attribute};
-      my $value     = $avu->{value};
-      my $units     = $avu->{units};
-      $target->supersede_avus($attribute, $value, $units);
-    } catch {
-      $self->error('Failed to set AVU ', pp($avu), ' on ',  $target->str);
-    };
-  }
-
-  return $target;
+  return WTSI::NPG::HTS::IlluminaObjFactory->new(irods  => $self->irods,
+                                                 logger => $self->logger);
 }
 
 # Return a sorted array of file paths, filtered by a regex.
@@ -1338,13 +1331,10 @@ sub _plex_qc_stats_file {
   return shift @files;
 }
 
-# Cache of JSON strings read from files
-my $JSON_VALUE_CACHE;
-
 sub _parse_json_file {
   my ($self, $file) = @_;
 
-  if (exists $JSON_VALUE_CACHE->{$file}) {
+  if (exists $self->_json_cache->{$file}) {
     $self->debug("Returning cached JSON value for '$file'");
   }
   else {
@@ -1358,10 +1348,10 @@ sub _parse_json_file {
     close $fh or $self->warn("Failed to close '$file'");
 
     my $json = Encode::decode('UTF-8', $octets, Encode::FB_CROAK);
-    $JSON_VALUE_CACHE->{$file} = $self->decode($json);
+    $self->_json_cache->{$file} = $self->decode($json);
   }
 
-  return $JSON_VALUE_CACHE->{$file};
+  return $self->_json_cache->{$file};
 }
 
 __PACKAGE__->meta->make_immutable;

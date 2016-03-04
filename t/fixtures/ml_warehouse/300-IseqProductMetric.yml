@@ -12,7 +12,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654910
-  id_iseq_pr_metrics_tmp: 318166570
+  id_iseq_pr_metrics_tmp: 350445229
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 409
@@ -33,6 +33,9 @@
   q30_yield_kb_reverse_read: 189143
   q40_yield_kb_forward_read: 126130
   q40_yield_kb_reverse_read: 106174
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 92.30
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -59,7 +62,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654911
-  id_iseq_pr_metrics_tmp: 318166571
+  id_iseq_pr_metrics_tmp: 350445230
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 403
@@ -80,6 +83,9 @@
   q30_yield_kb_reverse_read: 324041
   q40_yield_kb_forward_read: 215407
   q40_yield_kb_reverse_read: 182669
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 95.50
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -106,7 +112,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654899
-  id_iseq_pr_metrics_tmp: 318166572
+  id_iseq_pr_metrics_tmp: 350445231
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 408
@@ -127,6 +133,9 @@
   q30_yield_kb_reverse_read: 312996
   q40_yield_kb_forward_read: 208963
   q40_yield_kb_reverse_read: 175539
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 94.30
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -153,7 +162,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654885
-  id_iseq_pr_metrics_tmp: 318166573
+  id_iseq_pr_metrics_tmp: 350445232
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 404
@@ -174,6 +183,9 @@
   q30_yield_kb_reverse_read: 227154
   q40_yield_kb_forward_read: 152140
   q40_yield_kb_reverse_read: 127576
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 94.20
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -200,7 +212,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654904
-  id_iseq_pr_metrics_tmp: 318166574
+  id_iseq_pr_metrics_tmp: 350445233
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 391
@@ -221,6 +233,9 @@
   q30_yield_kb_reverse_read: 321405
   q40_yield_kb_forward_read: 213410
   q40_yield_kb_reverse_read: 181343
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 95.50
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -247,7 +262,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654880
-  id_iseq_pr_metrics_tmp: 318166575
+  id_iseq_pr_metrics_tmp: 350445234
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 386
@@ -268,6 +283,9 @@
   q30_yield_kb_reverse_read: 138033
   q40_yield_kb_forward_read: 92326
   q40_yield_kb_reverse_read: 78129
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 95.00
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -294,7 +312,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654895
-  id_iseq_pr_metrics_tmp: 318166576
+  id_iseq_pr_metrics_tmp: 350445235
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 402
@@ -315,6 +333,9 @@
   q30_yield_kb_reverse_read: 293274
   q40_yield_kb_forward_read: 196028
   q40_yield_kb_reverse_read: 164818
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 95.10
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -341,7 +362,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654879
-  id_iseq_pr_metrics_tmp: 318166577
+  id_iseq_pr_metrics_tmp: 350445236
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 395
@@ -362,6 +383,9 @@
   q30_yield_kb_reverse_read: 119832
   q40_yield_kb_forward_read: 79647
   q40_yield_kb_reverse_read: 67611
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 95.40
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -388,7 +412,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654896
-  id_iseq_pr_metrics_tmp: 318166578
+  id_iseq_pr_metrics_tmp: 350445237
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 396
@@ -409,6 +433,9 @@
   q30_yield_kb_reverse_read: 442764
   q40_yield_kb_forward_read: 296833
   q40_yield_kb_reverse_read: 249660
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 95.00
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -435,7 +462,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654908
-  id_iseq_pr_metrics_tmp: 318166579
+  id_iseq_pr_metrics_tmp: 350445238
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 447
@@ -456,6 +483,9 @@
   q30_yield_kb_reverse_read: 166027
   q40_yield_kb_forward_read: 110012
   q40_yield_kb_reverse_read: 91634
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 95.00
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -482,7 +512,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654894
-  id_iseq_pr_metrics_tmp: 318166580
+  id_iseq_pr_metrics_tmp: 350445239
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 403
@@ -503,6 +533,9 @@
   q30_yield_kb_reverse_read: 1456104
   q40_yield_kb_forward_read: 974230
   q40_yield_kb_reverse_read: 814202
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 95.70
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -529,7 +562,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654905
-  id_iseq_pr_metrics_tmp: 318166581
+  id_iseq_pr_metrics_tmp: 350445240
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 392
@@ -550,6 +583,9 @@
   q30_yield_kb_reverse_read: 204393
   q40_yield_kb_forward_read: 136614
   q40_yield_kb_reverse_read: 115455
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 93.30
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -576,7 +612,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654903
-  id_iseq_pr_metrics_tmp: 318166582
+  id_iseq_pr_metrics_tmp: 350445241
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 399
@@ -597,6 +633,9 @@
   q30_yield_kb_reverse_read: 79411
   q40_yield_kb_forward_read: 53101
   q40_yield_kb_reverse_read: 44800
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 95.50
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -623,7 +662,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654906
-  id_iseq_pr_metrics_tmp: 318166583
+  id_iseq_pr_metrics_tmp: 350445242
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 402
@@ -644,6 +683,9 @@
   q30_yield_kb_reverse_read: 1035355
   q40_yield_kb_forward_read: 692125
   q40_yield_kb_reverse_read: 582761
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 93.00
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -670,7 +712,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654878
-  id_iseq_pr_metrics_tmp: 318166584
+  id_iseq_pr_metrics_tmp: 350445243
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 402
@@ -691,6 +733,9 @@
   q30_yield_kb_reverse_read: 79941
   q40_yield_kb_forward_read: 51966
   q40_yield_kb_reverse_read: 46509
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: PhiX Illumina
   ref_match1_percent: 98.60
   ref_match2_name: Burkholderia pseudomallei K96243
@@ -717,7 +762,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654892
-  id_iseq_pr_metrics_tmp: 318166585
+  id_iseq_pr_metrics_tmp: 350445244
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 417
@@ -738,6 +783,9 @@
   q30_yield_kb_reverse_read: 385180
   q40_yield_kb_forward_read: 259082
   q40_yield_kb_reverse_read: 214690
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 94.70
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -764,7 +812,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654898
-  id_iseq_pr_metrics_tmp: 318166586
+  id_iseq_pr_metrics_tmp: 350445245
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 413
@@ -785,6 +833,9 @@
   q30_yield_kb_reverse_read: 843920
   q40_yield_kb_forward_read: 564567
   q40_yield_kb_reverse_read: 473728
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 95.20
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -811,7 +862,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654902
-  id_iseq_pr_metrics_tmp: 318166587
+  id_iseq_pr_metrics_tmp: 350445246
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 385
@@ -832,6 +883,9 @@
   q30_yield_kb_reverse_read: 657316
   q40_yield_kb_forward_read: 441310
   q40_yield_kb_reverse_read: 371923
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 96.00
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -858,7 +912,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654888
-  id_iseq_pr_metrics_tmp: 318166588
+  id_iseq_pr_metrics_tmp: 350445247
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 399
@@ -879,6 +933,9 @@
   q30_yield_kb_reverse_read: 516127
   q40_yield_kb_forward_read: 345530
   q40_yield_kb_reverse_read: 290321
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 94.50
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -905,7 +962,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654909
-  id_iseq_pr_metrics_tmp: 318166589
+  id_iseq_pr_metrics_tmp: 350445248
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 398
@@ -926,6 +983,9 @@
   q30_yield_kb_reverse_read: 785325
   q40_yield_kb_forward_read: 523021
   q40_yield_kb_reverse_read: 443096
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 94.40
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -952,7 +1012,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654889
-  id_iseq_pr_metrics_tmp: 318166590
+  id_iseq_pr_metrics_tmp: 350445249
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 436
@@ -973,6 +1033,9 @@
   q30_yield_kb_reverse_read: 318673
   q40_yield_kb_forward_read: 213681
   q40_yield_kb_reverse_read: 177166
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 94.50
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -999,7 +1062,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654900
-  id_iseq_pr_metrics_tmp: 318166591
+  id_iseq_pr_metrics_tmp: 350445250
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 399
@@ -1020,6 +1083,9 @@
   q30_yield_kb_reverse_read: 452856
   q40_yield_kb_forward_read: 303079
   q40_yield_kb_reverse_read: 255189
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 94.50
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -1046,7 +1112,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: ~
-  id_iseq_pr_metrics_tmp: 318166592
+  id_iseq_pr_metrics_tmp: 350445251
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 403
@@ -1067,6 +1133,9 @@
   q30_yield_kb_reverse_read: 293683
   q40_yield_kb_forward_read: 235381
   q40_yield_kb_reverse_read: 162717
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 93.80
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -1093,7 +1162,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654891
-  id_iseq_pr_metrics_tmp: 318166593
+  id_iseq_pr_metrics_tmp: 350445252
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 403
@@ -1114,6 +1183,9 @@
   q30_yield_kb_reverse_read: 630976
   q40_yield_kb_forward_read: 423532
   q40_yield_kb_reverse_read: 354374
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 95.20
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -1140,7 +1212,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654901
-  id_iseq_pr_metrics_tmp: 318166594
+  id_iseq_pr_metrics_tmp: 350445253
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 392
@@ -1161,6 +1233,9 @@
   q30_yield_kb_reverse_read: 167095
   q40_yield_kb_forward_read: 111960
   q40_yield_kb_reverse_read: 94268
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 96.20
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -1187,7 +1262,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654907
-  id_iseq_pr_metrics_tmp: 318166595
+  id_iseq_pr_metrics_tmp: 350445254
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 386
@@ -1208,6 +1283,9 @@
   q30_yield_kb_reverse_read: 417398
   q40_yield_kb_forward_read: 279063
   q40_yield_kb_reverse_read: 236398
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 95.00
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -1234,7 +1312,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654884
-  id_iseq_pr_metrics_tmp: 318166596
+  id_iseq_pr_metrics_tmp: 350445255
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 387
@@ -1255,6 +1333,9 @@
   q30_yield_kb_reverse_read: 189824
   q40_yield_kb_forward_read: 126934
   q40_yield_kb_reverse_read: 107311
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 95.50
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -1281,7 +1362,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654881
-  id_iseq_pr_metrics_tmp: 318166597
+  id_iseq_pr_metrics_tmp: 350445256
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 396
@@ -1302,6 +1383,9 @@
   q30_yield_kb_reverse_read: 637500
   q40_yield_kb_forward_read: 425427
   q40_yield_kb_reverse_read: 357856
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 94.70
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -1328,7 +1412,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654887
-  id_iseq_pr_metrics_tmp: 318166598
+  id_iseq_pr_metrics_tmp: 350445257
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 409
@@ -1349,6 +1433,9 @@
   q30_yield_kb_reverse_read: 310128
   q40_yield_kb_forward_read: 206872
   q40_yield_kb_reverse_read: 173412
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 96.00
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -1375,7 +1462,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654890
-  id_iseq_pr_metrics_tmp: 318166599
+  id_iseq_pr_metrics_tmp: 350445258
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 395
@@ -1396,6 +1483,9 @@
   q30_yield_kb_reverse_read: 369030
   q40_yield_kb_forward_read: 247301
   q40_yield_kb_reverse_read: 208006
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 93.70
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -1422,7 +1512,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654893
-  id_iseq_pr_metrics_tmp: 318166600
+  id_iseq_pr_metrics_tmp: 350445259
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 404
@@ -1443,6 +1533,9 @@
   q30_yield_kb_reverse_read: 195851
   q40_yield_kb_forward_read: 132984
   q40_yield_kb_reverse_read: 109677
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 94.80
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -1469,7 +1562,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654886
-  id_iseq_pr_metrics_tmp: 318166601
+  id_iseq_pr_metrics_tmp: 350445260
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 407
@@ -1490,6 +1583,9 @@
   q30_yield_kb_reverse_read: 940194
   q40_yield_kb_forward_read: 627884
   q40_yield_kb_reverse_read: 527771
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 96.50
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -1516,7 +1612,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654882
-  id_iseq_pr_metrics_tmp: 318166602
+  id_iseq_pr_metrics_tmp: 350445261
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 401
@@ -1537,6 +1633,9 @@
   q30_yield_kb_reverse_read: 164913
   q40_yield_kb_forward_read: 110488
   q40_yield_kb_reverse_read: 92643
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 93.10
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -1563,7 +1662,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654897
-  id_iseq_pr_metrics_tmp: 318166603
+  id_iseq_pr_metrics_tmp: 350445262
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 403
@@ -1584,6 +1683,9 @@
   q30_yield_kb_reverse_read: 346496
   q40_yield_kb_forward_read: 232075
   q40_yield_kb_reverse_read: 193973
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 94.50
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -1610,7 +1712,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2654883
-  id_iseq_pr_metrics_tmp: 318166604
+  id_iseq_pr_metrics_tmp: 350445263
   id_run: 7915
   indexing_read_length: ~
   insert_size_median: 415
@@ -1631,6 +1733,9 @@
   q30_yield_kb_reverse_read: 302838
   q40_yield_kb_forward_read: 202887
   q40_yield_kb_reverse_read: 168674
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Burkholderia pseudomallei K96243
   ref_match1_percent: 94.90
   ref_match2_name: Burkholderia cenocepacia J2315
@@ -1657,7 +1762,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2339760
-  id_iseq_pr_metrics_tmp: 317709825
+  id_iseq_pr_metrics_tmp: 349961814
   id_run: 15440
   indexing_read_length: ~
   insert_size_median: 446
@@ -1678,6 +1783,9 @@
   q30_yield_kb_reverse_read: 3054294
   q40_yield_kb_forward_read: 1255141
   q40_yield_kb_reverse_read: 1045358
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 98.30
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -1704,7 +1812,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2339763
-  id_iseq_pr_metrics_tmp: 317709826
+  id_iseq_pr_metrics_tmp: 349961815
   id_run: 15440
   indexing_read_length: ~
   insert_size_median: 426
@@ -1725,6 +1833,9 @@
   q30_yield_kb_reverse_read: 3353415
   q40_yield_kb_forward_read: 1389655
   q40_yield_kb_reverse_read: 1185589
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 98.00
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -1751,7 +1862,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: ~
-  id_iseq_pr_metrics_tmp: 317709827
+  id_iseq_pr_metrics_tmp: 349961816
   id_run: 15440
   indexing_read_length: ~
   insert_size_median: 435
@@ -1772,6 +1883,9 @@
   q30_yield_kb_reverse_read: 291162
   q40_yield_kb_forward_read: 101324
   q40_yield_kb_reverse_read: 80004
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 97.70
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -1798,7 +1912,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2339762
-  id_iseq_pr_metrics_tmp: 317709828
+  id_iseq_pr_metrics_tmp: 349961817
   id_run: 15440
   indexing_read_length: ~
   insert_size_median: 431
@@ -1819,6 +1933,9 @@
   q30_yield_kb_reverse_read: 3122398
   q40_yield_kb_forward_read: 1282917
   q40_yield_kb_reverse_read: 1085578
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 97.60
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -1845,7 +1962,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2339759
-  id_iseq_pr_metrics_tmp: 317709829
+  id_iseq_pr_metrics_tmp: 349961818
   id_run: 15440
   indexing_read_length: ~
   insert_size_median: 418
@@ -1866,6 +1983,9 @@
   q30_yield_kb_reverse_read: 66020
   q40_yield_kb_forward_read: 21801
   q40_yield_kb_reverse_read: 18592
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: PhiX Sanger-SNPs
   ref_match1_percent: 98.60
   ref_match2_name: Homo sapiens 1000Genomes
@@ -1892,7 +2012,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 2339761
-  id_iseq_pr_metrics_tmp: 317709830
+  id_iseq_pr_metrics_tmp: 349961819
   id_run: 15440
   indexing_read_length: ~
   insert_size_median: 433
@@ -1913,6 +2033,9 @@
   q30_yield_kb_reverse_read: 3219040
   q40_yield_kb_forward_read: 1318447
   q40_yield_kb_reverse_read: 1120316
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 97.70
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -1939,7 +2062,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047633
-  id_iseq_pr_metrics_tmp: 317893675
+  id_iseq_pr_metrics_tmp: 350145497
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 127
@@ -1960,6 +2083,9 @@
   q30_yield_kb_reverse_read: 1166388
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 80.20
   ref_match2_name: Saliva composite V1
@@ -1986,7 +2112,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047629
-  id_iseq_pr_metrics_tmp: 317893676
+  id_iseq_pr_metrics_tmp: 350145498
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 132
@@ -2007,6 +2133,9 @@
   q30_yield_kb_reverse_read: 1116305
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 80.80
   ref_match2_name: Saliva composite V1
@@ -2033,7 +2162,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047624
-  id_iseq_pr_metrics_tmp: 317893677
+  id_iseq_pr_metrics_tmp: 350145499
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 134
@@ -2054,6 +2183,9 @@
   q30_yield_kb_reverse_read: 1041002
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 84.50
   ref_match2_name: Saliva composite V1
@@ -2080,7 +2212,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047623
-  id_iseq_pr_metrics_tmp: 317893678
+  id_iseq_pr_metrics_tmp: 350145500
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 143
@@ -2101,6 +2233,9 @@
   q30_yield_kb_reverse_read: 2498332
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 83.90
   ref_match2_name: Saliva composite V1
@@ -2127,7 +2262,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: ~
-  id_iseq_pr_metrics_tmp: 317893679
+  id_iseq_pr_metrics_tmp: 350145501
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 131
@@ -2148,6 +2283,9 @@
   q30_yield_kb_reverse_read: 105961
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 82.20
   ref_match2_name: Saliva composite V1
@@ -2174,7 +2312,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047638
-  id_iseq_pr_metrics_tmp: 317893680
+  id_iseq_pr_metrics_tmp: 350145502
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 134
@@ -2195,6 +2333,9 @@
   q30_yield_kb_reverse_read: 1088092
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 81.40
   ref_match2_name: Saliva composite V1
@@ -2221,7 +2362,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047635
-  id_iseq_pr_metrics_tmp: 317893681
+  id_iseq_pr_metrics_tmp: 350145503
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 131
@@ -2242,6 +2383,9 @@
   q30_yield_kb_reverse_read: 1128683
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 82.20
   ref_match2_name: Saliva composite V1
@@ -2268,7 +2412,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047628
-  id_iseq_pr_metrics_tmp: 317893682
+  id_iseq_pr_metrics_tmp: 350145504
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 127
@@ -2289,6 +2433,9 @@
   q30_yield_kb_reverse_read: 843081
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 83.30
   ref_match2_name: Saliva composite V1
@@ -2315,7 +2462,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047625
-  id_iseq_pr_metrics_tmp: 317893683
+  id_iseq_pr_metrics_tmp: 350145505
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 127
@@ -2336,6 +2483,9 @@
   q30_yield_kb_reverse_read: 537177
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 77.00
   ref_match2_name: Saliva composite V1
@@ -2362,7 +2512,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047631
-  id_iseq_pr_metrics_tmp: 317893684
+  id_iseq_pr_metrics_tmp: 350145506
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 126
@@ -2383,6 +2533,9 @@
   q30_yield_kb_reverse_read: 968065
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 84.30
   ref_match2_name: Saliva composite V1
@@ -2409,7 +2562,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047634
-  id_iseq_pr_metrics_tmp: 317893685
+  id_iseq_pr_metrics_tmp: 350145507
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 129
@@ -2430,6 +2583,9 @@
   q30_yield_kb_reverse_read: 1428767
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 83.00
   ref_match2_name: Saliva composite V1
@@ -2456,7 +2612,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047636
-  id_iseq_pr_metrics_tmp: 317893686
+  id_iseq_pr_metrics_tmp: 350145508
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 130
@@ -2477,6 +2633,9 @@
   q30_yield_kb_reverse_read: 1305575
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 74.50
   ref_match2_name: Saliva composite V1
@@ -2503,7 +2662,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047637
-  id_iseq_pr_metrics_tmp: 317893687
+  id_iseq_pr_metrics_tmp: 350145509
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 129
@@ -2524,6 +2683,9 @@
   q30_yield_kb_reverse_read: 932055
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 81.60
   ref_match2_name: Saliva composite V1
@@ -2550,7 +2712,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047630
-  id_iseq_pr_metrics_tmp: 317893688
+  id_iseq_pr_metrics_tmp: 350145510
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 128
@@ -2571,6 +2733,9 @@
   q30_yield_kb_reverse_read: 935964
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 84.00
   ref_match2_name: Saliva composite V1
@@ -2597,7 +2762,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047622
-  id_iseq_pr_metrics_tmp: 317893689
+  id_iseq_pr_metrics_tmp: 350145511
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 483
@@ -2618,6 +2783,9 @@
   q30_yield_kb_reverse_read: 51220
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: PhiX Sanger-SNPs
   ref_match1_percent: 98.70
   ref_match2_name: Trichuris muris v110315
@@ -2644,7 +2812,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047626
-  id_iseq_pr_metrics_tmp: 317893690
+  id_iseq_pr_metrics_tmp: 350145512
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 129
@@ -2665,6 +2833,9 @@
   q30_yield_kb_reverse_read: 1195331
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 84.70
   ref_match2_name: Saliva composite V1
@@ -2691,7 +2862,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047632
-  id_iseq_pr_metrics_tmp: 317893691
+  id_iseq_pr_metrics_tmp: 350145513
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 127
@@ -2712,6 +2883,9 @@
   q30_yield_kb_reverse_read: 1076840
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 84.30
   ref_match2_name: Saliva composite V1
@@ -2738,7 +2912,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047627
-  id_iseq_pr_metrics_tmp: 317893692
+  id_iseq_pr_metrics_tmp: 350145514
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 126
@@ -2759,6 +2933,9 @@
   q30_yield_kb_reverse_read: 1172078
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 84.50
   ref_match2_name: Saliva composite V1
@@ -2785,7 +2962,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047645
-  id_iseq_pr_metrics_tmp: 317893693
+  id_iseq_pr_metrics_tmp: 350145515
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 127
@@ -2806,6 +2983,9 @@
   q30_yield_kb_reverse_read: 1641120
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 83.80
   ref_match2_name: Saliva composite V1
@@ -2832,7 +3012,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047650
-  id_iseq_pr_metrics_tmp: 317893694
+  id_iseq_pr_metrics_tmp: 350145516
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 135
@@ -2853,6 +3033,9 @@
   q30_yield_kb_reverse_read: 1383953
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 83.90
   ref_match2_name: Saliva composite V1
@@ -2879,7 +3062,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047642
-  id_iseq_pr_metrics_tmp: 317893695
+  id_iseq_pr_metrics_tmp: 350145517
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 128
@@ -2900,6 +3083,9 @@
   q30_yield_kb_reverse_read: 1685476
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 85.00
   ref_match2_name: Saliva composite V1
@@ -2926,7 +3112,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047646
-  id_iseq_pr_metrics_tmp: 317893696
+  id_iseq_pr_metrics_tmp: 350145518
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 138
@@ -2947,6 +3133,9 @@
   q30_yield_kb_reverse_read: 1329058
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 84.00
   ref_match2_name: Saliva composite V1
@@ -2973,7 +3162,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047648
-  id_iseq_pr_metrics_tmp: 317893697
+  id_iseq_pr_metrics_tmp: 350145519
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 130
@@ -2994,6 +3183,9 @@
   q30_yield_kb_reverse_read: 1400720
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 83.30
   ref_match2_name: Saliva composite V1
@@ -3020,7 +3212,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047641
-  id_iseq_pr_metrics_tmp: 317893698
+  id_iseq_pr_metrics_tmp: 350145520
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 144
@@ -3041,6 +3233,9 @@
   q30_yield_kb_reverse_read: 1546715
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 83.60
   ref_match2_name: Saliva composite V1
@@ -3067,7 +3262,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047651
-  id_iseq_pr_metrics_tmp: 317893699
+  id_iseq_pr_metrics_tmp: 350145521
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 137
@@ -3088,6 +3283,9 @@
   q30_yield_kb_reverse_read: 1591000
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 84.20
   ref_match2_name: Saliva composite V1
@@ -3114,7 +3312,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047647
-  id_iseq_pr_metrics_tmp: 317893700
+  id_iseq_pr_metrics_tmp: 350145522
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 144
@@ -3135,6 +3333,9 @@
   q30_yield_kb_reverse_read: 1379421
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 81.70
   ref_match2_name: Saliva composite V1
@@ -3161,7 +3362,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047643
-  id_iseq_pr_metrics_tmp: 317893701
+  id_iseq_pr_metrics_tmp: 350145523
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 125
@@ -3182,6 +3383,9 @@
   q30_yield_kb_reverse_read: 1782509
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 79.80
   ref_match2_name: Saliva composite V1
@@ -3208,7 +3412,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047640
-  id_iseq_pr_metrics_tmp: 317893702
+  id_iseq_pr_metrics_tmp: 350145524
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 124
@@ -3229,6 +3433,9 @@
   q30_yield_kb_reverse_read: 1457782
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 83.00
   ref_match2_name: Saliva composite V1
@@ -3255,7 +3462,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047639
-  id_iseq_pr_metrics_tmp: 317893703
+  id_iseq_pr_metrics_tmp: 350145525
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 483
@@ -3276,6 +3483,9 @@
   q30_yield_kb_reverse_read: 52632
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: PhiX Sanger-SNPs
   ref_match1_percent: 98.50
   ref_match2_name: Trichuris muris v110315
@@ -3302,7 +3512,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: ~
-  id_iseq_pr_metrics_tmp: 317893704
+  id_iseq_pr_metrics_tmp: 350145526
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 134
@@ -3323,6 +3533,9 @@
   q30_yield_kb_reverse_read: 111042
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 82.80
   ref_match2_name: Saliva composite V1
@@ -3349,7 +3562,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047649
-  id_iseq_pr_metrics_tmp: 317893705
+  id_iseq_pr_metrics_tmp: 350145527
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 134
@@ -3370,6 +3583,9 @@
   q30_yield_kb_reverse_read: 1478683
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 84.20
   ref_match2_name: Saliva composite V1
@@ -3396,7 +3612,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047644
-  id_iseq_pr_metrics_tmp: 317893706
+  id_iseq_pr_metrics_tmp: 350145528
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 133
@@ -3417,6 +3633,9 @@
   q30_yield_kb_reverse_read: 1404876
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Danio rerio GRCz10
   ref_match1_percent: 83.80
   ref_match2_name: Saliva composite V1
@@ -3443,7 +3662,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047658
-  id_iseq_pr_metrics_tmp: 317893707
+  id_iseq_pr_metrics_tmp: 350145529
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 159
@@ -3464,6 +3683,9 @@
   q30_yield_kb_reverse_read: 1990980
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 91.20
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -3490,7 +3712,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047655
-  id_iseq_pr_metrics_tmp: 317893708
+  id_iseq_pr_metrics_tmp: 350145530
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 163
@@ -3511,6 +3733,9 @@
   q30_yield_kb_reverse_read: 2122225
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 91.80
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -3537,7 +3762,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047659
-  id_iseq_pr_metrics_tmp: 317893709
+  id_iseq_pr_metrics_tmp: 350145531
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 177
@@ -3558,6 +3783,9 @@
   q30_yield_kb_reverse_read: 2020607
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 90.50
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -3584,7 +3812,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047654
-  id_iseq_pr_metrics_tmp: 317893710
+  id_iseq_pr_metrics_tmp: 350145532
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 162
@@ -3605,6 +3833,9 @@
   q30_yield_kb_reverse_read: 1882738
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 92.00
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -3631,7 +3862,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047660
-  id_iseq_pr_metrics_tmp: 317893711
+  id_iseq_pr_metrics_tmp: 350145533
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 170
@@ -3652,6 +3883,9 @@
   q30_yield_kb_reverse_read: 1840336
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 91.00
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -3678,7 +3912,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047652
-  id_iseq_pr_metrics_tmp: 317893712
+  id_iseq_pr_metrics_tmp: 350145534
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 483
@@ -3699,6 +3933,9 @@
   q30_yield_kb_reverse_read: 67532
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: PhiX Sanger-SNPs
   ref_match1_percent: 98.90
   ref_match2_name: Trichuris muris v110315
@@ -3725,7 +3962,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047653
-  id_iseq_pr_metrics_tmp: 317893713
+  id_iseq_pr_metrics_tmp: 350145535
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 162
@@ -3746,6 +3983,9 @@
   q30_yield_kb_reverse_read: 2062870
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 91.20
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -3772,7 +4012,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047656
-  id_iseq_pr_metrics_tmp: 317893714
+  id_iseq_pr_metrics_tmp: 350145536
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 165
@@ -3793,6 +4033,9 @@
   q30_yield_kb_reverse_read: 2093617
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 91.50
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -3819,7 +4062,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: ~
-  id_iseq_pr_metrics_tmp: 317893715
+  id_iseq_pr_metrics_tmp: 350145537
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 166
@@ -3840,6 +4083,9 @@
   q30_yield_kb_reverse_read: 93839
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 89.60
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -3866,7 +4112,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047657
-  id_iseq_pr_metrics_tmp: 317893716
+  id_iseq_pr_metrics_tmp: 350145538
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 158
@@ -3887,6 +4133,9 @@
   q30_yield_kb_reverse_read: 1880366
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 91.40
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -3913,7 +4162,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047667
-  id_iseq_pr_metrics_tmp: 317893717
+  id_iseq_pr_metrics_tmp: 350145539
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 159
@@ -3934,6 +4183,9 @@
   q30_yield_kb_reverse_read: 1983245
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 91.50
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -3960,7 +4212,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047664
-  id_iseq_pr_metrics_tmp: 317893718
+  id_iseq_pr_metrics_tmp: 350145540
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 163
@@ -3981,6 +4233,9 @@
   q30_yield_kb_reverse_read: 2116883
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 91.50
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -4007,7 +4262,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047668
-  id_iseq_pr_metrics_tmp: 317893719
+  id_iseq_pr_metrics_tmp: 350145541
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 180
@@ -4028,6 +4283,9 @@
   q30_yield_kb_reverse_read: 2011702
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 90.20
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -4054,7 +4312,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047663
-  id_iseq_pr_metrics_tmp: 317893720
+  id_iseq_pr_metrics_tmp: 350145542
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 162
@@ -4075,6 +4333,9 @@
   q30_yield_kb_reverse_read: 1877012
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 91.40
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -4101,7 +4362,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047669
-  id_iseq_pr_metrics_tmp: 317893721
+  id_iseq_pr_metrics_tmp: 350145543
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 169
@@ -4122,6 +4383,9 @@
   q30_yield_kb_reverse_read: 1837629
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 91.20
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -4148,7 +4412,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047661
-  id_iseq_pr_metrics_tmp: 317893722
+  id_iseq_pr_metrics_tmp: 350145544
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 484
@@ -4169,6 +4433,9 @@
   q30_yield_kb_reverse_read: 67016
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: PhiX Sanger-SNPs
   ref_match1_percent: 98.50
   ref_match2_name: Trichuris muris v110315
@@ -4195,7 +4462,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047662
-  id_iseq_pr_metrics_tmp: 317893723
+  id_iseq_pr_metrics_tmp: 350145545
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 163
@@ -4216,6 +4483,9 @@
   q30_yield_kb_reverse_read: 2059105
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 91.60
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -4242,7 +4512,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047665
-  id_iseq_pr_metrics_tmp: 317893724
+  id_iseq_pr_metrics_tmp: 350145546
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 169
@@ -4263,6 +4533,9 @@
   q30_yield_kb_reverse_read: 2088958
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 92.00
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -4289,7 +4562,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: ~
-  id_iseq_pr_metrics_tmp: 317893725
+  id_iseq_pr_metrics_tmp: 350145547
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 164
@@ -4310,6 +4583,9 @@
   q30_yield_kb_reverse_read: 96497
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 89.70
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -4336,7 +4612,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047666
-  id_iseq_pr_metrics_tmp: 317893726
+  id_iseq_pr_metrics_tmp: 350145548
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 158
@@ -4357,6 +4633,9 @@
   q30_yield_kb_reverse_read: 1873782
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 91.00
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -4383,7 +4662,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047671
-  id_iseq_pr_metrics_tmp: 317893727
+  id_iseq_pr_metrics_tmp: 350145549
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 165
@@ -4404,6 +4683,9 @@
   q30_yield_kb_reverse_read: 3566300
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 94.30
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -4430,7 +4712,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047674
-  id_iseq_pr_metrics_tmp: 317893728
+  id_iseq_pr_metrics_tmp: 350145550
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 174
@@ -4451,6 +4733,9 @@
   q30_yield_kb_reverse_read: 2783422
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 94.70
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -4477,7 +4762,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047670
-  id_iseq_pr_metrics_tmp: 317893729
+  id_iseq_pr_metrics_tmp: 350145551
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 484
@@ -4498,6 +4783,9 @@
   q30_yield_kb_reverse_read: 58237
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: PhiX Sanger-SNPs
   ref_match1_percent: 98.60
   ref_match2_name: Trichuris muris v110315
@@ -4524,7 +4812,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: ~
-  id_iseq_pr_metrics_tmp: 317893730
+  id_iseq_pr_metrics_tmp: 350145552
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 166
@@ -4545,6 +4833,9 @@
   q30_yield_kb_reverse_read: 117110
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 73.30
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -4571,7 +4862,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047673
-  id_iseq_pr_metrics_tmp: 317893731
+  id_iseq_pr_metrics_tmp: 350145553
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 164
@@ -4592,6 +4883,9 @@
   q30_yield_kb_reverse_read: 3977311
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 93.90
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -4618,7 +4912,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047672
-  id_iseq_pr_metrics_tmp: 317893732
+  id_iseq_pr_metrics_tmp: 350145554
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 166
@@ -4639,6 +4933,9 @@
   q30_yield_kb_reverse_read: 3467939
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 94.30
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -4665,7 +4962,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047675
-  id_iseq_pr_metrics_tmp: 317893733
+  id_iseq_pr_metrics_tmp: 350145555
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: ~
@@ -4686,6 +4983,9 @@
   q30_yield_kb_reverse_read: 3756450
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 4.00
   ref_match2_name: Canis familiaris CanFam3.1
@@ -4712,7 +5012,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047682
-  id_iseq_pr_metrics_tmp: 317893734
+  id_iseq_pr_metrics_tmp: 350145556
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 157
@@ -4733,6 +5033,9 @@
   q30_yield_kb_reverse_read: 1184369
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 91.00
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -4759,7 +5062,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047687
-  id_iseq_pr_metrics_tmp: 317893735
+  id_iseq_pr_metrics_tmp: 350145557
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 164
@@ -4780,6 +5083,9 @@
   q30_yield_kb_reverse_read: 1225557
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 92.00
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -4806,7 +5112,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047679
-  id_iseq_pr_metrics_tmp: 317893736
+  id_iseq_pr_metrics_tmp: 350145558
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 159
@@ -4827,6 +5133,9 @@
   q30_yield_kb_reverse_read: 1143716
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 91.60
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -4853,7 +5162,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047683
-  id_iseq_pr_metrics_tmp: 317893737
+  id_iseq_pr_metrics_tmp: 350145559
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 164
@@ -4874,6 +5183,9 @@
   q30_yield_kb_reverse_read: 1090755
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 91.40
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -4900,7 +5212,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047685
-  id_iseq_pr_metrics_tmp: 317893738
+  id_iseq_pr_metrics_tmp: 350145560
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 157
@@ -4921,6 +5233,9 @@
   q30_yield_kb_reverse_read: 1128611
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 91.90
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -4947,7 +5262,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047678
-  id_iseq_pr_metrics_tmp: 317893739
+  id_iseq_pr_metrics_tmp: 350145561
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 163
@@ -4968,6 +5283,9 @@
   q30_yield_kb_reverse_read: 1098945
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 91.20
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -4994,7 +5312,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047688
-  id_iseq_pr_metrics_tmp: 317893740
+  id_iseq_pr_metrics_tmp: 350145562
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 163
@@ -5015,6 +5333,9 @@
   q30_yield_kb_reverse_read: 1234705
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 92.00
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -5041,7 +5362,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047684
-  id_iseq_pr_metrics_tmp: 317893741
+  id_iseq_pr_metrics_tmp: 350145563
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 166
@@ -5062,6 +5383,9 @@
   q30_yield_kb_reverse_read: 1152144
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 91.70
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -5088,7 +5412,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047680
-  id_iseq_pr_metrics_tmp: 317893742
+  id_iseq_pr_metrics_tmp: 350145564
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 163
@@ -5109,6 +5433,9 @@
   q30_yield_kb_reverse_read: 1252074
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 92.00
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -5135,7 +5462,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047677
-  id_iseq_pr_metrics_tmp: 317893743
+  id_iseq_pr_metrics_tmp: 350145565
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 164
@@ -5156,6 +5483,9 @@
   q30_yield_kb_reverse_read: 1014093
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 91.70
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -5182,7 +5512,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047676
-  id_iseq_pr_metrics_tmp: 317893744
+  id_iseq_pr_metrics_tmp: 350145566
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 486
@@ -5203,6 +5533,9 @@
   q30_yield_kb_reverse_read: 73786
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: PhiX Sanger-SNPs
   ref_match1_percent: 98.50
   ref_match2_name: Trichuris muris v110315
@@ -5229,7 +5562,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: ~
-  id_iseq_pr_metrics_tmp: 317893745
+  id_iseq_pr_metrics_tmp: 350145567
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 163
@@ -5250,6 +5583,9 @@
   q30_yield_kb_reverse_read: 77118
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 89.80
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -5276,7 +5612,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047686
-  id_iseq_pr_metrics_tmp: 317893746
+  id_iseq_pr_metrics_tmp: 350145568
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 165
@@ -5297,6 +5633,9 @@
   q30_yield_kb_reverse_read: 1188329
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 91.30
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -5323,7 +5662,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047681
-  id_iseq_pr_metrics_tmp: 317893747
+  id_iseq_pr_metrics_tmp: 350145569
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 164
@@ -5344,6 +5683,9 @@
   q30_yield_kb_reverse_read: 1128893
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 91.70
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -5370,7 +5712,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047695
-  id_iseq_pr_metrics_tmp: 317893748
+  id_iseq_pr_metrics_tmp: 350145570
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 312
@@ -5391,6 +5733,9 @@
   q30_yield_kb_reverse_read: 1979733
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 98.40
   ref_match2_name: Rattus norvegicus Rnor_5.0
@@ -5417,7 +5762,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047692
-  id_iseq_pr_metrics_tmp: 317893749
+  id_iseq_pr_metrics_tmp: 350145571
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 215
@@ -5438,6 +5783,9 @@
   q30_yield_kb_reverse_read: 1721296
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 97.90
   ref_match2_name: Trichuris muris v110315
@@ -5464,7 +5812,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047691
-  id_iseq_pr_metrics_tmp: 317893750
+  id_iseq_pr_metrics_tmp: 350145572
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 252
@@ -5485,6 +5833,9 @@
   q30_yield_kb_reverse_read: 1797779
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 98.10
   ref_match2_name: Trichuris muris v110315
@@ -5511,7 +5862,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047690
-  id_iseq_pr_metrics_tmp: 317893751
+  id_iseq_pr_metrics_tmp: 350145573
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 253
@@ -5532,6 +5883,9 @@
   q30_yield_kb_reverse_read: 1002230
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 98.20
   ref_match2_name: Trichuris muris v110315
@@ -5558,7 +5912,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047693
-  id_iseq_pr_metrics_tmp: 317893752
+  id_iseq_pr_metrics_tmp: 350145574
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 246
@@ -5579,6 +5933,9 @@
   q30_yield_kb_reverse_read: 985878
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 98.20
   ref_match2_name: Trichuris muris v110315
@@ -5605,7 +5962,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047689
-  id_iseq_pr_metrics_tmp: 317893753
+  id_iseq_pr_metrics_tmp: 350145575
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 484
@@ -5626,6 +5983,9 @@
   q30_yield_kb_reverse_read: 91171
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: PhiX Sanger-SNPs
   ref_match1_percent: 98.60
   ref_match2_name: Trichuris muris v110315
@@ -5652,7 +6012,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: ~
-  id_iseq_pr_metrics_tmp: 317893754
+  id_iseq_pr_metrics_tmp: 350145576
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 259
@@ -5673,6 +6033,9 @@
   q30_yield_kb_reverse_read: 176077
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 97.20
   ref_match2_name: Trichuris muris v110315
@@ -5699,7 +6062,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047694
-  id_iseq_pr_metrics_tmp: 317893755
+  id_iseq_pr_metrics_tmp: 350145577
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 255
@@ -5720,6 +6083,9 @@
   q30_yield_kb_reverse_read: 1113133
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 97.90
   ref_match2_name: Trichuris muris v110315
@@ -5746,7 +6112,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047702
-  id_iseq_pr_metrics_tmp: 317893756
+  id_iseq_pr_metrics_tmp: 350145578
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 311
@@ -5767,6 +6133,9 @@
   q30_yield_kb_reverse_read: 1106015
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 95.90
   ref_match2_name: Trichuris muris v110315
@@ -5793,7 +6162,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047699
-  id_iseq_pr_metrics_tmp: 317893757
+  id_iseq_pr_metrics_tmp: 350145579
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 304
@@ -5814,6 +6183,9 @@
   q30_yield_kb_reverse_read: 3244300
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 97.60
   ref_match2_name: Trichuris muris v110315
@@ -5840,7 +6212,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047698
-  id_iseq_pr_metrics_tmp: 317893758
+  id_iseq_pr_metrics_tmp: 350145580
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 330
@@ -5861,6 +6233,9 @@
   q30_yield_kb_reverse_read: 3625824
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 97.90
   ref_match2_name: Trichuris muris v110315
@@ -5887,7 +6262,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047697
-  id_iseq_pr_metrics_tmp: 317893759
+  id_iseq_pr_metrics_tmp: 350145581
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 343
@@ -5908,6 +6283,9 @@
   q30_yield_kb_reverse_read: 3234375
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 97.50
   ref_match2_name: Trichuris muris v110315
@@ -5934,7 +6312,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047700
-  id_iseq_pr_metrics_tmp: 317893760
+  id_iseq_pr_metrics_tmp: 350145582
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 335
@@ -5955,6 +6333,9 @@
   q30_yield_kb_reverse_read: 2393188
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 97.70
   ref_match2_name: Trichuris muris v110315
@@ -5981,7 +6362,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047696
-  id_iseq_pr_metrics_tmp: 317893761
+  id_iseq_pr_metrics_tmp: 350145583
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 480
@@ -6002,6 +6383,9 @@
   q30_yield_kb_reverse_read: 57925
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: PhiX Sanger-SNPs
   ref_match1_percent: 98.40
   ref_match2_name: Trichuris muris v110315
@@ -6028,7 +6412,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: ~
-  id_iseq_pr_metrics_tmp: 317893762
+  id_iseq_pr_metrics_tmp: 350145584
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 337
@@ -6049,6 +6433,9 @@
   q30_yield_kb_reverse_read: 423128
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 97.20
   ref_match2_name: Trichuris muris v110315
@@ -6075,7 +6462,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4047701
-  id_iseq_pr_metrics_tmp: 317893763
+  id_iseq_pr_metrics_tmp: 350145585
   id_run: 17550
   indexing_read_length: ~
   insert_size_median: 390
@@ -6096,6 +6483,9 @@
   q30_yield_kb_reverse_read: 4369336
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Mus musculus GRCm38
   ref_match1_percent: 97.60
   ref_match2_name: Trichuris muris v110315
@@ -6122,7 +6512,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4670176
-  id_iseq_pr_metrics_tmp: 317980149
+  id_iseq_pr_metrics_tmp: 350231689
   id_run: 18448
   indexing_read_length: ~
   insert_size_median: 480
@@ -6143,6 +6533,9 @@
   q30_yield_kb_reverse_read: 56439686
   q40_yield_kb_forward_read: 53210502
   q40_yield_kb_reverse_read: 41486147
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 96.10
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -6169,7 +6562,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4670178
-  id_iseq_pr_metrics_tmp: 317980150
+  id_iseq_pr_metrics_tmp: 350231690
   id_run: 18448
   indexing_read_length: ~
   insert_size_median: 479
@@ -6190,6 +6583,9 @@
   q30_yield_kb_reverse_read: 56628670
   q40_yield_kb_forward_read: 52253914
   q40_yield_kb_reverse_read: 41978794
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 96.20
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -6216,7 +6612,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4670180
-  id_iseq_pr_metrics_tmp: 317980151
+  id_iseq_pr_metrics_tmp: 350231691
   id_run: 18448
   indexing_read_length: ~
   insert_size_median: 474
@@ -6237,6 +6633,9 @@
   q30_yield_kb_reverse_read: 59410391
   q40_yield_kb_forward_read: 55261437
   q40_yield_kb_reverse_read: 44454411
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 96.40
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -6263,7 +6662,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4670182
-  id_iseq_pr_metrics_tmp: 317980152
+  id_iseq_pr_metrics_tmp: 350231692
   id_run: 18448
   indexing_read_length: ~
   insert_size_median: 466
@@ -6284,6 +6683,9 @@
   q30_yield_kb_reverse_read: 58898794
   q40_yield_kb_forward_read: 54712192
   q40_yield_kb_reverse_read: 43849161
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 96.50
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -6310,7 +6712,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4670184
-  id_iseq_pr_metrics_tmp: 317980153
+  id_iseq_pr_metrics_tmp: 350231693
   id_run: 18448
   indexing_read_length: ~
   insert_size_median: 479
@@ -6331,6 +6733,9 @@
   q30_yield_kb_reverse_read: 57399148
   q40_yield_kb_forward_read: 52865882
   q40_yield_kb_reverse_read: 42466036
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 96.40
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -6357,7 +6762,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4670186
-  id_iseq_pr_metrics_tmp: 317980154
+  id_iseq_pr_metrics_tmp: 350231694
   id_run: 18448
   indexing_read_length: ~
   insert_size_median: 465
@@ -6378,6 +6783,9 @@
   q30_yield_kb_reverse_read: 60257409
   q40_yield_kb_forward_read: 55451128
   q40_yield_kb_reverse_read: 45809326
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 97.00
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -6404,7 +6812,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4670188
-  id_iseq_pr_metrics_tmp: 317980155
+  id_iseq_pr_metrics_tmp: 350231695
   id_run: 18448
   indexing_read_length: ~
   insert_size_median: 481
@@ -6425,6 +6833,9 @@
   q30_yield_kb_reverse_read: 59197951
   q40_yield_kb_forward_read: 54855190
   q40_yield_kb_reverse_read: 44787479
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 96.50
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -6451,7 +6862,7 @@
   human_percent_duplicate: ~
   human_percent_mapped: ~
   id_iseq_flowcell_tmp: 4670190
-  id_iseq_pr_metrics_tmp: 317980156
+  id_iseq_pr_metrics_tmp: 350231696
   id_run: 18448
   indexing_read_length: ~
   insert_size_median: 466
@@ -6472,6 +6883,9 @@
   q30_yield_kb_reverse_read: 60537344
   q40_yield_kb_forward_read: 56188595
   q40_yield_kb_reverse_read: 46041515
+  qc: 1
+  qc_lib: ~
+  qc_seq: 1
   ref_match1_name: Homo sapiens 1000Genomes
   ref_match1_percent: 96.30
   ref_match2_name: Pan troglodytes CHIMP2.1.4
@@ -6485,3 +6899,2853 @@
   verify_bam_id_average_depth: 38.85
   verify_bam_id_score: 0.00119
   verify_bam_id_snp_count: 1347021
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 84.45
+  adapters_percent_reverse_read: 81.03
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.70
+  gc_percent_reverse_read: 52.50
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 36.22
+  human_percent_mapped: 89.00
+  id_iseq_flowcell_tmp: 4789244
+  id_iseq_pr_metrics_tmp: 350284356
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 280
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 264
+  insert_size_quartile3: 304
+  mean_bait_coverage: 5077.66
+  num_reads: 11248428
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 37.83
+  percent_mapped: 88.72
+  position: 1
+  q20_yield_kb_forward_read: 1411813
+  q20_yield_kb_reverse_read: 1321936
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 85.00
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 10.10
+  sequence_mismatch_percent_forward_read: 8.68
+  sequence_mismatch_percent_reverse_read: 9.64
+  tag_decode_count: 6162871
+  tag_decode_percent: 2.63
+  tag_index: 33
+  tag_sequence4deplexing: TACTTCGG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 81.40
+  adapters_percent_reverse_read: 77.60
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 51.50
+  gc_percent_reverse_read: 50.20
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 35.08
+  human_percent_mapped: 88.84
+  id_iseq_flowcell_tmp: 4789243
+  id_iseq_pr_metrics_tmp: 350284357
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 281
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 265
+  insert_size_quartile3: 300
+  mean_bait_coverage: 258.90
+  num_reads: 678496
+  on_bait_percent: 100.00
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 31.98
+  percent_mapped: 69.53
+  position: 1
+  q20_yield_kb_forward_read: 156725
+  q20_yield_kb_reverse_read: 146076
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 56.00
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 51.00
+  sequence_mismatch_percent_forward_read: 8.40
+  sequence_mismatch_percent_reverse_read: 9.36
+  tag_decode_count: 689727
+  tag_decode_percent: 0.29
+  tag_index: 32
+  tag_sequence4deplexing: TGAACTGG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 82.04
+  adapters_percent_reverse_read: 78.20
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.80
+  gc_percent_reverse_read: 49.80
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 79.38
+  human_percent_mapped: 88.74
+  id_iseq_flowcell_tmp: 4789232
+  id_iseq_pr_metrics_tmp: 350284358
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 277
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 257
+  insert_size_quartile3: 308
+  mean_bait_coverage: 46.64
+  num_reads: 834150
+  on_bait_percent: 99.95
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 73.23
+  percent_mapped: 39.32
+  position: 1
+  q20_yield_kb_forward_read: 362086
+  q20_yield_kb_reverse_read: 339205
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 83.30
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 74.90
+  sequence_mismatch_percent_forward_read: 9.06
+  sequence_mismatch_percent_reverse_read: 9.81
+  tag_decode_count: 1607308
+  tag_decode_percent: 0.68
+  tag_index: 21
+  tag_sequence4deplexing: TTGACTCT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 84.70
+  adapters_percent_reverse_read: 81.01
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.30
+  gc_percent_reverse_read: 51.75
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 79.96
+  human_percent_mapped: 88.63
+  id_iseq_flowcell_tmp: 4789218
+  id_iseq_pr_metrics_tmp: 350284359
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 281
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 264
+  insert_size_quartile3: 307
+  mean_bait_coverage: 353.53
+  num_reads: 3102932
+  on_bait_percent: 99.95
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 74.49
+  percent_mapped: 76.45
+  position: 1
+  q20_yield_kb_forward_read: 591169
+  q20_yield_kb_reverse_read: 552756
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 48.40
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 44.80
+  sequence_mismatch_percent_forward_read: 8.39
+  sequence_mismatch_percent_reverse_read: 9.67
+  tag_decode_count: 2601664
+  tag_decode_percent: 1.11
+  tag_index: 7
+  tag_sequence4deplexing: GATCAGCG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 84.00
+  adapters_percent_reverse_read: 80.51
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.40
+  gc_percent_reverse_read: 52.20
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 78.98
+  human_percent_mapped: 88.74
+  id_iseq_flowcell_tmp: 4789237
+  id_iseq_pr_metrics_tmp: 350284360
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 279
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 262
+  insert_size_quartile3: 301
+  mean_bait_coverage: 1720.04
+  num_reads: 12614622
+  on_bait_percent: 99.98
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 75.30
+  percent_mapped: 88.28
+  position: 1
+  q20_yield_kb_forward_read: 1727900
+  q20_yield_kb_reverse_read: 1620260
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 77.40
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 18.50
+  sequence_mismatch_percent_forward_read: 8.55
+  sequence_mismatch_percent_reverse_read: 9.62
+  tag_decode_count: 7553660
+  tag_decode_percent: 3.22
+  tag_index: 26
+  tag_sequence4deplexing: TGTGGTTG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 79.58
+  adapters_percent_reverse_read: 75.52
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.55
+  gc_percent_reverse_read: 49.30
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 79.66
+  human_percent_mapped: 88.74
+  id_iseq_flowcell_tmp: 4789213
+  id_iseq_pr_metrics_tmp: 350284361
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 277
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 260
+  insert_size_quartile3: 305
+  mean_bait_coverage: 28.24
+  num_reads: 773222
+  on_bait_percent: 99.98
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 73.53
+  percent_mapped: 24.10
+  position: 1
+  q20_yield_kb_forward_read: 369356
+  q20_yield_kb_reverse_read: 345464
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 86.60
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 78.00
+  sequence_mismatch_percent_forward_read: 8.95
+  sequence_mismatch_percent_reverse_read: 9.88
+  tag_decode_count: 1632512
+  tag_decode_percent: 0.70
+  tag_index: 2
+  tag_sequence4deplexing: TGACCACT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 78.38
+  adapters_percent_reverse_read: 73.92
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 51.80
+  gc_percent_reverse_read: 50.55
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 76.11
+  human_percent_mapped: 88.59
+  id_iseq_flowcell_tmp: 4789228
+  id_iseq_pr_metrics_tmp: 350284362
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 275
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 261
+  insert_size_quartile3: 290
+  mean_bait_coverage: 73.39
+  num_reads: 1114908
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 71.94
+  percent_mapped: 42.92
+  position: 1
+  q20_yield_kb_forward_read: 317568
+  q20_yield_kb_reverse_read: 296869
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 67.80
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 60.90
+  sequence_mismatch_percent_forward_read: 8.16
+  sequence_mismatch_percent_reverse_read: 9.61
+  tag_decode_count: 1394235
+  tag_decode_percent: 0.59
+  tag_index: 17
+  tag_sequence4deplexing: TTGGAGGT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 79.98
+  adapters_percent_reverse_read: 76.34
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.80
+  gc_percent_reverse_read: 52.90
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 79.53
+  human_percent_mapped: 88.71
+  id_iseq_flowcell_tmp: 4789212
+  id_iseq_pr_metrics_tmp: 350284363
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 285
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 265
+  insert_size_quartile3: 309
+  mean_bait_coverage: 6684.04
+  num_reads: 50182748
+  on_bait_percent: 99.96
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 78.75
+  percent_mapped: 90.78
+  position: 1
+  q20_yield_kb_forward_read: 6279889
+  q20_yield_kb_reverse_read: 5865366
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 85.70
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 9.30
+  sequence_mismatch_percent_forward_read: 8.05
+  sequence_mismatch_percent_reverse_read: 9.10
+  tag_decode_count: 27299127
+  tag_decode_percent: 11.63
+  tag_index: 1
+  tag_sequence4deplexing: CGATGTTT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 82.49
+  adapters_percent_reverse_read: 78.53
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 52.40
+  gc_percent_reverse_read: 50.80
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 77.93
+  human_percent_mapped: 88.72
+  id_iseq_flowcell_tmp: 4789229
+  id_iseq_pr_metrics_tmp: 350284364
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 277
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 259
+  insert_size_quartile3: 305
+  mean_bait_coverage: 160.62
+  num_reads: 1791402
+  on_bait_percent: 99.97
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 72.90
+  percent_mapped: 55.32
+  position: 1
+  q20_yield_kb_forward_read: 442624
+  q20_yield_kb_reverse_read: 413513
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 61.00
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 54.80
+  sequence_mismatch_percent_forward_read: 8.52
+  sequence_mismatch_percent_reverse_read: 9.60
+  tag_decode_count: 1945599
+  tag_decode_percent: 0.83
+  tag_index: 18
+  tag_sequence4deplexing: TCGAGCGT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 78.57
+  adapters_percent_reverse_read: 74.55
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 52.20
+  gc_percent_reverse_read: 51.10
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 34.76
+  human_percent_mapped: 88.84
+  id_iseq_flowcell_tmp: 4789241
+  id_iseq_pr_metrics_tmp: 350284365
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 279
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 262
+  insert_size_quartile3: 305
+  mean_bait_coverage: 143.63
+  num_reads: 479276
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 33.23
+  percent_mapped: 57.44
+  position: 1
+  q20_yield_kb_forward_read: 117963
+  q20_yield_kb_reverse_read: 110175
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 60.50
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 54.10
+  sequence_mismatch_percent_forward_read: 7.88
+  sequence_mismatch_percent_reverse_read: 9.06
+  tag_decode_count: 517950
+  tag_decode_percent: 0.22
+  tag_index: 30
+  tag_sequence4deplexing: TAACGCTG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 80.62
+  adapters_percent_reverse_read: 76.68
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 51.90
+  gc_percent_reverse_read: 50.60
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 78.80
+  human_percent_mapped: 88.72
+  id_iseq_flowcell_tmp: 4789227
+  id_iseq_pr_metrics_tmp: 350284366
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 274
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 261
+  insert_size_quartile3: 294
+  mean_bait_coverage: 211.26
+  num_reads: 2175968
+  on_bait_percent: 99.95
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 73.78
+  percent_mapped: 61.70
+  position: 1
+  q20_yield_kb_forward_read: 515416
+  q20_yield_kb_reverse_read: 482649
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 57.80
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 52.10
+  sequence_mismatch_percent_forward_read: 8.44
+  sequence_mismatch_percent_reverse_read: 9.22
+  tag_decode_count: 2265565
+  tag_decode_percent: 0.97
+  tag_index: 16
+  tag_sequence4deplexing: TCTGCTGT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 75.99
+  adapters_percent_reverse_read: 71.70
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.90
+  gc_percent_reverse_read: 49.60
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 35.49
+  human_percent_mapped: 88.71
+  id_iseq_flowcell_tmp: 4789255
+  id_iseq_pr_metrics_tmp: 350284367
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 287
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 269
+  insert_size_quartile3: 312
+  mean_bait_coverage: 77.65
+  num_reads: 282490
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 32.84
+  percent_mapped: 49.76
+  position: 1
+  q20_yield_kb_forward_read: 107157
+  q20_yield_kb_reverse_read: 100134
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 79.20
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 71.80
+  sequence_mismatch_percent_forward_read: 7.98
+  sequence_mismatch_percent_reverse_read: 8.93
+  tag_decode_count: 470033
+  tag_decode_percent: 0.20
+  tag_index: 44
+  tag_sequence4deplexing: TTACTCGC
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 80.50
+  adapters_percent_reverse_read: 76.73
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.60
+  gc_percent_reverse_read: 52.80
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 36.85
+  human_percent_mapped: 88.72
+  id_iseq_flowcell_tmp: 4789266
+  id_iseq_pr_metrics_tmp: 350284368
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 279
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 263
+  insert_size_quartile3: 302
+  mean_bait_coverage: 6816.76
+  num_reads: 14622160
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 40.74
+  percent_mapped: 91.50
+  position: 1
+  q20_yield_kb_forward_read: 1807561
+  q20_yield_kb_reverse_read: 1689519
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 91.20
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 7.70
+  sequence_mismatch_percent_forward_read: 7.85
+  sequence_mismatch_percent_reverse_read: 8.91
+  tag_decode_count: 7841252
+  tag_decode_percent: 3.34
+  tag_index: 55
+  tag_sequence4deplexing: TGTGAAGA
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 85.46
+  adapters_percent_reverse_read: 82.25
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 51.70
+  gc_percent_reverse_read: 50.80
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 79.44
+  human_percent_mapped: 88.85
+  id_iseq_flowcell_tmp: 4789238
+  id_iseq_pr_metrics_tmp: 350284369
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 275
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 262
+  insert_size_quartile3: 307
+  mean_bait_coverage: 245.47
+  num_reads: 2770310
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 74.71
+  percent_mapped: 59.61
+  position: 1
+  q20_yield_kb_forward_read: 390917
+  q20_yield_kb_reverse_read: 367217
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 50.60
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 21.00
+  sequence_mismatch_percent_forward_read: 8.73
+  sequence_mismatch_percent_reverse_read: 9.77
+  tag_decode_count: 1717976
+  tag_decode_percent: 0.73
+  tag_index: 27
+  tag_sequence4deplexing: TAGTCTTG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 81.39
+  adapters_percent_reverse_read: 77.49
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.30
+  gc_percent_reverse_read: 52.50
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 79.46
+  human_percent_mapped: 88.59
+  id_iseq_flowcell_tmp: 4789236
+  id_iseq_pr_metrics_tmp: 350284370
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 282
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 264
+  insert_size_quartile3: 307
+  mean_bait_coverage: 774.34
+  num_reads: 6149588
+  on_bait_percent: 99.98
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 75.28
+  percent_mapped: 80.79
+  position: 1
+  q20_yield_kb_forward_read: 953041
+  q20_yield_kb_reverse_read: 892337
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 62.60
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 29.00
+  sequence_mismatch_percent_forward_read: 8.93
+  sequence_mismatch_percent_reverse_read: 9.82
+  tag_decode_count: 4134667
+  tag_decode_percent: 1.76
+  tag_index: 25
+  tag_sequence4deplexing: TCCTCAAT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 82.61
+  adapters_percent_reverse_read: 78.36
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.60
+  gc_percent_reverse_read: 52.85
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 79.96
+  human_percent_mapped: 88.49
+  id_iseq_flowcell_tmp: 4789239
+  id_iseq_pr_metrics_tmp: 350284371
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 280
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 264
+  insert_size_quartile3: 304
+  mean_bait_coverage: 6273.31
+  num_reads: 47959136
+  on_bait_percent: 99.98
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 79.27
+  percent_mapped: 90.90
+  position: 1
+  q20_yield_kb_forward_read: 5866578
+  q20_yield_kb_reverse_read: 5464364
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 91.00
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 6.70
+  sequence_mismatch_percent_forward_read: 8.45
+  sequence_mismatch_percent_reverse_read: 9.49
+  tag_decode_count: 25530123
+  tag_decode_percent: 10.88
+  tag_index: 28
+  tag_sequence4deplexing: TTCCATTG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 73.53
+  adapters_percent_reverse_read: 69.21
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.30
+  gc_percent_reverse_read: 49.35
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 33.67
+  human_percent_mapped: 88.78
+  id_iseq_flowcell_tmp: 4789251
+  id_iseq_pr_metrics_tmp: 350284372
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 273
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 270
+  insert_size_quartile3: 289
+  mean_bait_coverage: 4.35
+  num_reads: 108544
+  on_bait_percent: 99.97
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 29.72
+  percent_mapped: 9.72
+  position: 1
+  q20_yield_kb_forward_read: 89292
+  q20_yield_kb_reverse_read: 83401
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 97.60
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 88.00
+  sequence_mismatch_percent_forward_read: 8.55
+  sequence_mismatch_percent_reverse_read: 7.99
+  tag_decode_count: 393792
+  tag_decode_percent: 0.17
+  tag_index: 40
+  tag_sequence4deplexing: TACTAGTC
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 77.64
+  adapters_percent_reverse_read: 73.42
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 52.15
+  gc_percent_reverse_read: 50.85
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 79.19
+  human_percent_mapped: 88.56
+  id_iseq_flowcell_tmp: 4789225
+  id_iseq_pr_metrics_tmp: 350284373
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 282
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 263
+  insert_size_quartile3: 310
+  mean_bait_coverage: 195.60
+  num_reads: 1988832
+  on_bait_percent: 99.98
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 74.60
+  percent_mapped: 62.32
+  position: 1
+  q20_yield_kb_forward_read: 493072
+  q20_yield_kb_reverse_read: 462323
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 61.00
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 54.70
+  sequence_mismatch_percent_forward_read: 8.57
+  sequence_mismatch_percent_reverse_read: 9.60
+  tag_decode_count: 2155707
+  tag_decode_percent: 0.92
+  tag_index: 14
+  tag_sequence4deplexing: TCCGTCTT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 79.26
+  adapters_percent_reverse_read: 74.80
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.30
+  gc_percent_reverse_read: 49.35
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 79.40
+  human_percent_mapped: 88.61
+  id_iseq_flowcell_tmp: 4789231
+  id_iseq_pr_metrics_tmp: 350284374
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 287
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 268
+  insert_size_quartile3: 323
+  mean_bait_coverage: 19.18
+  num_reads: 714126
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 72.28
+  percent_mapped: 18.94
+  position: 1
+  q20_yield_kb_forward_read: 323735
+  q20_yield_kb_reverse_read: 301993
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 84.90
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 76.60
+  sequence_mismatch_percent_forward_read: 8.68
+  sequence_mismatch_percent_reverse_read: 10.04
+  tag_decode_count: 1427865
+  tag_decode_percent: 0.61
+  tag_index: 20
+  tag_sequence4deplexing: TGCATAGT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 0.36
+  adapters_percent_reverse_read: 0.34
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 44.40
+  gc_percent_reverse_read: 43.94
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: ~
+  human_percent_mapped: ~
+  id_iseq_flowcell_tmp: 4789211
+  id_iseq_pr_metrics_tmp: 350284375
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 478
+  insert_size_normal_fit_confidence: 0.77
+  insert_size_num_modes: 1
+  insert_size_quartile1: 426
+  insert_size_quartile3: 525
+  mean_bait_coverage: ~
+  num_reads: 769696
+  on_bait_percent: ~
+  on_or_near_bait_percent: ~
+  percent_duplicate: 17.67
+  percent_mapped: 85.85
+  position: 1
+  q20_yield_kb_forward_read: 88596
+  q20_yield_kb_reverse_read: 75815
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: PhiX Sanger-SNPs
+  ref_match1_percent: 98.40
+  ref_match2_name: Trichuris muris v110315
+  ref_match2_percent: 97.30
+  sequence_mismatch_percent_forward_read: 0.61
+  sequence_mismatch_percent_reverse_read: 3.08
+  tag_decode_count: 384848
+  tag_decode_percent: 0.16
+  tag_index: 888
+  tag_sequence4deplexing: ACAACGCA
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 82.82
+  adapters_percent_reverse_read: 78.73
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 51.60
+  gc_percent_reverse_read: 50.35
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 35.81
+  human_percent_mapped: 88.57
+  id_iseq_flowcell_tmp: 4789260
+  id_iseq_pr_metrics_tmp: 350284376
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 279
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 266
+  insert_size_quartile3: 305
+  mean_bait_coverage: 217.52
+  num_reads: 670062
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 34.81
+  percent_mapped: 64.32
+  position: 1
+  q20_yield_kb_forward_read: 138852
+  q20_yield_kb_reverse_read: 129384
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 51.40
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 46.30
+  sequence_mismatch_percent_forward_read: 8.57
+  sequence_mismatch_percent_reverse_read: 9.88
+  tag_decode_count: 611743
+  tag_decode_percent: 0.26
+  tag_index: 49
+  tag_sequence4deplexing: TTGCGTAC
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 79.69
+  adapters_percent_reverse_read: 75.57
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 51.30
+  gc_percent_reverse_read: 50.35
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 78.59
+  human_percent_mapped: 88.68
+  id_iseq_flowcell_tmp: 4789235
+  id_iseq_pr_metrics_tmp: 350284377
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 276
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 261
+  insert_size_quartile3: 298
+  mean_bait_coverage: 156.03
+  num_reads: 1566526
+  on_bait_percent: 99.96
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 74.23
+  percent_mapped: 61.14
+  position: 1
+  q20_yield_kb_forward_read: 413274
+  q20_yield_kb_reverse_read: 385722
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 63.10
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 56.60
+  sequence_mismatch_percent_forward_read: 8.32
+  sequence_mismatch_percent_reverse_read: 9.36
+  tag_decode_count: 1808469
+  tag_decode_percent: 0.77
+  tag_index: 24
+  tag_sequence4deplexing: TACAGGAT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 79.70
+  adapters_percent_reverse_read: 75.65
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 52.15
+  gc_percent_reverse_read: 51.25
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 78.96
+  human_percent_mapped: 88.60
+  id_iseq_flowcell_tmp: 4789221
+  id_iseq_pr_metrics_tmp: 350284378
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 279
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 263
+  insert_size_quartile3: 301
+  mean_bait_coverage: 298.59
+  num_reads: 2558580
+  on_bait_percent: 99.96
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 75.90
+  percent_mapped: 73.88
+  position: 1
+  q20_yield_kb_forward_read: 555249
+  q20_yield_kb_reverse_read: 520091
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 53.80
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 48.40
+  sequence_mismatch_percent_forward_read: 8.46
+  sequence_mismatch_percent_reverse_read: 9.25
+  tag_decode_count: 2427092
+  tag_decode_percent: 1.03
+  tag_index: 10
+  tag_sequence4deplexing: CTTGTACT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 84.28
+  adapters_percent_reverse_read: 81.00
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 52.60
+  gc_percent_reverse_read: 51.70
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 36.55
+  human_percent_mapped: 88.91
+  id_iseq_flowcell_tmp: 4789242
+  id_iseq_pr_metrics_tmp: 350284379
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 280
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 263
+  insert_size_quartile3: 304
+  mean_bait_coverage: 854.39
+  num_reads: 1987314
+  on_bait_percent: 99.98
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 34.41
+  percent_mapped: 82.37
+  position: 1
+  q20_yield_kb_forward_read: 274997
+  q20_yield_kb_reverse_read: 257615
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 70.90
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 19.50
+  sequence_mismatch_percent_forward_read: 8.56
+  sequence_mismatch_percent_reverse_read: 9.52
+  tag_decode_count: 1206010
+  tag_decode_percent: 0.51
+  tag_index: 31
+  tag_sequence4deplexing: TTGGTATG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 96.66
+  adapters_percent_reverse_read: 95.08
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.30
+  gc_percent_reverse_read: 51.65
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 35.01
+  human_percent_mapped: 89.20
+  id_iseq_flowcell_tmp: 4789246
+  id_iseq_pr_metrics_tmp: 350284380
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 264
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 255
+  insert_size_quartile3: 272
+  mean_bait_coverage: 10628.83
+  num_reads: 53503720
+  on_bait_percent: 99.98
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 70.25
+  percent_mapped: 92.15
+  position: 1
+  q20_yield_kb_forward_read: 6222015
+  q20_yield_kb_reverse_read: 5841076
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 92.00
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 6.10
+  sequence_mismatch_percent_forward_read: 10.64
+  sequence_mismatch_percent_reverse_read: 11.76
+  tag_decode_count: 28245975
+  tag_decode_percent: 12.03
+  tag_index: 35
+  tag_sequence4deplexing: TCAGGAGG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 84.54
+  adapters_percent_reverse_read: 81.20
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.95
+  gc_percent_reverse_read: 50.00
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 78.97
+  human_percent_mapped: 89.03
+  id_iseq_flowcell_tmp: 4789222
+  id_iseq_pr_metrics_tmp: 350284381
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 278
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 264
+  insert_size_quartile3: 301
+  mean_bait_coverage: 45.31
+  num_reads: 1140292
+  on_bait_percent: 99.97
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 73.99
+  percent_mapped: 24.92
+  position: 1
+  q20_yield_kb_forward_read: 274405
+  q20_yield_kb_reverse_read: 257570
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 58.30
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 52.20
+  sequence_mismatch_percent_forward_read: 8.44
+  sequence_mismatch_percent_reverse_read: 9.42
+  tag_decode_count: 1217826
+  tag_decode_percent: 0.52
+  tag_index: 11
+  tag_sequence4deplexing: TGGTTGTT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 83.80
+  adapters_percent_reverse_read: 80.42
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.10
+  gc_percent_reverse_read: 49.15
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 38.20
+  human_percent_mapped: 89.01
+  id_iseq_flowcell_tmp: 4789264
+  id_iseq_pr_metrics_tmp: 350284382
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 283
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 266
+  insert_size_quartile3: 318
+  mean_bait_coverage: 49.76
+  num_reads: 337956
+  on_bait_percent: 99.97
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 35.03
+  percent_mapped: 29.88
+  position: 1
+  q20_yield_kb_forward_read: 94037
+  q20_yield_kb_reverse_read: 88326
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 66.30
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 60.20
+  sequence_mismatch_percent_forward_read: 8.86
+  sequence_mismatch_percent_reverse_read: 9.70
+  tag_decode_count: 416972
+  tag_decode_percent: 0.18
+  tag_index: 53
+  tag_sequence4deplexing: TCATCCTA
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 82.17
+  adapters_percent_reverse_read: 78.24
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.10
+  gc_percent_reverse_read: 48.40
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 38.19
+  human_percent_mapped: 88.87
+  id_iseq_flowcell_tmp: 4789259
+  id_iseq_pr_metrics_tmp: 350284383
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 289
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 264
+  insert_size_quartile3: 312
+  mean_bait_coverage: 33.81
+  num_reads: 219826
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 33.93
+  percent_mapped: 30.39
+  position: 1
+  q20_yield_kb_forward_read: 110195
+  q20_yield_kb_reverse_read: 103357
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 86.40
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 78.00
+  sequence_mismatch_percent_forward_read: 8.86
+  sequence_mismatch_percent_reverse_read: 9.63
+  tag_decode_count: 487535
+  tag_decode_percent: 0.21
+  tag_index: 48
+  tag_sequence4deplexing: TTCGCACC
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 80.11
+  adapters_percent_reverse_read: 76.06
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.25
+  gc_percent_reverse_read: 49.20
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 35.83
+  human_percent_mapped: 88.78
+  id_iseq_flowcell_tmp: 4789253
+  id_iseq_pr_metrics_tmp: 350284384
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 272
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 259
+  insert_size_quartile3: 298
+  mean_bait_coverage: 53.62
+  num_reads: 241588
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 34.35
+  percent_mapped: 44.38
+  position: 1
+  q20_yield_kb_forward_read: 94825
+  q20_yield_kb_reverse_read: 88970
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 80.80
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 72.60
+  sequence_mismatch_percent_forward_read: 9.03
+  sequence_mismatch_percent_reverse_read: 9.99
+  tag_decode_count: 418190
+  tag_decode_percent: 0.18
+  tag_index: 42
+  tag_sequence4deplexing: TGTCTATC
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 82.78
+  adapters_percent_reverse_read: 79.09
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.40
+  gc_percent_reverse_read: 52.20
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 78.65
+  human_percent_mapped: 88.62
+  id_iseq_flowcell_tmp: 4789233
+  id_iseq_pr_metrics_tmp: 350284385
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 280
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 261
+  insert_size_quartile3: 303
+  mean_bait_coverage: 276.38
+  num_reads: 2904174
+  on_bait_percent: 100.00
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 73.35
+  percent_mapped: 61.19
+  position: 1
+  q20_yield_kb_forward_read: 468106
+  q20_yield_kb_reverse_read: 437996
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 45.50
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 32.60
+  sequence_mismatch_percent_forward_read: 8.36
+  sequence_mismatch_percent_reverse_read: 9.58
+  tag_decode_count: 2046366
+  tag_decode_percent: 0.87
+  tag_index: 22
+  tag_sequence4deplexing: TGCGATCT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 86.22
+  adapters_percent_reverse_read: 82.88
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.60
+  gc_percent_reverse_read: 48.80
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 37.62
+  human_percent_mapped: 88.97
+  id_iseq_flowcell_tmp: 4789257
+  id_iseq_pr_metrics_tmp: 350284386
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 275
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 273
+  insert_size_quartile3: 289
+  mean_bait_coverage: 8.38
+  num_reads: 173846
+  on_bait_percent: 99.97
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 32.33
+  percent_mapped: 10.45
+  position: 1
+  q20_yield_kb_forward_read: 87360
+  q20_yield_kb_reverse_read: 81975
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 86.50
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 77.60
+  sequence_mismatch_percent_forward_read: 8.11
+  sequence_mismatch_percent_reverse_read: 9.69
+  tag_decode_count: 390824
+  tag_decode_percent: 0.17
+  tag_index: 46
+  tag_sequence4deplexing: TACCGAGC
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 79.58
+  adapters_percent_reverse_read: 76.06
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.43
+  gc_percent_reverse_read: 52.43
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 65.78
+  human_percent_mapped: 88.35
+  id_iseq_flowcell_tmp: ~
+  id_iseq_pr_metrics_tmp: 350284387
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 279
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 263
+  insert_size_quartile3: 305
+  mean_bait_coverage: 3377.40
+  num_reads: 11699238
+  on_bait_percent: 99.98
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 52.28
+  percent_mapped: 79.49
+  position: 1
+  q20_yield_kb_forward_read: 1692148
+  q20_yield_kb_reverse_read: 1563545
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 64.20
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 27.70
+  sequence_mismatch_percent_forward_read: 8.70
+  sequence_mismatch_percent_reverse_read: 9.81
+  tag_decode_count: 7664435
+  tag_decode_percent: 3.26
+  tag_index: 0
+  tag_sequence4deplexing: ~
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 82.01
+  adapters_percent_reverse_read: 77.98
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.05
+  gc_percent_reverse_read: 49.00
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 78.94
+  human_percent_mapped: 88.77
+  id_iseq_flowcell_tmp: 4789224
+  id_iseq_pr_metrics_tmp: 350284388
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 271
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 256
+  insert_size_quartile3: 304
+  mean_bait_coverage: 16.79
+  num_reads: 692234
+  on_bait_percent: 99.95
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 71.46
+  percent_mapped: 15.83
+  position: 1
+  q20_yield_kb_forward_read: 316562
+  q20_yield_kb_reverse_read: 296327
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 84.90
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 76.50
+  sequence_mismatch_percent_forward_read: 9.12
+  sequence_mismatch_percent_reverse_read: 10.46
+  tag_decode_count: 1397771
+  tag_decode_percent: 0.60
+  tag_index: 13
+  tag_sequence4deplexing: TAAGCGTT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 76.16
+  adapters_percent_reverse_read: 71.65
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 51.00
+  gc_percent_reverse_read: 50.05
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 78.37
+  human_percent_mapped: 88.73
+  id_iseq_flowcell_tmp: 4789234
+  id_iseq_pr_metrics_tmp: 350284389
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 264
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 254
+  insert_size_quartile3: 282
+  mean_bait_coverage: 16.37
+  num_reads: 701068
+  on_bait_percent: 99.93
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 71.75
+  percent_mapped: 15.11
+  position: 1
+  q20_yield_kb_forward_read: 322272
+  q20_yield_kb_reverse_read: 301761
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 85.60
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 77.50
+  sequence_mismatch_percent_forward_read: 8.09
+  sequence_mismatch_percent_reverse_read: 10.07
+  tag_decode_count: 1415302
+  tag_decode_percent: 0.60
+  tag_index: 23
+  tag_sequence4deplexing: TAGTGACT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 82.43
+  adapters_percent_reverse_read: 78.94
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 54.10
+  gc_percent_reverse_read: 53.00
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 36.76
+  human_percent_mapped: 88.84
+  id_iseq_flowcell_tmp: 4789240
+  id_iseq_pr_metrics_tmp: 350284390
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 280
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 265
+  insert_size_quartile3: 306
+  mean_bait_coverage: 11167.19
+  num_reads: 27872852
+  on_bait_percent: 99.98
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 45.41
+  percent_mapped: 90.47
+  position: 1
+  q20_yield_kb_forward_read: 3364339
+  q20_yield_kb_reverse_read: 3137399
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 87.30
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 5.40
+  sequence_mismatch_percent_forward_read: 8.22
+  sequence_mismatch_percent_reverse_read: 9.32
+  tag_decode_count: 14660742
+  tag_decode_percent: 6.25
+  tag_index: 29
+  tag_sequence4deplexing: TCGAAGTG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 85.55
+  adapters_percent_reverse_read: 82.29
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 51.85
+  gc_percent_reverse_read: 51.00
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 81.49
+  human_percent_mapped: 88.82
+  id_iseq_flowcell_tmp: 4789217
+  id_iseq_pr_metrics_tmp: 350284391
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 275
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 264
+  insert_size_quartile3: 303
+  mean_bait_coverage: 339.24
+  num_reads: 3688754
+  on_bait_percent: 99.94
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 77.45
+  percent_mapped: 71.43
+  position: 1
+  q20_yield_kb_forward_read: 693812
+  q20_yield_kb_reverse_read: 649899
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 44.40
+  ref_match2_name: Human herpesvirus_4 Wild_type
+  ref_match2_percent: 44.20
+  sequence_mismatch_percent_forward_read: 9.06
+  sequence_mismatch_percent_reverse_read: 10.02
+  tag_decode_count: 3070293
+  tag_decode_percent: 1.31
+  tag_index: 6
+  tag_sequence4deplexing: ACTTGATG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 80.67
+  adapters_percent_reverse_read: 76.67
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.70
+  gc_percent_reverse_read: 49.30
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 39.51
+  human_percent_mapped: 88.63
+  id_iseq_flowcell_tmp: 4789261
+  id_iseq_pr_metrics_tmp: 350284392
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 275
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 262
+  insert_size_quartile3: 298
+  mean_bait_coverage: 54.70
+  num_reads: 261038
+  on_bait_percent: 100.00
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 36.41
+  percent_mapped: 42.64
+  position: 1
+  q20_yield_kb_forward_read: 112835
+  q20_yield_kb_reverse_read: 105736
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 82.60
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 74.20
+  sequence_mismatch_percent_forward_read: 8.79
+  sequence_mismatch_percent_reverse_read: 9.78
+  tag_decode_count: 498667
+  tag_decode_percent: 0.21
+  tag_index: 50
+  tag_sequence4deplexing: TCTACGAC
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 74.76
+  adapters_percent_reverse_read: 70.65
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 49.20
+  gc_percent_reverse_read: 48.25
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 34.47
+  human_percent_mapped: 88.95
+  id_iseq_flowcell_tmp: 4789250
+  id_iseq_pr_metrics_tmp: 350284393
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 292
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 290
+  insert_size_quartile3: 294
+  mean_bait_coverage: 6.55
+  num_reads: 121080
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 29.78
+  percent_mapped: 12.24
+  position: 1
+  q20_yield_kb_forward_read: 98867
+  q20_yield_kb_reverse_read: 92600
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 97.00
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 87.50
+  sequence_mismatch_percent_forward_read: 9.19
+  sequence_mismatch_percent_reverse_read: 10.07
+  tag_decode_count: 437072
+  tag_decode_percent: 0.19
+  tag_index: 39
+  tag_sequence4deplexing: TCAGATTC
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 85.14
+  adapters_percent_reverse_read: 81.84
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 51.45
+  gc_percent_reverse_read: 50.20
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 78.17
+  human_percent_mapped: 88.87
+  id_iseq_flowcell_tmp: 4789214
+  id_iseq_pr_metrics_tmp: 350284394
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 283
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 264
+  insert_size_quartile3: 300
+  mean_bait_coverage: 56.68
+  num_reads: 1375776
+  on_bait_percent: 99.95
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 74.36
+  percent_mapped: 27.64
+  position: 1
+  q20_yield_kb_forward_read: 260073
+  q20_yield_kb_reverse_read: 243745
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 44.80
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 39.90
+  sequence_mismatch_percent_forward_read: 8.95
+  sequence_mismatch_percent_reverse_read: 10.22
+  tag_decode_count: 1152039
+  tag_decode_percent: 0.49
+  tag_index: 3
+  tag_sequence4deplexing: ACAGTGGT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 95.11
+  adapters_percent_reverse_read: 93.77
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.30
+  gc_percent_reverse_read: 49.00
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 36.50
+  human_percent_mapped: 88.86
+  id_iseq_flowcell_tmp: 4789247
+  id_iseq_pr_metrics_tmp: 350284395
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 317
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 310
+  insert_size_quartile3: 334
+  mean_bait_coverage: 51.72
+  num_reads: 182958
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 32.09
+  percent_mapped: 57.90
+  position: 1
+  q20_yield_kb_forward_read: 115980
+  q20_yield_kb_reverse_read: 108892
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 88.20
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 79.10
+  sequence_mismatch_percent_forward_read: 11.44
+  sequence_mismatch_percent_reverse_read: 12.94
+  tag_decode_count: 514436
+  tag_decode_percent: 0.22
+  tag_index: 36
+  tag_sequence4deplexing: TAAGTTCG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 82.79
+  adapters_percent_reverse_read: 79.09
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.80
+  gc_percent_reverse_read: 52.30
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 78.40
+  human_percent_mapped: 88.61
+  id_iseq_flowcell_tmp: 4789220
+  id_iseq_pr_metrics_tmp: 350284396
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 283
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 265
+  insert_size_quartile3: 307
+  mean_bait_coverage: 1376.74
+  num_reads: 9759926
+  on_bait_percent: 99.97
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 75.25
+  percent_mapped: 87.36
+  position: 1
+  q20_yield_kb_forward_read: 1356051
+  q20_yield_kb_reverse_read: 1266474
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 76.50
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 19.10
+  sequence_mismatch_percent_forward_read: 8.33
+  sequence_mismatch_percent_reverse_read: 9.52
+  tag_decode_count: 5903331
+  tag_decode_percent: 2.51
+  tag_index: 9
+  tag_sequence4deplexing: GGCTACAG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 80.23
+  adapters_percent_reverse_read: 76.57
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.65
+  gc_percent_reverse_read: 52.55
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 39.61
+  human_percent_mapped: 88.70
+  id_iseq_flowcell_tmp: 4789262
+  id_iseq_pr_metrics_tmp: 350284397
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 280
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 262
+  insert_size_quartile3: 307
+  mean_bait_coverage: 3813.82
+  num_reads: 8037480
+  on_bait_percent: 100.00
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 41.34
+  percent_mapped: 90.83
+  position: 1
+  q20_yield_kb_forward_read: 1033901
+  q20_yield_kb_reverse_read: 970201
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 85.70
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 11.80
+  sequence_mismatch_percent_forward_read: 7.94
+  sequence_mismatch_percent_reverse_read: 9.14
+  tag_decode_count: 4476129
+  tag_decode_percent: 1.91
+  tag_index: 51
+  tag_sequence4deplexing: TGACAGAC
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 85.80
+  adapters_percent_reverse_read: 82.92
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.45
+  gc_percent_reverse_read: 52.30
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 37.58
+  human_percent_mapped: 88.84
+  id_iseq_flowcell_tmp: 4789252
+  id_iseq_pr_metrics_tmp: 350284398
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 276
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 262
+  insert_size_quartile3: 302
+  mean_bait_coverage: 8305.37
+  num_reads: 19470370
+  on_bait_percent: 100.00
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 43.33
+  percent_mapped: 90.64
+  position: 1
+  q20_yield_kb_forward_read: 2347748
+  q20_yield_kb_reverse_read: 2207191
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 90.30
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 5.90
+  sequence_mismatch_percent_forward_read: 8.72
+  sequence_mismatch_percent_reverse_read: 9.84
+  tag_decode_count: 10264334
+  tag_decode_percent: 4.37
+  tag_index: 41
+  tag_sequence4deplexing: TTCAGCTC
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 82.62
+  adapters_percent_reverse_read: 78.90
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 51.70
+  gc_percent_reverse_read: 50.30
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 78.55
+  human_percent_mapped: 88.83
+  id_iseq_flowcell_tmp: 4789223
+  id_iseq_pr_metrics_tmp: 350284399
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 277
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 264
+  insert_size_quartile3: 298
+  mean_bait_coverage: 23.12
+  num_reads: 1053672
+  on_bait_percent: 99.96
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 71.73
+  percent_mapped: 13.50
+  position: 1
+  q20_yield_kb_forward_read: 255018
+  q20_yield_kb_reverse_read: 238788
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 59.50
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 53.40
+  sequence_mismatch_percent_forward_read: 8.42
+  sequence_mismatch_percent_reverse_read: 9.70
+  tag_decode_count: 1123313
+  tag_decode_percent: 0.48
+  tag_index: 12
+  tag_sequence4deplexing: TCTCGGTT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 81.49
+  adapters_percent_reverse_read: 77.76
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 51.65
+  gc_percent_reverse_read: 50.40
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 36.21
+  human_percent_mapped: 88.76
+  id_iseq_flowcell_tmp: 4789258
+  id_iseq_pr_metrics_tmp: 350284400
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 278
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 261
+  insert_size_quartile3: 307
+  mean_bait_coverage: 230.95
+  num_reads: 579594
+  on_bait_percent: 99.98
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 33.87
+  percent_mapped: 74.92
+  position: 1
+  q20_yield_kb_forward_read: 138603
+  q20_yield_kb_reverse_read: 130303
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 58.40
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 52.80
+  sequence_mismatch_percent_forward_read: 8.49
+  sequence_mismatch_percent_reverse_read: 9.41
+  tag_decode_count: 609914
+  tag_decode_percent: 0.26
+  tag_index: 47
+  tag_sequence4deplexing: TGTTCTCC
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 81.02
+  adapters_percent_reverse_read: 77.12
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 51.10
+  gc_percent_reverse_read: 50.10
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 79.47
+  human_percent_mapped: 88.80
+  id_iseq_flowcell_tmp: 4789226
+  id_iseq_pr_metrics_tmp: 350284401
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 276
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 259
+  insert_size_quartile3: 300
+  mean_bait_coverage: 16.92
+  num_reads: 869046
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 72.34
+  percent_mapped: 13.62
+  position: 1
+  q20_yield_kb_forward_read: 308489
+  q20_yield_kb_reverse_read: 289652
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 76.50
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 68.70
+  sequence_mismatch_percent_forward_read: 8.61
+  sequence_mismatch_percent_reverse_read: 9.41
+  tag_decode_count: 1360341
+  tag_decode_percent: 0.58
+  tag_index: 15
+  tag_sequence4deplexing: TGTACCTT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 76.70
+  adapters_percent_reverse_read: 72.13
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 51.30
+  gc_percent_reverse_read: 50.30
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 76.76
+  human_percent_mapped: 88.60
+  id_iseq_flowcell_tmp: 4789219
+  id_iseq_pr_metrics_tmp: 350284402
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 277
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 260
+  insert_size_quartile3: 300
+  mean_bait_coverage: 56.70
+  num_reads: 848924
+  on_bait_percent: 99.96
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 71.10
+  percent_mapped: 38.87
+  position: 1
+  q20_yield_kb_forward_read: 389539
+  q20_yield_kb_reverse_read: 363392
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 85.50
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 76.30
+  sequence_mismatch_percent_forward_read: 8.36
+  sequence_mismatch_percent_reverse_read: 9.12
+  tag_decode_count: 1710381
+  tag_decode_percent: 0.73
+  tag_index: 8
+  tag_sequence4deplexing: TAGCTTGT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 82.70
+  adapters_percent_reverse_read: 79.01
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.00
+  gc_percent_reverse_read: 49.05
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 36.55
+  human_percent_mapped: 88.80
+  id_iseq_flowcell_tmp: 4789263
+  id_iseq_pr_metrics_tmp: 350284403
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 281
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 266
+  insert_size_quartile3: 316
+  mean_bait_coverage: 22.92
+  num_reads: 211778
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 34.25
+  percent_mapped: 21.82
+  position: 1
+  q20_yield_kb_forward_read: 78374
+  q20_yield_kb_reverse_read: 73311
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 77.50
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 69.90
+  sequence_mismatch_percent_forward_read: 8.06
+  sequence_mismatch_percent_reverse_read: 9.18
+  tag_decode_count: 347098
+  tag_decode_percent: 0.15
+  tag_index: 52
+  tag_sequence4deplexing: TAGAACAC
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 74.19
+  adapters_percent_reverse_read: 69.61
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.30
+  gc_percent_reverse_read: 49.00
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 37.87
+  human_percent_mapped: 88.75
+  id_iseq_flowcell_tmp: 4789249
+  id_iseq_pr_metrics_tmp: 350284404
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 264
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 259
+  insert_size_quartile3: 289
+  mean_bait_coverage: 2.76
+  num_reads: 111650
+  on_bait_percent: 100.00
+  on_or_near_bait_percent: ~
+  percent_duplicate: 28.43
+  percent_mapped: 6.82
+  position: 1
+  q20_yield_kb_forward_read: 93641
+  q20_yield_kb_reverse_read: 87394
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 98.10
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 88.40
+  sequence_mismatch_percent_forward_read: 7.71
+  sequence_mismatch_percent_reverse_read: 8.59
+  tag_decode_count: 414342
+  tag_decode_percent: 0.18
+  tag_index: 38
+  tag_sequence4deplexing: TATGCCAG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 82.35
+  adapters_percent_reverse_read: 78.53
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 52.40
+  gc_percent_reverse_read: 51.20
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 79.28
+  human_percent_mapped: 88.76
+  id_iseq_flowcell_tmp: 4789215
+  id_iseq_pr_metrics_tmp: 350284405
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 279
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 264
+  insert_size_quartile3: 300
+  mean_bait_coverage: 164.74
+  num_reads: 2541680
+  on_bait_percent: 99.95
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 75.27
+  percent_mapped: 48.35
+  position: 1
+  q20_yield_kb_forward_read: 422137
+  q20_yield_kb_reverse_read: 394501
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 34.20
+  ref_match2_name: Human herpesvirus_4 Wild_type
+  ref_match2_percent: 33.10
+  sequence_mismatch_percent_forward_read: 8.70
+  sequence_mismatch_percent_reverse_read: 9.62
+  tag_decode_count: 1851476
+  tag_decode_percent: 0.79
+  tag_index: 4
+  tag_sequence4deplexing: GCCAATGT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 86.36
+  adapters_percent_reverse_read: 82.88
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 54.80
+  gc_percent_reverse_read: 53.25
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 39.98
+  human_percent_mapped: 89.15
+  id_iseq_flowcell_tmp: 4789245
+  id_iseq_pr_metrics_tmp: 350284406
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 283
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 264
+  insert_size_quartile3: 314
+  mean_bait_coverage: 14342.03
+  num_reads: 42321962
+  on_bait_percent: 99.98
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 56.82
+  percent_mapped: 92.07
+  position: 1
+  q20_yield_kb_forward_read: 5198639
+  q20_yield_kb_reverse_read: 4864404
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 91.10
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 7.00
+  sequence_mismatch_percent_forward_read: 8.90
+  sequence_mismatch_percent_reverse_read: 10.00
+  tag_decode_count: 22598855
+  tag_decode_percent: 9.63
+  tag_index: 34
+  tag_sequence4deplexing: TCTCACGG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 77.71
+  adapters_percent_reverse_read: 73.57
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 51.05
+  gc_percent_reverse_read: 49.80
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 36.78
+  human_percent_mapped: 88.84
+  id_iseq_flowcell_tmp: 4789256
+  id_iseq_pr_metrics_tmp: 350284407
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 277
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 261
+  insert_size_quartile3: 307
+  mean_bait_coverage: 133.91
+  num_reads: 385670
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 33.84
+  percent_mapped: 64.79
+  position: 1
+  q20_yield_kb_forward_read: 123555
+  q20_yield_kb_reverse_read: 115553
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 72.40
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 65.30
+  sequence_mismatch_percent_forward_read: 8.23
+  sequence_mismatch_percent_reverse_read: 9.30
+  tag_decode_count: 542501
+  tag_decode_percent: 0.23
+  tag_index: 45
+  tag_sequence4deplexing: TCGTTAGC
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 82.36
+  adapters_percent_reverse_read: 78.96
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.90
+  gc_percent_reverse_read: 52.80
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 37.78
+  human_percent_mapped: 88.94
+  id_iseq_flowcell_tmp: 4789248
+  id_iseq_pr_metrics_tmp: 350284408
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 279
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 263
+  insert_size_quartile3: 304
+  mean_bait_coverage: 9251.43
+  num_reads: 20977500
+  on_bait_percent: 99.98
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 44.06
+  percent_mapped: 91.93
+  position: 1
+  q20_yield_kb_forward_read: 2576466
+  q20_yield_kb_reverse_read: 2411270
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 90.50
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 7.20
+  sequence_mismatch_percent_forward_read: 8.14
+  sequence_mismatch_percent_reverse_read: 9.29
+  tag_decode_count: 11215207
+  tag_decode_percent: 4.78
+  tag_index: 37
+  tag_sequence4deplexing: TGTATGCG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 85.91
+  adapters_percent_reverse_read: 82.40
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.15
+  gc_percent_reverse_read: 48.80
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 33.97
+  human_percent_mapped: 88.64
+  id_iseq_flowcell_tmp: 4789254
+  id_iseq_pr_metrics_tmp: 350284409
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 278
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 262
+  insert_size_quartile3: 315
+  mean_bait_coverage: 25.51
+  num_reads: 190726
+  on_bait_percent: 99.98
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 33.12
+  percent_mapped: 26.91
+  position: 1
+  q20_yield_kb_forward_read: 56749
+  q20_yield_kb_reverse_read: 53000
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 69.30
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 62.10
+  sequence_mismatch_percent_forward_read: 9.12
+  sequence_mismatch_percent_reverse_read: 9.96
+  tag_decode_count: 253034
+  tag_decode_percent: 0.11
+  tag_index: 43
+  tag_sequence4deplexing: TATGTGGC
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 83.76
+  adapters_percent_reverse_read: 80.31
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 50.30
+  gc_percent_reverse_read: 49.30
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 79.28
+  human_percent_mapped: 89.08
+  id_iseq_flowcell_tmp: 4789230
+  id_iseq_pr_metrics_tmp: 350284410
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 275
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 273
+  insert_size_quartile3: 302
+  mean_bait_coverage: 5.83
+  num_reads: 999598
+  on_bait_percent: 99.99
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 68.28
+  percent_mapped: 4.81
+  position: 1
+  q20_yield_kb_forward_read: 225884
+  q20_yield_kb_reverse_read: 211641
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Homo sapiens 1000Genomes
+  ref_match1_percent: 55.30
+  ref_match2_name: Pan troglodytes CHIMP2.1.4
+  ref_match2_percent: 49.60
+  sequence_mismatch_percent_forward_read: 9.01
+  sequence_mismatch_percent_reverse_read: 9.58
+  tag_decode_count: 999487
+  tag_decode_percent: 0.43
+  tag_index: 19
+  tag_sequence4deplexing: TGATACGT
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 82.89
+  adapters_percent_reverse_read: 79.74
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 53.60
+  gc_percent_reverse_read: 52.95
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 64.55
+  human_percent_mapped: 89.03
+  id_iseq_flowcell_tmp: 4789265
+  id_iseq_pr_metrics_tmp: 350284411
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 283
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 267
+  insert_size_quartile3: 308
+  mean_bait_coverage: 1.07
+  num_reads: 3458
+  on_bait_percent: 100.00
+  on_or_near_bait_percent: ~
+  percent_duplicate: 48.09
+  percent_mapped: 81.06
+  position: 1
+  q20_yield_kb_forward_read: 521
+  q20_yield_kb_reverse_read: 486
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 64.10
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 26.50
+  sequence_mismatch_percent_forward_read: 8.02
+  sequence_mismatch_percent_reverse_read: 9.46
+  tag_decode_count: 2285
+  tag_decode_percent: 0.00
+  tag_index: 54
+  tag_sequence4deplexing: TGCTGATA
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~
+- actual_forward_read_length: ~
+  actual_reverse_read_length: ~
+  adapters_percent_forward_read: 81.46
+  adapters_percent_reverse_read: 77.65
+  chimeric_reads_percent: 0.00
+  gc_percent_forward_read: 52.90
+  gc_percent_reverse_read: 51.85
+  genotype_mean_depth: ~
+  genotype_sample_name_match: ~
+  genotype_sample_name_relaxed_match: ~
+  human_percent_duplicate: 78.79
+  human_percent_mapped: 88.63
+  id_iseq_flowcell_tmp: 4789216
+  id_iseq_pr_metrics_tmp: 350284412
+  id_run: 18980
+  indexing_read_length: ~
+  insert_size_median: 277
+  insert_size_normal_fit_confidence: ~
+  insert_size_num_modes: ~
+  insert_size_quartile1: 263
+  insert_size_quartile3: 296
+  mean_bait_coverage: 535.87
+  num_reads: 4565316
+  on_bait_percent: 99.97
+  on_or_near_bait_percent: 100.00
+  percent_duplicate: 74.46
+  percent_mapped: 75.60
+  position: 1
+  q20_yield_kb_forward_read: 747031
+  q20_yield_kb_reverse_read: 697992
+  q30_yield_kb_forward_read: ~
+  q30_yield_kb_reverse_read: ~
+  q40_yield_kb_forward_read: ~
+  q40_yield_kb_reverse_read: ~
+  qc: ~
+  qc_lib: ~
+  qc_seq: ~
+  ref_match1_name: Human herpesvirus_4 Wild_type
+  ref_match1_percent: 56.00
+  ref_match2_name: Homo sapiens 1000Genomes
+  ref_match2_percent: 34.00
+  sequence_mismatch_percent_forward_read: 8.29
+  sequence_mismatch_percent_reverse_read: 9.36
+  tag_decode_count: 3272553
+  tag_decode_percent: 1.39
+  tag_index: 5
+  tag_sequence4deplexing: CAGATCTG
+  verify_bam_id_average_depth: ~
+  verify_bam_id_score: ~
+  verify_bam_id_snp_count: ~

@@ -1,7 +1,5 @@
 package WTSI::NPG::HTS::RunComponent;
 
-use strict;
-use warnings;
 use Moose::Role;
 
 use npg_tracking::util::types qw[
@@ -15,19 +13,22 @@ our $VERSION = '';
 has 'id_run' =>
   (isa           => 'NpgTrackingRunId',
    is            => 'ro',
-   required      => 0,
+   required      => 0, # unlike npg_tracking::glossary::run
+   writer        => 'set_id_run',
    documentation => 'The run identifier');
 
 has 'position' =>
   (isa           => 'NpgTrackingLaneNumber',
    is            => 'ro',
-   required      => 0,
+   required      => 0, # unlike npg_tracking::glossary::lane
+   writer        => 'set_position',
    documentation => 'The position (i.e. sequencing lane)');
 
 has 'tag_index' =>
-  (isa           => 'Maybe[NpgTrackingTagIndex]',
+  (isa           => 'NpgTrackingTagIndex',
    is            => 'ro',
    required      => 0,
+   writer        => 'set_tag_index',
    documentation => 'The tag_index');
 
 no Moose::Role;
@@ -43,12 +44,13 @@ WTSI::NPG::HTS::RunComponent
 =head1 DESCRIPTION
 
 A run component is a subset of an Illumina sequencing run's alignment
-or ancillary data, identified by run, lane position and (optionally)
-sequencing tag index.
+or ancillary data, identified by id_run and optionally, lane position
+and sequencing tag index.
 
-This roles exists because We can't extend npg_tracking::glossary::run
+This roles exists because we can't extend npg_tracking::glossary::run
 or npg_tracking::glossary::lane to make objects that do not require
-id_run or position; that would violate Liskov.
+id_run or position without violating Liskov. However, maybe we should
+accept that?
 
 =head1 AUTHOR
 

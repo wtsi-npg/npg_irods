@@ -2,12 +2,16 @@ package WTSI::NPG::HTS::MetaUpdater;
 
 use namespace::autoclean;
 use Moose;
+use MooseX::StrictConstructor;
 use Try::Tiny;
 
 use WTSI::NPG::HTS::AlMapFileDataObject;
 use WTSI::NPG::iRODS;
 
-with qw[WTSI::DNAP::Utilities::Loggable];
+with qw[
+         WTSI::DNAP::Utilities::Loggable
+         WTSI::NPG::HTS::Annotator
+       ];
 
 our $VERSION = '';
 
@@ -54,7 +58,6 @@ sub update_secondary_metadata {
     $self->logconfess('The files argument must be an array reference');
 
   my $num_files = scalar @{$files};
-
   $self->info("Updating metadata on $num_files files");
 
   my $num_processed = 0;
@@ -65,8 +68,12 @@ sub update_secondary_metadata {
     my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new($self->irods, $file);
 
     try {
-      $obj->update_secondary_metadata($self->lims_factory,
-                                      $with_spiked_control);
+      my @secondary_avus = $self->make_secondary_metadata
+        ($self->lims_factory, $obj->id_run, $obj->position,
+         tag_index           => $obj->tag_index,
+         with_spiked_control => $with_spiked_control);
+      $obj->update_secondary_metadata(@secondary_avus);
+
       $self->info("Updated metadata on '$file' ",
                   "[$num_processed / $num_files]");
     } catch {
