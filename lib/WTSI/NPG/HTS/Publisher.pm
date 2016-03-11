@@ -28,13 +28,20 @@ has 'irods' =>
    default       => sub { return WTSI::NPG::iRODS->new },
    documentation => 'The iRODS connection handle');
 
+has 'checksum_cache_threshold' =>
+  (is            => 'ro',
+   isa           => 'Int',
+   required      => 1,
+   default       => 2048,
+   documentation => 'The size above which file checksums will be cached');
+
 has 'require_md5_cache' =>
   (is            => 'ro',
    isa           => 'ArrayRef[Str]',
    required      => 1,
    default       => sub { return [qw[bam cram]] },
    documentation => 'A list of file suffixes for which MD5 cache files ' .
-                    'must be provided and will not be created on the fly.');
+                    'must be provided and will not be created on the fly');
 
 sub BUILD {
   my ($self) = @_;
@@ -136,7 +143,7 @@ sub publish_file {
                                $metadata, $timestamp)
   }
   else {
-    my $local_md5 = $self->_read_md5($local_path);
+    my $local_md5 = $self->_get_md5($local_path);
     if ($self->irods->is_object($remote_path)) {
       $self->info("Remote path '$remote_path' is an existing object");
       $obj = $self->_publish_file_overwrite($local_path, $local_md5,
@@ -399,61 +406,77 @@ sub _supersede_multivalue {
   return $num_meta_errors;
 }
 
-sub _read_md5 {
+sub _get_md5 {
   my ($self, $path) = @_;
 
-  my $cache_file = $self->_ensure_md5_cache_file($path);
+  defined $path or $self->logconfess('A defined path argument is required');
+  -e $path or $self->logconfess("The path '$path' does not exist");
+
+  my ($suffix) = $path =~ m{[.]([^.]+)$}msx;
+  my $cache_file = "$path.md5";
+  my $md5 = q[];
+
+  if (-e $cache_file) {
+    $md5 = $self->_read_md5_cache_file($cache_file);
+  }
+
+  if (not $md5) {
+    if ($suffix and any { $suffix eq $_ } @{$self->require_md5_cache}) {
+      $self->logconfess("Missing a populated MD5 cache file '$cache_file'",
+                        "for '$path'");
+    }
+    else {
+      $md5 = $self->irods->md5sum($path);
+
+      if (-s $path > $self->checksum_cache_threshold) {
+        $self->_make_md5_cache_file($cache_file, $md5);
+      }
+    }
+  }
+
+  return $md5;
+}
+
+sub _read_md5_cache_file {
+  my ($self, $cache_file) = @_;
+
   my $md5 = q[];
 
   my $in;
   open $in, '<', $cache_file or
-    $self->logcroak("Failed to open '$in' for reading: $ERRNO");
+    $self->logcarp("Failed to open '$cache_file' for reading: $ERRNO");
   $md5 = <$in>;
   close $in or
-    $self->logcarp("Failed to close '$in' cleanly");
+    $self->logcarp("Failed to close '$cache_file' cleanly: $ERRNO");
 
   if ($md5) {
     chomp $md5;
 
     my $len = length $md5;
     if ($len != 32) {
-      $self->logconfess("Malformed ($len character) MD5 checksum ",
-                        "'$md5' read from '$cache_file'");
+      $self->error("Malformed ($len character) MD5 checksum ",
+                   "'$md5' read from '$cache_file'");
     }
   }
   else {
-    $self->logconfess("Malformed (empty) MD5 checksum read from '$cache_file'");
+    $self->logcarp("Malformed (empty) MD5 checksum read from '$cache_file'");
   }
 
   return $md5;
 }
 
-sub _ensure_md5_cache_file {
-  my ($self, $path) = @_;
+sub _make_md5_cache_file {
+  my ($self, $cache_file, $md5) = @_;
 
-  my $cache_file = "$path.md5";
-  if (-e $cache_file) {
-    $self->debug("Found MD5 cache file '$cache_file' for '$path'");
-  }
-  else {
-    my ($suffix) = $path =~ m{[.]([^.]+)$}msx;
+  $self->warn("Adding missing MD5 cache file '$cache_file'");
 
-    if ($suffix and any { $suffix eq $_ } @{$self->require_md5_cache}) {
-      $self->logconfess("Missing MD5 cache file '$cache_file' for '$path'");
-    }
-    else {
-      $self->warn("Adding missing MD5 cache file '$cache_file' for '$path'");
-      my $md5 = $self->irods->md5sum($path);
-
-      my $out;
-      open $out, '>', $cache_file or
-        $self->logcroak("Failed to open '$cache_file' for writing: $ERRNO");
-      print $out "$md5\n" or
-        $self->logcroak("Failed to write MD5 to '$cache_file'");
-      close $out or
-        $self->logcarp("Failed to close '$cache_file' cleanly");
-    }
-  }
+  my $out;
+  open $out, '>', $cache_file or
+    $self->logcroak("Failed to open '$cache_file' for writing: $ERRNO");
+  print $out "$md5\n" or
+    $self->logcroak("Failed to write MD5 to '$cache_file'");
+  close $out or
+    $self->logcarp("Failed to close '$cache_file' cleanly");
 
   return $cache_file;
 }

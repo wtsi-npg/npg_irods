@@ -24,18 +24,17 @@ has 'irods' =>
    default       => sub { return WTSI::NPG::iRODS->new },
    documentation => 'The iRODS connection handle');
 
+my $anc_pattern = join q[|], qw[bai bed bamcheck crai flagstat json
+                                seqchksum stats txt];
+
+my $almap_regex = qr{[.](bam|cram)$}msx;
+my $anc_regex   = qr{[.]($anc_pattern)$}msx;
+my $xml_regex   = qr{[.]xml$}msx;
+
 {
-  my $positional = 3; ## no critic (ValuesAndExpressions::ProhibitMagicNumbers)
+  my $positional = 2;
   my @named      = qw[id_run position tag_index];
   my $params = function_params($positional, @named);
-
-  my $anc_pattern = join q[|], qw[bai bed bamcheck crai flagstat json
-                                  seqchksum stats txt];
-
-  my $almap_regex = qr{[.](bam|cram)$}msx;
-  my $anc_regex   = qr{[.]($anc_pattern)$}msx;
-  my $xml_regex   = qr{[.]xml$}msx;
-
 
 =head2 make_data_object
 
@@ -65,18 +64,25 @@ has 'irods' =>
                      logger      => $self->logger);
 
     if ($filename =~  m{$almap_regex}msxi) {
+      $self->debug("Making WTSI::NPG::HTS::AlMapFileDataObject from '$path' ",
+                   "matching $almap_regex");
       $obj = WTSI::NPG::HTS::AlMapFileDataObject->new(@init_args);
     }
     elsif ($filename =~ m{$anc_regex}msxi) {
+      $self->debug("Making WTSI::NPG::HTS::AncFileDataObject from '$path' ",
+                   "matching $anc_regex");
       $obj = WTSI::NPG::HTS::AncFileDataObject->new(@init_args);
     }
     elsif ($filename =~ m{$xml_regex}msxi) {
       if (defined $params->id_run) {
         push @init_args, id_run => $params->id_run;
       }
+      $self->debug("Making WTSI::NPG::HTS::XMLFileDataObject from '$path' ",
+                   "matching $xml_regex");
       $obj = WTSI::NPG::HTS::XMLFileDataObject->new(@init_args);
     }
     else {
+      $self->debug("Not making any WTSI::NPG::HTS::DataObject for '$path'");
       # return undef
     }
 
