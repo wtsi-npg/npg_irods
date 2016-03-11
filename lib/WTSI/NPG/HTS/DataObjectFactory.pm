@@ -6,6 +6,18 @@ our $VERSION = '';
 
 requires 'make_data_object';
 
+=head2 make_data_object
+
+  Arg [1]      Data object path, Str.
+
+  Example    : my $obj = $factory->make_data_object($path);
+  Description: Return a new data object for a path. If the factory cannot
+               construct a suitable object for the given path, it may
+               return undef.
+  Returntype : WTSI::NPG::HTS::DataObject or undef
+
+=cut
+
 no Moose::Role;
 
 1;

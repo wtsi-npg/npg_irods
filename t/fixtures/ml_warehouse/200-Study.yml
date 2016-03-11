@@ -20,6 +20,7 @@
   ena_project_id: 0
   ethically_approved: ~
   faculty_sponsor: Paul Kellam
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 425
   id_study_tmp: 400
@@ -56,6 +57,7 @@
   ena_project_id: ~
   ethically_approved: 1
   faculty_sponsor: Chris Tyler-Smith
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 2967
   id_study_tmp: 2934
@@ -92,6 +94,7 @@
   ena_project_id: ~
   ethically_approved: ~
   faculty_sponsor: George Vassiliou
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 2905
   id_study_tmp: 2872
@@ -128,6 +131,7 @@
   ena_project_id: 0
   ethically_approved: ~
   faculty_sponsor: Julian Parkhill
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 619
   id_study_tmp: 594
@@ -164,6 +168,7 @@
   ena_project_id: ~
   ethically_approved: ~
   faculty_sponsor: Paul Kellam
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 3745
   id_study_tmp: 3718
@@ -200,6 +205,7 @@
   ena_project_id: ~
   ethically_approved: ~
   faculty_sponsor: Gordon Dougan
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 3784
   id_study_tmp: 3758
@@ -236,6 +242,7 @@
   ena_project_id: ~
   ethically_approved: ~
   faculty_sponsor: George Vassiliou
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 3291
   id_study_tmp: 3258
@@ -272,6 +279,7 @@
   ena_project_id: ~
   ethically_approved: ~
   faculty_sponsor: None
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 198
   id_study_tmp: 177
@@ -308,6 +316,7 @@
   ena_project_id: ~
   ethically_approved: ~
   faculty_sponsor: Derek Stemple
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 3749
   id_study_tmp: 3722
@@ -344,6 +353,7 @@
   ena_project_id: ~
   ethically_approved: 1
   faculty_sponsor: Chris Tyler-Smith
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 3606
   id_study_tmp: 3570

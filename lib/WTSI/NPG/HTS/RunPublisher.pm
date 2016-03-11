@@ -1060,7 +1060,8 @@ sub _publish_alignment_files {
       # Currently these determine their own id_run, position, plex and
       # alignment_filter by parsing their own file name. We should
       # really pass this information to the factory
-      my $obj = $self->obj_factory->make_data_object($dest_coll, $file);
+      my $obj = $self->obj_factory->make_data_object
+        (catfile($dest_coll, $file));
       $dest = $obj->str;
       $dest = $publisher->publish($file, $dest);
 

@@ -456,18 +456,18 @@
   instrument_model: HiSeq
   instrument_name: HS38
   paired_read: 1
-  pf_bases: ~
-  pf_cluster_count: ~
+  pf_bases: 117379004
+  pf_cluster_count: 3668094
   pf_cluster_density: 1266285.688
   position: 1
   q20_yield_kb_forward_read: 53461093
   q20_yield_kb_reverse_read: 49944939
-  q30_yield_kb_forward_read: ~
-  q30_yield_kb_reverse_read: ~
-  q40_yield_kb_forward_read: ~
-  q40_yield_kb_reverse_read: ~
-  qc_complete: ~
-  raw_cluster_count: ~
+  q30_yield_kb_forward_read: 50523670
+  q30_yield_kb_reverse_read: 45191073
+  q40_yield_kb_forward_read: 18447014
+  q40_yield_kb_reverse_read: 13616012
+  qc_complete: 2016-03-07 11:49:46
+  raw_cluster_count: 3986654
   raw_cluster_density: 1366438.812
   run_complete: 2016-02-28 05:52:40
   run_pending: 2016-02-25 15:44:09

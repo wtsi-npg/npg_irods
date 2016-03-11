@@ -4739,7 +4739,7 @@
   cost_code: ~
   entity_id_lims: 15794873
   entity_type: library_indexed_spike
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -4751,14 +4751,14 @@
   id_study_tmp: 177
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 12172503
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: ~
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 250
@@ -4776,7 +4776,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -4788,14 +4788,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143187
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -4813,7 +4813,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -4825,14 +4825,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143211
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -4850,7 +4850,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -4862,14 +4862,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143223
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -4887,7 +4887,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -4899,14 +4899,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143235
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -4924,7 +4924,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -4936,14 +4936,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143247
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -4961,7 +4961,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -4973,14 +4973,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143259
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -4998,7 +4998,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5010,14 +5010,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143176
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5035,7 +5035,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5047,14 +5047,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143188
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5072,7 +5072,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5084,14 +5084,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143200
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5109,7 +5109,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5121,14 +5121,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143212
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5146,7 +5146,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5158,14 +5158,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143224
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5183,7 +5183,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5195,14 +5195,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143236
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5220,7 +5220,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5232,14 +5232,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143248
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5257,7 +5257,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5269,14 +5269,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143260
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5294,7 +5294,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5306,14 +5306,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143177
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5331,7 +5331,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5343,14 +5343,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143201
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5368,7 +5368,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5380,14 +5380,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143213
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5405,7 +5405,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5417,14 +5417,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143225
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:05
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5442,7 +5442,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5454,14 +5454,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143237
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5479,7 +5479,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5491,14 +5491,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143249
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5516,7 +5516,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5528,14 +5528,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143261
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5553,7 +5553,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5565,14 +5565,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143178
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5590,7 +5590,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5602,14 +5602,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143202
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5627,7 +5627,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5639,14 +5639,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143214
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5664,7 +5664,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5676,14 +5676,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143226
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5701,7 +5701,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5713,14 +5713,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143238
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5738,7 +5738,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5750,14 +5750,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143250
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5775,7 +5775,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5787,14 +5787,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143262
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5812,7 +5812,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5824,14 +5824,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143179
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5849,7 +5849,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5861,14 +5861,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143191
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5886,7 +5886,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5898,14 +5898,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143203
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5923,7 +5923,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5935,14 +5935,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143215
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5960,7 +5960,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -5972,14 +5972,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143227
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -5997,7 +5997,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6009,14 +6009,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143239
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6034,7 +6034,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6046,14 +6046,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143251
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6071,7 +6071,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6083,14 +6083,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143263
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6108,7 +6108,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6120,14 +6120,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143192
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6145,7 +6145,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6157,14 +6157,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143228
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6182,7 +6182,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6194,14 +6194,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143240
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6219,7 +6219,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6231,14 +6231,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143252
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6256,7 +6256,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6268,14 +6268,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143264
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6293,7 +6293,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6305,14 +6305,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143181
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6330,7 +6330,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6342,14 +6342,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143193
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6367,7 +6367,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6379,14 +6379,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143205
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6404,7 +6404,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6416,14 +6416,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143217
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6441,7 +6441,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6453,14 +6453,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143229
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6478,7 +6478,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6490,14 +6490,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143241
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6515,7 +6515,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6527,14 +6527,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143253
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6552,7 +6552,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6564,14 +6564,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143265
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6589,7 +6589,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6601,14 +6601,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143182
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:28
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6626,7 +6626,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6638,14 +6638,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143194
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:29
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6663,7 +6663,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6675,14 +6675,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143206
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:29
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6700,7 +6700,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6712,14 +6712,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143218
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:29
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6737,7 +6737,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6749,14 +6749,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143230
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:29
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
@@ -6774,7 +6774,7 @@
   cost_code: S0753
   entity_id_lims: 15794873
   entity_type: library_indexed
-  external_release: ~
+  external_release: 1
   flowcell_barcode: H7HHMBCXX
   forward_read_length: 250
   id_flowcell_lims: 44445
@@ -6786,14 +6786,14 @@
   id_study_tmp: 400
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2016-02-25 14:25:25
+  last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143254
-  manual_qc: ~
+  manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
   priority: 3
   purpose: standard
-  recorded_at: 2016-02-25 14:25:29
+  recorded_at: 2016-03-07 22:03:06
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250

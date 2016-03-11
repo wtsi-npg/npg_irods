@@ -29,39 +29,55 @@ has 'irods' =>
   my @named      = qw[id_run position tag_index];
   my $params = function_params($positional, @named);
 
-  sub make_data_object {
-    my ($self, $dest_collection, $file) = $params->parse(@_);
+  my $anc_pattern = join q[|], qw[bai bed bamcheck crai flagstat json
+                                  seqchksum stats txt];
 
-    defined $dest_collection or
-      $self->logconfess('A defined dest_collection argument is required');
-    $dest_collection or
-      $self->logconfess('A non-empty dest_collection argument is required');
-    defined $file or
-      $self->logconfess('A defined file argument is required');
-    $file or $self->logconfess('A non-empty file argument is required');
+  my $almap_regex = qr{[.](bam|cram)$}msx;
+  my $anc_regex   = qr{[.]($anc_pattern)$}msx;
+  my $xml_regex   = qr{[.]xml$}msx;
+
+
+=head2 make_data_object
+
+  Arg [1]      Data object path, Str.
+
+  Example    : my $obj = $factory->make_data_object($path);
+  Description: Return a new data object for a path. If the factory cannot
+               construct a suitable object for the given path, it may
+               return undef.
+  Returntype : WTSI::NPG::HTS::DataObject or undef
+
+=cut
+
+  sub make_data_object {
+    my ($self, $path) = $params->parse(@_);
+
+    defined $path or $self->logconfess('A defined path argument is required');
+    $path or $self->logconfess('A non-empty path argument is required');
 
     my $obj;
 
-    my $filename = fileparse($file);
-    if ($filename =~  m{[.](bam|cram)$}msxi) {
-      $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
-        (collection  => $dest_collection,
-         data_object => $filename,
-         irods       => $self->irods,
-         logger      => $self->logger);
+    my ($filename, $collection, $suffix) = fileparse($path);
+
+    my @init_args = (collection  => $collection,
+                     data_object => $filename,
+                     irods       => $self->irods,
+                     logger      => $self->logger);
+
+    if ($filename =~  m{$almap_regex}msxi) {
+      $obj = WTSI::NPG::HTS::AlMapFileDataObject->new(@init_args);
     }
-    elsif ($filename =~  m{[.]xml$}msxi) {
-      $obj = WTSI::NPG::HTS::XMLFileDataObject->new
-        (collection  => $dest_collection,
-         data_object => $filename,
-         id_run      => $params->id_run,
-         irods       => $self->irods);
+    elsif ($filename =~ m{$anc_regex}msxi) {
+      $obj = WTSI::NPG::HTS::AncFileDataObject->new(@init_args);
+    }
+    elsif ($filename =~ m{$xml_regex}msxi) {
+      if (defined $params->id_run) {
+        push @init_args, id_run => $params->id_run;
+      }
+      $obj = WTSI::NPG::HTS::XMLFileDataObject->new(@init_args);
     }
     else {
-      $obj = WTSI::NPG::HTS::AncFileDataObject->new
-        (collection  => $dest_collection,
-         data_object => $filename,
-         irods       => $self->irods);
+      # return undef
     }
 
     return $obj;
