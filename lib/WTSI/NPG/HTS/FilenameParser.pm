@@ -1,7 +1,5 @@
 package WTSI::NPG::HTS::FilenameParser;
 
-use strict;
-use warnings;
 use File::Basename;
 use Moose::Role;
 
@@ -50,7 +48,7 @@ sub parse_file_name {
                          (\#(\d+))?        # Tag index
                          (_$splits)?       # Alignment filter
                          (\S+)?            # Ancillary
-                         [.](\S+)$         # File format
+                         [.][^.]+$         # File format
                      }mxs;
 
   my $tag_index    = $tag_index2;

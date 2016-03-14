@@ -88,7 +88,6 @@ sub publish : Test(6) {
   } 'publish, cram no MD5 fails';
 }
 
-
 sub publish_file : Test(36) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);

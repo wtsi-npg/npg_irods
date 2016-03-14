@@ -4,6 +4,7 @@ use namespace::autoclean;
 use Data::Dump qw[pp];
 use List::AllUtils qw[firstval uniq];
 use Moose;
+use MooseX::StrictConstructor;
 use Try::Tiny;
 
 with qw[WTSI::DNAP::Utilities::Loggable];

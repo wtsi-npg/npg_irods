@@ -2,53 +2,28 @@ package WTSI::NPG::HTS::AncFileDataObject;
 
 use namespace::autoclean;
 use Data::Dump qw[pp];
-use List::AllUtils qw[any];
+use List::AllUtils qw[none];
 use Moose;
+use MooseX::StrictConstructor;
 use Try::Tiny;
+
+use WTSI::NPG::iRODS::Metadata;
 
 our $VERSION = '';
 
-our $PUBLIC = 'public'; # FIXME
-
-# The contents of BED and JSON formatted file are sensitive and are
-# given restricted access
-our @RESTRICTED_ANCILLARY_FORMATS = qw[bed json];
-
-extends 'WTSI::NPG::iRODS::DataObject';
+extends 'WTSI::NPG::HTS::DataObject';
 
 with qw[
+         WTSI::NPG::HTS::AlFilter
          WTSI::NPG::HTS::RunComponent
          WTSI::NPG::HTS::FilenameParser
-         WTSI::NPG::HTS::AVUCollator
-         WTSI::NPG::HTS::Annotator
        ];
 
-has 'alignment_filter' =>
-  (isa           => 'Maybe[Str]',
-   is            => 'ro',
-   required      => 0,
-   writer        => '_set_alignment_filter',
-   documentation => 'The align filter, parsed from the iRODS path');
+has '+is_restricted_access' =>
+  (is            => 'ro');
 
-has 'file_format' =>
-  (isa           => 'Str',
-   is            => 'ro',
-   required      => 0,
-   writer        => '_set_file_format',
-   documentation => 'The storage format of the file');
-
-has '+id_run' =>
-  (writer        => '_set_id_run',
-   documentation => 'The run ID, parsed from the iRODS path');
-
-has '+position' =>
-  (writer        => '_set_position',
-   documentation => 'The position (i.e. sequencing lane), parsed ' .
-                    'from the iRODS path');
-
-has '+tag_index' =>
-  (writer        => '_set_tag_index',
-   documentation => 'The tag_index, parsed from the iRODS path');
+has '+primary_metadata' =>
+  (is            => 'ro');
 
 sub BUILD {
   my ($self) = @_;
@@ -59,28 +34,23 @@ sub BUILD {
   if (not defined $self->id_run) {
     defined $id_run or
       $self->logconfess('Failed to parse id_run from path ', $self->str);
-    $self->_set_id_run($id_run);
+    $self->set_id_run($id_run);
   }
-
   if (not defined $self->position) {
     defined $position or
       $self->logconfess('Failed to parse position from path ', $self->str);
-    $self->_set_position($position);
+    $self->set_position($position);
   }
-
-  if (not defined $self->file_format) {
-    defined $file_format or
-      $self->logconfess('Failed to parse file format from path ', $self->str);
-    $self->_set_file_format($file_format);
+  if (defined $tag_index and not defined $self->tag_index) {
+    $self->set_tag_index($tag_index);
   }
 
   if (not defined $self->alignment_filter) {
-    $self->_set_alignment_filter($alignment_filter);
+    $self->set_alignment_filter($alignment_filter);
   }
 
-  if (not defined $self->tag_index) {
-    $self->_set_tag_index($tag_index);
-  }
+  # Modifying read-only attribute
+  push @{$self->primary_metadata}, $ALT_PROCESS;
 
   return;
 }
@@ -92,78 +62,37 @@ sub BUILD {
   Example    : $obj->is_restricted_access
   Description: Return true if the file contains or may contain sensitive
                information and is not for unrestricted public access.
+               This true for bed and JSON files.
   Returntype : Bool
 
 =cut
 
-sub is_restricted_access {
-  my ($self) = @_;
-
-  return any { $self->file_format eq $_ } @RESTRICTED_ANCILLARY_FORMATS;
-}
-
-sub update_secondary_metadata {
-  my ($self, $factory, $with_spiked_control) = @_;
-
-  defined $factory or
-    $self->logconfess('A defined factory argument is required');
+# Only apply secondary metadata (which should contain study_id) on
+# those files that are to have their access restricted.
+override 'update_secondary_metadata' => sub {
+  my ($self, @avus) = @_;
 
   my $path = $self->str;
 
   if ($self->is_restricted_access) {
-    my $lims = $factory->make_lims($self->id_run, $self->position,
-                                   $self->tag_index);
-
-    # These files do not have full secondary metadata. They have
-    # sufficient study metadata to set their permissions, if they are
-    # restricted.
-    my @meta = $self->make_study_metadata($lims, $with_spiked_control);
-    $self->debug("Created metadata AVUs for '$path' : ", pp(\@meta));
-
-    # Collate into lists of values per attribute
-    my %collated_avus = %{$self->collate_avus(@meta)};
-
-    # Sorting by attribute to allow repeated updates to be in
-    # deterministic order
-    my @attributes = sort keys %collated_avus;
-    $self->debug("Superseding AVUs on '$path' in order of attributes: ",
-                 join q[, ], @attributes);
-    foreach my $attr (@attributes) {
-      my $values = $collated_avus{$attr};
-      try {
-        $self->supersede_multivalue_avus($attr, $values, undef);
-      } catch {
-        $self->error("Failed to supersede with attribute '$attr' and values ",
-                     pp($values), q[: ], $_);
-      };
-    }
-
-    $self->info("Setting study-defined access for restricted file '$path'");
-    $self->update_group_permissions;
+    super();
   }
   else {
-    $self->update_group_permissions;
-    $self->info("Setting public access for unrestricted file '$path'");
-    $self->set_permissions($WTSI::NPG::iRODS::READ_PERMISSION, 'public');
+    $self->debug("Skipping secondary metadata update for '$path'");
   }
 
   return $self;
-}
+};
 
-before 'update_group_permissions' => sub {
+sub _build_is_restricted_access {
   my ($self) = @_;
 
-  # If the data contains any non-consented human data, or we are
-  # expecting to set groups restricting general access, then remove
-  # access for the public group.
-  if ($self->is_restricted_access) {
-    $self->info(qq[Removing $PUBLIC access to '], $self->str, q[']);
-    $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION, $PUBLIC);
-  }
-  else {
-    $self->info(qq[Allowing $PUBLIC access to '], $self->str, q[']);
-  }
-};
+  my $format = lc $self->file_format;
+
+  # The contents of BED and JSON formatted file are sensitive and
+  # are given restricted access
+  return ($format eq 'bed' or $format eq 'json');
+}
 
 __PACKAGE__->meta->make_immutable;
 

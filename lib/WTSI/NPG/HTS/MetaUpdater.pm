@@ -1,13 +1,18 @@
 package WTSI::NPG::HTS::MetaUpdater;
 
 use namespace::autoclean;
+use File::Basename;
 use Moose;
+use MooseX::StrictConstructor;
 use Try::Tiny;
 
-use WTSI::NPG::HTS::AlMapFileDataObject;
+use WTSI::NPG::HTS::IlluminaObjFactory;
 use WTSI::NPG::iRODS;
 
-with qw[WTSI::DNAP::Utilities::Loggable];
+with qw[
+         WTSI::DNAP::Utilities::Loggable
+         WTSI::NPG::HTS::Annotator
+       ];
 
 our $VERSION = '';
 
@@ -16,6 +21,13 @@ has 'irods' =>
    isa           => 'WTSI::NPG::iRODS',
    required      => 1,
    documentation => 'An iRODS handle to run searches and perform updates');
+
+has 'obj_factory' =>
+  (is            => 'ro',
+   isa           => 'WTSI::NPG::HTS::DataObjectFactory',
+   required      => 1,
+   builder       => '_build_obj_factory',
+   documentation => 'A factory building data objects from files');
 
 has 'lims_factory' =>
   (is            => 'ro',
@@ -46,46 +58,57 @@ sub BUILD {
 =cut
 
 sub update_secondary_metadata {
-  my ($self, $files, $with_spiked_control) = @_;
+  my ($self, $paths, $with_spiked_control) = @_;
 
-  defined $files or
-    $self->logconfess('A files argument is required');
-  ref $files eq 'ARRAY' or
-    $self->logconfess('The files argument must be an array reference');
+  defined $paths or
+    $self->logconfess('A paths argument is required');
+  ref $paths eq 'ARRAY' or
+    $self->logconfess('The paths argument must be an array reference');
 
-  my $num_files = scalar @{$files};
-
-  $self->info("Updating metadata on $num_files files");
+  my $num_paths = scalar @{$paths};
+  $self->info("Updating metadata on $num_paths files");
 
   my $num_processed = 0;
   my $num_errors    = 0;
-  foreach my $file (@{$files}) {
-    $self->info("Updating metadata on '$file' [$num_processed / $num_files]");
+  foreach my $path (@{$paths}) {
+    $self->info("Updating metadata on '$path' [$num_processed / $num_paths]");
 
-    my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new($self->irods, $file);
+    my $obj = $self->obj_factory->make_data_object($path);
+    if ($obj and defined $obj->id_run) {
+      try {
+        my @secondary_avus = $self->make_secondary_metadata
+          ($self->lims_factory, $obj->id_run, $obj->position,
+           tag_index           => $obj->tag_index,
+           with_spiked_control => $with_spiked_control);
+        $obj->update_secondary_metadata(@secondary_avus);
 
-    try {
-      $obj->update_secondary_metadata($self->lims_factory,
-                                      $with_spiked_control);
-      $self->info("Updated metadata on '$file' ",
-                  "[$num_processed / $num_files]");
-    } catch {
-      $num_errors++;
-      $self->error("Failed to update metadata on '$file' ",
-                   "[$num_processed / $num_files]: ", $_);
-    };
+        $self->info("Updated metadata on '$path' ",
+                    "[$num_processed / $num_paths]");
+      } catch {
+        $num_errors++;
+        $self->error("Failed to update metadata on '$path' ",
+                     "[$num_processed / $num_paths]: ", $_);
+      };
+    }
 
     $num_processed++;
   }
 
-  $self->info("Updated metadata on $num_processed / $num_files files");
+  $self->info("Updated metadata on $num_processed / $num_paths files");
 
   if ($num_errors > 0) {
-    $self->error("Failed to update cleanly metadata on $num_files files. ",
+    $self->error("Failed to update cleanly metadata on $num_paths files. ",
                  "$num_errors errors were recorded. See logs for details.")
   }
 
   return $num_processed - $num_errors;
+}
+
+sub _build_obj_factory {
+  my ($self) = @_;
+
+  return WTSI::NPG::HTS::IlluminaObjFactory->new(irods  => $self->irods,
+                                                 logger => $self->logger);
 }
 
 __PACKAGE__->meta->make_immutable;

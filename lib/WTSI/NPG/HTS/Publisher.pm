@@ -13,13 +13,13 @@ use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS;
 
+our $VERSION = '';
+
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::Accountable
          WTSI::NPG::HTS::Annotator
        ];
-
-our $VERSION = '';
 
 has 'irods' =>
   (is            => 'ro',
@@ -28,13 +28,20 @@ has 'irods' =>
    default       => sub { return WTSI::NPG::iRODS->new },
    documentation => 'The iRODS connection handle');
 
+has 'checksum_cache_threshold' =>
+  (is            => 'ro',
+   isa           => 'Int',
+   required      => 1,
+   default       => 2048,
+   documentation => 'The size above which file checksums will be cached');
+
 has 'require_md5_cache' =>
   (is            => 'ro',
    isa           => 'ArrayRef[Str]',
    required      => 1,
    default       => sub { return [qw[bam cram]] },
    documentation => 'A list of file suffixes for which MD5 cache files ' .
-                    'must be provided and will not be created on the fly.');
+                    'must be provided and will not be created on the fly');
 
 sub BUILD {
   my ($self) = @_;
@@ -42,6 +49,25 @@ sub BUILD {
   $self->irods->logger($self->logger);
   return;
 }
+
+=head2 publish
+
+  Arg [1]    : Path to local file for directory, Str.
+  Arg [2]    : Path to destination in iRODS, Str.
+  Arg [3]    : Custom metadata AVUs to add, ArrayRef[HashRef].
+  Arg [4]    : Timestamp to use in metadata, DateTime. Optional, defaults
+               to current time.
+
+  Example    : my $path = $pub->publish('./local/file.txt',
+                                        '/zone/path/file.txt',
+                                        [{attribute => 'x',
+                                          value     => 'y'}])
+  Description: Publish a local file or directory to iRODS, detecting which
+               has been passed as an argument and then delegating to
+               'publish_file' or 'publish_directory' as appropriate.
+  Returntype : Str
+
+=cut
 
 sub publish {
   my ($self, $local_path, $remote_path, $metadata, $timestamp) = @_;
@@ -117,7 +143,7 @@ sub publish_file {
                                $metadata, $timestamp)
   }
   else {
-    my $local_md5 = $self->_read_md5($local_path);
+    my $local_md5 = $self->_get_md5($local_path);
     if ($self->irods->is_object($remote_path)) {
       $self->info("Remote path '$remote_path' is an existing object");
       $obj = $self->_publish_file_overwrite($local_path, $local_md5,
@@ -139,6 +165,29 @@ sub publish_file {
 
   return $obj->str;
 }
+
+=head2 publish_directory
+
+  Arg [1]    : Path to local directory, Str.
+  Arg [2]    : Path to destination in iRODS, Str.
+  Arg [3]    : Custom metadata AVUs to add, ArrayRef[HashRef].
+  Arg [4]    : Timestamp to use in metadata, DateTime. Optional, defaults
+               to current time.
+
+  Example    : my $path = $pub->publish_directory('./local/dir',
+                                                  '/zone/path',
+                                                  [{attribute => 'x',
+                                                    value     => 'y'}])
+  Description: Publish a local directory to iRODS, create and/or supersede
+               metadata (both default and custom) and update permissions,
+               returning the absolute path of the published collection.
+
+               The local directory will be inserted into the destination
+               collection as a new sub-collection. No checks are made on the
+               files with in the new collection.
+  Returntype : Str
+
+=cut
 
 sub publish_directory {
   my ($self, $local_path, $remote_path, $metadata, $timestamp) = @_;
@@ -357,61 +406,77 @@ sub _supersede_multivalue {
   return $num_meta_errors;
 }
 
-sub _read_md5 {
+sub _get_md5 {
   my ($self, $path) = @_;
 
-  my $cache_file = $self->_ensure_md5_cache_file($path);
+  defined $path or $self->logconfess('A defined path argument is required');
+  -e $path or $self->logconfess("The path '$path' does not exist");
+
+  my ($suffix) = $path =~ m{[.]([^.]+)$}msx;
+  my $cache_file = "$path.md5";
+  my $md5 = q[];
+
+  if (-e $cache_file) {
+    $md5 = $self->_read_md5_cache_file($cache_file);
+  }
+
+  if (not $md5) {
+    if ($suffix and any { $suffix eq $_ } @{$self->require_md5_cache}) {
+      $self->logconfess("Missing a populated MD5 cache file '$cache_file'",
+                        "for '$path'");
+    }
+    else {
+      $md5 = $self->irods->md5sum($path);
+
+      if (-s $path > $self->checksum_cache_threshold) {
+        $self->_make_md5_cache_file($cache_file, $md5);
+      }
+    }
+  }
+
+  return $md5;
+}
+
+sub _read_md5_cache_file {
+  my ($self, $cache_file) = @_;
+
   my $md5 = q[];
 
   my $in;
   open $in, '<', $cache_file or
-    $self->logcroak("Failed to open '$in' for reading: $ERRNO");
+    $self->logcarp("Failed to open '$cache_file' for reading: $ERRNO");
   $md5 = <$in>;
   close $in or
-    $self->logcarp("Failed to close '$in' cleanly");
+    $self->logcarp("Failed to close '$cache_file' cleanly: $ERRNO");
 
   if ($md5) {
     chomp $md5;
 
     my $len = length $md5;
     if ($len != 32) {
-      $self->logconfess("Malformed ($len character) MD5 checksum ",
-                        "'$md5' read from '$cache_file'");
+      $self->error("Malformed ($len character) MD5 checksum ",
+                   "'$md5' read from '$cache_file'");
     }
   }
   else {
-    $self->logconfess("Malformed (empty) MD5 checksum read from '$cache_file'");
+    $self->logcarp("Malformed (empty) MD5 checksum read from '$cache_file'");
   }
 
   return $md5;
 }
 
-sub _ensure_md5_cache_file {
-  my ($self, $path) = @_;
+sub _make_md5_cache_file {
+  my ($self, $cache_file, $md5) = @_;
 
-  my $cache_file = "$path.md5";
-  if (-e $cache_file) {
-    $self->debug("Found MD5 cache file '$cache_file' for '$path'");
-  }
-  else {
-    my ($suffix) = $path =~ m{[.]([^.]+)$}msx;
+  $self->warn("Adding missing MD5 cache file '$cache_file'");
 
-    if ($suffix and any { $suffix eq $_ } @{$self->require_md5_cache}) {
-      $self->logconfess("Missing MD5 cache file '$cache_file' for '$path'");
-    }
-    else {
-      $self->warn("Adding missing MD5 cache file '$cache_file' for '$path'");
-      my $md5 = $self->irods->md5sum($path);
-
-      my $out;
-      open $out, '>', $cache_file or
-        $self->logcroak("Failed to open '$cache_file' for writing: $ERRNO");
-      print $out "$md5\n" or
-        $self->logcroak("Failed to write MD5 to '$cache_file'");
-      close $out or
-        $self->logcarp("Failed to close '$cache_file' cleanly");
-    }
-  }
+  my $out;
+  open $out, '>', $cache_file or
+    $self->logcroak("Failed to open '$cache_file' for writing: $ERRNO");
+  print $out "$md5\n" or
+    $self->logcroak("Failed to write MD5 to '$cache_file'");
+  close $out or
+    $self->logcarp("Failed to close '$cache_file' cleanly");
 
   return $cache_file;
 }

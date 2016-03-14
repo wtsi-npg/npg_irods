@@ -4,10 +4,12 @@ use namespace::autoclean;
 use Data::Dump qw[pp];
 use Encode qw[decode];
 use English qw[-no_match_vars];
-use List::AllUtils qw[any none uniq];
+use List::AllUtils qw[any];
 use Moose;
+use MooseX::StrictConstructor;
 use Try::Tiny;
 
+use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::HTS::HeaderParser;
 use WTSI::NPG::HTS::Types qw[AlMapFileFormat];
 
@@ -15,39 +17,25 @@ our $VERSION = '';
 
 our $DEFAULT_SAMTOOLS_EXECUTABLE = 'samtools';
 
+# Sequence alignment filters
 our $HUMAN   = 'human';   # FIXME
 our $YHUMAN  = 'yhuman';  # FIXME
 our $XAHUMAN = 'xahuman'; # FIXME
-our $PUBLIC  = 'public';  # FIXME
 
+# SAM SQ header tag
 our $SQ = 'SQ';
 
-extends 'WTSI::NPG::iRODS::DataObject';
+extends 'WTSI::NPG::HTS::DataObject';
 
 with qw[
+         WTSI::NPG::HTS::AlFilter
          WTSI::NPG::HTS::RunComponent
          WTSI::NPG::HTS::FilenameParser
-         WTSI::NPG::HTS::AVUCollator
-         WTSI::NPG::HTS::Annotator
        ];
 
 ## no critic (ErrorHandling::RequireCheckingReturnValueOfEval)
 eval { with qw[npg_common::roles::software_location] };
 ## critic
-
-has 'alignment_filter' =>
-  (isa           => 'Maybe[Str]',
-   is            => 'ro',
-   required      => 0,
-   writer        => '_set_alignment_filter',
-   documentation => 'The align filter, parsed from the iRODS path');
-
-has 'file_format' =>
-  (isa           => AlMapFileFormat,
-   is            => 'ro',
-   required      => 0,
-   writer        => '_set_file_format',
-   documentation => 'The storage format of the file');
 
 has 'header' =>
   (is            => 'rw',
@@ -57,20 +45,14 @@ has 'header' =>
    clearer       => 'clear_header',
    documentation => 'The HTS file header (or excerpts of it)');
 
-# begin -- from WTSI::NPG::HTS::FilenameParser
-has '+id_run' =>
-  (writer        => '_set_id_run',
-   documentation => 'The run ID, parsed from the iRODS path');
+has '+file_format' =>
+  (isa           => AlMapFileFormat);
 
-has '+position' =>
-  (writer        => '_set_position',
-   documentation => 'The position (i.e. sequencing lane), parsed ' .
-                    'from the iRODS path');
+has '+is_restricted_access' =>
+  (is            => 'ro');
 
-has '+tag_index' =>
-  (writer        => '_set_tag_index',
-   documentation => 'The tag_index, parsed from the iRODS path');
-# end
+has '+primary_metadata' =>
+  (is            => 'ro');
 
 my $header_parser;
 
@@ -80,36 +62,43 @@ sub BUILD {
   # Parsing the file name could be delayed because the parsed values
   # are not required for all operations
 
+  # WTSI::NPG::HTS::FilenameParser
   my ($id_run, $position, $tag_index, $alignment_filter, $file_format) =
     $self->parse_file_name($self->str);
 
   if (not defined $self->id_run) {
     defined $id_run or
       $self->logconfess('Failed to parse id_run from path ', $self->str);
-    $self->_set_id_run($id_run);
+    $self->set_id_run($id_run);
   }
-
   if (not defined $self->position) {
     defined $position or
       $self->logconfess('Failed to parse position from path ', $self->str);
-    $self->_set_position($position);
+    $self->set_position($position);
   }
-
-  if (not defined $self->file_format) {
-    defined $file_format or
-      $self->logconfess('Failed to parse file format from path ', $self->str);
-    $self->_set_file_format($file_format);
+  if (defined $tag_index and not defined $self->tag_index) {
+    $self->set_tag_index($tag_index);
   }
 
   if (not defined $self->alignment_filter) {
-    $self->_set_alignment_filter($alignment_filter);
-  }
-
-  if (not defined $self->tag_index) {
-    $self->_set_tag_index($tag_index);
+    $self->set_alignment_filter($alignment_filter);
   }
 
   $header_parser = WTSI::NPG::HTS::HeaderParser->new(logger => $self->logger);
+
+  # Modifying read-only attribute
+  push @{$self->primary_metadata},
+    $ALIGNMENT,
+    $ALIGNMENT_FILTER,
+    $ALT_PROCESS,
+    $ALT_TARGET,
+    $ID_RUN,
+    $IS_PAIRED_READ,
+    $POSITION,
+    $REFERENCE,
+    $TAG_INDEX,
+    $TARGET,
+    $TOTAL_READS;
 
   return;
 }
@@ -187,13 +176,6 @@ sub reference {
   return $reference;
 }
 
-sub is_restricted_access {
-  my ($self) = @_;
-
-  return ($self->contains_nonconsented_human or
-          ($self->is_present and $self->expected_groups));
-}
-
 =head2 contains_nonconsented_human
 
   Arg [1]      None
@@ -211,81 +193,49 @@ sub contains_nonconsented_human {
   my ($self) = @_;
 
   my $af = $self->alignment_filter;
-  my $contains_consented_human;
+  my $contains_nonconsented_human;
   if ($af and ($af eq $HUMAN or $af eq $XAHUMAN)) {
-    $contains_consented_human = 1;
+    $contains_nonconsented_human = 1;
     $self->debug("$af indicates nonconsented human");
   }
   else {
-    $contains_consented_human = 0;
+    $contains_nonconsented_human = 0;
   }
 
-  return $contains_consented_human;
+  return $contains_nonconsented_human;
 }
 
-=head2 update_secondary_metadata
-
-  Arg [1]    : Factory making st::api::lims, WTSI::NPG::HTS::LIMSFactory.
-  Arg [2]    : HTS data has spiked control, Bool. Optional.
-  Arg [3]    : Reference filter (see reference method), CoreRef. Optional.
-
-  Example    : $obj->update_secondary_metadata($schema);
-  Description: Update all secondary (LIMS-supplied) metadata and set data
-               access permissions. Return $self.
-  Returntype : WTSI::NPG::HTS::AlMapFileDataObject
-
-=cut
-
-sub update_secondary_metadata {
-  my ($self, $factory, $with_spiked_control, $filter) = @_;
-
-  defined $factory or
-    $self->logconfess('A defined factory argument is required');
-
-  my $path = $self->str;
-  my @avus = $self->make_secondary_metadata
-    ($factory, $self->id_run, $self->position,
-     tag_index           => $self->tag_index,
-     with_spiked_control => $with_spiked_control);
-  $self->debug("Created metadata AVUs for '$path' : ", pp(\@avus));
-
-  # Collate into lists of values per attribute
-  my %collated_avus = %{$self->collate_avus(@avus)};
-
-  # Sorting by attribute to allow repeated updates to be in
-  # deterministic order
-  my @attributes = sort keys %collated_avus;
-  $self->debug("Superseding AVUs on '$path' in order of attributes: ",
-               join q[, ], @attributes);
-  foreach my $attr (@attributes) {
-    my $values = $collated_avus{$attr};
-    try {
-      $self->supersede_multivalue_avus($attr, $values, undef);
-    } catch {
-      $self->error("Failed to supersede with attribute '$attr' and values ",
-                   pp($values), q[: ], $_);
-    };
-  }
-
-  $self->update_group_permissions;
-
-  return $self;
-}
-
-before 'update_group_permissions' => sub {
+override 'update_group_permissions' => sub {
   my ($self) = @_;
 
-  # If the data contains any non-consented human data, or we are
-  # expecting to set groups restricting general access, then remove
-  # access for the public group.
-  if ($self->is_restricted_access) {
-    $self->info(qq[Removing $PUBLIC access to '], $self->str, q[']);
-    $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION, $PUBLIC);
+  if ($self->contains_nonconsented_human) {
+    my $path = $self->str;
+
+    my @groups = $self->get_groups($WTSI::NPG::iRODS::READ_PERMISSION);
+    $self->info('Ensuring permissions removed for nonconsented human on ',
+                "'$path': for groups [", join(q[, ], @groups), ']');
+
+    foreach my $group (@groups) {
+      try {
+        $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION, $group);
+      } catch {
+        $self->error("Failed to remove permissions for group '$group' from ",
+                     "'$path': ", $_);
+      };
+    }
+
+    return $self;
   }
   else {
-    $self->info(qq[Allowing $PUBLIC access to '], $self->str, q[']);
+    return super();
   }
 };
+
+sub _build_is_restricted_access {
+  my ($self) = @_;
+
+  return 1;
+}
 
 sub _read_header {
   my ($self) = @_;

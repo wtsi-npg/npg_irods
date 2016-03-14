@@ -22,9 +22,8 @@ our @DEFAULT_FILE_SUFFIXES = (@GENERAL_PURPOSE_SUFFIXES,
 our $SUFFIX_PATTERN = join q[|], @DEFAULT_FILE_SUFFIXES;
 our $SUFFIX_REGEX   = qr{[.]($SUFFIX_PATTERN)$}msx;
 
-# FIXME -- use controlled vocabulary
-our $YHUMAN      = 'yhuman';      # FIXME -- add to WTSI::NPG::iRODS::Metadata
-our $ALT_PROCESS = 'alt_process'; # FIXME -- add to WTSI::NPG::iRODS::Metadata
+# Sequence alignment filters
+our $YHUMAN = 'yhuman';  # FIXME
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
@@ -161,7 +160,6 @@ sub make_ticket_metadata {
   return ($self->make_avu($RT_TICKET, $ticket_number));
 }
 
-
 =head2 make_primary_metadata
 
   Arg [1]    : Run identifier, Int.
@@ -189,8 +187,11 @@ sub make_ticket_metadata {
 =cut
 
 {
-  my $params = function_params(4, qw[tag_index is_paired_read is_aligned
-                                     reference alt_process alignment_filter]);
+  my $positional = 4;
+  my @named      = qw[tag_index is_paired_read is_aligned
+                      reference alt_process alignment_filter];
+  my $params = function_params($positional, @named);
+
   sub make_primary_metadata {
     my ($self, $id_run, $position, $num_reads) = $params->parse(@_);
 
@@ -244,7 +245,9 @@ sub make_ticket_metadata {
 =cut
 
 {
-  my $params = function_params(4, qw(is_paired_read tag_index));
+  my $positional = 4;
+  my @named      = qw[is_paired_read tag_index];
+  my $params = function_params($positional, @named);
 
   sub make_run_metadata {
     my ($self, $id_run, $position, $num_reads) = $params->parse(@_);
@@ -291,7 +294,9 @@ sub make_ticket_metadata {
 =cut
 
 {
-  my $params = function_params(4, qw(alignment_filter));
+  my $positional = 4;
+  my @named      = qw[alignment_filter];
+  my $params = function_params($positional, @named);
 
   sub make_alignment_metadata {
     my ($self, $num_reads, $reference, $is_aligned) = $params->parse(@_);
@@ -393,7 +398,9 @@ sub make_alt_metadata {
 =cut
 
 {
-  my $params = function_params(4, qw[tag_index with_spiked_control]);
+  my $positional = 4;
+  my @named      = qw[tag_index with_spiked_control];
+  my $params = function_params($positional, @named);
 
   sub make_secondary_metadata {
     my ($self, $factory, $id_run, $position) = $params->parse(@_);
@@ -441,6 +448,8 @@ sub make_study_metadata {
 
   defined $lims or $self->logconfess('A defined lims argument is required');
 
+  my @avus = $self->make_study_id_metadata($lims, $with_spiked_control);
+
   # Map of method name to attribute name under which the result will
   # be stored.
   my $method_attr =
@@ -448,6 +457,30 @@ sub make_study_metadata {
      study_names             => $STUDY_NAME,
      study_ids               => $STUDY_ID,
      study_titles            => $STUDY_TITLE};
+
+  push @avus, $self->_make_multi_value_metadata($lims, $method_attr,
+                                                $with_spiked_control);
+  return @avus
+}
+
+=head2 make_study_id_metadata
+
+  Arg [1]    : A LIMS handle, st::api::lims.
+
+  Example    : my @meta = $ann->make_study_id_metadata($st);
+  Description: Return HTS study_id metadata AVUs.
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_study_id_metadata {
+  my ($self, $lims, $with_spiked_control) = @_;
+
+  defined $lims or $self->logconfess('A defined lims argument is required');
+
+  # Map of method name to attribute name under which the result will
+  # be stored.
+  my $method_attr = {study_ids => $STUDY_ID};
 
   return $self->_make_multi_value_metadata($lims, $method_attr,
                                            $with_spiked_control);
@@ -472,12 +505,14 @@ sub make_sample_metadata {
   # Map of method name to attribute name under which the result will
   # be stored.
   my $method_attr =
-    {sample_names          => $SAMPLE_NAME,
-     sample_public_names   => $SAMPLE_PUBLIC_NAME,
-     sample_common_names   => $SAMPLE_COMMON_NAME,
-     sample_supplier_names => $SAMPLE_SUPPLIER_NAME,
-     sample_cohorts        => $SAMPLE_COHORT,
-     sample_donor_ids      => $SAMPLE_DONOR_ID};
+    {sample_accession_numbers => $SAMPLE_ACCESSION_NUMBER,
+     sample_ids               => $SAMPLE_ID,
+     sample_names             => $SAMPLE_NAME,
+     sample_public_names      => $SAMPLE_PUBLIC_NAME,
+     sample_common_names      => $SAMPLE_COMMON_NAME,
+     sample_supplier_names    => $SAMPLE_SUPPLIER_NAME,
+     sample_cohorts           => $SAMPLE_COHORT,
+     sample_donor_ids         => $SAMPLE_DONOR_ID};
 
   return $self->_make_multi_value_metadata($lims, $method_attr,
                                            $with_spiked_control);

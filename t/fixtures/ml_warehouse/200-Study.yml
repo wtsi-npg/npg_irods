@@ -1,76 +1,41 @@
 ---
-- abbreviation: 3784STDY
-  abstract: To produce whole transcriptome datasets from human organoids stimulated with IL-22
-  accession_number: ~
+- abbreviation: 425STDY
+  abstract: "Very little is known about genome diversity of herpesviruses and there are currently very few genome sequences in Genbank. Whole genome sequencing of large DNA viruses is complicated by the difficulty in separating virus DNA from human DNA. In this project we will address this issue by using Agilent SureSelect technology and Illumina deep sequencing to sequence several members of the herpesvirus family, including Epstein Barr virus (EBV, HHV4), Kaposiâ€™s sarcoma associated herpesvirus (KSHV, HHV8) and varicella zoster virus (VZV, HHV3). We have designed custom baits to the available reference sequences and will use these to pull out virus sequence from host DNA and then Illumina sequence the captured virus DNA. The short read data will be assembled into a genome consensus sequence for each virus and importantly, allow analysis of virus minority species, which may be important for pathogenesis.\r\n\r\nWe will use a range of samples including DNA from cell lines latently infected with either EBV or KSHV or both viruses. These data will enable an initial estimation of genome diversity and highlight differences at the genetic level between EBV and KSHV from different cell lines. Further studies will generate herpesvirus genome sequences from clinical samples, including varicella, Kaposiâ€™s sarcoma and nasopharyngeal carcinoma to investigate virus genetic diversity and pathogenic determinants.\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-lymphocryptovirus.html\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-rhadinovirus.html\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-simplexvirus.html\r\n"
+  accession_number: ERP001026
   aligned: 1
   array_express_accession_number: ~
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2015-08-18 14:21:29
+  contains_human_dna: 1
+  contaminated_human_dna: 1
+  created: 2010-01-08 15:13:47
   data_access_group: ~
-  data_release_delay_period: 12 months
-  data_release_delay_reason: phd study
-  data_release_sort_of_study: transcriptomics
+  data_release_delay_period: 3 months
+  data_release_delay_reason: other
+  data_release_sort_of_study: genomic sequencing
   data_release_strategy: open
   data_release_timing: delayed
   deleted_at: ~
-  description: "To generate an RNA-Seq dataset for organoids stimulated with IL-22; Salmonella Typhimurium; IL-22 and Salmonella Typhimurium; and unstimulated.\r\nThese data are part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/\r\n"
+  description: "This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/\r\n\r\nThis project aims to generate full genome sequences for several members of the human herpesvirus family, including Epstein Barr virus (EBV, HHV4), Kaposiâ€™s sarcoma associated herpesvirus (KSHV, HHV8) and varicella zoster virus (VZV, HHV3). We have designed a new custom pulldown protocol to separate virus DNA from human DNA prior to sequencing and this method will be tested on a range of samples. Virus genome diversity will then be examined by sequencing the virus genome from a large number of different samples.\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-lymphocryptovirus.html\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-rhadinovirus.html\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-simplexvirus.html\r\n"
   ega_dac_accession_number: ~
   ega_policy_accession_number: ~
-  ena_project_id: ~
+  ena_project_id: 0
   ethically_approved: ~
-  faculty_sponsor: Gordon Dougan
+  faculty_sponsor: Paul Kellam
+  hmdmc_number: ~
   id_lims: SQSCP
-  id_study_lims: 3784
-  id_study_tmp: 3758
-  last_updated: 2016-01-20 14:12:12
-  name: I2134 Transcriptional response of Kolf2 intestinal organoids to IL-22 (GD)
-  prelim_id: I2134
-  recorded_at: 2016-01-20 14:12:12
-  reference_genome: Homo_sapiens (GRCh38_15)
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 1
-  state: active
-  study_title: 'Transcriptional response of Kolf2 intestinal organoids to IL-22[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
-  study_type: Transcriptome Analysis
-  study_visibility: Hold
-  uuid_study_lims: 6b316fe0-45b4-11e5-af59-68b59976a382
-- abbreviation: 3291STDY
-  abstract: "Comprehensive analysis of AML genomes has revealed co-occurring mutations in DNA and\r\nhistone modifying enzymes suggesting their crucial role in tumourigenesis. To gain inside into\r\nthe role of those genes in AML we generated mouse models recapitulating mutations in part\r\nof the most frequent ones. We hypothesise that aberrant chromatin modification and\r\nunderlying effect on gene expression largely contribute to leukemogenesis. To test this\r\nhypothesis we propose to compare gene expression and DNA and histone modification in the\r\npresence or absence of single gene mutation in mouse hematopoietic stem and progenitor\r\ncompartment in a pre-leukaemia setting. Characterisation of these models will inform the\r\nbiology of AML, identify potential therapeutic targets and provide platforms for the\r\nassessment of novel therapeutics.\r\n"
-  accession_number: ERP006862
-  aligned: 1
-  array_express_accession_number: E-ERAD-322
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2014-09-04 14:13:42
-  data_access_group: ~
-  data_release_delay_period: ~
-  data_release_delay_reason: ~
-  data_release_sort_of_study: transcriptomics
-  data_release_strategy: open
-  data_release_timing: standard
-  deleted_at: ~
-  description: "Comprehensive analysis of AML genomes has revealed co-occurring mutations in DNA and\r\nhistone modifying enzymes suggesting their crucial role in tumourigenesis. To gain inside into\r\nthe role of those genes in AML we generated mouse models recapitulating mutations in part\r\nof the most frequent ones. We hypothesise that aberrant chromatin modification and\r\nunderlying effect on gene expression largely contribute to leukemogenesis. To test this\r\nhypothesis we propose to compare gene expression and DNA and histone modification in the\r\npresence or absence of single gene mutation in mouse hematopoietic stem and progenitor\r\ncompartment in a pre-leukaemia setting. Characterisation of these models will inform the\r\nbiology of AML, identify potential therapeutic targets and provide platforms for the\r\nassessment of novel therapeutics.\r\n\r\n\r\nThis data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/"
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: ~
-  ethically_approved: ~
-  faculty_sponsor: George Vassiliou
-  id_lims: SQSCP
-  id_study_lims: 3291
-  id_study_tmp: 3258
-  last_updated: 2015-12-08 08:33:12
-  name: RNA sequencing of mouse haemopoietic cells 2014/15
+  id_study_lims: 425
+  id_study_tmp: 400
+  last_updated: 2016-01-20 14:11:49
+  name: Virus Genome Herpesvirus
   prelim_id: ~
-  recorded_at: 2015-12-08 08:33:13
-  reference_genome: Mus_musculus (GRCm38 + ensembl_75_transcriptome)
+  recorded_at: 2016-01-20 14:11:54
+  reference_genome: Human_herpesvirus_4 (Wild_type)
   remove_x_and_autosomes: 0
   separate_y_chromosome_data: 0
   state: active
-  study_title: 'RNA sequencing of mouse haemopoietic cells 2014/15[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
-  study_type: Cancer Genomics
+  study_title: 'Herpesvirus whole genome sequencing[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
+  study_type: Whole Genome Sequencing
   study_visibility: Hold
-  uuid_study_lims: acd495a0-343d-11e4-aa9b-68b59976a382
+  uuid_study_lims: 2c847286-a557-11df-8092-00144f01a414
 - abbreviation: SC_LB_LCSeq
   abstract: 'The Middle East is a key area for understanding the evolutionary history of humans, and one of the most complex. It is one of the possible centres of the expansion of modern humans outside Africa and an established source of subsequent expansions such as that during the Neolithic into Europe and possibly North Africa. It is also likely to have experienced many less-understood migrations in several directions relevant to the history of Africa, Asia and Europe. Yet the genomics of populations in this area have been little-studied. In the current project, we propose to investigate the genomics of a Lebanese sample. We chose Lebanon because its history in the last few thousand years is relatively well-understood. In addition, our previous studies on the Lebanese population suggest Lebanon could have been a refuge for the earliest indigenous populations in the region. In this project we plan to (1) genotype 120 Lebanese individuals analyzing 2.5M variants (2) 8x sequence 100 individuals and (3) 30x sequence 4 individuals. '
   accession_number: ERP005180
@@ -92,6 +57,7 @@
   ena_project_id: ~
   ethically_approved: 1
   faculty_sponsor: Chris Tyler-Smith
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 2967
   id_study_tmp: 2934
@@ -128,13 +94,14 @@
   ena_project_id: ~
   ethically_approved: ~
   faculty_sponsor: George Vassiliou
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 2905
   id_study_tmp: 2872
-  last_updated: 2015-10-07 12:04:27
+  last_updated: 2016-02-15 12:33:55
   name: Analysis of the chromatin state of mouse stem and progenitor cell compartment
   prelim_id: ~
-  recorded_at: 2015-10-07 12:04:27
+  recorded_at: 2016-02-15 12:33:55
   reference_genome: Mus_musculus (GRCm38)
   remove_x_and_autosomes: 0
   separate_y_chromosome_data: 0
@@ -143,6 +110,154 @@
   study_type: Cancer Genomics
   study_visibility: Hold
   uuid_study_lims: e29286f0-79d7-11e3-876e-68b59976a382
+- abbreviation: 619STDY
+  abstract: For further information on this study please see http://www.sanger.ac.uk/resources/downloads/bacteria/burkholderia-pseudomallei.html
+  accession_number: ERP000251
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2010-06-25 11:19:52
+  data_access_group: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: 'For further information on this study please see http://www.sanger.ac.uk/resources/downloads/bacteria/burkholderia-pseudomallei.html This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/'
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: 0
+  ethically_approved: ~
+  faculty_sponsor: Julian Parkhill
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 619
+  id_study_tmp: 594
+  last_updated: 2016-01-20 14:11:33
+  name: Burkholderia pseudomallei diversity
+  prelim_id: ~
+  recorded_at: 2016-01-20 14:11:36
+  reference_genome: ' '
+  remove_x_and_autosomes: 0
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: 'Burkholderia pseudomallei diversity[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
+  study_type: Whole Genome Sequencing
+  study_visibility: Hold
+  uuid_study_lims: 2e5202a4-a557-11df-8092-00144f01a414
+- abbreviation: 3745STDY
+  abstract: RNA-seq study on stably transfected cell lines
+  accession_number: ERP011057
+  aligned: 1
+  array_express_accession_number: E-ERAD-414
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2015-07-16 15:28:11
+  data_access_group: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: transcriptomics
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: "RNA-seq study on stably transfected cell lines\r\nThese data are part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/"
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: ~
+  ethically_approved: ~
+  faculty_sponsor: Paul Kellam
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 3745
+  id_study_tmp: 3718
+  last_updated: 2016-01-20 14:12:11
+  name: RNASeq stable cell lines (PK)
+  prelim_id: ~
+  recorded_at: 2016-01-20 14:12:11
+  reference_genome: ' '
+  remove_x_and_autosomes: 0
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: 'RNASeq stable cell lines[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
+  study_type: Transcriptome Analysis
+  study_visibility: Hold
+  uuid_study_lims: 44a66b90-2bcf-11e5-a6a1-68b59976a382
+- abbreviation: 3784STDY
+  abstract: To produce whole transcriptome datasets from human organoids stimulated with IL-22
+  accession_number: ~
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2015-08-18 14:21:29
+  data_access_group: ~
+  data_release_delay_period: 12 months
+  data_release_delay_reason: phd study
+  data_release_sort_of_study: transcriptomics
+  data_release_strategy: open
+  data_release_timing: delayed
+  deleted_at: ~
+  description: "To generate an RNA-Seq dataset for organoids stimulated with IL-22; Salmonella Typhimurium; IL-22 and Salmonella Typhimurium; and unstimulated.\r\nThese data are part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/\r\n"
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: ~
+  ethically_approved: ~
+  faculty_sponsor: Gordon Dougan
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 3784
+  id_study_tmp: 3758
+  last_updated: 2016-01-20 14:12:12
+  name: I2134 Transcriptional response of Kolf2 intestinal organoids to IL-22 (GD)
+  prelim_id: I2134
+  recorded_at: 2016-01-20 14:12:12
+  reference_genome: Homo_sapiens (GRCh38_15)
+  remove_x_and_autosomes: 0
+  separate_y_chromosome_data: 1
+  state: active
+  study_title: 'Transcriptional response of Kolf2 intestinal organoids to IL-22[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
+  study_type: Transcriptome Analysis
+  study_visibility: Hold
+  uuid_study_lims: 6b316fe0-45b4-11e5-af59-68b59976a382
+- abbreviation: 3291STDY
+  abstract: "Comprehensive analysis of AML genomes has revealed co-occurring mutations in DNA and\r\nhistone modifying enzymes suggesting their crucial role in tumourigenesis. To gain inside into\r\nthe role of those genes in AML we generated mouse models recapitulating mutations in part\r\nof the most frequent ones. We hypothesise that aberrant chromatin modification and\r\nunderlying effect on gene expression largely contribute to leukemogenesis. To test this\r\nhypothesis we propose to compare gene expression and DNA and histone modification in the\r\npresence or absence of single gene mutation in mouse hematopoietic stem and progenitor\r\ncompartment in a pre-leukaemia setting. Characterisation of these models will inform the\r\nbiology of AML, identify potential therapeutic targets and provide platforms for the\r\nassessment of novel therapeutics.\r\n"
+  accession_number: ERP006862
+  aligned: 1
+  array_express_accession_number: E-ERAD-322
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2014-09-04 14:13:42
+  data_access_group: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: transcriptomics
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: "Comprehensive analysis of AML genomes has revealed co-occurring mutations in DNA and\r\nhistone modifying enzymes suggesting their crucial role in tumourigenesis. To gain inside into\r\nthe role of those genes in AML we generated mouse models recapitulating mutations in part\r\nof the most frequent ones. We hypothesise that aberrant chromatin modification and\r\nunderlying effect on gene expression largely contribute to leukemogenesis. To test this\r\nhypothesis we propose to compare gene expression and DNA and histone modification in the\r\npresence or absence of single gene mutation in mouse hematopoietic stem and progenitor\r\ncompartment in a pre-leukaemia setting. Characterisation of these models will inform the\r\nbiology of AML, identify potential therapeutic targets and provide platforms for the\r\nassessment of novel therapeutics.\r\n\r\n\r\nThis data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/"
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: ~
+  ethically_approved: ~
+  faculty_sponsor: George Vassiliou
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 3291
+  id_study_tmp: 3258
+  last_updated: 2015-12-08 08:33:12
+  name: RNA sequencing of mouse haemopoietic cells 2014/15
+  prelim_id: ~
+  recorded_at: 2015-12-08 08:33:13
+  reference_genome: Mus_musculus (GRCm38 + ensembl_75_transcriptome)
+  remove_x_and_autosomes: 0
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: 'RNA sequencing of mouse haemopoietic cells 2014/15[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
+  study_type: Cancer Genomics
+  study_visibility: Hold
+  uuid_study_lims: acd495a0-343d-11e4-aa9b-68b59976a382
 - abbreviation: 198STDY
   abstract: ~
   accession_number: ~
@@ -164,6 +279,7 @@
   ena_project_id: ~
   ethically_approved: ~
   faculty_sponsor: None
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 198
   id_study_tmp: 177
@@ -200,6 +316,7 @@
   ena_project_id: ~
   ethically_approved: ~
   faculty_sponsor: Derek Stemple
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 3749
   id_study_tmp: 3722
@@ -215,42 +332,6 @@
   study_type: Transcriptome Analysis
   study_visibility: Hold
   uuid_study_lims: 7e285fe0-312e-11e5-b214-68b59976a382
-- abbreviation: 619STDY
-  abstract: For further information on this study please see http://www.sanger.ac.uk/resources/downloads/bacteria/burkholderia-pseudomallei.html
-  accession_number: ERP000251
-  aligned: 1
-  array_express_accession_number: ~
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2010-06-25 11:19:52
-  data_access_group: ~
-  data_release_delay_period: ~
-  data_release_delay_reason: ~
-  data_release_sort_of_study: genomic sequencing
-  data_release_strategy: open
-  data_release_timing: standard
-  deleted_at: ~
-  description: 'For further information on this study please see http://www.sanger.ac.uk/resources/downloads/bacteria/burkholderia-pseudomallei.html This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/'
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: 0
-  ethically_approved: ~
-  faculty_sponsor: Julian Parkhill
-  id_lims: SQSCP
-  id_study_lims: 619
-  id_study_tmp: 594
-  last_updated: 2016-01-20 14:11:33
-  name: Burkholderia pseudomallei diversity
-  prelim_id: ~
-  recorded_at: 2016-01-20 14:11:36
-  reference_genome: ' '
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: 'Burkholderia pseudomallei diversity[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
-  study_type: Whole Genome Sequencing
-  study_visibility: Hold
-  uuid_study_lims: 2e5202a4-a557-11df-8092-00144f01a414
 - abbreviation: 3606STDY
   abstract: 'We propose to sequence 35 Tibetan samples to provide a comparative dataset for a project examining Himalayan samples (I1911). Tibetans have been studied in several ways such as their adaptations to high altitude life, although not, thus far, at the genome sequence level. We chose this number of individuals because similar numbers will be sequenced from many African, European and HGDP populations, and thus the Tibetan data can also be included in many other analyses.'
   accession_number: ERP010096
@@ -272,6 +353,7 @@
   ena_project_id: ~
   ethically_approved: 1
   faculty_sponsor: Chris Tyler-Smith
+  hmdmc_number: ~
   id_lims: SQSCP
   id_study_lims: 3606
   id_study_tmp: 3570
@@ -287,39 +369,3 @@
   study_type: Whole Genome Sequencing
   study_visibility: Public
   uuid_study_lims: 0e3c3470-da46-11e4-808c-68b59976a382
-- abbreviation: 3745STDY
-  abstract: RNA-seq study on stably transfected cell lines
-  accession_number: ERP011057
-  aligned: 1
-  array_express_accession_number: E-ERAD-414
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2015-07-16 15:28:11
-  data_access_group: ~
-  data_release_delay_period: ~
-  data_release_delay_reason: ~
-  data_release_sort_of_study: transcriptomics
-  data_release_strategy: open
-  data_release_timing: standard
-  deleted_at: ~
-  description: "RNA-seq study on stably transfected cell lines\r\nThese data are part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/"
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: ~
-  ethically_approved: ~
-  faculty_sponsor: Paul Kellam
-  id_lims: SQSCP
-  id_study_lims: 3745
-  id_study_tmp: 3718
-  last_updated: 2016-01-20 14:12:11
-  name: RNASeq stable cell lines (PK)
-  prelim_id: ~
-  recorded_at: 2016-01-20 14:12:11
-  reference_genome: ' '
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: 'RNASeq stable cell lines[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
-  study_type: Transcriptome Analysis
-  study_visibility: Hold
-  uuid_study_lims: 44a66b90-2bcf-11e5-a6a1-68b59976a382

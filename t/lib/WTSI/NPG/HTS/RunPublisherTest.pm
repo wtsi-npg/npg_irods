@@ -232,6 +232,28 @@ sub is_paired_read : Test(2) {
   }
 }
 
+sub list_xml_files : Test(2) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+
+  foreach my $file_format (qw[bam cram]) {
+    my $pub = WTSI::NPG::HTS::RunPublisher->new
+      (file_format    => $file_format,
+       irods          => $irods,
+       lims_factory   => $lims_factory,
+       runfolder_path => $runfolder_path);
+
+    my @expected_files = ("$runfolder_path/RunInfo.xml",
+                          "$runfolder_path/runParameters.xml");
+    my $observed_files = $pub->list_xml_files;
+    is_deeply($observed_files, \@expected_files,
+              "Found XML files ($file_format)")
+        or diag explain $observed_files;
+  }
+}
+
 sub list_lane_alignment_files : Test(16) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -439,6 +461,40 @@ sub list_plex_ancillary_files : Test(16) {
   }
 }
 
+sub publish_xml_files : Test(14) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
+
+  my $dest_coll = "$irods_tmp_coll/publish_xml_files";
+
+  my $pub = WTSI::NPG::HTS::RunPublisher->new
+    (dest_collection => $dest_coll,
+     file_format     => 'cram',
+     irods           => $irods,
+     lims_factory    => $lims_factory,
+     runfolder_path  => $runfolder_path);
+
+  my @expected_paths = ("$dest_coll/RunInfo.xml",
+                        "$dest_coll/runParameters.xml");
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_xml_files;
+  cmp_ok($num_processed, '==', 2, 'Published 2 XML files');
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll, '[.]xml$');
+  is_deeply(\@observed_paths, \@expected_paths,
+            "Published correctly named XML files") or
+              diag explain \@observed_paths;
+
+  check_common_metadata($irods, @observed_paths);
+
+  foreach my $path (@observed_paths) {
+    my $obj = WTSI::NPG::HTS::XMLFileDataObject->new($irods, $path);
+    cmp_ok($obj->get_avu($ID_RUN)->{value}, '==', 18448,
+           "$path id_run metadata present");
+  }
+}
+
 sub publish_lane_alignment_files : Test(168) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -461,6 +517,7 @@ sub publish_lane_alignment_files : Test(168) {
     foreach my $position (1 .. 8) {
       my @expected_files = @{$position_index{$position}};
       my $num_expected  = scalar @expected_files;
+
       my ($num_files, $num_processed, $num_errors) =
         $pub->publish_lane_alignment_files($position);
 
@@ -541,7 +598,7 @@ sub publish_plex_alignment_files : Test(487) {
       my %position_index =
         calc_plex_alignment_files($archive_path, $file_format);
 
-      my $num_expected  = scalar @{$position_index{$position}};
+      my $num_expected = scalar @{$position_index{$position}};
       my ($num_files, $num_processed, $num_errors) =
         $pub->publish_plex_alignment_files($position);
 
@@ -719,7 +776,7 @@ sub publish_lane_ancillary_files : Test(776) {
 
       cmp_ok($num_processed, '==', $num_expected,
              "Published $num_expected $file_format lane " .
-             "$position ancillary files");
+             "$position $file_format ancillary files");
 
       my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
       my @expected_paths =
@@ -728,8 +785,8 @@ sub publish_lane_ancillary_files : Test(776) {
         observed_data_objects($irods, $dest_coll, $pos_pattern);
 
       is_deeply(\@observed_paths, \@expected_paths,
-                "Published correctly named position $position " .
-                "$file_format ancillary files") or
+                "Published correctly named $file_format position $position " .
+                "ancillary files") or
                   diag explain \@observed_paths;
 
       check_common_metadata($irods, @observed_paths);
@@ -763,8 +820,8 @@ sub publish_plex_ancillary_files : Test(2534) {
         $pub->publish_plex_ancillary_files($position);
 
       cmp_ok($num_processed, '==', $num_expected,
-             "Published $num_expected position $position " .
-             "$file_format ancillary files");
+             "Published $num_expected $file_format position $position " .
+             "ancillary files");
 
       my $pos_pattern = sprintf '%d_%d#\d+', $pub->id_run, $position;
       my @expected_paths =
@@ -773,8 +830,8 @@ sub publish_plex_ancillary_files : Test(2534) {
         observed_data_objects($irods, $dest_coll, $pos_pattern);
 
       is_deeply(\@observed_paths, \@expected_paths,
-                "Published correctly named position $position " .
-                "$file_format ancillary files") or
+                "Published correctly named $file_format position $position " .
+                "ancillary files") or
                   diag explain \@observed_paths;
 
       check_common_metadata($irods, @observed_paths);
@@ -782,7 +839,55 @@ sub publish_plex_ancillary_files : Test(2534) {
   }
 }
 
-sub publish_plex_qc_files : Test(2212) {
+sub publish_lane_qc_files : Test(928) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
+
+  # Omitting bam to reduce runtime
+  foreach my $file_format (qw[cram]) {
+    my $dest_coll = "$irods_tmp_coll/publish_lane_qc_files";
+
+    my $pub = WTSI::NPG::HTS::RunPublisher->new
+      (dest_collection => $dest_coll,
+       file_format     => $file_format,
+       irods           => $irods,
+       lims_factory    => $lims_factory,
+       runfolder_path  => $runfolder_path);
+
+    my %position_index = calc_lane_qc_files($archive_path, $file_format);
+
+    foreach my $position (1 .. 8) {
+      my $num_expected  = scalar @{$position_index{$position}};
+      my ($num_files, $num_processed, $num_errors) =
+        $pub->publish_lane_qc_files($position);
+
+      cmp_ok($num_processed, '==', $num_expected,
+             "Published $num_expected $file_format lane " .
+             "$position QC files");
+
+      my $qc_coll = catfile($dest_coll, q[qc]);
+
+      my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
+      my @expected_paths =
+        expected_data_objects($qc_coll, \%position_index, $position);
+      my @observed_paths =
+        observed_data_objects($irods, $qc_coll, $pos_pattern);
+
+      is_deeply(\@observed_paths, \@expected_paths,
+                "Published correctly named $file_format position $position " .
+                "JSON QC files") or
+                  diag explain \@observed_paths;
+
+      check_common_metadata($irods, @observed_paths);
+      check_study_id_metadata($irods, @observed_paths);
+    }
+  }
+}
+
+sub publish_plex_qc_files : Test(1660) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -808,8 +913,8 @@ sub publish_plex_qc_files : Test(2212) {
         $pub->publish_plex_qc_files($position);
 
       cmp_ok($num_processed, '==', $num_expected,
-             "Published $num_expected position $position " .
-             "$file_format QC files");
+             "Published $num_expected $file_format position $position " .
+             "JSON QC files");
 
       my $qc_coll = catfile($dest_coll, q[qc]);
 
@@ -820,12 +925,12 @@ sub publish_plex_qc_files : Test(2212) {
         observed_data_objects($irods, $qc_coll, $pos_pattern);
 
       is_deeply(\@observed_paths, \@expected_paths,
-                "Published correctly named position $position " .
-                "$file_format QC files") or
+                "Published correctly named $file_format position $position " .
+                "JSON QC files") or
                   diag explain \@observed_paths;
 
       check_common_metadata($irods, @observed_paths);
-      check_study_metadata($irods, @observed_paths);
+      check_study_id_metadata($irods, @observed_paths);
     }
   }
 }
@@ -878,6 +983,41 @@ sub publish_plex_alignment_files_alt_process : Test(598) {
       check_study_metadata($irods, @observed_paths);
       check_alt_process_metadata($irods, $alt_process, @observed_paths);
     }
+  }
+}
+
+sub publish_plex_alignment_files_human_split : Test(4) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $runfolder_path = "$data_path/sequence/160225_HS38_18980_B_H7HHMBCXX";
+  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20160228-062603/no_cal/archive";
+
+  my $position = 1;
+
+  foreach my $file_format (qw[bam cram]) {
+    my $dest_coll = "$irods_tmp_coll/plex_human_split/$position";
+
+    my $pub = WTSI::NPG::HTS::RunPublisher->new
+      (dest_collection => $dest_coll,
+       file_format     => $file_format,
+       irods           => $irods,
+       lims_factory    => $lims_factory,
+       runfolder_path  => $runfolder_path);
+
+    my $num_expected = 5;
+
+    my @listed = @{$pub->list_plex_alignment_files($position)};
+    my $num_listed = scalar @listed;
+    cmp_ok($num_listed, '==', $num_expected,
+           "$num_listed position $position alignment files to publish") or
+             diag explain \@listed;
+
+    my ($num_files, $num_processed, $num_errors) =
+      $pub->publish_plex_alignment_files($position);
+    cmp_ok($num_processed, '==', $num_expected,
+           "Published $num_expected position $position " .
+           "$file_format alignment files");
   }
 }
 
@@ -1087,7 +1227,6 @@ sub calc_lane_qc_files {
                       ref_match sequence_error sequence_summary spatial_filter
                       verify_bam_id];
   my @qc_parts = qw[_F0x900.samtools_stats _F0xB00.samtools_stats];
-
 
   foreach my $position (1 .. 8) {
     my @lane_files;
@@ -1382,6 +1521,18 @@ sub check_common_metadata {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
+  }
+}
+
+sub check_study_id_metadata {
+  my ($irods, @paths) = @_;
+
+  foreach my $path (@paths) {
+    my $obj = WTSI::NPG::HTS::AncFileDataObject->new($irods, $path);
+    my $file_name = fileparse($obj->str);
+
+    my @avu = $obj->find_in_metadata($STUDY_ID);
+    cmp_ok(scalar @avu, '>=', 1, "$file_name $STUDY_ID metadata present");
   }
 }
 
