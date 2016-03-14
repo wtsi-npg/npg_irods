@@ -15,7 +15,7 @@ use WTSI::NPG::HTS::Types qw[AlMapFileFormat];
 
 our $VERSION = '';
 
-our $DEFAULT_SAMTOOLS_EXECUTABLE = 'samtools';
+our $DEFAULT_SAMTOOLS_EXECUTABLE = 'samtools_irods';
 
 # Sequence alignment filters
 our $HUMAN   = 'human';   # FIXME
@@ -241,10 +241,10 @@ sub _read_header {
   my ($self) = @_;
 
   my $samtools;
-  if ($self->can('samtools_cmd')) {
+  if ($self->can('samtools_irods_cmd')) {
     $self->debug('Using npg_common::roles::software_location to find ',
-                 'samtools: ', $self->samtools_cmd);
-    $samtools = $self->samtools_cmd;
+                 'samtools_irods: ', $self->samtools_irods_cmd);
+    $samtools = $self->samtools_irods_cmd;
   }
   else {
     $self->debug('Using the default samtools executable on PATH: ',

@@ -43,7 +43,7 @@ my $data_file      = '7915_5#1';
 my $reference_file = 'test_ref.fa';
 my $irods_tmp_coll;
 
-my $samtools_available = `which samtools`;
+my $samtools_available = `which samtools_irods`;
 
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
@@ -73,14 +73,14 @@ sub setup_test : Test(setup) {
                         '-T', "$data_path/$reference_file",
                         '-o', "irods:$irods_tmp_coll/$data_file.cram",
                         "$data_path/$data_file.sam"],
-         executable => 'samtools')->run;
+         executable => 'samtools_irods')->run;
 
     WTSI::DNAP::Utilities::Runnable->new
         (arguments  => ['view', '-b',
                         '-T', "$data_path/$reference_file",
                         '-o', "irods:$irods_tmp_coll/$data_file.bam",
                         "$data_path/$data_file.sam"],
-         executable => 'samtools')->run;
+         executable => 'samtools_irods')->run;
   }
 }
 
