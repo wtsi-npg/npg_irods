@@ -56,7 +56,7 @@ my $run15440_lane1_tag81 = '15440_1#81';
 
 my $reference_file = 'test_ref.fa';
 my $irods_tmp_coll;
-my $samtools_available = `which samtools`;
+my $samtools_available = `which samtools_irods`;
 
 my $have_admin_rights =
   system(qq[$WTSI::NPG::iRODS::IADMIN lu >/dev/null 2>&1]) == 0;
@@ -139,13 +139,13 @@ sub setup_test : Test(setup) {
                           '-T', "$data_path/$reference_file",
                           '-o', "irods:$irods_tmp_coll/$data_file.cram",
                                 "$data_path/$data_file.sam"],
-           executable => 'samtools')->run;
+           executable => 'samtools_irods')->run;
       WTSI::DNAP::Utilities::Runnable->new
           (arguments  => ['view', '-b',
                           '-T', "$data_path/$reference_file",
                           '-o', "irods:$irods_tmp_coll/$data_file.bam",
                                 "$data_path/$data_file.sam"],
-           executable => 'samtools')->run;
+           executable => 'samtools_irods')->run;
 
         foreach my $format (qw[bam cram]) {
           my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
@@ -335,7 +335,7 @@ sub alignment_filter : Test(24) {
 sub header : Test(8) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 8;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -367,7 +367,7 @@ sub header : Test(8) {
 sub is_aligned : Test(4) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools executable not on the PATH', 4;
+      skip 'samtools_irods executable not on the PATH', 4;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -394,7 +394,7 @@ sub is_aligned : Test(4) {
 sub reference : Test(4) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools executable not on the PATH', 4;
+      skip 'samtools_irods executable not on the PATH', 4;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -422,7 +422,7 @@ sub reference : Test(4) {
 sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 8;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -633,7 +633,7 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
 sub update_secondary_metadata_tag0_spike_bact : Test(8) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 8;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -852,7 +852,7 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
 sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 8;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -903,7 +903,7 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
 sub update_secondary_metadata_tag1_spike_bact : Test(8) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 8;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -954,7 +954,7 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
 sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 8;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -1023,7 +1023,7 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
 sub update_secondary_metadata_tag0_spike_human : Test(8) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 8;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -1099,7 +1099,7 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
 sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 8;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -1150,7 +1150,7 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
 sub update_secondary_metadata_tag81_spike_human : Test(8) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 8;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,

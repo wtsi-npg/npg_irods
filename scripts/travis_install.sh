@@ -39,6 +39,7 @@ cd /tmp/samtools-${SAMTOOLS_VERSION}
 ./configure --enable-plugins --with-plugin-path=/tmp/htslib-${HTSLIB_VERSION}
 make all plugins-htslib
 sudo make install
+sudo ln -s samtools /usr/local/bin/samtools_irods
 
 # CPAN
 cpanm --quiet --notest Alien::Tidyp # For npg_tracking
