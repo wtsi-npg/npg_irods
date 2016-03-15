@@ -42,7 +42,7 @@ my $verbose;
 
 my @positions;
 
-GetOptions('aligment'                          => \$alignment,
+GetOptions('alignment'                         => \$alignment,
            'ancillary'                         => \$ancillary,
            'collection=s'                      => \$collection,
            'debug'                             => \$debug,
