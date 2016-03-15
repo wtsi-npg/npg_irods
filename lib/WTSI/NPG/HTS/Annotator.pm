@@ -455,7 +455,6 @@ sub make_study_metadata {
   my $method_attr =
     {study_accession_numbers => $STUDY_ACCESSION_NUMBER,
      study_names             => $STUDY_NAME,
-     study_ids               => $STUDY_ID,
      study_titles            => $STUDY_TITLE};
 
   push @avus, $self->_make_multi_value_metadata($lims, $method_attr,
