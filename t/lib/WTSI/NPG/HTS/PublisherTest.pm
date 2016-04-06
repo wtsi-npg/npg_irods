@@ -88,7 +88,7 @@ sub publish : Test(6) {
   } 'publish, cram no MD5 fails';
 }
 
-sub publish_file : Test(36) {
+sub publish_file : Test(38) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -116,6 +116,10 @@ sub publish_file : Test(36) {
   # non-matching MD5
   pf_exist_full_path_meta_no_stamp_no_match($irods, $data_path,
                                             $irods_tmp_coll);
+
+  # publish file where the cached md5 file is stale and must be
+  # regenerated
+  pf_stale_md5_cache($irods, $data_path, $irods_tmp_coll);
 }
 
 sub publish_directory : Test(11) {
@@ -175,7 +179,7 @@ sub pf_new_full_path_meta_no_stamp {
 
   my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $remote_path);
 
- is($obj->get_avu($DCTERMS_CREATOR)->{value}, 'http://www.sanger.ac.uk',
+  is($obj->get_avu($DCTERMS_CREATOR)->{value}, 'http://www.sanger.ac.uk',
      'New object creator URI') or diag explain $obj->metadata;
 
   ok(URI->new($obj->get_avu($DCTERMS_PUBLISHER)->{value}), 'Publisher URI') or
@@ -402,6 +406,38 @@ sub pd_new_full_path_meta_no_stamp {
 
   is($coll->get_avu($ANALYSIS_UUID)->{value}, $additional_avu2->{value},
      'New additional AVU 2') or diag explain $coll->metadata;
+}
+
+sub pf_stale_md5_cache {
+  my ($irods, $data_path, $coll_path) = @_;
+
+  my $cache_timeout = 10;
+  my $publisher = WTSI::NPG::HTS::Publisher->new
+    (irods                     => $irods,
+     checksum_cache_time_delta => $cache_timeout);
+
+  my $local_path_c = "$tmp_data_path/publish_file/c.txt";
+  my $remote_path = "$coll_path/pf_stale_md5_cache.txt";
+
+  open my $md5_out, '>>', "$local_path_c.md5"
+    or die "Failed to open $local_path_c.md5 for writing";
+  print $md5_out "fake_md5_string\n";
+  close $md5_out or warn "Failed to close $local_path_c.md5";
+
+  sleep $cache_timeout + 5;
+
+  open my $data_out, '>>', $local_path_c
+    or die "Failed to open $local_path_c for writing";
+  print $data_out "extra data\n";
+  close $data_out or warn "Failed to close $local_path_c";
+
+  is($publisher->publish_file($local_path_c, $remote_path),
+     $remote_path,
+     'publish_file, stale MD5 cache');
+
+  my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $remote_path);
+  is($obj->get_avu($FILE_MD5)->{value}, 'c8a3fa18c7c1402c953415a6b4f8ef7d',
+     'Stale MD5 was regenerated') or diag explain $obj->metadata;
 }
 
 1;

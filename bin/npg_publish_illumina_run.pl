@@ -33,6 +33,7 @@ my $alignment;
 my $ancillary;
 my $collection;
 my $debug;
+my $driver_type;
 my $file_format;
 my $index;
 my $log4perl_config;
@@ -46,6 +47,7 @@ GetOptions('alignment'                         => \$alignment,
            'ancillary'                         => \$ancillary,
            'collection=s'                      => \$collection,
            'debug'                             => \$debug,
+           'driver-type|driver_type=s'         => \$driver_type,
            'file-format|file_format=s'         => \$file_format,
            'help'                              => sub {
              pod2usage(-verbose => 2, -exitval => 0);
@@ -84,18 +86,23 @@ my $irods = WTSI::NPG::iRODS->new(logger => $log);
 my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
 
 # Make this an optional argument (construct within the publisher)
-my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+my @fac_init_args = (mlwh_schema => $wh_schema);
+if ($driver_type) {
+  $log->info("Overriding default driver type with '$driver_type'");
+  push @fac_init_args, 'driver_type' => $driver_type;
+}
+my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(@fac_init_args);
 
-my @initargs = (file_format     => $file_format,
-                irods           => $irods,
-                lims_factory    => $lims_factory,
-                logger          => $log,
-                runfolder_path  => $runfolder_path);
+my @pub_init_args = (file_format     => $file_format,
+                     irods           => $irods,
+                     lims_factory    => $lims_factory,
+                     logger          => $log,
+                     runfolder_path  => $runfolder_path);
 if ($collection) {
-  push @initargs, dest_collection => $collection;
+  push @pub_init_args, dest_collection => $collection;
 }
 
-my $publisher = WTSI::NPG::HTS::RunPublisher->new(@initargs);
+my $publisher = WTSI::NPG::HTS::RunPublisher->new(@pub_init_args);
 
 my ($num_files, $num_published, $num_errors) = (0, 0, 0);
 my $increment_counts = sub {
@@ -178,6 +185,11 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
    --runfolder_path  The instrument runfolder path to load.
    --logconf         A log4perl configuration file. Optional.
    --verbose         Print messages while processing. Optional.
+
+ Advanced options:
+
+  --driver-type
+  --driver_type Set the ML warehouse driver type to a custom value.
 
 =head1 DESCRIPTION
 
