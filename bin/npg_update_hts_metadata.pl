@@ -38,6 +38,7 @@ my $embedded_conf = << 'LOGCONF';
 LOGCONF
 
 my $debug;
+my $driver_type;
 my $dry_run = 1;
 my @id_run;
 my $lane;
@@ -49,19 +50,20 @@ my $tag_index;
 my $verbose;
 my $zone;
 
-GetOptions('debug'                 => \$debug,
-           'dry-run|dry_run!'      => \$dry_run,
-           'help'                  => sub { pod2usage(-verbose => 2,
-                                                      -exitval => 0) },
-           'lane=i'                => \$lane,
-           'logconf=s'             => \$log4perl_config,
-           'max-run|max_run=i'     => \$max_id_run,
-           'min-run|min_run=i'     => \$min_id_run,
-           'run=i'                 => \@id_run,
-           'tag-index|tag_index=i' => \$tag_index,
-           'verbose'               => \$verbose,
-           'zone=s',               => \$zone,
-           q[]                     => \$stdio);
+GetOptions('debug'                     => \$debug,
+           'driver-type|driver_type=s' => \$driver_type,
+           'dry-run|dry_run!'          => \$dry_run,
+           'help'                      => sub { pod2usage(-verbose => 2,
+                                                          -exitval => 0) },
+           'lane=i'                    => \$lane,
+           'logconf=s'                 => \$log4perl_config,
+           'max-run|max_run=i'         => \$max_id_run,
+           'min-run|min_run=i'         => \$min_id_run,
+           'run=i'                     => \@id_run,
+           'tag-index|tag_index=i'     => \$tag_index,
+           'verbose'                   => \$verbose,
+           'zone=s',                   => \$zone,
+           q[]                         => \$stdio);
 
 # Process CLI arguments
 if ($log4perl_config) {
@@ -149,8 +151,13 @@ my $num_updated = 0;
 
 if (@data_objs) {
   my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
-  my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new
-    (mlwh_schema => $wh_schema);
+
+  my @init_args = (mlwh_schema => $wh_schema);
+  if ($driver_type) {
+    $log->info("Overriding default driver type with '$driver_type'");
+    push @init_args, 'driver_type' => $driver_type;
+  }
+  my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(@init_args);
 
   $num_updated = WTSI::NPG::HTS::MetaUpdater->new
     (irods        => $irods,
@@ -200,7 +207,7 @@ npg_update_hts_metadata [--dry-run] [--lane position] [--logconf file]
   --min-run id_run --max-run id_run | --run id_run [--tag-index i]
   [--verbose] [--zone name]
 
-Options:
+ Options:
 
   --debug       Enable debug level logging. Optional, defaults to false.
   --dry-run
@@ -224,6 +231,11 @@ Options:
   -             Read iRODS paths from STDIN instead of finding them by their
                 run, lane and tag index.
 
+ Advanced options:
+
+  --driver-type
+  --driver_type Set the ML warehouse driver type to a custom value.
+
 =head1 DESCRIPTION
 
 This script updates secondary metadata (i.e. LIMS-derived metadata,
@@ -232,6 +244,18 @@ files may be specified by run (optionally restricted further by lane
 and tag index) in which case either a specific run or run range must
 be given. Alternatively a list of iRODS paths may be piped to
 STDIN.
+
+This script will update metadata on all the files that constitute a
+run, including ancillary files, JSON files and bed files. Some of
+these files do not have sufficient metadata to identify them as
+belonging to a specific run, using metadata alone. This script uses
+the following procedure to find a run's files:
+
+ 1. A metadata query is run to idenify all the BAM and/or CRAM files
+    in the run.
+
+ 2. The collection(s) in which the files from step 1. are located, are
+    search recursively for additional files.
 
 In dry run mode, the proposed metadata changes will be written as INFO
 notices to the log.

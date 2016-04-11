@@ -6,7 +6,6 @@ use MooseX::StrictConstructor;
 
 use npg_tracking::util::types qw[:all];
 use st::api::lims;
-use st::api::lims::ml_warehouse;
 
 our $VERSION = '';
 
@@ -17,6 +16,20 @@ has 'mlwh_schema' =>
    isa           => 'WTSI::DNAP::Warehouse::Schema',
    required      => 1,
    documentation => 'A ML warehouse handle to obtain secondary metadata');
+
+has 'driver_type' =>
+  (is            => 'rw',
+   isa           => 'Str',
+   required      => 1,
+   default       => 'ml_warehouse_fc_cache',
+   documentation => 'The ML warehouse driver type used when obtaining ' .
+                    'secondary metadata');
+
+has '_lims_cache' =>
+  (is       => 'rw',
+   isa      => 'HashRef',
+   required => 1,
+   default  => sub { return {} });
 
 =head2 positions
 
@@ -53,7 +66,6 @@ sub positions {
 
 =cut
 
-
 sub tag_indices {
   my ($self, $id_run, $position) = @_;
 
@@ -75,8 +87,8 @@ sub tag_indices {
   Arg [3]      Tag index, Int. Optional.
 
   Example    : my $lims = $factory->make_lims(17750, 1, 0)
-  Description: Return a new st::api::lims for the specified run,
-               lane (and possibly plex).
+  Description: Return an st::api::lims for the specified run
+               (and possibly lane, plex).
   Returntype : st::api::lims
 
 =cut
@@ -87,49 +99,31 @@ sub make_lims {
   defined $id_run or
     $self->logconfess('A defined id_run argument is required');
 
-  my $flowcell = $self->_find_flowcell($id_run);
+  if (not exists $self->_lims_cache->{$id_run}) {
+    my $run = st::api::lims->new(driver_type => $self->driver_type,
+                                 mlwh_schema => $self->mlwh_schema,
+                                 id_run      => $id_run);
+    $self->_lims_cache->{$id_run} = $run;
+  }
 
-  my @initargs = (flowcell_barcode => $flowcell->flowcell_barcode,
-                  id_flowcell_lims => $flowcell->id_flowcell_lims,
-                  id_run           => $id_run);
+  my $lims = $self->_lims_cache->{$id_run};
+  defined $lims or
+      $self->logconfess("Failed to create st::api::lims for run $id_run");
 
   if (defined $position) {
-    push @initargs, position => $position;
+    ($lims) = grep { $_->position == $position } $lims->children;
+    defined $lims or
+      $self->logconfess("Failed to create st::api::lims for run $id_run ",
+                        "lane $position");
   }
-  if (defined $tag_index) {
-    push @initargs, tag_index => $tag_index;
-  }
-
-  my $driver = st::api::lims::ml_warehouse->new
-    (mlwh_schema => $self->mlwh_schema, @initargs);
-
-  return st::api::lims->new(driver => $driver, @initargs);
-}
-
-sub _find_flowcell {
-  my ($self, $id_run) = @_;
-
-  my $flowcells = $self->mlwh_schema->resultset('IseqFlowcell')->search
-    ({'iseq_product_metrics.id_run' => $id_run},
-     {join     => 'iseq_product_metrics',
-      select   => ['flowcell_barcode', 'id_flowcell_lims'],
-      distinct => 1});
-
-  my @flowcells;
-  while (my $fc = $flowcells->next) {
-    push @flowcells, $fc;
+  if ($tag_index) {
+    ($lims) = grep { $_->tag_index == $tag_index } $lims->children;
+    defined $lims or
+      $self->logconfess("Failed to create st::api::lims for run $id_run ",
+                        "lane $position tag_index $tag_index");
   }
 
-  my $num_flowcells = scalar @flowcells;
-  if ($num_flowcells == 0) {
-    $self->logconfess("LIMS returned no flowcells for run '$id_run'");
-  }
-  elsif ($num_flowcells > 1) {
-    $self->logconfess("LIMS returned >1 ($num_flowcells) flowcells for ",
-                      "run $id_run: ", pp(\@flowcells));
-  }
-
-  return shift @flowcells
+  return $lims;
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -160,7 +154,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

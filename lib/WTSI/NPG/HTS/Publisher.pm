@@ -5,6 +5,7 @@ use Data::Dump qw[pp];
 use DateTime;
 use English qw[-no_match_vars];
 use File::Spec::Functions qw[catdir catfile splitdir splitpath];
+use File::stat;
 use List::AllUtils qw[any];
 use Moose;
 use Try::Tiny;
@@ -35,13 +36,23 @@ has 'checksum_cache_threshold' =>
    default       => 2048,
    documentation => 'The size above which file checksums will be cached');
 
-has 'require_md5_cache' =>
+has 'require_checksum_cache' =>
   (is            => 'ro',
    isa           => 'ArrayRef[Str]',
    required      => 1,
    default       => sub { return [qw[bam cram]] },
    documentation => 'A list of file suffixes for which MD5 cache files ' .
                     'must be provided and will not be created on the fly');
+
+has 'checksum_cache_time_delta' =>
+  (is            => 'rw',
+   isa           => 'Int',
+   required      => 1,
+   default       => 60,
+   documentation => 'Time delta in seconds for checksum cache files to be ' .
+                    'considered stale. If a data file is newer than its '   .
+                    'cache by more than this number of seconds, the cache ' .
+                    'is stale');
 
 sub BUILD {
   my ($self) = @_;
@@ -416,12 +427,17 @@ sub _get_md5 {
   my $cache_file = "$path.md5";
   my $md5 = q[];
 
+  if (-e $cache_file and $self->_md5_cache_file_stale($path, $cache_file)) {
+    $self->warn("Deleting stale MD5 cache file '$cache_file' for '$path'");
+    unlink $cache_file or $self->warn("Failed to unlink '$cache_file'");
+  }
+
   if (-e $cache_file) {
     $md5 = $self->_read_md5_cache_file($cache_file);
   }
 
   if (not $md5) {
-    if ($suffix and any { $suffix eq $_ } @{$self->require_md5_cache}) {
+    if ($suffix and any { $suffix eq $_ } @{$self->require_checksum_cache}) {
       $self->logconfess("Missing a populated MD5 cache file '$cache_file'",
                         "for '$path'");
     }
@@ -435,6 +451,23 @@ sub _get_md5 {
   }
 
   return $md5;
+}
+
+sub _md5_cache_file_stale {
+  my ($self, $path, $cache_file) = @_;
+
+  my $path_stat  = stat $path;
+  my $cache_stat = stat $cache_file;
+
+  # Pipeline processes may write the data file and its checksum cache
+  # in parallel, leading to mthe possibility that the checksum file
+  # handle may be closed before the data file handle. i.e. the data
+  # file may be newer than its checksum cache. The test for stale
+  # cache files uses a delta to accommodate this; if the data file is
+  # newer by more than delta seconds, the cache is considered stale.
+
+  return (($path_stat->mtime - $cache_stat->mtime)
+          > $self->checksum_cache_time_delta) ? 1 : 0;
 }
 
 sub _read_md5_cache_file {
