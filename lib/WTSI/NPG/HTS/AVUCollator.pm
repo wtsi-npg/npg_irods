@@ -70,9 +70,11 @@ WTSI::NPG::HTS::AVUCollator
 
 =head1 DESCRIPTION
 
-A role providing methods to collate metadata for WTSI HTS runs. This
-could be pushed back into WTSI::NPG::iRODS, removing the need for this
-role.
+A role providing methods to collate metadata i.e. gather togther all
+the values for each distinct attribute in a list of AVUs.
+
+This could be pushed back into WTSI::NPG::iRODS, removing the need for
+this role.
 
 =head1 AUTHOR
 

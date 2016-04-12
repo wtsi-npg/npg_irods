@@ -105,7 +105,9 @@ WTSI::NPG::HTS::IlluminaObjFactory
 =head1 DESCRIPTION
 
 A factory for creating iRODS data objects given local files from an
-Illumina sequencing run.
+Illumina sequencing run. Different types of local file may require
+data objects of different classes and an object of this class will
+construct the appropriate one.
 
 =head1 AUTHOR
 

@@ -642,7 +642,10 @@ WTSI::NPG::HTS::Annotator
 
 =head1 DESCRIPTION
 
-A role providing methods to calculate metadata for WTSI HTS runs.
+A role providing methods to calculate metadata for WTSI HTS runs. This
+is used to create all the metadata for the WTSI::NPG::HTS
+package. Please add new methods as require to create metadata, rather
+than creating it inline in your own package.
 
 =head1 AUTHOR
 
