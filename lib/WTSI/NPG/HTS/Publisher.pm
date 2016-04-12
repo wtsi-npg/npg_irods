@@ -528,7 +528,35 @@ WTSI::NPG::HTS::Publisher
 
 =head1 DESCRIPTION
 
-General purpose file/metadata publisher for iRODS.
+General purpose file/metadata publisher for iRODS. Objects of this
+class provide the capability to:
+
+ - Put new files into iRODS
+
+ - Update (overwrite) files already in iRODS
+
+ - Compare local (file system) checksums to remote (iRODS) checksums
+   before an upload to determine whether work needs to be done.
+
+ - Compare local (file system) checksums to remote (iRODS) checksums
+   after an upload to determine that data were transferred successfully.
+
+ - Cache local (file system) checksums for large files.
+
+ - Add basic metadata to all uploaded files:
+
+   - Creation timestamp
+
+   - Update timestamp
+
+   - File type
+
+   - Entity performing the upload
+
+   See WTSI::NPG::HTS::Annotator.
+
+ - Add custom metadata supplied by the caller.
+
 
 =head1 AUTHOR
 
