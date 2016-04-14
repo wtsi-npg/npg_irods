@@ -1,0 +1,7 @@
+###	set	count		b_seq	name_b_seq	b_seq_qual	b_seq_tags(BC,FI,QT,RT,TC)
+all	all	56		5587d7c6	91ce91b	a6b56a	2041ccb1
+all	pass	56		5587d7c6	91ce91b	a6b56a	2041ccb1
+	all	0		1	1	1	1
+	pass	0		1	1	1	1
+1#1	all	56		5587d7c6	91ce91b	a6b56a	2041ccb1
+1#1	pass	56		5587d7c6	91ce91b	a6b56a	2041ccb1

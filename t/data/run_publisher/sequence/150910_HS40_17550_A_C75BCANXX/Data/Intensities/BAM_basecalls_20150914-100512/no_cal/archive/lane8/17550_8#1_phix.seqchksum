@@ -1,0 +1,7 @@
+###	set	count		b_seq	name_b_seq	b_seq_qual	b_seq_tags(BC,FI,QT,RT,TC)
+all	all	36		74512997	500f8f53	2170db7b	687b53c1
+all	pass	36		74512997	500f8f53	2170db7b	687b53c1
+	all	0		1	1	1	1
+	pass	0		1	1	1	1
+1#1	all	36		74512997	500f8f53	2170db7b	687b53c1
+1#1	pass	36		74512997	500f8f53	2170db7b	687b53c1

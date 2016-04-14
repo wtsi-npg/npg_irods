@@ -1,0 +1,7 @@
+###	set	count		b_seq	name_b_seq	b_seq_qual	b_seq_tags(BC,FI,QT,RT,TC)
+all	all	22		33e30161	53ad4490	18091a34	3aaacb6e
+all	pass	22		33e30161	53ad4490	18091a34	3aaacb6e
+	all	0		1	1	1	1
+	pass	0		1	1	1	1
+1#10	all	22		33e30161	53ad4490	18091a34	3aaacb6e
+1#10	pass	22		33e30161	53ad4490	18091a34	3aaacb6e

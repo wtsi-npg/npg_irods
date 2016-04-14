@@ -22,6 +22,7 @@ lib/WTSI/NPG/HTS/MetaUpdater.pm
 lib/WTSI/NPG/HTS/Publisher.pm
 lib/WTSI/NPG/HTS/RunComponent.pm
 lib/WTSI/NPG/HTS/RunPublisher.pm
+lib/WTSI/NPG/HTS/Seqchksum.pm
 lib/WTSI/NPG/HTS/Types.pm
 lib/WTSI/NPG/HTS/XMLFileDataObject.pm
 LICENSE
@@ -99,6 +100,7 @@ t/data/publisher/publish_file/a.txt
 t/data/publisher/publish_file/a.txt.md5
 t/data/publisher/publish_file/b.txt
 t/data/publisher/publish_file/b.txt.md5
+t/data/publisher/publish_file/c.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/17550_1.all.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/17550_1_1.fastq
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/17550_1_1.fastqcheck
@@ -7342,6 +7344,7 @@ t/data/run_publisher/sequence/160225_HS38_18980_B_H7HHMBCXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/160225_HS38_18980_B_H7HHMBCXX/Data/Intensities/BAM_basecalls_20160228-062603/no_cal/archive/lane1/qc/18980_1#10_human.bam_flagstats.json
 t/data/run_publisher/sequence/160225_HS38_18980_B_H7HHMBCXX/Data/Intensities/BAM_basecalls_20160228-062603/no_cal/archive/lane1/qc/18980_1#10_phix.bam_flagstats.json
 t/data/run_publisher/sequence/160225_HS38_18980_B_H7HHMBCXX/RunInfo.xml
+t/data/seqchksum/17550_1#1.seqchksum
 t/fixtures/ml_warehouse/200-Sample.yml
 t/fixtures/ml_warehouse/200-Study.yml
 t/fixtures/ml_warehouse/300-IseqFlowcell.yml
@@ -7360,6 +7363,7 @@ t/lib/WTSI/NPG/HTS/HeaderParserTest.pm
 t/lib/WTSI/NPG/HTS/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/HTS/PublisherTest.pm
 t/lib/WTSI/NPG/HTS/RunPublisherTest.pm
+t/lib/WTSI/NPG/HTS/SeqchksumTest.pm
 t/lib/WTSI/NPG/HTS/Test.pm
 t/meta_updater.t
 t/params.t
@@ -7367,4 +7371,4 @@ t/perlcriticrc
 t/publisher.t
 t/README
 t/run_publisher.t
-
+t/seqchksum.t

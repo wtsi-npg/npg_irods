@@ -1,0 +1,7 @@
+###	set	count		b_seq	name_b_seq	b_seq_qual	b_seq_tags(BC,FI,QT,RT,TC)
+all	all	8		325ab5b3	218e3cb3	2a02e55a	7843ee76
+all	pass	8		325ab5b3	218e3cb3	2a02e55a	7843ee76
+	all	0		1	1	1	1
+	pass	0		1	1	1	1
+1#2	all	8		325ab5b3	218e3cb3	2a02e55a	7843ee76
+1#2	pass	8		325ab5b3	218e3cb3	2a02e55a	7843ee76

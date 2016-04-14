@@ -1,0 +1,7 @@
+###	set	count		b_seq	name_b_seq	b_seq_qual	b_seq_tags(BC,FI,QT,RT,TC)
+all	all	112		42abf61c	12b5359c	53693df9	3d6684ce
+all	pass	112		42abf61c	12b5359c	53693df9	3d6684ce
+	all	0		1	1	1	1
+	pass	0		1	1	1	1
+1#1	all	112		42abf61c	12b5359c	53693df9	3d6684ce
+1#1	pass	112		42abf61c	12b5359c	53693df9	3d6684ce

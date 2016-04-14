@@ -1,0 +1,7 @@
+###	set	count		b_seq	name_b_seq	b_seq_qual	b_seq_tags(BC,FI,QT,RT,TC)
+all	all	32163268		7021f181	cfe33f2	47ec36fc	446dadef
+all	pass	32163268		7021f181	cfe33f2	47ec36fc	446dadef
+	all	0		1	1	1	1
+	pass	0		1	1	1	1
+1#6	all	32163268		7021f181	cfe33f2	47ec36fc	446dadef
+1#6	pass	32163268		7021f181	cfe33f2	47ec36fc	446dadef

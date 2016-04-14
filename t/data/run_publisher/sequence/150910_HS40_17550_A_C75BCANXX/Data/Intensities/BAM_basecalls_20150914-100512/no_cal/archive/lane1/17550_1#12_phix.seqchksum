@@ -1,0 +1,7 @@
+###	set	count		b_seq	name_b_seq	b_seq_qual	b_seq_tags(BC,FI,QT,RT,TC)
+all	all	18		11f512f2	7222d459	17cb7fd3	23c1b40f
+all	pass	18		11f512f2	7222d459	17cb7fd3	23c1b40f
+	all	0		1	1	1	1
+	pass	0		1	1	1	1
+1#12	all	18		11f512f2	7222d459	17cb7fd3	23c1b40f
+1#12	pass	18		11f512f2	7222d459	17cb7fd3	23c1b40f
