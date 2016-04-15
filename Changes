@@ -1,0 +1,19 @@
+Release 1.1
+
+ - Added support for alternative ML warehouse drivers.
+
+ - The default samtools is now samtools_irods.
+
+ - The Publisher now avoids creating MD5 cache files for small files
+   and tests for stale cache files.
+
+ - Bug fix: Corrected handling of nonconsented human.
+
+ - Bug fix: Corrected caching of file lists in RunPublisher.
+
+ - Bug fix: Publish run-level XML files.
+
+ - Bug fix: Obtain num reads value from the correct flagstats JSON
+   file for alignment subsets.
+
+Release 1.0
