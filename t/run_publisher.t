@@ -2,6 +2,6 @@
 use strict;
 use warnings;
 
-use WTSI::NPG::HTS::RunPublisherTest;
+use WTSI::NPG::HTS::Illumina::RunPublisherTest;
 
-WTSI::NPG::HTS::RunPublisherTest->runtests;
+WTSI::NPG::HTS::Illumina::RunPublisherTest->runtests;

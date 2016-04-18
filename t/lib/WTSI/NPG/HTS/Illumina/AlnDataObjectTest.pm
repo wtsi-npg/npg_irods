@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::AlMapFileDataObjectTest;
+package WTSI::NPG::HTS::Illumina::AlnDataObjectTest;
 
 use utf8;
 
@@ -18,7 +18,7 @@ Log::Log4perl::init('./etc/log4perl_tests.conf');
 
 use WTSI::DNAP::Utilities::Runnable;
 use WTSI::DNAP::Warehouse::Schema;
-use WTSI::NPG::HTS::AlMapFileDataObject;
+use WTSI::NPG::HTS::Illumina::AlnDataObject;
 use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
@@ -111,7 +111,7 @@ sub setup_test : Test(setup) {
                                     strict_baton_version => 0);
 
   $irods_tmp_coll =
-    $irods->add_collection("AlMapFileDataObjectTest.$pid.$test_counter");
+    $irods->add_collection("Illumina::AlnDataObjectTest.$pid.$test_counter");
   $test_counter++;
 
   my $group_count = 0;
@@ -148,7 +148,7 @@ sub setup_test : Test(setup) {
            executable => 'samtools_irods')->run;
 
         foreach my $format (qw[bam cram]) {
-          my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+          my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
             ($irods, "$irods_tmp_coll/$data_file.$format");
 
           my $num_reads = 10000;
@@ -198,7 +198,7 @@ sub teardown_test : Test(teardown) {
 }
 
 sub require : Test(1) {
-  require_ok('WTSI::NPG::HTS::AlMapFileDataObject');
+  require_ok('WTSI::NPG::HTS::Illumina::AlnDataObject');
 }
 
 my @tagged_paths   = ('/seq/17550/17550_3#1',
@@ -221,7 +221,7 @@ sub id_run : Test(24) {
   foreach my $format (qw[bam cram]) {
     foreach my $path (@tagged_paths, @untagged_paths) {
       my $full_path = $path . ".$format";
-      cmp_ok(WTSI::NPG::HTS::AlMapFileDataObject->new
+      cmp_ok(WTSI::NPG::HTS::Illumina::AlnDataObject->new
              ($irods, $full_path)->id_run,
              '==', 17550, "$full_path id_run is correct");
     }
@@ -235,7 +235,7 @@ sub position : Test(24) {
   foreach my $format (qw(bam cram)) {
     foreach my $path (@tagged_paths, @untagged_paths) {
       my $full_path = "$path.$format";
-      cmp_ok(WTSI::NPG::HTS::AlMapFileDataObject->new
+      cmp_ok(WTSI::NPG::HTS::Illumina::AlnDataObject->new
              ($irods, $full_path)->position,
              '==', 3, "$full_path position is correct");
     }
@@ -249,7 +249,8 @@ sub contains_nonconsented_human : Test(24) {
   foreach my $format (qw[bam cram]) {
     foreach my $path (@tagged_paths, @untagged_paths) {
       my $full_path = "$path.$format";
-      my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new($irods, $full_path);
+      my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+        ($irods, $full_path);
       my $af = $obj->alignment_filter;
 
       if (not $af) {
@@ -282,7 +283,8 @@ sub is_restricted_access : Test(24) {
   foreach my $format (qw[bam cram]) {
     foreach my $path (@tagged_paths, @untagged_paths) {
       my $full_path = "$path.$format";
-      my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new($irods, $full_path);
+      my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+        ($irods, $full_path);
       my $af = $obj->alignment_filter;
 
       ok($obj->is_restricted_access, "$full_path is restricted_access");
@@ -297,7 +299,7 @@ sub tag_index : Test(24) {
   foreach my $format (qw[bam cram]) {
     foreach my $path (@tagged_paths) {
       my $full_path = "$path.$format";
-      cmp_ok(WTSI::NPG::HTS::AlMapFileDataObject->new
+      cmp_ok(WTSI::NPG::HTS::Illumina::AlnDataObject->new
              ($irods, $full_path)->tag_index,
              '==', 1, "$full_path tag_index is correct");
     }
@@ -306,7 +308,7 @@ sub tag_index : Test(24) {
   foreach my $format (qw[bam cram]) {
     foreach my $path (@untagged_paths) {
       my $full_path = "$path.$format";
-      isnt(defined WTSI::NPG::HTS::AlMapFileDataObject->new
+      isnt(defined WTSI::NPG::HTS::Illumina::AlnDataObject->new
            ($irods, $full_path)->tag_index,
            "$full_path tag_index is correct");
     }
@@ -323,7 +325,7 @@ sub alignment_filter : Test(24) {
       # FIXME -- use controlled vocbulary
       my ($expected) = $path =~ m{_((human|nonhuman|xahuman|yhuman|phix))};
 
-      my $alignment_filter = WTSI::NPG::HTS::AlMapFileDataObject->new
+      my $alignment_filter = WTSI::NPG::HTS::Illumina::AlnDataObject->new
         ($irods, $full_path)->alignment_filter;
 
       is($alignment_filter, $expected,
@@ -344,7 +346,7 @@ sub header : Test(8) {
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
       foreach my $format (qw[bam cram]) {
         my $file_name = "$data_file.$format";
-        my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+        my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
           (collection  => $irods_tmp_coll,
            data_object => $file_name,
            file_format => $format,
@@ -376,7 +378,7 @@ sub is_aligned : Test(4) {
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
       foreach my $format (qw[bam cram]) {
         my $file_name = "$data_file.$format";
-        my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+        my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
           (collection  => $irods_tmp_coll,
            data_object => $file_name,
            file_format => $format,
@@ -403,7 +405,7 @@ sub reference : Test(4) {
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
       foreach my $format (qw[bam cram]) {
         my $file_name = "$data_file.$format";
-        my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+        my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
           (collection  => $irods_tmp_coll,
            data_object => $file_name,
            file_format => $format,
@@ -1211,7 +1213,7 @@ sub test_metadata_update {
   my $exp_grp_after  = $args->{expected_groups_after};
 
   my $file_name = "$data_file.$format";
-  my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+  my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
     (collection  => $working_coll,
      data_object => $file_name,
      irods       => $irods);

@@ -2,6 +2,6 @@
 use strict;
 use warnings;
 
-use WTSI::NPG::HTS::AncFileDataObjectTest;
+use WTSI::NPG::HTS::Illumina::AncDataObjectTest;
 
-WTSI::NPG::HTS::AncFileDataObjectTest->runtests;
+WTSI::NPG::HTS::Illumina::AncDataObjectTest->runtests;

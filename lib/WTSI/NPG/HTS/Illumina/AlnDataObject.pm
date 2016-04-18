@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::AlMapFileDataObject;
+package WTSI::NPG::HTS::Illumina::AlnDataObject;
 
 use namespace::autoclean;
 use Data::Dump qw[pp];
@@ -11,7 +11,7 @@ use Try::Tiny;
 
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::HTS::HeaderParser;
-use WTSI::NPG::HTS::Types qw[AlMapFileFormat];
+use WTSI::NPG::HTS::Types qw[AlnFormat];
 
 our $VERSION = '';
 
@@ -29,8 +29,8 @@ extends 'WTSI::NPG::HTS::DataObject';
 
 with qw[
          WTSI::NPG::HTS::AlFilter
-         WTSI::NPG::HTS::RunComponent
-         WTSI::NPG::HTS::FilenameParser
+         WTSI::NPG::HTS::Illumina::RunComponent
+         WTSI::NPG::HTS::Illumina::FilenameParser
        ];
 
 ## no critic (ErrorHandling::RequireCheckingReturnValueOfEval)
@@ -46,7 +46,7 @@ has 'header' =>
    documentation => 'The HTS file header (or excerpts of it)');
 
 has '+file_format' =>
-  (isa           => AlMapFileFormat);
+  (isa           => AlnFormat);
 
 has '+is_restricted_access' =>
   (is            => 'ro');
@@ -296,7 +296,7 @@ __END__
 
 =head1 NAME
 
-WTSI::NPG::HTS::AlMapFileDataObject
+WTSI::NPG::HTS::Illumina::AlnDataObject
 
 =head1 DESCRIPTION
 

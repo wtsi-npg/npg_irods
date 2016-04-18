@@ -2,6 +2,6 @@
 use strict;
 use warnings;
 
-use WTSI::NPG::HTS::AlMapFileDataObjectTest;
+use WTSI::NPG::HTS::Illumina::AlnDataObjectTest;
 
-WTSI::NPG::HTS::AlMapFileDataObjectTest->runtests;
+WTSI::NPG::HTS::Illumina::AlnDataObjectTest->runtests;

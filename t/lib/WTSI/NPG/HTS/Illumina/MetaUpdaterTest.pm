@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::MetaUpdaterTest;
+package WTSI::NPG::HTS::Illumina::MetaUpdaterTest;
 
 use utf8;
 
@@ -14,8 +14,8 @@ use base qw[WTSI::NPG::HTS::Test];
 
 use WTSI::DNAP::Utilities::Runnable;
 use WTSI::DNAP::Warehouse::Schema;
+use WTSI::NPG::HTS::Illumina::MetaUpdater;
 use WTSI::NPG::HTS::LIMSFactory;
-use WTSI::NPG::HTS::MetaUpdater;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 
@@ -91,7 +91,7 @@ sub teardown_test : Test(teardown) {
 }
 
 sub require : Test(1) {
-  require_ok('WTSI::NPG::HTS::MetaUpdater');
+  require_ok('WTSI::NPG::HTS::Illumina::MetaUpdater');
 }
 
 sub update_secondary_metadata : Test(3) {
@@ -108,7 +108,7 @@ sub update_secondary_metadata : Test(3) {
       push @paths_to_update, "$irods_tmp_coll/$data_file.$format";
     }
 
-    my $updater = WTSI::NPG::HTS::MetaUpdater->new
+    my $updater = WTSI::NPG::HTS::Illumina::MetaUpdater->new
       (irods       => $irods,
        lims_factory => $lims_factory);
 
@@ -135,7 +135,7 @@ sub update_secondary_metadata : Test(3) {
           value     => 'Burkholderia pseudomallei diversity' . $utf8_extra}];
 
       my $file_name = "$data_file.$format";
-      my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+      my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
         (collection  => $irods_tmp_coll,
          data_object => $file_name,
          irods       => $irods);

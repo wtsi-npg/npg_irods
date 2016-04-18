@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::AncFileDataObject;
+package WTSI::NPG::HTS::Illumina::AncDataObject;
 
 use namespace::autoclean;
 use Data::Dump qw[pp];
@@ -15,8 +15,8 @@ extends 'WTSI::NPG::HTS::DataObject';
 
 with qw[
          WTSI::NPG::HTS::AlFilter
-         WTSI::NPG::HTS::RunComponent
-         WTSI::NPG::HTS::FilenameParser
+         WTSI::NPG::HTS::Illumina::RunComponent
+         WTSI::NPG::HTS::Illumina::FilenameParser
        ];
 
 has '+is_restricted_access' =>
@@ -104,11 +104,11 @@ __END__
 
 =head1 NAME
 
-WTSI::NPG::HTS::AncFileDataObject
+WTSI::NPG::HTS::Illumina::AncDataObject
 
 =head1 DESCRIPTION
 
-Represents alignment/map (CRAM and BAM) files in iRODS.
+Represents Illumina ancillary files in iRODS.
 
 =head1 AUTHOR
 

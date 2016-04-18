@@ -16,7 +16,7 @@ use Pod::Usage;
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::DriRODS;
 use WTSI::NPG::HTS::LIMSFactory;
-use WTSI::NPG::HTS::MetaUpdater;
+use WTSI::NPG::HTS::Illumina::MetaUpdater;
 use WTSI::NPG::iRODS::Metadata qw[
                                    $FILE_TYPE
                                    $ID_RUN
@@ -159,7 +159,7 @@ if (@data_objs) {
   }
   my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(@init_args);
 
-  $num_updated = WTSI::NPG::HTS::MetaUpdater->new
+  $num_updated = WTSI::NPG::HTS::Illumina::MetaUpdater->new
     (irods        => $irods,
      lims_factory => $lims_factory)->update_secondary_metadata(\@data_objs);
 }

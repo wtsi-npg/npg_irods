@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::FilenameParser;
+package WTSI::NPG::HTS::Illumina::FilenameParser;
 
 use File::Basename;
 use Moose::Role;
@@ -65,7 +65,7 @@ __END__
 
 =head1 NAME
 
-WTSI::NPG::HTS::FilenameParser
+WTSI::NPG::HTS::Illumina::FilenameParser
 
 =head1 DESCRIPTION
 
@@ -86,7 +86,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

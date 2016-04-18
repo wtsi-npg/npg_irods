@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::XMLFileDataObject;
+package WTSI::NPG::HTS::Illumina::XMLDataObject;
 
 use namespace::autoclean;
 use Moose;
@@ -10,7 +10,7 @@ our $VERSION = '';
 
 extends 'WTSI::NPG::HTS::DataObject';
 
-with 'WTSI::NPG::HTS::RunComponent';
+with 'WTSI::NPG::HTS::Illumina::RunComponent';
 
 has '+is_restricted_access' =>
   (is            => 'ro');
@@ -51,7 +51,7 @@ __END__
 
 =head1 NAME
 
-WTSI::NPG::HTS::XMLFileDataObject
+WTSI::NPG::HTS::Illumina::XMLDataObject
 
 =head1 DESCRIPTION
 
