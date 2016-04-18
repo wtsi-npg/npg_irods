@@ -39,7 +39,7 @@ use WTSI::NPG::iRODS;
 
 my $pid          = $PID;
 my $test_counter = 0;
-my $data_path    = './t/data/almap_file_data_object';
+my $data_path    = './t/data/aln_data_object';
 my $fixture_path = "./t/fixtures";
 
 my $utf8_extra = '[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]';
@@ -86,7 +86,7 @@ my @groups_added;
 my $group_tests_enabled = 0;
 
 # Reference filter for recognising the test reference
-my $ref_regex = qr{\./t\/data\/almap_file_data_object\/test_ref.fa}msx;
+my $ref_regex = qr{\./t\/data\/aln_data_object\/test_ref.fa}msx;
 my $ref_filter = sub {
   my ($line) = @_;
   return $line =~ m{$ref_regex}msx;

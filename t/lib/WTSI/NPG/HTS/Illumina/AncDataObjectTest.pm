@@ -37,7 +37,7 @@ use WTSI::NPG::iRODS;
 
 my $pid          = $PID;
 my $test_counter = 0;
-my $data_path    = './t/data/anc_file_data_object';
+my $data_path    = './t/data/anc_data_object';
 my $fixture_path = "./t/fixtures";
 
 my $db_dir = File::Temp->newdir;
@@ -142,7 +142,7 @@ sub setup_test : Test(setup) {
   $irods->put_collection($data_path, $irods_tmp_coll);
 
   foreach my $data_file (@tag0_files, @tag1_files) {
-    my $path = "$irods_tmp_coll/anc_file_data_object/$data_file";
+    my $path = "$irods_tmp_coll/anc_data_object/$data_file";
     if ($group_tests_enabled) {
       # Add some test group permissions
       $irods->set_object_permissions($WTSI::NPG::iRODS::READ_PERMISSION,
@@ -290,7 +290,7 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(72) {
     }
 
     test_metadata_update($irods, $lims_factory,
-                         "$irods_tmp_coll/anc_file_data_object",
+                         "$irods_tmp_coll/anc_data_object",
                          {data_file              => $data_file,
                           spiked_control         => $spiked_control,
                           expected_metadata      => \@expected_metadata,
@@ -325,7 +325,7 @@ sub update_secondary_metadata_tag1_no_spike_human : Test(84) {
     }
 
     test_metadata_update($irods, $lims_factory,
-                         "$irods_tmp_coll/anc_file_data_object",
+                         "$irods_tmp_coll/anc_data_object",
                          {data_file              => $data_file,
                           spiked_control         => $spiked_control,
                           expected_metadata      => \@expected_metadata,
