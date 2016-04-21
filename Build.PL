@@ -37,6 +37,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
     'Moose'                         => '>= 2.1',
     'MooseX::Types'                 => '>= 0.45',
     'MooseX::StrictConstructor'     => 0,
+    'Text::CSV'                     => '>= 1.33',
     'Try::Tiny'                     => '>= 0.12',
     'WTSI::DNAP::Utilities'         => '>= 0.5.1',   # perl-dnap-utilities
     'WTSI::NPG::iRODS'              => '>= 2.1.0',   # perl-irods-wrap

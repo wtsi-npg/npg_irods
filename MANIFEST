@@ -22,6 +22,7 @@ lib/WTSI/NPG/HTS/MetaUpdater.pm
 lib/WTSI/NPG/HTS/Publisher.pm
 lib/WTSI/NPG/HTS/RunComponent.pm
 lib/WTSI/NPG/HTS/RunPublisher.pm
+lib/WTSI/NPG/HTS/Seqchksum.pm
 lib/WTSI/NPG/HTS/Types.pm
 lib/WTSI/NPG/HTS/XMLFileDataObject.pm
 LICENSE
@@ -99,6 +100,7 @@ t/data/publisher/publish_file/a.txt
 t/data/publisher/publish_file/a.txt.md5
 t/data/publisher/publish_file/b.txt
 t/data/publisher/publish_file/b.txt.md5
+t/data/publisher/publish_file/c.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/17550_1.all.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/17550_1_1.fastq
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/17550_1_1.fastqcheck
@@ -168,7 +170,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#0.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#0.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#0.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#0.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#0.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#0.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#0_F0x900.stats
@@ -188,7 +189,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#0_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#0_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#0_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#0_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#0_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#0_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#0_phix_F0x900.stats
@@ -220,7 +220,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#1.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#1.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#1.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#1.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#1.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#1.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10.bai
@@ -236,7 +235,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10_F0x900.stats
@@ -256,7 +254,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#10_phix_F0x900.stats
@@ -288,7 +285,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#11.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#11.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#11.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#11.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#11.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#11.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#11_F0x900.stats
@@ -308,7 +304,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#11_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#11_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#11_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#11_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#11_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#11_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#11_phix_F0x900.stats
@@ -340,7 +335,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#12.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#12.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#12.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#12.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#12.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#12.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#12_F0x900.stats
@@ -360,7 +354,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#12_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#12_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#12_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#12_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#12_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#12_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#12_phix_F0x900.stats
@@ -392,7 +385,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#13.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#13.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#13.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#13.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#13.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#13.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#13_F0x900.stats
@@ -412,7 +404,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#13_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#13_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#13_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#13_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#13_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#13_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#13_phix_F0x900.stats
@@ -444,7 +435,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#14.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#14.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#14.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#14.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#14.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#14.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#14_F0x900.stats
@@ -464,7 +454,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#14_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#14_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#14_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#14_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#14_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#14_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#14_phix_F0x900.stats
@@ -496,7 +485,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#15.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#15.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#15.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#15.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#15.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#15.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#15_F0x900.stats
@@ -516,7 +504,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#15_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#15_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#15_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#15_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#15_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#15_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#15_phix_F0x900.stats
@@ -548,7 +535,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#16.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#16.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#16.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#16.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#16.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#16.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#16_F0x900.stats
@@ -568,7 +554,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#16_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#16_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#16_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#16_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#16_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#16_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#16_phix_F0x900.stats
@@ -604,7 +589,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#1_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#1_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#1_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#1_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#1_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#1_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#1_phix_F0x900.stats
@@ -636,7 +620,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#2.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#2.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#2.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#2.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#2.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#2.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#2_F0x900.stats
@@ -656,7 +639,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#2_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#2_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#2_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#2_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#2_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#2_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#2_phix_F0x900.stats
@@ -688,7 +670,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#3.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#3.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#3.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#3.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#3.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#3.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#3_F0x900.stats
@@ -708,7 +689,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#3_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#3_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#3_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#3_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#3_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#3_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#3_phix_F0x900.stats
@@ -740,7 +720,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#4.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#4.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#4.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#4.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#4.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#4.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#4_F0x900.stats
@@ -760,7 +739,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#4_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#4_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#4_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#4_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#4_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#4_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#4_phix_F0x900.stats
@@ -792,7 +770,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#5.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#5.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#5.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#5.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#5.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#5.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#5_F0x900.stats
@@ -812,7 +789,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#5_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#5_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#5_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#5_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#5_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#5_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#5_phix_F0x900.stats
@@ -844,7 +820,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#6.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#6.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#6.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#6.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#6.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#6.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#6_F0x900.stats
@@ -864,7 +839,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#6_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#6_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#6_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#6_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#6_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#6_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#6_phix_F0x900.stats
@@ -896,7 +870,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#7.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#7.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#7.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#7.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#7.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#7.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#7_F0x900.stats
@@ -916,7 +889,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#7_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#7_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#7_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#7_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#7_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#7_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#7_phix_F0x900.stats
@@ -948,7 +920,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#8.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#8.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#8.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#8.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#8.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#8.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#888.bai
@@ -963,7 +934,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#888.flagstat
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#888.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#888.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#888.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#888.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#888.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#888_quality_cycle_caltable.txt
@@ -989,7 +959,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#8_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#8_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#8_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#8_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#8_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#8_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#8_phix_F0x900.stats
@@ -1021,7 +990,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#9.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#9.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#9.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#9.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#9.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#9.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#9_F0x900.stats
@@ -1041,7 +1009,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#9_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#9_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#9_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#9_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#9_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#9_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane1/17550_1#9_phix_F0x900.stats
@@ -2392,7 +2359,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#0.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#0.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#0.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#0.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#0.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#0.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#0_F0x900.stats
@@ -2412,7 +2378,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#0_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#0_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#0_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#0_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#0_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#0_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#0_phix_F0x900.stats
@@ -2450,7 +2415,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1_F0x900.stats
@@ -2470,7 +2434,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1_phix_F0x900.stats
@@ -2508,7 +2471,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2_F0x900.stats
@@ -2528,7 +2490,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2_phix_F0x900.stats
@@ -2566,7 +2527,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3_F0x900.stats
@@ -2586,7 +2546,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3_phix_F0x900.stats
@@ -2624,7 +2583,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4_F0x900.stats
@@ -2644,7 +2602,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4_phix_F0x900.stats
@@ -2682,7 +2639,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5_F0x900.stats
@@ -2702,7 +2658,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5_phix_F0x900.stats
@@ -2740,7 +2695,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6_F0x900.stats
@@ -2760,7 +2714,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6_phix_F0x900.stats
@@ -2798,7 +2751,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7_F0x900.stats
@@ -2818,7 +2770,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7_phix_F0x900.stats
@@ -2856,7 +2807,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#888.bai
@@ -2871,7 +2821,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#888.flagstat
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#888.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#888.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#888.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#888.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#888.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#888_quality_cycle_caltable.txt
@@ -2897,7 +2846,6 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8_phix.flagstat.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8_phix.seqchksum
-t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8_phix.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8_phix_F0x900.stats
@@ -6462,7 +6410,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1_1.fastq
@@ -6486,7 +6433,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1_phix.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1_phix.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1_phix.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1_phix_F0x900.stats
@@ -6520,7 +6466,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2_1.fastq
@@ -6544,7 +6489,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2_phix.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2_phix.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2_phix.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2_phix_F0x900.stats
@@ -6578,7 +6522,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3_1.fastq
@@ -6602,7 +6545,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3_phix.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3_phix.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3_phix.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3_phix_F0x900.stats
@@ -6636,7 +6578,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4_1.fastq
@@ -6660,7 +6601,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4_phix.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4_phix.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4_phix.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4_phix_F0x900.stats
@@ -6694,7 +6634,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5_1.fastq
@@ -6718,7 +6657,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5_phix.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5_phix.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5_phix.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5_phix_F0x900.stats
@@ -6752,7 +6690,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6_1.fastq
@@ -6776,7 +6713,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6_phix.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6_phix.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6_phix.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6_phix_F0x900.stats
@@ -6810,7 +6746,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7_1.fastq
@@ -6834,7 +6769,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7_phix.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7_phix.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7_phix.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7_phix_F0x900.stats
@@ -6868,7 +6802,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8_1.fastq
@@ -6892,7 +6825,6 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8_phix.flagstat.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8_phix.markdups_metrics.txt
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8_phix.seqchksum
-t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8_phix.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8_phix.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8_phix.sha512primesums512.seqchksum.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8_phix_F0x900.stats
@@ -7342,6 +7274,7 @@ t/data/run_publisher/sequence/160225_HS38_18980_B_H7HHMBCXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/160225_HS38_18980_B_H7HHMBCXX/Data/Intensities/BAM_basecalls_20160228-062603/no_cal/archive/lane1/qc/18980_1#10_human.bam_flagstats.json
 t/data/run_publisher/sequence/160225_HS38_18980_B_H7HHMBCXX/Data/Intensities/BAM_basecalls_20160228-062603/no_cal/archive/lane1/qc/18980_1#10_phix.bam_flagstats.json
 t/data/run_publisher/sequence/160225_HS38_18980_B_H7HHMBCXX/RunInfo.xml
+t/data/seqchksum/17550_1#1.seqchksum
 t/fixtures/ml_warehouse/200-Sample.yml
 t/fixtures/ml_warehouse/200-Study.yml
 t/fixtures/ml_warehouse/300-IseqFlowcell.yml
@@ -7360,6 +7293,7 @@ t/lib/WTSI/NPG/HTS/HeaderParserTest.pm
 t/lib/WTSI/NPG/HTS/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/HTS/PublisherTest.pm
 t/lib/WTSI/NPG/HTS/RunPublisherTest.pm
+t/lib/WTSI/NPG/HTS/SeqchksumTest.pm
 t/lib/WTSI/NPG/HTS/Test.pm
 t/meta_updater.t
 t/params.t
@@ -7367,4 +7301,4 @@ t/perlcriticrc
 t/publisher.t
 t/README
 t/run_publisher.t
-
+t/seqchksum.t

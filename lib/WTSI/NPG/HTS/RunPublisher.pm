@@ -14,6 +14,7 @@ use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::IlluminaObjFactory;
 use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::HTS::Publisher;
+use WTSI::NPG::HTS::Seqchksum;
 use WTSI::NPG::HTS::Types qw[AlMapFileFormat];
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
@@ -54,14 +55,14 @@ our @FILE_CATEGORIES = ($ALIGNMENT_CATEGORY, $ANCILLARY_CATEGORY,
 our $NUM_READS_JSON_PROPERTY = 'num_total_reads';
 
 has 'irods' =>
-  (is            => 'ro',
-   isa           => 'WTSI::NPG::iRODS',
+  (isa           => 'WTSI::NPG::iRODS',
+   is            => 'ro',
    required      => 1,
    documentation => 'An iRODS handle to run searches and perform updates');
 
 has 'obj_factory' =>
-  (is            => 'ro',
-   isa           => 'WTSI::NPG::HTS::DataObjectFactory',
+  (isa           => 'WTSI::NPG::HTS::DataObjectFactory',
+   is            => 'ro',
    required      => 1,
    builder       => '_build_obj_factory',
    documentation => 'A factory building data objects from files');
@@ -211,7 +212,6 @@ sub is_plexed {
 =head2 num_reads
 
   Arg [1]    : Lane position, Int.
-  Arg [2]    : Tag index, Int. Required for plexed positions.
 
   Named args : tag_index            Tag index, Int. Required for
                                     plexed positions.
@@ -259,6 +259,70 @@ sub is_plexed {
     }
 
     return $num_reads
+  }
+}
+
+=head2 seqchksum_digest
+
+  Arg [1]    : Lane position, Int.
+
+  Named args : tag_index            Tag index, Int. Required for
+                                    plexed positions.
+               alignment_filter     Alignment filter name. Optional.
+                                    Used to request the number of reads
+                                    for a particular alignment filter.
+
+  Example    : my $digest1 = $pub->seqchksum_digest($position1)
+               my $digest2 = $pub->seqchksum_digest($position2,
+                                                    tag_index        => 1,
+                                                    alignment_filter => 'phix')
+  Description: Return a digest summarising the seqchksum results for
+               a subset of alignment data. Raise an error if the seqchksum
+               file is missing or malformed. The seqchksum file must contain
+               data for one read group only.
+  Returntype : Str
+
+=cut
+
+{
+  my $positional = 2;
+  my @named      = qw[alignment_filter tag_index];
+  my $params = function_params($positional, @named);
+
+  sub seqchksum_digest {
+    my ($self, $position) = $params->parse(@_);
+
+    my $pos = $self->_check_position($position);
+
+    my $seqchksum_file;
+    if ($self->is_plexed($pos)) {
+      defined $params->tag_index or
+        $self->logconfess('A defined tag_index argument is required');
+
+      $seqchksum_file = $self->_plex_seqchksum_file($pos, $params->tag_index,
+                                                    $params->alignment_filter);
+    }
+    else {
+      $seqchksum_file = $self->_lane_seqchksum_file($pos,
+                                                    $params->alignment_filter);
+    }
+
+    my $seqchksum = WTSI::NPG::HTS::Seqchksum->new
+      (file_name => $seqchksum_file);
+    my @rg = $seqchksum->read_groups;
+    my $num_rg = scalar @rg;
+    my ($rg) = @rg;
+
+    if ($num_rg == 1) {
+      $self->debug("Creating seqchksum digest for read group '$rg' ",
+                   "from file '$seqchksum_file'");
+    }
+    else {
+      $self->logcroak("Expected 1 read group in '$seqchksum_file'. ",
+                      "Found $num_rg: ", pp(\@rg));
+    }
+
+    return $seqchksum->digest($rg);
   }
 }
 
@@ -1071,6 +1135,11 @@ sub _publish_alignment_files {
          alignment_filter => $obj->alignment_filter,
          tag_index        => $obj->tag_index);
 
+      my $seqchksum_digest = $self->seqchksum_digest
+        ($pos,
+         alignment_filter => $obj->alignment_filter,
+         tag_index        => $obj->tag_index);
+
       my @pri = $self->make_primary_metadata
         ($self->id_run, $pos, $num_reads,
          tag_index        => $obj->tag_index,
@@ -1078,7 +1147,8 @@ sub _publish_alignment_files {
          is_aligned       => $obj->is_aligned,
          reference        => $obj->reference,
          alignment_filter => $obj->alignment_filter,
-         alt_process      => $self->alt_process);
+         alt_process      => $self->alt_process,
+         seqchksum        => $seqchksum_digest);
       $self->debug("Created primary metadata AVUs for '$dest': ", pp(\@pri));
       $obj->set_primary_metadata(@pri);
 
@@ -1294,40 +1364,55 @@ sub _lane_qc_stats_file {
   my ($self, $position, $alignment_filter) = @_;
 
   my $af_suffix = $alignment_filter ? "_$alignment_filter" : q[];
-
-  my $id_run = $self->id_run;
   my $qc_file_pattern = sprintf '%s_%d%s.bam_flagstats.json$',
-    $id_run, $position, $af_suffix;
+    $self->id_run, $position, $af_suffix;
 
-  my @files = grep { m{$qc_file_pattern}msx }
-    @{$self->list_lane_qc_files($position)};
-  my $num_files = scalar @files;
-
-  if ($num_files != 1) {
-    $self->logcroak("Found $num_files QC files for id_run: $id_run, ",
-                    "position: $position; ", pp(\@files));
-  }
-
-  return shift @files;
+  return $self->_match_single_file($qc_file_pattern,
+                                   $self->list_lane_qc_files($position));
 }
 
 sub _plex_qc_stats_file {
   my ($self, $position, $tag_index, $alignment_filter) = @_;
 
   my $af_suffix = $alignment_filter ? "_$alignment_filter" : q[];
-
-  my $id_run = $self->id_run;
   my $qc_file_pattern = sprintf '%s_%d\#%d%s.bam_flagstats.json$',
-    $id_run, $position, $tag_index, $af_suffix;
+    $self->id_run, $position, $tag_index, $af_suffix;
 
-  my @files = grep { m{$qc_file_pattern}msx }
-    @{$self->list_plex_qc_files($position)};
+  return $self->_match_single_file($qc_file_pattern,
+                                   $self->list_plex_qc_files($position));
+}
+
+sub _lane_seqchksum_file {
+  my ($self, $position, $alignment_filter) = @_;
+
+  my $af_suffix = $alignment_filter ? "_$alignment_filter" : q[];
+  my $anc_file_pattern = sprintf '%s_%d%s.seqchksum$',
+    $self->id_run, $position, $af_suffix;
+
+  return $self->_match_single_file($anc_file_pattern,
+                                   $self->list_lane_ancillary_files($position));
+}
+
+sub _plex_seqchksum_file {
+  my ($self, $position, $tag_index, $alignment_filter) = @_;
+
+  my $af_suffix = $alignment_filter ? "_$alignment_filter" : q[];
+  my $anc_file_pattern = sprintf '%s_%d\#%d%s.seqchksum$',
+    $self->id_run, $position, $tag_index, $af_suffix;
+
+  return $self->_match_single_file($anc_file_pattern,
+                                   $self->list_plex_ancillary_files($position));
+}
+
+sub _match_single_file {
+  my ($self, $pattern, $files) = @_;
+
+  my @files = grep { m{$pattern}msx } @{$files};
   my $num_files = scalar @files;
 
   if ($num_files != 1) {
-    $self->logcroak("Found $num_files QC files for id_run: $id_run, ",
-                    "position: $position, tag_index: $tag_index; ",
-                    pp(\@files));
+    $self->logcroak("Found $num_files matching '$pattern' ",
+                    'where one was expected: ', pp(\@files));
   }
 
   return shift @files;

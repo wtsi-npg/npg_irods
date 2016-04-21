@@ -96,6 +96,7 @@ sub BUILD {
     $IS_PAIRED_READ,
     $POSITION,
     $REFERENCE,
+    $WTSI::NPG::HTS::Annotator::SEQCHKSUM,
     $TAG_INDEX,
     $TARGET,
     $TOTAL_READS;
