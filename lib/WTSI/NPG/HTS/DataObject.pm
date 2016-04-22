@@ -37,7 +37,17 @@ has 'primary_metadata' =>
    required      => 1,
    default       => sub { return [] },
    documentation => 'The primary metadata (AVU) attributes recognised by ' .
-                    'this type of data object');
+                    'this type of data object. The default is an empty array ' .
+                    'which signifies no restriction on attributes.');
+
+has 'secondary_metadata' =>
+  (is            => 'rw',
+   isa           => 'ArrayRef[Str]',
+   required      => 1,
+   default       => sub { return [] },
+   documentation => 'The secondary metadata (AVU) attributes recognised by ' .
+                    'this type of data object. The default is an empty array ' .
+                    'which signifies no restriction on attributes.');
 
 =head2 is_restricted_access
 
@@ -67,12 +77,24 @@ has 'primary_metadata' =>
 sub is_primary_metadata {
   my ($self, $avu) = @_;
 
-  defined $avu or $self->logconfess('A defined avu argument is required');
-  ref $avu eq 'HASH' or
-    $self->logconfess('The avu argument must be a HashRef');
+  return $self->_is_valid_metadata($avu, $self->primary_metadata);
+}
 
-  my $attr = $avu->{attribute};
-  return (defined $attr and any { $attr eq $_ } @{$self->primary_metadata});
+=head2 is_secondary_metadata
+
+  Arg [1]    : AVU, HashRef. A candidate iRODS AVU.
+
+  Example    : $obj->is_secondary_metadata({attribute => 'y', value => 'y'});
+  Description: Return true if the candidate AVU argument is acceptable as
+               secondary metadata for the data object.
+  Returntype : Bool
+
+=cut
+
+sub is_secondary_metadata {
+  my ($self, $avu) = @_;
+
+  return $self->_is_valid_metadata($avu, $self->secondary_metadata);
 }
 
 =head2 set_primary_metadata
@@ -91,24 +113,7 @@ sub set_primary_metadata {
   my ($self, @avus) = @_;
 
   my @primary_avus = grep { $self->is_primary_metadata($_) } @avus;
-
-  my $path = $self->str;
-  my %collated_avus = %{$self->collate_avus(@primary_avus)};
-
-  my @attributes = sort keys %collated_avus;
-  $self->debug("Superseding AVUs on '$path' in order of attributes: ",
-               join q[, ], @attributes);
-  foreach my $attr (@attributes) {
-    my $values = $collated_avus{$attr};
-    try {
-      $self->supersede_multivalue_avus($attr, $values, undef);
-    } catch {
-      $self->error("Failed to supersede with attribute '$attr' and values ",
-                   pp($values), q[: ], $_);
-    };
-  }
-
-  return $self;
+  return $self->_set_metadata(@primary_avus);
 }
 
 =head2 update_secondary_metadata
@@ -127,26 +132,8 @@ sub set_primary_metadata {
 sub update_secondary_metadata {
   my ($self, @avus) = @_;
 
-  my $path = $self->str;
-  # Collate into lists of values per attribute
-  my %collated_avus = %{$self->collate_avus(@avus)};
-
-  # Sorting by attribute to allow repeated updates to be in
-  # deterministic order
-  my @attributes = sort keys %collated_avus;
-  $self->debug("Superseding AVUs on '$path' in order of attributes: ",
-               join q[, ], @attributes);
-  foreach my $attr (@attributes) {
-    my $values = $collated_avus{$attr};
-    try {
-      $self->supersede_multivalue_avus($attr, $values, undef);
-    } catch {
-      $self->error("Failed to supersede with attribute '$attr' and values ",
-                   pp($values), q[: ], $_);
-    };
-  }
-
-  return $self;
+  my @secondary_avus = grep { $self->is_secondary_metadata($_) } @avus;
+  return $self->_set_metadata(@secondary_avus);
 }
 
 after 'update_secondary_metadata' => sub {
@@ -204,6 +191,44 @@ sub _build_is_restricted_access {
   my ($self) = @_;
 
   return 0;
+}
+
+sub _is_valid_metadata {
+  my ($self, $avu, $reference_avus) = @_;
+
+  defined $avu or $self->logconfess('A defined avu argument is required');
+  ref $avu eq 'HASH' or
+    $self->logconfess('The avu argument must be a HashRef');
+
+  my $attr = $avu->{attribute};
+  return (defined $attr and
+          (scalar @{$reference_avus} == 0 or
+           any { $attr eq $_ } @{$reference_avus}));
+}
+
+sub _set_metadata {
+  my ($self, @avus) = @_;
+
+  my $path = $self->str;
+  # Collate into lists of values per attribute
+  my %collated_avus = %{$self->collate_avus(@avus)};
+
+  # Sorting by attribute to allow repeated updates to be in
+  # deterministic order
+  my @attributes = sort keys %collated_avus;
+  $self->debug("Superseding AVUs on '$path' in order of attributes: ",
+               join q[, ], @attributes);
+  foreach my $attr (@attributes) {
+    my $values = $collated_avus{$attr};
+    try {
+      $self->supersede_multivalue_avus($attr, $values, undef);
+    } catch {
+      $self->error("Failed to supersede with attribute '$attr' and values ",
+                   pp($values), q[: ], $_);
+    };
+  }
+
+  return $self;
 }
 
 __PACKAGE__->meta->make_immutable;
