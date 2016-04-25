@@ -32,6 +32,7 @@ LOGCONF
 my $alignment;
 my $alt_process;
 my $ancillary;
+my $archive_path;
 my $collection;
 my $debug;
 my $driver_type;
@@ -47,6 +48,7 @@ my @positions;
 GetOptions('alignment'                         => \$alignment,
            'alt-process|alt_process=s'         => \$alt_process,
            'ancillary'                         => \$ancillary,
+           'archive-path|archive_path=s'       => \$archive_path,
            'collection=s'                      => \$collection,
            'debug'                             => \$debug,
            'driver-type|driver_type=s'         => \$driver_type,
@@ -82,8 +84,9 @@ if (not $file_format) {
 }
 $file_format = lc $file_format;
 
-if (not defined $runfolder_path) {
-  pod2usage(-msg     => 'A --runfolder-path argument is required',
+if (not (defined $runfolder_path or defined $archive_path)) {
+  my $msg = 'A --runfolder-path or --archive-path argument is required';
+  pod2usage(-msg     => $msg,
             -exitval => 2);
 }
 
@@ -103,12 +106,17 @@ my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(@fac_init_args);
 my @pub_init_args = (file_format     => $file_format,
                      irods           => $irods,
                      lims_factory    => $lims_factory,
-                     logger          => $log,
-                     runfolder_path  => $runfolder_path);
+                     logger          => $log);
+
+if (defined $archive_path) {
+  push @pub_init_args, archive_path => $archive_path;
+}
+if (defined $runfolder_path) {
+  push @pub_init_args, runfolder_path => $runfolder_path;
+}
 if ($collection) {
   push @pub_init_args, dest_collection => $collection;
 }
-
 if ($alt_process) {
   push @pub_init_args, alt_process => $alt_process;
   $log->info("Using alt_process '$alt_process'");
