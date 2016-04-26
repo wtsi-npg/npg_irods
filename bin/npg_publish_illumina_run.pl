@@ -30,7 +30,9 @@ my $embedded_conf = << 'LOGCONF';
 LOGCONF
 
 my $alignment;
+my $alt_process;
 my $ancillary;
+my $archive_path;
 my $collection;
 my $debug;
 my $driver_type;
@@ -44,7 +46,9 @@ my $verbose;
 my @positions;
 
 GetOptions('alignment'                         => \$alignment,
+           'alt-process|alt_process=s'         => \$alt_process,
            'ancillary'                         => \$ancillary,
+           'archive-path|archive_path=s'       => \$archive_path,
            'collection=s'                      => \$collection,
            'debug'                             => \$debug,
            'driver-type|driver_type=s'         => \$driver_type,
@@ -80,6 +84,12 @@ if (not $file_format) {
 }
 $file_format = lc $file_format;
 
+if (not (defined $runfolder_path or defined $archive_path)) {
+  my $msg = 'A --runfolder-path or --archive-path argument is required';
+  pod2usage(-msg     => $msg,
+            -exitval => 2);
+}
+
 # Setup iRODS
 my $irods = WTSI::NPG::iRODS->new(logger => $log);
 
@@ -96,10 +106,20 @@ my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(@fac_init_args);
 my @pub_init_args = (file_format     => $file_format,
                      irods           => $irods,
                      lims_factory    => $lims_factory,
-                     logger          => $log,
-                     runfolder_path  => $runfolder_path);
+                     logger          => $log);
+
+if (defined $archive_path) {
+  push @pub_init_args, archive_path => $archive_path;
+}
+if (defined $runfolder_path) {
+  push @pub_init_args, runfolder_path => $runfolder_path;
+}
 if ($collection) {
   push @pub_init_args, dest_collection => $collection;
+}
+if ($alt_process) {
+  push @pub_init_args, alt_process => $alt_process;
+  $log->info("Using alt_process '$alt_process'");
 }
 
 my $publisher = WTSI::NPG::HTS::RunPublisher->new(@pub_init_args);
@@ -165,6 +185,8 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
 
  Options:
    --alignment       Load alignment files. Optional, defaults to true.
+   --alt-process     Alternatove process used. Optional.
+   --alt_process
    --ancillary       Load ancillary (any file other than alignment, index
                      or JSON). Optional, defaults to true.
    --collection      The destination collection in iRODS. Optional,
@@ -235,6 +257,14 @@ One or more "--position <position>" arguments may be supplied to
 restrict operations specific lanes. e.g. "--position 1 --position 8"
 will publish from lane positions 1 and 8 only.
 
+If an alternative process has been used, it may be supplied as a
+string using the "--alt-process <name>" argument. This affects the
+metadata in iRODS (resulting in "target = 0", "alt_target = 1",
+"alt_process = <name>"). It also affects the default destination
+collection in iRODS, which will have an extra leaf collection added,
+having the name of the "--alt-process <name>" argument. If the
+destination collection is set explicitly on the command line, the
+extra leaf collection isn not added.
 
 =head1 AUTHOR
 

@@ -1,3 +1,5 @@
+ - Added --alt-process command line option.
+
 Release 1.1
 
  - Added support for alternative ML warehouse drivers.
