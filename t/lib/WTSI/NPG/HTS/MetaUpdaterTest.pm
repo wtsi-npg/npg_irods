@@ -82,6 +82,9 @@ sub setup_test : Test(setup) {
                         "$data_path/$data_file.sam"],
          executable => 'samtools_irods')->run;
   }
+
+  $irods->add_object("$data_path/$data_file.test.json", $irods_tmp_coll);
+  $irods->add_object("$data_path/$data_file.test.txt", $irods_tmp_coll);
 }
 
 sub teardown_test : Test(teardown) {
@@ -94,28 +97,28 @@ sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::MetaUpdater');
 }
 
-sub update_secondary_metadata : Test(3) {
+sub update_secondary_metadata : Test(6) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $updater = WTSI::NPG::HTS::MetaUpdater->new
+    (irods       => $irods,
+     lims_factory => $lims_factory);
+
+  # Alignment files
  SKIP: {
     if (not $samtools_available) {
       skip 'samtools executable not on the PATH', 3;
     }
-
-    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                      strict_baton_version => 0);
 
     my @paths_to_update;
     foreach my $format (qw[bam cram]) {
       push @paths_to_update, "$irods_tmp_coll/$data_file.$format";
     }
 
-    my $updater = WTSI::NPG::HTS::MetaUpdater->new
-      (irods       => $irods,
-       lims_factory => $lims_factory);
-
     # 1 test
     cmp_ok($updater->update_secondary_metadata(\@paths_to_update),
            '==', scalar @paths_to_update,
-           'All iRODS paths processed without errors');
+           'All iRODS alignment paths processed without errors');
 
     foreach my $format (qw[bam cram]) {
       my $expected_meta =
@@ -146,6 +149,32 @@ sub update_secondary_metadata : Test(3) {
                   diag explain $obj->metadata;
     }
   } # SKIP samtools
+
+  # Ancillary files
+  my @paths_to_update = ("$irods_tmp_coll/$data_file.test.json",
+                         "$irods_tmp_coll/$data_file.test.txt");
+
+  cmp_ok($updater->update_secondary_metadata(\@paths_to_update),
+         '==', scalar @paths_to_update,
+         'All iRODS ancillary paths processed without errors');
+
+  # Restricted
+  my $json_obj = WTSI::NPG::HTS::AncFileDataObject->new
+    (collection  => $irods_tmp_coll,
+     data_object => "$data_file.test.json",
+     irods       => $irods);
+  is_deeply($json_obj->metadata, [{attribute => $STUDY_ID, value => '619'}],
+            "Secondary metadata updated correctly ($STUDY_ID) JSON") or
+              diag explain $json_obj->metadata;
+
+  # Unrestricted
+  my $txt_obj = WTSI::NPG::HTS::AncFileDataObject->new
+    (collection  => $irods_tmp_coll,
+     data_object => "$data_file.test.txt",
+     irods       => $irods);
+  is_deeply($txt_obj->metadata, [],
+            'Secondary metadata updated correctly txt') or
+              diag explain $txt_obj->metadata;
 }
 
 1;

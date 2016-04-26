@@ -52,6 +52,12 @@ sub BUILD {
   # Modifying read-only attribute
   push @{$self->primary_metadata}, $ALT_PROCESS;
 
+  # Restricted access files will get some secondary metadata, but
+  # limited to $STUDY_ID
+  if ($self->is_restricted_access) {
+    $self->secondary_metadata([$STUDY_ID]);
+  }
+
   return;
 }
 
