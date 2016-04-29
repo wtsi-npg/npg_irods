@@ -124,23 +124,44 @@ if ($stdio) {
     push @data_objs, $line;
   }
 }
-else {
-  # Range queries in iRODS are so slow that we have to do lots of
-  # per-run queries
-  foreach my $id_run (@id_run) {
-    my @query = _make_run_query($id_run, $lane, $tag_index);
-    $log->info('iRODS query: ', pp(\@query));
-    push @data_objs, $irods->find_objects_by_meta("/$zone", @query);
-  }
 
-  my @collections = _parse_run_collections(@data_objs);
+# Range queries in iRODS are so slow that we have to do lots of
+# per-run queries
+foreach my $id_run (@id_run) {
+  my @run_objs;
+
+  # Find the annotated objects by query
+  my @query = _make_run_query($id_run, $lane, $tag_index);
+  $log->info('iRODS query: ', pp(\@query));
+  push @run_objs, $irods->find_objects_by_meta("/$zone", @query);
+
+  # Find other objects by listing collections and filtering
+  my @collections = _parse_run_collections(@run_objs);
   $log->info(pp(\@collections));
+
+  my $filter_pattern = "^$id_run";
+  if (defined $lane) {
+    $filter_pattern .= qq[_$lane];
+  }
+  if (defined $tag_index) {
+    $filter_pattern .= qq[#$tag_index];
+  }
 
   my $recurse = 1;
   foreach my $collection (@collections) {
     my ($objs, $colls) = $irods->list_collection($collection, $recurse);
-    push @data_objs, @{$objs};
+
+    foreach my $obj (@{$objs}) {
+      my $objname = fileparse($obj);
+      ## no critic (RegularExpressions::RequireExtendedFormatting)
+      if ($objname =~ m{$filter_pattern}ms) {
+        push @run_objs, $obj;
+      }
+      ## use critic
+    }
   }
+
+  push @data_objs, @run_objs;
 }
 
 @data_objs = uniq sort @data_objs;
