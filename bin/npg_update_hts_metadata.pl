@@ -55,11 +55,11 @@ GetOptions('debug'                     => \$debug,
            'dry-run|dry_run!'          => \$dry_run,
            'help'                      => sub { pod2usage(-verbose => 2,
                                                           -exitval => 0) },
-           'lane=i'                    => \$lane,
+           'lane|position=i'           => \$lane,
            'logconf=s'                 => \$log4perl_config,
-           'max-run|max_run=i'         => \$max_id_run,
-           'min-run|min_run=i'         => \$min_id_run,
-           'run=i'                     => \@id_run,
+           'max_id_run|max-id-run=i'   => \$max_id_run,
+           'min_id_run|min-id-run=i'   => \$min_id_run,
+           'id_run|id-run=i'           => \@id_run,
            'tag-index|tag_index=i'     => \$tag_index,
            'verbose'                   => \$verbose,
            'zone=s',                   => \$zone,
@@ -225,7 +225,7 @@ npg_update_hts_metadata
 =head1 SYNOPSIS
 
 npg_update_hts_metadata [--dry-run] [--lane position] [--logconf file]
-  --min-run id_run --max-run id_run | --run id_run [--tag-index i]
+  --min-id-run id_run --max-id-run id_run | --id-run id_run [--tag-index i]
   [--verbose] [--zone name]
 
  Options:
@@ -235,13 +235,15 @@ npg_update_hts_metadata [--dry-run] [--lane position] [--logconf file]
   --dry_run     Enable dry-run mode. Propose metadata changes, but do not
                 perform them. Optional, defaults to true.
   --help        Display help.
+  --position
   --lane        The sequencing lane/position to update. Optional.
   --logconf     A log4perl configuration file. Optional.
-  --max-run
-  --max_run     The upper limit of a run number range to update. Optional.
-  --min-run
-  --min_run     The lower limit of a run number range to update. Optional.
-  --run         A specific run to update. May be given multiple times to
+  --max-id-run
+  --max_id_run  The upper limit of a run number range to update. Optional.
+  --min-id-run
+  --min_id_run  The lower limit of a run number range to update. Optional.
+  --id-run
+  --id_run      A specific run to update. May be given multiple times to
                 specify multiple runs. If used in conjunction with --min-run
                 and --max-run, the union of the two sets of runs will be
                 updated.
