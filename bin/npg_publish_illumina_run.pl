@@ -58,7 +58,7 @@ GetOptions('alignment'                         => \$alignment,
            },
            'index'                             => \$index,
            'logconf=s'                         => \$log4perl_config,
-           'position=i'                        => \@positions,
+           'lanes|positions=i'                 => \@positions,
            'qc'                                => \$qc,
            'runfolder-path|runfolder_path=s'   => \$runfolder_path,
            'verbose'                           => \$verbose);
@@ -185,8 +185,8 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
 
  Options:
    --alignment       Load alignment files. Optional, defaults to true.
-   --alt-process     Alternatove process used. Optional.
-   --alt_process
+   --alt-process
+   --alt_process     Alternative process used. Optional.
    --ancillary       Load ancillary (any file other than alignment, index
                      or JSON). Optional, defaults to true.
    --collection      The destination collection in iRODS. Optional,
@@ -199,7 +199,8 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
    --help            Display help.
    --index           Load alignment index files. Optional, defaults to
                      true.
-   --position        A sequencing lane/position to load. This option may
+   --lanes
+   --positions       A sequencing lane/position to load. This option may
                      be supplied multiple times to load multiple lanes.
                      Optional, defaults to loading all available lanes.
    --qc              Load QC JSON files. Optional, defaults to true.
