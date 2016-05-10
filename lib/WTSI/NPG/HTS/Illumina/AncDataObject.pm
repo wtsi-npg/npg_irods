@@ -20,10 +20,10 @@ with qw[
        ];
 
 has '+is_restricted_access' =>
-  (is            => 'ro');
+  (is => 'ro');
 
 has '+primary_metadata' =>
-  (is            => 'ro');
+  (is => 'ro');
 
 sub BUILD {
   my ($self) = @_;

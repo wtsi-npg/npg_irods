@@ -32,8 +32,9 @@ with qw[npg_tracking::illumina::run::long_info];
 our $VERSION = '';
 
 # Default 
-our $DEFAULT_ROOT_COLL = '/seq';
-our $DEFAULT_QC_COLL   = 'qc';
+our $DEFAULT_ROOT_COLL    = '/seq';
+our $DEFAULT_QC_COLL      = 'qc';
+our $DEFAULT_INTEROP_COLL = 'InterOp';
 
 # Alignment and index file suffixes
 our $BAM_FILE_FORMAT   = 'bam';
@@ -46,8 +47,8 @@ our $ALIGNMENT_CATEGORY = 'alignment';
 our $ANCILLARY_CATEGORY = 'ancillary';
 our $INDEX_CATEGORY     = 'index';
 our $QC_CATEGORY        = 'qc';
-# XML files do not have a category because they exist once per run,
-# while all the rest exist per lane and/or plex
+# XML and InterOp files do not have a category because they exist once
+# per run, while all the rest exist per lane and/or plex
 
 our @FILE_CATEGORIES = ($ALIGNMENT_CATEGORY, $ANCILLARY_CATEGORY,
                         $INDEX_CATEGORY, $QC_CATEGORY);
@@ -97,6 +98,14 @@ has 'dest_collection' =>
    lazy          => 1,
    builder       => '_build_dest_collection',
    documentation => 'The destination collection within iRODS to store data');
+
+has 'interop_dest_collection' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   lazy          => 1,
+   builder       => '_build_interop_dest_collection',
+   documentation => 'The destination collection within iRODS to store '.
+                    'InterOp data');
 
 has 'qc_dest_collection' =>
   (isa           => 'Str',
@@ -173,6 +182,12 @@ foreach my $method_name (@CACHING_LANE_METHOD_NAMES,
 
        return $cache->{$method_name}->{$position};
      });
+}
+
+sub interop_path {
+  my ($self) = @_;
+
+  return $self->runfolder_path . '/InterOp';
 }
 
 =head2 positions
@@ -362,6 +377,26 @@ sub list_xml_files {
   my $xml_file_pattern = '^(RunInfo|runParameters).xml$';
 
   return [$self->_list_directory($runfolder_path, $xml_file_pattern)];
+}
+
+=head2 list_interop_files
+
+  Arg [1]    : None
+
+  Example    : $pub->list_interop_files;
+  Description: Return paths of all run-level InterOp files for the run.
+               Calling this method will access the file system.
+  Returntype : ArrayRef[Str]
+
+=cut
+
+sub list_interop_files {
+  my ($self) = @_;
+
+  my $interop_path   = $self->interop_path;
+  my $interop_file_pattern = '.bin$';
+
+  return [$self->_list_directory($interop_path, $interop_file_pattern)];
 }
 
 =head2 list_lane_alignment_files
@@ -631,9 +666,16 @@ sub list_plex_ancillary_files {
 
     my $positions = $params->positions || [$self->positions];
 
-    # XML files do not have a lane position; they belong to the entire
-    # run
-    my ($num_files, $num_processed, $num_errors) = $self->publish_xml_files;
+    my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
+
+    # XML and InterOp files do not have a lane position; they belong
+    # to the entire run
+    my ($nfx, $npx, $nex) = $self->publish_xml_files;
+    my ($nfi, $npi, $nei) = $self->publish_interop_files;
+
+    $num_files     += ($nfx + $nfi);
+    $num_processed += ($npx + $npi);
+    $num_errors    += ($nex + $nei);
 
     foreach my $category (@FILE_CATEGORIES) {
       my ($nf, $np, $ne) =
@@ -653,10 +695,9 @@ sub list_plex_ancillary_files {
 
   Arg [1]    : None
 
-  Example    : my $num_published = $pub->publish_alignment_files
-  Description: Publish alignment files (lane- or plex-level) to
-               iRODS. Return the number of files, the number published
-               and the number of errors.
+  Example    : my $num_published = $pub->publish_xml_files
+  Description: Publish run-level XML files to iRODS. Return the number of
+               files, the number published and the number of errors.
   Returntype : Array[Int]
 
 =cut
@@ -666,6 +707,25 @@ sub publish_xml_files {
 
   return $self->_publish_support_files($self->list_xml_files,
                                        $self->dest_collection);
+}
+
+=head2 publish_xml_files
+
+  Arg [1]    : None
+
+  Example    : my $num_published = $pub->publish_xml_files
+  Description: Publish run-level InterOp files to iRODS. Return the number of
+               files, the number published and the number of errors.
+  Returntype : Array[Int]
+
+=cut
+
+sub publish_interop_files {
+  my ($self) = @_;
+
+  return $self->_publish_support_files($self->list_interop_files,
+                                       $self->interop_dest_collection);
+
 }
 
 =head2 publish_alignment_files
@@ -1326,6 +1386,12 @@ sub _build_dest_collection  {
   }
 
   return catdir(@colls);
+}
+
+sub _build_interop_dest_collection  {
+  my ($self) = @_;
+
+  return catdir($self->dest_collection, $DEFAULT_INTEROP_COLL);
 }
 
 sub _build_qc_dest_collection  {

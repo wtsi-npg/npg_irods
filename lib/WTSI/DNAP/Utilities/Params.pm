@@ -42,7 +42,7 @@ sub function_params {
   my $params = $class->new_object(positional => $positional,
                                   names      => \@names);
   $params->debug("Created a parser for $positional positional arguments and ",
-                 "$num_names named arguments", @names ? "[$names]" : q[]);
+                 "$num_names named arguments ", @names ? "[$names]" : q[]);
 
   return $params;
 }
