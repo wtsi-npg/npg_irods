@@ -80,14 +80,16 @@ override 'update_secondary_metadata' => sub {
 
   my $path = $self->str;
 
+  # No attributes, none processed, no errors
+  my @counts = (0, 0, 0);
   if ($self->is_restricted_access) {
-    super();
+    @counts = super();
   }
   else {
     $self->debug("Skipping secondary metadata update for '$path'");
   }
 
-  return $self;
+  return @counts;
 };
 
 sub _build_is_restricted_access {

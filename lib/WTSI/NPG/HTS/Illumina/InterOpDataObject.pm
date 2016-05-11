@@ -28,11 +28,12 @@ sub BUILD {
 }
 
 override 'update_secondary_metadata' => sub {
-  my ($self) = @_;
+  my ($self, @avus) = @_;
 
   # Nothing to add
 
-  return $self;
+  # No attributes, none processed, no errors
+  return (0, 0, 0);
 };
 
 sub _build_is_restricted_access {

@@ -421,10 +421,10 @@ sub reference : Test(4) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
+sub update_secondary_metadata_tag0_no_spike_bact : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -632,10 +632,10 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag0_spike_bact : Test(8) {
+sub update_secondary_metadata_tag0_spike_bact : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -851,10 +851,10 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
+sub update_secondary_metadata_tag1_no_spike_bact : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -902,10 +902,10 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag1_spike_bact : Test(8) {
+sub update_secondary_metadata_tag1_spike_bact : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -953,10 +953,10 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
+sub update_secondary_metadata_tag0_no_spike_human : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -1022,10 +1022,10 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag0_spike_human : Test(8) {
+sub update_secondary_metadata_tag0_spike_human : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -1098,10 +1098,10 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
+sub update_secondary_metadata_tag81_no_spike_human : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -1149,10 +1149,10 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag81_spike_human : Test(8) {
+sub update_secondary_metadata_tag81_spike_human : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -1225,8 +1225,18 @@ sub test_metadata_update {
      with_spiked_control => $spiked);
 
   my @groups_before = $obj->get_groups;
-  ok($obj->update_secondary_metadata(@secondary_avus),
-     "Secondary metadata ran; format: $format, tag: $tag, spiked: $spiked");
+
+  my %secondary_attrs = map { $_->{attribute} => 1 } @secondary_avus;
+  my $expected_num_attrs = scalar keys %secondary_attrs;
+  my ($num_attributes, $num_processed, $num_errors) =
+    $obj->update_secondary_metadata(@secondary_avus);
+  cmp_ok($num_attributes, '==', $expected_num_attrs,
+         "Secondary metadata attrs; $format, tag: $tag, spiked: $spiked");
+  cmp_ok($num_processed, '==', $expected_num_attrs,
+         "Secondary metadata processed; $format, tag: $tag, spiked: $spiked");
+  cmp_ok($num_errors, '==', 0,
+         "Secondary metadata errors; $format, tag: $tag, spiked: $spiked");
+
   my @groups_after = $obj->get_groups;
 
   my $metadata = $obj->metadata;
