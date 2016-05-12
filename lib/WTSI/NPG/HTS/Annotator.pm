@@ -25,6 +25,8 @@ our $SUFFIX_REGEX   = qr{[.]($SUFFIX_PATTERN)$}msx;
 # Sequence alignment filters
 our $YHUMAN = 'yhuman';  # FIXME
 
+our $SEQCHKSUM = 'seqchksum'; # FIXME -- move to WTSI::NPG::iRODS::Metadata
+
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::iRODS::Utilities
@@ -172,6 +174,7 @@ sub make_ticket_metadata {
                reference        Reference file path, Str. Optional.
                alt_process      Alternative process name, Str. Optional.
                alignment_filter Alignment filter name, Str. Optional.
+               seqchksum        Seqchksum digest, Str. Optional.
 
   Example    : my @avus = $ann->make_primary_metadata
                    ($id_run, $position, $num_reads,
@@ -189,7 +192,8 @@ sub make_ticket_metadata {
 {
   my $positional = 4;
   my @named      = qw[tag_index is_paired_read is_aligned
-                      reference alt_process alignment_filter];
+                      reference alt_process alignment_filter
+                      seqchksum];
   my $params = function_params($positional, @named);
 
   sub make_primary_metadata {
@@ -219,6 +223,15 @@ sub make_ticket_metadata {
     if ($params->alt_process) {
       push @avus, $self->make_alt_metadata($params->alt_process);
     }
+
+    if ($params->seqchksum) {
+      push @avus, $self->make_seqchksum_metadata($params->seqchksum);
+    }
+
+    my $hts_element = sprintf 'run: %s, pos: %s, tag_index: %s',
+      $id_run, $position,
+      (defined $params->tag_index ? $params->tag_index : 'NA');
+    $self->info("Created primary metadata for $hts_element: ", pp(\@avus));
 
     return @avus;
   }
@@ -377,6 +390,25 @@ sub make_alt_metadata {
     $self->logconfess('A defined alt_process argument is required');
 
   return ($self->make_avu($ALT_PROCESS, $alt_process));
+}
+
+=head2 make_seqchksum_metadata
+
+  Arg [1]      Seqchksum digest, Str.
+
+  Example    : my @avus = $ann->make_seqchksum_metadata($digest);
+  Description: Return seqchksum metadata AVUs.
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_seqchksum_metadata {
+  my ($self, $digest) = @_;
+
+  defined $digest or
+    $self->logconfess('A defined alt_process argument is required');
+
+  return ($self->make_avu($SEQCHKSUM, $digest));
 }
 
 =head2 make_secondary_metadata
@@ -644,7 +676,7 @@ WTSI::NPG::HTS::Annotator
 
 A role providing methods to calculate metadata for WTSI HTS runs. This
 is used to create all the metadata for the WTSI::NPG::HTS
-package. Please add new methods as require to create metadata, rather
+package. Please add new methods as required to create metadata, rather
 than creating it inline in your own package.
 
 =head1 AUTHOR

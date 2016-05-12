@@ -1,0 +1,7 @@
+###	set	count		b_seq	name_b_seq	b_seq_qual	b_seq_tags(BC,FI,QT,RT,TC)
+all	all	20		614db5e9	daab93f	5948072	32ea50d
+all	pass	20		614db5e9	daab93f	5948072	32ea50d
+	all	0		1	1	1	1
+	pass	0		1	1	1	1
+1#8	all	20		614db5e9	daab93f	5948072	32ea50d
+1#8	pass	20		614db5e9	daab93f	5948072	32ea50d

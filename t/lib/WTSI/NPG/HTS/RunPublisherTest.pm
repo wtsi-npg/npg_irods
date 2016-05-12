@@ -495,7 +495,7 @@ sub publish_xml_files : Test(14) {
   }
 }
 
-sub publish_lane_alignment_files : Test(168) {
+sub publish_lane_alignment_files : Test(264) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
@@ -537,6 +537,7 @@ sub publish_lane_alignment_files : Test(168) {
                 "$file_format alignment files") or
                   diag explain \@observed_paths;
 
+      check_primary_metadata($irods, @observed_paths);
       check_common_metadata($irods, @observed_paths);
       check_study_metadata($irods, @observed_paths);
     }
@@ -575,7 +576,7 @@ sub publish_lane_alignment_files : Test(168) {
   }
 }
 
-sub publish_plex_alignment_files : Test(487) {
+sub publish_plex_alignment_files : Test(811) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -617,6 +618,7 @@ sub publish_plex_alignment_files : Test(487) {
                 "$file_format alignment files") or
                   diag explain \@observed_paths;
 
+      check_primary_metadata($irods, @observed_paths);
       check_common_metadata($irods, @observed_paths);
       check_study_metadata($irods, @observed_paths);
     }
@@ -935,7 +937,7 @@ sub publish_plex_qc_files : Test(1660) {
   }
 }
 
-sub publish_plex_alignment_files_alt_process : Test(598) {
+sub publish_plex_alignment_files_alt_process : Test(922) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -979,6 +981,7 @@ sub publish_plex_alignment_files_alt_process : Test(598) {
                 "$file_format alt process alignment files") or
                   diag explain \@observed_paths;
 
+      check_primary_metadata($irods, @observed_paths);
       check_common_metadata($irods, @observed_paths);
       check_study_metadata($irods, @observed_paths);
       check_alt_process_metadata($irods, $alt_process, @observed_paths);
@@ -1524,6 +1527,22 @@ sub check_common_metadata {
   }
 }
 
+sub check_primary_metadata {
+  my ($irods, @paths) = @_;
+
+  foreach my $path (@paths) {
+    my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $path);
+    my $file_name = fileparse($obj->str);
+
+    foreach my $attr ($ALIGNMENT, $ID_RUN, $POSITION,
+                      $TOTAL_READS, $IS_PAIRED_READ,
+                      $WTSI::NPG::HTS::Annotator::SEQCHKSUM) {
+      my @avu = $obj->find_in_metadata($attr);
+      cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
+    }
+  }
+}
+
 sub check_study_id_metadata {
   my ($irods, @paths) = @_;
 
@@ -1583,10 +1602,10 @@ sub check_alt_process_metadata {
               [{attribute => $ALT_TARGET,
                 value     => 1}],
               "$file_name $ALT_TARGET metadata correct when alt_process");
-    is_deeply([$obj->get_avu($WTSI::NPG::HTS::Annotator::ALT_PROCESS)],
-              [{attribute => $WTSI::NPG::HTS::Annotator::ALT_PROCESS,
+    is_deeply([$obj->get_avu($ALT_PROCESS)],
+              [{attribute => $ALT_PROCESS,
                 value     => $alt_process}],
-              "$file_name $WTSI::NPG::HTS::Annotator::ALT_PROCESS metadata correct when alt_process");
+              "$file_name $ALT_PROCESS metadata correct when alt_process");
   }
 }
 

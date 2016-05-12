@@ -1,3 +1,20 @@
+Release 1.2
+
+ - Added --alt-process and --archive-path command line options to
+   publish_illumina_run.
+
+ - Added options aliases, e.g. position/lanes, to publish_illumina_run.
+
+ - Initial seqchksum digest metadata support for publish_illumina_run.
+
+ - Restrict the types of secondary metadata on ancillary files i.e 
+   Restrict JSON file secondary metadata to study_id.
+
+ - Change run option to id_run (or id-run)
+
+ - Filter data objects by lane and tag index (without recourse to 
+   metadata)
+
 Release 1.1
 
  - Added support for alternative ML warehouse drivers.

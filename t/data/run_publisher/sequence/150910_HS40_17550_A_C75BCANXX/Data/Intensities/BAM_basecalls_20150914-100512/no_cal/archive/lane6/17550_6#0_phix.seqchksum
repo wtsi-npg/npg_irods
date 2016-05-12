@@ -1,0 +1,7 @@
+###	set	count		b_seq	name_b_seq	b_seq_qual	b_seq_tags(BC,FI,QT,RT,TC)
+all	all	40370		1f939b14	605929b5	667fb67f	2d1c753c
+all	pass	40360		59b6199b	5dd58851	34d46b2d	7f5c85d
+	all	0		1	1	1	1
+	pass	0		1	1	1	1
+1#0	all	40370		1f939b14	605929b5	667fb67f	2d1c753c
+1#0	pass	40360		59b6199b	5dd58851	34d46b2d	7f5c85d

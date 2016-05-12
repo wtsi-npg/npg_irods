@@ -1,0 +1,7 @@
+###	set	count		b_seq	name_b_seq	b_seq_qual	b_seq_tags(BC,FI,QT,RT,TC)
+all	all	18		e7a6906	3d3af0f3	21137cd3	18e3cc13
+all	pass	18		e7a6906	3d3af0f3	21137cd3	18e3cc13
+	all	0		1	1	1	1
+	pass	0		1	1	1	1
+1#2	all	18		e7a6906	3d3af0f3	21137cd3	18e3cc13
+1#2	pass	18		e7a6906	3d3af0f3	21137cd3	18e3cc13

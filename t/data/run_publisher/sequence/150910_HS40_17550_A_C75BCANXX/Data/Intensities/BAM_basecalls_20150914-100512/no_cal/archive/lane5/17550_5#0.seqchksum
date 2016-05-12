@@ -1,0 +1,7 @@
+###	set	count		b_seq	name_b_seq	b_seq_qual	b_seq_tags(BC,FI,QT,RT,TC)
+all	all	3798264		a16aa54	5e708ff	2a3f061c	45ee400
+all	pass	3798264		a16aa54	5e708ff	2a3f061c	45ee400
+	all	0		1	1	1	1
+	pass	0		1	1	1	1
+1#0	all	3798264		a16aa54	5e708ff	2a3f061c	45ee400
+1#0	pass	3798264		a16aa54	5e708ff	2a3f061c	45ee400
