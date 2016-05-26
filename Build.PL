@@ -40,7 +40,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
     'Text::CSV'                     => '>= 1.33',
     'Try::Tiny'                     => '>= 0.12',
     'WTSI::DNAP::Utilities'         => '>= 0.5.1',   # perl-dnap-utilities
-    'WTSI::NPG::iRODS'              => '>= 2.1.0',   # perl-irods-wrap
+    'WTSI::NPG::iRODS'              => '>= 2.4.0',   # perl-irods-wrap
     'WTSI::DNAP::Warehouse::Schema' => '>= 1.8',     # ml_warehouse
     'st::api::lims'                 => '>= 85.1',    # npg_tracking
     'st::api::lims::ml_warehouse'   => '>= 38.0'     # npg_ml_warehouse
