@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::AncFileDataObjectTest;
+package WTSI::NPG::HTS::Illumina::AncDataObjectTest;
 
 use strict;
 use warnings;
@@ -16,7 +16,7 @@ use base qw(WTSI::NPG::HTS::Test);
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
-use WTSI::NPG::HTS::AncFileDataObject;
+use WTSI::NPG::HTS::Illumina::AncDataObject;
 use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
@@ -37,7 +37,7 @@ use WTSI::NPG::iRODS;
 
 my $pid          = $PID;
 my $test_counter = 0;
-my $data_path    = './t/data/anc_file_data_object';
+my $data_path    = './t/data/anc_data_object';
 my $fixture_path = "./t/fixtures";
 
 my $db_dir = File::Temp->newdir;
@@ -119,7 +119,7 @@ sub setup_test : Test(setup) {
                                     strict_baton_version => 0);
 
   $irods_tmp_coll =
-    $irods->add_collection("AncFileDataObjectTest.$pid.$test_counter");
+    $irods->add_collection("Illumina::AncDataObjectTest.$pid.$test_counter");
   $test_counter++;
 
   my $group_count = 0;
@@ -142,7 +142,7 @@ sub setup_test : Test(setup) {
   $irods->put_collection($data_path, $irods_tmp_coll);
 
   foreach my $data_file (@tag0_files, @tag1_files) {
-    my $path = "$irods_tmp_coll/anc_file_data_object/$data_file";
+    my $path = "$irods_tmp_coll/anc_data_object/$data_file";
     if ($group_tests_enabled) {
       # Add some test group permissions
       $irods->set_object_permissions($WTSI::NPG::iRODS::READ_PERMISSION,
@@ -170,7 +170,7 @@ sub teardown_test : Test(teardown) {
 }
 
 sub require : Test(1) {
-  require_ok('WTSI::NPG::HTS::AncFileDataObject');
+  require_ok('WTSI::NPG::HTS::Illumina::AncDataObject');
 }
 
 my @untagged_paths = ('/seq/17550/17550_3',
@@ -192,7 +192,7 @@ sub id_run : Test(120) {
     foreach my $path (@tagged_paths, @untagged_paths) {
       foreach my $part (@{$formats->{$format}}) {
         my $full_path = $path . $part . ".$format";
-        cmp_ok(WTSI::NPG::HTS::AncFileDataObject->new
+        cmp_ok(WTSI::NPG::HTS::Illumina::AncDataObject->new
                ($irods, $full_path)->id_run,
                '==', 17550, "$full_path id_run is correct");
       }
@@ -208,7 +208,7 @@ sub position : Test(120) {
     foreach my $path (@tagged_paths, @untagged_paths) {
       foreach my $part (@{$formats->{$format}}) {
         my $full_path = $path . $part . ".$format";
-        cmp_ok(WTSI::NPG::HTS::AncFileDataObject->new
+        cmp_ok(WTSI::NPG::HTS::Illumina::AncDataObject->new
                ($irods, $full_path)->position,
                '==', 3, "$full_path position is correct");
       }
@@ -224,7 +224,7 @@ sub tag_index : Test(120) {
     foreach my $path (@tagged_paths) {
       foreach my $part (@{$formats->{$format}}) {
         my $full_path = $path . $part . ".$format";
-        cmp_ok(WTSI::NPG::HTS::AncFileDataObject->new
+        cmp_ok(WTSI::NPG::HTS::Illumina::AncDataObject->new
                ($irods, $full_path)->tag_index,
                '==', 1, "$full_path tag_index is correct");
       }
@@ -235,7 +235,7 @@ sub tag_index : Test(120) {
     foreach my $path (@untagged_paths) {
       foreach my $part (@{$formats->{$format}}) {
         my $full_path = $path . $part . ".$format";
-        is(WTSI::NPG::HTS::AncFileDataObject->new
+        is(WTSI::NPG::HTS::Illumina::AncDataObject->new
            ($irods, $full_path)->tag_index, undef,
            "$full_path tag_index 'undef' is correct");
       }
@@ -254,7 +254,7 @@ sub alignment_filter : Test(120) {
         my ($expected) = $path =~ m{_((human|nonhuman|yhuman|phix))};
         my $exp_str = defined $expected ? $expected : 'undef';
 
-        my $alignment_filter = WTSI::NPG::HTS::AncFileDataObject->new
+        my $alignment_filter = WTSI::NPG::HTS::Illumina::AncDataObject->new
           ($irods, $full_path)->alignment_filter;
 
         is($alignment_filter, $expected,
@@ -290,7 +290,7 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(72) {
     }
 
     test_metadata_update($irods, $lims_factory,
-                         "$irods_tmp_coll/anc_file_data_object",
+                         "$irods_tmp_coll/anc_data_object",
                          {data_file              => $data_file,
                           spiked_control         => $spiked_control,
                           expected_metadata      => \@expected_metadata,
@@ -325,7 +325,7 @@ sub update_secondary_metadata_tag1_no_spike_human : Test(84) {
     }
 
     test_metadata_update($irods, $lims_factory,
-                         "$irods_tmp_coll/anc_file_data_object",
+                         "$irods_tmp_coll/anc_data_object",
                          {data_file              => $data_file,
                           spiked_control         => $spiked_control,
                           expected_metadata      => \@expected_metadata,
@@ -345,7 +345,7 @@ sub test_metadata_update {
   my $exp_grp_before = $args->{expected_groups_before};
   my $exp_grp_after  = $args->{expected_groups_after};
 
-  my $obj = WTSI::NPG::HTS::AncFileDataObject->new
+  my $obj = WTSI::NPG::HTS::Illumina::AncDataObject->new
     (collection  => $working_coll,
      data_object => $data_file,
      irods       => $irods);

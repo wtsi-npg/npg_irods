@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::IlluminaObjFactory;
+package WTSI::NPG::HTS::Illumina::DataObjectFactory;
 
 use namespace::autoclean;
 use File::Basename;
@@ -6,9 +6,9 @@ use Moose;
 use MooseX::StrictConstructor;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
-use WTSI::NPG::HTS::AlMapFileDataObject;
-use WTSI::NPG::HTS::AncFileDataObject;
-use WTSI::NPG::HTS::XMLFileDataObject;
+use WTSI::NPG::HTS::Illumina::AlnDataObject;
+use WTSI::NPG::HTS::Illumina::AncDataObject;
+use WTSI::NPG::HTS::Illumina::XMLDataObject;
 
 our $VERSION = '';
 
@@ -64,22 +64,22 @@ my $xml_regex   = qr{[.]xml$}msx;
                      logger      => $self->logger);
 
     if ($filename =~  m{$almap_regex}msxi) {
-      $self->debug("Making WTSI::NPG::HTS::AlMapFileDataObject from '$path' ",
-                   "matching $almap_regex");
-      $obj = WTSI::NPG::HTS::AlMapFileDataObject->new(@init_args);
+      $self->debug('Making WTSI::NPG::HTS::Illumina::AlnDataObject from ',
+                   "'$path' matching $almap_regex");
+      $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new(@init_args);
     }
     elsif ($filename =~ m{$anc_regex}msxi) {
-      $self->debug("Making WTSI::NPG::HTS::AncFileDataObject from '$path' ",
-                   "matching $anc_regex");
-      $obj = WTSI::NPG::HTS::AncFileDataObject->new(@init_args);
+      $self->debug('Making WTSI::NPG::HTS::Illumina::AncDataObject from ',
+                   "'$path' matching $anc_regex");
+      $obj = WTSI::NPG::HTS::Illumina::AncDataObject->new(@init_args);
     }
     elsif ($filename =~ m{$xml_regex}msxi) {
       if (defined $params->id_run) {
         push @init_args, id_run => $params->id_run;
       }
-      $self->debug("Making WTSI::NPG::HTS::XMLFileDataObject from '$path' ",
-                   "matching $xml_regex");
-      $obj = WTSI::NPG::HTS::XMLFileDataObject->new(@init_args);
+      $self->debug('Making WTSI::NPG::HTS::Illumina::XMLDataObject from ',
+                   "'$path' matching $xml_regex");
+      $obj = WTSI::NPG::HTS::Illumina::XMLDataObject->new(@init_args);
     }
     else {
       $self->debug("Not making any WTSI::NPG::HTS::DataObject for '$path'");
@@ -100,7 +100,7 @@ __END__
 
 =head1 NAME
 
-WTSI::NPG::HTS::IlluminaObjFactory
+WTSI::NPG::HTS::Illumina::DataObjectFactory
 
 =head1 DESCRIPTION
 

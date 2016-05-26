@@ -2,6 +2,6 @@
 use strict;
 use warnings;
 
-use WTSI::NPG::HTS::MetaUpdaterTest;
+use WTSI::NPG::HTS::Illumina::MetaUpdaterTest;
 
-WTSI::NPG::HTS::MetaUpdaterTest->runtests;
+WTSI::NPG::HTS::Illumina::MetaUpdaterTest->runtests;

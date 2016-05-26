@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::RunPublisher;
+package WTSI::NPG::HTS::Illumina::RunPublisher;
 
 use namespace::autoclean;
 use Data::Dump qw[pp];
@@ -11,11 +11,11 @@ use MooseX::StrictConstructor;
 use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
-use WTSI::NPG::HTS::IlluminaObjFactory;
+use WTSI::NPG::HTS::Illumina::DataObjectFactory;
 use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::HTS::Publisher;
 use WTSI::NPG::HTS::Seqchksum;
-use WTSI::NPG::HTS::Types qw[AlMapFileFormat];
+use WTSI::NPG::HTS::Types qw[AlnFormat];
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 
@@ -74,7 +74,7 @@ has 'lims_factory' =>
    documentation => 'A factory providing st:api::lims objects');
 
 has 'file_format' =>
-  (isa           => AlMapFileFormat,
+  (isa           => AlnFormat,
    is            => 'ro',
    required      => 1,
    lazy          => 1,
@@ -1337,8 +1337,9 @@ sub _build_qc_dest_collection  {
 sub _build_obj_factory {
   my ($self) = @_;
 
-  return WTSI::NPG::HTS::IlluminaObjFactory->new(irods  => $self->irods,
-                                                 logger => $self->logger);
+  return WTSI::NPG::HTS::Illumina::DataObjectFactory->new
+    (irods  => $self->irods,
+     logger => $self->logger);
 }
 
 # Return a sorted array of file paths, filtered by a regex.
@@ -1451,7 +1452,7 @@ __END__
 
 =head1 NAME
 
-WTSI::NPG::HTS::RunPublisher
+WTSI::NPG::HTS::Illumina::RunPublisher
 
 =head1 DESCRIPTION
 

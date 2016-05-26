@@ -14,8 +14,8 @@ use Pod::Usage;
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::DriRODS;
+use WTSI::NPG::HTS::Illumina::RunPublisher;
 use WTSI::NPG::HTS::LIMSFactory;
-use WTSI::NPG::HTS::RunPublisher;
 
 our $VERSION = '';
 our $DEFAULT_ZONE = 'seq';
@@ -122,7 +122,7 @@ if ($alt_process) {
   $log->info("Using alt_process '$alt_process'");
 }
 
-my $publisher = WTSI::NPG::HTS::RunPublisher->new(@pub_init_args);
+my $publisher = WTSI::NPG::HTS::Illumina::RunPublisher->new(@pub_init_args);
 
 my ($num_files, $num_published, $num_errors) = (0, 0, 0);
 my $increment_counts = sub {
