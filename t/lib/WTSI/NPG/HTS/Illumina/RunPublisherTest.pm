@@ -465,8 +465,6 @@ sub publish_xml_files : Test(14) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
-
   my $dest_coll = "$irods_tmp_coll/publish_xml_files";
 
   my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
@@ -490,6 +488,46 @@ sub publish_xml_files : Test(14) {
 
   foreach my $path (@observed_paths) {
     my $obj = WTSI::NPG::HTS::Illumina::XMLDataObject->new($irods, $path);
+    cmp_ok($obj->get_avu($ID_RUN)->{value}, '==', 18448,
+           "$path id_run metadata present");
+  }
+}
+
+sub publish_interop_files : Test(44) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $dest_coll = "$irods_tmp_coll/publish_interop_files";
+
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (dest_collection => $dest_coll,
+     file_format     => 'cram',
+     irods           => $irods,
+     lims_factory    => $lims_factory,
+     runfolder_path  => $runfolder_path);
+
+   my @expected_paths = map { "$dest_coll/InterOp/$_" }
+     qw[ControlMetricsOut.bin
+        CorrectedIntMetricsOut.bin
+        ErrorMetricsOut.bin
+        ExtractionMetricsOut.bin
+        ImageMetricsOut.bin
+        QMetricsOut.bin
+        TileMetricsOut.bin];
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_interop_files;
+  cmp_ok($num_processed, '==', 7, 'Published 7 InterOp files');
+
+  my @observed_paths = observed_data_objects($irods,
+                                             $pub->interop_dest_collection,
+                                             '[.]bin$');
+  is_deeply(\@observed_paths, \@expected_paths,
+            "Published correctly named InterOp files") or
+              diag explain \@observed_paths;
+
+  check_common_metadata($irods, @observed_paths);
+
+  foreach my $path (@observed_paths) {
+    my $obj = WTSI::NPG::HTS::Illumina::InterOpDataObject->new($irods, $path);
     cmp_ok($obj->get_avu($ID_RUN)->{value}, '==', 18448,
            "$path id_run metadata present");
   }

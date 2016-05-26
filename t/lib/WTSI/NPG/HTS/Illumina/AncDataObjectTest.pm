@@ -264,7 +264,7 @@ sub alignment_filter : Test(120) {
   }
 }
 
-sub update_secondary_metadata_tag0_no_spike_human : Test(72) {
+sub update_secondary_metadata_tag0_no_spike_human : Test(108) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     group_prefix         => $group_prefix,
                                     group_filter         => $group_filter,
@@ -299,7 +299,7 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(72) {
   }
 }
 
-sub update_secondary_metadata_tag1_no_spike_human : Test(84) {
+sub update_secondary_metadata_tag1_no_spike_human : Test(126) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     group_prefix         => $group_prefix,
                                     group_filter         => $group_filter,
@@ -357,8 +357,24 @@ sub test_metadata_update {
     TestAnnotator->new->make_study_id_metadata($lims, $spiked);
 
   my @groups_before = $obj->get_groups;
-  ok($obj->update_secondary_metadata(@secondary_avus),
-     "Secondary metadata ran; $data_file, tag: $tag, spiked: $spiked");
+
+  my $expected_num_attrs = 0;
+  if ($obj->is_restricted_access) {
+    $expected_num_attrs = 1; # study_id
+  }
+
+  my ($num_attributes, $num_processed, $num_errors) =
+    $obj->update_secondary_metadata(@secondary_avus);
+  cmp_ok($num_attributes, '==', $expected_num_attrs,
+         "Secondary metadata attrs; $data_file, " .
+         "tag: $tag, spiked: $spiked");
+  cmp_ok($num_processed, '==', $expected_num_attrs,
+         "Secondary metadata processed; $data_file, " .
+         "tag: $tag, spiked: $spiked");
+  cmp_ok($num_errors, '==', 0,
+         "Secondary metadata errors; $data_file, " .
+         "tag: $tag, spiked: $spiked");
+
   my @groups_after = $obj->get_groups;
 
   my $metadata = $obj->metadata;

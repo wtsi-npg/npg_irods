@@ -8,6 +8,7 @@ use MooseX::StrictConstructor;
 use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::Illumina::AlnDataObject;
 use WTSI::NPG::HTS::Illumina::AncDataObject;
+use WTSI::NPG::HTS::Illumina::InterOpDataObject;
 use WTSI::NPG::HTS::Illumina::XMLDataObject;
 
 our $VERSION = '';
@@ -27,9 +28,10 @@ has 'irods' =>
 my $anc_pattern = join q[|], qw[bai bed bamcheck crai flagstat json
                                 seqchksum stats txt];
 
-my $almap_regex = qr{[.](bam|cram)$}msx;
-my $anc_regex   = qr{[.]($anc_pattern)$}msx;
-my $xml_regex   = qr{[.]xml$}msx;
+my $almap_regex   = qr{[.](bam|cram)$}msx;
+my $anc_regex     = qr{[.]($anc_pattern)$}msx;
+my $xml_regex     = qr{[.]xml$}msx;
+my $interop_regex = qr{[.]bin$}msx;
 
 {
   my $positional = 2;
@@ -63,6 +65,7 @@ my $xml_regex   = qr{[.]xml$}msx;
                      irods       => $self->irods,
                      logger      => $self->logger);
 
+    ## no critic (ControlStructures::ProhibitCascadingIfElse)
     if ($filename =~  m{$almap_regex}msxi) {
       $self->debug('Making WTSI::NPG::HTS::Illumina::AlnDataObject from ',
                    "'$path' matching $almap_regex");
@@ -72,6 +75,14 @@ my $xml_regex   = qr{[.]xml$}msx;
       $self->debug('Making WTSI::NPG::HTS::Illumina::AncDataObject from ',
                    "'$path' matching $anc_regex");
       $obj = WTSI::NPG::HTS::Illumina::AncDataObject->new(@init_args);
+    }
+    elsif ($filename =~ m{$interop_regex}msxi) {
+      if (defined $params->id_run) {
+        push @init_args, id_run => $params->id_run;
+      }
+      $self->debug('Making WTSI::NPG::HTS::Illumina::InterOpDataObject from ',
+                   "'$path' matching $interop_regex");
+      $obj = WTSI::NPG::HTS::Illumina::InterOpDataObject->new(@init_args);
     }
     elsif ($filename =~ m{$xml_regex}msxi) {
       if (defined $params->id_run) {
@@ -85,6 +96,7 @@ my $xml_regex   = qr{[.]xml$}msx;
       $self->debug("Not making any WTSI::NPG::HTS::DataObject for '$path'");
       # return undef
     }
+    ## use critic
 
     return $obj;
   }

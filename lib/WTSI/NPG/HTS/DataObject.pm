@@ -104,8 +104,9 @@ sub is_secondary_metadata {
   Example    : $obj->set_primary_metadata({attribute => 'y', value => 'y'});
   Description: Test each candidate AVU against the 'is_primary_metadata'
                predicate and if a true value is returned, set it as
-               metadata on the object. Return $self;
-  Returntype : WTSI::NPG::HTS::DataObject
+               metadata on the object.  Return the number of attributes, the
+               number processed and the number of errors.
+  Returntype : Array[Int]
 
 =cut
 
@@ -121,11 +122,11 @@ sub set_primary_metadata {
   Arg [1]    : AVUs to add, List[HashRef]. A list of iRODS AVUs.
 
   Example    : $obj->update_secondary_metadata(@avus);
-  Description: Update all secondary (LIMS-supplied) metadata using the
-               supplied AVUs. Unlike primary metadata, the object does
-               not filter the AVUs, so you are free to add your own.
-               Return $self.
-  Returntype : WTSI::NPG::HTS::DataObject
+  Description: Test each candidate AVU against the 'is_secondary_metadata'
+               predicate and if a true value is returned, set it as
+               metadata on the object.  Return the number of attributes, the
+               number processed and the number of errors.
+  Returntype : Array[Int]
 
 =cut
 
@@ -218,17 +219,23 @@ sub _set_metadata {
   my @attributes = sort keys %collated_avus;
   $self->debug("Superseding AVUs on '$path' in order of attributes: ",
                join q[, ], @attributes);
+
+  my ($num_attributes, $num_processed, $num_errors) =
+    (scalar @attributes, 0, 0);
+
   foreach my $attr (@attributes) {
     my $values = $collated_avus{$attr};
     try {
       $self->supersede_multivalue_avus($attr, $values, undef);
+      $num_processed++;
     } catch {
+      $num_errors++;
       $self->error("Failed to supersede with attribute '$attr' and values ",
                    pp($values), q[: ], $_);
     };
   }
 
-  return $self;
+  return ($num_attributes, $num_processed, $num_errors);
 }
 
 __PACKAGE__->meta->make_immutable;

@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::Illumina::XMLDataObject;
+package WTSI::NPG::HTS::Illumina::InterOpDataObject;
 
 use namespace::autoclean;
 use Moose;
@@ -52,11 +52,11 @@ __END__
 
 =head1 NAME
 
-WTSI::NPG::HTS::Illumina::XMLDataObject
+WTSI::NPG::HTS::Illumina::InterOpDataObject
 
 =head1 DESCRIPTION
 
-Represents XML (RunInfo.xml and runparameters.xml) files in iRODS.
+Represents InterOp .bin files in iRODS.
 
 =head1 AUTHOR
 

@@ -9,7 +9,7 @@ use WTSI::DNAP::Utilities::Params qw[function_params];
 
 our $VERSION = '';
 
-our @GENERAL_PURPOSE_SUFFIXES = qw[csv tif tsv txt xls xlsx xml];
+our @GENERAL_PURPOSE_SUFFIXES = qw[bin csv tif tsv txt xls xlsx xml];
 our @GENO_DATA_SUFFIXES       = qw[gtc idat];
 our @HTS_DATA_SUFFIXES        = qw[bam cram bai crai];
 our @HTS_ANCILLARY_SUFFIXES   = qw[bamcheck bed flagstat json seqchksum
