@@ -145,16 +145,17 @@ sub publish_file {
     $timestamp = DateTime->now;
   }
 
-  my $obj;
+  my $path;
   if ($self->irods->is_collection($remote_path)) {
     $self->info("Remote path '$remote_path' is a collection");
 
     my ($loc_vol, $dir, $file) = splitpath($local_path);
-    $obj = $self->publish_file($local_path, catfile($remote_path, $file),
-                               $metadata, $timestamp)
+    $path = $self->publish_file($local_path, catfile($remote_path, $file),
+                                $metadata, $timestamp)
   }
   else {
     my $local_md5 = $self->_get_md5($local_path);
+    my $obj;
     if ($self->irods->is_object($remote_path)) {
       $self->info("Remote path '$remote_path' is an existing object");
       $obj = $self->_publish_file_overwrite($local_path, $local_md5,
@@ -172,9 +173,11 @@ sub publish_file {
                        "$num_meta_errors errors encountered ",
                        '(see log for details)');
      }
+
+    $path = $obj->str;
   }
 
-  return $obj->str;
+  return $path;
 }
 
 =head2 publish_directory
