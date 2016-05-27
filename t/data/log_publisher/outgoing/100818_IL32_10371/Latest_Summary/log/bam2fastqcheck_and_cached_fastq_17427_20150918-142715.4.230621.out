@@ -1,0 +1,36 @@
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@bc-19-2-10>
+Subject: Job 230621[4]: <prod_bam2fastqcheck_and_cached_fastq_17427_20150918-142715[4]> in cluster <seqfarm2> Done
+
+Job <prod_bam2fastqcheck_and_cached_fastq_17427_20150918-142715[4]> was submitted from host <sf2-farm-srv2> by user <srl> in cluster <seqfarm2>.
+Job was executed on host(s) <bc-19-2-10>, in queue <srpipeline>, as user <srl> in cluster <seqfarm2>.
+</nfs/users/nfs_s/srl> was used as the home directory.
+</nfs/users/nfs_s/srl> was used as the working directory.
+Started at Sat Sep 19 00:25:16 2015
+Results reported at Sat Sep 19 03:09:39 2015
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+generate_cached_fastq --path /nfs/sf54/ILorHSany_sf54/analysis/150825_HS38_17427_A_C75BGANXX/Data/Intensities/BAM_basecalls_20150918-142715/no_cal/archive --file /nfs/sf54/ILorHSany_sf54/analysis/150825_HS38_17427_A_C75BGANXX/Data/Intensities/BAM_basecalls_20150918-142715/no_cal/17427_`echo $LSB_JOBINDEX`.bam
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :               9850.39 sec.
+    Max Memory :             114 MB
+    Average Memory :         108.75 MB
+    Total Requested Memory : -
+    Delta Memory :           -
+    (Delta: the difference between total requested memory and actual max usage.)
+    Max Swap :               3722 MB
+
+    Max Processes :          4
+    Max Threads :            5
+
+The output (if any) is above this job summary.
+

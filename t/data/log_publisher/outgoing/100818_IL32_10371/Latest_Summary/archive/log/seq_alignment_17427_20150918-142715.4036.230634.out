@@ -1,0 +1,38 @@
+*** 19-Sep-2015 04:01:23 - created logger(vtfp.pl)  (1) ***
+*** 19-Sep-2015 04:01:23 (1/1) (vtfp.pl) - vtfp.pl version 0.17, running as /software/npg/20150820/bin/vtfp.pl ***
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@sf-7-1-15>
+Subject: Job 230634[4036]: <prod_seq_alignment_17427_20150918-142715[4000-4084,4888]> in cluster <seqfarm2> Done
+
+Job <prod_seq_alignment_17427_20150918-142715[4000-4084,4888]> was submitted from host <sf2-farm-srv2> by user <srl> in cluster <seqfarm2>.
+Job was executed on host(s) <16*sf-7-1-15>, in queue <srpipeline>, as user <srl> in cluster <seqfarm2>.
+</nfs/users/nfs_s/srl> was used as the home directory.
+</nfs/users/nfs_s/srl> was used as the working directory.
+Started at Sat Sep 19 04:01:21 2015
+Results reported at Sat Sep 19 04:15:47 2015
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+perl -Mstrict -MJSON -MFile::Slurp -e 'exec from_json(read_file shift@ARGV)->{shift@ARGV} or die q(failed exec)' /nfs/sf54/ILorHSany_sf54/analysis/150825_HS38_17427_A_C75BGANXX/Data/Intensities/BAM_basecalls_20150918-142715/no_cal/seq_alignment_17427_20150918-142715_$LSB_JOBID $LSB_JOBINDEX
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :               3050.59 sec.
+    Max Memory :             6512 MB
+    Average Memory :         4187.49 MB
+    Total Requested Memory : 32000.00 MB
+    Delta Memory :           25488.00 MB
+    (Delta: the difference between total requested memory and actual max usage.)
+    Max Swap :               10491 MB
+
+    Max Processes :          64
+    Max Threads :            115
+
+The output (if any) is above this job summary.
+
