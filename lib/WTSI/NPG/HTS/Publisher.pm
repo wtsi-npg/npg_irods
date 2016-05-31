@@ -145,16 +145,17 @@ sub publish_file {
     $timestamp = DateTime->now;
   }
 
-  my $obj;
+  my $path;
   if ($self->irods->is_collection($remote_path)) {
     $self->info("Remote path '$remote_path' is a collection");
 
     my ($loc_vol, $dir, $file) = splitpath($local_path);
-    $obj = $self->publish_file($local_path, catfile($remote_path, $file),
-                               $metadata, $timestamp)
+    $path = $self->publish_file($local_path, catfile($remote_path, $file),
+                                $metadata, $timestamp)
   }
   else {
     my $local_md5 = $self->_get_md5($local_path);
+    my $obj;
     if ($self->irods->is_object($remote_path)) {
       $self->info("Remote path '$remote_path' is an existing object");
       $obj = $self->_publish_file_overwrite($local_path, $local_md5,
@@ -172,9 +173,11 @@ sub publish_file {
                        "$num_meta_errors errors encountered ",
                        '(see log for details)');
      }
+
+    $path = $obj->str;
   }
 
-  return $obj->str;
+  return $path;
 }
 
 =head2 publish_directory
@@ -289,12 +292,14 @@ sub _publish_file_create {
   $self->_ensure_collection_exists($coll);
   $self->info("Publishing new object '$remote_path'");
 
-  $self->irods->add_object($local_path, $remote_path);
+  $self->irods->add_object($local_path, $remote_path,
+                           $WTSI::NPG::iRODS::SKIP_CHECKSUM);
 
   my $obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $remote_path);
   my $num_meta_errors = 0;
 
-  my $remote_md5 = $obj->checksum; # Calculated on publication
+  # Calculate checksum post-upload to ensure that iRODS reports errors
+  my $remote_md5 = $obj->calculate_checksum;
   my @meta = $self->make_creation_metadata($self->affiliation_uri,
                                            $timestamp,
                                            $self->accountee_uri);
@@ -338,7 +343,8 @@ sub _publish_file_overwrite {
   my $obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $remote_path);
   my $num_meta_errors = 0;
 
-  my $pre_remote_md5 = $obj->calculate_checksum;
+  # Assume that the existing checksum is present and correct
+  my $pre_remote_md5 = $obj->checksum;
   if ($local_md5 eq $pre_remote_md5) {
     $self->info("Skipping publication of '$local_path' to '$remote_path': ",
                 "(checksum unchanged): local MD5 is '$local_md5', ",
@@ -348,9 +354,11 @@ sub _publish_file_overwrite {
     $self->info("Re-publishing '$local_path' to '$remote_path' ",
                 "(checksum changed): local MD5 is '$local_md5', ",
                 "remote is MD5: '$pre_remote_md5'");
-    $self->irods->replace_object($local_path, $obj->str);
+    $self->irods->replace_object($local_path, $obj->str,
+                                 $WTSI::NPG::iRODS::SKIP_CHECKSUM);
 
-    my $post_remote_md5 = $obj->checksum; # Calculated on publication
+    # Calculate checksum post-upload to ensure that iRODS reports errors
+    my $post_remote_md5 = $obj->calculate_checksum;
     my @meta = $self->make_modification_metadata($timestamp);
     push @meta, $self->make_md5_metadata($post_remote_md5);
     push @meta, $self->make_type_metadata($remote_path);

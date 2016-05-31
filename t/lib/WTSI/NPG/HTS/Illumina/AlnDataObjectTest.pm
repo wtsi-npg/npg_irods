@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::AlMapFileDataObjectTest;
+package WTSI::NPG::HTS::Illumina::AlnDataObjectTest;
 
 use utf8;
 
@@ -18,7 +18,7 @@ Log::Log4perl::init('./etc/log4perl_tests.conf');
 
 use WTSI::DNAP::Utilities::Runnable;
 use WTSI::DNAP::Warehouse::Schema;
-use WTSI::NPG::HTS::AlMapFileDataObject;
+use WTSI::NPG::HTS::Illumina::AlnDataObject;
 use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
@@ -39,7 +39,7 @@ use WTSI::NPG::iRODS;
 
 my $pid          = $PID;
 my $test_counter = 0;
-my $data_path    = './t/data/almap_file_data_object';
+my $data_path    = './t/data/aln_data_object';
 my $fixture_path = "./t/fixtures";
 
 my $utf8_extra = '[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]';
@@ -86,7 +86,7 @@ my @groups_added;
 my $group_tests_enabled = 0;
 
 # Reference filter for recognising the test reference
-my $ref_regex = qr{\./t\/data\/almap_file_data_object\/test_ref.fa}msx;
+my $ref_regex = qr{\./t\/data\/aln_data_object\/test_ref.fa}msx;
 my $ref_filter = sub {
   my ($line) = @_;
   return $line =~ m{$ref_regex}msx;
@@ -111,7 +111,7 @@ sub setup_test : Test(setup) {
                                     strict_baton_version => 0);
 
   $irods_tmp_coll =
-    $irods->add_collection("AlMapFileDataObjectTest.$pid.$test_counter");
+    $irods->add_collection("Illumina::AlnDataObjectTest.$pid.$test_counter");
   $test_counter++;
 
   my $group_count = 0;
@@ -148,7 +148,7 @@ sub setup_test : Test(setup) {
            executable => 'samtools_irods')->run;
 
         foreach my $format (qw[bam cram]) {
-          my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+          my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
             ($irods, "$irods_tmp_coll/$data_file.$format");
 
           my $num_reads = 10000;
@@ -198,7 +198,7 @@ sub teardown_test : Test(teardown) {
 }
 
 sub require : Test(1) {
-  require_ok('WTSI::NPG::HTS::AlMapFileDataObject');
+  require_ok('WTSI::NPG::HTS::Illumina::AlnDataObject');
 }
 
 my @tagged_paths   = ('/seq/17550/17550_3#1',
@@ -221,7 +221,7 @@ sub id_run : Test(24) {
   foreach my $format (qw[bam cram]) {
     foreach my $path (@tagged_paths, @untagged_paths) {
       my $full_path = $path . ".$format";
-      cmp_ok(WTSI::NPG::HTS::AlMapFileDataObject->new
+      cmp_ok(WTSI::NPG::HTS::Illumina::AlnDataObject->new
              ($irods, $full_path)->id_run,
              '==', 17550, "$full_path id_run is correct");
     }
@@ -235,7 +235,7 @@ sub position : Test(24) {
   foreach my $format (qw(bam cram)) {
     foreach my $path (@tagged_paths, @untagged_paths) {
       my $full_path = "$path.$format";
-      cmp_ok(WTSI::NPG::HTS::AlMapFileDataObject->new
+      cmp_ok(WTSI::NPG::HTS::Illumina::AlnDataObject->new
              ($irods, $full_path)->position,
              '==', 3, "$full_path position is correct");
     }
@@ -249,7 +249,8 @@ sub contains_nonconsented_human : Test(24) {
   foreach my $format (qw[bam cram]) {
     foreach my $path (@tagged_paths, @untagged_paths) {
       my $full_path = "$path.$format";
-      my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new($irods, $full_path);
+      my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+        ($irods, $full_path);
       my $af = $obj->alignment_filter;
 
       if (not $af) {
@@ -282,7 +283,8 @@ sub is_restricted_access : Test(24) {
   foreach my $format (qw[bam cram]) {
     foreach my $path (@tagged_paths, @untagged_paths) {
       my $full_path = "$path.$format";
-      my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new($irods, $full_path);
+      my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+        ($irods, $full_path);
       my $af = $obj->alignment_filter;
 
       ok($obj->is_restricted_access, "$full_path is restricted_access");
@@ -297,7 +299,7 @@ sub tag_index : Test(24) {
   foreach my $format (qw[bam cram]) {
     foreach my $path (@tagged_paths) {
       my $full_path = "$path.$format";
-      cmp_ok(WTSI::NPG::HTS::AlMapFileDataObject->new
+      cmp_ok(WTSI::NPG::HTS::Illumina::AlnDataObject->new
              ($irods, $full_path)->tag_index,
              '==', 1, "$full_path tag_index is correct");
     }
@@ -306,7 +308,7 @@ sub tag_index : Test(24) {
   foreach my $format (qw[bam cram]) {
     foreach my $path (@untagged_paths) {
       my $full_path = "$path.$format";
-      isnt(defined WTSI::NPG::HTS::AlMapFileDataObject->new
+      isnt(defined WTSI::NPG::HTS::Illumina::AlnDataObject->new
            ($irods, $full_path)->tag_index,
            "$full_path tag_index is correct");
     }
@@ -323,7 +325,7 @@ sub alignment_filter : Test(24) {
       # FIXME -- use controlled vocbulary
       my ($expected) = $path =~ m{_((human|nonhuman|xahuman|yhuman|phix))};
 
-      my $alignment_filter = WTSI::NPG::HTS::AlMapFileDataObject->new
+      my $alignment_filter = WTSI::NPG::HTS::Illumina::AlnDataObject->new
         ($irods, $full_path)->alignment_filter;
 
       is($alignment_filter, $expected,
@@ -344,7 +346,7 @@ sub header : Test(8) {
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
       foreach my $format (qw[bam cram]) {
         my $file_name = "$data_file.$format";
-        my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+        my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
           (collection  => $irods_tmp_coll,
            data_object => $file_name,
            file_format => $format,
@@ -376,7 +378,7 @@ sub is_aligned : Test(4) {
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
       foreach my $format (qw[bam cram]) {
         my $file_name = "$data_file.$format";
-        my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+        my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
           (collection  => $irods_tmp_coll,
            data_object => $file_name,
            file_format => $format,
@@ -403,7 +405,7 @@ sub reference : Test(4) {
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
       foreach my $format (qw[bam cram]) {
         my $file_name = "$data_file.$format";
-        my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+        my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
           (collection  => $irods_tmp_coll,
            data_object => $file_name,
            file_format => $format,
@@ -419,10 +421,10 @@ sub reference : Test(4) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
+sub update_secondary_metadata_tag0_no_spike_bact : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -630,10 +632,10 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(8) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag0_spike_bact : Test(8) {
+sub update_secondary_metadata_tag0_spike_bact : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -849,10 +851,10 @@ sub update_secondary_metadata_tag0_spike_bact : Test(8) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
+sub update_secondary_metadata_tag1_no_spike_bact : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -900,10 +902,10 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(8) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag1_spike_bact : Test(8) {
+sub update_secondary_metadata_tag1_spike_bact : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -951,10 +953,10 @@ sub update_secondary_metadata_tag1_spike_bact : Test(8) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
+sub update_secondary_metadata_tag0_no_spike_human : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -1020,10 +1022,10 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(8) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag0_spike_human : Test(8) {
+sub update_secondary_metadata_tag0_spike_human : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -1096,10 +1098,10 @@ sub update_secondary_metadata_tag0_spike_human : Test(8) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
+sub update_secondary_metadata_tag81_no_spike_human : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -1147,10 +1149,10 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(8) {
   } # SKIP samtools
 }
 
-sub update_secondary_metadata_tag81_spike_human : Test(8) {
+sub update_secondary_metadata_tag81_spike_human : Test(12) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 12;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -1211,7 +1213,7 @@ sub test_metadata_update {
   my $exp_grp_after  = $args->{expected_groups_after};
 
   my $file_name = "$data_file.$format";
-  my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new
+  my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
     (collection  => $working_coll,
      data_object => $file_name,
      irods       => $irods);
@@ -1223,8 +1225,18 @@ sub test_metadata_update {
      with_spiked_control => $spiked);
 
   my @groups_before = $obj->get_groups;
-  ok($obj->update_secondary_metadata(@secondary_avus),
-     "Secondary metadata ran; format: $format, tag: $tag, spiked: $spiked");
+
+  my %secondary_attrs = map { $_->{attribute} => 1 } @secondary_avus;
+  my $expected_num_attrs = scalar keys %secondary_attrs;
+  my ($num_attributes, $num_processed, $num_errors) =
+    $obj->update_secondary_metadata(@secondary_avus);
+  cmp_ok($num_attributes, '==', $expected_num_attrs,
+         "Secondary metadata attrs; $format, tag: $tag, spiked: $spiked");
+  cmp_ok($num_processed, '==', $expected_num_attrs,
+         "Secondary metadata processed; $format, tag: $tag, spiked: $spiked");
+  cmp_ok($num_errors, '==', 0,
+         "Secondary metadata errors; $format, tag: $tag, spiked: $spiked");
+
   my @groups_after = $obj->get_groups;
 
   my $metadata = $obj->metadata;

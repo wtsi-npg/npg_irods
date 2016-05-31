@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::RunPublisherTest;
+package WTSI::NPG::HTS::Illumina::RunPublisherTest;
 
 use strict;
 use warnings;
@@ -13,9 +13,9 @@ use Test::More;
 
 use base qw[WTSI::NPG::HTS::Test];
 
-use WTSI::NPG::HTS::AlMapFileDataObject;
-use WTSI::NPG::HTS::AncFileDataObject;
-use WTSI::NPG::HTS::RunPublisher;
+use WTSI::NPG::HTS::Illumina::AlnDataObject;
+use WTSI::NPG::HTS::Illumina::AncDataObject;
+use WTSI::NPG::HTS::Illumina::RunPublisher;
 use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS::Metadata;
 
@@ -75,7 +75,7 @@ sub positions : Test(2) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -105,7 +105,7 @@ sub num_reads : Test(102) {
                                    899795972];
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -130,7 +130,7 @@ sub num_reads : Test(102) {
                                         13586652,
                                         13564700];
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -160,7 +160,7 @@ sub num_reads : Test(102) {
                                    1757876]; # tag 888
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -191,7 +191,7 @@ sub num_reads : Test(102) {
                                        ]; # tag 888 has no JSON file
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -222,7 +222,7 @@ sub is_paired_read : Test(2) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -239,7 +239,7 @@ sub list_xml_files : Test(2) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -261,7 +261,7 @@ sub list_lane_alignment_files : Test(16) {
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -286,7 +286,7 @@ sub list_plex_alignment_files : Test(16) {
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -313,7 +313,7 @@ sub list_lane_index_files : Test(16) {
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -338,7 +338,7 @@ sub list_plex_index_files : Test(16) {
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -365,7 +365,7 @@ sub list_lane_qc_files : Test(16) {
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -391,7 +391,7 @@ sub list_plex_qc_files : Test(16) {
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -416,7 +416,7 @@ sub list_lane_ancillary_files : Test(16) {
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -442,7 +442,7 @@ sub list_plex_ancillary_files : Test(16) {
   my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
@@ -465,11 +465,9 @@ sub publish_xml_files : Test(14) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
-
   my $dest_coll = "$irods_tmp_coll/publish_xml_files";
 
-  my $pub = WTSI::NPG::HTS::RunPublisher->new
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
     (dest_collection => $dest_coll,
      file_format     => 'cram',
      irods           => $irods,
@@ -489,7 +487,47 @@ sub publish_xml_files : Test(14) {
   check_common_metadata($irods, @observed_paths);
 
   foreach my $path (@observed_paths) {
-    my $obj = WTSI::NPG::HTS::XMLFileDataObject->new($irods, $path);
+    my $obj = WTSI::NPG::HTS::Illumina::XMLDataObject->new($irods, $path);
+    cmp_ok($obj->get_avu($ID_RUN)->{value}, '==', 18448,
+           "$path id_run metadata present");
+  }
+}
+
+sub publish_interop_files : Test(44) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $dest_coll = "$irods_tmp_coll/publish_interop_files";
+
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (dest_collection => $dest_coll,
+     file_format     => 'cram',
+     irods           => $irods,
+     lims_factory    => $lims_factory,
+     runfolder_path  => $runfolder_path);
+
+   my @expected_paths = map { "$dest_coll/InterOp/$_" }
+     qw[ControlMetricsOut.bin
+        CorrectedIntMetricsOut.bin
+        ErrorMetricsOut.bin
+        ExtractionMetricsOut.bin
+        ImageMetricsOut.bin
+        QMetricsOut.bin
+        TileMetricsOut.bin];
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_interop_files;
+  cmp_ok($num_processed, '==', 7, 'Published 7 InterOp files');
+
+  my @observed_paths = observed_data_objects($irods,
+                                             $pub->interop_dest_collection,
+                                             '[.]bin$');
+  is_deeply(\@observed_paths, \@expected_paths,
+            "Published correctly named InterOp files") or
+              diag explain \@observed_paths;
+
+  check_common_metadata($irods, @observed_paths);
+
+  foreach my $path (@observed_paths) {
+    my $obj = WTSI::NPG::HTS::Illumina::InterOpDataObject->new($irods, $path);
     cmp_ok($obj->get_avu($ID_RUN)->{value}, '==', 18448,
            "$path id_run metadata present");
   }
@@ -505,7 +543,7 @@ sub publish_lane_alignment_files : Test(264) {
   foreach my $file_format (qw[cram]) {
     my $dest_coll = "$irods_tmp_coll/publish_lane_alignment_files";
 
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (dest_collection => $dest_coll,
        file_format     => $file_format,
        irods           => $irods,
@@ -563,7 +601,7 @@ sub publish_lane_alignment_files : Test(264) {
 
     cmp_ok(scalar @paths, '==', 1, "position: $position found");
 
-    my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new($irods, $paths[0]);
+    my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new($irods, $paths[0]);
     is_deeply([$obj->get_avu($IS_PAIRED_READ)],
               [{attribute => $IS_PAIRED_READ,
                 value     => 1}],
@@ -589,7 +627,7 @@ sub publish_plex_alignment_files : Test(811) {
     foreach my $file_format (qw[cram]) {
       my $dest_coll = "$irods_tmp_coll/publish_plex_alignment_files/$position";
 
-      my $pub = WTSI::NPG::HTS::RunPublisher->new
+      my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
         (dest_collection => $dest_coll,
          file_format     => $file_format,
          irods           => $irods,
@@ -647,7 +685,7 @@ sub publish_plex_alignment_files : Test(811) {
 
     cmp_ok(scalar @paths, '==', 1, "position: 1, tag $tag found");
 
-    my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new($irods, $paths[0]);
+    my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new($irods, $paths[0]);
     is_deeply([$obj->get_avu($IS_PAIRED_READ)],
               [{attribute => $IS_PAIRED_READ,
                 value     => 1}],
@@ -671,7 +709,7 @@ sub publish_lane_index_files : Test(96) {
   foreach my $file_format (qw[cram]) {
     my $dest_coll = "$irods_tmp_coll/publish_lane_index_files";
 
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (dest_collection => $dest_coll,
        file_format     => $file_format,
        irods           => $irods,
@@ -718,7 +756,7 @@ sub publish_plex_index_files : Test(274) {
     foreach my $file_format (qw[cram]) {
       my $dest_coll = "$irods_tmp_coll/publish_plex_index_files/$position";
 
-      my $pub = WTSI::NPG::HTS::RunPublisher->new
+      my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
         (dest_collection => $dest_coll,
          file_format     => $file_format,
          irods           => $irods,
@@ -762,7 +800,7 @@ sub publish_lane_ancillary_files : Test(776) {
   foreach my $file_format (qw[cram]) {
     my $dest_coll = "$irods_tmp_coll/publish_lane_ancillary_files";
 
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (dest_collection => $dest_coll,
        file_format     => $file_format,
        irods           => $irods,
@@ -808,7 +846,7 @@ sub publish_plex_ancillary_files : Test(2534) {
     # Omitting bam to reduce runtime
     foreach my $file_format (qw[cram]) {
       my $dest_coll = "$irods_tmp_coll/publish_plex_ancillary_files/$position";
-      my $pub = WTSI::NPG::HTS::RunPublisher->new
+      my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
         (dest_collection => $dest_coll,
          file_format     => $file_format,
          irods           => $irods,
@@ -852,7 +890,7 @@ sub publish_lane_qc_files : Test(928) {
   foreach my $file_format (qw[cram]) {
     my $dest_coll = "$irods_tmp_coll/publish_lane_qc_files";
 
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (dest_collection => $dest_coll,
        file_format     => $file_format,
        irods           => $irods,
@@ -901,7 +939,7 @@ sub publish_plex_qc_files : Test(1660) {
     # Omitting bam to reduce runtime
     foreach my $file_format (qw[cram]) {
       my $dest_coll = "$irods_tmp_coll/publish_plex_qc_files/$position";
-      my $pub = WTSI::NPG::HTS::RunPublisher->new
+      my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
         (dest_collection => $dest_coll,
          file_format     => $file_format,
          irods           => $irods,
@@ -951,7 +989,7 @@ sub publish_plex_alignment_files_alt_process : Test(922) {
     foreach my $file_format (qw[cram]) {
       my $dest_coll = "$irods_tmp_coll/alt_process/$position";
 
-      my $pub = WTSI::NPG::HTS::RunPublisher->new
+      my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
         (alt_process     => $alt_process,
          dest_collection => $dest_coll,
          file_format     => $file_format,
@@ -1001,7 +1039,7 @@ sub publish_plex_alignment_files_human_split : Test(4) {
   foreach my $file_format (qw[bam cram]) {
     my $dest_coll = "$irods_tmp_coll/plex_human_split/$position";
 
-    my $pub = WTSI::NPG::HTS::RunPublisher->new
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (dest_collection => $dest_coll,
        file_format     => $file_format,
        irods           => $irods,
@@ -1031,14 +1069,14 @@ sub dest_collection : Test(8) {
   my $runfolder_path = "$data_path/sequence/100818_IL32_05174";
 
   foreach my $file_format (qw[bam cram]) {
-    my $pub1 = WTSI::NPG::HTS::RunPublisher->new
+    my $pub1 = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
        irods          => $irods,
        lims_factory   => $lims_factory,
        runfolder_path => $runfolder_path);
     is($pub1->dest_collection, '/seq/5174', 'Default dest collection');
 
-    my $pub2 = WTSI::NPG::HTS::RunPublisher->new
+    my $pub2 = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (dest_collection => '/a/b/c',
        file_format     => $file_format,
        irods           => $irods,
@@ -1047,7 +1085,7 @@ sub dest_collection : Test(8) {
     is($pub2->dest_collection, '/a/b/c', 'Custom dest collection');
 
     # Alt process 
-    my $pub3 = WTSI::NPG::HTS::RunPublisher->new
+    my $pub3 = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (alt_process    => 'x',
        file_format    => $file_format,
        irods          => $irods,
@@ -1056,7 +1094,7 @@ sub dest_collection : Test(8) {
     is($pub3->dest_collection, '/seq/5174/x',
        'Default alt_process destination has process appended to collection');
 
-    my $pub4 = WTSI::NPG::HTS::RunPublisher->new
+    my $pub4 = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (alt_process    => 'x',
        dest_collection => '/a/b/c',
        file_format    => $file_format,
@@ -1547,7 +1585,7 @@ sub check_study_id_metadata {
   my ($irods, @paths) = @_;
 
   foreach my $path (@paths) {
-    my $obj = WTSI::NPG::HTS::AncFileDataObject->new($irods, $path);
+    my $obj = WTSI::NPG::HTS::Illumina::AncDataObject->new($irods, $path);
     my $file_name = fileparse($obj->str);
 
     my @avu = $obj->find_in_metadata($STUDY_ID);
@@ -1559,7 +1597,7 @@ sub check_study_metadata {
   my ($irods, @paths) = @_;
 
   foreach my $path (@paths) {
-    my $obj = WTSI::NPG::HTS::AncFileDataObject->new($irods, $path);
+    my $obj = WTSI::NPG::HTS::Illumina::AncDataObject->new($irods, $path);
     my $file_name = fileparse($obj->str);
 
     my $tag_index = $obj->tag_index;
@@ -1591,7 +1629,7 @@ sub check_alt_process_metadata {
   my ($irods, $alt_process, @paths) = @_;
 
   foreach my $path (@paths) {
-    my $obj = WTSI::NPG::HTS::AlMapFileDataObject->new($irods, $path);
+    my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new($irods, $path);
     my $file_name = fileparse($obj->str);
 
     is_deeply([$obj->get_avu($TARGET)],

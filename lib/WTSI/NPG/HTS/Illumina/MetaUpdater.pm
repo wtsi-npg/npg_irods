@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::MetaUpdater;
+package WTSI::NPG::HTS::Illumina::MetaUpdater;
 
 use namespace::autoclean;
 use File::Basename;
@@ -6,7 +6,7 @@ use Moose;
 use MooseX::StrictConstructor;
 use Try::Tiny;
 
-use WTSI::NPG::HTS::IlluminaObjFactory;
+use WTSI::NPG::HTS::Illumina::DataObjectFactory;
 use WTSI::NPG::iRODS;
 
 with qw[
@@ -107,8 +107,9 @@ sub update_secondary_metadata {
 sub _build_obj_factory {
   my ($self) = @_;
 
-  return WTSI::NPG::HTS::IlluminaObjFactory->new(irods  => $self->irods,
-                                                 logger => $self->logger);
+  return WTSI::NPG::HTS::Illumina::DataObjectFactory->new
+    (irods  => $self->irods,
+     logger => $self->logger);
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -121,7 +122,7 @@ __END__
 
 =head1 NAME
 
-WTSI::NPG::HTS::MetaUpdater
+WTSI::NPG::HTS::Illumina::MetaUpdater
 
 =head1 DESCRIPTION
 

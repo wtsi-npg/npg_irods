@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::XMLFileDataObject;
+package WTSI::NPG::HTS::Illumina::InterOpDataObject;
 
 use namespace::autoclean;
 use Moose;
@@ -10,13 +10,13 @@ our $VERSION = '';
 
 extends 'WTSI::NPG::HTS::DataObject';
 
-with 'WTSI::NPG::HTS::RunComponent';
+with 'WTSI::NPG::HTS::Illumina::RunComponent';
 
 has '+is_restricted_access' =>
-  (is            => 'ro');
+  (is => 'ro');
 
 has '+primary_metadata' =>
-  (is            => 'ro');
+  (is => 'ro');
 
 sub BUILD {
   my ($self) = @_;
@@ -28,11 +28,12 @@ sub BUILD {
 }
 
 override 'update_secondary_metadata' => sub {
-  my ($self) = @_;
+  my ($self, @avus) = @_;
 
   # Nothing to add
 
-  return $self;
+  # No attributes, none processed, no errors
+  return (0, 0, 0);
 };
 
 sub _build_is_restricted_access {
@@ -51,11 +52,11 @@ __END__
 
 =head1 NAME
 
-WTSI::NPG::HTS::XMLFileDataObject
+WTSI::NPG::HTS::Illumina::InterOpDataObject
 
 =head1 DESCRIPTION
 
-Represents XML (RunInfo.xml and runparameters.xml) files in iRODS.
+Represents InterOp .bin files in iRODS.
 
 =head1 AUTHOR
 

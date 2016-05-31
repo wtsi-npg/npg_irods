@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::AlMapFileDataObject;
+package WTSI::NPG::HTS::Illumina::AlnDataObject;
 
 use namespace::autoclean;
 use Data::Dump qw[pp];
@@ -11,7 +11,7 @@ use Try::Tiny;
 
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::HTS::HeaderParser;
-use WTSI::NPG::HTS::Types qw[AlMapFileFormat];
+use WTSI::NPG::HTS::Types qw[AlnFormat];
 
 our $VERSION = '';
 
@@ -29,8 +29,8 @@ extends 'WTSI::NPG::HTS::DataObject';
 
 with qw[
          WTSI::NPG::HTS::AlFilter
-         WTSI::NPG::HTS::RunComponent
-         WTSI::NPG::HTS::FilenameParser
+         WTSI::NPG::HTS::Illumina::RunComponent
+         WTSI::NPG::HTS::Illumina::FilenameParser
        ];
 
 ## no critic (ErrorHandling::RequireCheckingReturnValueOfEval)
@@ -46,7 +46,7 @@ has 'header' =>
    documentation => 'The HTS file header (or excerpts of it)');
 
 has '+file_format' =>
-  (isa           => AlMapFileFormat);
+  (isa           => AlnFormat);
 
 has '+is_restricted_access' =>
   (is            => 'ro');
@@ -207,22 +207,31 @@ sub contains_nonconsented_human {
 }
 
 override 'update_group_permissions' => sub {
-  my ($self) = @_;
+  my ($self, $strict_groups) = @_;
 
   if ($self->contains_nonconsented_human) {
     my $path = $self->str;
 
     my @groups = $self->get_groups($WTSI::NPG::iRODS::READ_PERMISSION);
     $self->info('Ensuring permissions removed for nonconsented human on ',
-                "'$path': for groups [", join(q[, ], @groups), ']');
+                "'$path': for groups ", pp(\@groups));
+    my @failed_groups;
 
     foreach my $group (@groups) {
       try {
         $self->set_permissions($WTSI::NPG::iRODS::NULL_PERMISSION, $group);
       } catch {
+        push @failed_groups, $group;
         $self->error("Failed to remove permissions for group '$group' from ",
                      "'$path': ", $_);
       };
+    }
+
+    my $num_groups = scalar @groups;
+    my $num_errors = scalar @failed_groups;
+    if ($num_errors > 0) {
+      $self->logcroak("Failed to remove $num_errors / $num_groups group ",
+                      "permissions from '$path': ", pp(\@failed_groups));
     }
 
     return $self;
@@ -296,7 +305,7 @@ __END__
 
 =head1 NAME
 
-WTSI::NPG::HTS::AlMapFileDataObject
+WTSI::NPG::HTS::Illumina::AlnDataObject
 
 =head1 DESCRIPTION
 

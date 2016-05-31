@@ -14,8 +14,8 @@ use Pod::Usage;
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::DriRODS;
+use WTSI::NPG::HTS::Illumina::RunPublisher;
 use WTSI::NPG::HTS::LIMSFactory;
-use WTSI::NPG::HTS::RunPublisher;
 
 our $VERSION = '';
 our $DEFAULT_ZONE = 'seq';
@@ -38,10 +38,12 @@ my $debug;
 my $driver_type;
 my $file_format;
 my $index;
+my $interop;
 my $log4perl_config;
 my $qc;
 my $runfolder_path;
 my $verbose;
+my $xml;
 
 my @positions;
 
@@ -57,11 +59,13 @@ GetOptions('alignment'                         => \$alignment,
              pod2usage(-verbose => 2, -exitval => 0);
            },
            'index'                             => \$index,
+           'interop'                           => \$interop,
            'logconf=s'                         => \$log4perl_config,
            'lanes|positions=i'                 => \@positions,
            'qc'                                => \$qc,
            'runfolder-path|runfolder_path=s'   => \$runfolder_path,
-           'verbose'                           => \$verbose);
+           'verbose'                           => \$verbose,
+           'xml'                               => \$xml);
 
 # Process CLI arguments
 if ($log4perl_config) {
@@ -122,7 +126,7 @@ if ($alt_process) {
   $log->info("Using alt_process '$alt_process'");
 }
 
-my $publisher = WTSI::NPG::HTS::RunPublisher->new(@pub_init_args);
+my $publisher = WTSI::NPG::HTS::Illumina::RunPublisher->new(@pub_init_args);
 
 my ($num_files, $num_published, $num_errors) = (0, 0, 0);
 my $increment_counts = sub {
@@ -138,7 +142,7 @@ if (not @positions) {
   @positions = $publisher->positions;
 }
 
-if (none { defined } ($alignment, $ancillary, $index, $qc)) {
+if (none { defined } ($alignment, $ancillary, $index, $interop, $qc, $xml)) {
   $increment_counts->($publisher->publish_files
                       (positions => \@positions));
 }
@@ -147,17 +151,23 @@ else {
     $increment_counts->($publisher->publish_alignment_files
                         (positions => \@positions));
   }
-  if ($index) {
-    $increment_counts->($publisher->publish_index_files
-                        (positions => \@positions));
-  }
   if ($ancillary) {
     $increment_counts->($publisher->publish_ancillary_files
                         (positions => \@positions));
   }
+  if ($index) {
+    $increment_counts->($publisher->publish_index_files
+                        (positions => \@positions));
+  }
+  if ($interop) {
+    $increment_counts->($publisher->publish_interop_files);
+  }
   if ($qc) {
     $increment_counts->($publisher->publish_qc_files
                         (positions => \@positions));
+  }
+  if ($xml) {
+    $increment_counts->($publisher->publish_xml_files);
   }
 }
 
@@ -199,6 +209,7 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
    --help            Display help.
    --index           Load alignment index files. Optional, defaults to
                      true.
+   --interop         Load InterOp files. Optional, defaults to true.
    --lanes
    --positions       A sequencing lane/position to load. This option may
                      be supplied multiple times to load multiple lanes.
@@ -208,6 +219,7 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
    --runfolder_path  The instrument runfolder path to load.
    --logconf         A log4perl configuration file. Optional.
    --verbose         Print messages while processing. Optional.
+   --xml             Load XML files. Optional, defaults to true.
 
  Advanced options:
 
@@ -219,12 +231,15 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
 This script loads data and metadata for a single Illumina sequencing
 run into iRODS.
 
-Data files are divided into four categories:
+Data files are divided into six categories:
 
  - alignment files; the sequencing reads in BAM or CRAM format.
- - alignment index files; indices in the relevant format
- - ancillary files; files containing information about the run
- - QC JSON files; JSON files containing information about the run
+ - alignment index files; indices in the relevant format.
+ - ancillary files; files containing information about the run.
+ - QC JSON files; JSON files containing information about the run.
+ - XML files; XML files describing the entire run.
+ - InterOp files; binary files containing diagnostic data for the
+   entire run.
 
 As part of the copying process, metadata are added to, or updated on,
 the files in iRODS. Following the metadata update, access permissions
@@ -245,14 +260,14 @@ collection, the following take place:
    synchronise with the metadata supplied by st::api::lims, even if no
    files have been modified
 
-The default behaviour of the script is to publish all four categories
-of file (alignment, index, ancillary, qc), for all available lane
-positions. This may be restricted by using one or more of the command
-line flags --alignment, --index, --ancillary and --qc, each of which
-instructs the script to act on only that type of
-file. e.g. "--alignment --index" will cause just alignment and index
-files to be copied. Specifying all four of these flags at once is
-equivalent to the default behaviour (i.e. all files).
+The default behaviour of the script is to publish all six categories
+of file (alignment, ancillary, index, interop, qc and xml), for all
+available lane positions. This may be restricted by using one or more
+of the command line flags --alignment, --index, --interop,
+--ancillary, --qc and --xml, each of which instructs the script to act
+on only that type of file. e.g. "--alignment --index" will cause just
+alignment and index files to be copied. Specifying all four of these
+flags at once is equivalent to the default behaviour (i.e. all files).
 
 One or more "--position <position>" arguments may be supplied to
 restrict operations specific lanes. e.g. "--position 1 --position 8"
@@ -265,7 +280,7 @@ metadata in iRODS (resulting in "target = 0", "alt_target = 1",
 collection in iRODS, which will have an extra leaf collection added,
 having the name of the "--alt-process <name>" argument. If the
 destination collection is set explicitly on the command line, the
-extra leaf collection isn not added.
+extra leaf collection is not added.
 
 =head1 AUTHOR
 
