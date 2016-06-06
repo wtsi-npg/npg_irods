@@ -481,7 +481,7 @@ sub list_lane_index_files {
       $self->id_run, $positions_pattern, $self->index_format;
   }
   elsif ($file_format eq $CRAM_FILE_FORMAT) {
-    $lane_file_pattern = sprintf '^%d_%s.*[.]%s\.%s$',
+    $lane_file_pattern = sprintf '^%d_%s.*[.]%s[.]%s$',
       $self->id_run, $positions_pattern, $file_format, $self->index_format;
   }
   else {

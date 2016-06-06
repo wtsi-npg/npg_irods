@@ -140,7 +140,8 @@ sub update_secondary_metadata {
 after 'update_secondary_metadata' => sub {
   my ($self) = @_;
 
-  $self->update_group_permissions;
+  my $strict_groups = 0;
+  $self->update_group_permissions($strict_groups);
 };
 
 before 'update_group_permissions' => sub {
