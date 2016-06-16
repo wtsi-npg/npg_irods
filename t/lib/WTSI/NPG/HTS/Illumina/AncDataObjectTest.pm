@@ -32,7 +32,7 @@ use WTSI::NPG::iRODS;
   package TestAnnotator;
   use Moose;
 
-  with 'WTSI::NPG::HTS::Annotator';
+  with 'WTSI::NPG::HTS::Illumina::Annotator';
 }
 
 my $pid          = $PID;

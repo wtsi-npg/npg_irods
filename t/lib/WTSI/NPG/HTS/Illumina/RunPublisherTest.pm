@@ -1574,7 +1574,7 @@ sub check_primary_metadata {
 
     foreach my $attr ($ALIGNMENT, $ID_RUN, $POSITION,
                       $TOTAL_READS, $IS_PAIRED_READ,
-                      $WTSI::NPG::HTS::Annotator::SEQCHKSUM) {
+                      $WTSI::NPG::HTS::Illumina::Annotator::SEQCHKSUM) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }

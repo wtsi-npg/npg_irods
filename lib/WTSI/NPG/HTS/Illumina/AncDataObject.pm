@@ -116,7 +116,15 @@ WTSI::NPG::HTS::Illumina::AncDataObject
 
 =head1 DESCRIPTION
 
-Represents Illumina ancillary files in iRODS.
+Represents Illumina ancillary files in iRODS. This class overrides
+some base class behaviour to introduce:
+
+ Custom primary metadata restrictions.
+
+ Custom secondary metadata restrictions.
+
+ Custom behaviour with respect to the file having restricted access
+ (i.e. for BED and JSON files only).
 
 =head1 AUTHOR
 

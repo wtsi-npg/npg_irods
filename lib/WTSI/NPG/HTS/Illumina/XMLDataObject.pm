@@ -56,7 +56,13 @@ WTSI::NPG::HTS::Illumina::XMLDataObject
 
 =head1 DESCRIPTION
 
-Represents XML (RunInfo.xml and runparameters.xml) files in iRODS.
+Represents XML (RunInfo.xml and runparameters.xml) files in
+iRODS. This class overrides some base class behaviour to introduce:
+
+ Custom primary metadata restrictions.
+
+ Custom behaviour with respect to the file having restricted access
+ (i.e. never).
 
 =head1 AUTHOR
 

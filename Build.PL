@@ -16,7 +16,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
    license            => 'gpl',
    configure_requires =>
    {
-    'Module::Build'                 => ">= 0.42"
+    'Module::Build'                 => ">= 0.4218"
    },
    test_requires =>
    {
@@ -24,6 +24,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
     'TAP::Harness'                  => '>= 3.30',
     'Test::Class'                   => '>= 0.41',
     'Test::Compile'                 => 0,
+    'Test::HTTP::Server'            => 0,
     'Test::More'                    => '>= 0.98',
     'Test::Exception'               => '>= 0.32',
     'Test::Perl::Critic'            => '>= 1.02'

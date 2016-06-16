@@ -495,6 +495,68 @@
   supplier_name: 14730_IMS_Saliva_52
   taxon_id: 10376
   uuid_sample_lims: 2ae7ad70-d87f-11e4-8878-3c4a9275d6c6
+- accession_number: ERS1098415
+  cohort: ~
+  common_name: Anopheles gambiae
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2016-03-07 12:50:03
+  deleted_at: ~
+  description: ~
+  donor_id: 2572STDY6358501
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2567489
+  id_sample_tmp: 2546242
+  last_updated: 2016-03-29 09:39:49
+  mother: ~
+  name: 2572STDY6358501
+  organism: ~
+  public_name: 70627
+  recorded_at: 2016-03-29 09:39:49
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 2572STDY6358501
+  strain: ~
+  supplier_name: AR0049-CW
+  taxon_id: 7165
+  uuid_sample_lims: 1cb4e2e0-e463-11e5-88b1-3c4a9275d6c6
+- accession_number: ERS1080585
+  cohort: ~
+  common_name: Bordatella parapertussis
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2016-03-10 13:52:33
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6362606
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2571766
+  id_sample_tmp: 2550517
+  last_updated: 2016-03-11 13:09:56
+  mother: ~
+  name: 3012STDY6362606
+  organism: ~
+  public_name: NCTC10524
+  recorded_at: 2016-03-11 13:09:56
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6362606
+  strain: NCTC10524
+  supplier_name: NCTC10524_110316
+  taxon_id: 519
+  uuid_sample_lims: 56bcc3c0-e6c7-11e5-bc69-3c4a9275d6c6
 - accession_number: ERS811038
   cohort: ~
   common_name: Mus musculus
@@ -2076,6 +2138,37 @@
   supplier_name: BCOR_IP_CTCF
   taxon_id: 10090
   uuid_sample_lims: 4ec17830-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS1072059
+  cohort: ~
+  common_name: Streptococccus pneumoniae 23F
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2016-02-26 09:39:01
+  deleted_at: ~
+  description: ~
+  donor_id: 2690STDY6350942
+  ethnicity: ~
+  father: ~
+  gender: Not Applicable
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2559284
+  id_sample_tmp: 2538162
+  last_updated: 2016-03-09 14:00:07
+  mother: ~
+  name: 2690STDY6350942
+  organism: ~
+  public_name: ~
+  recorded_at: 2016-03-09 14:00:07
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 2690STDY6350942
+  strain: ~
+  supplier_name: 23F_P1121
+  taxon_id: 216600
+  uuid_sample_lims: c44345f0-dc6c-11e5-bc69-3c4a9275d6c6
 - accession_number: ~
   cohort: ~
   common_name: Homo sapiens
@@ -2200,6 +2293,37 @@
   supplier_name: tcf3b_hom_E2
   taxon_id: 7955
   uuid_sample_lims: a2f68630-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS527775
+  cohort: ~
+  common_name: Trichuris muris
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2014-07-11 08:50:45
+  deleted_at: ~
+  description: genomic DNA from mixed adults
+  donor_id: 375STDY5878366
+  ethnicity: ~
+  father: ~
+  gender: Mixed
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2015126
+  id_sample_tmp: 1991865
+  last_updated: 2015-09-04 12:48:40
+  mother: ~
+  name: 375STDY5878366
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-09-04 12:48:40
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 375STDY5878366
+  strain: Edinburgh
+  supplier_name: Tmu1_257201
+  taxon_id: 70415
+  uuid_sample_lims: 72c02270-08d8-11e4-8ee9-3c4a9275d6c6
 - accession_number: ERS811030
   cohort: ~
   common_name: Mus musculus
@@ -2231,6 +2355,37 @@
   supplier_name: INPUT_KAMX34_4E
   taxon_id: 10090
   uuid_sample_lims: 4e9956c0-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS1080584
+  cohort: ~
+  common_name: Bordatella parapertussis
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2016-03-10 13:52:33
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6362605
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2571765
+  id_sample_tmp: 2550516
+  last_updated: 2016-03-11 13:09:56
+  mother: ~
+  name: 3012STDY6362605
+  organism: ~
+  public_name: NCTC10522
+  recorded_at: 2016-03-11 13:09:56
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6362605
+  strain: NCTC10522
+  supplier_name: NCTC10522_110316
+  taxon_id: 519
+  uuid_sample_lims: 56b15210-e6c7-11e5-bc69-3c4a9275d6c6
 - accession_number: ~
   cohort: Virus_6
   common_name: Human herpesvirus 4
@@ -2696,6 +2851,37 @@
   supplier_name: 14726_IMS_Saliva_10
   taxon_id: 10376
   uuid_sample_lims: 2ac9ec40-d87f-11e4-8878-3c4a9275d6c6
+- accession_number: ERS1075968
+  cohort: ~
+  common_name: Anopheles gambiae
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2016-03-07 12:50:03
+  deleted_at: ~
+  description: ~
+  donor_id: 2572STDY6358500
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2567488
+  id_sample_tmp: 2546241
+  last_updated: 2016-03-11 11:20:53
+  mother: ~
+  name: 2572STDY6358500
+  organism: ~
+  public_name: 70628
+  recorded_at: 2016-03-11 11:20:53
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: 2572STDY6358500
+  strain: ~
+  supplier_name: AR0091-CW
+  taxon_id: 7165
+  uuid_sample_lims: 1ca1a900-e463-11e5-88b1-3c4a9275d6c6
 - accession_number: ~
   cohort: Virus_6
   common_name: Human herpesvirus 4
@@ -3347,6 +3533,37 @@
   supplier_name: Ub_Milipor_KAMX28_4F
   taxon_id: 10090
   uuid_sample_lims: 4eed6a30-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS527776
+  cohort: ~
+  common_name: Leishmania tropica
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2014-08-05 13:37:48
+  deleted_at: ~
+  description: PacBio
+  donor_id: 315STDY5911966
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2055141
+  id_sample_tmp: 2030286
+  last_updated: 2015-09-04 13:14:51
+  mother: ~
+  name: 315STDY5911966
+  organism: ~
+  public_name: MHOM/IL/1990/P283
+  recorded_at: 2015-09-04 13:14:51
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 315STDY5911966
+  strain: P283 (LRC-L590)
+  supplier_name: LtropP283_PB
+  taxon_id: 5666
+  uuid_sample_lims: b0cd65b0-1ca5-11e4-a291-3c4a9275d6c6
 - accession_number: ERS012332
   cohort: ~
   common_name: Burkholderia pseudomallei
@@ -3409,6 +3626,37 @@
   supplier_name: tcf3a_hom_3b_wt_C4
   taxon_id: 7955
   uuid_sample_lims: a3691e20-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS1080586
+  cohort: ~
+  common_name: Bordatella bronchiseptica
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2016-03-10 13:52:33
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6362607
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2571767
+  id_sample_tmp: 2550518
+  last_updated: 2016-03-11 13:09:57
+  mother: ~
+  name: 3012STDY6362607
+  organism: ~
+  public_name: NCTC10543
+  recorded_at: 2016-03-11 13:09:57
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6362607
+  strain: NCTC10543
+  supplier_name: NCTC10543_110316
+  taxon_id: 518
+  uuid_sample_lims: 56cd1770-e6c7-11e5-bc69-3c4a9275d6c6
 - accession_number: ~
   cohort: Virus_6
   common_name: Human herpesvirus 4
@@ -3998,6 +4246,37 @@
   supplier_name: KAMX34_4G_UTX_Bethyl
   taxon_id: 10090
   uuid_sample_lims: 4e6108b0-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS1080587
+  cohort: ~
+  common_name: Suttonella indologenes
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2016-03-10 13:52:33
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6362608
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2571768
+  id_sample_tmp: 2550519
+  last_updated: 2016-03-11 13:09:57
+  mother: ~
+  name: 3012STDY6362608
+  organism: ~
+  public_name: NCTC10717
+  recorded_at: 2016-03-11 13:09:57
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6362608
+  strain: NCTC10717
+  supplier_name: NCTC10717_110316
+  taxon_id: 13276
+  uuid_sample_lims: 56d30ae0-e6c7-11e5-bc69-3c4a9275d6c6
 - accession_number: ERS985077
   cohort: HIMAL
   common_name: Homo Sapien
@@ -4897,6 +5176,37 @@
   supplier_name: 14723_IMS_Saliva_5
   taxon_id: 10376
   uuid_sample_lims: 2ab3cc30-d87f-11e4-8878-3c4a9275d6c6
+- accession_number: ERS525811
+  cohort: ~
+  common_name: Plasmodium relictum
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2014-08-06 09:58:42
+  deleted_at: ~
+  description: ~
+  donor_id: 1864STDY5912254
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2055705
+  id_sample_tmp: 2030850
+  last_updated: 2015-09-04 13:15:04
+  mother: ~
+  name: 1864STDY5912254
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-09-04 13:15:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 1864STDY5912254
+  strain: SGS1
+  supplier_name: Pr_PB
+  taxon_id: 85471
+  uuid_sample_lims: 3f950f00-1d50-11e4-a291-3c4a9275d6c6
 - accession_number: ~
   cohort: Virus_6
   common_name: Human herpesvirus 4
@@ -4928,6 +5238,37 @@
   supplier_name: 14756_AH_Saliva_9077
   taxon_id: 10376
   uuid_sample_lims: 2b9f8bc0-d87f-11e4-8878-3c4a9275d6c6
+- accession_number: ERS532154
+  cohort: ~
+  common_name: Plasmodium chabaudi chabaudi
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2014-08-22 13:06:31
+  deleted_at: ~
+  description: PacBio
+  donor_id: 286STDY5962942
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2110340
+  id_sample_tmp: 2085346
+  last_updated: 2015-09-04 13:53:52
+  mother: ~
+  name: 286STDY5962942
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-09-04 13:53:52
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 286STDY5962942
+  strain: CB
+  supplier_name: PcCB_PB
+  taxon_id: 31271
+  uuid_sample_lims: 22db9c80-29fd-11e4-b1f4-3c4a9275d6c6
 - accession_number: ~
   cohort: Virus_6
   common_name: Human herpesvirus 4
