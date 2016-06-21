@@ -551,7 +551,7 @@ sub list_lane_qc_files {
 
   my $file_format       = 'json';
   my $positions_pattern = $self->_positions_pattern($pos);
-  my $lane_file_pattern = sprintf '^%d_%s.*[.]%s$',
+  my $lane_file_pattern = sprintf '^%d_%s.*(?<!samtools_stats)[.]%s$',
     $self->id_run, $positions_pattern, $file_format;
 
   return [$self->_list_directory($self->qc_path, $lane_file_pattern)];
@@ -576,7 +576,7 @@ sub list_plex_qc_files {
   my $pos = $self->_check_position($position);
 
   my $file_format       = 'json';
-  my $plex_file_pattern = sprintf '^%d_%d.*[.]%s$',
+  my $plex_file_pattern = sprintf '^%d_%d.*(?<!samtools_stats)[.]%s$',
     $self->id_run, $position, $file_format;
 
   return [$self->_list_directory($self->lane_qc_path($pos),

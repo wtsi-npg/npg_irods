@@ -879,7 +879,7 @@ sub publish_plex_ancillary_files : Test(2534) {
   }
 }
 
-sub publish_lane_qc_files : Test(928) {
+sub publish_lane_qc_files : Test(736) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -1267,7 +1267,9 @@ sub calc_lane_qc_files {
                       gc_bias gc_fraction genotype insert_size qX_yield
                       ref_match sequence_error sequence_summary spatial_filter
                       verify_bam_id];
-  my @qc_parts = qw[_F0x900.samtools_stats _F0xB00.samtools_stats];
+
+  # We no longer load these because they are a QC implementation detail
+  # my @qc_parts = qw[_F0x900.samtools_stats _F0xB00.samtools_stats];
 
   foreach my $position (1 .. 8) {
     my @lane_files;
@@ -1282,12 +1284,12 @@ sub calc_lane_qc_files {
       }
     }
 
-    foreach my $part (@qc_parts) {
-      push @lane_files, sprintf '%s/qc/%d_%d%s.json',
-        $root_path, $id_run, $position, $part;
-      push @lane_files, sprintf '%s/qc/%d_%d_phix%s.json',
-        $root_path, $id_run, $position, $part;
-    }
+    # foreach my $part (@qc_parts) {
+    #   push @lane_files, sprintf '%s/qc/%d_%d%s.json',
+    #     $root_path, $id_run, $position, $part;
+    #   push @lane_files, sprintf '%s/qc/%d_%d_phix%s.json',
+    #     $root_path, $id_run, $position, $part;
+    # }
 
     @lane_files = sort @lane_files;
     $position_index{$position} = \@lane_files;
