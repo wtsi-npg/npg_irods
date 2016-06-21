@@ -28,14 +28,21 @@ use WTSI::NPG::iRODS;
 our $VERSION = '';
 our $DEFAULT_ZONE = 'seq';
 
-my $embedded_conf = << 'LOGCONF';
-   log4perl.logger                = ERROR, A1
+my $verbose_config = << 'LOGCONF'
+log4perl.logger = ERROR, A1
 
-   log4perl.appender.A1           = Log::Log4perl::Appender::Screen
-   log4perl.appender.A1.utf8      = 1
-   log4perl.appender.A1.layout    = Log::Log4perl::Layout::PatternLayout
-   log4perl.appender.A1.layout.ConversionPattern = %d %p %m %n
+log4perl.logger.WTSI.NPG.HTS.Illumina.AlnDataObject = INFO, A1
+log4perl.logger.WTSI.NPG.HTS.Illumina.MetaUpdater = INFO, A1
+
+log4perl.appender.A1 = Log::Log4perl::Appender::Screen
+log4perl.appender.A1.layout = Log::Log4perl::Layout::PatternLayout
+log4perl.appender.A1.layout.ConversionPattern = %d %-5p %c - %m%n
+log4perl.appender.A1.utf8 = 1
+
+# Prevent duplicate messages with a non-Log4j-compliant Log4perl option
+log4perl.oneMessagePerAppender = 1
 LOGCONF
+;
 
 my $debug;
 my $driver_type;
@@ -70,15 +77,25 @@ if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
 }
 else {
-  Log::Log4perl::init(\$embedded_conf);
+  if ($verbose and ($dry_run and not $debug)) {
+    Log::Log4perl::init(\$verbose_config);
+  }
+  elsif ($debug) {
+    Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
+                              level  => $DEBUG,
+                              utf8   => 1})
+  }
+  else {
+    Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
+                              level  => $ERROR,
+                              utf8   => 1})
+  }
 }
 
-my $log = Log::Log4perl->get_logger(q[]);
-if ($verbose or ($dry_run and not $debug)) {
-  $log->level($INFO);
-}
-elsif ($debug) {
-  $log->level($DEBUG);
+my $log = Log::Log4perl->get_logger('main');
+$log->level($ALL);
+if ($log4perl_config) {
+  $log->info("Using log config file '$log4perl_config'");
 }
 
 if ((defined $max_id_run and not defined $min_id_run) ||
@@ -107,10 +124,10 @@ $zone ||= $DEFAULT_ZONE;
 # Setup iRODS
 my $irods;
 if ($dry_run) {
-  $irods = WTSI::NPG::DriRODS->new(logger => $log);
+  $irods = WTSI::NPG::DriRODS->new;
 }
 else {
-  $irods = WTSI::NPG::iRODS->new(logger => $log);
+  $irods = WTSI::NPG::iRODS->new;
 }
 
 # Find data objects

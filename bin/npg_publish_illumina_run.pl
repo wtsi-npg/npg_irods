@@ -19,14 +19,25 @@ use WTSI::NPG::HTS::LIMSFactory;
 our $VERSION = '';
 our $DEFAULT_ZONE = 'seq';
 
-my $embedded_conf = << 'LOGCONF';
-   log4perl.logger = ERROR, A1
+my $verbose_config = << 'LOGCONF'
+log4perl.logger = ERROR, A1
 
-   log4perl.appender.A1           = Log::Log4perl::Appender::Screen
-   log4perl.appender.A1.utf8      = 1
-   log4perl.appender.A1.layout    = Log::Log4perl::Layout::PatternLayout
-   log4perl.appender.A1.layout.ConversionPattern = %d %p %m %n
+log4perl.logger.WTSI.NPG.HTS.Illumina = INFO, A1
+
+# Errors from WTSI::NPG::iRODS are propagated in the code to callers
+# in WTSI::NPG::HTS::Illumina, so we do not need to see them directly:
+
+log4perl.logger.WTSI.NPG.iRODS = OFF, A1
+
+log4perl.appender.A1 = Log::Log4perl::Appender::Screen
+log4perl.appender.A1.layout = Log::Log4perl::Layout::PatternLayout
+log4perl.appender.A1.layout.ConversionPattern = %d %-5p %c - %m%n
+log4perl.appender.A1.utf8 = 1
+
+# Prevent duplicate messages with a non-Log4j-compliant Log4perl option
+log4perl.oneMessagePerAppender = 1
 LOGCONF
+;
 
 my $alignment;
 my $alt_process;
@@ -71,16 +82,23 @@ if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
 }
 else {
-  Log::Log4perl::init(\$embedded_conf);
+  if ($verbose and not $debug) {
+    Log::Log4perl::init(\$verbose_config);
+  }
+  elsif ($debug) {
+    Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
+                              level  => $DEBUG,
+                              utf8   => 1})
+  }
+  else {
+    Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
+                              level  => $ERROR,
+                              utf8   => 1})
+  }
 }
 
-my $log = Log::Log4perl->get_logger(q[]);
-if ($verbose and not $debug) {
-  $log->level($INFO);
-}
-elsif ($debug) {
-  $log->level($DEBUG);
-}
+my $log = Log::Log4perl->get_logger('main');
+$log->level($ALL);
 
 if (not $file_format) {
   $file_format = 'cram';
@@ -94,8 +112,7 @@ if (not (defined $runfolder_path or defined $archive_path)) {
 }
 
 # Setup iRODS
-my $irods = WTSI::NPG::iRODS->new(logger => $log);
-
+my $irods     = WTSI::NPG::iRODS->new;
 my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
 
 # Make this an optional argument (construct within the publisher)
@@ -108,8 +125,7 @@ my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(@fac_init_args);
 
 my @pub_init_args = (file_format     => $file_format,
                      irods           => $irods,
-                     lims_factory    => $lims_factory,
-                     logger          => $log);
+                     lims_factory    => $lims_factory);
 
 if (defined $archive_path) {
   push @pub_init_args, archive_path => $archive_path;

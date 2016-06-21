@@ -8,8 +8,6 @@ use Moose::Role;
 
 our $VERSION = '';
 
-with 'WTSI::DNAP::Utilities::Loggable';
-
 has 'arguments' =>
   (is            => 'rw',
    isa           => 'ArrayRef',
@@ -56,8 +54,8 @@ sub arg_at {
 
   my $max = $self->positional - 1;
   if ($position < 0 or $position > $max) {
-    $self->logconfess("Positional argument index $position out of bounds; ",
-                      "must be in the range 0 - $max, inclusive");
+    confess "Positional argument index $position out of bounds; " .
+            "must be in the range 0 - $max, inclusive";
   }
 
   return $self->arguments->[$position];
@@ -124,8 +122,8 @@ sub parse {
     my $num_named = scalar @named_args;
 
     if (@named_args and not $num_named % 2 == 0) {
-      $self->logconfess('Name or value missing (odd number of elements) ',
-                        'in named arguments: ', pp(\@named_args));
+      confess 'Name or value missing (odd number of elements) ' .
+              'in named arguments: ' . pp(\@named_args);
     }
     else {
       my %named = @named_args;
@@ -133,8 +131,8 @@ sub parse {
       my %valid_name_table = map { $_ => 1 } @{$self->names};
       foreach my $name (sort keys %named) {
         if (not exists $valid_name_table{$name}) {
-          $self->warn("Ignoring unknown name '$name' in named arguments: ",
-                      pp(\@named_args));
+          carp "Ignoring unknown name '$name' in named arguments: " .
+            pp(\@named_args);
           delete $named{$name};
         }
       }
@@ -143,13 +141,13 @@ sub parse {
     }
   }
   elsif ($self->has_positional_params) {
-    # Warn of extra positinal args if we know they are not named ones
+    # Warn of extra positional args if we know they are not named ones
     if ($self->positional < $num_args) {
       my @extra_args = @args[$self->positional .. $num_args - 1];
       my $num_extra = scalar @extra_args;
 
-      $self->warn("Ignoring $num_extra extra arguments ", pp(\@extra_args),
-                  ' in positional arguments: ', pp(\@args));
+      carp "Ignoring $num_extra extra arguments " . pp(\@extra_args),
+           ' in positional arguments: ' . pp(\@args);
     }
   }
 

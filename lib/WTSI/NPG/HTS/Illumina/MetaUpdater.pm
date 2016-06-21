@@ -35,15 +35,6 @@ has 'lims_factory' =>
    required      => 1,
    documentation => 'A factory providing st:api::lims objects');
 
-sub BUILD {
-  my ($self) = @_;
-
-  # Use our logger to log activity in attributes.
-  $self->lims_factory->logger($self->logger);
-  $self->irods->logger($self->logger);
-  return;
-}
-
 =head2 update_secondary_metadata
 
   Arg [1]    : iRODS data objects to update, ArrayRef.
@@ -108,8 +99,7 @@ sub _build_obj_factory {
   my ($self) = @_;
 
   return WTSI::NPG::HTS::Illumina::DataObjectFactory->new
-    (irods  => $self->irods,
-     logger => $self->logger);
+    (irods => $self->irods);
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -135,7 +125,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

@@ -140,15 +140,6 @@ has '_json_cache' =>
    init_arg      => undef,
    documentation => 'Cache of JSON data read from disk, indexed by path');
 
-sub BUILD {
-  my ($self) = @_;
-
-  # Use our logger to log activity in attributes.
-  $self->irods->logger($self->logger);
-  $self->lims_factory->logger($self->logger);
-  return;
-}
-
 # The list_*_files methods are uncached. The verb in their name
 # suggests activity. The corresponding methods generated here without
 # the list_ prefix are caching. We are not using attributes here
@@ -1172,8 +1163,7 @@ sub _publish_alignment_files {
 
   my $pos = $self->_check_position($position);
 
-  my $publisher = WTSI::NPG::HTS::Publisher->new(irods  => $self->irods,
-                                                 logger => $self->logger);
+  my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods);
 
   my $num_files     = scalar @{$files};
   my $num_processed = 0;
@@ -1235,12 +1225,9 @@ sub _publish_alignment_files {
       $self->info("Published '$dest' [$num_processed / $num_files]");
     } catch {
       $num_errors++;
-
-      ## no critic (RegularExpressions::RequireDotMatchAnything)
-      my ($msg) = m{^(.*)$}mx;
-      ## use critic
+      my @stack = split /\n/msx;  # Chop up the stack trace
       $self->error("Failed to publish '$file' to '$dest' cleanly ",
-                   "[$num_processed / $num_files]: ", $msg);
+                   "[$num_processed / $num_files]: ", pop @stack);
     };
   }
 
@@ -1323,8 +1310,7 @@ sub _publish_support_files {
   defined $dest_coll or
     $self->logconfess('A defined dest_coll argument is required');
 
-  my $publisher = WTSI::NPG::HTS::Publisher->new(irods  => $self->irods,
-                                                 logger => $self->logger);
+  my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods);
 
   my $num_files     = scalar @{$files};
   my $num_processed = 0;
@@ -1368,7 +1354,7 @@ sub _publish_support_files {
       $self->info("Published '$dest' [$num_processed / $num_files]");
     } catch {
       $num_errors++;
-      my @stack = split /\n/msx;   # Chop up the stack trace
+      my @stack = split /\n/msx;  # Chop up the stack trace
       $self->error("Failed to publish '$file' to '$dest' cleanly ",
                    "[$num_processed / $num_files]: ", pop @stack);
     };
@@ -1424,8 +1410,7 @@ sub _build_obj_factory {
   my ($self) = @_;
 
   return WTSI::NPG::HTS::Illumina::DataObjectFactory->new
-    (irods  => $self->irods,
-     logger => $self->logger);
+    (irods => $self->irods);
 }
 
 sub _lane_qc_stats_file {

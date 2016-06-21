@@ -16,15 +16,6 @@ use WTSI::NPG::iRODS;
 
 our $VERSION = '';
 
-my $embedded_conf = << 'LOGCONF';
-   log4perl.logger = ERROR, A1
-
-   log4perl.appender.A1           = Log::Log4perl::Appender::Screen
-   log4perl.appender.A1.utf8      = 1
-   log4perl.appender.A1.layout    = Log::Log4perl::Layout::PatternLayout
-   log4perl.appender.A1.layout.ConversionPattern = %d %p %m %n
-LOGCONF
-
 my $collection;
 my $debug;
 my $id_run;
@@ -47,15 +38,18 @@ if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
 }
 else {
-  Log::Log4perl::init(\$embedded_conf);
-}
+  my $log_args = {layout => '%d %p %m %n',
+                  level  => $ERROR,
+                  utf8   => 1};
 
-my $log = Log::Log4perl->get_logger(q[]);
-if ($verbose and not $debug) {
-  $log->level($INFO);
-}
-elsif ($debug) {
-  $log->level($DEBUG);
+  if ($verbose and not $debug) {
+    $log_args->{level} = $INFO;
+  }
+  elsif ($debug) {
+    $log_args->{level} = $DEBUG;
+  }
+
+  Log::Log4perl->easy_init($log_args);
 }
 
 if (not defined $runfolder_path) {
@@ -63,8 +57,7 @@ if (not defined $runfolder_path) {
             -exitval => 2);
 }
 
-my @init_args = (irods          => WTSI::NPG::iRODS->new(logger => $log),
-                 logger         => $log,
+my @init_args = (irods          => WTSI::NPG::iRODS->new,
                  runfolder_path => $runfolder_path);
 if ($collection) {
   push @init_args, dest_collection => $collection;
@@ -73,7 +66,13 @@ if (defined $id_run) {
   push @init_args, id_run => $id_run;
 }
 
-WTSI::NPG::HTS::Illumina::LogPublisher->new(@init_args)->publish_logs;
+my $log = Log::Log4perl->get_logger('main');
+$log->level($ALL);
+
+my $path =
+  WTSI::NPG::HTS::Illumina::LogPublisher->new(@init_args)->publish_logs;
+
+$log->info("Published logs to '$path'");
 
 __END__
 

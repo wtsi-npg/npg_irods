@@ -48,7 +48,10 @@ my $build = WTSI::DNAP::Utilities::Build->new
    },
    recommends =>
    {
-    'npg_common::roles::software_location' => 0      # npg_seq_common
+    'npg_common::roles::software_location' => 0,     # npg_seq_common
+    # Prefer higher versions for improved logging
+    'WTSI::DNAP::Utilities'                => '> 0.5.1',
+    'WTSI::NPG::iRODS'                     => '> 2.4.1'
    }
   );
 
