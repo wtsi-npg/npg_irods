@@ -649,7 +649,8 @@ sub list_plex_ancillary_files {
   Named args : positions            ArrayRef[Int]. Optional.
                with_spiked_control  Bool. Optional
 
-  Example    : my $num_published = $pub->publish_alignment_files
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_files
   Description: Publish all files (lane- or plex-level) to iRODS. If the
                positions argument is supplied, only those positions will be
                published. The default is to publish all positions. Return
@@ -698,7 +699,7 @@ sub list_plex_ancillary_files {
 
   Arg [1]    : None
 
-  Example    : my $num_published = $pub->publish_xml_files
+  Example    : my  = $pub->publish_xml_files
   Description: Publish run-level XML files to iRODS. Return the number of
                files, the number published and the number of errors.
   Returntype : Array[Int]
@@ -716,7 +717,8 @@ sub publish_xml_files {
 
   Arg [1]    : None
 
-  Example    : my $num_published = $pub->publish_xml_files
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_xml_files
   Description: Publish run-level InterOp files to iRODS. Return the number of
                files, the number published and the number of errors.
   Returntype : Array[Int]
@@ -738,7 +740,8 @@ sub publish_interop_files {
   Named args : positions            ArrayRef[Int]. Optional.
                with_spiked_control  Bool. Optional
 
-  Example    : my $num_published = $pub->publish_alignment_files
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_alignment_files
   Description: Publish alignment files (lane- or plex-level) to
                iRODS. If the positions argument is supplied, only those
                positions will be published. The default is to publish all

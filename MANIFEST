@@ -30,6 +30,7 @@ lib/WTSI/NPG/HTS/PacBio/Annotator.pm
 lib/WTSI/NPG/HTS/PacBio/APIClient.pm
 lib/WTSI/NPG/HTS/PacBio/Metadata.pm
 lib/WTSI/NPG/HTS/PacBio/MetaXMLParser.pm
+lib/WTSI/NPG/HTS/PacBio/RunMonitor.pm
 lib/WTSI/NPG/HTS/PacBio/RunPublisher.pm
 lib/WTSI/NPG/HTS/PathLister.pm
 lib/WTSI/NPG/HTS/Publisher.pm
@@ -7506,6 +7507,7 @@ t/lib/WTSI/NPG/HTS/Illumina/LogPublisherTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/RunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/APIClientTest.pm
+t/lib/WTSI/NPG/HTS/PacBio/RunMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/RunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PublisherTest.pm
 t/lib/WTSI/NPG/HTS/SeqchksumTest.pm
@@ -7513,6 +7515,7 @@ t/lib/WTSI/NPG/HTS/Test.pm
 t/log_publisher.t
 t/meta_updater.t
 t/pacbio_apiclient.t
+t/pacbio_run_monitor.t
 t/pacbio_run_publisher.t
 t/params.t
 t/perlcriticrc

@@ -97,6 +97,16 @@ sub smrt_names {
   return @names;
 }
 
+=head2 smrt_look_indices
+
+  Arg [1]    : SMRT cell name, Str.
+
+  Example    : my @indices = $pub->smrt_look_indices('A01_1');
+  Description: Return look indices given a cell name.
+  Returntype : Array[Int]
+
+=cut
+
 sub smrt_look_indices {
   my ($self, $smrt_name) = @_;
 
@@ -243,6 +253,24 @@ sub list_meta_xml_file {
   return shift @files;
 }
 
+=head2 publish_files
+
+  Arg [1]    : None
+
+  Named args : smrt_names           ArrayRef[Str]. Optional.
+               look_index           Int. Optional
+
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_files(smrt_names => ['A01_1', 'B01_1'],
+                                     look_index => 1)
+  Description: Publish all files to iRODS. If the smart_names argument is
+               supplied, only those SMRT cells will be published. The default
+               is to publish all SMRT cells. Return the number of files,
+               the number published and the number of errors.
+  Returntype : Array[Int]
+
+=cut
+
 {
   my $positional = 1;
   my @named      = qw[smrt_names look_index];
@@ -293,6 +321,23 @@ sub list_meta_xml_file {
   }
 }
 
+=head2 publish_meta_xml_file
+
+  Arg [1]    : None
+
+  Named args : smrt_name            Str.
+               look_index           Int. Optional if there is one look index,
+                                    required if there is more than one.
+
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_meta_xml_file
+  Description: Publish metadata XML file for a SMRT cell to iRODS. Return
+               the number of files, the number published and the number
+               of errors.
+  Returntype : Array[Int]
+
+=cut
+
 sub publish_meta_xml_file {
   my ($self, $smrt_name, $look_index) = @_;
 
@@ -301,6 +346,23 @@ sub publish_meta_xml_file {
 
   return $self->_publish_files($files, $dest_coll);
 }
+
+=head2 publish_basx_files
+
+  Arg [1]    : None
+
+  Named args : smrt_name            Str.
+               look_index           Int. Optional if there is one look index,
+                                    required if there is more than one.
+
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_basx_files
+  Description: Publish bas and bax files for a SMRT cell to iRODS. Return
+               the number of files, the number published and the number
+               of errors.
+  Returntype : Array[Int]
+
+=cut
 
 sub publish_basx_files {
   my ($self, $smrt_name, $look_index) = @_;
@@ -322,6 +384,23 @@ sub publish_basx_files {
   return $self->_publish_files($files, $dest_coll,
                                \@primary_avus, \@secondary_avus);
 }
+
+=head2 publish_sts_xml_files
+
+  Arg [1]    : None
+
+  Named args : smrt_name            Str.
+               look_index           Int. Optional if there is one look index,
+                                    required if there is more than one.
+
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_sts_xml_files
+  Description: Publish sts XML files for a SMRT cell to iRODS. Return
+               the number of files, the number published and the number
+               of errors.
+  Returntype : Array[Int]
+
+=cut
 
 sub publish_sts_xml_files {
   my ($self, $smrt_name, $look_index) = @_;
@@ -440,10 +519,6 @@ __END__
 WTSI::NPG::HTS::PacBio::RunPublisher
 
 =head1 DESCRIPTION
-
-
-
-
 
 
 =head1 AUTHOR
