@@ -778,28 +778,17 @@ sub publish_lane_alignment_files {
   my ($self, $position, $with_spiked_control) = @_;
 
   my $pos = $self->_check_position($position);
-
   my $id_run = $self->id_run;
-  my $num_files;
-  my $num_processed;
-  my $num_errors;
 
-  if (not $self->is_plexed($pos)) {
-    ($num_files, $num_processed, $num_errors) =
-      $self->_publish_alignment_files($pos,
-                                      $self->lane_alignment_files($pos),
-                                      $self->dest_collection,
-                                      $with_spiked_control);
-    $self->info("Published $num_processed / $num_files lane-level ",
-                "alignment files in run '$id_run'");
-  }
-  else {
+  if ($self->is_plexed($pos)) {
     $self->logconfess("Attempted to publish position '$pos' plex-level ",
                       "alignment files in run '$id_run'; ",
                       'the position is not plexed');
   }
 
-  return ($num_files, $num_processed, $num_errors);
+  return $self->_publish_alignment_files($self->lane_alignment_files($pos),
+                                         $self->dest_collection,
+                                         $with_spiked_control);
 }
 
 =head2 publish_plex_alignment_files
@@ -820,28 +809,17 @@ sub publish_plex_alignment_files {
   my ($self, $position, $with_spiked_control) = @_;
 
   my $pos = $self->_check_position($position);
-
   my $id_run = $self->id_run;
-  my $num_files;
-  my $num_processed;
-  my $num_errors;
 
-  if ($self->is_plexed($pos)) {
-    ($num_files, $num_processed, $num_errors) =
-      $self->_publish_alignment_files($pos,
-                                      $self->plex_alignment_files($position),
-                                      $self->dest_collection,
-                                      $with_spiked_control);
-    $self->info("Published $num_processed / $num_files plex-level ",
-                "alignment files in run '$id_run' position '$pos'");
-  }
-  else {
+  if (not $self->is_plexed($pos)) {
     $self->logconfess("Attempted to publish position '$pos' lane-level ",
                       "alignment files in run '$id_run'; ",
                       'the position is plexed');
   }
 
-  return ($num_files, $num_processed, $num_errors);
+  return $self->_publish_alignment_files($self->plex_alignment_files($pos),
+                                         $self->dest_collection,
+                                         $with_spiked_control);
 }
 
 =head2 publish_index_files
@@ -884,8 +862,8 @@ sub publish_plex_alignment_files {
   Arg [2]    : HTS data has spiked control, Bool. Optional.
 
   Example    : my ($num_files, $num_published, $num_errors) =
-                 $pub->publish_plex_ancillary_files(8)
-  Description: Publish lane-level ancillary files to iRODS.
+                 $pub->publish_lane_index_files(8)
+  Description: Publish lane-level index files to iRODS.
                Return the number of files, the number published and
                the number of errors.
   Returntype : Array[Int]
@@ -895,8 +873,24 @@ sub publish_plex_alignment_files {
 sub publish_lane_index_files {
   my ($self, $position, $with_spiked_control) = @_;
 
+  my @has_reads;
+  foreach my $file (@{$self->lane_index_files($position)}) {
+    my $obj = $self->_make_obj($file, $self->dest_collection);
+    my $num_reads = $self->num_reads
+      ($obj->position,
+       alignment_filter => $obj->alignment_filter);
+
+    if ($num_reads == 0) {
+      $self->info("Skipping index file $file because the alignment file ",
+                  "contains $num_reads reads");
+    }
+    else {
+      push @has_reads, $file;
+    }
+  }
+
   return $self->_publish_lane_support_files($position,
-                                            $self->lane_index_files($position),
+                                            \@has_reads,
                                             $self->dest_collection,
                                             $INDEX_CATEGORY,
                                             $with_spiked_control);
@@ -908,8 +902,8 @@ sub publish_lane_index_files {
   Arg [2]    : HTS data has spiked control, Bool. Optional.
 
   Example    : my ($num_files, $num_published, $num_errors) =
-                 $pub->publish_plex_ancillary_files(8)
-  Description: Publish plex-level ancillary files to iRODS.
+                 $pub->publish_plex_index_files(8)
+  Description: Publish plex-level index files to iRODS.
                Return the number of files, the number published and
                the number of errors.
   Returntype : Array[Int]
@@ -919,11 +913,28 @@ sub publish_lane_index_files {
 sub publish_plex_index_files {
   my ($self, $position, $with_spiked_control) = @_;
 
-  return  $self->_publish_plex_support_files($position,
-                                             $self->plex_index_files($position),
-                                             $self->dest_collection,
-                                             $INDEX_CATEGORY,
-                                             $with_spiked_control);
+  my @has_reads;
+  foreach my $file (@{$self->plex_index_files($position)}) {
+    my $obj = $self->_make_obj($file, $self->dest_collection);
+    my $num_reads = $self->num_reads
+      ($obj->position,
+       alignment_filter => $obj->alignment_filter,
+       tag_index        => $obj->tag_index);
+
+    if ($num_reads == 0) {
+      $self->info("Skipping index file $file because the alignment file ",
+                  "contains $num_reads reads");
+    }
+    else {
+      push @has_reads, $file;
+    }
+  }
+
+  return $self->_publish_plex_support_files($position,
+                                            \@has_reads,
+                                            $self->dest_collection,
+                                            $INDEX_CATEGORY,
+                                            $with_spiked_control);
 }
 
 =head2 publish_ancillary_files
@@ -1164,153 +1175,78 @@ sub _publish_file_category {
 
 # Backend alignment file publisher
 sub _publish_alignment_files {
-  my ($self, $position, $files, $dest_coll, $with_spiked_control) = @_;
+  my ($self, $files, $dest_coll, $with_spiked_control) = @_;
 
-  my $pos = $self->_check_position($position);
+  my $primary_avus_callback = sub {
+    return $self->_make_alignment_primary_meta(shift);
+  };
 
-  my $publisher = WTSI::NPG::HTS::Publisher->new(irods  => $self->irods,
-                                                 logger => $self->logger);
+  my $secondary_avus_callback = sub {
+    $self->_make_alignment_secondary_meta(shift, $with_spiked_control);
+  };
 
-  my $num_files     = scalar @{$files};
-  my $num_processed = 0;
-  my $num_errors    = 0;
-  foreach my $file (@{$files}) {
-    my $dest = q[];
-
-    try {
-      $num_processed++;
-
-      # Currently these determine their own id_run, position, plex and
-      # alignment_filter by parsing their own file name. We should
-      # really pass this information to the factory
-      my ($filename, $directories, $suffix) = fileparse($file);
-      my $obj = $self->obj_factory->make_data_object
-        (catfile($dest_coll, $filename));
-      $dest = $obj->str;
-      $dest = $publisher->publish($file, $dest);
-
-      my $num_reads = $self->num_reads
-        ($pos,
-         alignment_filter => $obj->alignment_filter,
-         tag_index        => $obj->tag_index);
-
-      my $seqchksum_digest = $self->seqchksum_digest
-        ($pos,
-         alignment_filter => $obj->alignment_filter,
-         tag_index        => $obj->tag_index);
-
-      my @pri = $self->make_primary_metadata
-        ($self->id_run, $pos, $num_reads,
-         tag_index        => $obj->tag_index,
-         is_paired_read   => $self->is_paired_read,
-         is_aligned       => $obj->is_aligned,
-         reference        => $obj->reference,
-         alignment_filter => $obj->alignment_filter,
-         alt_process      => $self->alt_process,
-         seqchksum        => $seqchksum_digest);
-      $self->debug("Created primary metadata AVUs for '$dest': ", pp(\@pri));
-      my ($num_pattr, $num_pproc, $num_perr) =
-        $obj->set_primary_metadata(@pri);
-
-      my @sec = $self->make_secondary_metadata
-        ($self->lims_factory, $self->id_run, $pos,
-         tag_index           => $obj->tag_index,
-         with_spiked_control => $with_spiked_control);
-      $self->debug("Created secondary metadata AVUs for '$dest': ", pp(\@sec));
-      my ($num_sattr, $num_sproc, $num_serr) =
-        $obj->update_secondary_metadata(@sec);
-
-      # Test metadata at the end
-      if ($num_perr > 0) {
-        $self->logcroak("Failed to set primary metadata cleanly on '$dest'");
-      }
-      if ($num_serr > 0) {
-        $self->logcroak("Failed to set secondary metadata cleanly on '$dest'");
-      }
-
-      $self->info("Published '$dest' [$num_processed / $num_files]");
-    } catch {
-      $num_errors++;
-
-      ## no critic (RegularExpressions::RequireDotMatchAnything)
-      my ($msg) = m{^(.*)$}mx;
-      ## use critic
-      $self->error("Failed to publish '$file' to '$dest' cleanly ",
-                   "[$num_processed / $num_files]: ", $msg);
-    };
-  }
-
-  if ($num_errors > 0) {
-    $self->error("Encountered errors on $num_errors / ",
-                 "$num_processed alignment files processed");
-  }
-
-  return ($num_files, $num_processed, $num_errors);
+  return $self->_safe_publish_files($files, $dest_coll,
+                                    $primary_avus_callback,
+                                    $secondary_avus_callback);
 }
 
-# Backend ancillary, index and qc file publisher for lane-level positions
 ## no critic (Subroutines::ProhibitManyArgs)
 sub _publish_lane_support_files {
   my ($self, $position, $files, $dest_collection, $description,
       $with_spiked_control) = @_;
 
   my $pos = $self->_check_position($position);
-
   my $id_run = $self->id_run;
-  my $num_files;
-  my $num_processed;
-  my $num_errors;
 
-  if (not $self->is_plexed($pos)) {
-    ($num_files, $num_processed, $num_errors) =
-      $self->_publish_support_files($files, $dest_collection,
-                                    $with_spiked_control);
-    $self->info("Published $num_processed / $num_files lane-level ",
-                "$description files in run '$id_run' position '$pos'");
-  }
-  else {
+  if ($self->is_plexed($pos)) {
     $self->logconfess("Attempted to publish position '$pos' lane-level ",
                       "$description files in run '$id_run'; ",
                       'the position is plexed');
   }
 
-  return ($num_files, $num_processed, $num_errors);
+  return $self->_publish_support_files($files, $dest_collection,
+                                       $with_spiked_control);
 }
-## use critic
 
-# Backend ancillary, index and qc file publisher for plex-level positions
-## no critic (Subroutines::ProhibitManyArgs)
 sub _publish_plex_support_files {
   my ($self, $position, $files, $dest_collection, $description,
       $with_spiked_control) = @_;
 
   my $pos = $self->_check_position($position);
-
   my $id_run = $self->id_run;
-  my $num_files;
-  my $num_processed;
-  my $num_errors;
 
-  if ($self->is_plexed($pos)) {
-    ($num_files, $num_processed, $num_errors) =
-      $self->_publish_support_files($files, $dest_collection,
-                                    $with_spiked_control);
-    $self->info("Published $num_processed / $num_files plex-level ",
-                "$description files in run '$id_run' position '$pos'");
-  }
-  else {
-    $self->logconfess("Attempted to publish position '$pos' lane-level ",
+  if (not $self->is_plexed($pos)) {
+    $self->logconfess("Attempted to publish position '$pos' plex-level ",
                       "$description files in run '$id_run'; ",
                       'the position is not plexed');
   }
 
-  return ($num_files, $num_processed, $num_errors);
+  return $self->_publish_support_files($files, $dest_collection,
+                                       $with_spiked_control);
 }
 ## use critic
 
-# Backend publisher for qc, index and ancillary files
+# Backend index, qc and ancillary file publisher
 sub _publish_support_files {
   my ($self, $files, $dest_coll, $with_spiked_control) = @_;
+
+  my $primary_avus_callback = sub {
+    return $self->_make_support_primary_meta(shift);
+  };
+
+  my $secondary_avus_callback = sub {
+    $self->_make_support_secondary_meta(shift, $with_spiked_control);
+  };
+
+  return $self->_safe_publish_files($files, $dest_coll,
+                                    $primary_avus_callback,
+                                    $secondary_avus_callback);
+}
+
+# Backend publisher for all files which handles errors and logging
+sub _safe_publish_files {
+  my ($self, $files, $dest_coll, $primary_avus_callback,
+      $secondary_avus_callback) = @_;
 
   defined $files or
     $self->logconfess('A defined files argument is required');
@@ -1330,26 +1266,15 @@ sub _publish_support_files {
 
     try {
       $num_processed++;
-      my ($filename, $directories, $suffix) = fileparse($file);
-      my $obj = $self->obj_factory->make_data_object
-        (catfile($dest_coll, $filename), id_run => $self->id_run);
+      my $obj = $self->_make_obj($file, $dest_coll);
       $dest = $obj->str;
       $dest = $publisher->publish($file, $dest);
 
-      my @primary_avus = ($self->make_avu($ID_RUN, $self->id_run));
-      if (defined $self->alt_process) {
-        push @primary_avus, $self->make_alt_metadata($self->alt_process);
-      }
+      my @primary_avus = $primary_avus_callback->($obj);
       my ($num_pattr, $num_pproc, $num_perr) =
         $obj->set_primary_metadata(@primary_avus);
 
-      my $lims = $self->lims_factory->make_lims($obj->id_run,
-                                                $obj->position,
-                                                $obj->tag_index);
-      # Sufficient study metadata to set their permissions, if they are
-      # restricted.
-      my @secondary_avus = $self->make_study_id_metadata
-        ($lims, $with_spiked_control);
+      my @secondary_avus = $secondary_avus_callback->($obj);
       my ($num_sattr, $num_sproc, $num_serr) =
         $obj->update_secondary_metadata(@secondary_avus);
 
@@ -1537,6 +1462,94 @@ sub _parse_json_file {
   }
 
   return $self->_json_cache->{$file};
+}
+
+sub _make_obj {
+  my ($self, $file, $dest_coll) = @_;
+
+  my ($filename, $directories, $suffix) = fileparse($file);
+
+  my $obj = $self->obj_factory->make_data_object
+    (catfile($dest_coll, $filename), id_run => $self->id_run);
+
+  if (not $obj) {
+    $self->logconfess("Failed to parse and make an object from '$file'");
+  }
+
+  return $obj;
+}
+
+sub _make_alignment_primary_meta {
+  my ($self, $obj) = @_;
+
+  my $num_reads = $self->num_reads
+    ($obj->position,
+     alignment_filter => $obj->alignment_filter,
+     tag_index        => $obj->tag_index);
+
+  my $seqchksum_digest = $self->seqchksum_digest
+    ($obj->position,
+     alignment_filter => $obj->alignment_filter,
+     tag_index        => $obj->tag_index);
+
+  my @pri = $self->make_primary_metadata
+    ($self->id_run, $obj->position, $num_reads,
+     tag_index        => $obj->tag_index,
+     is_paired_read   => $self->is_paired_read,
+     is_aligned       => $obj->is_aligned,
+     reference        => $obj->reference,
+     alignment_filter => $obj->alignment_filter,
+     alt_process      => $self->alt_process,
+     seqchksum        => $seqchksum_digest);
+
+  $self->debug(q[Created primary metadata AVUs for '], $obj->str,
+               q[': ], pp(\@pri));
+
+  return @pri;
+}
+
+sub _make_alignment_secondary_meta {
+  my ($self, $obj, $with_spiked_control) = @_;
+
+  my @sec = $self->make_secondary_metadata
+    ($self->lims_factory, $self->id_run, $obj->position,
+     tag_index           => $obj->tag_index,
+     with_spiked_control => $with_spiked_control);
+
+  $self->debug(q[Created secondary metadata AVUs for '], $obj->str,
+               q[': ], pp(\@sec));
+
+  return @sec;
+}
+
+sub _make_support_primary_meta {
+  my ($self, $obj) = @_;
+
+  my @pri = ($self->make_avu($ID_RUN, $self->id_run));
+  if (defined $self->alt_process) {
+    push @pri, $self->make_alt_metadata($self->alt_process);
+  }
+
+  $self->debug(q[Created primary metadata AVUs for '], $obj->str,
+               q[': ], pp(\@pri));
+
+  return @pri;
+}
+
+sub _make_support_secondary_meta {
+  my ($self, $obj, $with_spiked_control) = @_;
+
+  my $lims = $self->lims_factory->make_lims($obj->id_run,
+                                            $obj->position,
+                                            $obj->tag_index);
+  # Sufficient study metadata to set their permissions, if they are
+  # restricted
+  my @sec = $self->make_study_id_metadata($lims, $with_spiked_control);
+
+  $self->debug(q[Created secondary metadata AVUs for '], $obj->str,
+               q[': ], pp(\@sec));
+
+  return @sec;
 }
 
 __PACKAGE__->meta->make_immutable;
