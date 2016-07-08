@@ -95,7 +95,7 @@ sub num_reads : Test(102) {
   my $lane_runfolder_path =
     "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
 
-  my $lane_expected_read_counts = [863061182,
+  my $lane_expected_read_counts = [0,        # edited from 863061182
                                    856966676,
                                    898136862,
                                    893691470,
@@ -153,7 +153,8 @@ sub num_reads : Test(102) {
   my $plex_position = 1;
   my $tag_count     = 16,
   my $plex_expected_read_counts = [3334934,  # tag 0
-                                   71488156, 29817458, 15354480, 33948370,
+                                   0,        # edited from 71488156,
+                                   29817458, 15354480, 33948370,
                                    33430552, 24094786, 32604688, 26749430,
                                    27668866, 30775624, 33480806, 40965140,
                                    32087634, 37315470, 27193418, 31538878,
@@ -582,7 +583,7 @@ sub publish_lane_alignment_files : Test(264) {
   }
 
   # FIXME -- these tests could be more exhaustive
-  my $expected_read_counts = [863061182,
+  my $expected_read_counts = [0,         # edited from 863061182,
                               856966676,
                               898136862,
                               893691470,
@@ -665,7 +666,8 @@ sub publish_plex_alignment_files : Test(811) {
   # FIXME -- these tests could be more exhaustive
   my $tag_count = 16;
   my $expected_read_counts = [3334934,  # tag 0
-                              71488156, 29817458, 15354480, 33948370,
+                              0,        # edited from 71488156,
+                              29817458, 15354480, 33948370,
                               33430552, 24094786, 32604688, 26749430,
                               27668866, 30775624, 33480806, 40965140,
                               32087634, 37315470, 27193418, 31538878,
@@ -699,7 +701,7 @@ sub publish_plex_alignment_files : Test(811) {
   }
 }
 
-sub publish_lane_index_files : Test(96) {
+sub publish_lane_index_files : Test(91) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
@@ -720,6 +722,12 @@ sub publish_lane_index_files : Test(96) {
 
     foreach my $position (1 .. 8) {
       my $num_expected  = scalar @{$position_index{$position}};
+
+      # Lane 1 has been marked as having 0 reads
+      if ($position == 1) {
+        $num_expected--;
+      }
+
       my ($num_files, $num_processed, $num_errors) =
         $pub->publish_lane_index_files($position);
 
@@ -728,8 +736,12 @@ sub publish_lane_index_files : Test(96) {
              "$position index files");
 
       my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
+
+      # Lane 1 has been marked as having 0 reads
       my @expected_paths =
+        grep { $_ !~ m{18448_1.cram.crai$} }
         expected_data_objects($dest_coll, \%position_index, $position);
+
       my @observed_paths =
         observed_data_objects($irods, $dest_coll, $pos_pattern);
 
@@ -743,7 +755,7 @@ sub publish_lane_index_files : Test(96) {
   }
 }
 
-sub publish_plex_index_files : Test(274) {
+sub publish_plex_index_files : Test(269) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -767,6 +779,11 @@ sub publish_plex_index_files : Test(274) {
         calc_plex_index_files($archive_path, $file_format);
 
       my $num_expected  = scalar @{$position_index{$position}};
+      # Lane 1, plex 1 has been marked as having 0 reads
+      if ($position == 1) {
+        $num_expected--;
+      }
+
       my ($num_files, $num_processed, $num_errors) =
         $pub->publish_plex_index_files($position);
 
@@ -775,8 +792,12 @@ sub publish_plex_index_files : Test(274) {
              "$file_format index files");
 
       my $pos_pattern = sprintf '%d_%d#\d+', $pub->id_run, $position;
+
+      # Lane 1, plex 1 has been marked as having 0 reads
       my @expected_paths =
+        grep { $_ !~ m{17550_1\#1[.]cram[.]crai$} }
         expected_data_objects($dest_coll, \%position_index, $position);
+
       my @observed_paths =
         observed_data_objects($irods, $dest_coll, $pos_pattern);
 
