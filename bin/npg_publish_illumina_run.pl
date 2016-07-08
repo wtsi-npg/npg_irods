@@ -13,7 +13,6 @@ use Log::Log4perl::Level;
 use Pod::Usage;
 
 use WTSI::DNAP::Warehouse::Schema;
-use WTSI::NPG::DriRODS;
 use WTSI::NPG::HTS::Illumina::RunPublisher;
 use WTSI::NPG::HTS::LIMSFactory;
 

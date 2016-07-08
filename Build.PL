@@ -16,7 +16,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
    license            => 'gpl',
    configure_requires =>
    {
-    'Module::Build'                 => ">= 0.42"
+    'Module::Build'                 => ">= 0.4218"
    },
    test_requires =>
    {
@@ -24,6 +24,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
     'TAP::Harness'                  => '>= 3.30',
     'Test::Class'                   => '>= 0.41',
     'Test::Compile'                 => 0,
+    'Test::HTTP::Server'            => 0,
     'Test::More'                    => '>= 0.98',
     'Test::Exception'               => '>= 0.32',
     'Test::Perl::Critic'            => '>= 1.02'
@@ -39,6 +40,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
     'MooseX::StrictConstructor'     => 0,
     'Text::CSV'                     => '>= 1.33',
     'Try::Tiny'                     => '>= 0.12',
+    'URI'                           => 0,
     'WTSI::DNAP::Utilities'         => '>= 0.5.1',   # perl-dnap-utilities
     'WTSI::NPG::iRODS'              => '>= 2.4.0',   # perl-irods-wrap
     'WTSI::DNAP::Warehouse::Schema' => '>= 1.8',     # ml_warehouse

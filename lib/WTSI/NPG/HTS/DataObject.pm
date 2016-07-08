@@ -3,7 +3,7 @@ package WTSI::NPG::HTS::DataObject;
 use namespace::autoclean;
 use Data::Dump qw[pp];
 use File::Basename;
-use List::AllUtils qw[any];
+use List::AllUtils qw[any all];
 use Moose;
 use MooseX::StrictConstructor;
 use Try::Tiny;
@@ -196,16 +196,27 @@ sub _build_is_restricted_access {
 }
 
 sub _is_valid_metadata {
-  my ($self, $avu, $reference_avus) = @_;
+  my ($self, $avu, $reference_attrs) = @_;
 
   defined $avu or $self->logconfess('A defined avu argument is required');
   ref $avu eq 'HASH' or
     $self->logconfess('The avu argument must be a HashRef');
 
   my $attr = $avu->{attribute};
+  defined $attr or
+    $self->logconfess('A defined avu attribute is required: ', pp($avu));
+
+  defined $reference_attrs or
+    $self->logconfess('A defined reference_attrs argument is required');
+  ref $reference_attrs eq 'ARRAY' or
+    $self->logconfess('The reference_attrs argument must be an ArrayRef');
+
+  all { defined } @{$reference_attrs} or
+    $self->logconfess('Invalid reference attributes: ', pp($reference_attrs));
+
   return (defined $attr and
-          (scalar @{$reference_avus} == 0 or
-           any { $attr eq $_ } @{$reference_avus}));
+          (scalar @{$reference_attrs} == 0 or
+           any { $attr eq $_ } @{$reference_attrs}));
 }
 
 sub _set_metadata {

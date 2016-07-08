@@ -22,7 +22,8 @@ use WTSI::NPG::iRODS;
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::DNAP::Utilities::JSONCodec
-         WTSI::NPG::HTS::Annotator
+         WTSI::NPG::HTS::PathLister
+         WTSI::NPG::HTS::Illumina::Annotator
          npg_tracking::illumina::run::short_info
          npg_tracking::illumina::run::folder
        ];
@@ -95,6 +96,7 @@ has 'ancillary_formats' =>
 has 'dest_collection' =>
   (isa           => 'Str',
    is            => 'ro',
+   required      => 1,
    lazy          => 1,
    builder       => '_build_dest_collection',
    documentation => 'The destination collection within iRODS to store data');
@@ -102,6 +104,7 @@ has 'dest_collection' =>
 has 'interop_dest_collection' =>
   (isa           => 'Str',
    is            => 'ro',
+   required      => 1,
    lazy          => 1,
    builder       => '_build_interop_dest_collection',
    documentation => 'The destination collection within iRODS to store '.
@@ -110,6 +113,7 @@ has 'interop_dest_collection' =>
 has 'qc_dest_collection' =>
   (isa           => 'Str',
    is            => 'ro',
+   required      => 1,
    lazy          => 1,
    builder       => '_build_qc_dest_collection',
    documentation => 'The destination collection within iRODS to store QC data');
@@ -375,7 +379,7 @@ sub list_xml_files {
   my $runfolder_path   = $self->runfolder_path;
   my $xml_file_pattern = '^(RunInfo|runParameters).xml$';
 
-  return [$self->_list_directory($runfolder_path, $xml_file_pattern)];
+  return [$self->list_directory($runfolder_path, $xml_file_pattern)];
 }
 
 =head2 list_interop_files
@@ -395,7 +399,7 @@ sub list_interop_files {
   my $interop_path   = $self->interop_path;
   my $interop_file_pattern = '.bin$';
 
-  return [$self->_list_directory($interop_path, $interop_file_pattern)];
+  return [$self->list_directory($interop_path, $interop_file_pattern)];
 }
 
 =head2 list_lane_alignment_files
@@ -423,7 +427,7 @@ sub list_lane_alignment_files {
   my $lane_file_pattern = sprintf '^%d_%s.*[.]%s$',
     $self->id_run, $positions_pattern, $self->file_format;
 
-  return [$self->_list_directory($self->archive_path, $lane_file_pattern)];
+  return [$self->list_directory($self->archive_path, $lane_file_pattern)];
 }
 
 =head2 list_plex_alignment_files
@@ -447,8 +451,8 @@ sub list_plex_alignment_files {
   my $plex_file_pattern = sprintf '^%d_%d.*[.]%s$',
     $self->id_run, $pos, $self->file_format;
 
-  return [$self->_list_directory($self->lane_archive_path($pos),
-                                 $plex_file_pattern)];
+  return [$self->list_directory($self->lane_archive_path($pos),
+                                $plex_file_pattern)];
 }
 
 =head2 list_lane_index_files
@@ -488,7 +492,7 @@ sub list_lane_index_files {
     $self->logconfess("Invalid HTS file format for indexing '$file_format'");
   }
 
-  return [$self->_list_directory($self->archive_path, $lane_file_pattern)];
+  return [$self->list_directory($self->archive_path, $lane_file_pattern)];
 }
 
 =head2 list_plex_index_files
@@ -524,8 +528,8 @@ sub list_plex_index_files {
     $self->logconfess("Invalid HTS file format for indexing '$file_format'");
   }
 
-  return [$self->_list_directory($self->lane_archive_path($pos),
-                                 $plex_file_pattern)];
+  return [$self->list_directory($self->lane_archive_path($pos),
+                                $plex_file_pattern)];
 }
 
 =head2 list_lane_qc_files
@@ -554,7 +558,7 @@ sub list_lane_qc_files {
   my $lane_file_pattern = sprintf '^%d_%s.*[.]%s$',
     $self->id_run, $positions_pattern, $file_format;
 
-  return [$self->_list_directory($self->qc_path, $lane_file_pattern)];
+  return [$self->list_directory($self->qc_path, $lane_file_pattern)];
 }
 
 =head2 list_plex_qc_files
@@ -579,8 +583,8 @@ sub list_plex_qc_files {
   my $plex_file_pattern = sprintf '^%d_%d.*[.]%s$',
     $self->id_run, $position, $file_format;
 
-  return [$self->_list_directory($self->lane_qc_path($pos),
-                                 $plex_file_pattern)];
+  return [$self->list_directory($self->lane_qc_path($pos),
+                                $plex_file_pattern)];
 }
 
 =head2 list_lane_ancillary_files
@@ -610,8 +614,8 @@ sub list_lane_ancillary_files {
   my $lane_file_pattern = sprintf '^%d_%s.*[.]%s$',
     $self->id_run, $positions_pattern, $suffix_pattern;
 
-  my @file_list = $self->_list_directory($self->archive_path,
-                                         $lane_file_pattern);
+  my @file_list = $self->list_directory($self->archive_path,
+                                        $lane_file_pattern);
   # The file pattern match is deliberately kept simple. The downside
   # is that it matches one file that we do not want.
   @file_list = grep { ! m{markdups_metrics}msx } @file_list;
@@ -629,8 +633,8 @@ sub list_plex_ancillary_files {
   my $plex_file_pattern = sprintf '^%d_%d.*[.]%s$',
     $self->id_run, $pos, $suffix_pattern;
 
-  my @file_list = $self->_list_directory($self->lane_archive_path($pos),
-                                         $plex_file_pattern);
+  my @file_list = $self->list_directory($self->lane_archive_path($pos),
+                                        $plex_file_pattern);
   # The file pattern match is deliberately kept simple. The downside
   # is that it matches one file that we do not want.
   @file_list = grep { ! m{markdups_metrics}msx } @file_list;
@@ -645,7 +649,8 @@ sub list_plex_ancillary_files {
   Named args : positions            ArrayRef[Int]. Optional.
                with_spiked_control  Bool. Optional
 
-  Example    : my $num_published = $pub->publish_alignment_files
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_files
   Description: Publish all files (lane- or plex-level) to iRODS. If the
                positions argument is supplied, only those positions will be
                published. The default is to publish all positions. Return
@@ -694,7 +699,7 @@ sub list_plex_ancillary_files {
 
   Arg [1]    : None
 
-  Example    : my $num_published = $pub->publish_xml_files
+  Example    : my  = $pub->publish_xml_files
   Description: Publish run-level XML files to iRODS. Return the number of
                files, the number published and the number of errors.
   Returntype : Array[Int]
@@ -712,7 +717,8 @@ sub publish_xml_files {
 
   Arg [1]    : None
 
-  Example    : my $num_published = $pub->publish_xml_files
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_xml_files
   Description: Publish run-level InterOp files to iRODS. Return the number of
                files, the number published and the number of errors.
   Returntype : Array[Int]
@@ -734,7 +740,8 @@ sub publish_interop_files {
   Named args : positions            ArrayRef[Int]. Optional.
                with_spiked_control  Bool. Optional
 
-  Example    : my $num_published = $pub->publish_alignment_files
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_alignment_files
   Description: Publish alignment files (lane- or plex-level) to
                iRODS. If the positions argument is supplied, only those
                positions will be published. The default is to publish all
@@ -1098,7 +1105,7 @@ sub _check_position {
 
   defined $position or
     $self->logconfess('A defined position argument is required');
-  any { $position } $self->positions or
+  any { $position == $_ } $self->positions or
     $self->logconfess("Invalid position argument '$position'");
 
   return $position;
@@ -1364,12 +1371,9 @@ sub _publish_support_files {
       $self->info("Published '$dest' [$num_processed / $num_files]");
     } catch {
       $num_errors++;
-
-      ## no critic (RegularExpressions::RequireDotMatchAnything)
-      my ($msg) = m{^(.*)$}mx;
-      ## use critic
+      my @stack = split /\n/msx;   # Chop up the stack trace
       $self->error("Failed to publish '$file' to '$dest' cleanly ",
-                   "[$num_processed / $num_files]: ", $msg);
+                   "[$num_processed / $num_files]: ", pop @stack);
     };
   }
 
@@ -1425,37 +1429,6 @@ sub _build_obj_factory {
   return WTSI::NPG::HTS::Illumina::DataObjectFactory->new
     (irods  => $self->irods,
      logger => $self->logger);
-}
-
-# Return a sorted array of file paths, filtered by a regex.
-sub _list_directory {
-  my ($self, $path, $filter_pattern) = @_;
-
-  my @file_list;
-
-  if (-e $path) {
-    if (-d $path) {
-      $self->debug("Finding files in '$path' matching pattern ",
-                   "'$filter_pattern'");
-      opendir my $dh, $path or $self->logcroak("Failed to opendir '$path': $!");
-      @file_list = grep { m{$filter_pattern}msx } readdir $dh;
-      closedir $dh;
-
-      @file_list = sort map { catfile($path, $_) } @file_list;
-
-      $self->debug("Found files in '$path' matching pattern ",
-                   "'$filter_pattern': ", pp(\@file_list));
-    }
-    else {
-      $self->error("Path '$path' is not a directory; ",
-                   'unable to scan it for files');
-    }
-  }
-  else {
-    $self->info("Path '$path' does not exist locally; ignoring");
-  }
-
-  return @file_list;
 }
 
 sub _lane_qc_stats_file {

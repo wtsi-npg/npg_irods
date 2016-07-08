@@ -96,7 +96,7 @@ sub BUILD {
     $IS_PAIRED_READ,
     $POSITION,
     $REFERENCE,
-    $WTSI::NPG::HTS::Annotator::SEQCHKSUM,
+    $WTSI::NPG::HTS::Illumina::Annotator::SEQCHKSUM,
     $TAG_INDEX,
     $TARGET,
     $TOTAL_READS;
@@ -286,10 +286,8 @@ sub _read_header {
     # traces when a file can't be read. Instead, any error information
     # is captured here, non-fatally.
 
-    ## no critic (RegularExpressions::RequireDotMatchAnything)
-    my ($msg) = m{^(.*)$}mx;
-    ## use critic
-    $self->error("Failed to read the header of '$path': ", $msg);
+    my @stack = split /\n/msx;   # Chop up the stack trace
+    $self->error("Failed to read the header of '$path': ", pop @stack);
   };
 
   return \@header;
@@ -309,7 +307,16 @@ WTSI::NPG::HTS::Illumina::AlnDataObject
 
 =head1 DESCRIPTION
 
-Represents an alignment/map (CRAM or BAM) file in iRODS.
+Represents an alignment/map (CRAM or BAM) file in iRODS. This class
+overrides some base class behaviour to introduce:
+
+ Reading of BAM/CRAM file headers.
+
+ Custom primary metadata restrictions.
+
+ Identification of nonconsented human data.
+
+ Handling of the 'public' group during 'update_group_permissions' calls.
 
 =head1 AUTHOR
 

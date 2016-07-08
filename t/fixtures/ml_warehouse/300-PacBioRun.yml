@@ -1,0 +1,484 @@
+---
+- cost_code: S0730
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 45137
+  id_pac_bio_tmp: 4062
+  id_sample_tmp: 2546241
+  id_study_tmp: 2541
+  last_updated: 2016-03-31 14:19:50
+  pac_bio_library_tube_id_lims: NT759603V
+  pac_bio_library_tube_legacy_id: 15977171
+  pac_bio_library_tube_name: DN434306G-A1
+  pac_bio_library_tube_uuid: 2442d580-ec65-11e5-8770-68b59976a382
+  pac_bio_run_uuid: 11f01620-f013-11e5-8c4c-68b59976a382
+  plate_barcode: DN436096A
+  plate_uuid_lims: 31b46920-f013-11e5-a007-68b59976a382
+  recorded_at: 2016-04-04 10:09:05
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: A1
+  well_uuid_lims: 31d892f0-f013-11e5-a007-68b59976a382
+- cost_code: S0730
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 45137
+  id_pac_bio_tmp: 4063
+  id_sample_tmp: 2546242
+  id_study_tmp: 2541
+  last_updated: 2016-03-31 14:19:50
+  pac_bio_library_tube_id_lims: NT759604W
+  pac_bio_library_tube_legacy_id: 15977172
+  pac_bio_library_tube_name: DN434306G-B1
+  pac_bio_library_tube_uuid: 246578b0-ec65-11e5-8770-68b59976a382
+  pac_bio_run_uuid: 11f01620-f013-11e5-8c4c-68b59976a382
+  plate_barcode: DN436096A
+  plate_uuid_lims: 31b46920-f013-11e5-a007-68b59976a382
+  recorded_at: 2016-04-04 10:09:05
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: B1
+  well_uuid_lims: 31f62d10-f013-11e5-a007-68b59976a382
+- cost_code: S0700
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 45137
+  id_pac_bio_tmp: 4064
+  id_sample_tmp: 2538162
+  id_study_tmp: 2658
+  last_updated: 2016-03-31 14:19:50
+  pac_bio_library_tube_id_lims: NT758272S
+  pac_bio_library_tube_legacy_id: 15958888
+  pac_bio_library_tube_name: DN434137H-A1
+  pac_bio_library_tube_uuid: 63d82270-eab4-11e5-9a1f-68b59976a382
+  pac_bio_run_uuid: 11f01620-f013-11e5-8c4c-68b59976a382
+  plate_barcode: DN436096A
+  plate_uuid_lims: 31b46920-f013-11e5-a007-68b59976a382
+  recorded_at: 2016-04-04 10:09:05
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: C1
+  well_uuid_lims: 320436d0-f013-11e5-a007-68b59976a382
+- cost_code: S0982
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 45137
+  id_pac_bio_tmp: 4065
+  id_sample_tmp: 2550516
+  id_study_tmp: 2979
+  last_updated: 2016-03-31 14:19:50
+  pac_bio_library_tube_id_lims: NT758946O
+  pac_bio_library_tube_legacy_id: 15976081
+  pac_bio_library_tube_name: DN434932D-A2
+  pac_bio_library_tube_uuid: d904d6e0-ec50-11e5-8770-68b59976a382
+  pac_bio_run_uuid: 11f01620-f013-11e5-8c4c-68b59976a382
+  plate_barcode: DN436096A
+  plate_uuid_lims: 31b46920-f013-11e5-a007-68b59976a382
+  recorded_at: 2016-04-04 10:09:05
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: D1
+  well_uuid_lims: 3211f270-f013-11e5-a007-68b59976a382
+- cost_code: S0982
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 45137
+  id_pac_bio_tmp: 4066
+  id_sample_tmp: 2550517
+  id_study_tmp: 2979
+  last_updated: 2016-03-31 14:19:50
+  pac_bio_library_tube_id_lims: NT758947P
+  pac_bio_library_tube_legacy_id: 15976082
+  pac_bio_library_tube_name: DN434932D-B2
+  pac_bio_library_tube_uuid: d90af160-ec50-11e5-8770-68b59976a382
+  pac_bio_run_uuid: 11f01620-f013-11e5-8c4c-68b59976a382
+  plate_barcode: DN436096A
+  plate_uuid_lims: 31b46920-f013-11e5-a007-68b59976a382
+  recorded_at: 2016-04-04 10:09:05
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: E1
+  well_uuid_lims: 321fd520-f013-11e5-a007-68b59976a382
+- cost_code: S0982
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 45137
+  id_pac_bio_tmp: 4067
+  id_sample_tmp: 2550518
+  id_study_tmp: 2979
+  last_updated: 2016-03-31 14:19:50
+  pac_bio_library_tube_id_lims: NT758948Q
+  pac_bio_library_tube_legacy_id: 15976083
+  pac_bio_library_tube_name: DN434932D-C2
+  pac_bio_library_tube_uuid: d91132f0-ec50-11e5-8770-68b59976a382
+  pac_bio_run_uuid: 11f01620-f013-11e5-8c4c-68b59976a382
+  plate_barcode: DN436096A
+  plate_uuid_lims: 31b46920-f013-11e5-a007-68b59976a382
+  recorded_at: 2016-04-04 10:09:05
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: F1
+  well_uuid_lims: 322ddee0-f013-11e5-a007-68b59976a382
+- cost_code: S0982
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 45137
+  id_pac_bio_tmp: 4068
+  id_sample_tmp: 2550519
+  id_study_tmp: 2979
+  last_updated: 2016-03-31 14:19:50
+  pac_bio_library_tube_id_lims: NT758949R
+  pac_bio_library_tube_legacy_id: 15976084
+  pac_bio_library_tube_name: DN434932D-D2
+  pac_bio_library_tube_uuid: d9177480-ec50-11e5-8770-68b59976a382
+  pac_bio_run_uuid: 11f01620-f013-11e5-8c4c-68b59976a382
+  plate_barcode: DN436096A
+  plate_uuid_lims: 31b46920-f013-11e5-a007-68b59976a382
+  recorded_at: 2016-04-04 10:09:05
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: G1
+  well_uuid_lims: 323c5dd0-f013-11e5-a007-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1714
+  id_sample_tmp: 1991865
+  id_study_tmp: 351
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT447149M
+  pac_bio_library_tube_legacy_id: 11651816
+  pac_bio_library_tube_name: DN362988U-A1
+  pac_bio_library_tube_uuid: ba804950-34fc-11e4-93bc-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:22
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: A1
+  well_uuid_lims: 6f46a290-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1715
+  id_sample_tmp: 2085346
+  id_study_tmp: 263
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540295W
+  pac_bio_library_tube_legacy_id: 11800135
+  pac_bio_library_tube_name: DN365397P-A1
+  pac_bio_library_tube_uuid: dd6cf670-3a83-11e4-9c2a-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:22
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: B1
+  well_uuid_lims: 6faa6d70-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1716
+  id_sample_tmp: 2085346
+  id_study_tmp: 263
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540295W
+  pac_bio_library_tube_legacy_id: 11800135
+  pac_bio_library_tube_name: DN365397P-A1
+  pac_bio_library_tube_uuid: dd6cf670-3a83-11e4-9c2a-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:22
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: B1
+  well_uuid_lims: 6faa6d70-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1717
+  id_sample_tmp: 2030286
+  id_study_tmp: 291
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540288A
+  pac_bio_library_tube_legacy_id: 11799643
+  pac_bio_library_tube_name: DN361557U-A1
+  pac_bio_library_tube_uuid: 8a6f6340-3a83-11e4-ad3f-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:22
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: D1
+  well_uuid_lims: 6fa64ec0-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1718
+  id_sample_tmp: 2030286
+  id_study_tmp: 291
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540288A
+  pac_bio_library_tube_legacy_id: 11799643
+  pac_bio_library_tube_name: DN361557U-A1
+  pac_bio_library_tube_uuid: 8a6f6340-3a83-11e4-ad3f-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:23
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: D1
+  well_uuid_lims: 6fa64ec0-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1719
+  id_sample_tmp: 2030286
+  id_study_tmp: 291
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540288A
+  pac_bio_library_tube_legacy_id: 11799643
+  pac_bio_library_tube_name: DN361557U-A1
+  pac_bio_library_tube_uuid: 8a6f6340-3a83-11e4-ad3f-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:23
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: D1
+  well_uuid_lims: 6fa64ec0-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1720
+  id_sample_tmp: 2030850
+  id_study_tmp: 1838
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540293U
+  pac_bio_library_tube_legacy_id: 11799745
+  pac_bio_library_tube_name: DN362987T-A1
+  pac_bio_library_tube_uuid: a82f5ac0-3a83-11e4-896d-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:23
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: A2
+  well_uuid_lims: 6f93ff40-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1721
+  id_sample_tmp: 2030850
+  id_study_tmp: 1838
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540293U
+  pac_bio_library_tube_legacy_id: 11799745
+  pac_bio_library_tube_name: DN362987T-A1
+  pac_bio_library_tube_uuid: a82f5ac0-3a83-11e4-896d-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:23
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: A2
+  well_uuid_lims: 6f93ff40-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1722
+  id_sample_tmp: 2030850
+  id_study_tmp: 1838
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540293U
+  pac_bio_library_tube_legacy_id: 11799745
+  pac_bio_library_tube_name: DN362987T-A1
+  pac_bio_library_tube_uuid: a82f5ac0-3a83-11e4-896d-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:23
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: A2
+  well_uuid_lims: 6f93ff40-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1723
+  id_sample_tmp: 2030850
+  id_study_tmp: 1838
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540293U
+  pac_bio_library_tube_legacy_id: 11799745
+  pac_bio_library_tube_name: DN362987T-A1
+  pac_bio_library_tube_uuid: a82f5ac0-3a83-11e4-896d-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:23
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: A2
+  well_uuid_lims: 6f93ff40-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1724
+  id_sample_tmp: 2030850
+  id_study_tmp: 1838
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540293U
+  pac_bio_library_tube_legacy_id: 11799745
+  pac_bio_library_tube_name: DN362987T-A1
+  pac_bio_library_tube_uuid: a82f5ac0-3a83-11e4-896d-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:23
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: A2
+  well_uuid_lims: 6f93ff40-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1725
+  id_sample_tmp: 2030850
+  id_study_tmp: 1838
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540293U
+  pac_bio_library_tube_legacy_id: 11799745
+  pac_bio_library_tube_name: DN362987T-A1
+  pac_bio_library_tube_uuid: a82f5ac0-3a83-11e4-896d-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:23
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: A2
+  well_uuid_lims: 6f93ff40-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1726
+  id_sample_tmp: 2030850
+  id_study_tmp: 1838
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540293U
+  pac_bio_library_tube_legacy_id: 11799745
+  pac_bio_library_tube_name: DN362987T-A1
+  pac_bio_library_tube_uuid: a82f5ac0-3a83-11e4-896d-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:23
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: A2
+  well_uuid_lims: 6f93ff40-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1727
+  id_sample_tmp: 2030850
+  id_study_tmp: 1838
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540293U
+  pac_bio_library_tube_legacy_id: 11799745
+  pac_bio_library_tube_name: DN362987T-A1
+  pac_bio_library_tube_uuid: a82f5ac0-3a83-11e4-896d-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:23
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: B2
+  well_uuid_lims: 6f770160-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1728
+  id_sample_tmp: 2030850
+  id_study_tmp: 1838
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540293U
+  pac_bio_library_tube_legacy_id: 11799745
+  pac_bio_library_tube_name: DN362987T-A1
+  pac_bio_library_tube_uuid: a82f5ac0-3a83-11e4-896d-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:23
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: B2
+  well_uuid_lims: 6f770160-60fd-11e4-b294-68b59976a382
+- cost_code: S0702
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 32669
+  id_pac_bio_tmp: 1729
+  id_sample_tmp: 2030850
+  id_study_tmp: 1838
+  last_updated: 2016-03-31 14:19:44
+  pac_bio_library_tube_id_lims: NT540293U
+  pac_bio_library_tube_legacy_id: 11799745
+  pac_bio_library_tube_name: DN362987T-A1
+  pac_bio_library_tube_uuid: a82f5ac0-3a83-11e4-896d-68b59976a382
+  pac_bio_run_uuid: 6f133680-60fd-11e4-b294-68b59976a382
+  plate_barcode: DN374815N
+  plate_uuid_lims: 104e63d0-60fe-11e4-a3f1-68b59976a382
+  recorded_at: 2016-04-04 10:07:23
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: B2
+  well_uuid_lims: 6f770160-60fd-11e4-b294-68b59976a382

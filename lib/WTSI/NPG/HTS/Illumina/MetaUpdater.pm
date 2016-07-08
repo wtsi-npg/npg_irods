@@ -11,7 +11,7 @@ use WTSI::NPG::iRODS;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
-         WTSI::NPG::HTS::Annotator
+         WTSI::NPG::HTS::Illumina::Annotator
        ];
 
 our $VERSION = '';
