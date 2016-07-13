@@ -1,3 +1,5 @@
+ -  Ensure test dependencies are installed.
+
 Release 1.3
 
  -  Defer checksums on (re)loading files until after upload. Assume
