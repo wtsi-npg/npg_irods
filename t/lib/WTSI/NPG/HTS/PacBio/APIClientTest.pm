@@ -8,6 +8,7 @@ use Log::Log4perl;
 use Test::HTTP::Server;
 use Test::More;
 use Test::Exception;
+use URI;
 
 use base qw[WTSI::NPG::HTS::Test];
 
@@ -71,7 +72,7 @@ sub require : Test(1) {
 }
 
 sub query_jobs : Test(1) {
-  my $uri = $server->uri . 'QueryJobs';
+  my $uri = URI->new($server->uri . 'QueryJobs');
   my $client = WTSI::NPG::HTS::PacBio::APIClient->new(api_uri => $uri);
   is_deeply($client->query_jobs, $test_response);
 }

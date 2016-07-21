@@ -18,7 +18,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
    {
     'Module::Build'                 => ">= 0.4218"
    },
-   test_requires =>
+   build_requires =>
    {
     'File::Copy::Recursive'         => 0,
     'TAP::Harness'                  => '>= 3.30',
@@ -40,6 +40,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
     'MooseX::StrictConstructor'     => 0,
     'Text::CSV'                     => '>= 1.33',
     'Try::Tiny'                     => '>= 0.12',
+    'URI'                           => 0,
     'WTSI::DNAP::Utilities'         => '>= 0.5.1',   # perl-dnap-utilities
     'WTSI::NPG::iRODS'              => '>= 2.4.0',   # perl-irods-wrap
     'WTSI::DNAP::Warehouse::Schema' => '>= 1.8',     # ml_warehouse
@@ -50,8 +51,8 @@ my $build = WTSI::DNAP::Utilities::Build->new
    {
     'npg_common::roles::software_location' => 0,     # npg_seq_common
     # Prefer higher versions for improved logging
-    'WTSI::DNAP::Utilities'                => '> 0.5.1',
-    'WTSI::NPG::iRODS'                     => '> 2.4.1'
+    'WTSI::DNAP::Utilities'                => '>= 0.5.2',
+    'WTSI::NPG::iRODS'                     => '>= 2.5.0'
    }
   );
 

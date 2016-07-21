@@ -47,6 +47,7 @@ my $collection;
 my $debug;
 my $driver_type;
 my $file_format;
+my $id_run;
 my $index;
 my $interop;
 my $log4perl_config;
@@ -68,6 +69,7 @@ GetOptions('alignment'                         => \$alignment,
            'help'                              => sub {
              pod2usage(-verbose => 2, -exitval => 0);
            },
+           'id_run|id-run=i'                   => \$id_run,
            'index'                             => \$index,
            'interop'                           => \$interop,
            'logconf=s'                         => \$log4perl_config,
@@ -133,6 +135,9 @@ if (defined $archive_path) {
 if (defined $runfolder_path) {
   push @pub_init_args, runfolder_path => $runfolder_path;
 }
+if ($id_run) {
+  push @pub_init_args, id_run => $id_run;
+}
 if ($collection) {
   push @pub_init_args, dest_collection => $collection;
 }
@@ -140,6 +145,7 @@ if ($alt_process) {
   push @pub_init_args, alt_process => $alt_process;
   $log->info("Using alt_process '$alt_process'");
 }
+
 
 my $publisher = WTSI::NPG::HTS::Illumina::RunPublisher->new(@pub_init_args);
 
@@ -222,6 +228,11 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
    --file_format     Load alignment files of this format. Optional,
                      defaults to CRAM format.
    --help            Display help.
+   --id-run
+   --id_run          Specify the run number. Optional, defaults to the
+                     value detected from the runfolder. This option is
+                     useful for runs where the value cannot be detected
+                     automatically.
    --index           Load alignment index files. Optional, defaults to
                      true.
    --interop         Load InterOp files. Optional, defaults to true.
