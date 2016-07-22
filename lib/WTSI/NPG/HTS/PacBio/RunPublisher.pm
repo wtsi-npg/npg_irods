@@ -57,18 +57,6 @@ has 'mlwh_schema' =>
    required      => 1,
    documentation => 'A ML warehouse handle to obtain secondary metadata');
 
-sub BUILD {
-  my ($self) = @_;
-
-  # TODO -- Use the following to set up per-class loggers
-  # $self->logger(Log::Log4perl->get_logger($self->meta->name));
-
-  # Use our logger to log activity.
-  $self->irods->logger($self->logger);
-
-  return;
-}
-
 sub run_name {
   my ($self) = @_;
 
@@ -312,9 +300,9 @@ sub list_meta_xml_file {
       my ($nfs, $nps, $nes) =
         $self->publish_sts_xml_files($smrt_name, $look_index);
 
-       $num_files     += ($nfx + $nfb + $nfs);
-       $num_processed += ($npx + $npb + $nps);
-       $num_errors    += ($nex + $neb + $nes);
+      $num_files     += ($nfx + $nfb + $nfs);
+      $num_processed += ($npx + $npb + $nps);
+      $num_errors    += ($nex + $neb + $nes);
     }
 
     return ($num_files, $num_processed, $num_errors);
@@ -344,7 +332,13 @@ sub publish_meta_xml_file {
   my $files = [$self->list_meta_xml_file($smrt_name, $look_index)];
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
 
-  return $self->_publish_files($files, $dest_coll);
+  my ($num_files, $num_processed, $num_errors) =
+    $self->_publish_files($files, $dest_coll);
+
+  $self->info("Published $num_processed / $num_files metadata XML files ",
+              "in SMRT cell '$smrt_name'");
+
+  return ($num_files, $num_processed, $num_errors);
 }
 
 =head2 publish_basx_files
@@ -381,8 +375,14 @@ sub publish_basx_files {
   my $files     = $self->list_basx_files($smrt_name, $look_index);
   my $dest_coll = catdir($self->dest_collection, $smrt_name, $ANALYSIS_DIR);
 
-  return $self->_publish_files($files, $dest_coll,
-                               \@primary_avus, \@secondary_avus);
+  my ($num_files, $num_processed, $num_errors) =
+    $self->_publish_files($files, $dest_coll,
+                          \@primary_avus, \@secondary_avus);
+
+  $self->info("Published $num_processed / $num_files bas/x files ",
+              "in SMRT cell '$smrt_name'");
+
+  return ($num_files, $num_processed, $num_errors);
 }
 
 =head2 publish_sts_xml_files
@@ -408,7 +408,13 @@ sub publish_sts_xml_files {
   my $files = $self->list_sts_xml_files($smrt_name, $look_index);
   my $dest_coll = catdir($self->dest_collection, $smrt_name, $ANALYSIS_DIR);
 
-  return $self->_publish_files($files, $dest_coll);
+  my ($num_files, $num_processed, $num_errors) =
+    $self->_publish_files($files, $dest_coll);
+
+  $self->info("Published $num_processed / $num_files sts XML files ",
+              "in SMRT cell '$smrt_name'");
+
+  return ($num_files, $num_processed, $num_errors);
 }
 
 sub _publish_files {
@@ -429,8 +435,7 @@ sub _publish_files {
   ref $secondary_avus eq 'ARRAY' or
     $self->logconfess('The secondary_avus argument must be an ArrayRef');
 
-  my $publisher = WTSI::NPG::HTS::Publisher->new(irods  => $self->irods,
-                                                 logger => $self->logger);
+  my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods);
 
   my $num_files     = scalar @{$files};
   my $num_processed = 0;
@@ -459,6 +464,8 @@ sub _publish_files {
       if ($num_serr > 0) {
         $self->logcroak("Failed to set secondary metadata cleanly on '$dest'");
       }
+
+      $self->info("Published '$dest' [$num_processed / $num_files]");
     } catch {
       $num_errors++;
       my @stack = split /\n/msx;   # Chop up the stack trace

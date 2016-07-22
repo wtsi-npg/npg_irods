@@ -84,7 +84,7 @@ sub BUILD {
     $self->set_alignment_filter($alignment_filter);
   }
 
-  $header_parser = WTSI::NPG::HTS::HeaderParser->new(logger => $self->logger);
+  $header_parser = WTSI::NPG::HTS::HeaderParser->new;
 
   # Modifying read-only attribute
   push @{$self->primary_metadata},
@@ -268,8 +268,7 @@ sub _read_header {
   try {
     my $run = WTSI::DNAP::Utilities::Runnable->new
       (arguments  => [qw[view -H], "irods:$path"],
-       executable => $samtools,
-       logger     => $self->logger)->run;
+       executable => $samtools)->run;
 
     my $stdout = ${$run->stdout};
     my $header = q[];

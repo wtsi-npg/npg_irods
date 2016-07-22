@@ -62,8 +62,7 @@ my $interop_regex = qr{[.]bin$}msx;
 
     my @init_args = (collection  => $collection,
                      data_object => $filename,
-                     irods       => $self->irods,
-                     logger      => $self->logger);
+                     irods       => $self->irods);
 
     ## no critic (ControlStructures::ProhibitCascadingIfElse)
     if ($filename =~  m{$almap_regex}msxi) {

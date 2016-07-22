@@ -15,14 +15,20 @@ use WTSI::NPG::HTS::PacBio::RunPublisher;
 
 our $VERSION = '';
 
-my $embedded_conf = << 'LOGCONF';
-   log4perl.logger = ERROR, A1
+my $verbose_config = << 'LOGCONF'
+log4perl.logger = ERROR, A1
 
-   log4perl.appender.A1           = Log::Log4perl::Appender::Screen
-   log4perl.appender.A1.utf8      = 1
-   log4perl.appender.A1.layout    = Log::Log4perl::Layout::PatternLayout
-   log4perl.appender.A1.layout.ConversionPattern = %d %p %m %n
+log4perl.logger.WTSI.NPG.HTS.PacBio = INFO, A1
+
+log4perl.appender.A1 = Log::Log4perl::Appender::Screen
+log4perl.appender.A1.layout = Log::Log4perl::Layout::PatternLayout
+log4perl.appender.A1.layout.ConversionPattern = %d %-5p %c - %m%n
+log4perl.appender.A1.utf8 = 1
+
+# Prevent duplicate messages with a non-Log4j-compliant Log4perl option
+log4perl.oneMessagePerAppender = 1
 LOGCONF
+;
 
 my $collection;
 my $debug;
@@ -44,15 +50,19 @@ if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
 }
 else {
-  Log::Log4perl::init(\$embedded_conf);
-}
-
-my $log = Log::Log4perl->get_logger(q[]);
-if ($verbose and not $debug) {
-  $log->level($INFO);
-}
-elsif ($debug) {
-  $log->level($DEBUG);
+  if ($verbose and not $debug) {
+    Log::Log4perl::init(\$verbose_config);
+  }
+  elsif ($debug) {
+    Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
+                              level  => $DEBUG,
+                              utf8   => 1})
+  }
+  else {
+    Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
+                              level  => $ERROR,
+                              utf8   => 1})
+  }
 }
 
 if (not (defined $runfolder_path)) {
@@ -61,11 +71,10 @@ if (not (defined $runfolder_path)) {
             -exitval => 2);
 }
 
-my $irods     = WTSI::NPG::iRODS->new(logger => $log);
+my $irods     = WTSI::NPG::iRODS->new;
 my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
 
 my @pub_init_args = (irods          => $irods,
-                     logger         => $log,
                      mlwh_schema    => $wh_schema,
                      runfolder_path => $runfolder_path);
 if ($collection) {
@@ -74,6 +83,9 @@ if ($collection) {
 
 my $publisher = WTSI::NPG::HTS::PacBio::RunPublisher->new(@pub_init_args);
 my ($num_files, $num_published, $num_errors) = $publisher->publish_files;
+
+my $log = Log::Log4perl->get_logger('main');
+$log->level($ALL);
 
 if ($num_errors == 0) {
   $log->info("Processed $num_files, published $num_published ",

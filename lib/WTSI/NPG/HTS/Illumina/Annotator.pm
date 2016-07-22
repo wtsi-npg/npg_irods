@@ -86,7 +86,7 @@ with qw[
     my $hts_element = sprintf 'run: %s, pos: %s, tag_index: %s',
       $id_run, $position,
       (defined $params->tag_index ? $params->tag_index : 'NA');
-    $self->info("Created primary metadata for $hts_element: ", pp(\@avus));
+    $self->debug("Created primary metadata for $hts_element: ", pp(\@avus));
 
     return @avus;
   }
@@ -314,7 +314,7 @@ sub make_seqchksum_metadata {
     my $hts_element = sprintf 'run: %s, pos: %s, tag_index: %s',
       $id_run, $position,
       (defined $params->tag_index ? $params->tag_index : 'NA');
-    $self->info("Created metadata for $hts_element: ", pp(\@avus));
+    $self->debug("Created metadata for $hts_element: ", pp(\@avus));
 
     return @avus;
   }

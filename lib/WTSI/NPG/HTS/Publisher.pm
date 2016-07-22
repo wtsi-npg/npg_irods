@@ -54,13 +54,6 @@ has 'checksum_cache_time_delta' =>
                     'cache by more than this number of seconds, the cache ' .
                     'is stale');
 
-sub BUILD {
-  my ($self) = @_;
-
-  $self->irods->logger($self->logger);
-  return;
-}
-
 =head2 publish
 
   Arg [1]    : Path to local file for directory, Str.

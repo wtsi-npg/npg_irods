@@ -104,15 +104,13 @@ sub publish_logs {
 
   try {
     WTSI::DNAP::Utilities::Runnable->new(executable => '/bin/bash',
-                                         arguments  => ['-c', $cmd],
-                                         logger     => $self->logger)->run;
+                                         arguments  => ['-c', $cmd])->run;
   } catch {
     my @stack = split /\n/msx;   # Chop up the stack trace
     $self->logcroak(pop @stack); # Use a shortened error message
   };
 
-  my $publisher = WTSI::NPG::HTS::Publisher->new(irods  => $self->irods,
-                                                 logger => $self->logger);
+  my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods);
   my $dest = $publisher->publish($tarpath, catfile($self->dest_collection,
                                                    $self->tarfile));
   my $obj = WTSI::NPG::HTS::DataObject->new($self->irods, $dest);

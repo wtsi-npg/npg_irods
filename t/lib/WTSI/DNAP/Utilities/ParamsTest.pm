@@ -63,7 +63,15 @@ sub positional_arg_parsing : Test(12) {
   is($params1->arg_at(0), 'a',
      'arg_at: 1 positional defined, 1 provided');
 
-  my @argsab = $params1->parse('a', 'b');
+  my @argsab;
+  {
+    local $SIG{__WARN__} = sub {
+      # Discard warning
+    };
+
+    @argsab = $params1->parse('a', 'b');
+  }
+
   is_deeply($params1->arguments, ['a', 'b'],
             'arguments: 1 positional defined, 2 provided');
   is_deeply(\@argsab, ['a'],
@@ -89,6 +97,5 @@ sub named_arg_parsing : Test(7) {
   is($params0->a, 99, 'named arg a provided and correct');
   is($params0->b, 100, 'named arg b provided and correct');
 }
-
 
 1;
