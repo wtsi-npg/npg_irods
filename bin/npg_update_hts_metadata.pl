@@ -191,7 +191,7 @@ sub _make_run_query {
   my ($q_id_run, $q_position, $q_tag_index) = @_;
 
   my @query = ([$FILE_TYPE => '%am', 'like']);
-  if ($q_id_run) {
+  if (defined $q_id_run) {
     push @query, [$ID_RUN => $q_id_run];
   }
   if ($q_position) {
