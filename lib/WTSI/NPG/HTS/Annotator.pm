@@ -8,7 +8,7 @@ use WTSI::NPG::iRODS::Metadata;
 
 our $VERSION = '';
 
-our @GENERAL_PURPOSE_SUFFIXES = qw[bin csv h5 tif tsv txt xls xlsx xml];
+our @GENERAL_PURPOSE_SUFFIXES = qw[bin csv h5 tgz tif tsv txt xls xlsx xml];
 our @GENO_DATA_SUFFIXES       = qw[gtc idat];
 our @HTS_DATA_SUFFIXES        = qw[bam cram bai crai];
 our @HTS_ANCILLARY_SUFFIXES   = qw[bamcheck bed flagstat json seqchksum
