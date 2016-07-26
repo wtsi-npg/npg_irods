@@ -451,39 +451,11 @@ sub make_library_metadata {
 
   # Map of method name to attribute name under which the result will
   # be stored.
-  my $method_attr = {library_ids => $LIBRARY_ID};
+  my $method_attr = {library_ids   => $LIBRARY_ID,
+                     library_types => $LIBRARY_TYPE};
 
   return $self->_make_multi_value_metadata($lims, $method_attr,
                                            $with_spiked_control);
-}
-
-
-=head2 make_library_type_metadata
-
-  Arg [1]    : A LIMS handle, st::api::lims.
-
-  Example    : my @avus = $ann->make_library_type_metadata($lims);
-  Description: Return HTS library type metadata AVUs; distinguishes PCR-ful
-               from PCR-free libraries.  An AVU will be returned only if a
-               defined library type is present.
-  Returntype : Array[HashRef]
-
-=cut
-
-sub make_library_type_metadata {
-  my ($self, $lims) = @_;
-
-  defined $lims or $self->logconfess('A defined lims argument is required');
-
-  my $attr  = $LIBRARY_TYPE;
-  my $value = $lims->library_type;
-
-  my @avus;
-  if (defined $value) {
-    push @avus, $self->make_avu($attr, $value);
-  }
-
-  return @avus;
 }
 
 
