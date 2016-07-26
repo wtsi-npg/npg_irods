@@ -5,6 +5,7 @@ use warnings;
 use Log::Log4perl;
 use Test::More;
 use Test::Exception;
+use WTSI::NPG::iRODS::Metadata;
 use URI;
 
 use base qw[WTSI::NPG::HTS::Test];

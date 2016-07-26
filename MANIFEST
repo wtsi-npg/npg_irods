@@ -26,6 +26,7 @@ lib/WTSI/NPG/HTS/Illumina/RunComponent.pm
 lib/WTSI/NPG/HTS/Illumina/RunPublisher.pm
 lib/WTSI/NPG/HTS/Illumina/XMLDataObject.pm
 lib/WTSI/NPG/HTS/LIMSFactory.pm
+lib/WTSI/NPG/HTS/Metadata.pm
 lib/WTSI/NPG/HTS/PacBio/Annotator.pm
 lib/WTSI/NPG/HTS/PacBio/APIClient.pm
 lib/WTSI/NPG/HTS/PacBio/Metadata.pm

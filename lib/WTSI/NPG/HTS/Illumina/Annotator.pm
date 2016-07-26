@@ -3,6 +3,7 @@ package WTSI::NPG::HTS::Illumina::Annotator;
 use Data::Dump qw[pp];
 use Moose::Role;
 
+use WTSI::NPG::HTS::Metadata;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::DNAP::Utilities::Params qw[function_params];
 
@@ -310,6 +311,7 @@ sub make_seqchksum_metadata {
       ($lims, $params->with_spiked_control);
     push @avus, $self->make_library_metadata
       ($lims, $params->with_spiked_control);
+    push @avus, $self->make_library_type_metadata($lims);
 
     my $hts_element = sprintf 'run: %s, pos: %s, tag_index: %s',
       $id_run, $position,
@@ -455,6 +457,36 @@ sub make_library_metadata {
                                            $with_spiked_control);
 }
 
+
+=head2 make_library_type_metadata
+
+  Arg [1]    : A LIMS handle, st::api::lims.
+
+  Example    : my @avus = $ann->make_library_type_metadata($lims);
+  Description: Return HTS library type metadata AVUs; distinguishes PCR-ful
+               from PCR-free libraries.  An AVU will be returned only if a
+               defined library type is present.
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_library_type_metadata {
+  my ($self, $lims) = @_;
+
+  defined $lims or $self->logconfess('A defined lims argument is required');
+
+  my $attr  = $LIBRARY_TYPE;
+  my $value = $lims->library_type;
+
+  my @avus;
+  if (defined $value) {
+    push @avus, $self->make_avu($attr, $value);
+  }
+
+  return @avus;
+}
+
+
 =head2 make_plex_metadata
 
   Arg [1]    :  A LIMS handle, st::api::lims.
@@ -534,7 +566,7 @@ runs.
 
 =head1 AUTHOR
 
-Keith James <kdj@sanger.ac.uk>
+Keith James <kdj@sanger.ac.uk>, Iain Bancarz <ib5@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 

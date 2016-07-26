@@ -10,17 +10,13 @@ use MooseX::StrictConstructor;
 use Try::Tiny;
 
 use WTSI::NPG::iRODS::Metadata;
+use WTSI::NPG::HTS::Metadata;
 use WTSI::NPG::HTS::HeaderParser;
 use WTSI::NPG::HTS::Types qw[AlnFormat];
 
 our $VERSION = '';
 
 our $DEFAULT_SAMTOOLS_EXECUTABLE = 'samtools_irods';
-
-# Sequence alignment filters
-our $HUMAN   = 'human';   # FIXME
-our $YHUMAN  = 'yhuman';  # FIXME
-our $XAHUMAN = 'xahuman'; # FIXME
 
 # SAM SQ header tag
 our $SQ = 'SQ';
