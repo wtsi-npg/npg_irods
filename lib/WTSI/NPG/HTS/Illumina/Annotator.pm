@@ -311,7 +311,6 @@ sub make_seqchksum_metadata {
       ($lims, $params->with_spiked_control);
     push @avus, $self->make_library_metadata
       ($lims, $params->with_spiked_control);
-    push @avus, $self->make_library_type_metadata($lims);
 
     my $hts_element = sprintf 'run: %s, pos: %s, tag_index: %s',
       $id_run, $position,
