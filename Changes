@@ -1,3 +1,26 @@
+Release 1.4
+
+ -  Added library_type metadata.
+
+ -  Added tgz as recognised file suffix for metadata.
+
+ -  Improved logging; configurable per-class, reduced verbosity in metadata
+    updater, increased default verbosity in scripts.
+
+ -  The metadata updater will handle an id_run of 0.
+
+ -  Added a CLI option to specify an id_run for cases where it can't be
+    detected automatically.
+
+ -  Avoid loading index files for empty alignment files.
+
+ -  Avoid loading the JSON-wrapped samtools stats created in more recent
+    runs.
+
+ -  Added a PacBio run publisher and monitor.
+
+ -  Added log file publisher.
+
  -  Ensure test dependencies are installed.
 
 Release 1.3
