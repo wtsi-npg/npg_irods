@@ -4,6 +4,7 @@ use Data::Dump qw[pp];
 use DateTime;
 use Moose::Role;
 
+use WTSI::NPG::HTS::Metadata;
 use WTSI::NPG::iRODS::Metadata;
 
 our $VERSION = '';
@@ -175,7 +176,7 @@ than creating it inline in your own package.
 
 =head1 AUTHOR
 
-Keith James <kdj@sanger.ac.uk>
+Keith James <kdj@sanger.ac.uk>, Iain Bancarz <ib5@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 

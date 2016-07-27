@@ -16,6 +16,7 @@ use WTSI::DNAP::Utilities::Runnable;
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::HTS::Illumina::MetaUpdater;
 use WTSI::NPG::HTS::LIMSFactory;
+use WTSI::NPG::HTS::Metadata;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 
@@ -127,6 +128,7 @@ sub update_secondary_metadata : Test(6) {
     foreach my $format (qw[bam cram]) {
       my $expected_meta =
         [{attribute => $LIBRARY_ID,               value     => '4957423'},
+         {attribute => $LIBRARY_TYPE,             value     => 'No PCR'},
          {attribute => $QC_STATE,                 value     => '1'},
          {attribute => $SAMPLE_NAME,              value     => '619s040'},
          {attribute => $SAMPLE_ACCESSION_NUMBER,  value     => 'ERS012323'},

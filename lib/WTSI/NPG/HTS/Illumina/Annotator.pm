@@ -3,6 +3,7 @@ package WTSI::NPG::HTS::Illumina::Annotator;
 use Data::Dump qw[pp];
 use Moose::Role;
 
+use WTSI::NPG::HTS::Metadata;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::DNAP::Utilities::Params qw[function_params];
 
@@ -449,11 +450,13 @@ sub make_library_metadata {
 
   # Map of method name to attribute name under which the result will
   # be stored.
-  my $method_attr = {library_ids => $LIBRARY_ID};
+  my $method_attr = {library_ids   => $LIBRARY_ID,
+                     library_types => $LIBRARY_TYPE};
 
   return $self->_make_multi_value_metadata($lims, $method_attr,
                                            $with_spiked_control);
 }
+
 
 =head2 make_plex_metadata
 
@@ -534,7 +537,7 @@ runs.
 
 =head1 AUTHOR
 
-Keith James <kdj@sanger.ac.uk>
+Keith James <kdj@sanger.ac.uk>, Iain Bancarz <ib5@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 

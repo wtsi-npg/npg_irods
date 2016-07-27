@@ -20,6 +20,7 @@ use WTSI::DNAP::Utilities::Runnable;
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::HTS::Illumina::AlnDataObject;
 use WTSI::NPG::HTS::LIMSFactory;
+use WTSI::NPG::HTS::Metadata;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 
@@ -470,6 +471,7 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(12) {
        {attribute => $LIBRARY_ID,               value => '4957453'},
        {attribute => $LIBRARY_ID,               value => '4957454'},
        {attribute => $LIBRARY_ID,               value => '4957455'},
+       {attribute => $LIBRARY_TYPE,             value => 'No PCR'},
        {attribute => $QC_STATE,                 value => '1'},
        {attribute => $SAMPLE_NAME,              value => '619s040'},
        {attribute => $SAMPLE_NAME,              value => '619s041'},
@@ -682,6 +684,7 @@ sub update_secondary_metadata_tag0_spike_bact : Test(12) {
        {attribute => $LIBRARY_ID,              value => '4957453'},
        {attribute => $LIBRARY_ID,              value => '4957454'},
        {attribute => $LIBRARY_ID,              value => '4957455'},
+       {attribute => $LIBRARY_TYPE,            value => 'No PCR'},
        {attribute => $QC_STATE,                value => '1'},
        {attribute => $SAMPLE_NAME,             value => '619s040'},
        {attribute => $SAMPLE_NAME,             value => '619s041'},
@@ -868,6 +871,7 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(12) {
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '5'},
        {attribute => $LIBRARY_ID,               value => '4957423'},
+       {attribute => $LIBRARY_TYPE,             value => 'No PCR'},
        {attribute => $QC_STATE,                 value => '1'},
        {attribute => $SAMPLE_NAME,              value => '619s040'},
        {attribute => $SAMPLE_ACCESSION_NUMBER,  value => 'ERS012323'},
@@ -919,6 +923,7 @@ sub update_secondary_metadata_tag1_spike_bact : Test(12) {
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '5'},
        {attribute => $LIBRARY_ID,               value => '4957423'},
+       {attribute => $LIBRARY_TYPE,             value => 'No PCR'},
        {attribute => $QC_STATE,                 value => '1'},
        {attribute => $SAMPLE_NAME,              value => '619s040'},
        {attribute => $SAMPLE_ACCESSION_NUMBER,  value => 'ERS012323'},
@@ -973,6 +978,7 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(12) {
        {attribute => $LIBRARY_ID,               value => '12789802'},
        {attribute => $LIBRARY_ID,               value => '12789814'},
        {attribute => $LIBRARY_ID,               value => '12789826'},
+       {attribute => $LIBRARY_TYPE,             value => 'Standard'},
        {attribute => $QC_STATE,                 value => '1'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759045'},
@@ -1043,6 +1049,7 @@ sub update_secondary_metadata_tag0_spike_human : Test(12) {
        {attribute => $LIBRARY_ID,               value => '12789814'},
        {attribute => $LIBRARY_ID,               value => '12789826'},
        {attribute => $LIBRARY_ID,               value => '6759268'},
+       {attribute => $LIBRARY_TYPE,             value => 'Standard'},
        {attribute => $QC_STATE,                 value => '1'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759045'},
@@ -1115,6 +1122,7 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(12) {
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '1'},
        {attribute => $LIBRARY_ID,               value => '12789790'},
+       {attribute => $LIBRARY_TYPE,             value => 'Standard'},
        {attribute => $QC_STATE,                 value => '1'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
        {attribute => $SAMPLE_ACCESSION_NUMBER,  value => 'ERS429032'},
@@ -1166,6 +1174,7 @@ sub update_secondary_metadata_tag81_spike_human : Test(12) {
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '1'},
        {attribute => $LIBRARY_ID,               value => '12789790'},
+       {attribute => $LIBRARY_TYPE,             value => 'Standard'},
        {attribute => $QC_STATE,                 value => '1'},
        {attribute => $SAMPLE_NAME,              value => 'T19PG5759041'},
        {attribute => $SAMPLE_ACCESSION_NUMBER,  value => 'ERS429032'},
