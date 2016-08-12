@@ -19,6 +19,7 @@ our $VERSION = '';
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::Accountable
+         WTSI::NPG::HTS::AVUCollator
          WTSI::NPG::HTS::Annotator
        ];
 
@@ -401,21 +402,30 @@ sub _publish_file_overwrite {
 sub _supersede_multivalue {
   my ($self, $item, $metadata) = @_;
 
-  $self->debug(q[Setting metadata on '], $item->str, q[': ], pp($metadata));
+  my $path = $item->str;
+  $self->debug("Setting metadata on '$path': ", pp($metadata));
 
-  my $num_meta_errors = 0;
-  foreach my $avu (@{$metadata}) {
+  my %collated_avus = %{$self->collate_avus(@{$metadata})};
+
+  # Sorting by attribute to allow repeated updates to be in
+  # deterministic order
+  my @attributes = sort keys %collated_avus;
+  $self->debug("Superseding AVUs on '$path' in order of attributes: ",
+               join q[, ], @attributes);
+
+  my $num_errors = 0;
+  foreach my $attr (@attributes) {
+    my $values = $collated_avus{$attr};
     try {
-      $item->supersede_multivalue_avus($avu->{attribute}, [$avu->{value}],
-                                       $avu->{units});
+      $item->supersede_multivalue_avus($attr, $values, undef);
     } catch {
-      $num_meta_errors++;
-      $self->error(q[Failed to supersede on '], $item->str, q[' with AVU ],
-                   pp($avu), q[: ], $_);
-    };
+      $num_errors++;
+      $self->error("Failed to supersede AVU on '$path' with attribute '$attr' ",
+                   'and values ', pp($values), q[: ], $_);
+    }
   }
 
-  return $num_meta_errors;
+  return $num_errors;
 }
 
 sub _get_md5 {
