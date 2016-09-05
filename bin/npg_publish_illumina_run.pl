@@ -114,15 +114,14 @@ if (not (defined $runfolder_path or defined $archive_path)) {
 }
 
 # Setup iRODS
-my $irods     = WTSI::NPG::iRODS->new;
-my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
+my $irods = WTSI::NPG::iRODS->new;
 
-# Make this an optional argument (construct within the publisher)
-my @fac_init_args = (mlwh_schema => $wh_schema);
+my @fac_init_args = ();
 if ($driver_type) {
   $log->info("Overriding default driver type with '$driver_type'");
   push @fac_init_args, 'driver_type' => $driver_type;
 }
+
 my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(@fac_init_args);
 
 my @pub_init_args = (file_format     => $file_format,
@@ -250,7 +249,10 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
  Advanced options:
 
   --driver-type
-  --driver_type Set the ML warehouse driver type to a custom value.
+  --driver_type Set the lims driver type to a custom value. The default
+                is driver type is 'ml_warehouse_fc_cache' (defined by
+                WTSI::NPG::HTS::LIMSFactory). Other st::spi::lims driver
+                types may be used e.g. 'samplesheet'.
 
 =head1 DESCRIPTION
 
