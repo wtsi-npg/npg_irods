@@ -8,6 +8,9 @@ Changes
 etc/log4perl_tests.conf
 lib/WTSI/DNAP/Utilities/Params.pm
 lib/WTSI/DNAP/Utilities/ParamsParser.pm
+lib/WTSI/NPG/DataSub/File.pm
+lib/WTSI/NPG/DataSub/MetaUpdater.pm
+lib/WTSI/NPG/DataSub/SubtrackClient.pm
 lib/WTSI/NPG/HTS/AlFilter.pm
 lib/WTSI/NPG/HTS/Annotator.pm
 lib/WTSI/NPG/HTS/AVUCollator.pm
@@ -98,6 +101,12 @@ t/data/anc_data_object/17550_3#1_phix_quality_error.txt
 t/data/anc_data_object/17550_3#1_quality_cycle_caltable.txt
 t/data/anc_data_object/17550_3#1_quality_cycle_surv.txt
 t/data/anc_data_object/17550_3#1_quality_error.txt
+t/data/datasub/invalid/a.txt
+t/data/datasub/invalid/x/a.txt
+t/data/datasub/valid/a.txt
+t/data/datasub/valid/b.txt
+t/data/datasub/valid/c.txt
+t/data/datasub/valid/d.txt
 t/data/header_parser/17550_1#1.txt
 t/data/log_publisher/100818_IL32_10371/Latest_Summary/archive/log/seq_alignment_17427_20150918-142715.4036.230634.out
 t/data/log_publisher/100818_IL32_10371/Latest_Summary/log/bam2fastqcheck_and_cached_fastq_17427_20150918-142715.4.230621.out
@@ -7500,6 +7509,8 @@ t/fixtures/npgqc/Fastqcheck.yml
 t/fixtures/npgqc/MqcOutcomeDict.yml
 t/header_parser.t
 t/lib/WTSI/DNAP/Utilities/ParamsTest.pm
+t/lib/WTSI/NPG/DataSub/MetaUpdaterTest.pm
+t/lib/WTSI/NPG/DataSub/SubtrackClientTest.pm
 t/lib/WTSI/NPG/HTS/AnnotatorTest.pm
 t/lib/WTSI/NPG/HTS/HeaderParserTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/AlnDataObjectTest.pm
@@ -7514,7 +7525,8 @@ t/lib/WTSI/NPG/HTS/PublisherTest.pm
 t/lib/WTSI/NPG/HTS/SeqchksumTest.pm
 t/lib/WTSI/NPG/HTS/Test.pm
 t/log_publisher.t
-t/meta_updater.t
+t/datasub_meta_updater.t
+t/illumina_meta_updater.t
 t/pacbio_apiclient.t
 t/pacbio_run_monitor.t
 t/pacbio_run_publisher.t
@@ -7524,3 +7536,4 @@ t/publisher.t
 t/README
 t/run_publisher.t
 t/seqchksum.t
+t/subtrack_client.t

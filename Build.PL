@@ -25,6 +25,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
     'Test::Class'                   => '>= 0.41',
     'Test::Compile'                 => 0,
     'Test::HTTP::Server'            => 0,
+    'Test::MockObject::Extends'     => 0,
     'Test::More'                    => '>= 0.98',
     'Test::Exception'               => '>= 0.32',
     'Test::Perl::Critic'            => '>= 1.02'
@@ -33,6 +34,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
    {
     'Carp'                          => '>= 1.20',
     'Data::Dump'                    => 0,
+    'DateTime::Format::ISO8601'     => 0,
     'Log::Log4perl'                 => '>= 1.42',
     'List::AllUtils'                => '>= 0.09',
     'Moose'                         => '>= 2.1',
