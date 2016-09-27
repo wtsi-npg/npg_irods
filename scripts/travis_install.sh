@@ -26,20 +26,23 @@ cd /tmp/baton-${BATON_VERSION}
 ./configure --with-irods=$IRODS_HOME ; make ; sudo make install
 sudo ldconfig
 
-# htslib/ samtools
+# htslib/samtools
 wget -q https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/htslib-${HTSLIB_VERSION}.tar.bz2 -O /tmp/htslib-${HTSLIB_VERSION}.tar.bz2
 tar xfj /tmp/htslib-${HTSLIB_VERSION}.tar.bz2 -C /tmp
 cd /tmp/htslib-${HTSLIB_VERSION}
-./configure --with-irods=$IRODS_HOME --enable-plugins
-make
+./configure --enable-plugins ; make ; sudo make install
+sudo ldconfig
 
 wget -q https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 -O /tmp/samtools-${SAMTOOLS_VERSION}.tar.bz2
 tar xfj /tmp/samtools-${SAMTOOLS_VERSION}.tar.bz2 -C /tmp
 cd /tmp/samtools-${SAMTOOLS_VERSION}
-./configure --enable-plugins --with-plugin-path=/tmp/htslib-${HTSLIB_VERSION}
-make all plugins-htslib
-sudo make install
-sudo ln -s samtools /usr/local/bin/samtools_irods
+./configure --enable-plugins --with-htslb=system ; make ; sudo make install
+sudo ln -s /usr/local/bin/samtools /usr/local/bin/samtools_irods
+
+cd /tmp
+git clone https://github.com/samtools/htslib-plugins.git htslib-plugins.git
+cd htslib-plugins.git
+make ; sudo cp *.so /usr/local/libexec/htslib
 
 # CPAN
 cpanm --quiet --notest Alien::Tidyp # For npg_tracking
