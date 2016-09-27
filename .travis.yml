@@ -23,6 +23,12 @@ env:
     - BATON_VERSION="0.16.4"
     - SAMTOOLS_VERSION="1.3.1"
     - HTSLIB_VERSION="1.3.2"
+    - PLATFORM=ubuntu12
+    - ARCH=x86_64
+    - RENCI_FTP_URL=ftp://ftp.renci.org
+    - WTSI_NPG_GITHUB_URL=https://github.com/wtsi-npg
+    - PG_PLUGIN_VERSION=1.9
+    - IRODS_VERSION=4.1.9
 
 before_install:
   - ./scripts/travis_before_install.sh
@@ -30,14 +36,5 @@ before_install:
 install:
   - ./scripts/travis_install.sh
 
-before_script:
-  - source ./scripts/travis_before_script.sh
-  - ienv
-  - ilsresc -l
-  - ils
-
 script:
   - ./scripts/travis_script.sh
-
-after_script:
-  - ./scripts/travis_after_script.sh

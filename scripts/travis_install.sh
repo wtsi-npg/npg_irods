@@ -6,10 +6,13 @@ sudo apt-get install -qq odbc-postgresql
 sudo apt-get install libgd2-xpm-dev # For npg_tracking
 sudo apt-get install liblzma-dev # For npg_qc
 
-# iRODS 3.3.1
-wget -q https://github.com/wtsi-npg/irods-legacy/releases/download/3.3.1-travis-bc85aa/irods.tar.gz -O /tmp/irods.tar.gz
-tar xfz /tmp/irods.tar.gz
-source $TRAVIS_BUILD_DIR/scripts/irods_paths.sh
+# iRODS
+wget -q https://github.com/wtsi-npg/disposable-irods/releases/download/1.0/disposable-irods-1.0.tar.gz -O /tmp/disposable-irods-1.0.tar.gz
+tar xfz /tmp/disposable-irods-1.0.tar.gz -C /tmp
+cd /tmp/disposable-irods-1.0
+./scripts/download_and_verify_irods.sh
+./scripts/install_irods.sh
+./scripts/configure_irods.sh
 
 # Jansson
 wget -q https://github.com/akheron/jansson/archive/v${JANSSON_VERSION}.tar.gz -O /tmp/jansson-${JANSSON_VERSION}.tar.gz
@@ -23,7 +26,7 @@ sudo ldconfig
 wget -q https://github.com/wtsi-npg/baton/releases/download/${BATON_VERSION}/baton-${BATON_VERSION}.tar.gz -O /tmp/baton-${BATON_VERSION}.tar.gz
 tar xfz /tmp/baton-${BATON_VERSION}.tar.gz -C /tmp
 cd /tmp/baton-${BATON_VERSION}
-./configure --with-irods=$IRODS_HOME ; make ; sudo make install
+./configure --with-irods ; make ; sudo make install
 sudo ldconfig
 
 # htslib/samtools
@@ -36,7 +39,7 @@ sudo ldconfig
 wget -q https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 -O /tmp/samtools-${SAMTOOLS_VERSION}.tar.bz2
 tar xfj /tmp/samtools-${SAMTOOLS_VERSION}.tar.bz2 -C /tmp
 cd /tmp/samtools-${SAMTOOLS_VERSION}
-./configure --enable-plugins --with-htslb=system ; make ; sudo make install
+./configure --enable-plugins --with-htslib=system ; make ; sudo make install
 sudo ln -s /usr/local/bin/samtools /usr/local/bin/samtools_irods
 
 cd /tmp
