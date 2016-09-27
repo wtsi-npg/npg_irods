@@ -119,6 +119,9 @@ SQL
        submission_date      => $timestamp);
   }
 
+  $self->info('Found ', scalar @rows, ' files updated between ',
+              $begin_date->iso8601, ' and ', $end_date->iso8601);
+
   return @rows;
 }
 

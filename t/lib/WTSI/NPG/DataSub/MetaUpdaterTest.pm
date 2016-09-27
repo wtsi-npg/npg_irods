@@ -51,7 +51,7 @@ sub setup_test : Test(setup) {
 sub teardown_test : Test(teardown) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  # $irods->remove_collection($irods_tmp_coll);
+  $irods->remove_collection($irods_tmp_coll);
 }
 
 sub update_submission_metadata : Test(22) {
