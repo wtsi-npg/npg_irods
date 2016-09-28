@@ -7,9 +7,9 @@ sudo apt-get install libgd2-xpm-dev # For npg_tracking
 sudo apt-get install liblzma-dev # For npg_qc
 
 # iRODS
-wget -q https://github.com/wtsi-npg/disposable-irods/releases/download/1.0/disposable-irods-1.0.tar.gz -O /tmp/disposable-irods-1.0.tar.gz
-tar xfz /tmp/disposable-irods-1.0.tar.gz -C /tmp
-cd /tmp/disposable-irods-1.0
+wget -q https://github.com/wtsi-npg/disposable-irods/releases/download/${DISPOSABLE_IRODS_VERSION}/disposable-irods-${DISPOSABLE_IRODS_VERSION}.tar.gz -O /tmp/disposable-irods-${DISPOSABLE_IRODS_VERSION}.tar.gz
+tar xfz /tmp/disposable-irods-${DISPOSABLE_IRODS_VERSION}.tar.gz -C /tmp
+cd /tmp/disposable-irods-${DISPOSABLE_IRODS_VERSION}
 ./scripts/download_and_verify_irods.sh
 ./scripts/install_irods.sh
 ./scripts/configure_irods.sh
@@ -26,7 +26,18 @@ sudo ldconfig
 wget -q https://github.com/wtsi-npg/baton/releases/download/${BATON_VERSION}/baton-${BATON_VERSION}.tar.gz -O /tmp/baton-${BATON_VERSION}.tar.gz
 tar xfz /tmp/baton-${BATON_VERSION}.tar.gz -C /tmp
 cd /tmp/baton-${BATON_VERSION}
-./configure --with-irods ; make ; sudo make install
+
+
+IRODS_HOME=
+baton_irods_conf="--with-irods"
+
+if [ -n "$IRODS_RIP_DIR" ]
+then
+    export IRODS_HOME="$IRODS_RIP_DIR/iRODS"
+    baton_irods_conf="--with-irods=$IRODS_HOME"
+fi
+
+./configure ${baton_irods_conf} ; make ; sudo make install
 sudo ldconfig
 
 # htslib/samtools
@@ -36,16 +47,16 @@ cd /tmp/htslib-${HTSLIB_VERSION}
 ./configure --enable-plugins ; make ; sudo make install
 sudo ldconfig
 
+cd /tmp
+git clone https://github.com/samtools/htslib-plugins.git htslib-plugins.git
+cd htslib-plugins.git
+make ; sudo make install
+
 wget -q https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 -O /tmp/samtools-${SAMTOOLS_VERSION}.tar.bz2
 tar xfj /tmp/samtools-${SAMTOOLS_VERSION}.tar.bz2 -C /tmp
 cd /tmp/samtools-${SAMTOOLS_VERSION}
 ./configure --enable-plugins --with-htslib=system ; make ; sudo make install
 sudo ln -s /usr/local/bin/samtools /usr/local/bin/samtools_irods
-
-cd /tmp
-git clone https://github.com/samtools/htslib-plugins.git htslib-plugins.git
-cd htslib-plugins.git
-make ; sudo cp *.so /usr/local/libexec/htslib
 
 # CPAN
 cpanm --quiet --notest Alien::Tidyp # For npg_tracking
