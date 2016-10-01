@@ -1,3 +1,6 @@
+ -  WTSI::NPG::HTS::Publisher now supports multi-value AVUs. Previously
+    it retained only the last value processed for a particular attribute.
+
 Release 1.4
 
  -  Added library_type metadata.
