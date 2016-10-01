@@ -47,11 +47,9 @@ cpanm --quiet --notest Module::Build
 
 # WTSI NPG Perl repo dependencies
 repos=""
-for repo in perl-dnap-utilities perl-irods-wrap ml_warehouse npg_ml_warehouse npg_tracking npg_seq_common npg_qc; do
   cd /tmp
-  git clone ${WTSI_NPG_GITHUB_URL}/${repo}.git ${repo}.git
-  cd /tmp/${repo}.git
-  git checkout ${TRAVIS_BRANCH} || git checkout master
+for repo in perl-dnap-utilities perl-irods-wrap ml_warehouse npg_ml_warehouse npg_tracking npg_seq_common npg_qc; do
+  git clone --branch ${TRAVIS_BRANCH} --depth 1 ${WTSI_NPG_GITHUB_URL}/${repo}.git ${repo}.git || git clone --branch master --depth 1 ${WTSI_NPG_GITHUB_URL}/${repo}.git ${repo}.git
   repos=$repos" /tmp/${repo}.git" 
 done
 
