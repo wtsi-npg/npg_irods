@@ -47,9 +47,11 @@ cpanm --quiet --notest Module::Build
 
 # WTSI NPG Perl repo dependencies
 repos=""
-  cd /tmp
 for repo in perl-dnap-utilities perl-irods-wrap ml_warehouse npg_ml_warehouse npg_tracking npg_seq_common npg_qc; do
-  git clone --branch ${TRAVIS_BRANCH} --depth 1 ${WTSI_NPG_GITHUB_URL}/${repo}.git ${repo}.git || git clone --branch master --depth 1 ${WTSI_NPG_GITHUB_URL}/${repo}.git ${repo}.git
+  cd /tmp
+  git clone --branch master --depth 1 ${WTSI_NPG_GITHUB_URL}/${repo}.git ${repo}.git #always clone master when using depth 1 to get current tag
+  cd /tmp/${repo}.git
+  git pull origin ${TRAVIS_BRANCH} || echo 'so, staying on master branch....' #shift off master to appropriate branch (if possible)
   repos=$repos" /tmp/${repo}.git" 
 done
 
