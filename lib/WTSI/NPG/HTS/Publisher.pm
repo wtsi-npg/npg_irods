@@ -290,24 +290,16 @@ sub _publish_file_create {
                            $WTSI::NPG::iRODS::SKIP_CHECKSUM);
 
   my $obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $remote_path);
-  my $num_meta_errors = 0;
-
   # Calculate checksum post-upload to ensure that iRODS reports errors
   my $remote_md5 = $obj->calculate_checksum;
-  my @meta = $self->make_creation_metadata($self->affiliation_uri,
-                                           $timestamp,
-                                           $self->accountee_uri);
-  push @meta, $self->make_md5_metadata($remote_md5);
-  push @meta, $self->make_type_metadata($remote_path);
 
-  foreach my $avu (@meta) {
-    try {
-      $obj->supersede_avus($avu->{attribute}, $avu->{value}, $avu->{units});
-    } catch {
-      $num_meta_errors++;
-      $self->error('Failed to supersede with AVU ', pp($avu), ': ', $_);
-    };
-  }
+  my $num_meta_errors =
+    $self->_supersede($obj,
+                      $self->make_creation_metadata($self->affiliation_uri,
+                                                    $timestamp,
+                                                    $self->accountee_uri),
+                      $self->make_md5_metadata($remote_md5),
+                      $self->make_type_metadata($remote_path));
 
   if ($local_md5 eq $remote_md5) {
     $self->info("After publication of '$local_path' ",
@@ -335,10 +327,16 @@ sub _publish_file_overwrite {
 
   $self->info("Remote path '$remote_path' is a data object");
   my $obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $remote_path);
-  my $num_meta_errors = 0;
 
   # Assume that the existing checksum is present and correct
   my $pre_remote_md5 = $obj->checksum;
+  my $post_remote_md5;
+
+  # Ensure that pre-update metadata are correct
+  my $num_meta_errors =
+    $self->_supersede($obj, $self->make_type_metadata($remote_path),
+                      $self->make_md5_metadata($pre_remote_md5));
+
   if ($local_md5 eq $pre_remote_md5) {
     $self->info("Skipping publication of '$local_path' to '$remote_path': ",
                 "(checksum unchanged): local MD5 is '$local_md5', ",
@@ -348,27 +346,38 @@ sub _publish_file_overwrite {
     $self->info("Re-publishing '$local_path' to '$remote_path' ",
                 "(checksum changed): local MD5 is '$local_md5', ",
                 "remote is MD5: '$pre_remote_md5'");
-    $self->irods->replace_object($local_path, $obj->str,
-                                 $WTSI::NPG::iRODS::SKIP_CHECKSUM);
+    my $num_write_errors = 0;
 
-    # Calculate checksum post-upload to ensure that iRODS reports errors
-    my $post_remote_md5 = $obj->calculate_checksum;
-    my @meta = $self->make_modification_metadata($timestamp);
-    push @meta, $self->make_md5_metadata($post_remote_md5);
-    push @meta, $self->make_type_metadata($remote_path);
+    try {
+      $self->irods->replace_object($local_path, $obj->str,
+                                   $WTSI::NPG::iRODS::SKIP_CHECKSUM);
 
-    foreach my $avu (@meta) {
-      try {
-        $obj->supersede_avus($avu->{attribute}, $avu->{value},
-                             $avu->{units});
-      } catch {
-        $num_meta_errors++;
-        $self->error(q[Failed to supersede on '], $obj->str, q[' with AVU ],
-                     pp($avu), q[: ], $_);
-      };
+      # Calculate checksum post-upload to ensure that iRODS reports errors
+      $post_remote_md5 = $obj->calculate_checksum;
+
+      # Add modification metadata only if successful
+      $num_meta_errors +=
+        $self->_supersede($obj,
+                          $self->make_md5_metadata($post_remote_md5),
+                          $self->make_modification_metadata($timestamp));
+    } catch {
+      $num_write_errors++;
+      $self->error(q[Failed to overwrite existing data object at '],
+                   $obj->str, q[' while re-publishing]);
+    };
+
+    if ($num_write_errors > 0) {
+      $self->logcroak("Failed to re-publish '$local_path' to '$remote_path': ",
+                      "(checksum unknown): local MD5 was '$local_md5', ",
+                      'remote MD5 was unknown');
     }
 
-    if ($local_md5 eq $post_remote_md5) {
+    if (not defined $post_remote_md5) {
+      $self->logcroak("Failed to re-publish '$local_path' to '$remote_path': ",
+                      "(checksum unknown): local MD5 was '$local_md5', ",
+                      'remote MD5 was unknown');
+    }
+    elsif ($local_md5 eq $post_remote_md5) {
       $self->info("Re-published '$local_path' to '$remote_path': ",
                   "(checksums match): local MD5 was '$local_md5', ",
                   "remote was MD5: '$pre_remote_md5', ",
@@ -397,6 +406,30 @@ sub _publish_file_overwrite {
   }
 
   return $obj;
+}
+
+sub _supersede {
+  my ($self, $item, @metadata) = @_;
+
+  my $path = $item->str;
+  $self->debug("Setting metadata on '$path': ", pp(\@metadata));
+
+  my $num_errors = 0;
+  foreach my $avu (@metadata) {
+    my $attr  = $avu->{attribute};
+    my $value = $avu->{value};
+    my $units = $avu->{units};
+
+    try {
+      $item->supersede_avus($attr, $value, $units);
+    } catch {
+      $num_errors++;
+      $self->error("Failed to supersede AVU on '$path' with attribute ",
+                   "'$attr' and value '$value': ", $_);
+    };
+  }
+
+  return $num_errors;
 }
 
 sub _supersede_multivalue {
