@@ -418,7 +418,7 @@ sub _supersede {
   foreach my $avu (@metadata) {
     my $attr  = $avu->{attribute};
     my $value = $avu->{value};
-    my $units =  $avu->{units};
+    my $units = $avu->{units};
 
     try {
       $item->supersede_avus($attr, $value, $units);
