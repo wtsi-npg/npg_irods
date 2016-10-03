@@ -46,24 +46,14 @@ cpanm --quiet --notest Alien::Tidyp # For npg_tracking
 cpanm --quiet --notest Module::Build
 
 # WTSI NPG Perl repo dependencies
-cd /tmp
-git clone https://github.com/wtsi-npg/perl-dnap-utilities.git perl-dnap-utilities.git
-git clone https://github.com/wtsi-npg/perl-irods-wrap.git perl-irods-wrap.git
-git clone https://github.com/wtsi-npg/ml_warehouse.git ml_warehouse.git
-git clone https://github.com/wtsi-npg/npg_ml_warehouse.git npg_ml_warehouse.git
-git clone https://github.com/wtsi-npg/npg_tracking.git npg_tracking.git
-git clone https://github.com/wtsi-npg/npg_seq_common.git npg_seq_common.git
-git clone https://github.com/wtsi-npg/npg_qc.git npg_qc.git
-
-cd /tmp/perl-dnap-utilities.git ; git checkout ${DNAP_UTILITIES_VERSION}
-cd /tmp/perl-irods-wrap.git     ; git checkout ${IRODS_WRAP_VERSION}
-cd /tmp/ml_warehouse.git        ; git checkout ${DNAP_WAREHOUSE_VERSION}
-cd /tmp/npg_ml_warehouse.git    ; git checkout ${NPG_ML_WAREHOUSE_VERSION}
-cd /tmp/npg_tracking.git        ; git checkout ${NPG_TRACKING_VERSION}
-cd /tmp/npg_seq_common.git      ; git checkout ${NPG_SEQ_COMMON_VERSION}
-cd /tmp/npg_qc.git              ; git checkout ${NPG_QC_VERSION}
-
-repos="/tmp/perl-dnap-utilities.git /tmp/perl-irods-wrap.git /tmp/ml_warehouse.git /tmp/npg_ml_warehouse.git /tmp/npg_tracking.git /tmp/npg_seq_common.git /tmp/npg_qc.git"
+repos=""
+for repo in perl-dnap-utilities perl-irods-wrap ml_warehouse npg_ml_warehouse npg_tracking npg_seq_common npg_qc; do
+  cd /tmp
+  git clone --branch master --depth 1 ${WTSI_NPG_GITHUB_URL}/${repo}.git ${repo}.git #always clone master when using depth 1 to get current tag
+  cd /tmp/${repo}.git
+  git pull origin ${TRAVIS_BRANCH} || echo 'so, staying on master branch....' #shift off master to appropriate branch (if possible)
+  repos=$repos" /tmp/${repo}.git" 
+done
 
 # Install CPAN dependencies. The src libs are on PERL5LIB because of
 # circular dependencies. The blibs are on PERL5LIB because the package
