@@ -39,28 +39,29 @@ log4perl.oneMessagePerAppender = 1
 LOGCONF
 ;
 
-my $alignment;
+# The default values cause all file types to be published
+my $alignment = 1;
 my $alt_process;
-my $ancillary;
+my $ancillary = 1;
 my $archive_path;
 my $collection;
 my $debug;
 my $driver_type;
 my $file_format;
 my $id_run;
-my $index;
-my $interop;
+my $index = 1;
+my $interop = 1;
 my $log4perl_config;
-my $qc;
+my $qc = 1;
 my $runfolder_path;
 my $verbose;
-my $xml;
+my $xml = 1;
 
 my @positions;
 
-GetOptions('alignment'                         => \$alignment,
+GetOptions('alignment!'                        => \$alignment,
            'alt-process|alt_process=s'         => \$alt_process,
-           'ancillary'                         => \$ancillary,
+           'ancillary!'                        => \$ancillary,
            'archive-path|archive_path=s'       => \$archive_path,
            'collection=s'                      => \$collection,
            'debug'                             => \$debug,
@@ -70,14 +71,14 @@ GetOptions('alignment'                         => \$alignment,
              pod2usage(-verbose => 2, -exitval => 0);
            },
            'id_run|id-run=i'                   => \$id_run,
-           'index'                             => \$index,
-           'interop'                           => \$interop,
+           'index!'                            => \$index,
+           'interop!'                          => \$interop,
            'logconf=s'                         => \$log4perl_config,
            'lanes|positions=i'                 => \@positions,
-           'qc'                                => \$qc,
+           'qc!'                               => \$qc,
            'runfolder-path|runfolder_path=s'   => \$runfolder_path,
            'verbose'                           => \$verbose,
-           'xml'                               => \$xml);
+           'xml!'                              => \$xml);
 
 # Process CLI arguments
 if ($log4perl_config) {
@@ -146,11 +147,10 @@ if ($alt_process) {
   $log->info("Using alt_process '$alt_process'");
 }
 
-
 my $publisher = WTSI::NPG::HTS::Illumina::RunPublisher->new(@pub_init_args);
 
 my ($num_files, $num_published, $num_errors) = (0, 0, 0);
-my $increment_counts = sub {
+my $inc_counts = sub {
   my ($nf, $np, $ne) = @_;
 
   $num_files     += $nf;
@@ -163,33 +163,23 @@ if (not @positions) {
   @positions = $publisher->positions;
 }
 
-if (none { defined } ($alignment, $ancillary, $index, $interop, $qc, $xml)) {
-  $increment_counts->($publisher->publish_files
-                      (positions => \@positions));
+if ($alignment) {
+  $inc_counts->($publisher->publish_alignment_files(positions => \@positions));
 }
-else {
-  if ($alignment) {
-    $increment_counts->($publisher->publish_alignment_files
-                        (positions => \@positions));
-  }
-  if ($ancillary) {
-    $increment_counts->($publisher->publish_ancillary_files
-                        (positions => \@positions));
-  }
-  if ($index) {
-    $increment_counts->($publisher->publish_index_files
-                        (positions => \@positions));
-  }
-  if ($interop) {
-    $increment_counts->($publisher->publish_interop_files);
-  }
-  if ($qc) {
-    $increment_counts->($publisher->publish_qc_files
-                        (positions => \@positions));
-  }
-  if ($xml) {
-    $increment_counts->($publisher->publish_xml_files);
-  }
+if ($ancillary) {
+  $inc_counts->($publisher->publish_ancillary_files(positions => \@positions));
+}
+if ($index) {
+  $inc_counts->($publisher->publish_index_files(positions => \@positions));
+}
+if ($interop) {
+  $inc_counts->($publisher->publish_interop_files);
+}
+if ($qc) {
+  $inc_counts->($publisher->publish_qc_files(positions => \@positions));
+}
+if ($xml) {
+  $inc_counts->($publisher->publish_xml_files);
 }
 
 if ($num_errors == 0) {
@@ -289,11 +279,10 @@ collection, the following take place:
 The default behaviour of the script is to publish all six categories
 of file (alignment, ancillary, index, interop, qc and xml), for all
 available lane positions. This may be restricted by using one or more
-of the command line flags --alignment, --index, --interop,
---ancillary, --qc and --xml, each of which instructs the script to act
-on only that type of file. e.g. "--alignment --index" will cause just
-alignment and index files to be copied. Specifying all four of these
-flags at once is equivalent to the default behaviour (i.e. all files).
+of the command line flags --no-alignment, --no-index, --no-interop,
+--no-ancillary, --no-qc and --no-xml, each of which instructs the script
+to exclude that type of file. e.g. "--no-alignment --no-index" will
+cause alignment and index files to be excluded.
 
 One or more "--position <position>" arguments may be supplied to
 restrict operations specific lanes. e.g. "--position 1 --position 8"
