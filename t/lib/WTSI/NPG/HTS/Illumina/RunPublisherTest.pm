@@ -585,7 +585,7 @@ sub publish_lane_alignment_files_samplesheet : Test(264) {
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
 
-  local $ENV{NPG_CACHED_SAMPLESHEET_FILE} = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/metadata_cache_18455/samplesheet_18448.csv";
+  local $ENV{NPG_CACHED_SAMPLESHEET_FILE} = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/metadata_cache_18448/samplesheet_18448.csv";
 
   my $lims_factory =
     WTSI::NPG::HTS::LIMSFactory->new(driver_type => 'samplesheet');

@@ -88,7 +88,7 @@ sub publish : Test(6) {
   } 'publish, cram no MD5 fails';
 }
 
-sub publish_file : Test(38) {
+sub publish_file : Test(41) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -144,7 +144,7 @@ sub pf_new_full_path_no_meta_no_stamp {
   my $remote_path = "$coll_path/pf_new_full_path_no_meta_no_stamp.txt";
   is($publisher->publish_file($local_path_a, $remote_path),
      $remote_path,
-     'publish_file, full path, no additional metadata, default timestamp');
+     'publish_file, full path, no extra metadata, default timestamp');
 
   my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $remote_path);
   like($obj->get_avu($DCTERMS_CREATED)->{value}, qr{^$timestamp_regex$},
@@ -168,14 +168,18 @@ sub pf_new_full_path_meta_no_stamp {
   # publish_file with new full path, some metadata, no timestamp
   my $local_path_a = "$tmp_data_path/publish_file/a.txt";
   my $remote_path = "$coll_path/pf_new_full_path_meta_no_stamp.txt";
-  my $additional_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
-  my $additional_avu2 = $irods->make_avu($ANALYSIS_UUID,
-                                         'abcdefg-01234567890-wxyz');
+  my $extra_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
+  my $extra_avu2 = $irods->make_avu($ANALYSIS_UUID,
+                                    'abcdefg-01234567890-wxyz');
+  # Should support AVUs with multiple values
+  my $extra_multival_avu1 = $irods->make_avu('x', '777');
+  my $extra_multival_avu2 = $irods->make_avu('x', '999');
 
   is($publisher->publish_file($local_path_a, $remote_path,
-                              [$additional_avu1, $additional_avu2]),
+                              [$extra_avu1, $extra_avu2,
+                               $extra_multival_avu1, $extra_multival_avu2]),
      $remote_path,
-     'publish_file, full path, additional metadata, default timestamp');
+     'publish_file, full path, extra metadata, default timestamp');
 
   my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $remote_path);
 
@@ -188,11 +192,16 @@ sub pf_new_full_path_meta_no_stamp {
   is($obj->get_avu($FILE_MD5)->{value}, 'a9fdbcfbce13a3d8dee559f58122a31c',
      'New object MD5') or diag explain $obj->metadata;
 
-  is($obj->get_avu($RT_TICKET)->{value}, $additional_avu1->{value},
-     'New additional AVU 1') or diag explain $obj->metadata;
+  is($obj->get_avu($RT_TICKET)->{value}, $extra_avu1->{value},
+     'New extra AVU 1') or diag explain $obj->metadata;
 
-  is($obj->get_avu($ANALYSIS_UUID)->{value}, $additional_avu2->{value},
-     'New additional AVU 2') or diag explain $obj->metadata;
+  is($obj->get_avu($ANALYSIS_UUID)->{value}, $extra_avu2->{value},
+     'New extra AVU 2') or diag explain $obj->metadata;
+
+  my @observed_values = map { $_->{value} } $obj->find_in_metadata('x');
+  my @expected_values = (777, 999);
+  is_deeply(\@observed_values, \@expected_values, 'New multival AVU') or
+    diag explain $obj->metadata;
 }
 
 sub pf_new_full_path_no_meta_stamp {
@@ -207,7 +216,7 @@ sub pf_new_full_path_no_meta_stamp {
 
   is($publisher->publish_file($local_path_a, $remote_path, [], $timestamp),
      $remote_path,
-     'publish_file, full path, no additional metadata, supplied timestamp');
+     'publish_file, full path, no extra metadata, supplied timestamp');
 
   my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $remote_path);
   is($obj->get_avu($DCTERMS_CREATED)->{value}, $timestamp->iso8601,
@@ -255,18 +264,24 @@ sub pf_exist_full_path_meta_no_stamp_match {
   # matching MD5
   my $local_path_a = "$tmp_data_path/publish_file/a.txt";
   my $remote_path = "$coll_path/pf_exist_full_path_meta_no_stamp_match.txt";
-  my $additional_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
-  my $additional_avu2 = $irods->make_avu($ANALYSIS_UUID,
-                                         'abcdefg-01234567890-wxyz');
+  my $extra_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
+  my $extra_avu2 = $irods->make_avu($ANALYSIS_UUID,
+                                    'abcdefg-01234567890-wxyz');
+  # Should support AVUs with multiple values
+  my $extra_multival_avu1 = $irods->make_avu('x', '777');
+  my $extra_multival_avu2 = $irods->make_avu('x', '999');
+
   $publisher->publish_file($local_path_a, $remote_path) or fail;
 
   my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $remote_path);
   ok(!$obj->get_avu($DCTERMS_MODIFIED), 'No modification timestamp before');
-  ok(!$obj->get_avu($RT_TICKET), 'No additional AVU 1 before');
-  ok(!$obj->get_avu($ANALYSIS_UUID), 'No additional AVU 2 before');
+  ok(!$obj->get_avu($RT_TICKET), 'No extra AVU 1 before');
+  ok(!$obj->get_avu($ANALYSIS_UUID), 'No extra AVU 2 before');
+  ok(!$obj->get_avu('x'), 'No extra multival AVU before');
 
   is($publisher->publish_file($local_path_a, $remote_path,
-                              [$additional_avu1, $additional_avu2]),
+                              [$extra_avu1, $extra_avu2,
+                               $extra_multival_avu1, $extra_multival_avu2]),
      $remote_path,
      'publish_file, existing full path, MD5 match');
 
@@ -274,11 +289,16 @@ sub pf_exist_full_path_meta_no_stamp_match {
   ok(!$obj->get_avu($DCTERMS_MODIFIED), 'No modification AVU after') or
     diag explain $obj->metadata;
 
-  is($obj->get_avu($RT_TICKET)->{value}, $additional_avu1->{value},
-     'New additional AVU 1') or diag explain $obj->metadata;
+  is($obj->get_avu($RT_TICKET)->{value}, $extra_avu1->{value},
+     'New extra AVU 1') or diag explain $obj->metadata;
 
-  is($obj->get_avu($ANALYSIS_UUID)->{value}, $additional_avu2->{value},
-     'New additional AVU 2') or diag explain $obj->metadata;
+  is($obj->get_avu($ANALYSIS_UUID)->{value}, $extra_avu2->{value},
+     'New extra AVU 2') or diag explain $obj->metadata;
+
+  my @observed_values = map { $_->{value} } $obj->find_in_metadata('x');
+  my @expected_values = (777, 999);
+  is_deeply(\@observed_values, \@expected_values, 'New multival AVU') or
+    diag explain $obj->metadata;
 }
 
 sub pf_exist_full_path_no_meta_no_stamp_no_match {
@@ -317,18 +337,18 @@ sub pf_exist_full_path_meta_no_stamp_no_match {
   my $local_path_a = "$tmp_data_path/publish_file/a.txt";
   my $remote_path =
     "$irods_tmp_coll/pf_exist_full_path_meta_no_stamp_no_match.txt";
-  my $additional_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
-  my $additional_avu2 = $irods->make_avu($ANALYSIS_UUID,
-                                         'abcdefg-01234567890-wxyz');
+  my $extra_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
+  my $extra_avu2 = $irods->make_avu($ANALYSIS_UUID,
+                                    'abcdefg-01234567890-wxyz');
   $publisher->publish_file($local_path_a, $remote_path) or fail;
   my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $remote_path);
   ok(!$obj->get_avu($DCTERMS_MODIFIED), 'No modification timestamp before');
-  ok(!$obj->get_avu($RT_TICKET), 'No additional AVU 1 before');
-  ok(!$obj->get_avu($ANALYSIS_UUID), 'No additional AVU 2 before');
+  ok(!$obj->get_avu($RT_TICKET), 'No extra AVU 1 before');
+  ok(!$obj->get_avu($ANALYSIS_UUID), 'No extra AVU 2 before');
 
   my $local_path_b = "$data_path/publish_file/b.txt";
   is($publisher->publish_file($local_path_b, $remote_path,
-                              [$additional_avu1, $additional_avu2]),
+                              [$extra_avu1, $extra_avu2]),
      $remote_path,
      'publish_file, existing full path, MD5 non-match');
 
@@ -336,11 +356,11 @@ sub pf_exist_full_path_meta_no_stamp_no_match {
   like($obj->get_avu($DCTERMS_MODIFIED)->{value}, qr{^$timestamp_regex$},
        'Modification AVU present after') or diag explain $obj->metadata;
 
-  is($obj->get_avu($RT_TICKET)->{value}, $additional_avu1->{value},
-     'New additional AVU 1') or diag explain $obj->metadata;
+  is($obj->get_avu($RT_TICKET)->{value}, $extra_avu1->{value},
+     'New extra AVU 1') or diag explain $obj->metadata;
 
-  is($obj->get_avu($ANALYSIS_UUID)->{value}, $additional_avu2->{value},
-     'New additional AVU 2') or diag explain $obj->metadata;
+  is($obj->get_avu($ANALYSIS_UUID)->{value}, $extra_avu2->{value},
+     'New extra AVU 2') or diag explain $obj->metadata;
 }
 
 sub pd_new_full_path_no_meta_no_stamp {
@@ -356,7 +376,7 @@ sub pd_new_full_path_no_meta_no_stamp {
   my $sub_coll = "$remote_path/publish_directory";
   is($publisher->publish_directory($local_path, $remote_path),
      $sub_coll,
-     'publish_directory, full path, no additional metadata, default timestamp');
+     'publish_directory, full path, no extra metadata, default timestamp');
 
   my $coll = WTSI::NPG::iRODS::Collection->new($irods, $sub_coll);
   like($coll->get_avu($DCTERMS_CREATED)->{value}, qr{^$timestamp_regex$},
@@ -377,16 +397,16 @@ sub pd_new_full_path_meta_no_stamp {
   # publish_directory with new full path, no metadata, no timestamp
   my $timestamp_regex = '\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}';
   my $local_path = "$tmp_data_path/publish_directory";
-  my $additional_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
-  my $additional_avu2 = $irods->make_avu($ANALYSIS_UUID,
-                                         'abcdefg-01234567890-wxyz');
+  my $extra_avu1 = $irods->make_avu($RT_TICKET, '1234567890');
+  my $extra_avu2 = $irods->make_avu($ANALYSIS_UUID,
+                                    'abcdefg-01234567890-wxyz');
 
   my $remote_path = "$coll_path/pd_new_full_path_meta_no_stamp";
   my $sub_coll = "$remote_path/publish_directory";
   is($publisher->publish_directory($local_path, $remote_path,
-                                   [$additional_avu1, $additional_avu2]),
+                                   [$extra_avu1, $extra_avu2]),
      $sub_coll,
-     'publish_directory, full path, no additional metadata, default timestamp');
+     'publish_directory, full path, no extra metadata, default timestamp');
 
   my $coll = WTSI::NPG::iRODS::Collection->new($irods, $sub_coll);
   like($coll->get_avu($DCTERMS_CREATED)->{value}, qr{^$timestamp_regex$},
@@ -401,11 +421,11 @@ sub pd_new_full_path_meta_no_stamp {
   ok(URI->new($coll->get_avu($DCTERMS_PUBLISHER)->{value}), 'Publisher URI') or
     diag explain $coll->metadata;
 
-  is($coll->get_avu($RT_TICKET)->{value}, $additional_avu1->{value},
-     'New additional AVU 1') or diag explain $coll->metadata;
+  is($coll->get_avu($RT_TICKET)->{value}, $extra_avu1->{value},
+     'New extra AVU 1') or diag explain $coll->metadata;
 
-  is($coll->get_avu($ANALYSIS_UUID)->{value}, $additional_avu2->{value},
-     'New additional AVU 2') or diag explain $coll->metadata;
+  is($coll->get_avu($ANALYSIS_UUID)->{value}, $extra_avu2->{value},
+     'New extra AVU 2') or diag explain $coll->metadata;
 }
 
 sub pf_stale_md5_cache {
