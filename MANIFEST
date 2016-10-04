@@ -37,6 +37,7 @@ lib/WTSI/NPG/HTS/PathLister.pm
 lib/WTSI/NPG/HTS/Publisher.pm
 lib/WTSI/NPG/HTS/Seqchksum.pm
 lib/WTSI/NPG/HTS/Types.pm
+lib/WTSI/NPG/OM/BioNano/AssayResultSet.pm
 LICENSE
 MANIFEST			This list of files
 README
@@ -49,6 +50,7 @@ scripts/travis_script.sh
 t/aln_data_object.t
 t/anc_data_object.t
 t/annotator.t
+t/bionano_assay_result_set.t
 t/compile_scripts.t
 t/critic.t
 t/data/aln_data_object/15440_1#0.sam
@@ -98,6 +100,14 @@ t/data/anc_data_object/17550_3#1_phix_quality_error.txt
 t/data/anc_data_object/17550_3#1_quality_cycle_caltable.txt
 t/data/anc_data_object/17550_3#1_quality_cycle_surv.txt
 t/data/anc_data_object/17550_3#1_quality_error.txt
+t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect Molecules/analysisLog.txt
+t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect Molecules/analysisResult.json
+t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect Molecules/iovars.json
+t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect Molecules/Molecules.bnx
+t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect Molecules/RawMolecules.bnx
+t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect Molecules/RunReport.txt
+t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect Molecules/Stitch.fov
+t/data/bionano/sample_barcode_01234_2016-10-04_09_00/workset.json
 t/data/header_parser/17550_1#1.txt
 t/data/log_publisher/100818_IL32_10371/Latest_Summary/archive/log/seq_alignment_17427_20150918-142715.4036.230634.out
 t/data/log_publisher/100818_IL32_10371/Latest_Summary/log/bam2fastqcheck_and_cached_fastq_17427_20150918-142715.4.230621.out
