@@ -30,30 +30,46 @@ has 'directory' =>
    required => 1);
 
 has 'data_directory' =>
-  (is      => 'ro',
-   isa     => 'Str',
-   lazy    => 1,
-   builder => '_build_data_directory',
+  (is       => 'ro',
+   isa      => 'Str',
+   lazy     => 1,
+   builder  => '_build_data_directory',
+   init_arg => undef,
 );
 
 has 'raw_molecules_file' =>
-  (is      => 'ro',
-   isa     => 'Str',
-   lazy    => 1,
-   builder => '_build_raw_molecules_file');
+  (is       => 'ro',
+   isa      => 'Str',
+   lazy     => 1,
+   builder  => '_build_raw_molecules_file',
+   init_arg => undef,
+);
 
 has 'molecules_file' =>
-  (is      => 'ro',
-   isa     => 'Str',
-   lazy    => 1,
-   builder => '_build_molecules_file');
+  (is       => 'ro',
+   isa      => 'Str',
+   lazy     => 1,
+   builder  => '_build_molecules_file',
+   init_arg => undef,
+);
 
 has 'ancillary_files' =>
-  (is      => 'ro',
-   isa     => 'ArrayRef[Str]',
-   lazy    => 1,
-   builder => '_build_ancillary_files',
-   documentation => 'Paths of ancillary files with information on the run');
+  (is       => 'ro',
+   isa      => 'ArrayRef[Str]',
+   lazy     => 1,
+   builder  => '_build_ancillary_files',
+   init_arg => undef,
+   documentation => 'Paths of ancillary files with information on the run',
+);
+
+has 'sample' =>
+  (is       => 'ro',
+   isa      => 'Str',
+   lazy     => 1,
+   builder  => '_build_sample',
+   init_arg => undef,
+   documentation => 'Sample barcode parsed from the main directory name',
+);
 
 
 sub BUILD {
@@ -66,6 +82,14 @@ sub BUILD {
     if (! -d $self->directory) {
         $self->logconfess("BioNano directory path '", $self->directory,
                           "' is not a directory");
+    }
+    # directory name must be of the form barcode_yyyy-mm-dd_MM_SS
+    # barcode may include _ (underscore) characters, but not whitespace
+    my $dirname = fileparse($self->directory);
+    if (!($dirname =~ qr{^\S+_\d{4}-\d{2}-\d{2}_\d{2}_\d{2}$}msx)) {
+        $self->logcroak("Incorrectly formatted name '", $dirname,
+                        "' for BioNano unit runfolder: should be ",
+                        "of the form barcode_yyyy-mm-dd_MM_SS");
     }
 }
 
@@ -125,6 +149,20 @@ sub _build_raw_molecules_file {
                           $molecules_path, "' does not exist");
     }
     return $molecules_path;
+}
+
+sub _build_sample {
+    # parse sample barcode from main directory name
+    # name is of the form barcode_time: barcode_yyy-mm-dd_HH_MM
+    # TODO save the timestamp also?
+    my ($self) = @_;
+    my $dirname = fileparse($self->directory);
+    my @terms = split '_', $dirname;
+    my $minutes = pop @terms;
+    my $hours = pop @terms;
+    my $date = pop @terms;
+    my $barcode = join '_', @terms;
+    return $barcode;
 }
 
 

@@ -4,10 +4,12 @@ use strict;
 use warnings;
 
 use Cwd qw(abs_path);
+use File::Temp qw(tempdir);
 
 use base qw(WTSI::NPG::HTS::Test); # FIXME better path for shared base
 
-use Test::More tests => 6;
+use Test::More tests => 9;
+use Test::Exception;
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
@@ -18,7 +20,7 @@ use WTSI::NPG::OM::BioNano::ResultSet;
 my $data_path = './t/data/bionano/';
 my $run_path = $data_path.'/sample_barcode_01234_2016-10-04_09_00';
 
-sub construction : Test(5) {
+sub construction : Test(8) {
 
     my $resultset = WTSI::NPG::OM::BioNano::ResultSet->new(
         directory => $run_path,
@@ -40,4 +42,20 @@ sub construction : Test(5) {
 
     my $ancillary = $resultset->ancillary_files;
     is(scalar @{$ancillary}, 6, "Found 6 ancillary files");
+
+    is($resultset->sample, 'sample_barcode_01234',
+       'Found expected sample barcode');
+
+    my $tmp = tempdir("BioNanoResultSetTest_XXXXXX", CLEANUP => 1);
+    dies_ok(
+        sub { WTSI::NPG::OM::BioNano::ResultSet->new( directory => $tmp) },
+        "Dies with badly formatted directory name"
+    );
+
+    my $no_dir = $tmp."/foo";
+    dies_ok(
+        sub { WTSI::NPG::OM::BioNano::ResultSet->new( directory => $no_dir) },
+        "Dies with nonexistent directory"
+    );
+
 }
