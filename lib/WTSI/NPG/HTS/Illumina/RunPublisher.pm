@@ -871,27 +871,47 @@ sub publish_plex_alignment_files {
 sub publish_lane_index_files {
   my ($self, $position, $with_spiked_control) = @_;
 
-  my @has_reads;
+  my @have_reads;
+
+  my $num_files     = 0;
+  my $num_processed = 0;
+  my $num_errors    = 0;
+
   foreach my $file (@{$self->lane_index_files($position)}) {
     my $obj = $self->_make_obj($file, $self->dest_collection);
-    my $num_reads = $self->num_reads
-      ($obj->position,
-       alignment_filter => $obj->alignment_filter);
 
-    if ($num_reads == 0) {
-      $self->info("Skipping index file $file because the alignment file ",
-                  "contains $num_reads reads");
-    }
-    else {
-      push @has_reads, $file;
-    }
+    try {
+      my $num_reads = $self->num_reads
+        ($obj->position,
+         alignment_filter => $obj->alignment_filter);
+
+      if ($num_reads == 0) {
+        $self->info("Skipping index file $file because the alignment file ",
+                    "contains $num_reads reads");
+      }
+      else {
+        push @have_reads, $file;
+      }
+    } catch {
+      $num_errors++;
+      my $path = $obj->str;
+      $self->error('Failed to determine the number of aligned reads in ',
+                   "$path': ", $_);
+    };
   }
 
-  return $self->_publish_lane_support_files($position,
-                                            \@has_reads,
-                                            $self->dest_collection,
-                                            $INDEX_CATEGORY,
-                                            $with_spiked_control);
+  my ($nf, $np, $ne) =
+    $self->_publish_lane_support_files($position,
+                                       \@have_reads,
+                                       $self->dest_collection,
+                                       $INDEX_CATEGORY,
+                                       $with_spiked_control);
+
+  $num_files     = scalar @have_reads;
+  $num_processed = $np;
+  $num_errors   += $ne;
+
+  return ($num_files, $num_processed, $num_errors);
 }
 
 =head2 publish_plex_index_files
@@ -911,28 +931,48 @@ sub publish_lane_index_files {
 sub publish_plex_index_files {
   my ($self, $position, $with_spiked_control) = @_;
 
-  my @has_reads;
+  my @have_reads;
+
+  my $num_files     = 0;
+  my $num_processed = 0;
+  my $num_errors    = 0;
+
   foreach my $file (@{$self->plex_index_files($position)}) {
     my $obj = $self->_make_obj($file, $self->dest_collection);
-    my $num_reads = $self->num_reads
+
+    try {
+      my $num_reads = $self->num_reads
       ($obj->position,
        alignment_filter => $obj->alignment_filter,
        tag_index        => $obj->tag_index);
 
-    if ($num_reads == 0) {
-      $self->info("Skipping index file $file because the alignment file ",
-                  "contains $num_reads reads");
-    }
-    else {
-      push @has_reads, $file;
-    }
+      if ($num_reads == 0) {
+        $self->info("Skipping index file '$file' because the alignment file ",
+                    "contains $num_reads reads");
+      }
+      else {
+        push @have_reads, $file;
+      }
+    } catch {
+      $num_errors++;
+      my $path = $obj->str;
+      $self->error('Failed to determine the number of aligned reads in ',
+                   "$path': ", $_);
+    };
   }
 
-  return $self->_publish_plex_support_files($position,
-                                            \@has_reads,
-                                            $self->dest_collection,
-                                            $INDEX_CATEGORY,
-                                            $with_spiked_control);
+  my ($nf, $np, $ne) =
+    $self->_publish_plex_support_files($position,
+                                       \@have_reads,
+                                       $self->dest_collection,
+                                       $INDEX_CATEGORY,
+                                       $with_spiked_control);
+
+  $num_files     = scalar @have_reads;
+  $num_processed = $np;
+  $num_errors   += $ne;
+
+  return ($num_files, $num_processed, $num_errors);
 }
 
 =head2 publish_ancillary_files
@@ -1146,9 +1186,9 @@ sub _publish_file_category {
   my $lane_method = sprintf 'publish_lane_%s_files', $category;
   my $plex_method = sprintf 'publish_plex_%s_files', $category;
 
-  my $num_files;
-  my $num_processed;
-  my $num_errors;
+  my $num_files     = 0;
+  my $num_processed = 0;
+  my $num_errors    = 0;
 
   $self->info("Publishing $category files for positions: ", pp($positions));
 
@@ -1415,12 +1455,17 @@ sub _parse_json_file {
     $self->debug("Parsing JSON value from '$file'");
 
     open my $fh, '<', $file or
-      $self->error("Failed to open '$file' for reading: ", $ERRNO);
+      $self->logcroak("Failed to open '$file' for reading: ", $ERRNO);
     my $octets = <$fh>;
     close $fh or $self->warn("Failed to close '$file'");
 
-    my $json = Encode::decode('UTF-8', $octets, Encode::FB_CROAK);
-    $self->_json_cache->{$file} = $self->decode($json);
+    try {
+      my $json = Encode::decode('UTF-8', $octets, Encode::FB_CROAK);
+      $self->_json_cache->{$file} = $self->decode($json);
+    } catch {
+      $self->logcroak('Failed to a parse JSON value from ',
+                      "cache file '$file': ", $_);
+    };
   }
 
   return $self->_json_cache->{$file};
