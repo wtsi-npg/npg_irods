@@ -1,4 +1,4 @@
-package WTSI::NPG::OM::BioNano::AssayResultSet;
+package WTSI::NPG::OM::BioNano::ResultSet;
 
 use Moose;
 
@@ -90,8 +90,6 @@ sub _build_ancillary_files {
     return \@ancillary_files;
 }
 
-
-
 sub _build_data_directory {
     my ($self) = @_;
     my $data_directory = File::Spec->catfile($self->directory,
@@ -128,7 +126,6 @@ sub _build_raw_molecules_file {
     }
     return $molecules_path;
 }
-
 
 
 __PACKAGE__->meta->make_immutable;

@@ -1,4 +1,4 @@
-package WTSI::NPG::OM::BioNano::AssayResultSetTest;
+package WTSI::NPG::OM::BioNano::ResultSetTest;
 
 use strict;
 use warnings;
@@ -11,19 +11,19 @@ use Test::More tests => 6;
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
-BEGIN { use_ok('WTSI::NPG::OM::BioNano::AssayResultSet'); }
+BEGIN { use_ok('WTSI::NPG::OM::BioNano::ResultSet'); }
 
-use WTSI::NPG::OM::BioNano::AssayResultSet;
+use WTSI::NPG::OM::BioNano::ResultSet;
 
 my $data_path = './t/data/bionano/';
 my $run_path = $data_path.'/sample_barcode_01234_2016-10-04_09_00';
 
 sub construction : Test(5) {
 
-    my $resultset = WTSI::NPG::OM::BioNano::AssayResultSet->new(
+    my $resultset = WTSI::NPG::OM::BioNano::ResultSet->new(
         directory => $run_path,
     );
-    ok($resultset, "AssayResultSet created");
+    ok($resultset, "ResultSet created");
     is(abs_path($resultset->data_directory),
        abs_path($run_path.'/Detect Molecules'),
        "Found expected data directory");
