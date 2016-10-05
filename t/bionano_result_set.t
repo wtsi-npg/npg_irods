@@ -2,6 +2,6 @@
 use strict;
 use warnings;
 
-use WTSI::NPG::OM::BioNano::AssayResultSetTest;
+use WTSI::NPG::OM::BioNano::ResultSetTest;
 
-WTSI::NPG::OM::BioNano::AssayResultSetTest->runtests;
+WTSI::NPG::OM::BioNano::ResultSetTest->runtests;
