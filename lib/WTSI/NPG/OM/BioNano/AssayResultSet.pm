@@ -1,9 +1,10 @@
-package WTSI::NPG::OM::BioNano::ResultSet;
+package WTSI::NPG::OM::BioNano::AssayResultSet;
 
 use Moose;
 
+use Cwd qw(abs_path);
 use File::Basename qw(fileparse);
-use File::Spec qw(catfile);
+use File::Spec;
 
 use WTSI::DNAP::Utilities::Collector;
 
@@ -52,8 +53,8 @@ has 'ancillary_files' =>
    isa     => 'ArrayRef[Str]',
    lazy    => 1,
    builder => '_build_ancillary_files',
-   documentation => 'Paths of ancillary files with information on the run, '.
-       'relative to the main directory path');
+   documentation => 'Paths of ancillary files with information on the run');
+
 
 sub BUILD {
     my ($self) = @_;
@@ -73,8 +74,7 @@ sub _build_ancillary_files {
     my @ancillary_files;
     my @files = WTSI::DNAP::Utilities::Collector->new(
         root => $self->directory,
-        regexp => qr{[^(\.bnx)]$}, # exclude BNX files
-    )->collect_files();
+    )->collect_files(sub {!($_[0] =~ qr{\.bnx$});}); # exclude .bnx files
     my %ancillary_file_names;
     foreach my $name (@ANCILLARY_FILE_NAMES) {
         $ancillary_file_names{$name} = 1;
@@ -90,9 +90,12 @@ sub _build_ancillary_files {
     return \@ancillary_files;
 }
 
+
+
 sub _build_data_directory {
     my ($self) = @_;
-    my $data_directory = catfile($self->directory, $DATA_DIRECTORY_NAME);
+    my $data_directory = File::Spec->catfile($self->directory,
+                                             $DATA_DIRECTORY_NAME);
     if (! -e $data_directory) {
         $self->logconfess("BioNano data directory path '", $data_directory,
                           "' does not exist");
@@ -106,7 +109,8 @@ sub _build_data_directory {
 
 sub _build_molecules_file {
     my ($self) = @_;
-    my $molecules_path = catfile($self->data_directory, $BNX_NAME_FILTERED);
+    my $molecules_path = File::Spec->catfile($self->data_directory,
+                                             $BNX_NAME_FILTERED);
     if (! -e $molecules_path) {
         $self->logconfess("BioNano filtered molecules path '",
                           $molecules_path, "' does not exist");
@@ -116,7 +120,8 @@ sub _build_molecules_file {
 
 sub _build_raw_molecules_file {
     my ($self) = @_;
-    my $molecules_path = catfile($self->data_directory, $BNX_NAME_RAW);
+    my $molecules_path = File::Spec->catfile($self->data_directory,
+                                             $BNX_NAME_RAW);
     if (! -e $molecules_path) {
         $self->logconfess("BioNano raw molecules path '",
                           $molecules_path, "' does not exist");
