@@ -8,7 +8,7 @@ use File::Temp qw(tempdir);
 
 use base qw(WTSI::NPG::HTS::Test); # FIXME better path for shared base
 
-use Test::More tests => 9;
+use Test::More tests => 10;
 use Test::Exception;
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
@@ -20,7 +20,7 @@ use WTSI::NPG::OM::BioNano::ResultSet;
 my $data_path = './t/data/bionano/';
 my $run_path = $data_path.'/sample_barcode_01234_2016-10-04_09_00';
 
-sub construction : Test(8) {
+sub construction : Test(9) {
 
     my $resultset = WTSI::NPG::OM::BioNano::ResultSet->new(
         directory => $run_path,
@@ -45,6 +45,9 @@ sub construction : Test(8) {
 
     is($resultset->sample, 'sample_barcode_01234',
        'Found expected sample barcode');
+
+    is($resultset->run_date, '2016-10-04T09:00:00',
+       'Found expected run date');
 
     my $tmp = tempdir("BioNanoResultSetTest_XXXXXX", CLEANUP => 1);
     dies_ok(

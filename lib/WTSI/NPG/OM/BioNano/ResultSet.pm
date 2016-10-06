@@ -3,6 +3,7 @@ package WTSI::NPG::OM::BioNano::ResultSet;
 use Moose;
 
 use Cwd qw(abs_path);
+use DateTime;
 use File::Basename qw(fileparse);
 use File::Spec;
 
@@ -45,6 +46,15 @@ has 'raw_molecules_file' =>
    init_arg => undef,
 );
 
+has 'run_date' =>
+  (is       => 'ro',
+   isa      => 'Str',
+   lazy     => 1,
+   builder  => '_build_run_date',
+   init_arg => undef,
+   documentation => 'Date and time of run, parsed from the runfolder name',
+);
+
 has 'molecules_file' =>
   (is       => 'ro',
    isa      => 'Str',
@@ -83,13 +93,13 @@ sub BUILD {
         $self->logconfess("BioNano directory path '", $self->directory,
                           "' is not a directory");
     }
-    # directory name must be of the form barcode_yyyy-mm-dd_MM_SS
+    # directory name must be of the form barcode_yyyy-mm-dd_HH_MM
     # barcode may include _ (underscore) characters, but not whitespace
     my $dirname = fileparse($self->directory);
     if (!($dirname =~ qr{^\S+_\d{4}-\d{2}-\d{2}_\d{2}_\d{2}$}msx)) {
         $self->logcroak("Incorrectly formatted name '", $dirname,
                         "' for BioNano unit runfolder: should be ",
-                        "of the form barcode_yyyy-mm-dd_MM_SS");
+                        "of the form barcode_yyyy-mm-dd_HH_MM");
     }
 }
 
@@ -151,19 +161,43 @@ sub _build_raw_molecules_file {
     return $molecules_path;
 }
 
+sub _build_run_date {
+    # parse the datestamp from main directory name
+    my ($self) = @_;
+    my ($barcode, $datetime) = $self->_parse_runfolder_name();
+    my $time_string = $datetime->strftime("%Y-%m-%dT%H:%M:%S");
+    return $time_string;
+}
+
 sub _build_sample {
     # parse sample barcode from main directory name
-    # name is of the form barcode_time: barcode_yyy-mm-dd_HH_MM
-    # TODO save the timestamp also?
     my ($self) = @_;
-    my $dirname = fileparse($self->directory);
-    my @terms = split '_', $dirname;
-    my $minutes = pop @terms;
-    my $hours = pop @terms;
-    my $date = pop @terms;
-    my $barcode = join '_', @terms;
+    my ($barcode, $datetime) = $self->_parse_runfolder_name();
     return $barcode;
 }
+
+sub _parse_runfolder_name {
+    # parse sample barcode from main directory name
+    # name is of the form barcode_time: barcode_yyyy-mm-dd_HH_MM
+    # name format is checked by the BUILD method
+    my ($self) = @_;
+    my $dirname = fileparse($self->directory);
+    my @terms = split('_', $dirname);
+    my $minute = pop @terms;
+    my $hour = pop @terms;
+    my $date = pop @terms;
+    my $barcode = join '_', @terms;
+    my ($year, $month, $day) = split('-', $date);
+    my $dt = DateTime->new(
+        year   => $year,
+        month  => $month,
+        day    => $day,
+        hour   => $hour,
+        minute => $minute,
+    );
+    return ($barcode, $dt);
+}
+
 
 
 __PACKAGE__->meta->make_immutable;
