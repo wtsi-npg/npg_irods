@@ -8,8 +8,7 @@ use lib (-d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib");
 use Data::Dump qw[pp];
 use Getopt::Long;
 use List::AllUtils qw[none];
-use Log::Log4perl;
-use Log::Log4perl::Level;
+use Log::Log4perl qw[:levels];
 use Pod::Usage;
 
 use WTSI::DNAP::Warehouse::Schema;
@@ -88,15 +87,11 @@ else {
   if ($verbose and not $debug) {
     Log::Log4perl::init(\$verbose_config);
   }
-  elsif ($debug) {
-    Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
-                              level  => $DEBUG,
-                              utf8   => 1})
-  }
   else {
+    my $level = $debug ? $DEBUG : $WARN;
     Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
-                              level  => $ERROR,
-                              utf8   => 1})
+                              level  => $level,
+                              utf8   => 1});
   }
 }
 

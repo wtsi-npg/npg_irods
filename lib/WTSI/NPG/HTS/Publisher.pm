@@ -1,6 +1,7 @@
 package WTSI::NPG::HTS::Publisher;
 
 use namespace::autoclean;
+use Carp;
 use Data::Dump qw[pp];
 use DateTime;
 use English qw[-no_match_vars];
@@ -536,7 +537,7 @@ sub _read_md5_cache_file {
     }
   }
   else {
-    $self->logcarp("Malformed (empty) MD5 checksum read from '$cache_file'");
+    $self->warn("Malformed (empty) MD5 checksum read from '$cache_file'");
   }
 
   return $md5;
@@ -547,13 +548,19 @@ sub _make_md5_cache_file {
 
   $self->warn("Adding missing MD5 cache file '$cache_file'");
 
-  my $out;
-  open $out, '>', $cache_file or
-    $self->logcroak("Failed to open '$cache_file' for writing: $ERRNO");
-  print $out "$md5\n" or
-    $self->logcroak("Failed to write MD5 to '$cache_file'");
-  close $out or
-    $self->logcarp("Failed to close '$cache_file' cleanly");
+  try {
+    my $out;
+    open $out, '>', $cache_file or
+      croak "Failed to open '$cache_file' for writing: $ERRNO";
+    print $out "$md5\n" or
+      croak "Failed to write MD5 to '$cache_file': $ERRNO";
+    close $out or
+      $self->warn("Failed to close '$cache_file' cleanly: $ERRNO");
+  } catch {
+    # Failure to create a cache should not be a hard error. Here we
+    # just forward the message from croak above.
+    $self->warn($_);
+  };
 
   return $cache_file;
 }
