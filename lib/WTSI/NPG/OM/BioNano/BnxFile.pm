@@ -117,12 +117,12 @@ sub _build_header {
     }
     close $fh ||
         $self->logcroak(q{Failed to close BNX path '}, $self->path, q{'});
-     foreach my $key (@REQUIRED_FIELDS) {
-         if (! $header{$key}) {
-             $self->logcroak(q{Required BNX header field '}, $key,
-                             q{' not found});
-         }
-     }
+    foreach my $key (@REQUIRED_FIELDS) {
+        if (! $header{$key}) {
+            $self->logcroak(q{Required BNX header field '}, $key,
+                            q{' not found});
+        }
+    }
     return \%header;
 }
 
