@@ -4,11 +4,16 @@ use Moose;
 
 use DateTime;
 use File::Spec;
+use Try::Tiny;
 
 use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::Metadata;
+use WTSI::NPG::HTS::Publisher;
 use WTSI::NPG::OM::BioNano::ResultSet;
 #use WTSI::NPG::OM::BioNano::Metadata; # TODO put new metadata (if any) in here, pending addition to perl-irods-wrap
+
+# FIXME Move/refactor WTSI::NPG::HTS::Publisher to reflect use outside of
+# HTS. Maybe consolidate with WTSI::NPG::Publisher in wtsi-npg/genotyping.
 
 # TODO composition with HTS::Publisher for low-level functionality?
 
@@ -98,14 +103,15 @@ sub publish_directory {
     $self->debug("Checksum of file '$molecules_file' is '$md5'");
 
     my $dest_collection = File::Spec->catdir($publish_dest, $hash_path);
-
     my $bionano_collection;
+    # TODO do we need to add metadata to the BioNano collection?
+    # Not done for Fluidigm, but yes for HTS?
     if ($self->irods->list_collection($dest_collection)) {
         $self->info("Skipping publication of BioNano data collection ",
                     "'$dest_collection': already exists");
 
-    my $dir = basename($self->resultset->directory);
-    $bionano_collection = File::Spec->catdir($dest_collection, $dir);
+        my $dir = basename($self->resultset->directory);
+        $bionano_collection = File::Spec->catdir($dest_collection, $dir);
     } else {
         $self->info("Publishing new BioNano data collection '",
                     $dest_collection, "'");
@@ -116,7 +122,43 @@ sub publish_directory {
     return $bionano_collection;
 }
 
-# sub publish_files
+sub publish_files {
+    my ($self, $publish_dest) = @_;
+
+    ## TODO define metadata. Use HTS::Publisher for low level behaviour?
+
+    defined $publish_dest or
+        $self->logconfess('A defined publish_dest argument is required');
+
+    $publish_dest eq '' and
+        $self->logconfess('A non-empty publish_dest argument is required');
+
+    $publish_dest = File::Spec->canonpath($publish_dest);
+
+    my $num_published = 0;
+
+    my @files_to_publish = (
+        $self->resultset->molecules_file,
+        $self->resultset->raw_molecules_file,
+    );
+    push @files_to_publish, @{$self->resultset->ancillary_files};
+
+    $self->debug("Ready to publish ", scalar @files_to_publish, "files");
+
+    foreach my $file (@files_to_publish) {
+
+        try {
+
+
+            $self->debug("Published file '", $file, "'");
+            $num_published++;
+        } catch {
+            $self->error("Failed to publish file '", $file, "'");
+        };
+    }
+    return $num_published;
+
+ }
 
 
 our $VERSION = '';
