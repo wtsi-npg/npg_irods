@@ -18,16 +18,29 @@ BEGIN { use_ok('WTSI::NPG::OM::BioNano::ResultSet'); }
 use WTSI::NPG::OM::BioNano::ResultSet;
 
 my $data_path = './t/data/bionano/';
-my $run_path = $data_path.'/sample_barcode_01234_2016-10-04_09_00';
+my $runfolder_name = 'sample_barcode_01234_2016-10-04_09_00';
+my $test_run_path;
+
+sub make_fixture : Test(setup) {
+    # create a temporary directory for test data
+    # workaround for the space in BioNano's "Detect Molecules" directory,
+    # because Build.PL does not work well with spaces in filenames
+    my $tmp_data = tempdir('temp_bionano_data_XXXXXX', CLEANUP => 1);
+    my $run_path = $data_path.$runfolder_name;
+    system("cp -R $run_path $tmp_data");
+    $test_run_path = $tmp_data.'/'.$runfolder_name;
+    my $cmd = q{mv }.$test_run_path.q{/Detect_Molecules }.$test_run_path.q{/Detect\ Molecules};
+    system($cmd);
+}
 
 sub construction : Test(9) {
 
     my $resultset = WTSI::NPG::OM::BioNano::ResultSet->new(
-        directory => $run_path,
+        directory => $test_run_path,
     );
     ok($resultset, "ResultSet created");
     is(abs_path($resultset->data_directory),
-       abs_path($run_path.'/Detect Molecules'),
+       abs_path($test_run_path.'/Detect Molecules'),
        "Found expected data directory");
 
     my $bnx = $resultset->molecules_file;
@@ -62,3 +75,5 @@ sub construction : Test(9) {
     );
 
 }
+
+1;
