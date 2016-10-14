@@ -33,6 +33,8 @@ use WTSI::NPG::OM::BioNano::ResultSet;
 #   - cf. update_secondary_metadata in Fluidigm::AssayDataObject
 #   - apply eg. sanger_sample_id, internal_id, study_id
 
+our $VERSION = '';
+
 with 'WTSI::DNAP::Utilities::Loggable';
 
 has 'irods' =>
@@ -59,6 +61,7 @@ sub BUILD {
   # Make our irods handle use our logger by default
   $self->irods->logger($self->logger);
 
+  return 1;
 }
 
 =head2 publish
@@ -76,7 +79,7 @@ sub publish {
 
     my $bionano_collection = $self->publish_directory($publish_dest);
 
-    $self->debug("Publishing to collection '", $bionano_collection, "'");
+    $self->debug(q{Publishing to collection '}, $bionano_collection, q{'});
 
     #$self->publish_files($bionano_collection);
 
@@ -100,21 +103,22 @@ sub publish_directory {
     my $molecules_file = $self->resultset->molecules_file;
     my $md5            = $self->irods->md5sum($molecules_file);
     my $hash_path      = $self->irods->hash_path($molecules_file, $md5);
-    $self->debug("Checksum of file '$molecules_file' is '$md5'");
+    $self->debug(q{Checksum of file '}, $molecules_file,
+                 q{' is '}, $md5, q{'});
 
     my $dest_collection = File::Spec->catdir($publish_dest, $hash_path);
     my $bionano_collection;
     # TODO do we need to add metadata to the BioNano collection?
     # Not done for Fluidigm, but yes for HTS?
     if ($self->irods->list_collection($dest_collection)) {
-        $self->info("Skipping publication of BioNano data collection ",
-                    "'$dest_collection': already exists");
+        $self->info(q{Skipping publication of BioNano data collection '},
+                    $dest_collection, q{': already exists});
 
         my $dir = basename($self->resultset->directory);
         $bionano_collection = File::Spec->catdir($dest_collection, $dir);
     } else {
-        $self->info("Publishing new BioNano data collection '",
-                    $dest_collection, "'");
+        $self->info(q{Publishing new BioNano data collection '},
+                    $dest_collection, q{'});
         $self->irods->add_collection($dest_collection);
         $bionano_collection = $self->irods->put_collection
             ($self->resultset->directory, $dest_collection);
@@ -130,7 +134,7 @@ sub publish_files {
     defined $publish_dest or
         $self->logconfess('A defined publish_dest argument is required');
 
-    $publish_dest eq '' and
+    $publish_dest eq q{} and
         $self->logconfess('A non-empty publish_dest argument is required');
 
     $publish_dest = File::Spec->canonpath($publish_dest);
@@ -143,17 +147,17 @@ sub publish_files {
     );
     push @files_to_publish, @{$self->resultset->ancillary_files};
 
-    $self->debug("Ready to publish ", scalar @files_to_publish, "files");
+    $self->debug('Ready to publish ', scalar @files_to_publish, 'files');
 
     foreach my $file (@files_to_publish) {
 
         try {
 
 
-            $self->debug("Published file '", $file, "'");
+            $self->debug(q{Published file '}, $file, q{'});
             $num_published++;
         } catch {
-            $self->error("Failed to publish file '", $file, "'");
+            $self->error(q{Failed to publish file '}, $file, q{'});
         };
     }
     return $num_published;
@@ -161,7 +165,6 @@ sub publish_files {
  }
 
 
-our $VERSION = '';
 
 __PACKAGE__->meta->make_immutable;
 

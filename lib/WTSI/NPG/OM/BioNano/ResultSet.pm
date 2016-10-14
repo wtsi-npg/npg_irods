@@ -86,40 +86,42 @@ sub BUILD {
     my ($self) = @_;
     # validate main directory
     if (! -e $self->directory) {
-        $self->logconfess("BioNano directory path '", $self->directory,
-                          "' does not exist");
+        $self->logconfess(q{BioNano directory path '}, $self->directory,
+                          q{' does not exist});
     }
     if (! -d $self->directory) {
-        $self->logconfess("BioNano directory path '", $self->directory,
-                          "' is not a directory");
+        $self->logconfess(q{BioNano directory path '}, $self->directory,
+                          q{' is not a directory});
     }
     # directory name must be of the form barcode_yyyy-mm-dd_HH_MM
     # barcode may include _ (underscore) characters, but not whitespace
     my $dirname = fileparse($self->directory);
     if (!($dirname =~ qr{^\S+_\d{4}-\d{2}-\d{2}_\d{2}_\d{2}$}msx)) {
-        $self->logcroak("Incorrectly formatted name '", $dirname,
-                        "' for BioNano unit runfolder: should be ",
-                        "of the form barcode_yyyy-mm-dd_HH_MM");
+        $self->logcroak(q{Incorrectly formatted name '}, $dirname,
+                        q{' for BioNano unit runfolder: should be },
+                        q{of the form barcode_yyyy-mm-dd_HH_MM});
     }
+    return 1;
 }
 
 sub _build_ancillary_files {
     my ($self) = @_;
     my @ancillary_files;
+    # exclude .bnx files from collection
     my @files = WTSI::DNAP::Utilities::Collector->new(
         root => $self->directory,
-    )->collect_files(sub {!($_[0] =~ qr{\.bnx$});}); # exclude .bnx files
+    )->collect_files(sub {!($_[0] =~ m/[.]bnx$/msx);});
     my %ancillary_file_names;
     foreach my $name (@ANCILLARY_FILE_NAMES) {
         $ancillary_file_names{$name} = 1;
     }
     foreach my $file (@files) {
         if (!$ancillary_file_names{fileparse($file)}) {
-            $self->logwarn("Unexpected ancillary file name for '",
-                           $file, "'");
+            $self->logwarn(q{Unexpected ancillary file name for '},
+                           $file, q{'});
         }
-        push(@ancillary_files, $file);
-        $self->debug("Added $file to list of ancillary files");
+        push @ancillary_files, $file;
+        $self->debug('Added ', $file, ' to list of ancillary files');
     }
     return \@ancillary_files;
 }
@@ -129,12 +131,12 @@ sub _build_data_directory {
     my $data_directory = File::Spec->catfile($self->directory,
                                              $DATA_DIRECTORY_NAME);
     if (! -e $data_directory) {
-        $self->logconfess("BioNano data directory path '", $data_directory,
-                          "' does not exist");
+        $self->logconfess(q{BioNano data directory path '}, $data_directory,
+                          q{' does not exist});
     }
     if (! -d $data_directory) {
-        $self->logconfess("BioNano data directory path '", $data_directory,
-                          "' is not a directory");
+        $self->logconfess(q{BioNano data directory path '}, $data_directory,
+                          q{' is not a directory"});
     }
     return $data_directory;
 }
@@ -144,8 +146,8 @@ sub _build_molecules_file {
     my $molecules_path = File::Spec->catfile($self->data_directory,
                                              $BNX_NAME_FILTERED);
     if (! -e $molecules_path) {
-        $self->logconfess("BioNano filtered molecules path '",
-                          $molecules_path, "' does not exist");
+        $self->logconfess(q{BioNano filtered molecules path '},
+                          $molecules_path, q{' does not exist});
     }
     return $molecules_path;
 }
@@ -155,8 +157,8 @@ sub _build_raw_molecules_file {
     my $molecules_path = File::Spec->catfile($self->data_directory,
                                              $BNX_NAME_RAW);
     if (! -e $molecules_path) {
-        $self->logconfess("BioNano raw molecules path '",
-                          $molecules_path, "' does not exist");
+        $self->logconfess(q{BioNano raw molecules path '},
+                          $molecules_path, q{' does not exist});
     }
     return $molecules_path;
 }
@@ -165,7 +167,7 @@ sub _build_run_date {
     # parse the datestamp from main directory name
     my ($self) = @_;
     my ($barcode, $datetime) = $self->_parse_runfolder_name();
-    my $time_string = $datetime->strftime("%Y-%m-%dT%H:%M:%S");
+    my $time_string = $datetime->strftime('%Y-%m-%dT%H:%M:%S');
     return $time_string;
 }
 
@@ -182,12 +184,12 @@ sub _parse_runfolder_name {
     # name format is checked by the BUILD method
     my ($self) = @_;
     my $dirname = fileparse($self->directory);
-    my @terms = split('_', $dirname);
+    my @terms = split /_/msx, $dirname;
     my $minute = pop @terms;
     my $hour = pop @terms;
     my $date = pop @terms;
     my $barcode = join '_', @terms;
-    my ($year, $month, $day) = split('-', $date);
+    my ($year, $month, $day) = split /-/msx, $date;
     my $dt = DateTime->new(
         year   => $year,
         month  => $month,

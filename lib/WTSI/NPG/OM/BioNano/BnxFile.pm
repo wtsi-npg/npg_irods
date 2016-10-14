@@ -70,7 +70,7 @@ around BUILDARGS => sub {
   my ($orig, $class, @args) = @_;
 
   # Permit a Str as an anonymous argument mapping to path
-  if (@args == 1 and !ref $args[0]) {
+  if (@args == 1 && !ref $args[0]) {
     return $class->$orig(path => $args[0]);
   }
   else {
@@ -81,8 +81,9 @@ around BUILDARGS => sub {
 sub BUILD {
     my ($self,) = @_;
     if (! -r $self->path) {
-        $self->logcroak("Cannot read BNX path '", $self->path, "'");
+        $self->logcroak(q{Cannot read BNX path '}, $self->path, q{'});
     }
+    return 1;
 }
 
 sub _build_header {
@@ -90,37 +91,36 @@ sub _build_header {
     my @header_keys;
     my %header;
     open my $fh, '<', $self->path ||
-        $self->logcroak("Failed to open BNX path '", $self->path, "'");
+        $self->logcroak(q{Failed to open BNX path '}, $self->path, q{'});
     while (<$fh>) {
         chomp;
-        if ($_ =~ /^\#\ BNX\ File\ Version:\t/msx) {
-            my @fields = split "\t";
+        if (m/^[#][ ]BNX[ ]File[ ]Version:\t/msx) {
+            my @fields = split /\t/msx;
             my $version = pop @fields;
-            if ($version !~ /1\.[012]/msx) {
-                $self->logwarn("Unsupported BNX version number: '",
-                               $version, "'");
+            if ($version !~ /1[.][012]/msx) {
+                $self->logwarn(q{Unsupported BNX version number: '},
+                               $version, q{'});
             }
-        } elsif (m/^\#rh/msx) {
-             @header_keys = split "\t";
-         } elsif (@header_keys && m/^\#\ Run\ Data\t/msx) {
-             my @header_values = split "\t";
-             if (scalar @header_keys != scalar @header_values) {
-                 $self->logcroak("Numbers of keys and values in BNX ",
-                                 "file header do not match");
-             }
-             for (my $i=0;$i<@header_keys;$i++) {
-                 $header{$header_keys[$i]} = $header_values[$i];
-             }
-         } elsif (%header) {
-             last;
-         }
+        } elsif (m/^[#]rh/msx) {
+            @header_keys = split /\t/msx;
+        } elsif (@header_keys && m/^[#][ ]Run[ ]Data\t/msx) {
+            my @header_values = split /\t/msx;
+            if (scalar @header_keys != scalar @header_values) {
+                $self->logcroak('Numbers of keys and values in BNX ',
+                                'file header do not match');
+            }
+            for (0 .. scalar @header_keys - 1) {
+                $header{$header_keys[$_]} = $header_values[$_];
+            }
+            last;
+        }
     }
     close $fh ||
-        $self->logcroak("Failed to close BNX path '", $self->path, "'");
+        $self->logcroak(q{Failed to close BNX path '}, $self->path, q{'});
      foreach my $key (@REQUIRED_FIELDS) {
          if (! $header{$key}) {
-             $self->logcroak("Required BNX header field '", $key,
-                             "' not found");
+             $self->logcroak(q{Required BNX header field '}, $key,
+                             q{' not found});
          }
      }
     return \%header;
