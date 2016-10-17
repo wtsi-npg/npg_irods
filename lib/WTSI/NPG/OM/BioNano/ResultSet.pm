@@ -8,6 +8,7 @@ use File::Basename qw(fileparse);
 use File::Spec;
 
 use WTSI::DNAP::Utilities::Collector;
+use WTSI::NPG::OM::BioNano::BnxFile;
 
 with 'WTSI::DNAP::Utilities::Loggable';
 
@@ -30,6 +31,18 @@ has 'directory' =>
    isa      => 'Str',
    required => 1);
 
+has 'bnx_file' =>
+  (is       => 'ro',
+   isa      => 'WTSI::NPG::OM::BioNano::BnxFile',
+   lazy     => 1,
+   default  => sub {
+       my ($self,) = @_;
+       return WTSI::NPG::OM::BioNano::BnxFile->new($self->molecules_path);
+   },
+   init_arg => undef,
+   documentation => 'Object representing the filtered (not raw) BNX file',
+);
+
 has 'data_directory' =>
   (is       => 'ro',
    isa      => 'Str',
@@ -38,11 +51,11 @@ has 'data_directory' =>
    init_arg => undef,
 );
 
-has 'raw_molecules_file' =>
+has 'raw_molecules_path' =>
   (is       => 'ro',
    isa      => 'Str',
    lazy     => 1,
-   builder  => '_build_raw_molecules_file',
+   builder  => '_build_raw_molecules_path',
    init_arg => undef,
 );
 
@@ -55,11 +68,11 @@ has 'run_date' =>
    documentation => 'Date and time of run, parsed from the runfolder name',
 );
 
-has 'molecules_file' =>
+has 'molecules_path' =>
   (is       => 'ro',
    isa      => 'Str',
    lazy     => 1,
-   builder  => '_build_molecules_file',
+   builder  => '_build_molecules_path',
    init_arg => undef,
 );
 
@@ -141,7 +154,7 @@ sub _build_data_directory {
     return $data_directory;
 }
 
-sub _build_molecules_file {
+sub _build_molecules_path {
     my ($self) = @_;
     my $molecules_path = File::Spec->catfile($self->data_directory,
                                              $BNX_NAME_FILTERED);
@@ -152,7 +165,7 @@ sub _build_molecules_file {
     return $molecules_path;
 }
 
-sub _build_raw_molecules_file {
+sub _build_raw_molecules_path {
     my ($self) = @_;
     my $molecules_path = File::Spec->catfile($self->data_directory,
                                              $BNX_NAME_RAW);
