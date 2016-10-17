@@ -22,11 +22,10 @@ use WTSI::NPG::OM::BioNano::ResultSet;
 my $data_path = './t/data/bionano/';
 my $runfolder_name = 'sample_barcode_01234_2016-10-04_09_00';
 my $test_run_path;
-
 my $irods_tmp_coll;
-
 my $pid = $$;
 
+my $log = Log::Log4perl->get_logger();
 
 sub make_fixture : Test(setup) {
     # set up iRODS test collection
@@ -38,10 +37,14 @@ sub make_fixture : Test(setup) {
     # because Build.PL does not work well with spaces in filenames
     my $tmp_data = tempdir('temp_bionano_data_XXXXXX', CLEANUP => 1);
     my $run_path = $data_path.$runfolder_name;
-    system("cp -R $run_path $tmp_data");
+    system("cp -R $run_path $tmp_data") && $log->logcroak(
+        q{Failed to copy '}, $run_path, q{' to '}, $tmp_data, q{'});
+    $test_run_path = $tmp_data.'/'.$runfolder_name;;
     $test_run_path = $tmp_data.'/'.$runfolder_name;
-    my $cmd = q{mv }.$test_run_path.q{/Detect_Molecules }.$test_run_path.q{/Detect\ Molecules};
-    system($cmd);
+    my $cmd = q{mv }.$test_run_path.q{/Detect_Molecules }.
+        $test_run_path.q{/Detect\ Molecules};
+    system($cmd) && $log->logcroak(
+        q{Failed rename command '}, $cmd, q{'});
 }
 
 sub teardown : Test(teardown) {
@@ -63,7 +66,11 @@ sub publish : Test(2) {
     );
     ok($publisher, "BioNano Publisher object created");
 
-    ok($publisher->publish($irods_tmp_coll), "ResultSet published ok");
+    my $run_collection;
+    lives_ok(
+        sub { $run_collection = $publisher->publish($irods_tmp_coll); },
+        'ResultSet published OK'
+    );
 
 }
 
