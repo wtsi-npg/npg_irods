@@ -12,6 +12,10 @@ use WTSI::NPG::HTS::Publisher;
 use WTSI::NPG::OM::BioNano::ResultSet;
 #use WTSI::NPG::OM::BioNano::Metadata; # TODO put new metadata (if any) in here, pending addition to perl-irods-wrap
 
+### TODO need appropriate Annotator class(es)
+
+
+
 # FIXME Move/refactor WTSI::NPG::HTS::Publisher to reflect use outside of
 # HTS. Maybe consolidate with WTSI::NPG::Publisher in wtsi-npg/genotyping.
 
@@ -83,7 +87,7 @@ sub publish {
 
     #$self->publish_files($bionano_collection);
 
-    return 1;
+    return  $bionano_collection;
 
 }
 
@@ -100,16 +104,13 @@ sub publish {
 
 sub publish_directory {
     my ($self, $publish_dest) = @_;
-    my $molecules_file = $self->resultset->molecules_file;
-    my $md5            = $self->irods->md5sum($molecules_file);
-    my $hash_path      = $self->irods->hash_path($molecules_file, $md5);
-    $self->debug(q{Checksum of file '}, $molecules_file,
+    my $molecules_path = $self->resultset->molecules_path;
+    my $md5            = $self->irods->md5sum($molecules_path);
+    my $hash_path      = $self->irods->hash_path($molecules_path, $md5);
+    $self->debug(q{Checksum of file '}, $molecules_path,
                  q{' is '}, $md5, q{'});
-
     my $dest_collection = File::Spec->catdir($publish_dest, $hash_path);
     my $bionano_collection;
-    # TODO do we need to add metadata to the BioNano collection?
-    # Not done for Fluidigm, but yes for HTS?
     if ($self->irods->list_collection($dest_collection)) {
         $self->info(q{Skipping publication of BioNano data collection '},
                     $dest_collection, q{': already exists});
@@ -122,14 +123,35 @@ sub publish_directory {
         $self->irods->add_collection($dest_collection);
         $bionano_collection = $self->irods->put_collection
             ($self->resultset->directory, $dest_collection);
+        # TODO add metadata to the new collection ??
+        # my @run_meta;
+        # push @run_meta, $self->make_run_metadata(\@project_titles);
+        # push @run_meta, $self->make_creation_metadata($self->affiliation_uri,
+        #                                               $self->publication_time,
+        #                                               $self->accountee_uri);
+        # my $run_coll = WTSI::NPG::iRODS::Collection->new($self->irods,
+        #                                                  $bionano_collection);
+        # foreach my $m (@run_meta) {
+        #     my ($attribute, $value, $units) = @$m;
+        #     $run_coll->add_avu($attribute, $value, $units);
+        # }
     }
     return $bionano_collection;
 }
 
+=head2 publish_files
+
+  Arg [1]    : Str iRODS path that will be the destination for publication
+
+  Example    : $export->publish_samples('/foo', 'S01', 'S02')
+  Description: Publish the individual files within a BioNano ResultSet to
+               a given iRODS path, with appropriate metadata.
+  Returntype : Int number of files published
+
+=cut
+
 sub publish_files {
     my ($self, $publish_dest) = @_;
-
-    ## TODO define metadata. Use HTS::Publisher for low level behaviour?
 
     defined $publish_dest or
         $self->logconfess('A defined publish_dest argument is required');
@@ -147,12 +169,22 @@ sub publish_files {
     );
     push @files_to_publish, @{$self->resultset->ancillary_files};
 
+    # generate metadata
+    # my @bnx_metadata = $self->make_bnx_metadata($self->resultset->bnx_file);
+    # my @creation_metadata;
+    # my @sample_metadata
+
+    # my $publisher = ???
+
     $self->debug('Ready to publish ', scalar @files_to_publish, 'files');
 
     foreach my $file (@files_to_publish) {
-
         try {
-
+            #my @file_meta;
+            #foreach my $m (@file_meta) {
+            #    my ($attribute, $value, $units) = @$m;
+            #    $run_coll->add_avu($attribute, $value, $units);
+            #}
 
             $self->debug(q{Published file '}, $file, q{'});
             $num_published++;
