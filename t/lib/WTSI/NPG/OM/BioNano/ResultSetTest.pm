@@ -48,12 +48,12 @@ sub construction : Test(11) {
        abs_path($test_run_path.'/Detect Molecules'),
        "Found expected data directory");
 
-    my $bnx_path = $resultset->molecules_path;
+    my $bnx_path = $resultset->bnx_path;
     my $expected_bnx = $resultset->data_directory.'/Molecules.bnx';
     is(abs_path($bnx_path), abs_path($expected_bnx),
        "Found expected filtered molecules path");
 
-    my $raw_bnx_path = $resultset->raw_molecules_path;
+    my $raw_bnx_path = $resultset->raw_bnx_path;
     my $expected_raw_bnx = $resultset->data_directory.'/RawMolecules.bnx';
     is(abs_path($raw_bnx_path), abs_path($expected_raw_bnx),
        "Found expected raw molecules path");

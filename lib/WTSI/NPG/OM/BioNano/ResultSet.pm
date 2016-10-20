@@ -37,7 +37,7 @@ has 'bnx_file' =>
    lazy     => 1,
    default  => sub {
        my ($self,) = @_;
-       return WTSI::NPG::OM::BioNano::BnxFile->new($self->molecules_path);
+       return WTSI::NPG::OM::BioNano::BnxFile->new($self->bnx_path);
    },
    init_arg => undef,
    documentation => 'Object representing the filtered (not raw) BNX file',
@@ -51,11 +51,11 @@ has 'data_directory' =>
    init_arg => undef,
 );
 
-has 'raw_molecules_path' =>
+has 'raw_bnx_path' =>
   (is       => 'ro',
    isa      => 'Str',
    lazy     => 1,
-   builder  => '_build_raw_molecules_path',
+   builder  => '_build_raw_bnx_path',
    init_arg => undef,
 );
 
@@ -68,11 +68,11 @@ has 'run_date' =>
    documentation => 'Date and time of run, parsed from the runfolder name',
 );
 
-has 'molecules_path' =>
+has 'bnx_path' =>
   (is       => 'ro',
    isa      => 'Str',
    lazy     => 1,
-   builder  => '_build_molecules_path',
+   builder  => '_build_bnx_path',
    init_arg => undef,
 );
 
@@ -154,26 +154,26 @@ sub _build_data_directory {
     return $data_directory;
 }
 
-sub _build_molecules_path {
+sub _build_bnx_path {
     my ($self) = @_;
-    my $molecules_path = File::Spec->catfile($self->data_directory,
+    my $bnx_path = File::Spec->catfile($self->data_directory,
                                              $BNX_NAME_FILTERED);
-    if (! -e $molecules_path) {
-        $self->logconfess(q{BioNano filtered molecules path '},
-                          $molecules_path, q{' does not exist});
+    if (! -e $bnx_path) {
+        $self->logconfess(q{BioNano filtered bnx path '},
+                          $bnx_path, q{' does not exist});
     }
-    return $molecules_path;
+    return $bnx_path;
 }
 
-sub _build_raw_molecules_path {
+sub _build_raw_bnx_path {
     my ($self) = @_;
-    my $molecules_path = File::Spec->catfile($self->data_directory,
+    my $bnx_path = File::Spec->catfile($self->data_directory,
                                              $BNX_NAME_RAW);
-    if (! -e $molecules_path) {
-        $self->logconfess(q{BioNano raw molecules path '},
-                          $molecules_path, q{' does not exist});
+    if (! -e $bnx_path) {
+        $self->logconfess(q{BioNano raw bnx path '},
+                          $bnx_path, q{' does not exist});
     }
-    return $molecules_path;
+    return $bnx_path;
 }
 
 sub _build_run_date {
