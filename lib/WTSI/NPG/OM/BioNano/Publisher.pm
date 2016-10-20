@@ -7,13 +7,11 @@ use File::Spec;
 use Try::Tiny;
 
 use WTSI::NPG::iRODS;
+use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::HTS::Publisher;
 use WTSI::NPG::OM::BioNano::ResultSet;
 #use WTSI::NPG::OM::BioNano::Metadata; # TODO put new metadata (if any) in here, pending addition to perl-irods-wrap
-
-### TODO need appropriate Annotator class(es)
-
 
 
 # FIXME Move/refactor WTSI::NPG::HTS::Publisher to reflect use outside of
@@ -39,7 +37,9 @@ use WTSI::NPG::OM::BioNano::ResultSet;
 
 our $VERSION = '';
 
-with 'WTSI::DNAP::Utilities::Loggable';
+with qw/WTSI::DNAP::Utilities::Loggable
+        WTSI::NPG::Accountable
+        WTSI::NPG::OM::BioNano::Annotator/;
 
 has 'irods' =>
   (is       => 'ro',
@@ -70,7 +70,9 @@ sub BUILD {
 
 =head2 publish
 
-  Arg [1]    : Str iRODS path that will be the destination for publication
+  Arg [1]    : Str iRODS path that will be the root destination for
+publication. BioNano will be published to a subcollection, with a hashed
+path based on the md5 checksum of the Molecules.bnx file.
 
   Example    : $export->publish('/foo')
   Description: Publish the BioNano ResultSet to an iRODS path.
@@ -79,17 +81,68 @@ sub BUILD {
 =cut
 
 sub publish {
-    my ($self, $publish_dest) = @_;
-
-    my $bionano_collection = $self->publish_directory($publish_dest);
-
+    my ($self, $publish_dest, $timestamp) = @_;
+    my $bnx_path  = $self->resultset->bnx_path;
+    my $md5       = $self->irods->md5sum($bnx_path);
+    my $hash_path = $self->irods->hash_path($bnx_path, $md5);
+    $self->debug(q{Checksum of file '}, $bnx_path,
+                 q{' is '}, $md5, q{'});
+    if (! File::Spec->file_name_is_absolute($publish_dest)) {
+        $publish_dest = File::Spec->catdir($self->irods->working_collection,
+                                           $publish_dest);
+    }
+    my $bionano_collection = File::Spec->catdir($publish_dest, $hash_path);
     $self->debug(q{Publishing to collection '}, $bionano_collection, q{'});
 
-    #$self->publish_files($bionano_collection);
+    # use low-level HTS::Publisher->publish method for directory
+    # arguments: $local_path, $remote_path, $metadata, $timestamp
 
-    return  $bionano_collection;
+    my $collection_meta = $self->get_collection_meta($timestamp);
 
+    my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods);
+    $publisher->publish(
+        $self->resultset->directory,
+        $bionano_collection,
+        $collection_meta
+    );
+    # TODO apply metadata to BNX files?
+    return $bionano_collection;
 }
+
+
+=head2 get_collection_meta
+
+  Args       : DateTime Publication time, defaults to the current time
+
+  Example    : $collection_meta = $publisher->get_collection_meta();
+  Description: Generate metadata to be applied to a BioNano collection
+               in iRODS.
+  Returntype : ArrayRef[HashRef] AVUs to be used as metadata
+
+=cut
+
+sub get_collection_meta {
+
+    my ($self, $timestamp) = @_;
+
+    if (not defined $timestamp) {
+        $timestamp = DateTime->now;
+    }
+
+    my @metadata;
+
+
+    my @creation_meta = $self->make_creation_metadata(
+        $self->affiliation_uri,
+        $timestamp,
+        $self->accountee_uri
+    );
+
+    push @metadata, @creation_meta;
+
+    return \@metadata;
+}
+
 
 =head2 publish_directory
 
@@ -104,10 +157,10 @@ sub publish {
 
 sub publish_directory {
     my ($self, $publish_dest) = @_;
-    my $molecules_path = $self->resultset->molecules_path;
-    my $md5            = $self->irods->md5sum($molecules_path);
-    my $hash_path      = $self->irods->hash_path($molecules_path, $md5);
-    $self->debug(q{Checksum of file '}, $molecules_path,
+    my $bnx_path = $self->resultset->bnx_path;
+    my $md5            = $self->irods->md5sum($bnx_path);
+    my $hash_path      = $self->irods->hash_path($bnx_path, $md5);
+    $self->debug(q{Checksum of file '}, $bnx_path,
                  q{' is '}, $md5, q{'});
     my $dest_collection = File::Spec->catdir($publish_dest, $hash_path);
     my $bionano_collection;
@@ -164,8 +217,8 @@ sub publish_files {
     my $num_published = 0;
 
     my @files_to_publish = (
-        $self->resultset->molecules_file,
-        $self->resultset->raw_molecules_file,
+        $self->resultset->bnx_file,
+        $self->resultset->raw_bnx_file,
     );
     push @files_to_publish, @{$self->resultset->ancillary_files};
 
