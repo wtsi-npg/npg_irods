@@ -6,6 +6,7 @@ use Moose::Role;
 our $VERSION = '';
 
 
+with qw/WTSI::NPG::HTS::Annotator/;
 
 
 # Based on genotyping WTSI::NPG::Annotator, and WTSI::NPG::HTS::Annotator
