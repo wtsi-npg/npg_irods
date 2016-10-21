@@ -119,11 +119,14 @@ sub publish {
         $timestamp,
     );
     # apply metadata to filtered BNX file
+    my @published_meta =
+        $self->irods->get_collection_meta($bionano_collection);
+    # $published_meta includes terms added by HTS::Publisher
     my $bnx_ipath = File::Spec->catfile($bionano_collection,
                                         'Detect Molecules',
                                         'Molecules.bnx');
     my $bnx_obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $bnx_ipath);
-    foreach my $avu (@{$collection_meta}) {
+    foreach my $avu (@published_meta) {
         $bnx_obj->add_avu($avu->{'attribute'}, $avu->{'value'});
     }
     $bnx_obj->add_avu('type', 'bnx');
@@ -152,16 +155,10 @@ sub make_collection_meta {
     }
 
     my @metadata;
-
-    my @creation_meta = $self->make_creation_metadata(
-        $self->affiliation_uri,
-        $timestamp,
-        $self->accountee_uri
-    );
-
+    # creation metadata is added by HTS::Publisher
     my @bnx_meta = $self->make_bnx_metadata($self->resultset);
-
-    push @metadata, @creation_meta, @bnx_meta;
+    push @metadata, @bnx_meta;
+    # TODO add sample metadata from mock Sequencescape instance
 
     return \@metadata;
 }
