@@ -8,9 +8,11 @@ use Data::Dumper; # FIXME
 
 use base qw(WTSI::NPG::HTS::Test); # FIXME better path for shared base
 
-use Test::More tests => 8;
+use Test::More tests => 7;
 use Test::Exception;
 
+use English qw(-no_match_vars);
+use File::Spec;
 use File::Temp qw(tempdir);
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
@@ -76,7 +78,7 @@ sub publish : Test(2) {
 
 }
 
-sub metadata : Test(5) {
+sub metadata : Test(4) {
 
     my $irods = WTSI::NPG::iRODS->new();
     my $resultset = WTSI::NPG::OM::BioNano::ResultSet->new(
@@ -90,34 +92,73 @@ sub metadata : Test(5) {
         minute     => 00,
     );
     my $publisher = WTSI::NPG::OM::BioNano::Publisher->new(
-        resultset => $resultset,
+        resultset => $resultset
     );
     my $bionano_coll = $publisher->publish($irods_tmp_coll,
                                            $publication_time);
     my @collection_meta = $irods->get_collection_meta($bionano_coll);
 
-    is(scalar @collection_meta, 6, "Expected number of AVUs found");
+    is(scalar @collection_meta, 6,
+       "Expected number of collection AVUs found");
 
-    foreach my $avu (@collection_meta) {
-        if ($avu->{'attribute'} eq 'dcterms:created') {
-            is($avu->{'value'}, '2016-01-01T12:00:00',
-               'Correct timestamp AVU');
-        } elsif ($avu->{'attribute'} eq 'bnx_chip_id') {
-            is($avu->{'value'}, '20000,10000,1/1/2015,987654321',
-               'Correct BNX chip ID AVU');
-        } elsif ($avu->{'attribute'} eq 'bnx_flowcell') {
-            is($avu->{'value'}, '1',
-               'Correct BNX flowcell AVU');
-        } elsif ($avu->{'attribute'} eq 'bnx_instrument') {
-            is($avu->{'value'}, 'B001',
-               'Correct BNX instrument AVU');
-        }
-    }
+    my ($user_name) = getpwuid $REAL_USER_ID;
 
-    #print STDERR "$bionano_coll\n";
+    my @expected_meta = (
+        {
+            'attribute' => 'bnx_chip_id',
+            'value' => '20000,10000,1/1/2015,987654321'
+        },
+        {
+            'attribute' => 'bnx_flowcell',
+            'value' => 1
+        },
+        {
+            'attribute' => 'bnx_instrument',
+            'value' => 'B001'
+        },
+        {
+            'attribute' => 'dcterms:created',
+            'value' => '2016-01-01T12:00:00'
+        },
+        {
+            'attribute' => 'dcterms:creator',
+            'value' => 'http://www.sanger.ac.uk'
+        },
+        {
+            'attribute' => 'dcterms:publisher',
+            'value' => 'ldap://ldap.internal.sanger.ac.uk/ou=people,dc=sanger,dc=ac,dc=uk?title?sub?(uid='.$user_name.')'
+        },
+    );
+
+    is_deeply(\@collection_meta, \@expected_meta,
+              "Collection metadata matches expected values");
+
     #print STDERR Dumper \@collection_meta;
 
+    my $bnx_ipath =  File::Spec->catfile($bionano_coll,
+                                         'Detect Molecules',
+                                         'Molecules.bnx');
+    my @file_meta = $irods->get_object_meta($bnx_ipath);
 
+    my @additional_file_meta = (
+        {
+            'attribute' => 'md5',
+            'value' => 'd50fb6797f561e74ae2a5ae6e0258d16'
+        },
+        {
+            'attribute' => 'type',
+            'value' => 'bnx'
+        }
+    );
+
+    push @expected_meta, @additional_file_meta;
+
+    is(scalar @file_meta, 8, "Expected number of BNX file AVUs found");
+
+    is_deeply(\@file_meta, \@expected_meta,
+              'BNX file metadata matches expected values');
+
+    #print STDERR Dumper \@file_meta;
 }
 
 

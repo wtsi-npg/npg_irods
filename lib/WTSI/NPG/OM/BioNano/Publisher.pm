@@ -8,6 +8,7 @@ use Try::Tiny;
 
 use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::Collection;
+use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::HTS::Publisher;
 use WTSI::NPG::OM::BioNano::ResultSet;
@@ -106,23 +107,34 @@ sub publish {
     # redundant assignment of dcterms:created in HTS::Publisher and
     # HTS::Annotator. Using the same timestamp argument ensures consistency.
 
-    my $collection_meta = $self->get_collection_meta($timestamp);
+    my $collection_meta = $self->make_collection_meta($timestamp);
 
-    my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods);
+    my $publisher = WTSI::NPG::HTS::Publisher->new(
+        irods => $self->irods,
+    );
     my $bionano_collection = $publisher->publish(
         $self->resultset->directory,
         $leaf_collection,
         $collection_meta,
         $timestamp,
     );
-    # TODO apply metadata to BNX files?
+    # apply metadata to filtered BNX file
+    my $bnx_ipath = File::Spec->catfile($bionano_collection,
+                                        'Detect Molecules',
+                                        'Molecules.bnx');
+    my $bnx_obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $bnx_ipath);
+    foreach my $avu (@{$collection_meta}) {
+        $bnx_obj->add_avu($avu->{'attribute'}, $avu->{'value'});
+    }
+    $bnx_obj->add_avu('type', 'bnx');
+    $bnx_obj->add_avu($FILE_MD5, $md5);
     return $bionano_collection;
 }
 
 
-=head2 get_collection_meta
+=head2 make_collection_meta
 
-  Args       : DateTime Publication time, defaults to the current time
+  Arg [1]    : [DateTime] Publication time, defaults to the current time
 
   Example    : $collection_meta = $publisher->get_collection_meta();
   Description: Generate metadata to be applied to a BioNano collection
@@ -131,7 +143,7 @@ sub publish {
 
 =cut
 
-sub get_collection_meta {
+sub make_collection_meta {
 
     my ($self, $timestamp) = @_;
 
@@ -153,63 +165,6 @@ sub get_collection_meta {
 
     return \@metadata;
 }
-
-=head2 publish_files
-
-  Arg [1]    : Str iRODS path that will be the destination for publication
-
-  Example    : $export->publish_samples('/foo', 'S01', 'S02')
-  Description: Publish the individual files within a BioNano ResultSet to
-               a given iRODS path, with appropriate metadata.
-  Returntype : Int number of files published
-
-=cut
-
-sub publish_files {
-    my ($self, $publish_dest) = @_;
-
-    defined $publish_dest or
-        $self->logconfess('A defined publish_dest argument is required');
-
-    $publish_dest eq q{} and
-        $self->logconfess('A non-empty publish_dest argument is required');
-
-    $publish_dest = File::Spec->canonpath($publish_dest);
-
-    my $num_published = 0;
-
-    my @files_to_publish = (
-        $self->resultset->bnx_file,
-        $self->resultset->raw_bnx_file,
-    );
-    push @files_to_publish, @{$self->resultset->ancillary_files};
-
-    # generate metadata
-    # my @bnx_metadata = $self->make_bnx_metadata($self->resultset->bnx_file);
-    # my @creation_metadata;
-    # my @sample_metadata
-
-    # my $publisher = ???
-
-    $self->debug('Ready to publish ', scalar @files_to_publish, 'files');
-
-    foreach my $file (@files_to_publish) {
-        try {
-            #my @file_meta;
-            #foreach my $m (@file_meta) {
-            #    my ($attribute, $value, $units) = @$m;
-            #    $run_coll->add_avu($attribute, $value, $units);
-            #}
-
-            $self->debug(q{Published file '}, $file, q{'});
-            $num_published++;
-        } catch {
-            $self->error(q{Failed to publish file '}, $file, q{'});
-        };
-    }
-    return $num_published;
-
- }
 
 
 
