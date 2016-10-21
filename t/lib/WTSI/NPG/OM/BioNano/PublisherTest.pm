@@ -4,9 +4,11 @@ use strict;
 use warnings;
 use DateTime;
 
+use Data::Dumper; # FIXME
+
 use base qw(WTSI::NPG::HTS::Test); # FIXME better path for shared base
 
-use Test::More tests => 3;
+use Test::More tests => 8;
 use Test::Exception;
 
 use File::Temp qw(tempdir);
@@ -74,3 +76,49 @@ sub publish : Test(2) {
 
 }
 
+sub metadata : Test(5) {
+
+    my $irods = WTSI::NPG::iRODS->new();
+    my $resultset = WTSI::NPG::OM::BioNano::ResultSet->new(
+        directory => $test_run_path,
+    );
+    my $publication_time = DateTime->new(
+        year       => 2016,
+        month      => 1,
+        day        => 1,
+        hour       => 12,
+        minute     => 00,
+    );
+    my $publisher = WTSI::NPG::OM::BioNano::Publisher->new(
+        resultset => $resultset,
+    );
+    my $bionano_coll = $publisher->publish($irods_tmp_coll,
+                                           $publication_time);
+    my @collection_meta = $irods->get_collection_meta($bionano_coll);
+
+    is(scalar @collection_meta, 6, "Expected number of AVUs found");
+
+    foreach my $avu (@collection_meta) {
+        if ($avu->{'attribute'} eq 'dcterms:created') {
+            is($avu->{'value'}, '2016-01-01T12:00:00',
+               'Correct timestamp AVU');
+        } elsif ($avu->{'attribute'} eq 'bnx_chip_id') {
+            is($avu->{'value'}, '20000,10000,1/1/2015,987654321',
+               'Correct BNX chip ID AVU');
+        } elsif ($avu->{'attribute'} eq 'bnx_flowcell') {
+            is($avu->{'value'}, '1',
+               'Correct BNX flowcell AVU');
+        } elsif ($avu->{'attribute'} eq 'bnx_instrument') {
+            is($avu->{'value'}, 'B001',
+               'Correct BNX instrument AVU');
+        }
+    }
+
+    #print STDERR "$bionano_coll\n";
+    #print STDERR Dumper \@collection_meta;
+
+
+}
+
+
+1;

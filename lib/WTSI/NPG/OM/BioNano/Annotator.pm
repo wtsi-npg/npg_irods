@@ -13,8 +13,24 @@ with qw/WTSI::NPG::HTS::Annotator/;
 # TODO consolidate Annotator functionality in one place where possible
 
 
+# get metadata for bionano_instrument, bionano_chip_id, bionano_flowcell
+# from BioNano::Resultset, parsed from BNX file header
 
+# TODO make a BioNano Metadata class (to be merged into perl-irods-wrap)
+our $BIONANO_CHIP_ID = 'bnx_chip_id';
+our $BIONANO_FLOWCELL = 'bnx_flowcell';
+our $BIONANO_INSTRUMENT = 'bnx_instrument';
 
+sub make_bnx_metadata {
+    my ($self, $resultset) = @_;
+    my $bnx = $resultset->bnx_file;
+    my @bnx_meta = (
+        $self->make_avu($BIONANO_CHIP_ID, $bnx->chip_id),
+        $self->make_avu($BIONANO_FLOWCELL, $bnx->flowcell),
+        $self->make_avu($BIONANO_INSTRUMENT, $bnx->instrument),
+    );
+    return @bnx_meta;
+}
 
 
 no Moose::Role;

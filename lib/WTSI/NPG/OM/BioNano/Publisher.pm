@@ -49,10 +49,10 @@ has 'irods' =>
      return WTSI::NPG::iRODS->new;
    });
 
-has 'publication_time' =>
-  (is       => 'ro',
-   isa      => 'DateTime',
-   required => 1);
+#has 'publication_time' =>
+#  (is       => 'ro',
+#   isa      => 'DateTime',
+#   required => 1);
 
 has 'resultset' =>
   (is       => 'ro',
@@ -70,9 +70,12 @@ sub BUILD {
 
 =head2 publish
 
-  Arg [1]    : Str iRODS path that will be the root destination for
-publication. BioNano will be published to a subcollection, with a hashed
-path based on the md5 checksum of the Molecules.bnx file.
+  Arg [1]    : [Str] iRODS path that will be the root destination for
+               publication. BioNano will be published to a subcollection,
+               with a hashed path based on the md5 checksum of the
+               Molecules.bnx file.
+  Arg [2]    : [DateTime] Timestamp for the time of publication. Optional,
+               defaults to the present time.
 
   Example    : $export->publish('/foo')
   Description: Publish the BioNano ResultSet to an iRODS path.
@@ -85,25 +88,32 @@ sub publish {
     my $bnx_path  = $self->resultset->bnx_path;
     my $md5       = $self->irods->md5sum($bnx_path);
     my $hash_path = $self->irods->hash_path($bnx_path, $md5);
+    if (! defined $timestamp) {
+        $timestamp = DateTime->now();
+    }
     $self->debug(q{Checksum of file '}, $bnx_path,
                  q{' is '}, $md5, q{'});
     if (! File::Spec->file_name_is_absolute($publish_dest)) {
         $publish_dest = File::Spec->catdir($self->irods->working_collection,
                                            $publish_dest);
     }
-    my $bionano_collection = File::Spec->catdir($publish_dest, $hash_path);
-    $self->debug(q{Publishing to collection '}, $bionano_collection, q{'});
+    my $leaf_collection = File::Spec->catdir($publish_dest, $hash_path);
+    $self->debug(q{Publishing to collection '}, $leaf_collection, q{'});
 
     # use low-level HTS::Publisher->publish method for directory
     # arguments: $local_path, $remote_path, $metadata, $timestamp
 
+    # redundant assignment of dcterms:created in HTS::Publisher and
+    # HTS::Annotator. Using the same timestamp argument ensures consistency.
+
     my $collection_meta = $self->get_collection_meta($timestamp);
 
     my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods);
-    $publisher->publish(
+    my $bionano_collection = $publisher->publish(
         $self->resultset->directory,
-        $bionano_collection,
-        $collection_meta
+        $leaf_collection,
+        $collection_meta,
+        $timestamp,
     );
     # TODO apply metadata to BNX files?
     return $bionano_collection;
@@ -131,65 +141,17 @@ sub get_collection_meta {
 
     my @metadata;
 
-
     my @creation_meta = $self->make_creation_metadata(
         $self->affiliation_uri,
         $timestamp,
         $self->accountee_uri
     );
 
-    push @metadata, @creation_meta;
+    my @bnx_meta = $self->make_bnx_metadata($self->resultset);
+
+    push @metadata, @creation_meta, @bnx_meta;
 
     return \@metadata;
-}
-
-
-=head2 publish_directory
-
-  Arg [1]    : Str iRODS path that will be the destination for publication
-
-  Example    : $export->publish('/foo')
-  Description: Publish the directory in a BioNano::ResultSet to an
-               iRODS path. Inserts a hashed directory path.
-  Returntype : [Str] The newly created iRODS collection
-
-=cut
-
-sub publish_directory {
-    my ($self, $publish_dest) = @_;
-    my $bnx_path = $self->resultset->bnx_path;
-    my $md5            = $self->irods->md5sum($bnx_path);
-    my $hash_path      = $self->irods->hash_path($bnx_path, $md5);
-    $self->debug(q{Checksum of file '}, $bnx_path,
-                 q{' is '}, $md5, q{'});
-    my $dest_collection = File::Spec->catdir($publish_dest, $hash_path);
-    my $bionano_collection;
-    if ($self->irods->list_collection($dest_collection)) {
-        $self->info(q{Skipping publication of BioNano data collection '},
-                    $dest_collection, q{': already exists});
-
-        my $dir = basename($self->resultset->directory);
-        $bionano_collection = File::Spec->catdir($dest_collection, $dir);
-    } else {
-        $self->info(q{Publishing new BioNano data collection '},
-                    $dest_collection, q{'});
-        $self->irods->add_collection($dest_collection);
-        $bionano_collection = $self->irods->put_collection
-            ($self->resultset->directory, $dest_collection);
-        # TODO add metadata to the new collection ??
-        # my @run_meta;
-        # push @run_meta, $self->make_run_metadata(\@project_titles);
-        # push @run_meta, $self->make_creation_metadata($self->affiliation_uri,
-        #                                               $self->publication_time,
-        #                                               $self->accountee_uri);
-        # my $run_coll = WTSI::NPG::iRODS::Collection->new($self->irods,
-        #                                                  $bionano_collection);
-        # foreach my $m (@run_meta) {
-        #     my ($attribute, $value, $units) = @$m;
-        #     $run_coll->add_avu($attribute, $value, $units);
-        # }
-    }
-    return $bionano_collection;
 }
 
 =head2 publish_files
