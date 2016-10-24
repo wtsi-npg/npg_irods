@@ -3,6 +3,7 @@ package WTSI::NPG::HTS::LIMSFactory;
 use List::AllUtils qw[any];
 use Moose;
 use MooseX::StrictConstructor;
+use Scalar::Util qw[refaddr];
 
 use npg_tracking::util::types qw[:all];
 use st::api::lims;
@@ -12,9 +13,10 @@ our $VERSION = '';
 with qw[WTSI::DNAP::Utilities::Loggable];
 
 has 'mlwh_schema' =>
-  (is            => 'ro',
+  (is            => 'rw',
    isa           => 'WTSI::DNAP::Warehouse::Schema',
-   required      => 1,
+   required      => 0,
+   predicate     => 'has_mlwh_schema',
    documentation => 'A ML warehouse handle to obtain secondary metadata');
 
 has 'driver_type' =>
@@ -99,16 +101,50 @@ sub make_lims {
   defined $id_run or
     $self->logconfess('A defined id_run argument is required');
 
+  $self->debug('Making a lims using driver_type ', $self->driver_type);
+
   if (not exists $self->_lims_cache->{$id_run}) {
-    my $run = st::api::lims->new(driver_type => $self->driver_type,
-                                 mlwh_schema => $self->mlwh_schema,
-                                 id_run      => $id_run);
+    my $run;
+
+    if ($self->has_mlwh_schema) {
+      $run = st::api::lims->new(driver_type => $self->driver_type,
+                                mlwh_schema => $self->mlwh_schema,
+                                id_run      => $id_run);
+    }
+    else {
+      $run = st::api::lims->new(driver_type => $self->driver_type,
+                                id_run      => $id_run);
+    }
+
+    if ($run->can('mlwh_schema')) {
+      if ($self->has_mlwh_schema) {
+        # Sanity check that the handle used by the st::api::lims is
+        # the same as any handle we have cached
+        my $mlwh1 = $run->mlwh_schema;
+        my $mlwh2 = $self->mlwh_schema;
+        if (defined $mlwh1 and ref $mlwh1 and
+            defined $mlwh2 and ref $mlwh2 and
+            refaddr($mlwh1) != refaddr($mlwh2)) {
+          $self->logconfess('The WTSI::DNAP::Warehouse::Schema cached by ',
+                            'WTSI::NPG::HTS::LIMSFactory is not the same ',
+                            "as that in the st::api::lims for run $id_run");
+        }
+      }
+      else {
+        # If the st::api::lims provided a database handle itself and the
+        # factory has not, cache the handle.
+        $self->mlwh_schema($run->mlwh_schema);
+      }
+    }
+
     $self->_lims_cache->{$id_run} = $run;
   }
 
   my $lims = $self->_lims_cache->{$id_run};
   defined $lims or
       $self->logconfess("Failed to create st::api::lims for run $id_run");
+
+  $self->debug("Driver st::api::lims for run $id_run is ", $lims->driver);
 
   if (defined $position) {
     ($lims) = grep { $_->position == $position } $lims->children;
@@ -144,6 +180,10 @@ A factory for creating st::api::lims objects given run, lane and plex
 information. This class exists only to encapsulate the ML warehouse
 queries and driver creation necessary to make st::api::lims
 objects. It will serve as a cache for these objects, if required.
+
+The factory will also cache any WTSI::DNAP::Warehouse::Schema created
+by the st::api::lims objects to enablke them to share the same
+underlying database connection.
 
 This functionality probably belongs in the st::api and could be moved
 there, making this class redundant.

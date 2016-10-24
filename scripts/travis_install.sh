@@ -2,14 +2,21 @@
 
 set -e -x
 
+# The default build branch for all repositories. This defaults to
+# TRAVIS_BRANCH unless set in the Travis build environment.
+WTSI_NPG_BUILD_BRANCH=${WTSI_NPG_BUILD_BRANCH:=$TRAVIS_BRANCH}
+
 sudo apt-get install -qq odbc-postgresql
 sudo apt-get install libgd2-xpm-dev # For npg_tracking
 sudo apt-get install liblzma-dev # For npg_qc
 
-# iRODS 3.3.1
-wget -q https://github.com/wtsi-npg/irods-legacy/releases/download/3.3.1-travis-bc85aa/irods.tar.gz -O /tmp/irods.tar.gz
-tar xfz /tmp/irods.tar.gz
-source $TRAVIS_BUILD_DIR/scripts/irods_paths.sh
+# iRODS
+wget -q https://github.com/wtsi-npg/disposable-irods/releases/download/${DISPOSABLE_IRODS_VERSION}/disposable-irods-${DISPOSABLE_IRODS_VERSION}.tar.gz -O /tmp/disposable-irods-${DISPOSABLE_IRODS_VERSION}.tar.gz
+tar xfz /tmp/disposable-irods-${DISPOSABLE_IRODS_VERSION}.tar.gz -C /tmp
+cd /tmp/disposable-irods-${DISPOSABLE_IRODS_VERSION}
+./scripts/download_and_verify_irods.sh
+./scripts/install_irods.sh
+./scripts/configure_irods.sh
 
 # Jansson
 wget -q https://github.com/akheron/jansson/archive/v${JANSSON_VERSION}.tar.gz -O /tmp/jansson-${JANSSON_VERSION}.tar.gz
@@ -23,47 +30,53 @@ sudo ldconfig
 wget -q https://github.com/wtsi-npg/baton/releases/download/${BATON_VERSION}/baton-${BATON_VERSION}.tar.gz -O /tmp/baton-${BATON_VERSION}.tar.gz
 tar xfz /tmp/baton-${BATON_VERSION}.tar.gz -C /tmp
 cd /tmp/baton-${BATON_VERSION}
-./configure --with-irods=$IRODS_HOME ; make ; sudo make install
+
+
+IRODS_HOME=
+baton_irods_conf="--with-irods"
+
+if [ -n "$IRODS_RIP_DIR" ]
+then
+    export IRODS_HOME="$IRODS_RIP_DIR/iRODS"
+    baton_irods_conf="--with-irods=$IRODS_HOME"
+fi
+
+./configure ${baton_irods_conf} ; make ; sudo make install
 sudo ldconfig
 
-# htslib/ samtools
+# htslib/samtools
 wget -q https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/htslib-${HTSLIB_VERSION}.tar.bz2 -O /tmp/htslib-${HTSLIB_VERSION}.tar.bz2
 tar xfj /tmp/htslib-${HTSLIB_VERSION}.tar.bz2 -C /tmp
 cd /tmp/htslib-${HTSLIB_VERSION}
-./configure --with-irods=$IRODS_HOME --enable-plugins
-make
+./configure --enable-plugins ; make ; sudo make install
+sudo ldconfig
+
+cd /tmp
+git clone https://github.com/samtools/htslib-plugins.git htslib-plugins.git
+cd htslib-plugins.git
+make ; sudo make install
 
 wget -q https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 -O /tmp/samtools-${SAMTOOLS_VERSION}.tar.bz2
 tar xfj /tmp/samtools-${SAMTOOLS_VERSION}.tar.bz2 -C /tmp
 cd /tmp/samtools-${SAMTOOLS_VERSION}
-./configure --enable-plugins --with-plugin-path=/tmp/htslib-${HTSLIB_VERSION}
-make all plugins-htslib
-sudo make install
-sudo ln -s samtools /usr/local/bin/samtools_irods
+./configure --enable-plugins --with-htslib=system ; make ; sudo make install
+sudo ln -s /usr/local/bin/samtools /usr/local/bin/samtools_irods
 
 # CPAN
 cpanm --quiet --notest Alien::Tidyp # For npg_tracking
 cpanm --quiet --notest Module::Build
 
 # WTSI NPG Perl repo dependencies
-cd /tmp
-git clone https://github.com/wtsi-npg/perl-dnap-utilities.git perl-dnap-utilities.git
-git clone https://github.com/wtsi-npg/perl-irods-wrap.git perl-irods-wrap.git
-git clone https://github.com/wtsi-npg/ml_warehouse.git ml_warehouse.git
-git clone https://github.com/wtsi-npg/npg_ml_warehouse.git npg_ml_warehouse.git
-git clone https://github.com/wtsi-npg/npg_tracking.git npg_tracking.git
-git clone https://github.com/wtsi-npg/npg_seq_common.git npg_seq_common.git
-git clone https://github.com/wtsi-npg/npg_qc.git npg_qc.git
-
-cd /tmp/perl-dnap-utilities.git ; git checkout ${DNAP_UTILITIES_VERSION}
-cd /tmp/perl-irods-wrap.git     ; git checkout ${IRODS_WRAP_VERSION}
-cd /tmp/ml_warehouse.git        ; git checkout ${DNAP_WAREHOUSE_VERSION}
-cd /tmp/npg_ml_warehouse.git    ; git checkout ${NPG_ML_WAREHOUSE_VERSION}
-cd /tmp/npg_tracking.git        ; git checkout ${NPG_TRACKING_VERSION}
-cd /tmp/npg_seq_common.git      ; git checkout ${NPG_SEQ_COMMON_VERSION}
-cd /tmp/npg_qc.git              ; git checkout ${NPG_QC_VERSION}
-
-repos="/tmp/perl-dnap-utilities.git /tmp/perl-irods-wrap.git /tmp/ml_warehouse.git /tmp/npg_ml_warehouse.git /tmp/npg_tracking.git /tmp/npg_seq_common.git /tmp/npg_qc.git"
+repos=""
+for repo in perl-dnap-utilities perl-irods-wrap ml_warehouse npg_ml_warehouse npg_tracking npg_seq_common npg_qc; do
+    cd /tmp
+    # Always clone master when using depth 1 to get current tag
+    git clone --branch master --depth 1 ${WTSI_NPG_GITHUB_URL}/${repo}.git ${repo}.git
+    cd /tmp/${repo}.git
+    # Shift off master to appropriate branch (if possible)
+    git ls-remote --heads --exit-code origin ${WTSI_NPG_BUILD_BRANCH} && git pull origin ${WTSI_NPG_BUILD_BRANCH} && echo "Switched to branch ${WTSI_NPG_BUILD_BRANCH}"
+    repos=$repos" /tmp/${repo}.git"
+done
 
 # Install CPAN dependencies. The src libs are on PERL5LIB because of
 # circular dependencies. The blibs are on PERL5LIB because the package

@@ -45,8 +45,6 @@ sub setup_databases : Test(startup) {
                            verbose             => 0)->create_test_db
     ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
      $wh_db_file);
-
-  $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 }
 
 sub teardown_databases : Test(shutdown) {
@@ -74,6 +72,9 @@ sub positions : Test(2) {
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
 
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
   foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (file_format    => $file_format,
@@ -90,6 +91,8 @@ sub positions : Test(2) {
 sub num_reads : Test(102) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
   # Lane-level
   my $lane_runfolder_path =
@@ -221,6 +224,8 @@ sub is_paired_read : Test(2) {
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
   foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
@@ -238,6 +243,8 @@ sub list_xml_files : Test(2) {
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
   foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
@@ -259,7 +266,10 @@ sub list_lane_alignment_files : Test(16) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20151214-085833/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
   foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
@@ -284,7 +294,10 @@ sub list_plex_alignment_files : Test(16) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20150914-100512/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
   foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
@@ -311,7 +324,10 @@ sub list_lane_index_files : Test(16) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20151214-085833/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
   foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
@@ -336,7 +352,10 @@ sub list_plex_index_files : Test(16) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20150914-100512/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
   foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
@@ -363,7 +382,10 @@ sub list_lane_qc_files : Test(16) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20151214-085833/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
   foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
@@ -389,7 +411,10 @@ sub list_plex_qc_files : Test(16) {
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20150914-100512/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
   foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
@@ -414,7 +439,10 @@ sub list_lane_ancillary_files : Test(16) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20151214-085833/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
   foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
@@ -440,7 +468,10 @@ sub list_plex_ancillary_files : Test(16) {
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20150914-100512/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
   foreach my $file_format (qw[bam cram]) {
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
@@ -466,7 +497,9 @@ sub publish_xml_files : Test(14) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
-  my $dest_coll = "$irods_tmp_coll/publish_xml_files";
+  my $dest_coll      = "$irods_tmp_coll/publish_xml_files";
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
   my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
     (dest_collection => $dest_coll,
@@ -498,7 +531,9 @@ sub publish_interop_files : Test(44) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
-  my $dest_coll = "$irods_tmp_coll/publish_interop_files";
+  my $dest_coll      = "$irods_tmp_coll/publish_interop_files";
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
   my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
     (dest_collection => $dest_coll,
@@ -534,52 +569,74 @@ sub publish_interop_files : Test(44) {
   }
 }
 
-sub publish_lane_alignment_files : Test(264) {
+sub publish_lane_alignment_files_mlwh : Test(264) {
+  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20151214-085833/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
+  check_publish_lane_alignment_files($runfolder_path, $archive_path,
+                                     $lims_factory);
+}
+
+sub publish_lane_alignment_files_samplesheet : Test(264) {
+  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20151214-085833/no_cal/archive';
+
+  local $ENV{NPG_CACHED_SAMPLESHEET_FILE} = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/metadata_cache_18448/samplesheet_18448.csv";
+
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(driver_type => 'samplesheet');
+
+  check_publish_lane_alignment_files($runfolder_path, $archive_path,
+                                     $lims_factory);
+}
+
+sub check_publish_lane_alignment_files {
+  my ($runfolder_path, $archive_path, $lims_factory) = @_;
+
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
+  my $file_format = 'cram';
+  my $dest_coll = "$irods_tmp_coll/publish_lane_alignment_files";
 
-  # Omitting bam to reduce runtime
-  foreach my $file_format (qw[cram]) {
-    my $dest_coll = "$irods_tmp_coll/publish_lane_alignment_files";
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (dest_collection => $dest_coll,
+     file_format     => $file_format,
+     irods           => $irods,
+     lims_factory    => $lims_factory,
+     runfolder_path  => $runfolder_path);
 
-    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
-      (dest_collection => $dest_coll,
-       file_format     => $file_format,
-       irods           => $irods,
-       lims_factory    => $lims_factory,
-       runfolder_path  => $runfolder_path);
+  my %position_index = calc_lane_alignment_files($archive_path, $file_format);
 
-    my %position_index = calc_lane_alignment_files($archive_path, $file_format);
+  foreach my $position (1 .. 8) {
+    my @expected_files = @{$position_index{$position}};
+    my $num_expected  = scalar @expected_files;
 
-    foreach my $position (1 .. 8) {
-      my @expected_files = @{$position_index{$position}};
-      my $num_expected  = scalar @expected_files;
+    my ($num_files, $num_processed, $num_errors) =
+      $pub->publish_lane_alignment_files($position);
 
-      my ($num_files, $num_processed, $num_errors) =
-        $pub->publish_lane_alignment_files($position);
+    cmp_ok($num_processed, '==', $num_expected,
+           "Published $num_expected $file_format lane " .
+           "$position alignment files");
 
-      cmp_ok($num_processed, '==', $num_expected,
-             "Published $num_expected $file_format lane " .
-             "$position alignment files");
+    my $pos_pattern = sprintf '%d_%d.*\.%s$',
+      $pub->id_run, $position, $file_format;
+    my @expected_paths =
+      expected_data_objects($dest_coll, \%position_index, $position);
+    my @observed_paths =
+      observed_data_objects($irods, $dest_coll, $pos_pattern);
 
-      my $pos_pattern = sprintf '%d_%d.*\.%s$',
-        $pub->id_run, $position, $file_format;
-      my @expected_paths =
-        expected_data_objects($dest_coll, \%position_index, $position);
-      my @observed_paths =
-        observed_data_objects($irods, $dest_coll, $pos_pattern);
+    is_deeply(\@observed_paths, \@expected_paths,
+              "Published correctly named position $position " .
+              "$file_format alignment files") or
+                diag explain \@observed_paths;
 
-      is_deeply(\@observed_paths, \@expected_paths,
-                "Published correctly named position $position " .
-                "$file_format alignment files") or
-                  diag explain \@observed_paths;
-
-      check_primary_metadata($irods, @observed_paths);
-      check_common_metadata($irods, @observed_paths);
-      check_study_metadata($irods, @observed_paths);
-    }
+    check_primary_metadata($irods, @observed_paths);
+    check_common_metadata($irods, @observed_paths);
+    check_study_metadata($irods, @observed_paths);
   }
 
   # FIXME -- these tests could be more exhaustive
@@ -615,52 +672,74 @@ sub publish_lane_alignment_files : Test(264) {
   }
 }
 
-sub publish_plex_alignment_files : Test(811) {
+sub publish_plex_alignment_files_mlwh : Test(811) {
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20150914-100512/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
+  check_publish_plex_alignment_files($runfolder_path, $archive_path,
+                                     $lims_factory);
+}
+
+sub publish_plex_alignment_files_samplesheet : Test(811) {
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20150914-100512/no_cal/archive';
+
+  local $ENV{NPG_CACHED_SAMPLESHEET_FILE} = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/metadata_cache_17550/samplesheet_17550.csv";
+
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(driver_type => 'samplesheet');
+
+  check_publish_plex_alignment_files($runfolder_path, $archive_path,
+                                     $lims_factory);
+}
+
+sub check_publish_plex_alignment_files {
+  my ($runfolder_path, $archive_path, $lims_factory) = @_;
+
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
-
+  my $file_format = 'cram';
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
-    # Omitting bam to reduce runtime
-    foreach my $file_format (qw[cram]) {
-      my $dest_coll = "$irods_tmp_coll/publish_plex_alignment_files/$position";
+    my $dest_coll = "$irods_tmp_coll/publish_plex_alignment_files/$position";
 
-      my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
-        (dest_collection => $dest_coll,
-         file_format     => $file_format,
-         irods           => $irods,
-         lims_factory    => $lims_factory,
-         runfolder_path  => $runfolder_path);
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+      (dest_collection => $dest_coll,
+       file_format     => $file_format,
+       irods           => $irods,
+       lims_factory    => $lims_factory,
+       runfolder_path  => $runfolder_path);
 
-      my %position_index =
-        calc_plex_alignment_files($archive_path, $file_format);
+    my %position_index =
+      calc_plex_alignment_files($archive_path, $file_format);
 
-      my $num_expected = scalar @{$position_index{$position}};
-      my ($num_files, $num_processed, $num_errors) =
-        $pub->publish_plex_alignment_files($position);
+    my $num_expected = scalar @{$position_index{$position}};
+    my ($num_files, $num_processed, $num_errors) =
+      $pub->publish_plex_alignment_files($position);
 
-      cmp_ok($num_processed, '==', $num_expected,
-             "Published $num_expected position $position " .
-             "$file_format alignment files");
+    cmp_ok($num_processed, '==', $num_expected,
+           "Published $num_expected position $position " .
+           "$file_format alignment files");
 
-      my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
-      my @expected_paths =
-        expected_data_objects($dest_coll, \%position_index, $position);
-      my @observed_paths =
-        observed_data_objects($irods, $dest_coll, $pos_pattern);
+    my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
+    my @expected_paths =
+      expected_data_objects($dest_coll, \%position_index, $position);
+    my @observed_paths =
+      observed_data_objects($irods, $dest_coll, $pos_pattern);
 
-      is_deeply(\@observed_paths, \@expected_paths,
-                "Published correctly named position $position " .
-                "$file_format alignment files") or
-                  diag explain \@observed_paths;
+    is_deeply(\@observed_paths, \@expected_paths,
+              "Published correctly named position $position " .
+              "$file_format alignment files") or
+                diag explain \@observed_paths;
 
-      check_primary_metadata($irods, @observed_paths);
-      check_common_metadata($irods, @observed_paths);
-      check_study_metadata($irods, @observed_paths);
-    }
+    check_primary_metadata($irods, @observed_paths);
+    check_common_metadata($irods, @observed_paths);
+    check_study_metadata($irods, @observed_paths);
   }
 
   # FIXME -- these tests could be more exhaustive
@@ -705,53 +784,53 @@ sub publish_lane_index_files : Test(91) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20151214-085833/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
-  # Omitting bam to reduce runtime
-  foreach my $file_format (qw[cram]) {
-    my $dest_coll = "$irods_tmp_coll/publish_lane_index_files";
+  my $file_format = 'cram';
+  my $dest_coll = "$irods_tmp_coll/publish_lane_index_files";
 
-    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
-      (dest_collection => $dest_coll,
-       file_format     => $file_format,
-       irods           => $irods,
-       lims_factory    => $lims_factory,
-       runfolder_path  => $runfolder_path);
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (dest_collection => $dest_coll,
+     file_format     => $file_format,
+     irods           => $irods,
+     lims_factory    => $lims_factory,
+     runfolder_path  => $runfolder_path);
 
-    my %position_index = calc_lane_index_files($archive_path, $file_format);
+  my %position_index = calc_lane_index_files($archive_path, $file_format);
 
-    foreach my $position (1 .. 8) {
-      my $num_expected  = scalar @{$position_index{$position}};
+  foreach my $position (1 .. 8) {
+    my $num_expected  = scalar @{$position_index{$position}};
 
-      # Lane 1 has been marked as having 0 reads
-      if ($position == 1) {
-        $num_expected--;
-      }
-
-      my ($num_files, $num_processed, $num_errors) =
-        $pub->publish_lane_index_files($position);
-
-      cmp_ok($num_processed, '==', $num_expected,
-             "Published $num_expected $file_format lane " .
-             "$position index files");
-
-      my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
-
-      # Lane 1 has been marked as having 0 reads
-      my @expected_paths =
-        grep { $_ !~ m{18448_1.cram.crai$} }
-        expected_data_objects($dest_coll, \%position_index, $position);
-
-      my @observed_paths =
-        observed_data_objects($irods, $dest_coll, $pos_pattern);
-
-      is_deeply(\@observed_paths, \@expected_paths,
-                "Published correctly named position $position " .
-                "$file_format index files") or
-                  diag explain \@observed_paths;
-
-      check_common_metadata($irods, @observed_paths);
+    # Lane 1 has been marked as having 0 reads
+    if ($position == 1) {
+      $num_expected--;
     }
+
+    my ($num_files, $num_processed, $num_errors) =
+      $pub->publish_lane_index_files($position);
+
+    cmp_ok($num_processed, '==', $num_expected,
+           "Published $num_expected $file_format lane $position index files");
+
+    my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
+
+    # Lane 1 has been marked as having 0 reads
+    my @expected_paths =
+      grep { $_ !~ m{18448_1.cram.crai$} }
+      expected_data_objects($dest_coll, \%position_index, $position);
+
+    my @observed_paths =
+      observed_data_objects($irods, $dest_coll, $pos_pattern);
+
+    is_deeply(\@observed_paths, \@expected_paths,
+              "Published correctly named position $position " .
+              "$file_format index files") or
+                diag explain \@observed_paths;
+
+    check_common_metadata($irods, @observed_paths);
   }
 }
 
@@ -760,66 +839,16 @@ sub publish_plex_index_files : Test(269) {
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20150914-100512/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
+  my $file_format = 'cram';
 
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
-    # Omitting bam to reduce runtime
-    foreach my $file_format (qw[cram]) {
-      my $dest_coll = "$irods_tmp_coll/publish_plex_index_files/$position";
-
-      my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
-        (dest_collection => $dest_coll,
-         file_format     => $file_format,
-         irods           => $irods,
-         lims_factory    => $lims_factory,
-         runfolder_path  => $runfolder_path);
-
-      my %position_index =
-        calc_plex_index_files($archive_path, $file_format);
-
-      my $num_expected  = scalar @{$position_index{$position}};
-      # Lane 1, plex 1 has been marked as having 0 reads
-      if ($position == 1) {
-        $num_expected--;
-      }
-
-      my ($num_files, $num_processed, $num_errors) =
-        $pub->publish_plex_index_files($position);
-
-      cmp_ok($num_processed, '==', $num_expected,
-             "Published $num_expected position $position " .
-             "$file_format index files");
-
-      my $pos_pattern = sprintf '%d_%d#\d+', $pub->id_run, $position;
-
-      # Lane 1, plex 1 has been marked as having 0 reads
-      my @expected_paths =
-        grep { $_ !~ m{17550_1\#1[.]cram[.]crai$} }
-        expected_data_objects($dest_coll, \%position_index, $position);
-
-      my @observed_paths =
-        observed_data_objects($irods, $dest_coll, $pos_pattern);
-
-      is_deeply(\@observed_paths, \@expected_paths,
-                "Published correctly named position $position " .
-                "$file_format index files") or
-                  diag explain \@observed_paths;
-
-      check_common_metadata($irods, @observed_paths);
-    }
-  }
-}
-
-sub publish_lane_ancillary_files : Test(776) {
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
-
-  # Omitting bam to reduce runtime
-  foreach my $file_format (qw[cram]) {
-    my $dest_coll = "$irods_tmp_coll/publish_lane_ancillary_files";
+    my $dest_coll = "$irods_tmp_coll/publish_plex_index_files/$position";
 
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (dest_collection => $dest_coll,
@@ -828,30 +857,83 @@ sub publish_lane_ancillary_files : Test(776) {
        lims_factory    => $lims_factory,
        runfolder_path  => $runfolder_path);
 
-    my %position_index = calc_lane_ancillary_files($archive_path, $file_format);
+    my %position_index =
+      calc_plex_index_files($archive_path, $file_format);
 
-    foreach my $position (1 .. 8) {
-      my $num_expected  = scalar @{$position_index{$position}};
-      my ($num_files, $num_processed, $num_errors) =
-        $pub->publish_lane_ancillary_files($position);
-
-      cmp_ok($num_processed, '==', $num_expected,
-             "Published $num_expected $file_format lane " .
-             "$position $file_format ancillary files");
-
-      my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
-      my @expected_paths =
-        expected_data_objects($dest_coll, \%position_index, $position);
-      my @observed_paths =
-        observed_data_objects($irods, $dest_coll, $pos_pattern);
-
-      is_deeply(\@observed_paths, \@expected_paths,
-                "Published correctly named $file_format position $position " .
-                "ancillary files") or
-                  diag explain \@observed_paths;
-
-      check_common_metadata($irods, @observed_paths);
+    my $num_expected  = scalar @{$position_index{$position}};
+    # Lane 1, plex 1 has been marked as having 0 reads
+    if ($position == 1) {
+      $num_expected--;
     }
+
+    my ($num_files, $num_processed, $num_errors) =
+      $pub->publish_plex_index_files($position);
+
+    cmp_ok($num_processed, '==', $num_expected,
+           "Published $num_expected position $position " .
+           "$file_format index files");
+
+    my $pos_pattern = sprintf '%d_%d#\d+', $pub->id_run, $position;
+
+    # Lane 1, plex 1 has been marked as having 0 reads
+    my @expected_paths =
+      grep { $_ !~ m{17550_1\#1[.]cram[.]crai$} }
+      expected_data_objects($dest_coll, \%position_index, $position);
+
+    my @observed_paths =
+      observed_data_objects($irods, $dest_coll, $pos_pattern);
+
+    is_deeply(\@observed_paths, \@expected_paths,
+              "Published correctly named position $position " .
+              "$file_format index files") or
+                diag explain \@observed_paths;
+
+    check_common_metadata($irods, @observed_paths);
+  }
+}
+
+sub publish_lane_ancillary_files : Test(776) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20151214-085833/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
+  my $file_format = 'cram';
+  my $dest_coll = "$irods_tmp_coll/publish_lane_ancillary_files";
+
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (dest_collection => $dest_coll,
+     file_format     => $file_format,
+     irods           => $irods,
+     lims_factory    => $lims_factory,
+     runfolder_path  => $runfolder_path);
+
+  my %position_index = calc_lane_ancillary_files($archive_path, $file_format);
+
+  foreach my $position (1 .. 8) {
+    my $num_expected  = scalar @{$position_index{$position}};
+    my ($num_files, $num_processed, $num_errors) =
+      $pub->publish_lane_ancillary_files($position);
+
+    cmp_ok($num_processed, '==', $num_expected,
+           "Published $num_expected $file_format lane " .
+           "$position $file_format ancillary files");
+
+    my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
+    my @expected_paths =
+      expected_data_objects($dest_coll, \%position_index, $position);
+    my @observed_paths =
+      observed_data_objects($irods, $dest_coll, $pos_pattern);
+
+    is_deeply(\@observed_paths, \@expected_paths,
+              "Published correctly named $file_format position $position " .
+              "ancillary files") or
+                diag explain \@observed_paths;
+
+    check_common_metadata($irods, @observed_paths);
   }
 }
 
@@ -860,43 +942,45 @@ sub publish_plex_ancillary_files : Test(2534) {
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20150914-100512/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
+  my $file_format = 'cram';
 
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
-    # Omitting bam to reduce runtime
-    foreach my $file_format (qw[cram]) {
-      my $dest_coll = "$irods_tmp_coll/publish_plex_ancillary_files/$position";
-      my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
-        (dest_collection => $dest_coll,
-         file_format     => $file_format,
-         irods           => $irods,
-         lims_factory    => $lims_factory,
-         runfolder_path  => $runfolder_path);
+    my $dest_coll = "$irods_tmp_coll/publish_plex_ancillary_files/$position";
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+      (dest_collection => $dest_coll,
+       file_format     => $file_format,
+       irods           => $irods,
+       lims_factory    => $lims_factory,
+       runfolder_path  => $runfolder_path);
 
-      my %position_index = calc_plex_ancillary_files($archive_path);
+    my %position_index = calc_plex_ancillary_files($archive_path);
 
-      my $num_expected  = scalar @{$position_index{$position}};
-      my ($num_files, $num_processed, $num_errors) =
-        $pub->publish_plex_ancillary_files($position);
+    my $num_expected  = scalar @{$position_index{$position}};
+    my ($num_files, $num_processed, $num_errors) =
+      $pub->publish_plex_ancillary_files($position);
 
-      cmp_ok($num_processed, '==', $num_expected,
-             "Published $num_expected $file_format position $position " .
-             "ancillary files");
+    cmp_ok($num_processed, '==', $num_expected,
+           "Published $num_expected $file_format position $position " .
+           "ancillary files");
 
-      my $pos_pattern = sprintf '%d_%d#\d+', $pub->id_run, $position;
-      my @expected_paths =
-        expected_data_objects($dest_coll, \%position_index, $position);
-      my @observed_paths =
-        observed_data_objects($irods, $dest_coll, $pos_pattern);
+    my $pos_pattern = sprintf '%d_%d#\d+', $pub->id_run, $position;
+    my @expected_paths =
+      expected_data_objects($dest_coll, \%position_index, $position);
+    my @observed_paths =
+      observed_data_objects($irods, $dest_coll, $pos_pattern);
 
-      is_deeply(\@observed_paths, \@expected_paths,
-                "Published correctly named $file_format position $position " .
-                "ancillary files") or
-                  diag explain \@observed_paths;
+    is_deeply(\@observed_paths, \@expected_paths,
+              "Published correctly named $file_format position $position " .
+              "ancillary files") or
+                diag explain \@observed_paths;
 
-      check_common_metadata($irods, @observed_paths);
-    }
+    check_common_metadata($irods, @observed_paths);
   }
 }
 
@@ -905,46 +989,47 @@ sub publish_lane_qc_files : Test(736) {
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20151214-085833/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
-  # Omitting bam to reduce runtime
-  foreach my $file_format (qw[cram]) {
-    my $dest_coll = "$irods_tmp_coll/publish_lane_qc_files";
+  my $file_format = 'cram';
+  my $dest_coll = "$irods_tmp_coll/publish_lane_qc_files";
 
-    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
-      (dest_collection => $dest_coll,
-       file_format     => $file_format,
-       irods           => $irods,
-       lims_factory    => $lims_factory,
-       runfolder_path  => $runfolder_path);
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (dest_collection => $dest_coll,
+     file_format     => $file_format,
+     irods           => $irods,
+     lims_factory    => $lims_factory,
+     runfolder_path  => $runfolder_path);
 
-    my %position_index = calc_lane_qc_files($archive_path, $file_format);
+  my %position_index = calc_lane_qc_files($archive_path, $file_format);
 
-    foreach my $position (1 .. 8) {
-      my $num_expected  = scalar @{$position_index{$position}};
-      my ($num_files, $num_processed, $num_errors) =
-        $pub->publish_lane_qc_files($position);
+  foreach my $position (1 .. 8) {
+    my $num_expected  = scalar @{$position_index{$position}};
+    my ($num_files, $num_processed, $num_errors) =
+      $pub->publish_lane_qc_files($position);
 
-      cmp_ok($num_processed, '==', $num_expected,
-             "Published $num_expected $file_format lane " .
-             "$position QC files");
+    cmp_ok($num_processed, '==', $num_expected,
+           "Published $num_expected $file_format lane " .
+           "$position QC files");
 
-      my $qc_coll = catfile($dest_coll, q[qc]);
+    my $qc_coll = catfile($dest_coll, q[qc]);
 
-      my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
-      my @expected_paths =
-        expected_data_objects($qc_coll, \%position_index, $position);
-      my @observed_paths =
-        observed_data_objects($irods, $qc_coll, $pos_pattern);
+    my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
+    my @expected_paths =
+      expected_data_objects($qc_coll, \%position_index, $position);
+    my @observed_paths =
+      observed_data_objects($irods, $qc_coll, $pos_pattern);
 
-      is_deeply(\@observed_paths, \@expected_paths,
-                "Published correctly named $file_format position $position " .
-                "JSON QC files") or
-                  diag explain \@observed_paths;
+    is_deeply(\@observed_paths, \@expected_paths,
+              "Published correctly named $file_format position $position " .
+              "JSON QC files") or
+                diag explain \@observed_paths;
 
-      check_common_metadata($irods, @observed_paths);
-      check_study_id_metadata($irods, @observed_paths);
-    }
+    check_common_metadata($irods, @observed_paths);
+    check_study_id_metadata($irods, @observed_paths);
   }
 }
 
@@ -953,46 +1038,48 @@ sub publish_plex_qc_files : Test(1660) {
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20150914-100512/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
+  my $file_format = 'cram';
 
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
-    # Omitting bam to reduce runtime
-    foreach my $file_format (qw[cram]) {
-      my $dest_coll = "$irods_tmp_coll/publish_plex_qc_files/$position";
-      my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
-        (dest_collection => $dest_coll,
-         file_format     => $file_format,
-         irods           => $irods,
-         lims_factory    => $lims_factory,
-         runfolder_path  => $runfolder_path);
+    my $dest_coll = "$irods_tmp_coll/publish_plex_qc_files/$position";
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+      (dest_collection => $dest_coll,
+       file_format     => $file_format,
+       irods           => $irods,
+       lims_factory    => $lims_factory,
+       runfolder_path  => $runfolder_path);
 
-      my %position_index = calc_plex_qc_files($archive_path);
+    my %position_index = calc_plex_qc_files($archive_path);
 
-      my $num_expected  = scalar @{$position_index{$position}};
-      my ($num_files, $num_processed, $num_errors) =
-        $pub->publish_plex_qc_files($position);
+    my $num_expected  = scalar @{$position_index{$position}};
+    my ($num_files, $num_processed, $num_errors) =
+      $pub->publish_plex_qc_files($position);
 
-      cmp_ok($num_processed, '==', $num_expected,
-             "Published $num_expected $file_format position $position " .
-             "JSON QC files");
+    cmp_ok($num_processed, '==', $num_expected,
+           "Published $num_expected $file_format position $position " .
+           "JSON QC files");
 
-      my $qc_coll = catfile($dest_coll, q[qc]);
+    my $qc_coll = catfile($dest_coll, q[qc]);
 
-      my $pos_pattern = sprintf '%d_%d#\d+', $pub->id_run, $position;
-      my @expected_paths =
-        expected_data_objects($qc_coll, \%position_index, $position);
-      my @observed_paths =
-        observed_data_objects($irods, $qc_coll, $pos_pattern);
+    my $pos_pattern = sprintf '%d_%d#\d+', $pub->id_run, $position;
+    my @expected_paths =
+      expected_data_objects($qc_coll, \%position_index, $position);
+    my @observed_paths =
+      observed_data_objects($irods, $qc_coll, $pos_pattern);
 
-      is_deeply(\@observed_paths, \@expected_paths,
-                "Published correctly named $file_format position $position " .
-                "JSON QC files") or
-                  diag explain \@observed_paths;
+    is_deeply(\@observed_paths, \@expected_paths,
+              "Published correctly named $file_format position $position " .
+              "JSON QC files") or
+                diag explain \@observed_paths;
 
-      check_common_metadata($irods, @observed_paths);
-      check_study_id_metadata($irods, @observed_paths);
-    }
+    check_common_metadata($irods, @observed_paths);
+    check_study_id_metadata($irods, @observed_paths);
   }
 }
 
@@ -1001,64 +1088,107 @@ sub publish_plex_alignment_files_alt_process : Test(922) {
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20150914-100512/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
+  my $file_format = 'cram';
   my $alt_process = 'an_alternative_process';
 
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
-    # Omitting bam to reduce runtime
-    foreach my $file_format (qw[cram]) {
-      my $dest_coll = "$irods_tmp_coll/alt_process/$position";
+    my $dest_coll = "$irods_tmp_coll/alt_process/$position";
 
-      my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
-        (alt_process     => $alt_process,
-         dest_collection => $dest_coll,
-         file_format     => $file_format,
-         irods           => $irods,
-         lims_factory    => $lims_factory,
-         runfolder_path  => $runfolder_path);
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+      (alt_process     => $alt_process,
+       dest_collection => $dest_coll,
+       file_format     => $file_format,
+       irods           => $irods,
+       lims_factory    => $lims_factory,
+       runfolder_path  => $runfolder_path);
 
-      my %position_index =
-        calc_plex_alignment_files($archive_path, $file_format);
+    my %position_index =
+      calc_plex_alignment_files($archive_path, $file_format);
 
-      my $num_expected  = scalar @{$position_index{$position}};
-      my ($num_files, $num_processed, $num_errors) =
-        $pub->publish_plex_alignment_files($position);
+    my $num_expected  = scalar @{$position_index{$position}};
+    my ($num_files, $num_processed, $num_errors) =
+      $pub->publish_plex_alignment_files($position);
 
-      cmp_ok($num_processed, '==', $num_expected,
-             "Published $num_expected position $position " .
-             "$file_format alignment files");
+    cmp_ok($num_processed, '==', $num_expected,
+           "Published $num_expected position $position " .
+           "$file_format alignment files");
 
-      my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
-      my @expected_paths =
-        expected_data_objects($dest_coll, \%position_index, $position);
-      my @observed_paths =
-        observed_data_objects($irods, $dest_coll, $pos_pattern);
+    my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
+    my @expected_paths =
+      expected_data_objects($dest_coll, \%position_index, $position);
+    my @observed_paths =
+      observed_data_objects($irods, $dest_coll, $pos_pattern);
 
-      is_deeply(\@observed_paths, \@expected_paths,
-                "Published correctly named position $position " .
-                "$file_format alt process alignment files") or
-                  diag explain \@observed_paths;
+    is_deeply(\@observed_paths, \@expected_paths,
+              "Published correctly named position $position " .
+              "$file_format alt process alignment files") or
+                diag explain \@observed_paths;
 
-      check_primary_metadata($irods, @observed_paths);
-      check_common_metadata($irods, @observed_paths);
-      check_study_metadata($irods, @observed_paths);
-      check_alt_process_metadata($irods, $alt_process, @observed_paths);
-    }
+    check_primary_metadata($irods, @observed_paths);
+    check_common_metadata($irods, @observed_paths);
+    check_study_metadata($irods, @observed_paths);
+    check_alt_process_metadata($irods, $alt_process, @observed_paths);
   }
 }
 
-sub publish_plex_alignment_files_human_split : Test(4) {
+sub publish_plex_alignment_files_human_split : Test(2) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/160225_HS38_18980_B_H7HHMBCXX";
-  my $archive_path = "$runfolder_path/Data/Intensities/BAM_basecalls_20160228-062603/no_cal/archive";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20160228-062603/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
+  my $file_format = 'cram';
   my $position = 1;
+  my $dest_coll = "$irods_tmp_coll/plex_human_split/$position";
 
-  foreach my $file_format (qw[bam cram]) {
-    my $dest_coll = "$irods_tmp_coll/plex_human_split/$position";
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (dest_collection => $dest_coll,
+     file_format     => $file_format,
+     irods           => $irods,
+     lims_factory    => $lims_factory,
+     runfolder_path  => $runfolder_path);
+
+  my $num_expected = 5;
+
+  my @listed = @{$pub->list_plex_alignment_files($position)};
+  my $num_listed = scalar @listed;
+  cmp_ok($num_listed, '==', $num_expected,
+         "$num_listed position $position alignment files to publish") or
+           diag explain \@listed;
+
+  my ($num_files, $num_processed, $num_errors) =
+      $pub->publish_plex_alignment_files($position);
+  cmp_ok($num_processed, '==', $num_expected,
+         "Published $num_expected position $position " .
+         "$file_format alignment files");
+}
+
+sub publish_with_samplesheet_driver : Test(760) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20150914-100512/no_cal/archive';
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(driver_type => 'samplesheet');
+
+  local $ENV{NPG_CACHED_SAMPLESHEET_FILE} = "$runfolder_path/Data/Intensities/BAM_basecalls_20150914-100512/metadata_cache_17550/samplesheet_17550.csv";
+
+  my $file_format = 'cram';
+
+  # Position 1 is DNA, position 3 is RNA
+  foreach my $position (1, 3) {
+    my $dest_coll = "$irods_tmp_coll/publish_with_samplesheet_driver/$position";
 
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (dest_collection => $dest_coll,
@@ -1067,19 +1197,31 @@ sub publish_plex_alignment_files_human_split : Test(4) {
        lims_factory    => $lims_factory,
        runfolder_path  => $runfolder_path);
 
-    my $num_expected = 5;
+    my %position_index =
+      calc_plex_alignment_files($archive_path, $file_format);
 
-    my @listed = @{$pub->list_plex_alignment_files($position)};
-    my $num_listed = scalar @listed;
-    cmp_ok($num_listed, '==', $num_expected,
-           "$num_listed position $position alignment files to publish") or
-             diag explain \@listed;
-
+    my $num_expected = scalar @{$position_index{$position}};
     my ($num_files, $num_processed, $num_errors) =
       $pub->publish_plex_alignment_files($position);
+
     cmp_ok($num_processed, '==', $num_expected,
            "Published $num_expected position $position " .
            "$file_format alignment files");
+
+    my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
+    my @expected_paths =
+      expected_data_objects($dest_coll, \%position_index, $position);
+    my @observed_paths =
+      observed_data_objects($irods, $dest_coll, $pos_pattern);
+
+    is_deeply(\@observed_paths, \@expected_paths,
+              "Published correctly named position $position " .
+              "$file_format alignment files") or
+                diag explain \@observed_paths;
+
+    check_primary_metadata($irods, @observed_paths);
+    check_common_metadata($irods, @observed_paths);
+    check_study_metadata($irods, @observed_paths);
   }
 }
 
@@ -1088,6 +1230,8 @@ sub dest_collection : Test(8) {
                                     strict_baton_version => 0);
 
   my $runfolder_path = "$data_path/sequence/100818_IL32_05174";
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(driver_type => 'samplesheet');
 
   foreach my $file_format (qw[bam cram]) {
     my $pub1 = WTSI::NPG::HTS::Illumina::RunPublisher->new

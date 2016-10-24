@@ -25,6 +25,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
     'Test::Class'                   => '>= 0.41',
     'Test::Compile'                 => 0,
     'Test::HTTP::Server'            => 0,
+    'Test::MockObject::Extends'     => 0,
     'Test::More'                    => '>= 0.98',
     'Test::Exception'               => '>= 0.32',
     'Test::Perl::Critic'            => '>= 1.02'
@@ -33,6 +34,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
    {
     'Carp'                          => '>= 1.20',
     'Data::Dump'                    => 0,
+    'DateTime::Format::ISO8601'     => 0,
     'Log::Log4perl'                 => '>= 1.42',
     'List::AllUtils'                => '>= 0.09',
     'Moose'                         => '>= 2.1',
@@ -41,11 +43,11 @@ my $build = WTSI::DNAP::Utilities::Build->new
     'Text::CSV'                     => '>= 1.33',
     'Try::Tiny'                     => '>= 0.12',
     'URI'                           => 0,
-    'WTSI::DNAP::Utilities'         => '>= 0.5.1',   # perl-dnap-utilities
-    'WTSI::NPG::iRODS'              => '>= 2.4.0',   # perl-irods-wrap
-    'WTSI::DNAP::Warehouse::Schema' => '>= 1.8',     # ml_warehouse
-    'st::api::lims'                 => '>= 85.1',    # npg_tracking
-    'st::api::lims::ml_warehouse'   => '>= 38.0'     # npg_ml_warehouse
+    'WTSI::DNAP::Utilities'         => '>= 0.5.2',   # perl-dnap-utilities
+    'WTSI::NPG::iRODS'              => '>= 2.5.0',   # perl-irods-wrap
+    'WTSI::DNAP::Warehouse::Schema' => '>= 2.1',     # ml_warehouse
+    'st::api::lims'                 => '>= 85.4',    # npg_tracking
+    'st::api::lims::ml_warehouse'   => '>= 39.1'     # npg_ml_warehouse
    },
    recommends =>
    {
