@@ -10,6 +10,7 @@ use English qw[-no_match_vars];
 use File::Spec::Functions;
 use File::Temp;
 use Log::Log4perl;
+use Test::Exception;
 use Test::More;
 
 use base qw[WTSI::NPG::HTS::Test];
@@ -54,6 +55,8 @@ my $run7915_lane5_tag1 = '7915_5#1';
 
 my $run15440_lane1_tag0  = '15440_1#0';
 my $run15440_lane1_tag81 = '15440_1#81';
+
+my $invalid = "1000_1#1";
 
 my $reference_file = 'test_ref.fa';
 my $irods_tmp_coll;
@@ -335,10 +338,10 @@ sub alignment_filter : Test(24) {
   }
 }
 
-sub header : Test(8) {
+sub header : Test(9) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools_irods executable not on the PATH', 8;
+      skip 'samtools_irods executable not on the PATH', 9;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -364,6 +367,21 @@ sub header : Test(8) {
                  diag explain $obj->header;
       }
     }
+
+    $irods->add_object("$data_path/$invalid.cram",
+                       "$irods_tmp_coll/$invalid.cram");
+
+    # Ensure that a malformed file raises an exception
+    my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+      (collection  => $irods_tmp_coll,
+       data_object => "$invalid.cram",
+       file_format => 'cram',
+       id_run      => 1000,
+       irods       => $irods,
+       position    => 1);
+
+    dies_ok { $obj->header }
+      'Expected failure reading header of invalid cram file';
   } # SKIP samtools
 }
 
