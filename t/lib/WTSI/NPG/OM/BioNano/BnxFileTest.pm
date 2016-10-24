@@ -5,7 +5,7 @@ use warnings;
 
 use base qw(WTSI::NPG::HTS::Test); # FIXME better path for shared base
 
-use Test::More tests => 8;
+use Test::More tests => 9;
 use Test::Exception;
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
@@ -18,10 +18,12 @@ my $bad_header_path = $data_path.'/MoleculesDummyBadHeader.bnx';
 
 use WTSI::NPG::OM::BioNano::BnxFile;
 
-sub construction : Test(3) {
+sub construction : Test(4) {
 
     my $bnx1 = WTSI::NPG::OM::BioNano::BnxFile->new(path => $bnx_path);
     ok($bnx1, "BnxFile created with hash argument");
+
+    is($bnx1->md5sum, 'd50fb6797f561e74ae2a5ae6e0258d16', 'BNX MD5 sum OK');
 
     my $bnx2 = WTSI::NPG::OM::BioNano::BnxFile->new($bnx_path);
     ok($bnx2, "BnxFile created with anonymous file path argument");

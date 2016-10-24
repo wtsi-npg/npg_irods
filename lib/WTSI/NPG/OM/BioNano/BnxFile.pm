@@ -2,6 +2,8 @@ package WTSI::NPG::OM::BioNano::BnxFile;
 
 use Moose;
 
+use Digest::MD5;
+
 our $VERSION = '';
 
 our $INSTRUMENT_KEY = 'InstrumentSerial';
@@ -65,6 +67,15 @@ has 'flowcell' =>
        'on a BioNano chip.',
 );
 
+has 'md5sum' =>
+  (is       => 'ro',
+   isa      => 'Str',
+   init_arg => undef,
+   lazy     => 1,
+   builder  => '_build_md5sum',
+   documentation => 'MD5 checksum of the BNX file',
+);
+
 
 around BUILDARGS => sub {
   my ($orig, $class, @args) = @_;
@@ -126,6 +137,17 @@ sub _build_header {
     return \%header;
 }
 
+sub _build_md5sum {
+    my ($self) = @_;
+    my $md5 = Digest::MD5->new;
+    my $fh;
+    open $fh, '<', $self->path ||
+        $self->logcroak(q{Failed to open BNX path '}, $self->path, q{'});
+    $md5->addfile($fh);
+    close $fh ||
+        $self->logcroak(q{Failed to close BNX path '}, $self->path, q{'});
+    return $md5->hexdigest;
+}
 
 
 __PACKAGE__->meta->make_immutable;
