@@ -4,8 +4,6 @@ use strict;
 use warnings;
 use DateTime;
 
-use Data::Dumper; # FIXME
-
 use base qw(WTSI::NPG::HTS::Test); # FIXME better path for shared base
 
 use Test::More tests => 7;
@@ -56,9 +54,7 @@ sub teardown : Test(teardown) {
     $irods->remove_collection($irods_tmp_coll);
 }
 
-
 sub publish : Test(2) {
-
     my $irods = WTSI::NPG::iRODS->new();
     my $resultset = WTSI::NPG::OM::BioNano::ResultSet->new(
         directory => $test_run_path,
@@ -79,7 +75,6 @@ sub publish : Test(2) {
 }
 
 sub metadata : Test(4) {
-
     my $irods = WTSI::NPG::iRODS->new();
     my $resultset = WTSI::NPG::OM::BioNano::ResultSet->new(
         directory => $test_run_path,
@@ -98,7 +93,7 @@ sub metadata : Test(4) {
                                            $publication_time);
     my @collection_meta = $irods->get_collection_meta($bionano_coll);
 
-    is(scalar @collection_meta, 6,
+    is(scalar @collection_meta, 7,
        "Expected number of collection AVUs found");
 
     my ($user_name) = getpwuid $REAL_USER_ID;
@@ -117,6 +112,10 @@ sub metadata : Test(4) {
             'value' => 'B001'
         },
         {
+            'attribute' => 'bnx_uuid',
+            'value' => $publisher->uuid
+        },
+        {
             'attribute' => 'dcterms:created',
             'value' => '2016-01-01T12:00:00'
         },
@@ -132,8 +131,6 @@ sub metadata : Test(4) {
 
     is_deeply(\@collection_meta, \@expected_meta,
               "Collection metadata matches expected values");
-
-    #print STDERR Dumper \@collection_meta;
 
     my $bnx_ipath =  File::Spec->catfile($bionano_coll,
                                          'Detect Molecules',
@@ -153,12 +150,10 @@ sub metadata : Test(4) {
 
     push @expected_meta, @additional_file_meta;
 
-    is(scalar @file_meta, 8, "Expected number of BNX file AVUs found");
+    is(scalar @file_meta, 9, "Expected number of BNX file AVUs found");
 
     is_deeply(\@file_meta, \@expected_meta,
               'BNX file metadata matches expected values');
-
-    #print STDERR Dumper \@file_meta;
 }
 
 

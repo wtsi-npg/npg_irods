@@ -5,7 +5,7 @@ use Moose;
 use DateTime;
 use File::Basename qw(basename);
 use File::Spec;
-use Try::Tiny;
+use UUID;
 
 use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::Collection;
@@ -55,6 +55,14 @@ has 'resultset' =>
   (is       => 'ro',
    isa      => 'WTSI::NPG::OM::BioNano::ResultSet',
    required => 1);
+
+has 'uuid' =>
+  (is       => 'ro',
+   isa      => 'Str',
+   required => 1,
+   lazy     => 1,
+   builder  => '_build_uuid',
+   documentation => 'UUID generated for the publication to iRODS');
 
 sub BUILD {
   my ($self) = @_;
@@ -128,7 +136,7 @@ sub publish {
                          $bionano_collection, q{'}
                      );
         }
-        my $bnx_ipath = $self->_apply_bnx_metadata($bionano_collection);
+        my $bnx_ipath = $self->_apply_bnx_file_metadata($bionano_collection);
         $self->debug(q{Applied metadata to BNX iRODS object '},
                      $bnx_ipath, q{'});
     }
@@ -151,17 +159,17 @@ sub make_collection_meta {
     my @metadata;
     # creation metadata is added by HTS::Publisher
     my @bnx_meta = $self->make_bnx_metadata($self->resultset);
-    push @metadata, @bnx_meta;
+    my @uuid_meta = $self->make_uuid_metadata($self->uuid);
+    push @metadata, @bnx_meta, @uuid_meta;
     # TODO add sample metadata from Sequencescape (or mock DB for tests)
-
     return \@metadata;
 }
 
 
-sub _apply_bnx_metadata {
+sub _apply_bnx_file_metadata {
     my ($self, $bionano_collection) = @_;
-    # apply metadata to filtered BNX file
-    # start with metadata applied to the collection
+    # apply metadata to filtered BNX file. Start with metadata applied to
+    # the collection (including by HTS::Publisher)
     my @bnx_meta;
     my $md5 = $self->resultset->bnx_file->md5sum;
     push @bnx_meta, $self->irods->get_collection_meta($bionano_collection);
@@ -177,6 +185,15 @@ sub _apply_bnx_metadata {
         $bnx_obj->add_avu($avu->{'attribute'}, $avu->{'value'});
     }
     return $bnx_ipath;
+}
+
+sub _build_uuid {
+    my (@self) = @_;
+    my $uuid_bin;
+    my $uuid_str;
+    UUID::generate($uuid_bin);
+    UUID::unparse($uuid_bin, $uuid_str);
+    return $uuid_str;
 }
 
 

@@ -1,25 +1,24 @@
 package WTSI::NPG::OM::BioNano::Annotator;
 
 use DateTime;
+use UUID;
 use Moose::Role;
+
+use WTSI::NPG::OM::Metadata;
 
 our $VERSION = '';
 
+with qw/WTSI::NPG::HTS::Annotator/; # TODO better location for "parent" role
 
-with qw/WTSI::NPG::HTS::Annotator/;
+=head2 make_bnx_metadata
 
+  Arg [1]    : WTSI::NPG::OM::BioNano::ResultSet
+  Example    : @bnx_meta = $publisher->get_bnx_metadata();
+  Description: Find metadata AVUs from the BNX file header, to be applied
+               to a BioNano collection in iRODS.
+  Returntype : ArrayRef[HashRef] AVUs to be used as metadata
 
-# Based on genotyping WTSI::NPG::Annotator, and WTSI::NPG::HTS::Annotator
-# TODO consolidate Annotator functionality in one place where possible
-
-
-# get metadata for bionano_instrument, bionano_chip_id, bionano_flowcell
-# from BioNano::Resultset, parsed from BNX file header
-
-# TODO make a BioNano Metadata class (to be merged into perl-irods-wrap)
-our $BIONANO_CHIP_ID = 'bnx_chip_id';
-our $BIONANO_FLOWCELL = 'bnx_flowcell';
-our $BIONANO_INSTRUMENT = 'bnx_instrument';
+=cut
 
 sub make_bnx_metadata {
     my ($self, $resultset) = @_;
@@ -30,6 +29,30 @@ sub make_bnx_metadata {
         $self->make_avu($BIONANO_INSTRUMENT, $bnx->instrument),
     );
     return @bnx_meta;
+}
+
+
+=head2 make_uuid_metadata
+
+  Arg [1]    : [Str] UUID string. Optional, defaults to generating new UUID.
+  Example    : @uuid_meta = $publisher->get_uuid_metadata($uuid);
+  Description: Generate a UUID metadata AVU, to be applied
+               to a BioNano collection in iRODS.
+  Returntype : ArrayRef[HashRef] AVUs to be used as metadata
+
+=cut
+
+sub make_uuid_metadata {
+    my ($self, $uuid_str) = @_;
+    if (! defined $uuid_str) {
+        my $uuid_bin;
+        UUID::generate($uuid_bin);
+        UUID::unparse($uuid_bin, $uuid_str);
+    }
+    my @uuid_meta = (
+        $self->make_avu($BIONANO_UUID, $uuid_str),
+    );
+    return @uuid_meta;
 }
 
 
