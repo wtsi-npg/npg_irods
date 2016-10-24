@@ -37,9 +37,11 @@ lib/WTSI/NPG/HTS/PathLister.pm
 lib/WTSI/NPG/HTS/Publisher.pm
 lib/WTSI/NPG/HTS/Seqchksum.pm
 lib/WTSI/NPG/HTS/Types.pm
+lib/WTSI/NPG/OM/BioNano/Annotator.pm
 lib/WTSI/NPG/OM/BioNano/BnxFile.pm
 lib/WTSI/NPG/OM/BioNano/Publisher.pm
 lib/WTSI/NPG/OM/BioNano/ResultSet.pm
+lib/WTSI/NPG/OM/Metadata.pm
 LICENSE
 MANIFEST			This list of files
 README
