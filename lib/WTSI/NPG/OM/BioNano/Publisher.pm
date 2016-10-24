@@ -69,6 +69,8 @@ sub BUILD {
   return 1;
 }
 
+our @BNX_SUFFIXES = qw[bnx];
+
 =head2 publish
 
   Arg [1]    : [Str] iRODS path that will be the root destination for
@@ -104,10 +106,9 @@ sub publish {
     # use low-level HTS::Publisher->publish method for directory
     # arguments: $local_path, $remote_path, $metadata, $timestamp
 
-    # redundant assignment of dcterms:created in HTS::Publisher and
-    # HTS::Annotator. Using the same timestamp argument ensures consistency.
+    # TODO need a 'fingerprint' or UUID for the runfolder
 
-    my $collection_meta = $self->make_collection_meta($timestamp);
+    my $collection_meta = $self->make_collection_meta();
 
     my $publisher = WTSI::NPG::HTS::Publisher->new(
         irods => $self->irods,
@@ -119,18 +120,19 @@ sub publish {
         $timestamp,
     );
     # apply metadata to filtered BNX file
-    my @published_meta =
-        $self->irods->get_collection_meta($bionano_collection);
+    # start with metadata applied to the collection
+    my @bnx_meta;
+    push @bnx_meta, $self->irods->get_collection_meta($bionano_collection);
+    push @bnx_meta, $self->make_md5_metadata($md5);
+    push @bnx_meta, $self->make_type_metadata($bnx_path, @BNX_SUFFIXES);
     # $published_meta includes terms added by HTS::Publisher
     my $bnx_ipath = File::Spec->catfile($bionano_collection,
                                         'Detect Molecules',
                                         'Molecules.bnx');
     my $bnx_obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $bnx_ipath);
-    foreach my $avu (@published_meta) {
+    foreach my $avu (@bnx_meta) {
         $bnx_obj->add_avu($avu->{'attribute'}, $avu->{'value'});
     }
-    $bnx_obj->add_avu('type', 'bnx');
-    $bnx_obj->add_avu($FILE_MD5, $md5);
     return $bionano_collection;
 }
 
@@ -148,17 +150,14 @@ sub publish {
 
 sub make_collection_meta {
 
-    my ($self, $timestamp) = @_;
+    my ($self) = @_;
 
-    if (not defined $timestamp) {
-        $timestamp = DateTime->now;
-    }
 
     my @metadata;
     # creation metadata is added by HTS::Publisher
     my @bnx_meta = $self->make_bnx_metadata($self->resultset);
     push @metadata, @bnx_meta;
-    # TODO add sample metadata from mock Sequencescape instance
+    # TODO add sample metadata from Sequencescape (or mock DB for tests)
 
     return \@metadata;
 }
