@@ -3,6 +3,7 @@ package WTSI::NPG::OM::BioNano::PublisherTest;
 use strict;
 use warnings;
 use DateTime;
+use URI;
 
 use base qw(WTSI::NPG::HTS::Test); # FIXME better path for shared base
 
@@ -86,7 +87,11 @@ sub metadata : Test(4) {
         hour       => 12,
         minute     => 00,
     );
+    my $user_name = 'jbancarz';
+    my $affiliation_uri = URI->new('http://www.bancarz.com');
     my $publisher = WTSI::NPG::OM::BioNano::Publisher->new(
+        affiliation_uri => $affiliation_uri,
+        accountee_uid => $user_name,
         resultset => $resultset
     );
     my $bionano_coll = $publisher->publish($irods_tmp_coll,
@@ -95,8 +100,6 @@ sub metadata : Test(4) {
 
     is(scalar @collection_meta, 7,
        "Expected number of collection AVUs found");
-
-    my ($user_name) = getpwuid $REAL_USER_ID;
 
     my @expected_meta = (
         {
@@ -121,7 +124,7 @@ sub metadata : Test(4) {
         },
         {
             'attribute' => 'dcterms:creator',
-            'value' => 'http://www.sanger.ac.uk'
+            'value' => $affiliation_uri
         },
         {
             'attribute' => 'dcterms:publisher',

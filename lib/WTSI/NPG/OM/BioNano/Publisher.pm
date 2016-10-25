@@ -6,6 +6,7 @@ use DateTime;
 use File::Basename qw(basename);
 use File::Spec;
 use UUID;
+use URI;
 
 use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::Collection;
@@ -13,35 +14,36 @@ use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::HTS::Publisher;
 use WTSI::NPG::OM::BioNano::ResultSet;
-#use WTSI::NPG::OM::BioNano::Metadata; # TODO put new metadata (if any) in here, pending addition to perl-irods-wrap
-
 
 # FIXME Move/refactor WTSI::NPG::HTS::Publisher to reflect use outside of
 # HTS. Maybe consolidate with WTSI::NPG::Publisher in wtsi-npg/genotyping.
-
-# TODO composition with HTS::Publisher for low-level functionality?
-
-# TODO use $irods->hash_path to create a hashed path on iRODS
-
-# TODO use $irods->put_collection to upload the runfolder
-
-# TODO assign a uuid to the runfolder?
-
-# TODO do we publish/track entire runfolders, or just BNX files?
-
-# TODO This class must:
-# - upload unit runfolders to irods
-# - assign metadata
-# - validate checksums?
-# - cross-reference with Sequencescape
-#   - cf. update_secondary_metadata in Fluidigm::AssayDataObject
-#   - apply eg. sanger_sample_id, internal_id, study_id
 
 our $VERSION = '';
 
 with qw/WTSI::DNAP::Utilities::Loggable
         WTSI::NPG::Accountable
         WTSI::NPG::OM::BioNano::Annotator/;
+
+has 'accountee_uid' =>
+  (is       => 'ro',
+   isa      => 'Maybe[Str]',
+   required => 0,
+   lazy     => 1,
+   default  => undef,
+   documentation => 'UID (eg. username) supplied to HTS::Publisher for '.
+       'constructing the user URI in creation metadata. Optional, assigned '.
+       'a default in WTSI::NPG::Accountable if not given.',
+);
+
+has 'affiliation_uri' =>
+  (is       => 'ro',
+   isa      => 'Maybe[URI]',
+   required => 0,
+   lazy     => 1,
+   default  => undef,
+   documentation => 'Affiliation URI supplied to HTS::Publisher. Optional, '.
+       'assigned a default in WTSI::NPG::Accountable if not given.',
+   );
 
 has 'irods' =>
   (is       => 'ro',
@@ -92,6 +94,7 @@ our @BNX_SUFFIXES = qw[bnx];
 
 sub publish {
     my ($self, $publish_dest, $timestamp) = @_;
+    # generate a hashed path for publication
     my $hash_path =
         $self->irods->hash_path($self->resultset->bnx_path,
                                 $self->resultset->bnx_file->md5sum);
@@ -106,9 +109,7 @@ sub publish {
     }
     my $leaf_collection = File::Spec->catdir($publish_dest, $hash_path);
     $self->debug(q{Publishing to collection '}, $leaf_collection, q{'});
-
-    # TODO need a 'fingerprint' or UUID for the runfolder
-
+    # publish data to iRODS, if not already present
     my $dirname = basename($self->resultset->directory);
     my $bionano_collection = File::Spec->catdir($leaf_collection, $dirname);
     if ($self->irods->list_collection($bionano_collection)) {
@@ -116,7 +117,17 @@ sub publish {
                 $bionano_collection, q{': already exists});
     } else {
         my $collection_meta = $self->make_collection_meta();
-        my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods);
+        my %publish_args = (
+            irods => $self->irods,
+            logger => $self->logger,
+        );
+        if (defined $self->accountee_uid) {
+            $publish_args{'accountee_uid'} = $self->accountee_uid;
+        }
+        if (defined $self->affiliation_uri) {
+            $publish_args{'affiliation_uri'} = $self->affiliation_uri;
+        }
+        my $publisher = WTSI::NPG::HTS::Publisher->new(%publish_args);
         my $bionano_published_coll = $publisher->publish(
             $self->resultset->directory,
             $leaf_collection,
@@ -204,6 +215,35 @@ no Moose;
 1;
 
 __END__
+
+=head1 NAME
+
+WTSI::NPG::OM::BioNano::Publisher - An iRODS data publisher
+for results from the BioNano optical mapping system.
+
+=head1 SYNOPSIS
+
+  my $resultset = WTSI::NPG::OM::BioNano::ResultSet->new
+    (directory => $dir);
+
+  my $publisher = WTSI::NPG::OM::BioNano::Publisher->new
+    (irods            => $irods_handle,
+     accountee_uid    => $accountee_uid,
+     affiliation_uri  => $affiliation_uri,
+     resultset        => $resultset);
+
+  # Publish to iRODS with a given timestamp
+  $publisher->publish($publish_dest, $timestamp);
+
+
+=head1 DESCRIPTION
+
+This class provides methods for publishing a BioNano unit runfolder to
+iRODS, with relevant metadata.
+
+The "unit" runfolder contains data from one run on the BioNano instrument,
+with a given sample, flowcell, and chip. The results of multiple runs are
+typically merged together for downstream analysis and assembly.
 
 =head1 AUTHOR
 
