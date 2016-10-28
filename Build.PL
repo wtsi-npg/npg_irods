@@ -43,6 +43,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
     'Text::CSV'                     => '>= 1.33',
     'Try::Tiny'                     => '>= 0.12',
     'URI'                           => 0,
+    'UUID'                          => '>= 0.27',
     'WTSI::DNAP::Utilities'         => '>= 0.5.2',   # perl-dnap-utilities
     'WTSI::NPG::iRODS'              => '>= 2.5.0',   # perl-irods-wrap
     'WTSI::DNAP::Warehouse::Schema' => '>= 2.1',     # ml_warehouse
