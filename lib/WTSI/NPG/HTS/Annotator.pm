@@ -19,8 +19,6 @@ our @DEFAULT_FILE_SUFFIXES = (@GENERAL_PURPOSE_SUFFIXES,
                               @GENO_DATA_SUFFIXES,
                               @HTS_DATA_SUFFIXES,
                               @HTS_ANCILLARY_SUFFIXES);
-our $SUFFIX_PATTERN = join q[|], @DEFAULT_FILE_SUFFIXES;
-our $SUFFIX_REGEX   = qr{[.]($SUFFIX_PATTERN)$}msx;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
@@ -99,8 +97,9 @@ sub make_type_metadata {
   if (not @suffixes) {
     @suffixes = @DEFAULT_FILE_SUFFIXES;
   }
-
-  my ($suffix) = $file =~ $SUFFIX_REGEX;
+  my $suffix_pattern = join q[|], @suffixes;
+  my $suffix_regex = qr{[.]($suffix_pattern)$}msx;
+  my ($suffix) = $file =~ $suffix_regex;
 
   my @avus;
   if ($suffix) {
