@@ -278,11 +278,10 @@ sub _read_header {
     push @header, split $INPUT_RECORD_SEPARATOR, $header;
   } catch {
     # No logger is set on samtools directly to avoid noisy stack
-    # traces when a file can't be read. Instead, any error information
-    # is captured here, non-fatally.
+    # traces when a file can't be read.
 
     my @stack = split /\n/msx;   # Chop up the stack trace
-    $self->error("Failed to read the header of '$path': ", pop @stack);
+    $self->logcroak("Failed to read the header of '$path': ", pop @stack);
   };
 
   return \@header;

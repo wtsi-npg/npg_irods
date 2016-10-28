@@ -63,6 +63,7 @@ t/bionano_publisher.t
 t/bionano_result_set.t
 t/compile_scripts.t
 t/critic.t
+t/data/aln_data_object/1000_1#1.cram
 t/data/aln_data_object/15440_1#0.sam
 t/data/aln_data_object/15440_1#81.sam
 t/data/aln_data_object/7915_5#0.sam
