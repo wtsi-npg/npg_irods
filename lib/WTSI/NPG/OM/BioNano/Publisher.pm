@@ -5,7 +5,7 @@ use Moose;
 use DateTime;
 use File::Basename qw(basename);
 use File::Spec;
-use UUID;
+use UUID::Tiny qw/create_uuid_as_string/;
 use URI;
 
 use WTSI::NPG::iRODS;
@@ -63,7 +63,7 @@ has 'uuid' =>
    isa      => 'Str',
    required => 1,
    lazy     => 1,
-   builder  => '_build_uuid',
+   default  => sub { return create_uuid_as_string() },
    documentation => 'UUID generated for the publication to iRODS');
 
 sub BUILD {
@@ -197,16 +197,6 @@ sub _apply_bnx_file_metadata {
     }
     return $bnx_ipath;
 }
-
-sub _build_uuid {
-    my (@self) = @_;
-    my $uuid_bin;
-    my $uuid_str;
-    UUID::generate($uuid_bin);
-    UUID::unparse($uuid_bin, $uuid_str);
-    return $uuid_str;
-}
-
 
 __PACKAGE__->meta->make_immutable;
 
