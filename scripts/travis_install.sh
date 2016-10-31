@@ -91,7 +91,7 @@ done
 for repo in $repos
 do
     cd $repo
-    cpanm --verbose --notest --installdeps .
+    cpanm --quiet --notest --installdeps .
     perl Build.PL
     ./Build
 done
@@ -101,10 +101,10 @@ done
 for repo in $repos
 do
     cd $repo
-    cpanm --verbose --notest --installdeps .
+    cpanm --quiet --notest --installdeps .
     ./Build install
 done
 
 cd $TRAVIS_BUILD_DIR
 
-cpanm --verbose --notest --installdeps .
+cpanm --quiet --notest --installdeps .
