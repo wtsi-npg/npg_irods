@@ -1,7 +1,7 @@
 package WTSI::NPG::OM::BioNano::Annotator;
 
 use DateTime;
-use UUID;
+use UUID::Tiny qw/create_uuid_as_string/;
 use Moose::Role;
 
 use WTSI::NPG::OM::Metadata;
@@ -45,9 +45,7 @@ sub make_bnx_metadata {
 sub make_uuid_metadata {
     my ($self, $uuid_str) = @_;
     if (! defined $uuid_str) {
-        my $uuid_bin;
-        UUID::generate($uuid_bin);
-        UUID::unparse($uuid_bin, $uuid_str);
+        $uuid_str = create_uuid_as_string();
     }
     my @uuid_meta = (
         $self->make_avu($BIONANO_UUID, $uuid_str),
