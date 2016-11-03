@@ -1,50 +1,73 @@
- -  WTSI::NPG::HTS::Publisher now supports multi-value AVUs. Previously
-    it retained only the last value processed for a particular attribute.
+Release 1.5
+
+ - Bug fix: Propagate a failure to read a CRAM header
+
+ - Bug fix: Failure to parse a JSON read count cache file is captured
+   and added to the error count. It is no longer immediately fatal,
+   but will cause a no-zero exit of the loading script.
+
+ - Bug fix: Failure to make an MD5 cache file is reduced from a fatal
+   error to a warning.
+
+ - Warnings now come through the logger, rather than raw carping,
+   so they gain a WARN tag.
+
+ - The default log level has been lowered from ERROR to WARN.
+
+ - Added WTSI_NPG_BUILD_BRANCH environment variable to permit overriding
+   of the default build branch.
+
+ - Added negation to CLI file category selection.
+
+ - Added support for the samplesheet lims driver.
+
+ - WTSI::NPG::HTS::Publisher now supports multi-value AVUs. Previously
+   it retained only the last value processed for a particular attribute.
 
 Release 1.4
 
- -  Added library_type metadata.
+ - Added library_type metadata.
 
- -  Added tgz as recognised file suffix for metadata.
+ - Added tgz as recognised file suffix for metadata.
 
- -  Improved logging; configurable per-class, reduced verbosity in metadata
-    updater, increased default verbosity in scripts.
+ - Improved logging; configurable per-class, reduced verbosity in metadata
+   updater, increased default verbosity in scripts.
 
- -  The metadata updater will handle an id_run of 0.
+ - The metadata updater will handle an id_run of 0.
 
- -  Added a CLI option to specify an id_run for cases where it can't be
-    detected automatically.
+ - Added a CLI option to specify an id_run for cases where it can't be
+   detected automatically.
 
- -  Avoid loading index files for empty alignment files.
+ - Avoid loading index files for empty alignment files.
 
- -  Avoid loading the JSON-wrapped samtools stats created in more recent
-    runs.
+ - Avoid loading the JSON-wrapped samtools stats created in more recent
+   runs.
 
- -  Added a PacBio run publisher and monitor.
+ - Added a PacBio run publisher and monitor.
 
- -  Added log file publisher.
+ - Added log file publisher.
 
- -  Ensure test dependencies are installed.
+ - Ensure test dependencies are installed.
 
 Release 1.3
 
- -  Defer checksums on (re)loading files until after upload. Assume
-    that iRODS checksums are in a good state prior to upload.
+ - Defer checksums on (re)loading files until after upload. Assume
+   that iRODS checksums are in a good state prior to upload.
 
- -  Bug fix: avoid calling $obj->str on a string, triggered when remote
-    path is a collection.
+ - Bug fix: avoid calling $obj->str on a string, triggered when remote
+   path is a collection.
 
- -  Count errors during group permission removal and re-throw.
+ - Count errors during group permission removal and re-throw.
 
- -  Added strict_groups parameter to overridden update_group_permissions
-    method.
+ - Added strict_groups parameter to overridden update_group_permissions
+   method.
 
- -  Use the return values of metadata-setting methods to inform the caller
-    of any failures while each operation remains in a try-catch.
+ - Use the return values of metadata-setting methods to inform the caller
+   of any failures while each operation remains in a try-catch.
 
- -  Add the ability to load InterOp files.
+ - Add the ability to load InterOp files.
 
- -  Added Illumina namespace
+ - Added Illumina namespace.
 
 Release 1.2
 
@@ -58,10 +81,10 @@ Release 1.2
  - Restrict the types of secondary metadata on ancillary files i.e 
    Restrict JSON file secondary metadata to study_id.
 
- - Change run option to id_run (or id-run)
+ - Change run option to id_run (or id-run).
 
  - Filter data objects by lane and tag index (without recourse to 
-   metadata)
+   metadata).
 
 Release 1.1
 
