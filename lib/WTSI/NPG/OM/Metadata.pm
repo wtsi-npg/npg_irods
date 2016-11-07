@@ -5,15 +5,15 @@ package WTSI::NPG::OM::Metadata;
 
 use strict;
 use warnings;
-use Exporter qw(import);
+use Exporter qw[import];
 
 ## no critic (Modules::ProhibitAutomaticExportation)
-our @EXPORT = qw(
+our @EXPORT = qw[
                  $BIONANO_CHIP_ID
                  $BIONANO_FLOWCELL
                  $BIONANO_INSTRUMENT
                  $BIONANO_UUID
-            );
+            ];
 
 ## use critic
 

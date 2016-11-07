@@ -1,6 +1,7 @@
 package WTSI::NPG::OM::BioNano::BnxFile;
 
 use Moose;
+use namespace::autoclean;
 
 use Digest::MD5;
 
@@ -92,7 +93,7 @@ around BUILDARGS => sub {
 sub BUILD {
     my ($self,) = @_;
     if (! -r $self->path) {
-        $self->logcroak(q{Cannot read BNX path '}, $self->path, q{'});
+        $self->logcroak(q[Cannot read BNX path '], $self->path, q[']);
     }
     return 1;
 }
@@ -102,15 +103,15 @@ sub _build_header {
     my @header_keys;
     my %header;
     open my $fh, '<', $self->path ||
-        $self->logcroak(q{Failed to open BNX path '}, $self->path, q{'});
+        $self->logcroak(q[Failed to open BNX path '], $self->path, q[']);
     while (<$fh>) {
         chomp;
         if (m/^[#][ ]BNX[ ]File[ ]Version:\t/msx) {
             my @fields = split /\t/msx;
             my $version = pop @fields;
             if ($version !~ /1[.][012]/msx) {
-                $self->logwarn(q{Unsupported BNX version number: '},
-                               $version, q{'});
+                $self->logwarn(q[Unsupported BNX version number: '],
+                               $version, q[']);
             }
         } elsif (m/^[#]rh/msx) {
             @header_keys = split /\t/msx;
@@ -127,11 +128,11 @@ sub _build_header {
         }
     }
     close $fh ||
-        $self->logcroak(q{Failed to close BNX path '}, $self->path, q{'});
+        $self->logcroak(q[Failed to close BNX path '], $self->path, q[']);
     foreach my $key (@REQUIRED_FIELDS) {
         if (! $header{$key}) {
-            $self->logcroak(q{Required BNX header field '}, $key,
-                            q{' not found});
+            $self->logcroak(q[Required BNX header field '], $key,
+                            q[' not found]);
         }
     }
     return \%header;
@@ -142,10 +143,10 @@ sub _build_md5sum {
     my $md5 = Digest::MD5->new;
     my $fh;
     open $fh, '<', $self->path ||
-        $self->logcroak(q{Failed to open BNX path '}, $self->path, q{'});
+        $self->logcroak(q[Failed to open BNX path '], $self->path, q[']);
     $md5->addfile($fh);
     close $fh ||
-        $self->logcroak(q{Failed to close BNX path '}, $self->path, q{'});
+        $self->logcroak(q[Failed to close BNX path '], $self->path, q[']);
     return $md5->hexdigest;
 }
 

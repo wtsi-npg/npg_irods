@@ -5,16 +5,16 @@ package WTSI::NPG::HTS::Metadata;
 
 use strict;
 use warnings;
-use Exporter qw(import);
+use Exporter qw[import];
 
 ## no critic (Modules::ProhibitAutomaticExportation)
-our @EXPORT = qw(
+our @EXPORT = qw[
                  $LIBRARY_TYPE
                  $SEQCHKSUM
                  $HUMAN
                  $XAHUMAN
                  $YHUMAN
-            );
+            ];
 
 ## use critic
 

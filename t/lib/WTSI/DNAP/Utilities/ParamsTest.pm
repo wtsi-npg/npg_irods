@@ -7,11 +7,11 @@ use Log::Log4perl;
 use Test::Exception;
 use Test::More;
 
-use base qw(WTSI::NPG::HTS::Test);
+use base qw[WTSI::NPG::HTS::Test];
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
-use WTSI::DNAP::Utilities::Params qw(function_params);
+use WTSI::DNAP::Utilities::Params qw[function_params];
 
 sub has_named_params : Test(3) {
   my $params0 = function_params(0);

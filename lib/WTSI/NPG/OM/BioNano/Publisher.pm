@@ -1,10 +1,11 @@
 package WTSI::NPG::OM::BioNano::Publisher;
 
 use Moose;
+use namespace::autoclean;
 
 use DateTime;
-use File::Basename qw(basename);
-use File::Spec;
+use File::Basename qw[basename];
+use File::Spec::Functions;
 use UUID;
 use URI;
 
@@ -20,30 +21,11 @@ use WTSI::NPG::OM::BioNano::ResultSet;
 
 our $VERSION = '';
 
-with qw/WTSI::DNAP::Utilities::Loggable
+our @BNX_SUFFIXES = qw[bnx];
+
+with qw[WTSI::DNAP::Utilities::Loggable
         WTSI::NPG::Accountable
-        WTSI::NPG::OM::BioNano::Annotator/;
-
-has 'accountee_uid' =>
-  (is       => 'ro',
-   isa      => 'Maybe[Str]',
-   required => 0,
-   lazy     => 1,
-   default  => undef,
-   documentation => 'UID (eg. username) supplied to HTS::Publisher for '.
-       'constructing the user URI in creation metadata. Optional, assigned '.
-       'a default in WTSI::NPG::Accountable if not given.',
-);
-
-has 'affiliation_uri' =>
-  (is       => 'ro',
-   isa      => 'Maybe[URI]',
-   required => 0,
-   lazy     => 1,
-   default  => undef,
-   documentation => 'Affiliation URI supplied to HTS::Publisher. Optional, '.
-       'assigned a default in WTSI::NPG::Accountable if not given.',
-   );
+        WTSI::NPG::OM::BioNano::Annotator];
 
 has 'irods' =>
   (is       => 'ro',
@@ -66,16 +48,6 @@ has 'uuid' =>
    builder  => '_build_uuid',
    documentation => 'UUID generated for the publication to iRODS');
 
-sub BUILD {
-  my ($self) = @_;
-
-  # Make our irods handle use our logger by default
-  $self->irods->logger($self->logger);
-
-  return 1;
-}
-
-our @BNX_SUFFIXES = qw[bnx];
 
 =head2 publish
 
@@ -95,39 +67,30 @@ our @BNX_SUFFIXES = qw[bnx];
 sub publish {
     my ($self, $publish_dest, $timestamp) = @_;
     # generate a hashed path for publication
-    my $hash_path =
-        $self->irods->hash_path($self->resultset->bnx_path,
-                                $self->resultset->bnx_file->md5sum);
-    $self->debug(q{Found hashed path '}, $hash_path, q{' from checksum '},
-                 $self->resultset->bnx_file->md5sum, q{'});
+    if (! file_name_is_absolute($publish_dest)) {
+        $self->logcroak(q[An absolute destination path is required for ],
+                        q[iRODS publication; given path was '],
+                        $publish_dest, q['])
+    }
     if (! defined $timestamp) {
         $timestamp = DateTime->now();
     }
-    if (! File::Spec->file_name_is_absolute($publish_dest)) {
-        $publish_dest = File::Spec->catdir($self->irods->working_collection,
-                                           $publish_dest);
-    }
-    my $leaf_collection = File::Spec->catdir($publish_dest, $hash_path);
-    $self->debug(q{Publishing to collection '}, $leaf_collection, q{'});
+    my $hash_path =
+        $self->irods->hash_path($self->resultset->bnx_path,
+                                $self->resultset->bnx_file->md5sum);
+    $self->debug(q[Found hashed path '], $hash_path, q[' from checksum '],
+                 $self->resultset->bnx_file->md5sum, q[']);
+    my $leaf_collection = catdir($publish_dest, $hash_path);
+    $self->debug(q[Publishing to collection '], $leaf_collection, q[']);
     # publish data to iRODS, if not already present
     my $dirname = basename($self->resultset->directory);
-    my $bionano_collection = File::Spec->catdir($leaf_collection, $dirname);
+    my $bionano_collection = catdir($leaf_collection, $dirname);
     if ($self->irods->list_collection($bionano_collection)) {
-        $self->info(q{Skipping publication of BioNano data collection '},
-                $bionano_collection, q{': already exists});
+        $self->info(q[Skipping publication of BioNano data collection '],
+                $bionano_collection, q[': already exists]);
     } else {
         my $collection_meta = $self->make_collection_meta();
-        my %publish_args = (
-            irods => $self->irods,
-            logger => $self->logger,
-        );
-        if (defined $self->accountee_uid) {
-            $publish_args{'accountee_uid'} = $self->accountee_uid;
-        }
-        if (defined $self->affiliation_uri) {
-            $publish_args{'affiliation_uri'} = $self->affiliation_uri;
-        }
-        my $publisher = WTSI::NPG::HTS::Publisher->new(%publish_args);
+        my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods);
         my $bionano_published_coll = $publisher->publish(
             $self->resultset->directory,
             $leaf_collection,
@@ -135,21 +98,21 @@ sub publish {
             $timestamp,
         );
         if ($bionano_published_coll ne $bionano_collection) {
-            $self->logcroak(q{Expected BioNano publication destination '},
+            $self->logcroak(q[Expected BioNano publication destination '],
                             $bionano_collection,
-                            q{' not equal to return value from Publisher '},
-                            $bionano_published_coll, q{'}
+                            q[' not equal to return value from Publisher '],
+                            $bionano_published_coll, q[']
                         );
         } else {
-            $self->debug(q{Published BioNano runfolder '},
+            $self->debug(q[Published BioNano runfolder '],
                          $self->resultset->directory,
-                         q{' to iRODS destination '},
-                         $bionano_collection, q{'}
+                         q[' to iRODS destination '],
+                         $bionano_collection, q[']
                      );
         }
         my $bnx_ipath = $self->_apply_bnx_file_metadata($bionano_collection);
-        $self->debug(q{Applied metadata to BNX iRODS object '},
-                     $bnx_ipath, q{'});
+        $self->debug(q[Applied metadata to BNX iRODS object '],
+                     $bnx_ipath, q[']);
     }
     return $bionano_collection;
 }

@@ -8,7 +8,7 @@ use WTSI::NPG::OM::Metadata;
 
 our $VERSION = '';
 
-with qw/WTSI::NPG::HTS::Annotator/; # TODO better location for "parent" role
+with qw[WTSI::NPG::HTS::Annotator]; # TODO better location for "parent" role
 
 =head2 make_bnx_metadata
 

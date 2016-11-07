@@ -3,7 +3,7 @@ package WTSI::NPG::OM::BioNano::BnxFileTest;
 use strict;
 use warnings;
 
-use base qw(WTSI::NPG::HTS::Test); # FIXME better path for shared base
+use base qw[WTSI::NPG::HTS::Test]; # FIXME better path for shared base
 
 use Test::More tests => 9;
 use Test::Exception;
