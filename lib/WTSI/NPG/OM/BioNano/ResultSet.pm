@@ -124,7 +124,7 @@ sub _build_ancillary_files {
     # exclude .bnx files from collection
     my @files = WTSI::DNAP::Utilities::Collector->new(
         root => $self->directory,
-    )->collect_files(sub {!($_[0] =~ m/[.]bnx$/msx);});
+    )->collect_files(sub {!($_[0] =~ m/[.]bnx$/msx)});
     my %ancillary_file_names;
     foreach my $name (@ANCILLARY_FILE_NAMES) {
         $ancillary_file_names{$name} = 1;
