@@ -236,7 +236,7 @@ sub position : Test(24) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  foreach my $format (qw(bam cram)) {
+  foreach my $format (qw[bam cram]) {
     foreach my $path (@tagged_paths, @untagged_paths) {
       my $full_path = "$path.$format";
       cmp_ok(WTSI::NPG::HTS::Illumina::AlnDataObject->new

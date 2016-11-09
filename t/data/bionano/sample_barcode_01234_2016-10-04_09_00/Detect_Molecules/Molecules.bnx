@@ -1,0 +1,23 @@
+# BNX File Version:	1.2
+# Label Channels:	1
+# Nickase Recognition Site 1:	
+# Min Molecule Length (Kb):	100
+# Label SNR Filter Type:	Static
+# Min Label SNR:	2.750
+# Software Version:	2.1.0.6656
+#rh	SourceFolder	InstrumentSerial	Time	NanoChannelPixelsPerScan	StretchFactor	BasesPerPixel	NumberofScans	ChipId	Flowcell	LabelSNRFilterType	MinMoleculeLength	MinLabelSNR	RunId
+# Run Data	C:\Irys_Data\2016-10\Foo_2016-10-01_12_00\Detect Molecules	B001	10/1/2016 12:00:37 PM	70000000	0.85	567.89	30	20000,10000,1/1/2015,987654321	1	Static	0	0	1
+# Quality Score QX01:	SNR
+# Quality Score QX02:	Ave Intensity
+#0h	LabelChannel	MoleculeId	Length	AvgIntensity	SNR	NumberofLabels	OriginalMoleculeId	ScanNumber	ScanDirection	ChipId	Flowcell	RunId	GlobalScanNumber
+#0f	int	int	float	float	float	int	int	int	int	string	int	int	int
+#1h	LabelChannel	LabelPositions[N]
+#1f	int	float
+#2h	LabelChannel	LabelPositions[N]
+#2h	int	float
+#Qh	QualityScoreID	QualityScores[N]
+#Qf	str	float
+0	186	123456.7	0.123	12.345	1	186	1	-1	20000,10000,1/1/2015,987654321	1	1	1
+1	34567.8	123456.7
+QX11	23.456
+QX12	0.1234
