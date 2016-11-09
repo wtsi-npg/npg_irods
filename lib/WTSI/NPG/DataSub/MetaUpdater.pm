@@ -47,7 +47,7 @@ sub update_submission_metadata {
   my ($self, $root, $files) = @_;
 
   defined $root or $self->logconfess('A defined root argument is required');
-  $root eq q{} and $self->logconfess('A non-empty root argument is required');
+  $root eq q[] and $self->logconfess('A non-empty root argument is required');
 
   defined $files or
     $self->logconfess('A files argument is required');
