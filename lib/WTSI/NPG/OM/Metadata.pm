@@ -1,6 +1,6 @@
-package WTSI::NPG::HTS::Metadata;
+package WTSI::NPG::OM::Metadata;
 
-# Contains metadata constants for HTS publication
+# Contains metadata constants for OM publication
 # FIXME -- move to WTSI::NPG::iRODS::Metadata
 
 use strict;
@@ -9,27 +9,22 @@ use Exporter qw[import];
 
 ## no critic (Modules::ProhibitAutomaticExportation)
 our @EXPORT = qw[
-                 $LIBRARY_TYPE
-                 $SEQCHKSUM
-                 $HUMAN
-                 $XAHUMAN
-                 $YHUMAN
+                 $BIONANO_CHIP_ID
+                 $BIONANO_FLOWCELL
+                 $BIONANO_INSTRUMENT
+                 $BIONANO_UUID
             ];
 
 ## use critic
 
 our $VERSION = '';
 
-# Annotation
+# BioNano metadata
 
-our $LIBRARY_TYPE = 'library_type';
-our $SEQCHKSUM = 'seqchksum';
-
-# Sequence alignment filters
-
-our $HUMAN   = 'human';   # FIXME
-our $XAHUMAN = 'xahuman'; # FIXME
-our $YHUMAN  = 'yhuman';  # FIXME
+our $BIONANO_CHIP_ID    = 'bnx_chip_id';
+our $BIONANO_FLOWCELL   = 'bnx_flowcell';
+our $BIONANO_INSTRUMENT = 'bnx_instrument';
+our $BIONANO_UUID       = 'bnx_uuid';
 
 1;
 
@@ -37,7 +32,7 @@ __END__
 
 =head1 NAME
 
-WTSI::NPG::HTS::Metadata
+WTSI::NPG::OM::Metadata
 
 =head1 DESCRIPTION
 

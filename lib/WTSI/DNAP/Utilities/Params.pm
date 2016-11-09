@@ -15,7 +15,7 @@ our $VERSION = '';
   Arg [1]      Number of positional parameters, Int.
   Arg [2]      Named parameters, Array.
 
-  Example    : my $params = function_params(2, qw(foo bar));
+  Example    : my $params = function_params(2, qw[foo bar]);
   Description: Return a new argument list parser recognising the
                specified positional and named parameters.
   Returntype : WTSI::DNAP::Utilities::ParamsParser
