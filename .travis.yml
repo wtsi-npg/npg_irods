@@ -33,4 +33,6 @@ script:
   - export PATH=$IRODS_RIP_DIR/iRODS/clients/icommands/bin:$PATH
   - ienv
   - ils
+  - env
+  - which npg_publish_bionano_run.pl
   - ./scripts/travis_script.sh
