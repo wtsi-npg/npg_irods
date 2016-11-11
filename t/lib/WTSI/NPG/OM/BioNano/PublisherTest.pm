@@ -7,7 +7,7 @@ use URI;
 
 use base qw[WTSI::NPG::HTS::Test]; # FIXME better path for shared base
 
-use Test::More tests => 7;
+use Test::More tests => 10;
 use Test::Exception;
 
 use English qw[-no_match_vars];
@@ -24,6 +24,7 @@ use WTSI::NPG::OM::BioNano::ResultSet;
 
 my $data_path = './t/data/bionano/';
 my $runfolder_name = 'sample_barcode_01234_2016-10-04_09_00';
+my $tmp_data;
 my $test_run_path;
 my $irods_tmp_coll;
 my $pid = $$;
@@ -39,7 +40,7 @@ sub make_fixture : Test(setup) {
     # create a temporary directory for test data
     # workaround for the space in BioNano's "Detect Molecules" directory,
     # because Build.PL does not work well with spaces in filenames
-    my $tmp_data = tempdir('temp_bionano_data_XXXXXX', CLEANUP => 1);
+    $tmp_data = tempdir('temp_bionano_data_XXXXXX', CLEANUP => 1);
     my $run_path = $data_path.$runfolder_name;
     system("cp -R $run_path $tmp_data") && $log->logcroak(
         q[Failed to copy '], $run_path, q[' to '], $tmp_data, q[']);
@@ -73,7 +74,6 @@ sub publish : Test(2) {
         sub { $run_collection = $publisher->publish($irods_tmp_coll); },
         'ResultSet published OK'
     );
-
 }
 
 sub metadata : Test(4) {
@@ -156,6 +156,29 @@ sub metadata : Test(4) {
 
     is_deeply(\@file_meta, \@expected_meta,
               'BNX file metadata matches expected values');
+}
+
+sub script : Test(3) {
+
+    my $irods = WTSI::NPG::iRODS->new();
+
+    system("find $test_run_path -exec touch {} +") && $log->logcroak(
+        "Failed to recursively update access time for $test_run_path"
+    );
+
+    my $script = "npg_publish_bionano_run.pl";
+
+    my $cmd = "$script --dest $irods_tmp_coll --source $tmp_data";
+
+    ok(system($cmd)==0, "Publish script run successfully");
+
+    my $expected_coll = $irods_tmp_coll."/d5/0f/b6/".$runfolder_name;
+    ok($irods->is_collection($expected_coll),
+       "Script publishes to expected iRODS collection");
+
+    my $expected_bnx = $expected_coll."/Detect Molecules/Molecules.bnx";
+    ok($irods->is_object($expected_bnx),
+       "Script publishes expected filtered BNX file");
 }
 
 
