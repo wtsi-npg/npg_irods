@@ -172,7 +172,7 @@ sub publish_meta_xml_files : Test(9) {
   check_common_metadata($irods, @observed_paths);
 }
 
-sub publish_basx_files : Test(56) {
+sub publish_basx_files : Test(64) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/superfoo/45137_1095";
@@ -272,11 +272,14 @@ sub check_primary_metadata {
     my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $path);
     my $file_name = fileparse($obj->str);
 
-    foreach my $attr ($WTSI::NPG::HTS::PacBio::Annotator::CELL_INDEX,
-                      $WTSI::NPG::HTS::PacBio::Annotator::COLLECTION_NUMBER,
-                      $WTSI::NPG::HTS::PacBio::Annotator::INSTRUMENT_NAME,
-                      $WTSI::NPG::HTS::PacBio::Annotator::RUN,
-                      $WTSI::NPG::HTS::PacBio::Annotator::SET_NUMBER) {
+    foreach my $attr
+      ($WTSI::NPG::HTS::PacBio::Annotator::PACBIO_CELL_INDEX,
+       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_COLLECTION_NUMBER,
+       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_INSTRUMENT_NAME,
+       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_RUN,
+       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_SET_NUMBER,
+       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_WELL,
+       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_SAMPLE_LOAD_NAME) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }

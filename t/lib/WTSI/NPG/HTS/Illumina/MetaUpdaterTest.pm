@@ -31,7 +31,7 @@ Log::Log4perl::init('./etc/log4perl_tests.conf');
 
 my $pid          = $PID;
 my $test_counter = 0;
-my $data_path    = './t/data/meta_updater';
+my $data_path    = './t/data/illumina_meta_updater';
 my $fixture_path = "./t/fixtures";
 
 my $utf8_extra = '[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]';
@@ -65,7 +65,7 @@ sub setup_test : Test(setup) {
                                     strict_baton_version => 0);
 
   $irods_tmp_coll =
-    $irods->add_collection("MetaUpdaterTest.$pid.$test_counter");
+    $irods->add_collection("IlluminaMetaUpdaterTest.$pid.$test_counter");
   $test_counter++;
 
   if ($samtools_available) {

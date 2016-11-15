@@ -366,11 +366,16 @@ sub publish_basx_files {
 
   my $metadata =
     WTSI::NPG::HTS::PacBio::MetaXMLParser->new->parse_file($metadata_file);
+
+  # There will be 1 record for a non-multiplexed SMRT cell and >1
+  # record for a multiplexed
   my @run_records = $self->_query_ml_warehouse($metadata->run_uuid,
                                                $metadata->library_tube_uuids);
+  # R & D runs have no records in the ML warehouse
+  my $is_r_and_d = @run_records ? 0 : 1;
 
-  my @primary_avus   = $self->make_primary_metadata($metadata);
-  my @secondary_avus = $self->make_secondary_metadata($metadata, @run_records);
+  my @primary_avus   = $self->make_primary_metadata($metadata, $is_r_and_d);
+  my @secondary_avus = $self->make_secondary_metadata(@run_records);
 
   my $files     = $self->list_basx_files($smrt_name, $look_index);
   my $dest_coll = catdir($self->dest_collection, $smrt_name, $ANALYSIS_DIR);
