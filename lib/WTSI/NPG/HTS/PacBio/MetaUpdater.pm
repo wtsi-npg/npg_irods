@@ -86,14 +86,25 @@ sub update_secondary_metadata {
 sub _query_ml_warehouse {
   my ($self, $run_id, $well) = @_;
 
+  # Well addresses are unpadded in the ML warehouse
+  my ($row, $col) = $well =~ m{^([[:upper:]])([[:digit:]]+)$}msx;
+  if ($row and $col) {
+    $col =~ s/^0+//msx; # Remove leading zeroes
+  }
+  else {
+    $self->logcroak("Failed to match a plate row and column in well '$well' ",
+                    "of PacBio run '$run_id'");
+  }
+
+  my $well_label = "$row$col";
   my @run_records = $self->mlwh_schema->resultset('PacBioRun')->search
     ({id_pac_bio_run_lims => $run_id,
-      well_label          => $well},
+      well_label          => $well_label},
      {prefetch            => ['sample', 'study']});
 
   my $num_records = scalar @run_records;
   $self->debug("Found $num_records records for PacBio ",
-               "run $run_id, well $well");
+               "run $run_id, well $well_label");
 
   return @run_records;
 }
@@ -112,6 +123,10 @@ WTSI::NPG::HTS::PacBio::MetaUpdater
 
 =head1 DESCRIPTION
 
+Updates secondary metadata and consequent permissions on PacBio HTS
+data files in iRODS. The information to do both of these operations is
+provided by WTSI::DNAP::Warehouse::Schema. Any errors encountered on
+each file are trapped and logged.
 
 =head1 AUTHOR
 

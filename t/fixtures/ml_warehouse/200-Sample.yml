@@ -495,6 +495,37 @@
   supplier_name: 14730_IMS_Saliva_52
   taxon_id: 10376
   uuid_sample_lims: 2ae7ad70-d87f-11e4-8878-3c4a9275d6c6
+- accession_number: ERS764947
+  cohort: ~
+  common_name: Escherichia coli
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-06-25 08:34:44
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6143532
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2335969
+  id_sample_tmp: 2307089
+  last_updated: 2015-09-04 16:21:08
+  mother: ~
+  name: 3012STDY6143532
+  organism: ~
+  public_name: NCTC10757
+  recorded_at: 2015-09-04 16:21:08
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6143532
+  strain: NCTC10757
+  supplier_name: NCTC10757_270615
+  taxon_id: 562
+  uuid_sample_lims: 07b7fe30-1b15-11e5-9473-3c4a9275d6c6
 - accession_number: ERS1098415
   cohort: ~
   common_name: Anopheles gambiae
@@ -526,6 +557,37 @@
   supplier_name: AR0049-CW
   taxon_id: 7165
   uuid_sample_lims: 1cb4e2e0-e463-11e5-88b1-3c4a9275d6c6
+- accession_number: ERS764447
+  cohort: ~
+  common_name: Escherichia coli
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-06-23 12:08:35
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6139500
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2331839
+  id_sample_tmp: 2302864
+  last_updated: 2015-09-04 16:18:00
+  mother: ~
+  name: 3012STDY6139500
+  organism: ~
+  public_name: NCTC9049
+  recorded_at: 2015-09-04 16:18:00
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6139500
+  strain: NCTC9049
+  supplier_name: NCTC9049_240615
+  taxon_id: 562
+  uuid_sample_lims: 92aad880-19a0-11e5-a937-3c4a9275d6c6
 - accession_number: ERS1080585
   cohort: ~
   common_name: Bordatella parapertussis
@@ -619,6 +681,37 @@
   supplier_name: 14759_DF_Tonsil_T156
   taxon_id: 10376
   uuid_sample_lims: 2bb78090-d87f-11e4-8878-3c4a9275d6c6
+- accession_number: ERS798843
+  cohort: ~
+  common_name: Staphylococcus aureus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-27 08:15:40
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6167399
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2364820
+  id_sample_tmp: 2341025
+  last_updated: 2015-09-04 16:40:26
+  mother: ~
+  name: 3012STDY6167399
+  organism: ~
+  public_name: NCTC11939
+  recorded_at: 2015-09-04 16:40:26
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6167399
+  strain: NCTC11939
+  supplier_name: NCTC11939_240715
+  taxon_id: 1280
+  uuid_sample_lims: ab557be0-3437-11e5-998e-3c4a9275d6c6
 - accession_number: ~
   cohort: ~
   common_name: Homo sapiens
@@ -650,6 +743,37 @@
   supplier_name: ~
   taxon_id: 9606
   uuid_sample_lims: cd21f520-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS799809
+  cohort: ~
+  common_name: Escherichia coli
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-16 10:40:49
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6160733
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2356689
+  id_sample_tmp: 2332894
+  last_updated: 2015-09-04 16:35:12
+  mother: ~
+  name: 3012STDY6160733
+  organism: ~
+  public_name: NCTC10537
+  recorded_at: 2015-09-04 16:35:12
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6160733
+  strain: NCTC10537
+  supplier_name: NCTC10537_170715
+  taxon_id: 562
+  uuid_sample_lims: 1f7f5700-2ba7-11e5-96d1-3c4a9275d6c6
 - accession_number: ~
   cohort: Virus_6
   common_name: Human herpesvirus 4
@@ -836,6 +960,37 @@
   supplier_name: tcf3b_het_D2
   taxon_id: 7955
   uuid_sample_lims: a2f092c0-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS798841
+  cohort: ~
+  common_name: Staphylococcus aureus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-27 08:15:40
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6167397
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2364818
+  id_sample_tmp: 2341023
+  last_updated: 2015-09-04 16:40:26
+  mother: ~
+  name: 3012STDY6167397
+  organism: ~
+  public_name: NCTC13142
+  recorded_at: 2015-09-04 16:40:26
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6167397
+  strain: NCTC13142
+  supplier_name: NCTC13142_240715
+  taxon_id: 1280
+  uuid_sample_lims: ab461290-3437-11e5-998e-3c4a9275d6c6
 - accession_number: ~
   cohort: ~
   common_name: Homo sapiens
@@ -929,6 +1084,37 @@
   supplier_name: IHMX1_1C
   taxon_id: 10090
   uuid_sample_lims: 83d9a5c0-41a0-11e5-998e-3c4a9275d6c6
+- accession_number: ERS542093
+  cohort: ~
+  common_name: S.cerevisiae
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: France
+  created: 2013-11-26 16:57:42
+  deleted_at: ~
+  description: ~
+  donor_id: pbsys5664601
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1772675
+  id_sample_tmp: 1751254
+  last_updated: 2015-11-19 16:40:57
+  mother: ~
+  name: pbsys5664601
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-19 16:40:57
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: pbsys5664601
+  strain: ~
+  supplier_name: DBVPG6044_kit_2
+  taxon_id: 4932
+  uuid_sample_lims: dd756be0-56bb-11e3-a14b-3c4a9275d6c6
 - accession_number: ~
   cohort: ~
   common_name: Homo sapiens
@@ -1053,6 +1239,37 @@
   supplier_name: Him1576
   taxon_id: 9606
   uuid_sample_lims: 29411588-b47a-11e0-9fc9-005056a8007b
+- accession_number: ERS764449
+  cohort: ~
+  common_name: Escherichia coli
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-06-23 12:08:35
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6139502
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2331841
+  id_sample_tmp: 2302866
+  last_updated: 2015-09-04 16:18:00
+  mother: ~
+  name: 3012STDY6139502
+  organism: ~
+  public_name: NCTC9068
+  recorded_at: 2015-09-04 16:18:00
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6139502
+  strain: NCTC9068
+  supplier_name: NCTC9068_240615
+  taxon_id: 562
+  uuid_sample_lims: 92c20a00-19a0-11e5-a937-3c4a9275d6c6
 - accession_number: ERS793068
   cohort: ~
   common_name: Homo sapiens
@@ -1208,6 +1425,37 @@
   supplier_name: tcf3b_wt_A3
   taxon_id: 7955
   uuid_sample_lims: a316df70-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS542098
+  cohort: ~
+  common_name: S.cerevisiae
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: France
+  created: 2013-11-26 16:57:44
+  deleted_at: ~
+  description: ~
+  donor_id: pbsys5664608
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1772682
+  id_sample_tmp: 1751261
+  last_updated: 2015-11-19 16:41:28
+  mother: ~
+  name: pbsys5664608
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-19 16:41:28
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: pbsys5664608
+  strain: ~
+  supplier_name: YPS138_Kit_2
+  taxon_id: 4932
+  uuid_sample_lims: de53e500-56bb-11e3-a14b-3c4a9275d6c6
 - accession_number: ~
   cohort: Virus_6
   common_name: Human herpesvirus 4
@@ -1363,7 +1611,7 @@
   supplier_name: 14742_IMS_Saliva_187
   taxon_id: 10376
   uuid_sample_lims: 2b37a230-d87f-11e4-8878-3c4a9275d6c6
-- accession_number: ERS429036
+- accession_number: EGAN00001455643
   cohort: ~
   common_name: Homo Sapien
   consent_withdrawn: 0
@@ -1380,12 +1628,12 @@
   id_lims: SQSCP
   id_sample_lims: 1877292
   id_sample_tmp: 1854910
-  last_updated: 2015-09-04 11:12:18
+  last_updated: 2016-10-17 11:57:42
   mother: ~
   name: T19PG5759048
   organism: ~
   public_name: ~
-  recorded_at: 2015-09-04 11:12:18
+  recorded_at: 2016-10-17 11:57:42
   reference_genome: ~
   replicate: ~
   sample_visibility: ~
@@ -1611,6 +1859,37 @@
   supplier_name: ~
   taxon_id: 28450
   uuid_sample_lims: a8b5638c-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS764943
+  cohort: ~
+  common_name: Escherichia coli
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-06-25 08:34:44
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6143528
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2335965
+  id_sample_tmp: 2307085
+  last_updated: 2015-09-04 16:21:08
+  mother: ~
+  name: 3012STDY6143528
+  organism: ~
+  public_name: NCTC7922
+  recorded_at: 2015-09-04 16:21:08
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6143528
+  strain: NCTC7922
+  supplier_name: NCTC7922_270615
+  taxon_id: 562
+  uuid_sample_lims: 079497b0-1b15-11e5-9473-3c4a9275d6c6
 - accession_number: ERS793069
   cohort: ~
   common_name: Homo sapiens
@@ -1735,6 +2014,37 @@
   supplier_name: tcf3a_hom_3b_wt_B4
   taxon_id: 7955
   uuid_sample_lims: a35fa840-312e-11e5-ad20-3c4a9275d6c6
+- accession_number: ERS798844
+  cohort: ~
+  common_name: Staphylococcus aureus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-27 08:15:40
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6167400
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2364821
+  id_sample_tmp: 2341026
+  last_updated: 2015-09-04 16:40:26
+  mother: ~
+  name: 3012STDY6167400
+  organism: ~
+  public_name: NCTC9944
+  recorded_at: 2015-09-04 16:40:26
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6167400
+  strain: NCTC9944
+  supplier_name: NCTC9944_240715
+  taxon_id: 1280
+  uuid_sample_lims: ab5b9660-3437-11e5-998e-3c4a9275d6c6
 - accession_number: ~
   cohort: ~
   common_name: Homo sapiens
@@ -1766,6 +2076,37 @@
   supplier_name: ~
   taxon_id: 9606
   uuid_sample_lims: cd01ea00-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS542100
+  cohort: ~
+  common_name: S.cerevisiae
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: France
+  created: 2013-11-26 16:57:44
+  deleted_at: ~
+  description: ~
+  donor_id: pbsys5664610
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1772684
+  id_sample_tmp: 1751263
+  last_updated: 2015-11-19 16:41:37
+  mother: ~
+  name: pbsys5664610
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-19 16:41:37
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: pbsys5664610
+  strain: ~
+  supplier_name: CBS432_kit_2
+  taxon_id: 4932
+  uuid_sample_lims: de724270-56bb-11e3-a14b-3c4a9275d6c6
 - accession_number: ~
   cohort: Virus_6
   common_name: Human herpesvirus 4
@@ -2107,6 +2448,37 @@
   supplier_name: 14766_014_P4
   taxon_id: 10376
   uuid_sample_lims: 2bf15540-d87f-11e4-8878-3c4a9275d6c6
+- accession_number: ERS798846
+  cohort: ~
+  common_name: Staphylococcus delphini
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-27 08:15:40
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6167402
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2364823
+  id_sample_tmp: 2341028
+  last_updated: 2015-09-04 16:40:26
+  mother: ~
+  name: 3012STDY6167402
+  organism: ~
+  public_name: NCTC12225
+  recorded_at: 2015-09-04 16:40:26
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6167402
+  strain: NCTC12225
+  supplier_name: NCTC12225_240715
+  taxon_id: 53344
+  uuid_sample_lims: ab688eb0-3437-11e5-998e-3c4a9275d6c6
 - accession_number: ERS811034
   cohort: ~
   common_name: Mus musculus
@@ -2138,6 +2510,37 @@
   supplier_name: BCOR_IP_CTCF
   taxon_id: 10090
   uuid_sample_lims: 4ec17830-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS764444
+  cohort: ~
+  common_name: Escherichia coli
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-06-23 12:08:34
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6139497
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2331836
+  id_sample_tmp: 2302861
+  last_updated: 2015-09-04 16:18:00
+  mother: ~
+  name: 3012STDY6139497
+  organism: ~
+  public_name: NCTC9033
+  recorded_at: 2015-09-04 16:18:00
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6139497
+  strain: NCTC9033
+  supplier_name: NCTC9033_240615
+  taxon_id: 562
+  uuid_sample_lims: 9287c020-19a0-11e5-a937-3c4a9275d6c6
 - accession_number: ERS1072059
   cohort: ~
   common_name: Streptococccus pneumoniae 23F
@@ -2634,7 +3037,38 @@
   supplier_name: tcf3b_het_B2
   taxon_id: 7955
   uuid_sample_lims: a2e3c180-312e-11e5-ad20-3c4a9275d6c6
-- accession_number: ERS429032
+- accession_number: ERS542097
+  cohort: ~
+  common_name: S.cerevisiae
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: France
+  created: 2013-11-26 16:57:43
+  deleted_at: ~
+  description: ~
+  donor_id: pbsys5664607
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1772681
+  id_sample_tmp: 1751260
+  last_updated: 2015-11-19 16:41:24
+  mother: ~
+  name: pbsys5664607
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-19 16:41:24
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: pbsys5664607
+  strain: ~
+  supplier_name: N44_kit_2
+  taxon_id: 4932
+  uuid_sample_lims: de3bf030-56bb-11e3-a14b-3c4a9275d6c6
+- accession_number: EGAN00001455639
   cohort: ~
   common_name: Homo Sapien
   consent_withdrawn: 0
@@ -2651,12 +3085,12 @@
   id_lims: SQSCP
   id_sample_lims: 1877285
   id_sample_tmp: 1854903
-  last_updated: 2015-09-04 11:12:18
+  last_updated: 2016-10-17 11:57:38
   mother: ~
   name: T19PG5759041
   organism: ~
   public_name: ~
-  recorded_at: 2015-09-04 11:12:18
+  recorded_at: 2016-10-17 11:57:38
   reference_genome: ~
   replicate: ~
   sample_visibility: ~
@@ -2696,6 +3130,37 @@
   supplier_name: 14782_JWBL43B
   taxon_id: 10359
   uuid_sample_lims: 2c6525b0-d87f-11e4-8878-3c4a9275d6c6
+- accession_number: ERS764446
+  cohort: ~
+  common_name: Escherichia coli
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-06-23 12:08:34
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6139499
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2331838
+  id_sample_tmp: 2302863
+  last_updated: 2015-09-04 16:18:00
+  mother: ~
+  name: 3012STDY6139499
+  organism: ~
+  public_name: NCTC9048
+  recorded_at: 2015-09-04 16:18:00
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6139499
+  strain: NCTC9048
+  supplier_name: NCTC9048_240615
+  taxon_id: 562
+  uuid_sample_lims: 929f18b0-19a0-11e5-a937-3c4a9275d6c6
 - accession_number: ERS012334
   cohort: ~
   common_name: Burkholderia pseudomallei
@@ -3192,6 +3657,37 @@
   supplier_name: ~
   taxon_id: 28450
   uuid_sample_lims: a8b573ae-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS542092
+  cohort: ~
+  common_name: S.cerevisiae
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: France
+  created: 2013-11-26 16:57:42
+  deleted_at: ~
+  description: ~
+  donor_id: pbsys5664600
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1772674
+  id_sample_tmp: 1751253
+  last_updated: 2015-11-19 16:40:53
+  mother: ~
+  name: pbsys5664600
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-19 16:40:53
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: pbsys5664600
+  strain: ~
+  supplier_name: DBVPG6765_kit_2
+  taxon_id: 4932
+  uuid_sample_lims: dd61bcd0-56bb-11e3-a14b-3c4a9275d6c6
 - accession_number: ERS012333
   cohort: ~
   common_name: Burkholderia pseudomallei
@@ -3347,6 +3843,37 @@
   supplier_name: 14774_JC_039
   taxon_id: 10376
   uuid_sample_lims: 2c2adbd0-d87f-11e4-8878-3c4a9275d6c6
+- accession_number: ERS527780
+  cohort: ~
+  common_name: Leishmania braziliensis
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2014-08-05 13:37:49
+  deleted_at: ~
+  description: PacBio
+  donor_id: 315STDY5911970
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2055145
+  id_sample_tmp: 2030290
+  last_updated: 2015-09-04 13:14:51
+  mother: ~
+  name: 315STDY5911970
+  organism: ~
+  public_name: MHOM/BR/75/M2904
+  recorded_at: 2015-09-04 13:14:51
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 315STDY5911970
+  strain: M2904
+  supplier_name: LbrazM2904_PB
+  taxon_id: 5660
+  uuid_sample_lims: b14aac00-1ca5-11e4-a291-3c4a9275d6c6
 - accession_number: ERS012330
   cohort: ~
   common_name: Burkholderia pseudomallei
@@ -3409,6 +3936,37 @@
   supplier_name: KAMX34_4F_UTX_Bethyl
   taxon_id: 10090
   uuid_sample_lims: 4e563340-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS542096
+  cohort: ~
+  common_name: S.cerevisiae
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: France
+  created: 2013-11-26 16:57:42
+  deleted_at: ~
+  description: ~
+  donor_id: pbsys5664604
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1772678
+  id_sample_tmp: 1751257
+  last_updated: 2015-11-19 16:41:10
+  mother: ~
+  name: pbsys5664604
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-19 16:41:10
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: pbsys5664604
+  strain: ~
+  supplier_name: SK1_kit_2
+  taxon_id: 4932
+  uuid_sample_lims: ddb42290-56bb-11e3-a14b-3c4a9275d6c6
 - accession_number: ERS812461
   cohort: ~
   common_name: Mus musculus
@@ -3471,7 +4029,7 @@
   supplier_name: 14721_GK_BL16
   taxon_id: 10376
   uuid_sample_lims: 2b335c70-d87f-11e4-b7dc-3c4a9275d6c6
-- accession_number: ERS429041
+- accession_number: EGAN00001455647
   cohort: ~
   common_name: Homo Sapien
   consent_withdrawn: 0
@@ -3488,12 +4046,12 @@
   id_lims: SQSCP
   id_sample_lims: 1877306
   id_sample_tmp: 1854924
-  last_updated: 2015-09-04 11:12:19
+  last_updated: 2016-10-17 11:57:47
   mother: ~
   name: T19PG5759062
   organism: ~
   public_name: ~
-  recorded_at: 2015-09-04 11:12:19
+  recorded_at: 2016-10-17 11:57:47
   reference_genome: ~
   replicate: ~
   sample_visibility: ~
@@ -3750,6 +4308,68 @@
   supplier_name: 14778_JC_VID14
   taxon_id: 10376
   uuid_sample_lims: 2c478b90-d87f-11e4-8878-3c4a9275d6c6
+- accession_number: ERS542094
+  cohort: ~
+  common_name: S.cerevisiae
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: France
+  created: 2013-11-26 16:57:42
+  deleted_at: ~
+  description: ~
+  donor_id: pbsys5664602
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1772676
+  id_sample_tmp: 1751255
+  last_updated: 2015-11-19 16:41:01
+  mother: ~
+  name: pbsys5664602
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-19 16:41:01
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: pbsys5664602
+  strain: ~
+  supplier_name: Y12_kit_2
+  taxon_id: 4932
+  uuid_sample_lims: dd88ccd0-56bb-11e3-a14b-3c4a9275d6c6
+- accession_number: ERS542101
+  cohort: ~
+  common_name: S.cerevisiae
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: France
+  created: 2013-11-26 16:57:45
+  deleted_at: ~
+  description: ~
+  donor_id: pbsys5664615
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 1772689
+  id_sample_tmp: 1751268
+  last_updated: 2015-11-19 16:41:59
+  mother: ~
+  name: pbsys5664615
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-11-19 16:41:59
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: pbsys5664615
+  strain: ~
+  supplier_name: YPS128_phenol_1
+  taxon_id: 4932
+  uuid_sample_lims: df428ac0-56bb-11e3-a14b-3c4a9275d6c6
 - accession_number: ERS804084
   cohort: ~
   common_name: Danio rerio
@@ -4153,6 +4773,37 @@
   supplier_name: ~
   taxon_id: 28450
   uuid_sample_lims: a8b55b94-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS764443
+  cohort: ~
+  common_name: Salmonella enterica subsp. enterica serovar Braenderup
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-06-23 12:08:34
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6139496
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2331835
+  id_sample_tmp: 2302860
+  last_updated: 2015-09-04 16:18:00
+  mother: ~
+  name: 3012STDY6139496
+  organism: ~
+  public_name: NCTC5750
+  recorded_at: 2015-09-04 16:18:00
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6139496
+  strain: NCTC5750
+  supplier_name: NCTC5750_240615
+  taxon_id: 149391
+  uuid_sample_lims: 927c2760-19a0-11e5-a937-3c4a9275d6c6
 - accession_number: ~
   cohort: Virus_6
   common_name: Human herpesvirus 4
@@ -4246,6 +4897,37 @@
   supplier_name: KAMX34_4G_UTX_Bethyl
   taxon_id: 10090
   uuid_sample_lims: 4e6108b0-40f7-11e5-998e-3c4a9275d6c6
+- accession_number: ERS764445
+  cohort: ~
+  common_name: Escherichia coli
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-06-23 12:08:34
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6139498
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2331837
+  id_sample_tmp: 2302862
+  last_updated: 2015-09-04 16:18:00
+  mother: ~
+  name: 3012STDY6139498
+  organism: ~
+  public_name: NCTC9038
+  recorded_at: 2015-09-04 16:18:00
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6139498
+  strain: NCTC9038
+  supplier_name: NCTC9038_240615
+  taxon_id: 562
+  uuid_sample_lims: 929358e0-19a0-11e5-a937-3c4a9275d6c6
 - accession_number: ERS1080587
   cohort: ~
   common_name: Suttonella indologenes
@@ -4308,6 +4990,37 @@
   supplier_name: Him0427
   taxon_id: 9606
   uuid_sample_lims: 27e24f2c-b47a-11e0-a80f-00144f2062b0
+- accession_number: ERS743205
+  cohort: ~
+  common_name: Mycobacterium tuberculosis
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-06-01 12:34:14
+  deleted_at: ~
+  description: ~
+  donor_id: 3565STDY6118139
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2308781
+  id_sample_tmp: 2279041
+  last_updated: 2015-09-04 16:00:55
+  mother: ~
+  name: 3565STDY6118139
+  organism: ~
+  public_name: N1176
+  recorded_at: 2015-09-04 16:00:55
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3565STDY6118139
+  strain: ~
+  supplier_name: N1176
+  taxon_id: 1773
+  uuid_sample_lims: 83701df0-085a-11e5-96a3-3c4a9275d6c6
 - accession_number: ~
   cohort: Virus_6
   common_name: Human herpesvirus 4
@@ -4370,7 +5083,7 @@
   supplier_name: 14749_IMS_Saliva_243
   taxon_id: 10376
   uuid_sample_lims: 2b6bf8a0-d87f-11e4-8878-3c4a9275d6c6
-- accession_number: ERS429034
+- accession_number: EGAN00001455641
   cohort: ~
   common_name: Homo Sapien
   consent_withdrawn: 0
@@ -4387,12 +5100,12 @@
   id_lims: SQSCP
   id_sample_lims: 1877289
   id_sample_tmp: 1854907
-  last_updated: 2015-09-04 11:12:18
+  last_updated: 2016-10-17 11:57:40
   mother: ~
   name: T19PG5759045
   organism: ~
   public_name: ~
-  recorded_at: 2015-09-04 11:12:18
+  recorded_at: 2016-10-17 11:57:40
   reference_genome: ~
   replicate: ~
   sample_visibility: ~
@@ -4401,6 +5114,37 @@
   supplier_name: 8R163
   taxon_id: 9606
   uuid_sample_lims: d492a150-a521-11e3-8055-3c4a9275d6c6
+- accession_number: ERS764946
+  cohort: ~
+  common_name: Escherichia coli
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-06-25 08:34:44
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6143531
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2335968
+  id_sample_tmp: 2307088
+  last_updated: 2015-09-04 16:21:08
+  mother: ~
+  name: 3012STDY6143531
+  organism: ~
+  public_name: NCTC9702
+  recorded_at: 2015-09-04 16:21:08
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6143531
+  strain: NCTC9702
+  supplier_name: NCTC9702_270615
+  taxon_id: 562
+  uuid_sample_lims: 07afc0d0-1b15-11e5-9473-3c4a9275d6c6
 - accession_number: ERS804059
   cohort: ~
   common_name: Danio rerio
@@ -4463,6 +5207,37 @@
   supplier_name: ~
   taxon_id: 9606
   uuid_sample_lims: cd910aa0-45b5-11e5-b5c7-68b59976a382
+- accession_number: ERS764448
+  cohort: ~
+  common_name: Escherichia coli
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-06-23 12:08:35
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6139501
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2331840
+  id_sample_tmp: 2302865
+  last_updated: 2015-09-04 16:18:00
+  mother: ~
+  name: 3012STDY6139501
+  organism: ~
+  public_name: NCTC9052
+  recorded_at: 2015-09-04 16:18:00
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6139501
+  strain: NCTC9052
+  supplier_name: NCTC9052_240615
+  taxon_id: 562
+  uuid_sample_lims: 92b67140-19a0-11e5-a937-3c4a9275d6c6
 - accession_number: ~
   cohort: Virus_6
   common_name: Human herpesvirus 4
@@ -4556,6 +5331,37 @@
   supplier_name: ~
   taxon_id: 28450
   uuid_sample_lims: a8b5e352-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS764944
+  cohort: ~
+  common_name: Escherichia coli
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-06-25 08:34:44
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6143529
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2335966
+  id_sample_tmp: 2307086
+  last_updated: 2015-09-04 16:21:08
+  mother: ~
+  name: 3012STDY6143529
+  organism: ~
+  public_name: NCTC8333
+  recorded_at: 2015-09-04 16:21:08
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6143529
+  strain: NCTC8333
+  supplier_name: NCTC8333_270615
+  taxon_id: 562
+  uuid_sample_lims: 079cfc20-1b15-11e5-9473-3c4a9275d6c6
 - accession_number: ~
   cohort: Virus_6
   common_name: Human herpesvirus 4
@@ -4866,6 +5672,37 @@
   supplier_name: ~
   taxon_id: 28450
   uuid_sample_lims: a8b5c35e-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS712859
+  cohort: ~
+  common_name: Plasmodium falciparum
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-04-23 08:24:49
+  deleted_at: ~
+  description: ~
+  donor_id: 3573STDY6095764
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2282457
+  id_sample_tmp: 2252521
+  last_updated: 2015-09-04 15:43:22
+  mother: ~
+  name: 3573STDY6095764
+  organism: ~
+  public_name: ~
+  recorded_at: 2015-09-04 15:43:22
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3573STDY6095764
+  strain: KH1
+  supplier_name: KH1-PB
+  taxon_id: 5833
+  uuid_sample_lims: 3583e1d0-e992-11e4-bbb6-3c4a9275d6c6
 - accession_number: ERS012325
   cohort: ~
   common_name: Burkholderia pseudomallei
@@ -5052,6 +5889,37 @@
   supplier_name: 14747_IMS_Saliva_220
   taxon_id: 10376
   uuid_sample_lims: 2b5a6c70-d87f-11e4-8878-3c4a9275d6c6
+- accession_number: ERS798842
+  cohort: ~
+  common_name: Staphylococcus aureus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-27 08:15:40
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6167398
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2364819
+  id_sample_tmp: 2341024
+  last_updated: 2015-09-04 16:40:26
+  mother: ~
+  name: 3012STDY6167398
+  organism: ~
+  public_name: NCTC13552
+  recorded_at: 2015-09-04 16:40:26
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6167398
+  strain: NCTC13552
+  supplier_name: NCTC13552_240715
+  taxon_id: 1280
+  uuid_sample_lims: ab4eec30-3437-11e5-998e-3c4a9275d6c6
 - accession_number: ERS804064
   cohort: ~
   common_name: Danio rerio
@@ -5331,6 +6199,37 @@
   supplier_name: 14743_IMS_Saliva_193
   taxon_id: 10376
   uuid_sample_lims: 2b3e58f0-d87f-11e4-8878-3c4a9275d6c6
+- accession_number: ERS798845
+  cohort: ~
+  common_name: Staphylococcus aureus
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2015-07-27 08:15:40
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY6167401
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 2364822
+  id_sample_tmp: 2341027
+  last_updated: 2015-09-04 16:40:26
+  mother: ~
+  name: 3012STDY6167401
+  organism: ~
+  public_name: NCTC10988
+  recorded_at: 2015-09-04 16:40:26
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: 3012STDY6167401
+  strain: NCTC10988
+  supplier_name: NCTC10988_240715
+  taxon_id: 1280
+  uuid_sample_lims: ab622610-3437-11e5-998e-3c4a9275d6c6
 - accession_number: ERS804072
   cohort: ~
   common_name: Danio rerio

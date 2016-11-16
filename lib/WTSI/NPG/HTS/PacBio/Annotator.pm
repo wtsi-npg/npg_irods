@@ -16,6 +16,7 @@ our $PACBIO_SET_NUMBER        = 'set_number';
 our $PACBIO_SOURCE            = 'source';
 our $PACBIO_WELL              = 'well';
 our $PACBIO_PRODUCTION        = 'production';
+our $PACBIO_MULTIPLEX         = 'multiplex';
 
 our $TAG_SEQUENCE             = 'tag_sequence';
 
@@ -29,9 +30,9 @@ with qw[
   Arg [2]      Is data R & D? Boolean. Optional, defaults to false.
 
   Example    : my @avus = $ann->make_primary_metadata($metadata);
-  Description: Return instrument, run, cell, collection number and cell
-               number AVU metadata given PacBio metadata from an XML
-               file.
+  Description: Return instrument, run, cell index, collection number, set
+               number and sample load name AVU metadata given PacBio
+               metadata from an XML file.
   Returntype : Array[HashRef]
 
 =cut
@@ -65,7 +66,6 @@ sub make_primary_metadata {
 
 =head2 make_secondary_metadata
 
-  Arg [1]      PacBio run metadata, WTSI::NPG::HTS::PacBio::Metadata.
   Arg [n]      PacBio run records,
                Array[WTSI::DNAP::Warehouse::Schema::Result::PacBioRun] for
                the SMRT cell.
@@ -157,7 +157,7 @@ sub make_library_metadata {
 
   my $num_libraries = scalar @run_records;
   if ($num_libraries > 1) {
-    push @avus, 'multiplex', 1;
+    push @avus, $self->make_avu($PACBIO_MULTIPLEX, 1);
   }
 
   return @avus;
