@@ -6,6 +6,7 @@ bin/npg_update_ebi_metadata.pl
 bin/npg_update_hts_metadata.pl
 bin/samgen.pl
 Build.PL
+Build.pm
 Changes
 etc/log4perl_tests.conf
 lib/WTSI/DNAP/Utilities/Params.pm
