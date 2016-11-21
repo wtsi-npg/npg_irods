@@ -33,5 +33,4 @@ script:
   - export PATH=$IRODS_RIP_DIR/iRODS/clients/icommands/bin:$PATH
   - ienv
   - ils
-  - export PATH=$PWD/bin:$PATH
   - ./scripts/travis_script.sh
