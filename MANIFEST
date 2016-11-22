@@ -1,10 +1,12 @@
 .travis.yml
+bin/npg_publish_bionano_run.pl
 bin/npg_publish_illumina_logs.pl
 bin/npg_publish_illumina_run.pl
 bin/npg_update_ebi_metadata.pl
 bin/npg_update_hts_metadata.pl
 bin/samgen.pl
 Build.PL
+Build.pm
 Changes
 etc/log4perl_tests.conf
 lib/WTSI/DNAP/Utilities/Params.pm
@@ -43,8 +45,8 @@ lib/WTSI/NPG/HTS/Seqchksum.pm
 lib/WTSI/NPG/HTS/Types.pm
 lib/WTSI/NPG/OM/BioNano/Annotator.pm
 lib/WTSI/NPG/OM/BioNano/BnxFile.pm
-lib/WTSI/NPG/OM/BioNano/Publisher.pm
 lib/WTSI/NPG/OM/BioNano/ResultSet.pm
+lib/WTSI/NPG/OM/BioNano/RunPublisher.pm
 lib/WTSI/NPG/OM/Metadata.pm
 LICENSE
 MANIFEST			This list of files
@@ -56,8 +58,8 @@ t/aln_data_object.t
 t/anc_data_object.t
 t/annotator.t
 t/bionano_bnx_file.t
-t/bionano_publisher.t
 t/bionano_result_set.t
+t/bionano_run_publisher.t
 t/compile_scripts.t
 t/critic.t
 t/data/aln_data_object/1000_1#1.cram
@@ -7542,8 +7544,8 @@ t/lib/WTSI/NPG/HTS/PublisherTest.pm
 t/lib/WTSI/NPG/HTS/SeqchksumTest.pm
 t/lib/WTSI/NPG/HTS/Test.pm
 t/lib/WTSI/NPG/OM/BioNano/BnxFileTest.pm
-t/lib/WTSI/NPG/OM/BioNano/PublisherTest.pm
 t/lib/WTSI/NPG/OM/BioNano/ResultSetTest.pm
+t/lib/WTSI/NPG/OM/BioNano/RunPublisherTest.pm
 t/log_publisher.t
 t/datasub_meta_updater.t
 t/illumina_meta_updater.t

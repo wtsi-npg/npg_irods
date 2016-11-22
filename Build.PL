@@ -6,9 +6,9 @@ use warnings;
 # directory is added because the Test::Class tests are there.
 use lib qw(lib t/lib);
 
-use WTSI::DNAP::Utilities::Build;
+use Build;
 
-my $build = WTSI::DNAP::Utilities::Build->new
+my $build = Build->new
   (module_name        => 'npg_irods',
    dist_author        => 'NPG <npg@sanger.ac.uk>',
    dist_abstract      => 'NPG iRODS data/metadata loading and update tools',
