@@ -1,4 +1,4 @@
-package WTSI::NPG::OM::BioNano::Publisher;
+package WTSI::NPG::OM::BioNano::RunPublisher;
 
 use Moose;
 use namespace::autoclean;
@@ -27,6 +27,13 @@ with qw[WTSI::DNAP::Utilities::Loggable
         WTSI::NPG::Accountable
         WTSI::NPG::OM::BioNano::Annotator];
 
+has 'directory' =>
+  (is       => 'ro',
+   isa      => 'Str',
+   required => 1,
+   documentation => 'Path of a BioNano runfolder to be published'
+);
+
 has 'irods' =>
   (is       => 'ro',
    isa      => 'WTSI::NPG::iRODS',
@@ -38,7 +45,11 @@ has 'irods' =>
 has 'resultset' =>
   (is       => 'ro',
    isa      => 'WTSI::NPG::OM::BioNano::ResultSet',
-   required => 1);
+   init_arg => undef,
+   lazy     => 1,
+   builder  => '_build_resultset',
+   documentation => 'Object containing results from a BioNano runfolder'
+);
 
 has 'uuid' =>
   (is       => 'ro',
@@ -161,8 +172,16 @@ sub _apply_bnx_file_metadata {
     return $bnx_ipath;
 }
 
+sub _build_resultset {
+    my ($self,) = @_;
+    my $resultset = WTSI::NPG::OM::BioNano::ResultSet->new(
+        directory => $self->directory
+    );
+    return $resultset;
+}
+
 sub _build_uuid {
-    my (@self) = @_;
+    my ($self,) = @_;
     my $uuid_bin;
     my $uuid_str;
     UUID::generate($uuid_bin);
@@ -181,7 +200,7 @@ __END__
 
 =head1 NAME
 
-WTSI::NPG::OM::BioNano::Publisher - An iRODS data publisher
+WTSI::NPG::OM::BioNano::RunPublisher - An iRODS data publisher
 for results from the BioNano optical mapping system.
 
 =head1 SYNOPSIS
@@ -189,7 +208,7 @@ for results from the BioNano optical mapping system.
   my $resultset = WTSI::NPG::OM::BioNano::ResultSet->new
     (directory => $dir);
 
-  my $publisher = WTSI::NPG::OM::BioNano::Publisher->new
+  my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new
     (irods            => $irods_handle,
      accountee_uid    => $accountee_uid,
      affiliation_uri  => $affiliation_uri,
