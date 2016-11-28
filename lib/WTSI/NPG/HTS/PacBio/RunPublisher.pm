@@ -377,12 +377,17 @@ sub publish_basx_files {
   my @primary_avus   = $self->make_primary_metadata($metadata, $is_r_and_d);
   my @secondary_avus = $self->make_secondary_metadata(@run_records);
 
+  # This call may be removed when the legacy metadata are no longer
+  # required
+  push @secondary_avus, $self->make_legacy_metadata(@run_records);
+
   my $files     = $self->list_basx_files($smrt_name, $look_index);
   my $dest_coll = catdir($self->dest_collection, $smrt_name, $ANALYSIS_DIR);
 
   my ($num_files, $num_processed, $num_errors) =
     $self->_publish_files($files, $dest_coll,
-                          \@primary_avus, \@secondary_avus);
+                          \@primary_avus, \@secondary_avus,
+                          [$self->make_avu($FILE_TYPE, 'bas')]);
 
   $self->info("Published $num_processed / $num_files bas/x files ",
               "in SMRT cell '$smrt_name'");
@@ -422,8 +427,10 @@ sub publish_sts_xml_files {
   return ($num_files, $num_processed, $num_errors);
 }
 
+## no critic (Subroutines::ProhibitManyArgs)
 sub _publish_files {
-  my ($self, $files, $dest_coll, $primary_avus, $secondary_avus) = @_;
+  my ($self, $files, $dest_coll, $primary_avus, $secondary_avus,
+      $legacy_avus) = @_;
 
   defined $files or
     $self->logconfess('A defined files argument is required');
@@ -458,16 +465,24 @@ sub _publish_files {
       $dest = $obj->str;
       $dest = $publisher->publish($file, $dest);
 
-       my ($num_pattr, $num_pproc, $num_perr) =
-         $obj->set_primary_metadata(@{$primary_avus});
-       my ($num_sattr, $num_sproc, $num_serr) =
-         $obj->update_secondary_metadata(@{$secondary_avus});
+      my ($num_pattr, $num_pproc, $num_perr) =
+        $obj->set_primary_metadata(@{$primary_avus});
+      my ($num_sattr, $num_sproc, $num_serr) =
+        $obj->update_secondary_metadata(@{$secondary_avus});
+
+      # This call may be removed when the legacy metadata are no longer
+      # required
+      my ($num_lattr, $num_lproc, $num_lerr) =
+        $self->_add_legacy_metadata($obj, $legacy_avus);
 
       if ($num_perr > 0) {
         $self->logcroak("Failed to set primary metadata cleanly on '$dest'");
       }
       if ($num_serr > 0) {
         $self->logcroak("Failed to set secondary metadata cleanly on '$dest'");
+      }
+      if ($num_lerr > 0) {
+        $self->logcroak("Failed to set legacy metadata cleanly on '$dest'");
       }
 
       $self->info("Published '$dest' [$num_processed / $num_files]");
@@ -485,6 +500,37 @@ sub _publish_files {
   }
 
   return ($num_files, $num_processed, $num_errors);
+}
+## use critic
+
+# This method may be removed when the legacy metadata are no longer
+# required
+sub _add_legacy_metadata {
+  my ($self, $obj, $avus) = @_;
+
+  defined $obj or
+    $self->logconfess('A defined obj argument is required');
+
+  $avus ||= [];
+
+  ref $avus eq 'ARRAY' or
+    $self->logconfess('The avus argument must be an ArrayRef');
+
+  my $num_avus      = scalar @{$avus};
+  my $num_processed = 0;
+  my $num_errors    = 0;
+
+  try {
+    foreach my $avu (@{$avus}) {
+      $num_processed++;
+      $obj->add_avu($avu->{attribute}, $avu->{value}, $avu->{units});
+    }
+  } catch {
+    $num_errors++;
+    $self->error('Failed to add legacy avus ', pp($avus), q[: ], $_);
+  };
+
+  return ($num_avus, $num_processed, $num_errors);
 }
 
 sub _build_dest_collection  {

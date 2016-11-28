@@ -144,7 +144,7 @@ sub make_sample_metadata {
                Array[WTSI::DNAP::Warehouse::Schema::Result::PacBioRun].
 
   Example    : my @avus = $ann->make_library_metadata(@run_records);
-  Description: Return secondary AVU metadata for a run.
+  Description: Return library AVU metadata for a run.
   Returntype : Array[HashRef]
 
 =cut
@@ -159,6 +159,31 @@ sub make_library_metadata {
   if ($num_libraries > 1) {
     push @avus, $self->make_avu($PACBIO_MULTIPLEX, 1);
   }
+
+  return @avus;
+}
+
+=head2 make_legacy_metadata
+
+  Arg [n]      PacBio run records,
+               Array[WTSI::DNAP::Warehouse::Schema::Result::PacBioRun].
+
+  Example    : my @avus = $ann->make_legacy_metadata($path, @run_records);
+  Description: Return legacy AVU metadata for a run; study name under
+               the attribute 'study_name' and 'bas' under the attribute
+               'type'.
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_legacy_metadata {
+  my ($self, @run_records) = @_;
+
+  my @avus;
+  my @studies = map { $_->study } @run_records;
+
+  my $method_attr = {name => 'study_name'};
+  push @avus, $self->_make_multi_value_metadata(\@studies, $method_attr);
 
   return @avus;
 }

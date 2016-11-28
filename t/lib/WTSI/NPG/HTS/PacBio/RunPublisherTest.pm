@@ -173,7 +173,7 @@ sub publish_meta_xml_files : Test(9) {
   check_common_metadata($irods, @observed_paths);
 }
 
-sub publish_basx_files : Test(64) {
+sub publish_basx_files : Test(68) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/superfoo/45137_1095";
@@ -238,7 +238,7 @@ sub publish_sts_xml_files : Test(9) {
   check_common_metadata($irods, @observed_paths);
 }
 
-sub publish_multiplexed : Test(76) {
+sub publish_multiplexed : Test(80) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/superfoo/39859_968";
@@ -295,10 +295,16 @@ sub check_common_metadata {
     my $file_name = fileparse($obj->str);
 
     foreach my $attr ($DCTERMS_CREATED, $DCTERMS_CREATOR, $DCTERMS_PUBLISHER,
-                      $FILE_TYPE, $FILE_MD5) {
+                      $FILE_MD5) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
+
+    # Two copies on h5 files because of legacy metadata 'type' => 'bas'
+    my $num_types = ($path =~ m{\.h5$}) ? 2 : 1;
+    my @avu = $obj->find_in_metadata($FILE_TYPE);
+    cmp_ok(scalar @avu, '==', $num_types,
+           "$file_name $FILE_TYPE x$num_types metadata present");
   }
 }
 
@@ -330,7 +336,9 @@ sub check_study_metadata {
     my $obj = WTSI::NPG::HTS::DataObject->new($irods, $path);
     my $file_name = fileparse($obj->str);
 
-    foreach my $attr ($STUDY_ID, $STUDY_NAME, $STUDY_ACCESSION_NUMBER) {
+    # study_name is legacy metadata
+    foreach my $attr ($STUDY_ID, $STUDY_NAME, $STUDY_ACCESSION_NUMBER,
+                      'study_name') {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
