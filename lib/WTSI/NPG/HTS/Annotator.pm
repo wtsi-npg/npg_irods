@@ -79,9 +79,10 @@ sub make_modification_metadata {
 =head2 make_type_metadata
 
   Arg [1]    : File name, Str.
-  Arg [2]    : Array of valid file suffix strings, Str. Optional
+  Arg [2]    : Array of valid file suffix strings (excluding and leading
+               dot), Str. Optional
 
-  Example    : my @avus = $ann->make_type_metadata($sample, '.txt', '.csv')
+  Example    : my @avus = $ann->make_type_metadata($sample, 'txt', 'csv')
   Description: Return an array of metadata AVUs describing the file 'type'
                (represented by its suffix).
   Returntype : Array[HashRef]

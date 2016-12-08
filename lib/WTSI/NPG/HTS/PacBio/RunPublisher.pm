@@ -366,18 +366,28 @@ sub publish_basx_files {
 
   my $metadata =
     WTSI::NPG::HTS::PacBio::MetaXMLParser->new->parse_file($metadata_file);
+
+  # There will be 1 record for a non-multiplexed SMRT cell and >1
+  # record for a multiplexed
   my @run_records = $self->_query_ml_warehouse($metadata->run_uuid,
                                                $metadata->library_tube_uuids);
+  # R & D runs have no records in the ML warehouse
+  my $is_r_and_d = @run_records ? 0 : 1;
 
-  my @primary_avus   = $self->make_primary_metadata($metadata);
-  my @secondary_avus = $self->make_secondary_metadata($metadata, @run_records);
+  my @primary_avus   = $self->make_primary_metadata($metadata, $is_r_and_d);
+  my @secondary_avus = $self->make_secondary_metadata(@run_records);
+
+  # This call may be removed when the legacy metadata are no longer
+  # required
+  push @secondary_avus, $self->make_legacy_metadata(@run_records);
 
   my $files     = $self->list_basx_files($smrt_name, $look_index);
   my $dest_coll = catdir($self->dest_collection, $smrt_name, $ANALYSIS_DIR);
 
   my ($num_files, $num_processed, $num_errors) =
     $self->_publish_files($files, $dest_coll,
-                          \@primary_avus, \@secondary_avus);
+                          \@primary_avus, \@secondary_avus,
+                          [$self->make_avu($FILE_TYPE, 'bas')]);
 
   $self->info("Published $num_processed / $num_files bas/x files ",
               "in SMRT cell '$smrt_name'");
@@ -417,8 +427,10 @@ sub publish_sts_xml_files {
   return ($num_files, $num_processed, $num_errors);
 }
 
+## no critic (Subroutines::ProhibitManyArgs)
 sub _publish_files {
-  my ($self, $files, $dest_coll, $primary_avus, $secondary_avus) = @_;
+  my ($self, $files, $dest_coll, $primary_avus, $secondary_avus,
+      $legacy_avus) = @_;
 
   defined $files or
     $self->logconfess('A defined files argument is required');
@@ -453,16 +465,24 @@ sub _publish_files {
       $dest = $obj->str;
       $dest = $publisher->publish($file, $dest);
 
-       my ($num_pattr, $num_pproc, $num_perr) =
-         $obj->set_primary_metadata(@{$primary_avus});
-       my ($num_sattr, $num_sproc, $num_serr) =
-         $obj->update_secondary_metadata(@{$secondary_avus});
+      my ($num_pattr, $num_pproc, $num_perr) =
+        $obj->set_primary_metadata(@{$primary_avus});
+      my ($num_sattr, $num_sproc, $num_serr) =
+        $obj->update_secondary_metadata(@{$secondary_avus});
+
+      # This call may be removed when the legacy metadata are no longer
+      # required
+      my ($num_lattr, $num_lproc, $num_lerr) =
+        $self->_add_legacy_metadata($obj, $legacy_avus);
 
       if ($num_perr > 0) {
         $self->logcroak("Failed to set primary metadata cleanly on '$dest'");
       }
       if ($num_serr > 0) {
         $self->logcroak("Failed to set secondary metadata cleanly on '$dest'");
+      }
+      if ($num_lerr > 0) {
+        $self->logcroak("Failed to set legacy metadata cleanly on '$dest'");
       }
 
       $self->info("Published '$dest' [$num_processed / $num_files]");
@@ -480,6 +500,37 @@ sub _publish_files {
   }
 
   return ($num_files, $num_processed, $num_errors);
+}
+## use critic
+
+# This method may be removed when the legacy metadata are no longer
+# required
+sub _add_legacy_metadata {
+  my ($self, $obj, $avus) = @_;
+
+  defined $obj or
+    $self->logconfess('A defined obj argument is required');
+
+  $avus ||= [];
+
+  ref $avus eq 'ARRAY' or
+    $self->logconfess('The avus argument must be an ArrayRef');
+
+  my $num_avus      = scalar @{$avus};
+  my $num_processed = 0;
+  my $num_errors    = 0;
+
+  try {
+    foreach my $avu (@{$avus}) {
+      $num_processed++;
+      $obj->add_avu($avu->{attribute}, $avu->{value}, $avu->{units});
+    }
+  } catch {
+    $num_errors++;
+    $self->error('Failed to add legacy avus ', pp($avus), q[: ], $_);
+  };
+
+  return ($num_avus, $num_processed, $num_errors);
 }
 
 sub _build_dest_collection  {
@@ -527,6 +578,42 @@ WTSI::NPG::HTS::PacBio::RunPublisher
 
 =head1 DESCRIPTION
 
+Publishes metadata.xml, bax.h5, bas.h5 and sts.xml files to iRODS,
+adds metadata and sets permissions.
+
+An instance of RunPublisher is responsible for copying PacBio
+sequencing data from the instrument run folder to a collection in
+iRODS for a single, specific run.
+
+Data files are divided into three categories:
+
+ - basx files; HDF files of sequence data.
+ - meta XML files; run metadata.
+ - sts XML files; run metadata.
+
+A RunPublisher provides methods to list the complement of these
+categories and to copy ("publish") them. Each of these list or publish
+operations may be restricted to a specific SMRT cell and look index
+position.
+
+As part of the copying process, metadata are added to, or updated on,
+the files in iRODS. Following the metadata update, access permissions
+are set. The information to do both of these operations is provided by
+an instance of WTSI::DNAP::Warehouse::Schema.
+
+If a run is published multiple times to the same destination
+collection, the following take place:
+
+ - the RunPublisher checks local (run folder) file checksums against
+   remote (iRODS) checksums and will not make unnecessary updates
+
+ - if a local file has changed, the copy in iRODS will be overwritten
+   and additional metadata indicating the time of the update will be
+   added
+
+ - the RunPublisher will proceed to make metadata and permissions
+   changes to synchronise with the metadata supplied by
+   WTSI::DNAP::Warehouse::Schema, even if no files have been modified
 
 =head1 AUTHOR
 

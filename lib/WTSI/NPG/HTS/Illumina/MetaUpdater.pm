@@ -116,8 +116,10 @@ WTSI::NPG::HTS::Illumina::MetaUpdater
 
 =head1 DESCRIPTION
 
-Updates secondary metadata on HTS data files in iRODS. Any errors
-encountered on each file are trapped and logged.
+Updates secondary metadata and consequent permissions on Illumina HTS
+data files in iRODS. The information to do both of these operations is
+provided by st::api::lims. Any errors encountered on each file are
+trapped and logged.
 
 =head1 AUTHOR
 
