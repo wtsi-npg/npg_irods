@@ -1,7 +1,7 @@
 package WTSI::NPG::HTS::Annotator;
 
-use Data::Dump qw[pp];
 use DateTime;
+use List::AllUtils qw[uniq];
 use Moose::Role;
 
 use WTSI::NPG::HTS::Metadata;
@@ -9,7 +9,9 @@ use WTSI::NPG::iRODS::Metadata;
 
 our $VERSION = '';
 
-our @GENERAL_PURPOSE_SUFFIXES = qw[bin csv h5 tgz tif tsv txt xls xlsx xml];
+our @COMPRESSION_SUFFIXES     = qw[bz2 gz xz zip];
+
+our @GENERAL_PURPOSE_SUFFIXES = qw[bin csv h5 tar tgz tif tsv txt xls xlsx xml];
 our @GENO_DATA_SUFFIXES       = qw[gtc idat];
 our @HTS_DATA_SUFFIXES        = qw[bam cram bai crai];
 our @HTS_ANCILLARY_SUFFIXES   = qw[bamcheck bed flagstat json seqchksum
@@ -24,6 +26,8 @@ with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::iRODS::Utilities
        ];
+
+my $COMPRESSION_PATTERN = join q[|], @COMPRESSION_SUFFIXES;
 
 # See http://dublincore.org/documents/dcmi-terms/
 
@@ -95,18 +99,20 @@ sub make_type_metadata {
   defined $file or $self->logconfess('A defined file argument is required');
   $file eq q[] and $self->logconfess('A non-empty file argument is required');
 
-  if (not @suffixes) {
-    @suffixes = @DEFAULT_FILE_SUFFIXES;
-  }
-  my $suffix_pattern = join q[|], @suffixes;
-  my $suffix_regex = qr{[.]($suffix_pattern)$}msx;
+  my @valid_suffixes = uniq (@DEFAULT_FILE_SUFFIXES, @suffixes);
+
+  my $suffix_pattern = join q[|], @valid_suffixes;
+  my $suffix_regex = qr{[.]  # Don't capture the suffix dot
+                        (
+                          ($suffix_pattern)
+                          ([.]($COMPRESSION_PATTERN))*
+                        )$}msx;
   my ($suffix) = $file =~ $suffix_regex;
 
   my @avus;
   if ($suffix) {
-    my ($base_suffix) = $suffix =~ m{^[.]?(.*)}msx;
-    $self->debug("Parsed base suffix of '$file' as '$base_suffix'");
-    push @avus, $self->make_avu($FILE_TYPE, $base_suffix);
+    $self->debug("Parsed base suffix of '$file' as '$suffix'");
+    push @avus, $self->make_avu($FILE_TYPE, $suffix);
   }
   else {
     $self->debug("Did not parse a suffix from '$file'");
