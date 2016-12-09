@@ -14,8 +14,8 @@ our @COMPRESSION_SUFFIXES     = qw[bz2 gz xz zip];
 our @GENERAL_PURPOSE_SUFFIXES = qw[bin csv h5 tar tgz tif tsv txt xls xlsx xml];
 our @GENO_DATA_SUFFIXES       = qw[gtc idat];
 our @HTS_DATA_SUFFIXES        = qw[bam cram bai crai];
-our @HTS_ANCILLARY_SUFFIXES   = qw[bamcheck bed flagstat json seqchksum
-                                   stats xml];
+our @HTS_ANCILLARY_SUFFIXES   = qw[bam_stats bamcheck bed flagstat json
+                                   seqchksum stats xml];
 
 our @DEFAULT_FILE_SUFFIXES = (@GENERAL_PURPOSE_SUFFIXES,
                               @GENO_DATA_SUFFIXES,
