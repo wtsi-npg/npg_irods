@@ -22,16 +22,6 @@ has 'irods' =>
    required      => 1,
    documentation => 'An iRODS handle to run searches and perform updates');
 
-has 'ancillary_formats' =>
-  (isa           => 'ArrayRef',
-   is            => 'ro',
-   required      => 1,
-   lazy          => 1,
-   default       => sub {
-     return [qw[bam_stats bed bamcheck flagstat json stats txt seqchksum]];
-   },
-   documentation => 'The ancillary file formats to be updated');
-
 has 'obj_factory' =>
   (is            => 'ro',
    isa           => 'WTSI::NPG::HTS::DataObjectFactory',
@@ -109,7 +99,7 @@ sub _build_obj_factory {
   my ($self) = @_;
 
   return WTSI::NPG::HTS::Illumina::DataObjectFactory->new
-    (ancillary_formats => $self->ancillary_formats,
+    (ancillary_formats => [$self->hts_ancillary_suffixes],
      irods             => $self->irods);
 }
 
