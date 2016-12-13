@@ -1,3 +1,10 @@
+Release 1.6
+ - BioNano: add command line script for publication
+ - Added a script to update PacBio metadata in iRODS
+ - added support for PacBio legacy metadata
+ - added PacBio run monitor CLI script 
+ - archival of bam_stats files
+
 Release 1.5
 
  - Bug fix: Propagate a failure to read a CRAM header
