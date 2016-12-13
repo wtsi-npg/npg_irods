@@ -6,9 +6,9 @@ use warnings;
 # directory is added because the Test::Class tests are there.
 use lib qw(lib t/lib);
 
-use WTSI::DNAP::Utilities::Build;
+use Build;
 
-my $build = WTSI::DNAP::Utilities::Build->new
+my $build = Build->new
   (module_name        => 'npg_irods',
    dist_author        => 'NPG <npg@sanger.ac.uk>',
    dist_abstract      => 'NPG iRODS data/metadata loading and update tools',
@@ -43,6 +43,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
     'Text::CSV'                     => '>= 1.33',
     'Try::Tiny'                     => '>= 0.12',
     'URI'                           => 0,
+    'UUID'                          => 0,
     'WTSI::DNAP::Utilities'         => '>= 0.5.2',   # perl-dnap-utilities
     'WTSI::NPG::iRODS'              => '>= 2.5.0',   # perl-irods-wrap
     'WTSI::DNAP::Warehouse::Schema' => '>= 2.1',     # ml_warehouse

@@ -6,84 +6,126 @@ use WTSI::NPG::iRODS::Metadata;
 
 our $VERSION = '';
 
-our $CELL_INDEX        = 'cell_index';
-our $COLLECTION_NUMBER = 'collection_number';
-our $INSTRUMENT_NAME   = 'instrument_name';
-our $RUN               = 'run';
-our $SAMPLE_LOAD_NAME  = 'sample_load_name';
-our $SET_NUMBER        = 'set_number';
-our $SOURCE            = 'source';
-our $WELL              = 'well';
+# TODO -- use WTSI::NPG::iRODS::Metadata for these attributes
+our $PACBIO_CELL_INDEX        = 'cell_index';
+our $PACBIO_COLLECTION_NUMBER = 'collection_number';
+our $PACBIO_INSTRUMENT_NAME   = 'instrument_name';
+our $PACBIO_RUN               = 'run';
+our $PACBIO_SAMPLE_LOAD_NAME  = 'sample_load_name';
+our $PACBIO_SET_NUMBER        = 'set_number';
+our $PACBIO_SOURCE            = 'source';
+our $PACBIO_WELL              = 'well';
+our $PACBIO_PRODUCTION        = 'production';
+our $PACBIO_MULTIPLEX         = 'multiplex';
 
-our $PRODUCTION_SOURCE = 'production';
+our $TAG_SEQUENCE             = 'tag_sequence';
 
 with qw[
          WTSI::NPG::HTS::Annotator
        ];
 
+=head2 make_primary_metadata
+
+  Arg [1]      PacBio run metadata, WTSI::NPG::HTS::PacBio::Metadata.
+  Arg [2]      Is data R & D? Boolean. Optional, defaults to false.
+
+  Example    : my @avus = $ann->make_primary_metadata($metadata);
+  Description: Return instrument, run, cell index, collection number, set
+               number and sample load name AVU metadata given PacBio
+               metadata from an XML file.
+  Returntype : Array[HashRef]
+
+=cut
+
 sub make_primary_metadata {
-  my ($self, $metadata) = @_;
+  my ($self, $metadata, $is_r_and_d) = @_;
 
   defined $metadata or
     $self->logconfess('A defined metadata argument is required');
 
   my @avus;
-  push @avus, $self->make_avu($CELL_INDEX,        $metadata->cell_index);
-  push @avus, $self->make_avu($COLLECTION_NUMBER, $metadata->collection_number);
-  push @avus, $self->make_avu($INSTRUMENT_NAME,   $metadata->instrument_name);
-  push @avus, $self->make_avu($RUN,               $metadata->run_name);
-  push @avus, $self->make_avu($SET_NUMBER,        $metadata->set_number);
+  push @avus, $self->make_avu($PACBIO_CELL_INDEX,        $metadata->cell_index);
+  push @avus, $self->make_avu($PACBIO_COLLECTION_NUMBER, $metadata->collection_number);
+  push @avus, $self->make_avu($PACBIO_INSTRUMENT_NAME,   $metadata->instrument_name);
+  push @avus, $self->make_avu($PACBIO_RUN,               $metadata->run_name);
+  push @avus, $self->make_avu($PACBIO_SET_NUMBER,        $metadata->set_number);
+  push @avus, $self->make_avu($PACBIO_WELL,              $metadata->well_name);
+  push @avus, $self->make_avu($PACBIO_SAMPLE_LOAD_NAME,  $metadata->sample_name);
 
-  return @avus;
-}
-
-sub make_secondary_metadata {
-  my ($self, $metadata, @run_records) = @_;
-
-  defined $metadata or
-    $self->logconfess('A defined metadata argument is required');
-
-  my @avus;
-
-  if (@run_records) {
-    # Production data
-    push @avus, $self->make_avu($SAMPLE_LOAD_NAME, $metadata->sample_name);
-    push @avus, $self->make_avu($SOURCE,           $PRODUCTION_SOURCE);
-    push @avus, $self->make_library_metadata(@run_records);
-
-    foreach my $run_record (@run_records) {
-      push @avus, $self->make_study_metadata($run_record->study);
-      push @avus, $self->make_sample_metadata($run_record->sample);
-    }
-  }
-  else {
+  if ($is_r_and_d) {
     # R & D data
     push @avus, $self->make_avu($SAMPLE_NAME, $metadata->sample_name);
   }
+  else {
+    # Production data
+    push @avus, $self->make_avu($PACBIO_SOURCE, $PACBIO_PRODUCTION);
+  }
 
   return @avus;
 }
 
+=head2 make_secondary_metadata
+
+  Arg [n]      PacBio run records,
+               Array[WTSI::DNAP::Warehouse::Schema::Result::PacBioRun] for
+               the SMRT cell.
+
+  Example    : my @avus = $ann->make_secondary_metadata(@run_records);
+  Description: Return secondary AVU metadata for a run.
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_secondary_metadata {
+  my ($self, @run_records) = @_;
+
+  my @avus;
+  if (@run_records) {
+    push @avus, $self->make_library_metadata(@run_records);
+    push @avus, $self->make_study_metadata(@run_records);
+    push @avus, $self->make_sample_metadata(@run_records);
+    push @avus, $self->make_tag_metadata(@run_records);
+  }
+
+  return @avus;
+}
+
+=head2 make_study_metadata
+
+  Arg [n]      PacBio run records,
+               Array[WTSI::DNAP::Warehouse::Schema::Result::PacBioRun].
+
+  Example    : my @avus = $ann->make_sample_metadata($sample);
+  Description: Return HTS sample metadata AVUs.
+  Returntype : Array[HashRef]
+
+=cut
+
 sub make_study_metadata {
-  my ($self, $study) = @_;
+  my ($self, @run_records) = @_;
 
-  defined $study or
-    $self->logconfess('A defined study argument is required');
-
+  my @studies = map { $_->study } @run_records;
   my $method_attr = {id_study_lims    => $STUDY_ID,
                      accession_number => $STUDY_ACCESSION_NUMBER,
                      name             => $STUDY_NAME,
                      study_title      => $STUDY_TITLE};
 
-  return $self->_make_single_value_metadata($study, $method_attr);
+  return $self->_make_multi_value_metadata(\@studies, $method_attr);
 }
 
+=head2 make_sample_metadata
+
+  Arg [1]    : Sample, WTSI::DNAP::Warehouse::Schema::Result::Sample.
+  Example    : my @avus = $ann->make_sample_metadata($sample);
+  Description: Return HTS sample metadata AVUs.
+  Returntype : Array[HashRef]
+
+=cut
+
 sub make_sample_metadata {
-  my ($self, $sample) = @_;
+  my ($self, @run_records) = @_;
 
-  defined $sample or
-    $self->logconfess('A defined sample argument is required');
-
+  my @samples = map { $_->sample } @run_records;
   my $method_attr = {accession_number => $SAMPLE_ACCESSION_NUMBER,
                      id_sample_lims   => $SAMPLE_ID,
                      name             => $SAMPLE_NAME,
@@ -93,45 +135,83 @@ sub make_sample_metadata {
                      cohort           => $SAMPLE_COHORT,
                      donor_id         => $SAMPLE_DONOR_ID};
 
-  return $self->_make_single_value_metadata($sample, $method_attr);
+  return $self->_make_multi_value_metadata(\@samples, $method_attr);
 }
+
+=head2 make_library_metadata
+
+  Arg [n]      PacBio run records,
+               Array[WTSI::DNAP::Warehouse::Schema::Result::PacBioRun].
+
+  Example    : my @avus = $ann->make_library_metadata(@run_records);
+  Description: Return library AVU metadata for a run.
+  Returntype : Array[HashRef]
+
+=cut
 
 sub make_library_metadata {
   my ($self, @run_records) = @_;
 
-  my @avus;
-  my @library_ids =
-    uniq map { $_->pac_bio_library_tube_legacy_id } @run_records;
+  my $method_attr = {pac_bio_library_tube_legacy_id => $LIBRARY_ID};
+  my @avus = $self->_make_multi_value_metadata(\@run_records, $method_attr);
 
-  foreach my $library_id (@library_ids) {
-    push @avus, $self->make_avu($LIBRARY_ID, $library_id);
-  }
-
-  my $num_libraries = scalar @library_ids;
+  my $num_libraries = scalar @run_records;
   if ($num_libraries > 1) {
-    push @avus, 'multiplex', q[1];
-    push @avus, 'library_id_composite', (join q[;], @library_ids);
+    push @avus, $self->make_avu($PACBIO_MULTIPLEX, 1);
   }
 
   return @avus;
 }
 
-sub _make_single_value_metadata {
-  my ($self, $obj, $method_attr) = @_;
+=head2 make_legacy_metadata
+
+  Arg [n]      PacBio run records,
+               Array[WTSI::DNAP::Warehouse::Schema::Result::PacBioRun].
+
+  Example    : my @avus = $ann->make_legacy_metadata($path, @run_records);
+  Description: Return legacy AVU metadata for a run; study name under
+               the attribute 'study_name' and 'bas' under the attribute
+               'type'.
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_legacy_metadata {
+  my ($self, @run_records) = @_;
+
+  my @avus;
+  my @studies = map { $_->study } @run_records;
+
+  my $method_attr = {name => 'study_name'};
+  push @avus, $self->_make_multi_value_metadata(\@studies, $method_attr);
+
+  return @avus;
+}
+
+sub make_tag_metadata {
+  my ($self, @run_records) = @_;
+
+  my $method_attr = {tag_sequence => $TAG_SEQUENCE};
+  return $self->_make_multi_value_metadata(\@run_records, $method_attr);
+}
+
+sub _make_multi_value_metadata {
+  my ($self, $objs, $method_attr) = @_;
   # The method_attr argument is a map of method name to attribute name
   # under which the result will be stored.
 
   my @avus;
   foreach my $method_name (sort keys %{$method_attr}) {
-    my $attr  = $method_attr->{$method_name};
-    my $value = $obj->$method_name;
-
-    if (defined $value) {
-      $self->debug($obj, "::$method_name returned ", $value);
-      push @avus, $self->make_avu($attr, $value);
-    }
-    else {
-      $self->debug($obj, "::$method_name returned undef");
+    my $attr = $method_attr->{$method_name};
+    foreach my $obj (@{$objs}) {
+      my $value = $obj->$method_name;
+      if (defined $value) {
+        $self->debug($obj, "::$method_name returned ", $value);
+        push @avus, $self->make_avu($attr, $value);
+      }
+      else {
+        $self->debug($obj, "::$method_name returned undef");
+      }
     }
   }
 

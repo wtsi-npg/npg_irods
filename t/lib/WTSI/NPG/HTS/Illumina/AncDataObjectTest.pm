@@ -4,15 +4,15 @@ use strict;
 use warnings;
 
 use Carp;
-use English qw(-no_match_vars);
+use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions;
 use File::Temp;
-use List::AllUtils qw(any);
+use List::AllUtils qw[any];
 use Log::Log4perl;
 use Test::More;
 
-use base qw(WTSI::NPG::HTS::Test);
+use base qw[WTSI::NPG::HTS::Test];
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 

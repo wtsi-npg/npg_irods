@@ -18,7 +18,7 @@ sub runtests {
   my %env_copy = %ENV;
 
   # iRODS 3.* and iRODS 4.* have different env vars for configuration
-  foreach my $file (qw(irodsEnvFile IRODS_ENVIRONMENT_FILE)) {
+  foreach my $file (qw[irodsEnvFile IRODS_ENVIRONMENT_FILE]) {
     my $env_file = $ENV{"WTSI_NPG_iRODS_Test_$file"} || q[];
 
     # Ensure that the iRODS connection details are a nonsense value if

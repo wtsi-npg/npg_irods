@@ -13,11 +13,11 @@ use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::HTS::PacBio::APIClient;
 use WTSI::NPG::HTS::PacBio::RunPublisher;
 
-our $VERSION = '';
-
 with qw[
          WTSI::DNAP::Utilities::Loggable
        ];
+
+our $VERSION = '';
 
 has 'api_client' =>
   (isa           => 'WTSI::NPG::HTS::PacBio::APIClient',
@@ -29,7 +29,8 @@ has 'api_client' =>
 has 'path_uri_filter' =>
   (isa           => 'Maybe[Str]',
    is            => 'ro',
-   required      => 0,
+   required      => 1,
+   default       => undef,
    documentation => 'A regex matching data path URIs to accept');
 
 has 'irods' =>
@@ -39,9 +40,10 @@ has 'irods' =>
    documentation => 'An iRODS handle to run searches and perform updates');
 
 has 'dest_collection' =>
-  (isa           => 'Str',
+  (isa           => 'Maybe[Str]',
    is            => 'ro',
-   required      => 0,
+   required      => 1,
+   default       => undef,
    documentation => 'The destination collection within iRODS to store data');
 
 has 'local_staging_area' =>
@@ -158,7 +160,7 @@ sub _get_smrt_path {
       # ./superfoo/46983_1129/F01_1
       my $rel_runfolder_path = URI->new($path_uri)->path;
       my $abs_runfolder_path =
-        canonpath(catfile($self->local_staging_area, $rel_runfolder_path));
+        canonpath(catdir($self->local_staging_area, $rel_runfolder_path));
 
       $runfolder_smrt_path = $abs_runfolder_path;
     }

@@ -22,6 +22,16 @@ has 'irods' =>
    required      => 1,
    documentation => 'An iRODS handle to run searches and perform updates');
 
+has 'ancillary_formats' =>
+  (isa           => 'ArrayRef',
+   is            => 'ro',
+   required      => 1,
+   lazy          => 1,
+   default       => sub {
+     return [qw[bam_stats bed bamcheck flagstat json stats txt seqchksum]];
+   },
+   documentation => 'The ancillary file formats to be updated');
+
 has 'obj_factory' =>
   (is            => 'ro',
    isa           => 'WTSI::NPG::HTS::DataObjectFactory',
@@ -99,7 +109,8 @@ sub _build_obj_factory {
   my ($self) = @_;
 
   return WTSI::NPG::HTS::Illumina::DataObjectFactory->new
-    (irods => $self->irods);
+    (ancillary_formats => $self->ancillary_formats,
+     irods             => $self->irods);
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -116,8 +127,10 @@ WTSI::NPG::HTS::Illumina::MetaUpdater
 
 =head1 DESCRIPTION
 
-Updates secondary metadata on HTS data files in iRODS. Any errors
-encountered on each file are trapped and logged.
+Updates secondary metadata and consequent permissions on Illumina HTS
+data files in iRODS. The information to do both of these operations is
+provided by st::api::lims. Any errors encountered on each file are
+trapped and logged.
 
 =head1 AUTHOR
 

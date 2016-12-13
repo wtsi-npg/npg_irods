@@ -6,8 +6,7 @@ use FindBin qw[$Bin];
 use lib (-d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib");
 
 use Getopt::Long;
-use Log::Log4perl;
-use Log::Log4perl::Level;
+use Log::Log4perl qw[:levels];
 use Pod::Usage;
 
 use WTSI::NPG::DriRODS;
@@ -38,18 +37,10 @@ if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
 }
 else {
-  my $log_args = {layout => '%d %p %m %n',
-                  level  => $ERROR,
-                  utf8   => 1};
-
-  if ($verbose and not $debug) {
-    $log_args->{level} = $INFO;
-  }
-  elsif ($debug) {
-    $log_args->{level} = $DEBUG;
-  }
-
-  Log::Log4perl->easy_init($log_args);
+  my $level = $debug ? $DEBUG : $verbose ? $INFO : $WARN;
+  Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
+                            level  => $level,
+                            utf8   => 1});
 }
 
 if (not defined $runfolder_path) {

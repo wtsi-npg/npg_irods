@@ -892,7 +892,7 @@ sub publish_plex_index_files : Test(269) {
   }
 }
 
-sub publish_lane_ancillary_files : Test(776) {
+sub publish_lane_ancillary_files : Test(856) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
@@ -937,7 +937,7 @@ sub publish_lane_ancillary_files : Test(776) {
   }
 }
 
-sub publish_plex_ancillary_files : Test(2534) {
+sub publish_plex_ancillary_files : Test(2804) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -1553,7 +1553,8 @@ sub calc_lane_ancillary_files {
   my %position_index;
 
   my $id_run = 18448;
-  my @default_parts = qw[.bamcheck
+  my @default_parts = qw[.bam_stats
+                         .bamcheck
                          .flagstat
                          .seqchksum
                          .sha512primesums512.seqchksum
@@ -1606,7 +1607,8 @@ sub calc_plex_ancillary_files {
                        8 => 'DNA'};
   my $lane_yhuman = 6;
 
-  my @default_parts = qw[.bamcheck
+  my @default_parts = qw[.bam_stats
+                         .bamcheck
                          .flagstat
                          .seqchksum
                          .sha512primesums512.seqchksum];

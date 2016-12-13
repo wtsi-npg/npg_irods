@@ -25,11 +25,16 @@ has 'irods' =>
    default       => sub { return WTSI::NPG::iRODS->new },
    documentation => 'The iRODS connection handle');
 
-my $anc_pattern = join q[|], qw[bai bed bamcheck crai flagstat json
-                                seqchksum stats txt];
+has 'ancillary_formats' =>
+  (isa           => 'ArrayRef',
+   is            => 'ro',
+   required      => 0,
+   predicate     => 'has_ancillary_formats',
+   documentation => 'The ancillary file formats that have been published');
 
-my $almap_regex   = qr{[.](bam|cram)$}msx;
-my $anc_regex     = qr{[.]($anc_pattern)$}msx;
+my $align_regex   = qr{[.](bam|cram)$}msx;
+my $index_regex   = qr{[.](bai|crai)$}msx;
+
 my $xml_regex     = qr{[.]xml$}msx;
 my $interop_regex = qr{[.]bin$}msx;
 
@@ -65,14 +70,14 @@ my $interop_regex = qr{[.]bin$}msx;
                      irods       => $self->irods);
 
     ## no critic (ControlStructures::ProhibitCascadingIfElse)
-    if ($filename =~  m{$almap_regex}msxi) {
+    if ($filename =~ m{$align_regex}msxi) {
       $self->debug('Making WTSI::NPG::HTS::Illumina::AlnDataObject from ',
-                   "'$path' matching $almap_regex");
+                   "'$path' matching $align_regex");
       $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new(@init_args);
     }
-    elsif ($filename =~ m{$anc_regex}msxi) {
+    elsif ($filename =~ m{$index_regex}msxi) {
       $self->debug('Making WTSI::NPG::HTS::Illumina::AncDataObject from ',
-                   "'$path' matching $anc_regex");
+                   "'$path' matching $index_regex");
       $obj = WTSI::NPG::HTS::Illumina::AncDataObject->new(@init_args);
     }
     elsif ($filename =~ m{$interop_regex}msxi) {
@@ -91,7 +96,18 @@ my $interop_regex = qr{[.]bin$}msx;
                    "'$path' matching $xml_regex");
       $obj = WTSI::NPG::HTS::Illumina::XMLDataObject->new(@init_args);
     }
-    else {
+    elsif ($self->has_ancillary_formats) {
+      my $anc_pattern = join q[|], @{$self->ancillary_formats};
+      my $anc_regex = qr{[.]($anc_pattern)$}msx;
+
+      if ($filename =~ m{$anc_regex}msxi) {
+        $self->debug('Making WTSI::NPG::HTS::Illumina::AncDataObject from ',
+                     "'$path' matching $anc_regex");
+        $obj = WTSI::NPG::HTS::Illumina::AncDataObject->new(@init_args);
+      }
+    }
+
+    if (not defined $obj) {
       $self->debug("Not making any WTSI::NPG::HTS::DataObject for '$path'");
       # return undef
     }

@@ -38,6 +38,7 @@ my $irods_tmp_coll;
 
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
+  # my $wh_db_file = 'ml_wh.db';
   $wh_schema = TestDB->new(sqlite_utf8_enabled => 1,
                            verbose             => 0)->create_test_db
     ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
@@ -172,7 +173,7 @@ sub publish_meta_xml_files : Test(9) {
   check_common_metadata($irods, @observed_paths);
 }
 
-sub publish_basx_files : Test(56) {
+sub publish_basx_files : Test(68) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/superfoo/45137_1095";
@@ -237,6 +238,42 @@ sub publish_sts_xml_files : Test(9) {
   check_common_metadata($irods, @observed_paths);
 }
 
+sub publish_multiplexed : Test(80) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/superfoo/39859_968";
+  my $dest_coll = "$irods_tmp_coll/publish_multiplexed";
+
+  my $pub = WTSI::NPG::HTS::PacBio::RunPublisher->new
+    (dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     runfolder_path  => $runfolder_path);
+
+  my @expected_paths =
+    map { catfile("$dest_coll/E01_1/Analysis_Results", $_) }
+    ('m150718_080850_00127_c100822662550000001823177111031595_s1_p0.1.bax.h5',
+     'm150718_080850_00127_c100822662550000001823177111031595_s1_p0.2.bax.h5',
+     'm150718_080850_00127_c100822662550000001823177111031595_s1_p0.3.bax.h5',
+     'm150718_080850_00127_c100822662550000001823177111031595_s1_p0.bas.h5');
+
+  my ($num_files, $num_processed, $num_errors) =
+    $pub->publish_basx_files('E01_1');
+  cmp_ok($num_files,     '==', scalar @expected_paths);
+  cmp_ok($num_processed, '==', scalar @expected_paths);
+  cmp_ok($num_errors,    '==', 0);
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named basx files') or
+              diag explain \@observed_paths;
+
+  check_primary_metadata($irods, @observed_paths);
+  check_common_metadata($irods, @observed_paths);
+  check_study_metadata($irods, @observed_paths);
+  check_multiplex_metadata($irods, 2, @observed_paths);
+}
+
 sub observed_data_objects {
   my ($irods, $dest_collection, $regex) = @_;
 
@@ -258,10 +295,16 @@ sub check_common_metadata {
     my $file_name = fileparse($obj->str);
 
     foreach my $attr ($DCTERMS_CREATED, $DCTERMS_CREATOR, $DCTERMS_PUBLISHER,
-                      $FILE_TYPE, $FILE_MD5) {
+                      $FILE_MD5) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
+
+    # Two copies on h5 files because of legacy metadata 'type' => 'bas'
+    my $num_types = ($path =~ m{\.h5$}) ? 2 : 1;
+    my @avu = $obj->find_in_metadata($FILE_TYPE);
+    cmp_ok(scalar @avu, '==', $num_types,
+           "$file_name $FILE_TYPE x$num_types metadata present");
   }
 }
 
@@ -272,11 +315,14 @@ sub check_primary_metadata {
     my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $path);
     my $file_name = fileparse($obj->str);
 
-    foreach my $attr ($WTSI::NPG::HTS::PacBio::Annotator::CELL_INDEX,
-                      $WTSI::NPG::HTS::PacBio::Annotator::COLLECTION_NUMBER,
-                      $WTSI::NPG::HTS::PacBio::Annotator::INSTRUMENT_NAME,
-                      $WTSI::NPG::HTS::PacBio::Annotator::RUN,
-                      $WTSI::NPG::HTS::PacBio::Annotator::SET_NUMBER) {
+    foreach my $attr
+      ($WTSI::NPG::HTS::PacBio::Annotator::PACBIO_CELL_INDEX,
+       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_COLLECTION_NUMBER,
+       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_INSTRUMENT_NAME,
+       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_RUN,
+       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_SET_NUMBER,
+       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_WELL,
+       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_SAMPLE_LOAD_NAME) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
@@ -290,9 +336,31 @@ sub check_study_metadata {
     my $obj = WTSI::NPG::HTS::DataObject->new($irods, $path);
     my $file_name = fileparse($obj->str);
 
-    foreach my $attr ($STUDY_ID, $STUDY_NAME, $STUDY_ACCESSION_NUMBER) {
+    # study_name is legacy metadata
+    foreach my $attr ($STUDY_ID, $STUDY_NAME, $STUDY_ACCESSION_NUMBER,
+                      'study_name') {
       my @avu = $obj->find_in_metadata($attr);
-      cmp_ok(scalar @avu, '>=', 1, "$file_name $attr metadata present");
+      cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
+    }
+  }
+}
+
+sub check_multiplex_metadata {
+  my ($irods, $n, @paths) = @_;
+
+  foreach my $path (@paths) {
+    my $obj = WTSI::NPG::HTS::DataObject->new($irods, $path);
+    my $file_name = fileparse($obj->str);
+
+    ok($obj->find_in_metadata
+       ($WTSI::NPG::HTS::PacBio::Annotator::PACBIO_MULTIPLEX),
+       "$file_name multiplex metadata present");
+
+    # We can't guarantee that there will be n x other sample metadata
+    foreach my $attr ($WTSI::NPG::HTS::PacBio::Annotator::TAG_SEQUENCE,
+                      $SAMPLE_ID) {
+      my @avu = $obj->find_in_metadata($attr);
+      cmp_ok(scalar @avu, '==', $n, "$file_name $n x $attr metadata present");
     }
   }
 }

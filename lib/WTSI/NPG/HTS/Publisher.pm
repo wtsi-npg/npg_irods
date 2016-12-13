@@ -299,8 +299,12 @@ sub _publish_file_create {
                       $self->make_creation_metadata($self->affiliation_uri,
                                                     $timestamp,
                                                     $self->accountee_uri),
-                      $self->make_md5_metadata($remote_md5),
-                      $self->make_type_metadata($remote_path));
+                      $self->make_md5_metadata($remote_md5));
+
+  # This is set rather than superseded to allow legacy type metadata
+  # to be added
+  $num_meta_errors +=
+    $self->_set($obj, $self->make_type_metadata($remote_path));
 
   if ($local_md5 eq $remote_md5) {
     $self->info("After publication of '$local_path' ",
@@ -335,8 +339,12 @@ sub _publish_file_overwrite {
 
   # Ensure that pre-update metadata are correct
   my $num_meta_errors =
-    $self->_supersede($obj, $self->make_type_metadata($remote_path),
-                      $self->make_md5_metadata($pre_remote_md5));
+    $self->_supersede($obj, $self->make_md5_metadata($pre_remote_md5));
+
+  # This is set rather than superseded to allow legacy type metadata
+  # to be added
+  $num_meta_errors +=
+    $self->_set($obj, $self->make_type_metadata($remote_path));
 
   if ($local_md5 eq $pre_remote_md5) {
     $self->info("Skipping publication of '$local_path' to '$remote_path': ",
@@ -407,6 +415,30 @@ sub _publish_file_overwrite {
   }
 
   return $obj;
+}
+
+sub _set {
+  my ($self, $item, @metadata) = @_;
+
+  my $path = $item->str;
+  $self->debug("Setting metadata on '$path': ", pp(\@metadata));
+
+  my $num_errors = 0;
+  foreach my $avu (@metadata) {
+    my $attr  = $avu->{attribute};
+    my $value = $avu->{value};
+    my $units = $avu->{units};
+
+    try {
+      $item->add_avu($attr, $value, $units);
+    } catch {
+      $num_errors++;
+      $self->error("Failed to add AVU on '$path' with attribute ",
+                   "'$attr' and value '$value': ", $_);
+    };
+  }
+
+  return $num_errors;
 }
 
 sub _supersede {
