@@ -4,7 +4,7 @@ use DateTime;
 use Moose::Role;
 use UUID;
 
-use WTSI::NPG::OM::Metadata;
+use WTSI::NPG::iRODS::Metadata;
 
 our $VERSION = '';
 
@@ -98,6 +98,42 @@ sub make_primary_metadata {
 }
 
 
+=head2 make_sample_metadata
+
+  Arg [n]      Sample records,
+               Array[WTSI::DNAP::Warehouse::Schema::Result::Sample].
+
+  Example    : my @avus = $ann->make_sample_metadata(@samples);
+  Description: Return HTS sample metadata AVUs.
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_sample_metadata {
+  my ($self, @samples) = @_;
+  # map from sample method names to AVU attribute names
+  my %method_attr = (accession_number => $SAMPLE_ACCESSION_NUMBER,
+                     id_sample_lims   => $SAMPLE_ID,
+                     name             => $SAMPLE_NAME,
+                     public_name      => $SAMPLE_PUBLIC_NAME,
+                     common_name      => $SAMPLE_COMMON_NAME,
+                     supplier_name    => $SAMPLE_SUPPLIER_NAME,
+                     cohort           => $SAMPLE_COHORT,
+                     donor_id         => $SAMPLE_DONOR_ID);
+  my @avus;
+  foreach my $method (sort keys %method_attr) {
+      my @method_avus = $self->make_avus_from_objects(
+          $method_attr{$method},
+          $method,
+          [], # empty ArrayRef for no arguments
+          \@samples,
+      );
+      push @avus, @method_avus;
+  }
+  return @avus;
+}
+
+
 =head2 make_secondary_metadata
 
   Arg [1]    : Str. Stock UUID parsed from the BioNano runfolder name.
@@ -127,6 +163,36 @@ sub make_secondary_metadata {
     return @avus;
 }
 
+=head2 make_study_metadata
+
+  Arg [n]      Study records,
+               Array[WTSI::DNAP::Warehouse::Schema::Result::Study].
+
+  Example    : my @avus = $ann->make_study_metadata(@studies);
+  Description: Return HTS study metadata AVUs.
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_study_metadata {
+  my ($self, @studies) = @_;
+  # map from study method names to AVU attribute names
+  my %method_attr = (id_study_lims    => $STUDY_ID,
+                     accession_number => $STUDY_ACCESSION_NUMBER,
+                     name             => $STUDY_NAME,
+                     study_title      => $STUDY_TITLE);
+  my @avus;
+  foreach my $method (sort keys %method_attr) {
+      my @method_avus = $self->make_avus_from_objects(
+          $method_attr{$method},
+          $method,
+          [], # empty ArrayRef for no arguments
+          \@studies,
+      );
+      push @avus, @method_avus;
+  }
+  return @avus;
+}
 
 =head2 make_uuid_metadata
 
