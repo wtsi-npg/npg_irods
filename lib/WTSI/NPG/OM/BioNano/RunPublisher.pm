@@ -162,7 +162,7 @@ sub _build_resultset {
 }
 
 sub _query_ml_warehouse {
-    # query the BioNano warehouse to get BioNano StockResource results
+    # query the multi-LIMS warehouse to get BioNano StockResource results
     # use these to get sample and study information
     my ($self,) = @_;
     my $stock_id = $self->resultset->stock;
