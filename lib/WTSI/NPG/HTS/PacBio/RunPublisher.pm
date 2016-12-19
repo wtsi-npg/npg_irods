@@ -52,12 +52,6 @@ has 'dest_collection' =>
    builder       => '_build_dest_collection',
    documentation => 'The destination collection within iRODS to store data');
 
-has 'mlwh_schema' =>
-  (is            => 'ro',
-   isa           => 'WTSI::DNAP::Warehouse::Schema',
-   required      => 1,
-   documentation => 'A ML warehouse handle to obtain secondary metadata');
-
 sub run_name {
   my ($self) = @_;
 
