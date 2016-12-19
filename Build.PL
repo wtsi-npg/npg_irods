@@ -47,6 +47,7 @@ my $build = Build->new
     'WTSI::DNAP::Utilities'         => '>= 0.5.2',   # perl-dnap-utilities
     'WTSI::NPG::iRODS'              => '>= 2.5.0',   # perl-irods-wrap
     'WTSI::DNAP::Warehouse::Schema' => '>= 2.1',     # ml_warehouse
+    'npg_testing::db'               => '>= 85.4',    # npg_tracking
     'st::api::lims'                 => '>= 85.4',    # npg_tracking
     'st::api::lims::ml_warehouse'   => '>= 39.1'     # npg_ml_warehouse
    },

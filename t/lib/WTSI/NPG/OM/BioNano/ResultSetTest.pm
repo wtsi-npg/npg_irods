@@ -18,7 +18,7 @@ BEGIN { use_ok('WTSI::NPG::OM::BioNano::ResultSet'); }
 use WTSI::NPG::OM::BioNano::ResultSet;
 
 my $data_path = './t/data/bionano/';
-my $runfolder_name = 'sample_barcode_01234_2016-10-04_09_00';
+my $runfolder_name = 'stock_barcode_01234_2016-10-04_09_00';
 my $test_run_path;
 
 my $log = Log::Log4perl->get_logger();
@@ -68,8 +68,8 @@ sub construction : Test(11) {
     my $ancillary = $resultset->ancillary_files;
     is(scalar @{$ancillary}, 6, "Found 6 ancillary files");
 
-    is($resultset->sample, 'sample_barcode_01234',
-       'Found expected sample barcode');
+    is($resultset->stock, 'stock_barcode_01234',
+       'Found expected stock barcode');
 
     my $dt = DateTime->new(
         year   => 2016,

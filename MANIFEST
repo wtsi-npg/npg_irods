@@ -55,7 +55,6 @@ lib/WTSI/NPG/OM/BioNano/Annotator.pm
 lib/WTSI/NPG/OM/BioNano/BnxFile.pm
 lib/WTSI/NPG/OM/BioNano/ResultSet.pm
 lib/WTSI/NPG/OM/BioNano/RunPublisher.pm
-lib/WTSI/NPG/OM/Metadata.pm
 LICENSE
 MANIFEST			This list of files
 META.json
@@ -123,14 +122,14 @@ t/data/anc_data_object/17550_3#1_quality_cycle_surv.txt
 t/data/anc_data_object/17550_3#1_quality_error.txt
 t/data/bionano/MoleculesDummy.bnx
 t/data/bionano/MoleculesDummyBadHeader.bnx
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect_Molecules/analysisLog.txt
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect_Molecules/analysisResult.json
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect_Molecules/iovars.json
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect_Molecules/Molecules.bnx
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect_Molecules/RawMolecules.bnx
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect_Molecules/RunReport.txt
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect_Molecules/Stitch.fov
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/workset.json
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/Detect_Molecules/analysisLog.txt
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/Detect_Molecules/analysisResult.json
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/Detect_Molecules/iovars.json
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/Detect_Molecules/Molecules.bnx
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/Detect_Molecules/RawMolecules.bnx
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/Detect_Molecules/RunReport.txt
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/Detect_Molecules/Stitch.fov
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/workset.json
 t/data/datasub/invalid/a.txt
 t/data/datasub/invalid/x/a.txt
 t/data/datasub/valid/a.txt
