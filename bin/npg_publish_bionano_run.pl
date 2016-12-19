@@ -22,18 +22,12 @@ our $VERSION = '';
 our $BIONANO_REGEX = qr{^\S+_\d{4}-\d{2}-\d{2}_\d{2}_\d{2}$}msx;
 our $DEFAULT_DAYS = 7;
 
-{
-  package TestDBFactory;
-  use Moose;
-
-  with 'npg_testing::db';
-}
-
 if (! caller ) {
     my $result = run();
     if ($result == 0) { exit 1; }
     else { exit 0; }
 }
+
 sub run {
 
     my $days;
