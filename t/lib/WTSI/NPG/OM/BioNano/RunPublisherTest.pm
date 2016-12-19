@@ -243,7 +243,7 @@ sub metadata : Test(4) {
         },
         {
             'attribute' => 'dcterms:publisher',
-            'value' => 'ldap://ldap.internal.sanger.ac.uk/ou=people,dc=sanger,dc=ac,dc=uk?title?sub?(uid=ib5)'
+            'value' => 'ldap://ldap.internal.sanger.ac.uk/ou=people,dc=sanger,dc=ac,dc=uk?title?sub?(uid='.$user_name.')'
         },
         {
             'attribute' => 'md5',
