@@ -43,7 +43,6 @@ sub run {
     my $collection;
     my $runfolder_path;
     my $search_dir;
-    my $test_db; # use the test MLWH DB; for development only
     my $verbose;
 
     GetOptions(
@@ -56,7 +55,6 @@ sub run {
         'logconf=s'                       => \$log4perl_config,
         'runfolder-path|runfolder_path=s' => \$runfolder_path,
         'search-dir|search_dir=s'         => \$search_dir,
-        'test-db|test_db'                 => \$test_db,
         'verbose'                         => \$verbose
     );
 
@@ -114,19 +112,7 @@ sub run {
     my $errors = 0;
     $log->debug(q[Ready to publish ], $total, q[ BioNano runfolder(s) to '],
                 $collection, q[']);
-    my $wh_schema;
-    if ($test_db) {
-        # using the default temporary SQLite file created by npg_testing::db
-        my $fixture_path =  "$Bin/../t/fixtures";
-        my $dbfactory = TestDBFactory->new(sqlite_utf8_enabled => 1,
-                                           verbose             => 0);
-        $wh_schema = $dbfactory->create_test_db(
-            'WTSI::DNAP::Warehouse::Schema',
-            "$fixture_path/ml_warehouse"
-        );
-    } else {
-        $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
-    }
+    my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
     foreach my $dir (@dirs) {
         try {
             my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new(
