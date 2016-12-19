@@ -110,7 +110,9 @@ sub metadata : Test(4) {
         hour       => 12,
         minute     => 00,
     );
-    my $user_name = `whoami`; #getpwuid $REAL_USER_ID; doesn't work on Travis
+    #getpwuid $REAL_USER_ID used by NPG::Annotator, but doesn't work on Travis
+    my $user_name = `whoami`;
+    chomp $user_name;
     my $affiliation_uri = URI->new('http://www.sanger.ac.uk');
     my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new(
         directory => $test_run_path,
