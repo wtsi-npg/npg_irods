@@ -54,17 +54,24 @@ has 'set_number' =>
    required      => 1,
    documentation => 'The PacBio XML set number');
 
-has 'library_tube_uuids' =>
-  (isa           => 'ArrayRef[Str]',
-   is            => 'ro',
-   required      => 1,
-   documentation => 'The WTSI LIMS library tube UUIDs');
-
 has 'run_uuid' =>
   (isa           => 'Str',
    is            => 'ro',
-   required      => 1,
+   predicate     => q(has_run_uuid),
    documentation => 'The WTSI LIMS PacBio run UUID');
+
+
+around BUILDARGS => sub {
+    my $orig   = shift;
+    my $class  = shift;
+    my %params = ref $_[0] ? %{$_[0]} : @_;
+
+    return $class->$orig(
+        map  { $_ => $params{$_} }
+        grep { defined $params{$_} }
+        keys %params
+    );
+};
 
 __PACKAGE__->meta->make_immutable;
 
