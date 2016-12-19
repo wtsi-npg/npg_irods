@@ -6,9 +6,9 @@ use namespace::autoclean;
 use DateTime;
 use File::Basename qw[basename];
 use File::Spec::Functions;
-use UUID;
 use URI;
 
+use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::iRODS::DataObject;
@@ -51,13 +51,13 @@ has 'resultset' =>
    documentation => 'Object containing results from a BioNano runfolder'
 );
 
-has 'uuid' =>
-  (is       => 'ro',
-   isa      => 'Str',
-   required => 1,
-   lazy     => 1,
-   builder  => '_build_uuid',
-   documentation => 'UUID generated for the publication to iRODS');
+has 'mlwh_schema' =>
+  (is            => 'ro',
+   isa           => 'WTSI::DNAP::Warehouse::Schema',
+   required      => 1,
+   documentation => 'A ML warehouse handle to obtain secondary metadata');
+
+#also has uuid attribute from WTSI::NPG::OM::BioNano::Annotator
 
 
 =head2 publish
@@ -100,12 +100,16 @@ sub publish {
         $self->info(q[Skipping publication of BioNano data collection '],
                 $bionano_collection, q[': already exists]);
     } else {
-        my $collection_meta = $self->make_collection_meta();
+        my @stock_records = $self->_query_ml_warehouse();
+        my @collection_meta = $self->make_collection_metadata(
+            $self->resultset,
+            @stock_records,
+        );
         my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods);
         my $bionano_published_coll = $publisher->publish(
             $self->resultset->directory,
             $leaf_collection,
-            $collection_meta,
+            \@collection_meta,
             $timestamp,
         );
         if ($bionano_published_coll ne $bionano_collection) {
@@ -127,29 +131,6 @@ sub publish {
     }
     return $bionano_collection;
 }
-
-
-=head2 make_collection_meta
-
-  Args       : None
-  Example    : $collection_meta = $publisher->get_collection_meta();
-  Description: Generate metadata to be applied to a BioNano collection
-               in iRODS.
-  Returntype : ArrayRef[HashRef] AVUs to be used as metadata
-
-=cut
-
-sub make_collection_meta {
-    my ($self) = @_;
-    my @metadata;
-    # creation metadata is added by HTS::Publisher
-    my @bnx_meta = $self->make_bnx_metadata($self->resultset);
-    my @uuid_meta = $self->make_uuid_metadata($self->uuid);
-    push @metadata, @bnx_meta, @uuid_meta;
-    # TODO add sample metadata from Sequencescape (or mock DB for tests)
-    return \@metadata;
-}
-
 
 sub _apply_bnx_file_metadata {
     my ($self, $bionano_collection) = @_;
@@ -180,13 +161,23 @@ sub _build_resultset {
     return $resultset;
 }
 
-sub _build_uuid {
+sub _query_ml_warehouse {
+    # query the multi-LIMS warehouse to get BioNano StockResource results
+    # use these to get sample and study information
     my ($self,) = @_;
-    my $uuid_bin;
-    my $uuid_str;
-    UUID::generate($uuid_bin);
-    UUID::unparse($uuid_bin, $uuid_str);
-    return $uuid_str;
+    my $stock_id = $self->resultset->stock;
+    my @stock_records = $self->mlwh_schema->resultset('StockResource')->search
+        ({id_stock_resource_lims => $stock_id, },
+         {prefetch                  => ['sample', 'study']});
+    my $stock_total = scalar @stock_records;
+    if ($stock_total == 0) {
+        $self->logwarn('Did not find any results in ML Warehouse for ',
+                       q[stock ID '], $stock_id, q[']);
+    } else {
+        $self->info('Found ', $stock_total, ' result(s) in ML Warehouse ',
+                    q[for stock ID '], $stock_id, q[']);
+    }
+    return @stock_records;
 }
 
 

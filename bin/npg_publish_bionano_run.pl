@@ -5,14 +5,17 @@ use warnings;
 use FindBin qw[$Bin];
 use lib (-d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib");
 
-use Cwd qw(cwd abs_path);
+use Cwd qw[cwd abs_path];
 use DateTime;
+use File::Spec::Functions;
+use File::Temp qw[tempdir];
 use Getopt::Long;
-use Log::Log4perl qw(:levels);
+use Log::Log4perl qw[:levels];
 use Pod::Usage;
 use Try::Tiny;
 use WTSI::DNAP::Utilities::Collector;
-use WTSI::DNAP::Utilities::ConfigureLogger qw(log_init);
+use WTSI::DNAP::Utilities::ConfigureLogger qw[log_init];
+use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::OM::BioNano::RunPublisher;
 
 our $VERSION = '';
@@ -24,6 +27,7 @@ if (! caller ) {
     if ($result == 0) { exit 1; }
     else { exit 0; }
 }
+
 sub run {
 
     my $days;
@@ -102,16 +106,19 @@ sub run {
     my $errors = 0;
     $log->debug(q[Ready to publish ], $total, q[ BioNano runfolder(s) to '],
                 $collection, q[']);
+    my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
     foreach my $dir (@dirs) {
         try {
             my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new(
                 directory => $dir,
+                mlwh_schema => $wh_schema,
             );
             my $dest_collection = $publisher->publish($collection);
             $num_published++;
             $log->info(q[Published BioNano run directory '], $dir,
                        q[' to iRODS collection '], $dest_collection,
-                       q[': ], $num_published, q[ of ], $total);
+                       q[': ], $total, q[ runs attempted, ], $num_published,
+                       q[ successes, ], $errors, q[ errors]);
         } catch {
             $log->error("Error publishing '$dir': ", $_);
             $errors++;

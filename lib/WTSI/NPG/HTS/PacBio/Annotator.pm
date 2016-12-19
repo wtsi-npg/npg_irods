@@ -95,8 +95,8 @@ sub make_secondary_metadata {
   Arg [n]      PacBio run records,
                Array[WTSI::DNAP::Warehouse::Schema::Result::PacBioRun].
 
-  Example    : my @avus = $ann->make_sample_metadata($sample);
-  Description: Return HTS sample metadata AVUs.
+  Example    : my @avus = $ann->make_study_metadata(@run_records);
+  Description: Return HTS study metadata AVUs.
   Returntype : Array[HashRef]
 
 =cut

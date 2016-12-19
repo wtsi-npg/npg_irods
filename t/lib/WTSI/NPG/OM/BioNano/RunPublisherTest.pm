@@ -7,7 +7,7 @@ use URI;
 
 use base qw[WTSI::NPG::HTS::Test]; # FIXME better path for shared base
 
-use Test::More tests => 17;
+use Test::More tests => 7;
 use Test::Exception;
 
 use English qw[-no_match_vars];
@@ -16,19 +16,47 @@ use File::Temp qw[tempdir];
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
+{
+  package TestDBFactory;
+  use Moose;
+
+  with 'npg_testing::db';
+}
+
 BEGIN { use_ok('WTSI::NPG::OM::BioNano::RunPublisher'); }
 
 use WTSI::NPG::iRODS;
 use WTSI::NPG::OM::BioNano::RunPublisher;
 
-my $data_path = './t/data/bionano/';
-my $runfolder_name = 'sample_barcode_01234_2016-10-04_09_00';
+my $data_path = './t/data/bionano';
+my $runfolder_name = 'stock_barcode_01234_2016-10-04_09_00';
+my $fixture_path = "t/fixtures";
 my $tmp_data;
+my $tmp_db;
 my $test_run_path;
 my $irods_tmp_coll;
 my $pid = $$;
+my $wh_schema;
 
 my $log = Log::Log4perl->get_logger();
+
+
+sub setup_databases : Test(startup) {
+    $tmp_db = tempdir('temp_bionano_db_XXXXXX', CLEANUP => 1);
+    my $wh_db_file = catfile($tmp_db, 'ml_wh.db');
+    my $db_factory = TestDBFactory->new(
+        sqlite_utf8_enabled => 1,
+        verbose             => 0
+    );
+    $wh_schema = $db_factory->create_test_db(
+        'WTSI::DNAP::Warehouse::Schema',
+        "$fixture_path/ml_warehouse",
+    );
+}
+
+sub teardown_databases : Test(shutdown) {
+    $wh_schema->storage->disconnect;
+}
 
 sub make_fixture : Test(setup) {
     # set up iRODS test collection
@@ -40,7 +68,7 @@ sub make_fixture : Test(setup) {
     # workaround for the space in BioNano's "Detect Molecules" directory,
     # because Build.PL does not work well with spaces in filenames
     $tmp_data = tempdir('temp_bionano_data_XXXXXX', CLEANUP => 1);
-    my $run_path = $data_path.$runfolder_name;
+    my $run_path = $data_path.'/'.$runfolder_name;
     system("cp -R $run_path $tmp_data") && $log->logcroak(
         q[Failed to copy '], $run_path, q[' to '], $tmp_data, q[']);
     $test_run_path = $tmp_data.'/'.$runfolder_name;;
@@ -62,6 +90,7 @@ sub publish : Test(2) {
     my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new(
         directory => $test_run_path,
         publication_time => $publication_time,
+        mlwh_schema => $wh_schema,
     );
     ok($publisher, "BioNano RunPublisher object created");
 
@@ -81,16 +110,18 @@ sub metadata : Test(4) {
         hour       => 12,
         minute     => 00,
     );
-    my $user_name = getpwuid $REAL_USER_ID;
+    # $REAL_USER_ID used by NPG::Annotator, but causes Travis test to fail
+    my $user_name = getpwuid $EFFECTIVE_USER_ID;
     my $affiliation_uri = URI->new('http://www.sanger.ac.uk');
     my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new(
-        directory => $test_run_path
+        directory => $test_run_path,
+        mlwh_schema => $wh_schema,
     );
     my $bionano_coll = $publisher->publish($irods_tmp_coll,
                                            $publication_time);
     my @collection_meta = $irods->get_collection_meta($bionano_coll);
 
-    is(scalar @collection_meta, 7,
+    is(scalar @collection_meta, 20,
        "Expected number of collection AVUs found");
 
     my @expected_meta = (
@@ -122,6 +153,58 @@ sub metadata : Test(4) {
             'attribute' => 'dcterms:publisher',
             'value' => 'ldap://ldap.internal.sanger.ac.uk/ou=people,dc=sanger,dc=ac,dc=uk?title?sub?(uid='.$user_name.')'
         },
+        {
+            'attribute' => 'sample',
+            'value' => '425STDY6079620'
+        },
+        {
+            'attribute' => 'sample_cohort',
+            'value' => 'Virus_6'
+        },
+        {
+            'attribute' => 'sample_common_name',
+            'value' => 'Human herpesvirus 4'
+        },
+        {
+            'attribute' => 'sample_donor_id',
+            'value' => '425STDY6079620'
+        },
+        {
+            'attribute' => 'sample_id',
+            'value' => '2265577'
+        },
+        {
+            'attribute' => 'sample_public_name',
+            'value' => 'IMS Saliva 250'
+        },
+        {
+            'attribute' => 'sample_supplier_name',
+            'value' => '14751_IMS_Saliva_250'
+        },
+        {
+            'attribute' => 'source',
+            'value' => 'production'
+        },
+        {
+            'attribute' => 'stock_id',
+            'value' => 'stock_barcode_01234'
+        },
+        {
+            'attribute' => 'study',
+            'value' => 'Virus Genome Herpesvirus'
+        },
+        {
+            'attribute' => 'study_accession_number',
+            'value' => 'ERP001026'
+        },
+        {
+            'attribute' => 'study_id',
+            'value' => '425'
+        },
+        {
+            'attribute' => 'study_title',
+            'value' => "Herpesvirus whole genome sequencing[UTF-8 test: \x{3a4}\x{1f74} \x{3b3}\x{3bb}\x{1ff6}\x{3c3}\x{3c3}\x{3b1} \x{3bc}\x{3bf}\x{1fe6} \x{1f14}\x{3b4}\x{3c9}\x{3c3}\x{3b1}\x{3bd} \x{1f11}\x{3bb}\x{3bb}\x{3b7}\x{3bd}\x{3b9}\x{3ba}\x{1f74} \x{3c4}\x{3bf} \x{3c3}\x{3c0}\x{3af}\x{3c4}\x{3b9} \x{3c6}\x{3c4}\x{3c9}\x{3c7}\x{3b9}\x{3ba}\x{3cc} \x{3c3}\x{3c4}\x{3b9}\x{3c2} \x{3b1}\x{3bc}\x{3bc}\x{3bf}\x{3c5}\x{3b4}\x{3b9}\x{3ad}\x{3c2} \x{3c4}\x{3bf}\x{3c5} \x{39f}\x{3bc}\x{3ae}\x{3c1}\x{3bf}\x{3c5}.]"
+        },
     );
 
     is_deeply(\@collection_meta, \@expected_meta,
@@ -132,69 +215,101 @@ sub metadata : Test(4) {
                             'Molecules.bnx');
     my @file_meta = $irods->get_object_meta($bnx_ipath);
 
-    my @additional_file_meta = (
+    my @expected_file_meta = (
+        {
+            'attribute' => 'bnx_chip_id',
+            'value' => '20000,10000,1/1/2015,987654321'
+        },
+        {
+            'attribute' => 'bnx_flowcell',
+            'value' => 1
+        },
+        {
+            'attribute' => 'bnx_instrument',
+            'value' => 'B001'
+        },
+        {
+            'attribute' => 'bnx_uuid',
+            'value' => $publisher->uuid,
+        },
+        {
+            'attribute' => 'dcterms:created',
+            'value' => '2016-01-01T12:00:00'
+        },
+        {
+            'attribute' => 'dcterms:creator',
+            'value' => 'http://www.sanger.ac.uk'
+        },
+        {
+            'attribute' => 'dcterms:publisher',
+            'value' => 'ldap://ldap.internal.sanger.ac.uk/ou=people,dc=sanger,dc=ac,dc=uk?title?sub?(uid='.$user_name.')'
+        },
         {
             'attribute' => 'md5',
             'value' => 'd50fb6797f561e74ae2a5ae6e0258d16'
         },
         {
+            'attribute' => 'sample',
+            'value' => '425STDY6079620'
+        },
+        {
+            'attribute' => 'sample_cohort',
+            'value' => 'Virus_6'
+        },
+        {
+            'attribute' => 'sample_common_name',
+            'value' => 'Human herpesvirus 4'
+        },
+        {
+            'attribute' => 'sample_donor_id',
+            'value' => '425STDY6079620'
+        },
+        {
+            'attribute' => 'sample_id',
+            'value' => 2265577
+        },
+        {
+            'attribute' => 'sample_public_name',
+            'value' => 'IMS Saliva 250'
+        },
+        {
+            'attribute' => 'sample_supplier_name',
+            'value' => '14751_IMS_Saliva_250'
+        },
+        {
+            'attribute' => 'source',
+            'value' => 'production'
+        },
+        {
+            'attribute' => 'stock_id',
+            'value' => 'stock_barcode_01234'
+        },
+        {
+            'attribute' => 'study',
+            'value' => 'Virus Genome Herpesvirus'
+        },
+        {
+            'attribute' => 'study_accession_number',
+            'value' => 'ERP001026'
+        },
+        {
+            'attribute' => 'study_id',
+            'value' => 425
+        },
+        {
+            'attribute' => 'study_title',
+            'value' => "Herpesvirus whole genome sequencing[UTF-8 test: \x{3a4}\x{1f74} \x{3b3}\x{3bb}\x{1ff6}\x{3c3}\x{3c3}\x{3b1} \x{3bc}\x{3bf}\x{1fe6} \x{1f14}\x{3b4}\x{3c9}\x{3c3}\x{3b1}\x{3bd} \x{1f11}\x{3bb}\x{3bb}\x{3b7}\x{3bd}\x{3b9}\x{3ba}\x{1f74} \x{3c4}\x{3bf} \x{3c3}\x{3c0}\x{3af}\x{3c4}\x{3b9} \x{3c6}\x{3c4}\x{3c9}\x{3c7}\x{3b9}\x{3ba}\x{3cc} \x{3c3}\x{3c4}\x{3b9}\x{3c2} \x{3b1}\x{3bc}\x{3bc}\x{3bf}\x{3c5}\x{3b4}\x{3b9}\x{3ad}\x{3c2} \x{3c4}\x{3bf}\x{3c5} \x{39f}\x{3bc}\x{3ae}\x{3c1}\x{3bf}\x{3c5}.]"
+        },
+        {
             'attribute' => 'type',
             'value' => 'bnx'
-        }
+        },
     );
 
-    push @expected_meta, @additional_file_meta;
+    is(scalar @file_meta, 22, "Expected number of BNX file AVUs found");
 
-    is(scalar @file_meta, 9, "Expected number of BNX file AVUs found");
-
-    is_deeply(\@file_meta, \@expected_meta,
+    is_deeply(\@file_meta, \@expected_file_meta,
               'BNX file metadata matches expected values');
-}
-
-sub script : Test(10) {
-
-    my $irods = WTSI::NPG::iRODS->new();
-
-    system("find $test_run_path -exec touch {} +") && $log->logcroak(
-        "Failed to recursively update access time for $test_run_path"
-    );
-
-    my $script = "npg_publish_bionano_run.pl";
-
-    my $cmd = "$script --collection $irods_tmp_coll --search_dir $tmp_data";
-
-    ok(system($cmd)==0, "Publish script run successfully with search dir");
-
-    my $expected_coll = $irods_tmp_coll."/d5/0f/b6/".$runfolder_name;
-    ok($irods->is_collection($expected_coll),
-       "Script publishes to expected iRODS collection");
-
-    my $expected_bnx = $expected_coll."/Detect Molecules/Molecules.bnx";
-    ok($irods->is_object($expected_bnx),
-       "Script publishes expected filtered BNX file");
-
-    $irods->remove_collection($expected_coll);
-
-    $cmd = "$script --collection $irods_tmp_coll --search_dir $tmp_data ".
-        "--runfolder_path $test_run_path 2> /dev/null";
-    ok(system($cmd)!=0, "Publish script fails with incompatible arguments");
-    ok(! $irods->is_collection($expected_coll),
-       "No iRODS collection published by failed script");
-
-    $cmd = "$script --collection $irods_tmp_coll --runfolder_path ".
-        "$tmp_data/foo/bar 2> /dev/null";
-    ok(system($cmd)!=0, "Publish script has non-zero exit status for ".
-           "nonexistent input");
-    ok(! $irods->is_collection($expected_coll),
-       "No iRODS collection published by failed script");
-
-    $cmd = "$script --collection $irods_tmp_coll ".
-        "--runfolder_path $test_run_path";
-    ok(system($cmd)==0, "Publish script run successfully with runfolder");
-    ok($irods->is_collection($expected_coll),
-       "Script publishes to expected iRODS collection");
-    ok($irods->is_object($expected_bnx),
-       "Script publishes expected filtered BNX file");
 }
 
 
