@@ -300,6 +300,11 @@ sub list_meta_xml_file {
       $num_errors    += ($nex + $neb + $nes);
     }
 
+    if ($num_errors > 0) {
+      $self->error("Encountered errors on $num_errors / ",
+                   "$num_processed files processed");
+    }
+
     return ($num_files, $num_processed, $num_errors);
   }
 }
@@ -331,7 +336,7 @@ sub publish_meta_xml_file {
     $self->_publish_files($files, $dest_coll);
 
   $self->info("Published $num_processed / $num_files metadata XML files ",
-              "in SMRT cell '$smrt_name'");
+              "in SMRT cell '$smrt_name' with $num_errors errors");
 
   return ($num_files, $num_processed, $num_errors);
 }
@@ -367,34 +372,39 @@ sub publish_basx_files {
 
   # There will be 1 record for a non-multiplexed SMRT cell and >1
   # record for a multiplexed
-  my @run_records = $self->query_ml_warehouse($metadata->run_name,
-                                              $metadata->well_name);
+  my @run_records = $self->find_pacbio_runs($metadata->run_name,
+                                            $metadata->well_name);
 
   # R & D runs have no records in the ML warehouse
   my $is_r_and_d = @run_records ? 0 : 1;
 
-  # A production well will always have run_uuid and records in ML warehouse
-  if($metadata->has_run_uuid && $is_r_and_d == 1){
-      my $num = @{$files};
-      $self->error("Failed to publish $num bas/x files for run ", $metadata->run_name,
-            ' well ', $metadata->well_name ,' as data missing from ML warehouse');
-      return ($num, $num, $num);
+  my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
+
+  # A production well will always have run_uuid and records in ML
+  # warehouse. Production data are not published unless ML warehouse
+  # records are present.
+  if ($metadata->has_run_uuid && $is_r_and_d == 1) {
+    $self->error("Failed to publish $num_files bas/x files for run ",
+                 $metadata->run_name, ' well ', $metadata->well_name ,
+                 ' as data missing from ML warehouse');
+    $num_files = $num_processed = $num_errors = scalar @{$files};
+  }
+  else {
+    my @primary_avus   = $self->make_primary_metadata($metadata, $is_r_and_d);
+    my @secondary_avus = $self->make_secondary_metadata(@run_records);
+
+    # This call may be removed when the legacy metadata are no longer
+    # required
+    push @secondary_avus, $self->make_legacy_metadata(@run_records);
+
+    ($num_files, $num_processed, $num_errors) =
+      $self->_publish_files($files, $dest_coll,
+                            \@primary_avus, \@secondary_avus,
+                            [$self->make_avu($FILE_TYPE, 'bas')]);
   }
 
-  my @primary_avus   = $self->make_primary_metadata($metadata, $is_r_and_d);
-  my @secondary_avus = $self->make_secondary_metadata(@run_records);
-
-  # This call may be removed when the legacy metadata are no longer
-  # required
-  push @secondary_avus, $self->make_legacy_metadata(@run_records);
-
-  my ($num_files, $num_processed, $num_errors) =
-    $self->_publish_files($files, $dest_coll,
-                          \@primary_avus, \@secondary_avus,
-                          [$self->make_avu($FILE_TYPE, 'bas')]);
-
   $self->info("Published $num_processed / $num_files bas/x files ",
-              "in SMRT cell '$smrt_name'");
+              "in SMRT cell '$smrt_name' with $num_errors errors");
 
   return ($num_files, $num_processed, $num_errors);
 }
@@ -426,7 +436,7 @@ sub publish_sts_xml_files {
     $self->_publish_files($files, $dest_coll);
 
   $self->info("Published $num_processed / $num_files sts XML files ",
-              "in SMRT cell '$smrt_name'");
+              "in SMRT cell '$smrt_name' with $num_errors errors");
 
   return ($num_files, $num_processed, $num_errors);
 }
@@ -496,11 +506,6 @@ sub _publish_files {
       $self->error("Failed to publish '$file' to '$dest' cleanly ",
                    "[$num_processed / $num_files]: ", pop @stack);
     };
-  }
-
-  if ($num_errors > 0) {
-    $self->error("Encountered errors on $num_errors / ",
-                 "$num_processed files processed");
   }
 
   return ($num_files, $num_processed, $num_errors);

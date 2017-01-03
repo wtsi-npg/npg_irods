@@ -1,11 +1,9 @@
-
 package WTSI::NPG::HTS::PacBio::MetaQuery;
 
 use namespace::autoclean;
 use File::Basename;
 use Moose::Role;
 use MooseX::StrictConstructor;
-
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
@@ -20,9 +18,25 @@ has 'mlwh_schema' =>
    documentation => 'A ML warehouse handle to obtain secondary metadata');
 
 
+=head2 find_pacbio_runs
 
-sub query_ml_warehouse {
+  Arg [1]    : PacBio run ID, Str.
+  Arg [2]    : PacBio plate well, zero-padded form, Str. E.g. 'A01'.
+
+  Example    : @run_records - $obj->find_runs($id, 'A01');
+  Description: Returns run records for a PabcBio run. Pre-fetches related
+               sample and study information.
+  Returntype : Array[WTSI::DNAP::Warehouse::Schema::Result::PacBioRun]
+
+=cut
+
+sub find_pacbio_runs {
   my ($self, $run_id, $well) = @_;
+
+  defined $run_id or
+    $self->logconfess('A defined run_id argument is required');
+  defined $well or
+    $self->logconfess('A defined well argument is required');
 
   # Well addresses are unpadded in the ML warehouse
   my ($row, $col) = $well =~ m{^([[:upper:]])([[:digit:]]+)$}msx;
@@ -60,7 +74,7 @@ WTSI::NPG::HTS::PacBio::MetaQuery
 =head1 DESCRIPTION
 
 Queries WTSI::DNAP::Warehouse::Schema for secondary metadata in order
-to update PacBio HTS data files in iRODS. 
+to update PacBio HTS data files in iRODS.
 
 =head1 AUTHOR
 

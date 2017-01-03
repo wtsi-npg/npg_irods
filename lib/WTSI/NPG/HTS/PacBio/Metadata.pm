@@ -57,20 +57,22 @@ has 'set_number' =>
 has 'run_uuid' =>
   (isa           => 'Str',
    is            => 'ro',
-   predicate     => q(has_run_uuid),
+   required      => 0,
+   predicate     => 'has_run_uuid',
    documentation => 'The WTSI LIMS PacBio run UUID');
 
 
 around BUILDARGS => sub {
-    my $orig   = shift;
-    my $class  = shift;
-    my %params = ref $_[0] ? %{$_[0]} : @_;
+  my $orig   = shift;
+  my $class  = shift;
 
-    return $class->$orig(
-        map  { $_ => $params{$_} }
-        grep { defined $params{$_} }
-        keys %params
-    );
+  my %params = ref $_[0] ? %{$_[0]} : @_;
+
+  return $class->$orig(
+                       map  { $_ => $params{$_} }
+                       grep { defined $params{$_} }
+                       keys %params
+                      );
 };
 
 __PACKAGE__->meta->make_immutable;
