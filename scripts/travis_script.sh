@@ -8,10 +8,4 @@ export WTSI_NPG_iRODS_Test_IRODS_ENVIRONMENT_FILE=$HOME/.irods/irods_environment
 
 perl Build.PL
 ./Build clean
-./Build testcover
-
-if [ $? -ne 0 ]; then
-    echo ===============================================================================
-    cat tests.log
-    echo ===============================================================================
-fi
+./Build test
