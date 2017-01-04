@@ -61,7 +61,7 @@ sub update_secondary_metadata {
       $obj->get_avu($WTSI::NPG::HTS::PacBio::Annotator::PACBIO_WELL)->{value};
 
     try {
-      my @run_records = $self->query_ml_warehouse($id_run, $well);
+      my @run_records = $self->find_pacbio_runs($id_run, $well);
       my @secondary_avus = $self->make_secondary_metadata(@run_records);
       $obj->update_secondary_metadata(@secondary_avus);
 
