@@ -105,11 +105,15 @@ if ($stdio) {
 
 # Range queries in iRODS are so slow that we have to do lots of
 # per-run queries
-foreach my $id_run (@id_run) {
-  # Find the annotated objects by query
-  my @query = _make_run_query($id_run);
-  $log->info('iRODS query: ', pp(\@query));
-  push @data_objs, $irods->find_objects_by_meta("/$zone", @query);
+if (@id_run) {
+  foreach my $id_run (@id_run) {
+    # Find one run's annotated objects by query
+    push @data_objs, _find_data_objects($id_run);
+  }
+}
+else {
+  # Find all runs' annotated objects by query
+  push @data_objs, _find_data_objects();
 }
 
 @data_objs = uniq sort @data_objs;
@@ -128,10 +132,25 @@ if (@data_objs) {
 
 $log->info("Updated metadata on $num_updated files");
 
+sub _find_data_objects {
+  my ($q_id_run) = @_;
+
+  # Find one run's annotated objects by query
+  my @query = _make_run_query($q_id_run);
+  $log->info('iRODS query: ', pp(\@query));
+
+  return $irods->find_objects_by_meta("/$zone", @query);
+}
+
 sub _make_run_query {
   my ($q_id_run) = @_;
 
-  my @query = ([$FILE_TYPE => 'h5']);
+  my @query =
+    ([$FILE_TYPE => 'h5'],
+     [$WTSI::NPG::HTS::PacBio::Annotator::PACBIO_SOURCE =>
+      $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_PRODUCTION],
+     [$WTSI::NPG::HTS::PacBio::Annotator::PACBIO_CELL_INDEX => q[%], 'like']);
+
   if (defined $q_id_run) {
     push @query, ['run' => $q_id_run];
   }
@@ -182,7 +201,8 @@ run range must be given. Additionally a list of iRODS paths may be piped
 to STDIN.
 
 This script will update metadata on all the H5 files that constitute a
-run.
+run. If neither --id-run nor --min-id-run/--max-id-run are supplied,
+all h5 files in the zone will be updated.
 
 In dry run mode, the proposed metadata changes will be written as INFO
 notices to the log.
