@@ -11,7 +11,7 @@ our $VERSION = '';
 
 our @COMPRESSION_SUFFIXES     = qw[bz2 gz xz zip];
 
-our @GENERAL_PURPOSE_SUFFIXES = qw[bin csv h5 tar tgz tif tsv txt xls xlsx xml];
+our @GENERAL_PURPOSE_SUFFIXES = qw[bin csv h5 tar tgz tif tsv txt xls xlsx xml pbi];
 our @GENO_DATA_SUFFIXES       = qw[gtc idat];
 our @HTS_DATA_SUFFIXES        = qw[bam cram bai crai];
 our @HTS_ANCILLARY_SUFFIXES   = qw[bam_stats bamcheck bed flagstat json

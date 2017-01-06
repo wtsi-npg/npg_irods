@@ -146,8 +146,7 @@ sub _make_run_query {
   my ($q_id_run) = @_;
 
   my @query =
-    ([$FILE_TYPE => 'h5'],
-     [$WTSI::NPG::HTS::PacBio::Annotator::PACBIO_SOURCE =>
+    ([$WTSI::NPG::HTS::PacBio::Annotator::PACBIO_SOURCE =>
       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_PRODUCTION],
      [$WTSI::NPG::HTS::PacBio::Annotator::PACBIO_CELL_INDEX => q[%], 'like']);
 

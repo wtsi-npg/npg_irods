@@ -1217,3 +1217,25 @@
   tag_set_name: ~
   well_label: H2
   well_uuid_lims: 99f543b0-2c7d-11e5-a6a1-68b59976a382
+- cost_code: S4048
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 50916
+  id_pac_bio_tmp: 5317
+  id_sample_tmp: 2302866
+  id_study_tmp: 2979
+  last_updated: 2016-03-31 14:19:53
+  pac_bio_library_tube_id_lims: NT871610E
+  pac_bio_library_tube_legacy_id: 18200561
+  pac_bio_library_tube_name: DN468178B-A1
+  pac_bio_library_tube_uuid: 87f5c5a0-bc77-11e6-9bff-68b59976a384
+  pac_bio_run_uuid: 4f19b100-bc78-11e6-94ff-68b599768938
+  plate_barcode: DN470775M
+  plate_uuid_lims: 66bcde90-bc78-11e6-9bff-68b59976a384
+  recorded_at: 2016-04-04 10:08:18
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: A1
+  well_uuid_lims: 66f46950-bc78-11e6-9bff-68b59976a384
+

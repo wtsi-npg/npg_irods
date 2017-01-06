@@ -1,4 +1,6 @@
 
+ - PacBio: add support for sequel to npg_publish_pacbio_run.pl and remove
+   file type from query in npg_update_pacbio_metadata.pl for sequel.
 
  - PacBio: remove dependancy on multi value user defined fields. Change
    run_uuid field to optional to support R&D runs/wells.  
