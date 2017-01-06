@@ -25,7 +25,6 @@ our $WELL_TAG              = 'WellName';
 
 # XML attributes
 our $LABEL_ATTR = 'label';
-our $USER_DEFINED_FIELD_2 = 'User Defined Field 2';
 our $USER_DEFINED_FIELD_3 = 'User Defined Field 3';
 
 sub parse_file {
@@ -55,7 +54,6 @@ sub parse_file {
   my $set_number =
     $dom->getElementsByTagName($SET_NUMBER_TAG)->[0]->string_value;
 
-  my $library_tube_uuids = [];
   my $run_uuid;
 
   my @props = $dom->getElementsByTagName($CUSTOM_TAG)->[0]->findnodes('./*');
@@ -65,10 +63,7 @@ sub parse_file {
       # May have multiple packed values :(
       my @values = split /;/msx, $property->textContent;
 
-      if ($attr eq $USER_DEFINED_FIELD_2) {
-        $library_tube_uuids = \@values; # maps to iRODS library_id attribute
-      }
-      elsif ($attr eq $USER_DEFINED_FIELD_3) {
+      if ($attr eq $USER_DEFINED_FIELD_3) {
         $run_uuid = shift @values;      # maps to iRODS batch_id attribute
       }
     }
@@ -79,7 +74,6 @@ sub parse_file {
      collection_number  => $collection_number,
      file_path          => $file_path,
      instrument_name    => $instrument_name,
-     library_tube_uuids => $library_tube_uuids,
      run_name           => $run_name,
      run_uuid           => $run_uuid,
      sample_name        => $sample_name,

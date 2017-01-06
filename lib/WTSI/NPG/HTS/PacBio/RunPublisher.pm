@@ -21,6 +21,7 @@ with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::HTS::PathLister
          WTSI::NPG::HTS::PacBio::Annotator
+         WTSI::NPG::HTS::PacBio::MetaQuery
        ];
 
 our $VERSION = '';
@@ -50,12 +51,6 @@ has 'dest_collection' =>
    lazy          => 1,
    builder       => '_build_dest_collection',
    documentation => 'The destination collection within iRODS to store data');
-
-has 'mlwh_schema' =>
-  (is            => 'ro',
-   isa           => 'WTSI::DNAP::Warehouse::Schema',
-   required      => 1,
-   documentation => 'A ML warehouse handle to obtain secondary metadata');
 
 sub run_name {
   my ($self) = @_;
@@ -305,6 +300,11 @@ sub list_meta_xml_file {
       $num_errors    += ($nex + $neb + $nes);
     }
 
+    if ($num_errors > 0) {
+      $self->error("Encountered errors on $num_errors / ",
+                   "$num_processed files processed");
+    }
+
     return ($num_files, $num_processed, $num_errors);
   }
 }
@@ -336,7 +336,7 @@ sub publish_meta_xml_file {
     $self->_publish_files($files, $dest_coll);
 
   $self->info("Published $num_processed / $num_files metadata XML files ",
-              "in SMRT cell '$smrt_name'");
+              "in SMRT cell '$smrt_name' with $num_errors errors");
 
   return ($num_files, $num_processed, $num_errors);
 }
@@ -361,6 +361,9 @@ sub publish_meta_xml_file {
 sub publish_basx_files {
   my ($self, $smrt_name, $look_index) = @_;
 
+  my $files     = $self->list_basx_files($smrt_name, $look_index);
+  my $dest_coll = catdir($self->dest_collection, $smrt_name, $ANALYSIS_DIR);
+
   my $metadata_file = $self->list_meta_xml_file($smrt_name, $look_index);
   $self->debug("Reading metadata from '$metadata_file'");
 
@@ -369,28 +372,39 @@ sub publish_basx_files {
 
   # There will be 1 record for a non-multiplexed SMRT cell and >1
   # record for a multiplexed
-  my @run_records = $self->_query_ml_warehouse($metadata->run_uuid,
-                                               $metadata->library_tube_uuids);
+  my @run_records = $self->find_pacbio_runs($metadata->run_name,
+                                            $metadata->well_name);
+
   # R & D runs have no records in the ML warehouse
   my $is_r_and_d = @run_records ? 0 : 1;
 
-  my @primary_avus   = $self->make_primary_metadata($metadata, $is_r_and_d);
-  my @secondary_avus = $self->make_secondary_metadata(@run_records);
+  my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
-  # This call may be removed when the legacy metadata are no longer
-  # required
-  push @secondary_avus, $self->make_legacy_metadata(@run_records);
+  # A production well will always have run_uuid and records in ML
+  # warehouse. Production data are not published unless ML warehouse
+  # records are present.
+  if ($metadata->has_run_uuid && $is_r_and_d == 1) {
+    $self->error("Failed to publish $num_files bas/x files for run ",
+                 $metadata->run_name, ' well ', $metadata->well_name ,
+                 ' as data missing from ML warehouse');
+    $num_files = $num_processed = $num_errors = scalar @{$files};
+  }
+  else {
+    my @primary_avus   = $self->make_primary_metadata($metadata, $is_r_and_d);
+    my @secondary_avus = $self->make_secondary_metadata(@run_records);
 
-  my $files     = $self->list_basx_files($smrt_name, $look_index);
-  my $dest_coll = catdir($self->dest_collection, $smrt_name, $ANALYSIS_DIR);
+    # This call may be removed when the legacy metadata are no longer
+    # required
+    push @secondary_avus, $self->make_legacy_metadata(@run_records);
 
-  my ($num_files, $num_processed, $num_errors) =
-    $self->_publish_files($files, $dest_coll,
-                          \@primary_avus, \@secondary_avus,
-                          [$self->make_avu($FILE_TYPE, 'bas')]);
+    ($num_files, $num_processed, $num_errors) =
+      $self->_publish_files($files, $dest_coll,
+                            \@primary_avus, \@secondary_avus,
+                            [$self->make_avu($FILE_TYPE, 'bas')]);
+  }
 
   $self->info("Published $num_processed / $num_files bas/x files ",
-              "in SMRT cell '$smrt_name'");
+              "in SMRT cell '$smrt_name' with $num_errors errors");
 
   return ($num_files, $num_processed, $num_errors);
 }
@@ -422,7 +436,7 @@ sub publish_sts_xml_files {
     $self->_publish_files($files, $dest_coll);
 
   $self->info("Published $num_processed / $num_files sts XML files ",
-              "in SMRT cell '$smrt_name'");
+              "in SMRT cell '$smrt_name' with $num_errors errors");
 
   return ($num_files, $num_processed, $num_errors);
 }
@@ -494,11 +508,6 @@ sub _publish_files {
     };
   }
 
-  if ($num_errors > 0) {
-    $self->error("Encountered errors on $num_errors / ",
-                 "$num_processed files processed");
-  }
-
   return ($num_files, $num_processed, $num_errors);
 }
 ## use critic
@@ -551,18 +560,6 @@ sub _check_smrt_name {
   return $smrt_name;
 }
 
-# Look up PacBio run metadata in the ML warehouse using the library
-# tube UUID obtained from the run XML metadata.
-sub _query_ml_warehouse {
-  my ($self, $run_uuid, $library_tube_uuids) = @_;
-
-  my @run_records = $self->mlwh_schema->resultset('PacBioRun')->search
-    ({pac_bio_run_uuid          => $run_uuid,
-      pac_bio_library_tube_uuid => {'-in' => $library_tube_uuids}},
-     {prefetch                  => ['sample', 'study']});
-
-  return @run_records;
-}
 
 __PACKAGE__->meta->make_immutable;
 
