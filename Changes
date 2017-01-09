@@ -1,5 +1,4 @@
-
-
+ - added script to archive 10x fastq files 
  - PacBio: remove dependancy on multi value user defined fields. Change
    run_uuid field to optional to support R&D runs/wells.  
 

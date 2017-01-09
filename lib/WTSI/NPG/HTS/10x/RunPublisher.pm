@@ -255,21 +255,6 @@ sub _check_position {
   return $position;
 }
 
-# Create a pattern to match file of one position, or all positions
-sub _positions_pattern {
-  my ($self, $position) = @_;
-
-  my $pattern;
-  if (defined $position) {
-    $pattern = $self->_check_position($position);
-  }
-  else {
-    $pattern = sprintf 'lane\-00[%s]', join q[], $self->positions;
-  }
-
-  return $pattern;
-}
-
 # A dispatcher to call the correct method for a given file category
 # and lane plex state
 sub _publish_file_category {
@@ -432,9 +417,10 @@ sub _build_run_folder {
 sub _build_tenx_fastq_path  {
   my ($self) = @_;
 
-  my @n = split(/_/, $self->run_folder);
-  my $flowCell = $n[@n-1];
-  my $path = sprintf "%s/%s/outs/fastq_path",dirname($self->recalibrated_path),$flowCell;
+  my @n = split /_/smx, $self->run_folder;
+  ## no critic (Variables::RequireNegativeIndices)
+  my $flowcell = $n[@n-1];
+  my $path = sprintf q[%s/%s/outs/fastq_path],dirname($self->recalibrated_path),$flowcell;
 
   return $path;
 }
@@ -457,20 +443,6 @@ sub _build_obj_factory {
     (irods => $self->irods);
 }
 
-sub _match_single_file {
-  my ($self, $pattern, $files) = @_;
-
-  my @files = grep { m{$pattern}msx } @{$files};
-  my $num_files = scalar @files;
-
-  if ($num_files != 1) {
-    $self->logcroak("Found $num_files matching '$pattern' ",
-                    'where one was expected: ', pp(\@files));
-  }
-
-  return shift @files;
-}
-
 sub _make_obj {
   my ($self, $file, $dest_coll) = @_;
 
@@ -488,7 +460,7 @@ sub _make_obj {
 
 sub _make_fastq_primary_meta {
   my ($self, $obj) = @_;
-  
+
   my @pri = $self->make_primary_metadata
     ($self->id_run, $obj->position, $obj->read, $obj->tag,
      alt_process      => $self->alt_process);

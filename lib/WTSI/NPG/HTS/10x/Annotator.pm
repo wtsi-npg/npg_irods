@@ -36,6 +36,7 @@ with qw[
 =cut
 
 {
+  ## no critic (ValuesAndExpressions::ProhibitMagicNumbers)
   my $positional = 5;
   my @named      = qw[alt_process seqchksum];
   my $params = function_params($positional, @named);
@@ -91,6 +92,7 @@ with qw[
 =cut
 
 {
+  ## no critic (ValuesAndExpressions::ProhibitMagicNumbers)
   my $positional = 5;
   my @named      = qw[tag];
   my $params = function_params($positional, @named);
@@ -173,6 +175,7 @@ sub make_seqchksum_metadata {
 =cut
 
 {
+  ## no critic (ValuesAndExpressions::ProhibitMagicNumbers)
   my $positional = 6;
   my $params = function_params($positional);
 
@@ -192,10 +195,10 @@ sub make_seqchksum_metadata {
 
     my $lims = $factory->make_lims($id_run, $position);
     ($lims) = grep { $_->tag_sequence eq $tag } $lims->children;
-    unless( defined $lims ) {
+    if( !defined $lims ) {
       $lims = $factory->make_lims($id_run, $position);
     }
-    defined $lims or 
+    defined $lims or
       $self->logconfess("Failed to create st::api::lims for run $id_run ",
                         "lane $position read $read tag $tag");
 
@@ -367,28 +370,6 @@ sub make_plex_metadata {
      qc_state  => $QC_STATE};
 
   return $self->_make_multi_value_metadata($lims, $method_attr);
-}
-
-sub _make_single_value_metadata {
-  my ($self, $lims, $method_attr) = @_;
-  # The method_attr argument is a map of method name to attribute name
-  # under which the result will be stored.
-
-  my @avus;
-  foreach my $method_name (sort keys %{$method_attr}) {
-    my $attr  = $method_attr->{$method_name};
-    my $value = $lims->$method_name;
-
-    if (defined $value) {
-      $self->debug("st::api::lims::$method_name returned ", $value);
-      push @avus, $self->make_avu($attr, $value);
-    }
-    else {
-      $self->debug("st::api::lims::$method_name returned undef");
-    }
-  }
-
-  return @avus;
 }
 
 sub _make_multi_value_metadata {

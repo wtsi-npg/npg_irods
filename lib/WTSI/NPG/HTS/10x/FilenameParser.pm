@@ -27,6 +27,7 @@ sub parse_file_name {
 
   my ($file_name, $directories, $suffix) = fileparse($path);
 
+  ## no critic (RegularExpressions::ProhibitComplexRegexes)
   my ($read,$tag,$position,$format) =
         $file_name =~ m{
                          ^read\-           # Separator

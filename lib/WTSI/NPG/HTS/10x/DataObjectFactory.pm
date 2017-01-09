@@ -55,8 +55,6 @@ my $fastq_regex = qr{[.]fastq.gz$}msx;
                      data_object => $filename,
                      irods       => $self->irods);
 
-    ## no critic (ControlStructures::ProhibitCascadingIfElse)
-
     if ($filename =~  m{$fastq_regex}msxi) {
       $self->debug('Making WTSI::NPG::HTS::10x::FastqDataObject from ',
                    "'$path' matching $fastq_regex");
