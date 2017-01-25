@@ -9,11 +9,6 @@ use WTSI::DNAP::Utilities::Params qw[function_params];
 
 our $VERSION = '';
 
-# Sequence alignment filters
-our $YHUMAN = 'yhuman';  # FIXME
-
-our $SEQCHKSUM = 'seqchksum'; # FIXME -- move to WTSI::NPG::iRODS::Metadata
-
 with qw[
          WTSI::NPG::iRODS::Annotator
        ];
