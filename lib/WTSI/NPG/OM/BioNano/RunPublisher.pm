@@ -13,7 +13,7 @@ use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS::Metadata;
-use WTSI::NPG::HTS::Publisher;
+use WTSI::NPG::iRODS::Publisher;
 use WTSI::NPG::OM::BioNano::ResultSet;
 
 # FIXME Move/refactor WTSI::NPG::HTS::Publisher to reflect use outside of
@@ -101,7 +101,7 @@ sub publish {
                 $bionano_collection, q[': already exists]);
     } else {
         my $collection_meta = $self->make_collection_meta();
-        my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods);
+        my $publisher = WTSI::NPG::iRODS::Publisher->new(irods => $self->irods);
         my $bionano_published_coll = $publisher->publish(
             $self->resultset->directory,
             $leaf_collection,

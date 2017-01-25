@@ -13,10 +13,10 @@ use Try::Tiny;
 use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::Illumina::DataObjectFactory;
 use WTSI::NPG::HTS::LIMSFactory;
-use WTSI::NPG::HTS::Publisher;
 use WTSI::NPG::HTS::Seqchksum;
 use WTSI::NPG::HTS::Types qw[AlnFormat];
 use WTSI::NPG::iRODS::Metadata;
+use WTSI::NPG::iRODS::Publisher;
 use WTSI::NPG::iRODS;
 
 with qw[
@@ -1284,7 +1284,7 @@ sub _safe_publish_files {
   defined $dest_coll or
     $self->logconfess('A defined dest_coll argument is required');
 
-  my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods);
+  my $publisher = WTSI::NPG::iRODS::Publisher->new(irods => $self->irods);
 
   my $num_files     = scalar @{$files};
   my $num_processed = 0;

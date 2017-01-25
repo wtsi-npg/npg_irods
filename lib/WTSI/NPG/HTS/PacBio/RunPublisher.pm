@@ -13,7 +13,7 @@ use Try::Tiny;
 use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::DataObject;
 use WTSI::NPG::HTS::PacBio::MetaXMLParser;
-use WTSI::NPG::HTS::Publisher;
+use WTSI::NPG::iRODS::Publisher;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 
@@ -474,8 +474,9 @@ sub _publish_files {
     $self->logconfess('The secondary_avus argument must be an ArrayRef');
 
   my $reqcache  = []; ## no md5s precreated for PacBio
-  my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods,
-                                                 require_checksum_cache => $reqcache);
+  my $publisher = WTSI::NPG::iRODS::Publisher->new
+    (irods => $self->irods,
+     require_checksum_cache => $reqcache)
 
   my $num_files     = scalar @{$files};
   my $num_processed = 0;
