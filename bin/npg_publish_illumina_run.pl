@@ -22,6 +22,8 @@ my $verbose_config = << 'LOGCONF'
 log4perl.logger = ERROR, A1
 
 log4perl.logger.WTSI.NPG.HTS.Illumina = INFO, A1
+log4perl.logger.WTSI.NPG.HTS = INFO, A1
+log4perl.logger.WTSI.NPG.iRODS.Publisher = INFO, A1
 
 # Errors from WTSI::NPG::iRODS are propagated in the code to callers
 # in WTSI::NPG::HTS::Illumina, so we do not need to see them directly:
@@ -47,10 +49,12 @@ my $collection;
 my $debug;
 my $driver_type;
 my $file_format;
+my $force = 0;
 my $id_run;
 my $index = 1;
 my $interop = 1;
 my $log4perl_config;
+my $max_errors = 0;
 my $qc = 1;
 my $runfolder_path;
 my $verbose;
@@ -66,6 +70,7 @@ GetOptions('alignment!'                        => \$alignment,
            'debug'                             => \$debug,
            'driver-type|driver_type=s'         => \$driver_type,
            'file-format|file_format=s'         => \$file_format,
+           'force'                             => \$force,
            'help'                              => sub {
              pod2usage(-verbose => 2, -exitval => 0);
            },
@@ -73,6 +78,7 @@ GetOptions('alignment!'                        => \$alignment,
            'index!'                            => \$index,
            'interop!'                          => \$interop,
            'logconf=s'                         => \$log4perl_config,
+           'max-errors|max_errors=i'           => \$max_errors,
            'lanes|positions=i'                 => \@positions,
            'qc!'                               => \$qc,
            'runfolder-path|runfolder_path=s'   => \$runfolder_path,
@@ -120,9 +126,10 @@ if ($driver_type) {
 
 my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(@fac_init_args);
 
-my @pub_init_args = (file_format     => $file_format,
-                     irods           => $irods,
-                     lims_factory    => $lims_factory);
+my @pub_init_args = (file_format  => $file_format,
+                     force        => $force,
+                     irods        => $irods,
+                     lims_factory => $lims_factory);
 
 if (defined $archive_path) {
   push @pub_init_args, archive_path => $archive_path;
@@ -140,8 +147,22 @@ if ($alt_process) {
   push @pub_init_args, alt_process => $alt_process;
   $log->info("Using alt_process '$alt_process'");
 }
+if ($max_errors) {
+  push @pub_init_args, max_errors => $max_errors;
+}
 
 my $publisher = WTSI::NPG::HTS::Illumina::RunPublisher->new(@pub_init_args);
+
+use sigtrap 'handler', \&handler, 'normal-signals';
+
+sub handler {
+  my ($signal) = @_;
+
+  $log->info('Writing restart file ', $publisher->restart_file);
+  $publisher->write_restart_file;
+  $log->error("Exiting due to $signal");
+  exit 1;
+}
 
 my ($num_files, $num_published, $num_errors) = (0, 0, 0);
 my $inc_counts = sub {
@@ -194,8 +215,8 @@ npg_publish_illumina_run
 =head1 SYNOPSIS
 
 npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
-  [--file-format <format>] [--position <n>]*
-  [--alignment] [--index] [--ancillary] [--qc]
+  [--file-format <format>] [--force] [--position <n>]*
+  [--alignment] [--index] [--ancillary] [--qc] [--max-errors <n>]
   [--debug] [--verbose] [--logconf <path>]
 
  Options:
@@ -211,6 +232,8 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
    --file-format
    --file_format     Load alignment files of this format. Optional,
                      defaults to CRAM format.
+   --force           Force an attempt to re-publish files that have been
+                     published successfully.
    --help            Display help.
    --id-run
    --id_run          Specify the run number. Optional, defaults to the
@@ -224,6 +247,8 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
    --positions       A sequencing lane/position to load. This option may
                      be supplied multiple times to load multiple lanes.
                      Optional, defaults to loading all available lanes.
+   --max-errors      The maximum number of errors permitted before aborting.
+                     Optional, defaults to unlimited.
    --qc              Load QC JSON files. Optional, defaults to true.
    --runfolder-path
    --runfolder_path  The instrument runfolder path to load.
@@ -300,7 +325,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2016, 2017 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

@@ -23,7 +23,7 @@ Log::Log4perl::init('./etc/log4perl_tests.conf');
   package TestDB;
   use Moose;
 
-  with 'npg_testing::db';  
+  with 'npg_testing::db';
 }
 
 my $pid          = $PID;
@@ -38,7 +38,6 @@ my $irods_tmp_coll;
 
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
-  # my $wh_db_file = 'ml_wh.db';
   $wh_schema = TestDB->new(sqlite_utf8_enabled => 1,
                            verbose             => 0)->create_test_db
     ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
@@ -103,11 +102,10 @@ sub list_sequence_files : Test(1) {
   my @expected_paths =
     map { catfile("$runfolder_path/1_A01", $_) }
     ('m54097_161207_133626.scraps.bam',
-     'm54097_161207_133626.subreads.bam'
-    );
+     'm54097_161207_133626.subreads.bam');
 
   is_deeply($pub->list_sequence_files('1_A01'), \@expected_paths,
-     'Found sequence files A01_1');
+            'Found sequence files A01_1');
 }
 
 sub list_index_files : Test(1) {
@@ -125,13 +123,11 @@ sub list_index_files : Test(1) {
   my @expected_paths =
     map { catfile("$runfolder_path/1_A01", $_) }
     ('m54097_161207_133626.scraps.bam.pbi',
-     'm54097_161207_133626.subreads.bam.pbi'
-    );
+     'm54097_161207_133626.subreads.bam.pbi');
 
   is_deeply($pub->list_index_files('1_A01'), \@expected_paths,
-     'Found sequence index files 1_A01');
+            'Found sequence index files 1_A01');
 }
-
 
 sub publish_files : Test(1) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -139,10 +135,12 @@ sub publish_files : Test(1) {
   my $runfolder_path = "$data_path/r54097_20161207_132758";
   my $dest_coll = "$irods_tmp_coll/publish_files";
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
     (dest_collection => $dest_coll,
      irods           => $irods,
      mlwh_schema     => $wh_schema,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
@@ -157,10 +155,12 @@ sub publish_xml_files : Test(14) {
   my $runfolder_path = "$data_path/r54097_20161207_132758";
   my $dest_coll = "$irods_tmp_coll/publish_xml_files";
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
     (dest_collection => $dest_coll,
      irods           => $irods,
      mlwh_schema     => $wh_schema,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =
@@ -180,7 +180,6 @@ sub publish_xml_files : Test(14) {
               diag explain \@observed_paths;
 
   check_common_metadata($irods, @observed_paths);
-
 }
 
 sub publish_sequence_files : Test(32) {
@@ -189,10 +188,12 @@ sub publish_sequence_files : Test(32) {
   my $runfolder_path = "$data_path/r54097_20161207_132758";
   my $dest_coll = "$irods_tmp_coll/publish_sequence_files";
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
     (dest_collection => $dest_coll,
      irods           => $irods,
      mlwh_schema     => $wh_schema,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =
@@ -214,6 +215,8 @@ sub publish_sequence_files : Test(32) {
   check_primary_metadata($irods, @observed_paths);
   check_common_metadata($irods, @observed_paths);
   check_study_metadata($irods, @observed_paths);
+
+  unlink $pub->restart_file;
 }
 
 sub publish_index_files : Test(14) {
@@ -222,10 +225,12 @@ sub publish_index_files : Test(14) {
   my $runfolder_path = "$data_path/r54097_20161207_132758";
   my $dest_coll = "$irods_tmp_coll/publish_sequence_files";
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
     (dest_collection => $dest_coll,
      irods           => $irods,
      mlwh_schema     => $wh_schema,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =
@@ -245,8 +250,9 @@ sub publish_index_files : Test(14) {
               diag explain \@observed_paths;
 
   check_common_metadata($irods, @observed_paths);
-}
 
+  unlink $pub->restart_file;
+}
 
 sub observed_data_objects {
   my ($irods, $dest_collection, $regex) = @_;
@@ -271,7 +277,7 @@ sub check_common_metadata {
     foreach my $attr ($DCTERMS_CREATED, $DCTERMS_CREATOR, $DCTERMS_PUBLISHER,
                       $FILE_TYPE, $FILE_MD5) {
        my @avu = $obj->find_in_metadata($attr);
-       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present"); 
+       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
   }
 }
@@ -310,6 +316,5 @@ sub check_study_metadata {
     }
   }
 }
-
 
 1;

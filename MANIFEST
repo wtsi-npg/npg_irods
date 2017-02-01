@@ -7584,7 +7584,6 @@ t/lib/WTSI/NPG/HTS/PacBio/RunMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/RunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunPublisherTest.pm
-t/lib/WTSI/NPG/HTS/PublisherTest.pm
 t/lib/WTSI/NPG/HTS/SeqchksumTest.pm
 t/lib/WTSI/NPG/HTS/Test.pm
 t/lib/WTSI/NPG/OM/BioNano/BnxFileTest.pm

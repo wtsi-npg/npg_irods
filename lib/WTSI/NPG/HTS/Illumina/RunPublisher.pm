@@ -11,6 +11,7 @@ use MooseX::StrictConstructor;
 use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
+use WTSI::NPG::HTS::BatchPublisher;
 use WTSI::NPG::HTS::Illumina::DataObjectFactory;
 use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::HTS::Seqchksum;
@@ -63,9 +64,10 @@ has 'irods' =>
    documentation => 'An iRODS handle to run searches and perform updates');
 
 has 'obj_factory' =>
-  (isa           => 'WTSI::NPG::HTS::DataObjectFactory',
+  (does          => 'WTSI::NPG::HTS::DataObjectFactory',
    is            => 'ro',
    required      => 1,
+   lazy          => 1,
    builder       => '_build_obj_factory',
    documentation => 'A factory building data objects from files');
 
@@ -74,6 +76,24 @@ has 'lims_factory' =>
    isa           => 'WTSI::NPG::HTS::LIMSFactory',
    required      => 1,
    documentation => 'A factory providing st:api::lims objects');
+
+has 'batch_publisher' =>
+  (is            => 'ro',
+   isa           => 'WTSI::NPG::HTS::BatchPublisher',
+   required      => 1,
+   lazy          => 1,
+   builder       => '_build_batch_publisher',
+   documentation => 'The publisher which handles batch operations, errors ' .
+                    'and restarts');
+
+has 'restart_file' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 1,
+   lazy          => 1,
+   builder       => '_build_restart_file',
+   documentation => 'A file containing a record of files successfully ' .
+                    'published');
 
 has 'file_format' =>
   (isa           => AlnFormat,
@@ -113,6 +133,21 @@ has 'alt_process' =>
    is            => 'ro',
    required      => 0,
    documentation => 'Non-standard process used');
+
+has 'force' =>
+  (isa           => 'Bool',
+   is            => 'ro',
+   required      => 0,
+   default       => 0,
+   documentation => 'Force re-publication of files that have been published');
+
+has 'max_errors' =>
+  (isa       => 'Int',
+   is        => 'ro',
+   required  => 0,
+   predicate => 'has_max_errors',
+   documentation => 'The maximum number of errors permitted before ' .
+                    'the remainder of a publishing process is aborted');
 
 has '_path_cache' =>
   (isa           => 'HashRef',
@@ -691,6 +726,8 @@ sub list_plex_ancillary_files {
 sub publish_xml_files {
   my ($self) = @_;
 
+  $self->info('Publishing XML files');
+
   return $self->_publish_support_files($self->list_xml_files,
                                        $self->dest_collection);
 }
@@ -709,6 +746,8 @@ sub publish_xml_files {
 
 sub publish_interop_files {
   my ($self) = @_;
+
+  $self->info('Publishing InterOp files');
 
   return $self->_publish_support_files($self->list_interop_files,
                                        $self->interop_dest_collection);
@@ -1132,6 +1171,13 @@ sub publish_plex_qc_files {
                                             $with_spiked_control);
 }
 
+sub write_restart_file {
+  my ($self) = @_;
+
+  $self->batch_publisher->write_state;
+  return;
+}
+
 # Check that a position argument is given and valid
 sub _check_position {
   my ($self, $position) = @_;
@@ -1214,9 +1260,9 @@ sub _publish_alignment_files {
     $self->_make_alignment_secondary_meta(shift, $with_spiked_control);
   };
 
-  return $self->_safe_publish_files($files, $dest_coll,
-                                    $primary_avus_callback,
-                                    $secondary_avus_callback);
+  return $self->batch_publisher->publish_file_batch
+    ($files, $dest_coll, $primary_avus_callback,
+     $secondary_avus_callback);
 }
 
 ## no critic (Subroutines::ProhibitManyArgs)
@@ -1267,68 +1313,9 @@ sub _publish_support_files {
     $self->_make_support_secondary_meta(shift, $with_spiked_control);
   };
 
-  return $self->_safe_publish_files($files, $dest_coll,
-                                    $primary_avus_callback,
-                                    $secondary_avus_callback);
-}
-
-# Backend publisher for all files which handles errors and logging
-sub _safe_publish_files {
-  my ($self, $files, $dest_coll, $primary_avus_callback,
-      $secondary_avus_callback) = @_;
-
-  defined $files or
-    $self->logconfess('A defined files argument is required');
-  ref $files eq 'ARRAY' or
-    $self->logconfess('The files argument must be an ArrayRef');
-  defined $dest_coll or
-    $self->logconfess('A defined dest_coll argument is required');
-
-  my $publisher = WTSI::NPG::iRODS::Publisher->new(irods => $self->irods);
-
-  my $num_files     = scalar @{$files};
-  my $num_processed = 0;
-  my $num_errors    = 0;
-  foreach my $file (@{$files}) {
-    my $dest = q[];
-
-    try {
-      $num_processed++;
-      my $obj = $self->_make_obj($file, $dest_coll);
-      $dest = $obj->str;
-      $dest = $publisher->publish($file, $dest);
-
-      my @primary_avus = $primary_avus_callback->($obj);
-      my ($num_pattr, $num_pproc, $num_perr) =
-        $obj->set_primary_metadata(@primary_avus);
-
-      my @secondary_avus = $secondary_avus_callback->($obj);
-      my ($num_sattr, $num_sproc, $num_serr) =
-        $obj->update_secondary_metadata(@secondary_avus);
-
-      # Test metadata at the end
-      if ($num_perr > 0) {
-        $self->logcroak("Failed to set primary metadata cleanly on '$dest'");
-      }
-      if ($num_serr > 0) {
-        $self->logcroak("Failed to set secondary metadata cleanly on '$dest'");
-      }
-
-      $self->info("Published '$dest' [$num_processed / $num_files]");
-    } catch {
-      $num_errors++;
-      my @stack = split /\n/msx;  # Chop up the stack trace
-      $self->error("Failed to publish '$file' to '$dest' cleanly ",
-                   "[$num_processed / $num_files]: ", pop @stack);
-    };
-  }
-
-  if ($num_errors > 0) {
-    $self->error("Encountered errors on $num_errors / ",
-                 "$num_processed files processed");
-  }
-
-  return ($num_files, $num_processed, $num_errors);
+  return $self->batch_publisher->publish_file_batch
+    ($files, $dest_coll, $primary_avus_callback,
+     $secondary_avus_callback);
 }
 
 # We are required by npg_tracking::illumina::run::short_info to
@@ -1375,6 +1362,26 @@ sub _build_obj_factory {
   return WTSI::NPG::HTS::Illumina::DataObjectFactory->new
     (ancillary_formats => [$self->hts_ancillary_suffixes],
      irods             => $self->irods);
+}
+
+sub _build_batch_publisher {
+  my ($self) = @_;
+
+  my @init_args = (force       => $self->force,
+                   irods       => $self->irods,
+                   obj_factory => $self->obj_factory,
+                   state_file  => $self->restart_file);
+  if ($self->has_max_errors) {
+    push @init_args, max_errors  => $self->max_errors;
+  }
+
+  return WTSI::NPG::HTS::BatchPublisher->new(@init_args);
+}
+
+sub _build_restart_file {
+  my ($self) = @_;
+
+  return catfile($self->archive_path, 'published.json');
 }
 
 sub _lane_qc_stats_file {
@@ -1452,8 +1459,7 @@ sub _parse_json_file {
     close $fh or $self->warn("Failed to close '$file'");
 
     try {
-      my $json = Encode::decode('UTF-8', $octets, Encode::FB_CROAK);
-      $self->_json_cache->{$file} = $self->decode($json);
+      $self->_json_cache->{$file} = $self->decode($octets);
     } catch {
       $self->logcroak('Failed to a parse JSON value from ',
                       "cache file '$file': ", $_);
@@ -1469,8 +1475,7 @@ sub _make_obj {
   my ($filename, $directories, $suffix) = fileparse($file);
 
   my $path = catfile($dest_coll, $filename);
-  my $obj = $self->obj_factory->make_data_object
-    ($path, id_run => $self->id_run);
+  my $obj = $self->obj_factory->make_data_object($path);
 
   if (not $obj) {
     $self->logconfess("Failed to parse and make an object from '$path'");
@@ -1610,7 +1615,8 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016, 2017 Genome Research Limited. All Rights
+Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

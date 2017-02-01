@@ -131,10 +131,12 @@ sub publish_files : Test(1) {
   my $runfolder_path = "$data_path/superfoo/45137_1095";
   my $dest_coll = "$irods_tmp_coll/publish_files";
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::PacBio::RunPublisher->new
     (dest_collection => $dest_coll,
      irods           => $irods,
      mlwh_schema     => $wh_schema,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
@@ -149,10 +151,12 @@ sub publish_meta_xml_files : Test(9) {
   my $runfolder_path = "$data_path/superfoo/45137_1095";
   my $dest_coll = "$irods_tmp_coll/publish_meta_xml_file";
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::PacBio::RunPublisher->new
     (dest_collection => $dest_coll,
      irods           => $irods,
      mlwh_schema     => $wh_schema,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =
@@ -179,10 +183,12 @@ sub publish_basx_files : Test(68) {
   my $runfolder_path = "$data_path/superfoo/45137_1095";
   my $dest_coll = "$irods_tmp_coll/publish_basx_files";
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::PacBio::RunPublisher->new
     (dest_collection => $dest_coll,
      irods           => $irods,
      mlwh_schema     => $wh_schema,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =
@@ -214,10 +220,12 @@ sub publish_sts_xml_files : Test(9) {
   my $runfolder_path = "$data_path/superfoo/45137_1095";
   my $dest_coll = "$irods_tmp_coll/publish_sts_xml_files";
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::PacBio::RunPublisher->new
     (dest_collection => $dest_coll,
      irods           => $irods,
      mlwh_schema     => $wh_schema,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =
@@ -244,10 +252,12 @@ sub publish_multiplexed : Test(80) {
   my $runfolder_path = "$data_path/superfoo/39859_968";
   my $dest_coll = "$irods_tmp_coll/publish_multiplexed";
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::PacBio::RunPublisher->new
     (dest_collection => $dest_coll,
      irods           => $irods,
      mlwh_schema     => $wh_schema,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =

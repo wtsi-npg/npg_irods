@@ -501,11 +501,13 @@ sub publish_xml_files : Test(14) {
   my $lims_factory =
     WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
     (dest_collection => $dest_coll,
      file_format     => 'cram',
      irods           => $irods,
      lims_factory    => $lims_factory,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
   my @expected_paths = ("$dest_coll/RunInfo.xml",
@@ -535,11 +537,13 @@ sub publish_interop_files : Test(44) {
   my $lims_factory =
     WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
     (dest_collection => $dest_coll,
      file_format     => 'cram',
      irods           => $irods,
      lims_factory    => $lims_factory,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
    my @expected_paths = map { "$dest_coll/InterOp/$_" }
@@ -594,84 +598,6 @@ sub publish_lane_alignment_files_samplesheet : Test(264) {
                                      $lims_factory);
 }
 
-sub check_publish_lane_alignment_files {
-  my ($runfolder_path, $archive_path, $lims_factory) = @_;
-
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-  my $file_format = 'cram';
-  my $dest_coll = "$irods_tmp_coll/publish_lane_alignment_files";
-
-  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
-    (dest_collection => $dest_coll,
-     file_format     => $file_format,
-     irods           => $irods,
-     lims_factory    => $lims_factory,
-     runfolder_path  => $runfolder_path);
-
-  my %position_index = calc_lane_alignment_files($archive_path, $file_format);
-
-  foreach my $position (1 .. 8) {
-    my @expected_files = @{$position_index{$position}};
-    my $num_expected  = scalar @expected_files;
-
-    my ($num_files, $num_processed, $num_errors) =
-      $pub->publish_lane_alignment_files($position);
-
-    cmp_ok($num_processed, '==', $num_expected,
-           "Published $num_expected $file_format lane " .
-           "$position alignment files");
-
-    my $pos_pattern = sprintf '%d_%d.*\.%s$',
-      $pub->id_run, $position, $file_format;
-    my @expected_paths =
-      expected_data_objects($dest_coll, \%position_index, $position);
-    my @observed_paths =
-      observed_data_objects($irods, $dest_coll, $pos_pattern);
-
-    is_deeply(\@observed_paths, \@expected_paths,
-              "Published correctly named position $position " .
-              "$file_format alignment files") or
-                diag explain \@observed_paths;
-
-    check_primary_metadata($irods, @observed_paths);
-    check_common_metadata($irods, @observed_paths);
-    check_study_metadata($irods, @observed_paths);
-  }
-
-  # FIXME -- these tests could be more exhaustive
-  my $expected_read_counts = [0,         # edited from 863061182,
-                              856966676,
-                              898136862,
-                              893691470,
-                              869960390,
-                              894014820,
-                              883399526,
-                              899795972];
-
-  foreach my $position (1 .. 8) {
-    my $expected_read_count = $expected_read_counts->[$position - 1];
-
-    my @paths = $irods->find_objects_by_meta($irods_tmp_coll,
-                                             [lane   => $position],
-                                             [type   => 'cram'],
-                                             [target => 1]);
-
-    cmp_ok(scalar @paths, '==', 1, "position: $position found");
-
-    my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new($irods, $paths[0]);
-    is_deeply([$obj->get_avu($IS_PAIRED_READ)],
-              [{attribute => $IS_PAIRED_READ,
-                value     => 1}],
-              "lane $position paired_read metadata correct");
-
-    is_deeply([$obj->find_in_metadata($TOTAL_READS)],
-              [{attribute => $TOTAL_READS,
-                value     => $expected_read_count}],
-              "lane $position total_reads metadata correct");
-  }
-}
-
 sub publish_plex_alignment_files_mlwh : Test(811) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -697,89 +623,6 @@ sub publish_plex_alignment_files_samplesheet : Test(811) {
                                      $lims_factory);
 }
 
-sub check_publish_plex_alignment_files {
-  my ($runfolder_path, $archive_path, $lims_factory) = @_;
-
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-
-  my $file_format = 'cram';
-  # Position 1 is DNA, position 3 is RNA
-  foreach my $position (1, 3) {
-    my $dest_coll = "$irods_tmp_coll/publish_plex_alignment_files/$position";
-
-    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
-      (dest_collection => $dest_coll,
-       file_format     => $file_format,
-       irods           => $irods,
-       lims_factory    => $lims_factory,
-       runfolder_path  => $runfolder_path);
-
-    my %position_index =
-      calc_plex_alignment_files($archive_path, $file_format);
-
-    my $num_expected = scalar @{$position_index{$position}};
-    my ($num_files, $num_processed, $num_errors) =
-      $pub->publish_plex_alignment_files($position);
-
-    cmp_ok($num_processed, '==', $num_expected,
-           "Published $num_expected position $position " .
-           "$file_format alignment files");
-
-    my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
-    my @expected_paths =
-      expected_data_objects($dest_coll, \%position_index, $position);
-    my @observed_paths =
-      observed_data_objects($irods, $dest_coll, $pos_pattern);
-
-    is_deeply(\@observed_paths, \@expected_paths,
-              "Published correctly named position $position " .
-              "$file_format alignment files") or
-                diag explain \@observed_paths;
-
-    check_primary_metadata($irods, @observed_paths);
-    check_common_metadata($irods, @observed_paths);
-    check_study_metadata($irods, @observed_paths);
-  }
-
-  # FIXME -- these tests could be more exhaustive
-  my $tag_count = 16;
-  my $expected_read_counts = [3334934,  # tag 0
-                              0,        # edited from 71488156,
-                              29817458, 15354480, 33948370,
-                              33430552, 24094786, 32604688, 26749430,
-                              27668866, 30775624, 33480806, 40965140,
-                              32087634, 37315470, 27193418, 31538878,
-                              1757876]; # tag 888
-  # Other tags
-  my @tags = (1 .. $tag_count, 888);
-
-  my $i = 1;
-  foreach my $tag (@tags) {
-    my $expected_read_count = $expected_read_counts->[$i];
-
-    my @paths = $irods->find_objects_by_meta($irods_tmp_coll,
-                                             [lane      => 1],
-                                             [tag_index => $tag],
-                                             [type      => 'cram'],
-                                             [target    => 1]);
-
-    cmp_ok(scalar @paths, '==', 1, "position: 1, tag $tag found");
-
-    my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new($irods, $paths[0]);
-    is_deeply([$obj->get_avu($IS_PAIRED_READ)],
-              [{attribute => $IS_PAIRED_READ,
-                value     => 1}],
-              "tag $tag paired_read metadata correct");
-
-    is_deeply([$obj->find_in_metadata($TOTAL_READS)],
-              [{attribute => $TOTAL_READS,
-                value     => $expected_read_count}],
-              "tag $tag total_reads metadata correct");
-    $i++;
-  }
-}
-
 sub publish_lane_index_files : Test(91) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -792,11 +635,13 @@ sub publish_lane_index_files : Test(91) {
   my $file_format = 'cram';
   my $dest_coll = "$irods_tmp_coll/publish_lane_index_files";
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
     (dest_collection => $dest_coll,
      file_format     => $file_format,
      irods           => $irods,
      lims_factory    => $lims_factory,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
   my %position_index = calc_lane_index_files($archive_path, $file_format);
@@ -850,11 +695,13 @@ sub publish_plex_index_files : Test(269) {
   foreach my $position (1, 3) {
     my $dest_coll = "$irods_tmp_coll/publish_plex_index_files/$position";
 
+    my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (dest_collection => $dest_coll,
        file_format     => $file_format,
        irods           => $irods,
        lims_factory    => $lims_factory,
+       restart_file    => catfile($tmpdir->dirname, 'published.json'),
        runfolder_path  => $runfolder_path);
 
     my %position_index =
@@ -904,11 +751,13 @@ sub publish_lane_ancillary_files : Test(856) {
   my $file_format = 'cram';
   my $dest_coll = "$irods_tmp_coll/publish_lane_ancillary_files";
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
     (dest_collection => $dest_coll,
      file_format     => $file_format,
      irods           => $irods,
      lims_factory    => $lims_factory,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
   my %position_index = calc_lane_ancillary_files($archive_path, $file_format);
@@ -952,11 +801,14 @@ sub publish_plex_ancillary_files : Test(2804) {
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
     my $dest_coll = "$irods_tmp_coll/publish_plex_ancillary_files/$position";
+
+    my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (dest_collection => $dest_coll,
        file_format     => $file_format,
        irods           => $irods,
        lims_factory    => $lims_factory,
+       restart_file    => catfile($tmpdir->dirname, 'published.json'),
        runfolder_path  => $runfolder_path);
 
     my %position_index = calc_plex_ancillary_files($archive_path);
@@ -997,11 +849,13 @@ sub publish_lane_qc_files : Test(736) {
   my $file_format = 'cram';
   my $dest_coll = "$irods_tmp_coll/publish_lane_qc_files";
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
     (dest_collection => $dest_coll,
      file_format     => $file_format,
      irods           => $irods,
      lims_factory    => $lims_factory,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
   my %position_index = calc_lane_qc_files($archive_path, $file_format);
@@ -1048,11 +902,14 @@ sub publish_plex_qc_files : Test(1660) {
   # Position 1 is DNA, position 3 is RNA
   foreach my $position (1, 3) {
     my $dest_coll = "$irods_tmp_coll/publish_plex_qc_files/$position";
+
+    my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (dest_collection => $dest_coll,
        file_format     => $file_format,
        irods           => $irods,
        lims_factory    => $lims_factory,
+       restart_file    => catfile($tmpdir->dirname, 'published.json'),
        runfolder_path  => $runfolder_path);
 
     my %position_index = calc_plex_qc_files($archive_path);
@@ -1100,12 +957,14 @@ sub publish_plex_alignment_files_alt_process : Test(922) {
   foreach my $position (1, 3) {
     my $dest_coll = "$irods_tmp_coll/alt_process/$position";
 
+    my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (alt_process     => $alt_process,
        dest_collection => $dest_coll,
        file_format     => $file_format,
        irods           => $irods,
        lims_factory    => $lims_factory,
+       restart_file    => catfile($tmpdir->dirname, 'published.json'),
        runfolder_path  => $runfolder_path);
 
     my %position_index =
@@ -1151,11 +1010,13 @@ sub publish_plex_alignment_files_human_split : Test(2) {
   my $position = 1;
   my $dest_coll = "$irods_tmp_coll/plex_human_split/$position";
 
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
     (dest_collection => $dest_coll,
      file_format     => $file_format,
      irods           => $irods,
      lims_factory    => $lims_factory,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
      runfolder_path  => $runfolder_path);
 
   my $num_expected = 5;
@@ -1190,11 +1051,13 @@ sub publish_with_samplesheet_driver : Test(760) {
   foreach my $position (1, 3) {
     my $dest_coll = "$irods_tmp_coll/publish_with_samplesheet_driver/$position";
 
+    my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
     my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
       (dest_collection => $dest_coll,
        file_format     => $file_format,
        irods           => $irods,
        lims_factory    => $lims_factory,
+       restart_file    => catfile($tmpdir->dirname, 'published.json'),
        runfolder_path  => $runfolder_path);
 
     my %position_index =
@@ -1268,6 +1131,174 @@ sub dest_collection : Test(8) {
        runfolder_path => $runfolder_path);
     is($pub4->dest_collection, '/a/b/c',
        'Custom alt_process destination uses the provided collection');
+  }
+}
+
+# From here onwards are test support methods
+
+sub check_publish_lane_alignment_files {
+  my ($runfolder_path, $archive_path, $lims_factory) = @_;
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $file_format = 'cram';
+  my $dest_coll = "$irods_tmp_coll/publish_lane_alignment_files";
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (dest_collection => $dest_coll,
+     file_format     => $file_format,
+     irods           => $irods,
+     lims_factory    => $lims_factory,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
+     runfolder_path  => $runfolder_path);
+
+  my %position_index = calc_lane_alignment_files($archive_path, $file_format);
+
+  foreach my $position (1 .. 8) {
+    my @expected_files = @{$position_index{$position}};
+    my $num_expected  = scalar @expected_files;
+
+    my ($num_files, $num_processed, $num_errors) =
+      $pub->publish_lane_alignment_files($position);
+
+    cmp_ok($num_processed, '==', $num_expected,
+           "Published $num_expected $file_format lane " .
+           "$position alignment files");
+
+    my $pos_pattern = sprintf '%d_%d.*\.%s$',
+      $pub->id_run, $position, $file_format;
+    my @expected_paths =
+      expected_data_objects($dest_coll, \%position_index, $position);
+    my @observed_paths =
+      observed_data_objects($irods, $dest_coll, $pos_pattern);
+
+    is_deeply(\@observed_paths, \@expected_paths,
+              "Published correctly named position $position " .
+              "$file_format alignment files") or
+                diag explain \@observed_paths;
+
+    check_primary_metadata($irods, @observed_paths);
+    check_common_metadata($irods, @observed_paths);
+    check_study_metadata($irods, @observed_paths);
+  }
+
+  $pub->write_restart_file;
+
+  # FIXME -- these tests could be more exhaustive
+  my $expected_read_counts = [0,         # edited from 863061182,
+                              856966676,
+                              898136862,
+                              893691470,
+                              869960390,
+                              894014820,
+                              883399526,
+                              899795972];
+
+  foreach my $position (1 .. 8) {
+    my $expected_read_count = $expected_read_counts->[$position - 1];
+
+    my @paths = $irods->find_objects_by_meta($irods_tmp_coll,
+                                             [lane   => $position],
+                                             [type   => 'cram'],
+                                             [target => 1]);
+    cmp_ok(scalar @paths, '==', 1, "position: $position found");
+
+    my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new($irods, $paths[0]);
+    is_deeply([$obj->get_avu($IS_PAIRED_READ)],
+              [{attribute => $IS_PAIRED_READ,
+                value     => 1}],
+              "lane $position paired_read metadata correct");
+
+    is_deeply([$obj->find_in_metadata($TOTAL_READS)],
+              [{attribute => $TOTAL_READS,
+                value     => $expected_read_count}],
+              "lane $position total_reads metadata correct");
+  }
+}
+
+sub check_publish_plex_alignment_files {
+  my ($runfolder_path, $archive_path, $lims_factory) = @_;
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $file_format = 'cram';
+  # Position 1 is DNA, position 3 is RNA
+  foreach my $position (1, 3) {
+    my $dest_coll = "$irods_tmp_coll/publish_plex_alignment_files/$position";
+
+    my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+    my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+      (dest_collection => $dest_coll,
+       file_format     => $file_format,
+       irods           => $irods,
+       lims_factory    => $lims_factory,
+       restart_file    => catfile($tmpdir->dirname, 'published.json'),
+       runfolder_path  => $runfolder_path);
+
+    my %position_index =
+      calc_plex_alignment_files($archive_path, $file_format);
+
+    my $num_expected = scalar @{$position_index{$position}};
+    my ($num_files, $num_processed, $num_errors) =
+      $pub->publish_plex_alignment_files($position);
+
+    cmp_ok($num_processed, '==', $num_expected,
+           "Published $num_expected position $position " .
+           "$file_format alignment files");
+
+    my $pos_pattern = sprintf '%d_%d', $pub->id_run, $position;
+    my @expected_paths =
+      expected_data_objects($dest_coll, \%position_index, $position);
+    my @observed_paths =
+      observed_data_objects($irods, $dest_coll, $pos_pattern);
+
+    is_deeply(\@observed_paths, \@expected_paths,
+              "Published correctly named position $position " .
+              "$file_format alignment files") or
+                diag explain \@observed_paths;
+
+    check_primary_metadata($irods, @observed_paths);
+    check_common_metadata($irods, @observed_paths);
+    check_study_metadata($irods, @observed_paths);
+  }
+
+  # FIXME -- these tests could be more exhaustive
+  my $tag_count = 16;
+  my $expected_read_counts = [3334934,  # tag 0
+                              0,        # edited from 71488156,
+                              29817458, 15354480, 33948370,
+                              33430552, 24094786, 32604688, 26749430,
+                              27668866, 30775624, 33480806, 40965140,
+                              32087634, 37315470, 27193418, 31538878,
+                              1757876]; # tag 888
+  # Other tags
+  my @tags = (1 .. $tag_count, 888);
+
+  my $i = 1;
+  foreach my $tag (@tags) {
+    my $expected_read_count = $expected_read_counts->[$i];
+
+    my @paths = $irods->find_objects_by_meta($irods_tmp_coll,
+                                             [lane      => 1],
+                                             [tag_index => $tag],
+                                             [type      => 'cram'],
+                                             [target    => 1]);
+
+    cmp_ok(scalar @paths, '==', 1, "position: 1, tag $tag found");
+
+    my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new($irods, $paths[0]);
+    is_deeply([$obj->get_avu($IS_PAIRED_READ)],
+              [{attribute => $IS_PAIRED_READ,
+                value     => 1}],
+              "tag $tag paired_read metadata correct");
+
+    is_deeply([$obj->find_in_metadata($TOTAL_READS)],
+              [{attribute => $TOTAL_READS,
+                value     => $expected_read_count}],
+              "tag $tag total_reads metadata correct");
+    $i++;
   }
 }
 
