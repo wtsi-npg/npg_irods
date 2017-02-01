@@ -7,18 +7,9 @@ use WTSI::NPG::iRODS::Metadata;
 our $VERSION = '';
 
 # TODO -- use WTSI::NPG::iRODS::Metadata for these attributes
-our $PACBIO_CELL_INDEX        = 'cell_index';
-our $PACBIO_COLLECTION_NUMBER = 'collection_number';
-our $PACBIO_INSTRUMENT_NAME   = 'instrument_name';
-our $PACBIO_RUN               = 'run';
-our $PACBIO_SAMPLE_LOAD_NAME  = 'sample_load_name';
-our $PACBIO_SET_NUMBER        = 'set_number';
-our $PACBIO_SOURCE            = 'source';
-our $PACBIO_WELL              = 'well';
 our $PACBIO_PRODUCTION        = 'production';
 our $PACBIO_MULTIPLEX         = 'multiplex';
-
-our $TAG_SEQUENCE             = 'tag_sequence';
+our $PACBIO_LIBRARY_NAME      = 'library_name';
 
 with qw[
          WTSI::NPG::HTS::Annotator
@@ -152,7 +143,8 @@ sub make_sample_metadata {
 sub make_library_metadata {
   my ($self, @run_records) = @_;
 
-  my $method_attr = {pac_bio_library_tube_legacy_id => $LIBRARY_ID};
+  my $method_attr = {pac_bio_library_tube_legacy_id => $LIBRARY_ID,
+                     pac_bio_library_tube_name      => $PACBIO_LIBRARY_NAME};
   my @avus = $self->_make_multi_value_metadata(\@run_records, $method_attr);
 
   my $num_libraries = scalar @run_records;

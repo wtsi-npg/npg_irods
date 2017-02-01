@@ -316,13 +316,13 @@ sub check_primary_metadata {
     my $file_name = fileparse($obj->str);
 
     foreach my $attr
-      ($WTSI::NPG::HTS::PacBio::Annotator::PACBIO_CELL_INDEX,
-       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_COLLECTION_NUMBER,
-       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_INSTRUMENT_NAME,
-       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_RUN,
-       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_SET_NUMBER,
-       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_WELL,
-       $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_SAMPLE_LOAD_NAME) {
+      ($PACBIO_CELL_INDEX,
+       $PACBIO_COLLECTION_NUMBER,
+       $PACBIO_INSTRUMENT_NAME,
+       $PACBIO_RUN,
+       $PACBIO_SET_NUMBER,
+       $PACBIO_WELL,
+       $PACBIO_SAMPLE_LOAD_NAME) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
@@ -357,8 +357,7 @@ sub check_multiplex_metadata {
        "$file_name multiplex metadata present");
 
     # We can't guarantee that there will be n x other sample metadata
-    foreach my $attr ($WTSI::NPG::HTS::PacBio::Annotator::TAG_SEQUENCE,
-                      $SAMPLE_ID) {
+    foreach my $attr ($TAG_SEQUENCE, $SAMPLE_ID) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', $n, "$file_name $n x $attr metadata present");
     }
