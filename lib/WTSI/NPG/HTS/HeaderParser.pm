@@ -31,7 +31,7 @@ our $ALIGNER_TOPHAT = qr{^TopHat}msx;
 #
 # The best we can do is pattern match for a string that has a form
 # matching the values that the reference might take.
-our $DEFAULT_REFERENCE_REGEX = qr{\/(nfs|lustre)\/\S+\/references}mxs;
+our $DEFAULT_REFERENCE_REGEX = qr{/references/}mxs;
 
 =head2 get_records
 
