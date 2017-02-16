@@ -15,7 +15,7 @@ our $YHUMAN = 'yhuman';  # FIXME
 our $SEQCHKSUM = 'seqchksum'; # FIXME -- move to WTSI::NPG::iRODS::Metadata
 
 with qw[
-         WTSI::NPG::HTS::Annotator
+         WTSI::NPG::iRODS::Annotator
        ];
 
 =head2 make_primary_metadata

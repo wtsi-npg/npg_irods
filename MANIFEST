@@ -21,7 +21,6 @@ lib/WTSI/NPG/DataSub/File.pm
 lib/WTSI/NPG/DataSub/MetaUpdater.pm
 lib/WTSI/NPG/DataSub/SubtrackClient.pm
 lib/WTSI/NPG/HTS/AlFilter.pm
-lib/WTSI/NPG/HTS/Annotator.pm
 lib/WTSI/NPG/HTS/AVUCollator.pm
 lib/WTSI/NPG/HTS/DataObject.pm
 lib/WTSI/NPG/HTS/DataObjectFactory.pm
@@ -30,7 +29,6 @@ lib/WTSI/NPG/HTS/Illumina/AlnDataObject.pm
 lib/WTSI/NPG/HTS/Illumina/AncDataObject.pm
 lib/WTSI/NPG/HTS/Illumina/Annotator.pm
 lib/WTSI/NPG/HTS/Illumina/DataObjectFactory.pm
-lib/WTSI/NPG/HTS/Illumina/FileFilter.pm
 lib/WTSI/NPG/HTS/Illumina/FilenameParser.pm
 lib/WTSI/NPG/HTS/Illumina/InterOpDataObject.pm
 lib/WTSI/NPG/HTS/Illumina/LogPublisher.pm
@@ -66,7 +64,6 @@ scripts/travis_install.sh
 scripts/travis_script.sh
 t/aln_data_object.t
 t/anc_data_object.t
-t/annotator.t
 t/bionano_bnx_file.t
 t/bionano_result_set.t
 t/bionano_run_publisher.t
@@ -195,7 +192,6 @@ t/data/pacbio/superfoo/39859_968/E01_1/m150718_080850_00127_c1008226625500000018
 t/data/pacbio/superfoo/39859_968/E01_1/m150718_080850_00127_c100822662550000001823177111031595_s1_p0.3.xfer.xml
 t/data/pacbio/superfoo/39859_968/E01_1/m150718_080850_00127_c100822662550000001823177111031595_s1_p0.mcd.h5
 t/data/pacbio/superfoo/39859_968/E01_1/m150718_080850_00127_c100822662550000001823177111031595_s1_p0.metadata.xml
-t/data/pacbio/superfoo/39859_968/E01_1/m150718_080850_00127_c100822662550000001823177111031595_s1_p0.metadata.xml.md5
 t/data/pacbio/superfoo/45137_1095/A01_1/Analysis_Results/m160322_123501_00127_c100951322550000001823215306251640_s1_p0.1.bax.h5
 t/data/pacbio/superfoo/45137_1095/A01_1/Analysis_Results/m160322_123501_00127_c100951322550000001823215306251640_s1_p0.1.log
 t/data/pacbio/superfoo/45137_1095/A01_1/Analysis_Results/m160322_123501_00127_c100951322550000001823215306251640_s1_p0.1.subreads.fasta
@@ -7564,7 +7560,6 @@ t/illumina_meta_updater.t
 t/lib/WTSI/DNAP/Utilities/ParamsTest.pm
 t/lib/WTSI/NPG/DataSub/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/DataSub/SubtrackClientTest.pm
-t/lib/WTSI/NPG/HTS/AnnotatorTest.pm
 t/lib/WTSI/NPG/HTS/HeaderParserTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/AlnDataObjectTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/AncDataObjectTest.pm
