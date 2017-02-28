@@ -12,6 +12,7 @@ use WTSI::NPG::iRODS;
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::HTS::PacBio::Annotator
+         WTSI::NPG::HTS::PacBio::MetaQuery
        ];
 
 our $VERSION = '';
@@ -22,11 +23,6 @@ has 'irods' =>
    required      => 1,
    documentation => 'An iRODS handle to run searches and perform updates');
 
-has 'mlwh_schema' =>
-  (is            => 'ro',
-   isa           => 'WTSI::DNAP::Warehouse::Schema',
-   required      => 1,
-   documentation => 'A ML warehouse handle to obtain secondary metadata');
 
 =head2 update_secondary_metadata
 
@@ -65,7 +61,7 @@ sub update_secondary_metadata {
       $obj->get_avu($WTSI::NPG::HTS::PacBio::Annotator::PACBIO_WELL)->{value};
 
     try {
-      my @run_records = $self->_query_ml_warehouse($id_run, $well);
+      my @run_records = $self->find_pacbio_runs($id_run, $well);
       my @secondary_avus = $self->make_secondary_metadata(@run_records);
       $obj->update_secondary_metadata(@secondary_avus);
 
@@ -81,32 +77,6 @@ sub update_secondary_metadata {
   }
 
   return $num_processed - $num_errors;
-}
-
-sub _query_ml_warehouse {
-  my ($self, $run_id, $well) = @_;
-
-  # Well addresses are unpadded in the ML warehouse
-  my ($row, $col) = $well =~ m{^([[:upper:]])([[:digit:]]+)$}msx;
-  if ($row and $col) {
-    $col =~ s/^0+//msx; # Remove leading zeroes
-  }
-  else {
-    $self->logcroak("Failed to match a plate row and column in well '$well' ",
-                    "of PacBio run '$run_id'");
-  }
-
-  my $well_label = "$row$col";
-  my @run_records = $self->mlwh_schema->resultset('PacBioRun')->search
-    ({id_pac_bio_run_lims => $run_id,
-      well_label          => $well_label},
-     {prefetch            => ['sample', 'study']});
-
-  my $num_records = scalar @run_records;
-  $self->debug("Found $num_records records for PacBio ",
-               "run $run_id, well $well_label");
-
-  return @run_records;
 }
 
 __PACKAGE__->meta->make_immutable;
