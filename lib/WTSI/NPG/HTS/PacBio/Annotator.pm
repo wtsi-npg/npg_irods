@@ -21,7 +21,7 @@ our $PACBIO_MULTIPLEX         = 'multiplex';
 our $TAG_SEQUENCE             = 'tag_sequence';
 
 with qw[
-         WTSI::NPG::HTS::Annotator
+         WTSI::NPG::iRODS::Annotator
        ];
 
 =head2 make_primary_metadata

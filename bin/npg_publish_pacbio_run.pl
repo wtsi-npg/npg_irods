@@ -8,10 +8,11 @@ use lib (-d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib");
 use Getopt::Long;
 use Log::Log4perl qw[:levels];
 use Pod::Usage;
-use Class::Load qw/load_class/;
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::iRODS;
+use WTSI::NPG::HTS::PacBio::RunPublisher;
+use WTSI::NPG::HTS::PacBio::Sequel::RunPublisher;
 
 our $VERSION = '';
 
@@ -20,24 +21,26 @@ my $debug;
 my $log4perl_config;
 my $runfolder_path;
 my $verbose;
-my $subclass = q[];
+my $sequel;
 
 GetOptions('collection=s'                    => \$collection,
            'debug'                           => \$debug,
            'help'                            => sub {
              pod2usage(-verbose => 2, -exitval => 0);
            },
-           'sequel!'                         => sub {
-               $subclass = q[Sequel::];
-           },
+           'sequel'                          => \$sequel,
            'logconf=s'                       => \$log4perl_config,
            'runfolder-path|runfolder_path=s' => \$runfolder_path,
            'verbose'                         => \$verbose);
 
 
-# load class
-my $module = 'WTSI::NPG::HTS::PacBio::' . $subclass . 'RunPublisher';
-load_class($module);
+
+my $module;
+if ($sequel) {
+  $module = 'WTSI::NPG::HTS::PacBio::Sequel::RunPublisher';
+} else {
+  $module = 'WTSI::NPG::HTS::PacBio::RunPublisher';
+}
 
 # Process CLI arguments
 if ($log4perl_config) {
