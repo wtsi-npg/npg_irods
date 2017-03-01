@@ -32,6 +32,10 @@ our $DEFAULT_ROOT_COLL    = '/seq/pacbio';
 # The default SMRT analysis results directory name
 our $ANALYSIS_DIR = 'Analysis_Results';
 
+# Well directory pattern
+our $WELL_DIRECTORY_PATTERN = '\d+_\d+$';
+
+
 has 'irods' =>
   (isa           => 'WTSI::NPG::iRODS',
    is            => 'ro',
@@ -52,13 +56,22 @@ has 'dest_collection' =>
    builder       => '_build_dest_collection',
    documentation => 'The destination collection within iRODS to store data');
 
+has 'directory_pattern' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   init_arg      => undef,
+   lazy          => 1,
+   builder       => '_build_directory_pattern',
+   documentation => 'Well directory pattern');
+
+
 sub run_name {
   my ($self) = @_;
 
   return first { $_ ne q[] } reverse splitdir($self->runfolder_path);
 }
 
-=head2 smrt_path
+=head2 smrt_names
 
   Arg [1]    : None
 
@@ -71,10 +84,9 @@ sub run_name {
 sub smrt_names {
   my ($self) = @_;
 
-  my $dir_pattern = '\d+_\d+$';
+  my $dir_pattern = $self->directory_pattern;
   my @dirs = grep { -d } $self->list_directory($self->runfolder_path,
                                                $dir_pattern);
-
   my @names = sort map { first { $_ ne q[] } reverse splitdir($_) } @dirs;
 
   return @names;
@@ -203,7 +215,7 @@ sub list_sts_xml_files {
   Arg [1]    : SMRT cell name, Str.
   Arg [2]    : Look index, Int. Optional.
 
-  Example    : $pub->list_smrt_xml_file('A01_1')
+  Example    : $pub->list_meta_xml_file('A01_1')
   Description: Return the path of the metadata XML file for the given SMRT
                cell.  Calling this method will access the file system.
   Returntype : Str
@@ -461,7 +473,9 @@ sub _publish_files {
   ref $secondary_avus eq 'ARRAY' or
     $self->logconfess('The secondary_avus argument must be an ArrayRef');
 
-  my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods);
+  my $reqcache  = []; ## no md5s precreated for PacBio
+  my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods,
+                                                 require_checksum_cache => $reqcache);
 
   my $num_files     = scalar @{$files};
   my $num_processed = 0;
@@ -548,12 +562,19 @@ sub _build_dest_collection  {
   return catdir($DEFAULT_ROOT_COLL, $self->run_name);
 }
 
+
+sub _build_directory_pattern{
+   my ($self) = @_;
+
+   return $WELL_DIRECTORY_PATTERN;
+}
+
 # Check that a SMRT cell name argument is given and valid
 sub _check_smrt_name {
   my ($self, $smrt_name) = @_;
 
   defined $smrt_name or
-    $self->logconfess('A defined smart_name argument is required');
+    $self->logconfess('A defined smrt_name argument is required');
   any { $smrt_name eq $_ } $self->smrt_names or
     $self->logconfess("Invalid smrt_name argument '$smrt_name'");
 

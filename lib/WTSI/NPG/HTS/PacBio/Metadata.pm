@@ -51,7 +51,8 @@ has 'cell_index' =>
 has 'set_number' =>
   (isa           => 'Str',
    is            => 'ro',
-   required      => 1,
+   required      => 0,
+   predicate     => 'has_set_number',
    documentation => 'The PacBio XML set number');
 
 has 'run_uuid' =>
