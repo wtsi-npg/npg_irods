@@ -20,8 +20,8 @@ our $VERSION = '';
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::Accountable
-         WTSI::NPG::HTS::AVUCollator
-         WTSI::NPG::HTS::Annotator
+         WTSI::NPG::iRODS::AVUCollator
+         WTSI::NPG::iRODS::Annotator
        ];
 
 has 'irods' =>

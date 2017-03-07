@@ -16,7 +16,7 @@ use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::DriRODS;
 use WTSI::NPG::HTS::PacBio::MetaUpdater;
 use WTSI::NPG::iRODS;
-use WTSI::NPG::iRODS::Metadata qw[$FILE_TYPE $PACBIO_SOURCE $PACBIO_CELL_INDEX];
+use WTSI::NPG::iRODS::Metadata qw[$PACBIO_SOURCE $PACBIO_PRODUCTION $PACBIO_CELL_INDEX];
 
 our $VERSION = '';
 our $DEFAULT_ZONE = 'seq';
@@ -146,8 +146,7 @@ sub _make_run_query {
   my ($q_id_run) = @_;
 
   my @query =
-    ([$FILE_TYPE => 'h5'],
-     [$PACBIO_SOURCE => $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_PRODUCTION],
+    ([$PACBIO_SOURCE => $PACBIO_PRODUCTION],
      [$PACBIO_CELL_INDEX => q[%], 'like']);
 
   if (defined $q_id_run) {

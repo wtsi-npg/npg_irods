@@ -6,13 +6,8 @@ use WTSI::NPG::iRODS::Metadata;
 
 our $VERSION = '';
 
-# TODO -- use WTSI::NPG::iRODS::Metadata for these attributes
-our $PACBIO_PRODUCTION        = 'production';
-our $PACBIO_MULTIPLEX         = 'multiplex';
-our $PACBIO_LIBRARY_NAME      = 'library_name';
-
 with qw[
-         WTSI::NPG::HTS::Annotator
+         WTSI::NPG::iRODS::Annotator
        ];
 
 =head2 make_primary_metadata
@@ -39,9 +34,12 @@ sub make_primary_metadata {
   push @avus, $self->make_avu($PACBIO_COLLECTION_NUMBER, $metadata->collection_number);
   push @avus, $self->make_avu($PACBIO_INSTRUMENT_NAME,   $metadata->instrument_name);
   push @avus, $self->make_avu($PACBIO_RUN,               $metadata->run_name);
-  push @avus, $self->make_avu($PACBIO_SET_NUMBER,        $metadata->set_number);
   push @avus, $self->make_avu($PACBIO_WELL,              $metadata->well_name);
   push @avus, $self->make_avu($PACBIO_SAMPLE_LOAD_NAME,  $metadata->sample_name);
+
+  if ($metadata->has_set_number){ #Deprecated field, used in early version of RS
+    push @avus, $self->make_avu($PACBIO_SET_NUMBER, $metadata->set_number);
+  }
 
   if ($is_r_and_d) {
     # R & D data

@@ -16,7 +16,7 @@ use WTSI::NPG::HTS::DataObject;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
-         WTSI::NPG::HTS::Annotator
+         WTSI::NPG::iRODS::Annotator
          npg_tracking::illumina::run::short_info
          npg_tracking::illumina::run::folder
        ];

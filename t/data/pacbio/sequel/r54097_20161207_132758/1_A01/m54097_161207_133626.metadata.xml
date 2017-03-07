@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<pbdm:PacBioDataModel xmlns:pbbase="http://pacificbiosciences.com/PacBioBaseDataModel.xsd" xmlns:pbrk="http://pacificbiosciences.com/PacBioReagentKit.xsd" xmlns:pbdm="http://pacificbiosciences.com/PacBioDataModel.xsd" xmlns:pbmeta="http://pacificbiosciences.com/PacBioCollectionMetadata.xsd" xmlns:pbds="http://pacificbiosciences.com/PacBioDatasets.xsd" xmlns:pbsample="http://pacificbiosciences.com/PacBioSampleInfo.xsd" xmlns:pbpn="http://pacificbiosciences.com/PacBioPartNumbers.xsd" xmlns:ns8="http://pacificbiosciences.com/PacBioAutomationConstraints.xsd" xmlns:ns9="http://pacificbiosciences.com/PacBioCommonMessages.xsd" xmlns:ns10="http://pacificbiosciences.com/PacBioDataStore.xsd" xmlns:ns12="http://pacificbiosciences.com/PacBioPipelineStats.xsd" xmlns:ns13="http://pacificbiosciences.com/PacBioRightsAndRoles.xsd">
+    <pbdm:ExperimentContainer CreatedAt="2016-12-07T12:39:11.108Z" ModifiedAt="0001-01-01T00:00:00">
+        <pbdm:InvestigatorName>Default</pbdm:InvestigatorName>
+        <pbdm:CreatedDate>0001-01-01</pbdm:CreatedDate>
+        <pbdm:Runs>
+            <pbdm:Run Status="Starting" CreatedBy="unknown" WhenStarted="2016-12-07T13:36:25.08759Z" UniqueId="ecbf020d-4437-48d8-9d00-935142094728" MetaType="Run" TimeStampedName="r54097_20161207_132758" Name="50916" Description="DN468178B-A1 initial titration 7pM" CreatedAt="2016-12-07T12:39:11.108Z" ModifiedAt="0001-01-01T00:00:00">
+                <pbdm:Outputs>
+                    <pbdm:SubreadSets>
+                        <pbds:SubreadSet UniqueId="d8aff1a7-67f7-4c30-b543-aa2d55377d2e" MetaType="SubreadSetCollection" TimeStampedName="54097-SubreadSetCollection-2016-27-07T13:27:58.347Z" Name="DN468178B-A1-Cell1" CreatedAt="2016-12-07T12:39:11.108Z">
+                            <pbbase:ExternalResources>
+<pbbase:ExternalResource UniqueId="b9689308-44ce-4502-aa66-697463d3b4ed" MetaType="ExternalResource" TimeStampedName="54097-ExternalResource-2016-27-07T13:27:58.347Z"/>
+                            </pbbase:ExternalResources>
+                            <pbds:DataSetMetadata>
+<pbds:TotalLength>0</pbds:TotalLength>
+<pbds:NumRecords>0</pbds:NumRecords>
+<pbmeta:Collections>
+    <pbmeta:CollectionMetadata Context="m54097_161207_133626" Status="Ready" InstrumentId="54097" InstrumentName="SQ54097" UniqueId="d8aff1a7-67f7-4c30-b543-aa2d55377d2e" MetaType="CollectionMetadata" TimeStampedName="54097-CollectionMetadata-2016-27-07T13:27:58.347Z" CreatedAt="2016-12-07T12:39:11.108Z" ModifiedAt="0001-01-01T00:00:00">
+        <pbmeta:InstCtrlVer>3.1.1.183540</pbmeta:InstCtrlVer>
+        <pbmeta:SigProcVer>3.1.1-182013</pbmeta:SigProcVer>
+        <pbmeta:RunDetails>
+            <pbmeta:TimeStampedName>r54097_20161207_132758</pbmeta:TimeStampedName>
+            <pbmeta:Name>50916</pbmeta:Name>
+            <pbmeta:WhenCreated>2016-12-07T12:39:11.108Z</pbmeta:WhenCreated>
+            <pbmeta:WhenStarted>2016-12-07T13:36:25.08759Z</pbmeta:WhenStarted>
+        </pbmeta:RunDetails>
+        <pbmeta:WellSample Name="DN468178B-A1" Description="15kb SS - Column Cleaned - 7pM load" CreatedAt="2016-12-07T12:39:11.108Z" ModifiedAt="0001-01-01T00:00:00">
+            <pbmeta:WellName>A01</pbmeta:WellName>
+            <pbmeta:Concentration>0.0</pbmeta:Concentration>
+            <pbmeta:InsertSize>20000</pbmeta:InsertSize>
+            <pbmeta:SampleReuseEnabled>false</pbmeta:SampleReuseEnabled>
+            <pbmeta:StageHotstartEnabled>false</pbmeta:StageHotstartEnabled>
+            <pbmeta:SizeSelectionEnabled>false</pbmeta:SizeSelectionEnabled>
+            <pbmeta:UseCount>0</pbmeta:UseCount>
+        </pbmeta:WellSample>
+        <pbmeta:Automation Name="Workflow_Magbead.py">
+            <pbbase:AutomationParameters>
+                <pbbase:AutomationParameter ValueDataType="Double" SimpleValue="360" Name="MovieLength" CreatedAt="2016-12-07T12:39:11.108Z" ModifiedAt="0001-01-01T00:00:00"/>
+                <pbbase:AutomationParameter ValueDataType="Double" SimpleValue="120" Name="ImmobilizationTime" CreatedAt="2016-12-07T12:39:11.108Z" ModifiedAt="0001-01-01T00:00:00"/>
+                <pbbase:AutomationParameter ValueDataType="Int32" SimpleValue="0" Name="CollectionNumber"/>
+                <pbbase:AutomationParameter ValueDataType="String" SimpleValue="False" Name="UseStageHotStart"/>
+                <pbbase:AutomationParameter ValueDataType="Int32" SimpleValue="20000" Name="InsertSize"/>
+            </pbbase:AutomationParameters>
+        </pbmeta:Automation>
+        <pbmeta:CollectionNumber>0</pbmeta:CollectionNumber>
+        <pbmeta:CellIndex>0</pbmeta:CellIndex>
+        <pbmeta:CellPac PartNumber="100-513-100" LotNumber="320746" Barcode="BA036483636167145864147480" ExpirationDate="2017-05-02"/>
+        <pbmeta:TemplatePrepKit MinInsertSize="500" MaxInsertSize="20000" PartNumber="100-259-100" LotNumber="008465" Barcode="008465100259100022817" ExpirationDate="2017-02-28" Name="SMRTbell™ Template Prep Kit">
+            <pbbase:LeftAdaptorSequence>ATCTCTCTCAACAACAACAACGGAGGAGGAGGAAAAGAGAGAGAT</pbbase:LeftAdaptorSequence>
+            <pbbase:RightAdaptorSequence>ATCTCTCTCAACAACAACAACGGAGGAGGAGGAAAAGAGAGAGAT</pbbase:RightAdaptorSequence>
+        </pbmeta:TemplatePrepKit>
+        <pbmeta:BindingKit PartNumber="100-619-300" LotNumber="008589" Barcode="008589100619300012017" ExpirationDate="2017-01-20" Name="Sequel™ Binding Kit 1.0"/>
+        <pbmeta:SequencingKitPlate PartNumber="100-902-100" LotNumber="161019" Barcode="161019100902100041917" ExpirationDate="2017-04-19" Name="Sequel™ Sequencing Plate 1.2">
+            <pbrk:ReagentTubes PartNumber="100-619-700" LotNumber="307053" ExpirationDate="2018-07-25"/>
+            <pbrk:ReagentTubes PartNumber="100-619-600" LotNumber="008604" ExpirationDate="2020-11-30"/>
+        </pbmeta:SequencingKitPlate>
+        <pbmeta:Primary>
+            <pbmeta:AutomationName>SequelAlpha</pbmeta:AutomationName>
+            <pbmeta:ConfigFileName>SqlPoC_SubCrf_2C2A-t2.xml</pbmeta:ConfigFileName>
+            <pbmeta:SequencingCondition>DefaultPrimarySequencingCondition</pbmeta:SequencingCondition>
+            <pbmeta:OutputOptions>
+                <pbmeta:ResultsFolder>r54097_20161207_132758/1_A01/</pbmeta:ResultsFolder>
+                <pbmeta:CollectionPathUri>/pbi/collections/r54097_20161207_132758/1_A01/</pbmeta:CollectionPathUri>
+                <pbmeta:CopyFiles>
+                    <pbmeta:CollectionFileCopy>Fasta</pbmeta:CollectionFileCopy>
+                    <pbmeta:CollectionFileCopy>Bam</pbmeta:CollectionFileCopy>
+                </pbmeta:CopyFiles>
+                <pbmeta:Readout>Bases_Without_QVs</pbmeta:Readout>
+                <pbmeta:MetricsVerbosity>Minimal</pbmeta:MetricsVerbosity>
+                <pbmeta:TransferResource>
+                    <pbmeta:Id>new-resource</pbmeta:Id>
+                    <pbmeta:TransferScheme>RSYNC</pbmeta:TransferScheme>
+                    <pbmeta:Name>Sanger Sequel</pbmeta:Name>
+                    <pbmeta:Description>Sequel transfer settings</pbmeta:Description>
+                    <pbmeta:DestPath>/pbi/collections</pbmeta:DestPath>
+                </pbmeta:TransferResource>
+            </pbmeta:OutputOptions>
+        </pbmeta:Primary>
+        <pbmeta:Secondary>
+            <pbmeta:AutomationName>DefaultSecondaryAutomationName</pbmeta:AutomationName>
+            <pbmeta:AutomationParameters>
+                <pbmeta:AutomationParameter ValueDataType="String" SimpleValue="DefaultSecondaryAnalysisReferenceName" Name="Reference" CreatedAt="0001-01-01T00:00:00" ModifiedAt="0001-01-01T00:00:00"/>
+            </pbmeta:AutomationParameters>
+            <pbmeta:CellCountInJob>0</pbmeta:CellCountInJob>
+        </pbmeta:Secondary>
+        <pbmeta:UserDefinedFields>
+            <pbbase:DataEntities ValueDataType="String" SimpleValue="DefaultUserDefinedFieldLIMS" Name=" LIMS_IMPORT "/>
+        </pbmeta:UserDefinedFields>
+    </pbmeta:CollectionMetadata>
+</pbmeta:Collections>
+                            </pbds:DataSetMetadata>
+                        </pbds:SubreadSet>
+                    </pbdm:SubreadSets>
+                </pbdm:Outputs>
+                <pbdm:RecordedEvents>
+                    <pbdm:RecordedEvent SimpleValue="Starting" Name="RunStateChange"/>
+                </pbdm:RecordedEvents>
+            </pbdm:Run>
+        </pbdm:Runs>
+    </pbdm:ExperimentContainer>
+</pbdm:PacBioDataModel>

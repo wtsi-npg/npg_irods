@@ -1,13 +1,19 @@
+Release 2.0
 
+ - API change: removed WTSI::NPG::HTS::Annotator in favour of
+   WTSI::NPG::iRODS::Annotator.
 
- - PacBio: remove dependancy on multi value user defined fields. Change
-   run_uuid field to optional to support R&D runs/wells.  
+ - PacBio: no longer require run ids to be specified whe updating
+   metadata.
+
+ - PacBio: remove dependancy on multi value user defined fields.
+   Change run_uuid field to optional to support R&D runs/wells.
 
 Release 1.6
  - BioNano: add command line script for publication
  - Added a script to update PacBio metadata in iRODS
  - added support for PacBio legacy metadata
- - added PacBio run monitor CLI script 
+ - added PacBio run monitor CLI script
  - archival of bam_stats files
 
 Release 1.5
