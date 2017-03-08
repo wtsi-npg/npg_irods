@@ -8,6 +8,7 @@ use Try::Tiny;
 
 use WTSI::NPG::HTS::DataObject;
 use WTSI::NPG::iRODS;
+use WTSI::NPG::iRODS::Metadata qw[$PACBIO_RUN $PACBIO_WELL];
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
@@ -54,11 +55,8 @@ sub update_secondary_metadata {
 
     my $obj = WTSI::NPG::HTS::DataObject->new($self->irods, $path);
 
-    # TODO -- use WTSI::NPG::iRODS::Metadata for these attributes
-    my $id_run =
-      $obj->get_avu($WTSI::NPG::HTS::PacBio::Annotator::PACBIO_RUN)->{value};
-    my $well   =
-      $obj->get_avu($WTSI::NPG::HTS::PacBio::Annotator::PACBIO_WELL)->{value};
+    my $id_run = $obj->get_avu($PACBIO_RUN)->{value};
+    my $well   = $obj->get_avu($PACBIO_WELL)->{value};
 
     try {
       my @run_records = $self->find_pacbio_runs($id_run, $well);

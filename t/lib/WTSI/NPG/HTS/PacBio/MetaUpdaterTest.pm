@@ -86,8 +86,8 @@ sub update_secondary_metadata : Test(2) {
   my $expected_meta =
     [
      {attribute => $LIBRARY_ID,              value => 15977171},
-     {attribute => $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_RUN,
-      value     => 45137},
+     {attribute => $PACBIO_LIBRARY_NAME,     value => 'DN434306G-A1'},
+     {attribute => $PACBIO_RUN,              value     => 45137},
      {attribute => $SAMPLE_NAME,             value => '2572STDY6358500'},
      {attribute => $SAMPLE_ACCESSION_NUMBER, value => 'ERS1075968'},
      {attribute => $SAMPLE_COMMON_NAME,      value => 'Anopheles gambiae'},
@@ -100,8 +100,7 @@ sub update_secondary_metadata : Test(2) {
      {attribute => $STUDY_ID,                value => 2572},
      {attribute => $STUDY_TITLE,
       value     => 'Anopheles Genome Variation Project'},
-     {attribute => $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_WELL,
-      value     => 'A01'}
+     {attribute => $PACBIO_WELL,             value     => 'A01'}
     ];
 
   my $obj = WTSI::NPG::HTS::DataObject->new
