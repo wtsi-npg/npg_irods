@@ -10,9 +10,12 @@ use Getopt::Long;
 use Log::Log4perl qw[:levels];
 use Pod::Usage;
 
+
 use WTSI::DNAP::Warehouse::Schema;
-use WTSI::NPG::HTS::PacBio::RunMonitor;
 use WTSI::NPG::iRODS;
+use WTSI::NPG::HTS::PacBio::RunMonitor;
+use WTSI::NPG::HTS::PacBio::Sequel::RunMonitor;
+
 
 our $VERSION = '';
 
@@ -21,15 +24,26 @@ my $debug;
 my $local_path;
 my $log4perl_config;
 my $verbose;
+my $sequel;
 
 GetOptions('collection=s'            => \$collection,
            'debug'                   => \$debug,
            'help'                    => sub {
              pod2usage(-verbose => 2, -exitval => 0);
            },
+           'sequel'                  => \$sequel,
            'logconf=s'               => \$log4perl_config,
            'local-path|local_path=s' => \$local_path,
            'verbose'                 => \$verbose);
+
+
+my $module;
+if ($sequel) {
+  $module = 'WTSI::NPG::HTS::PacBio::Sequel::RunMonitor';
+} else {
+  $module = 'WTSI::NPG::HTS::PacBio::RunMonitor';
+}
+
 
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
@@ -56,7 +70,7 @@ if ($collection) {
   push @init_args, dest_collection => $collection;
 }
 
-my $monitor = WTSI::NPG::HTS::PacBio::RunMonitor->new(@init_args);
+my $monitor = $module->new(@init_args);
 
 my ($num_files, $num_published, $num_errors) =
   $monitor->publish_completed_runs;
@@ -83,8 +97,8 @@ npg_pacbio_runmonitor
 =head1 SYNOPSIS
 
 npg_pacbio_runmonitor --local-path </path/to/staging/area
-  [--collection <path>] [--debug] [--verbose]
-  [--logconf <path>]
+  [--collection <path>] [--debug] [--logconf <path>]
+  [--verbose] [--sequel]
 
  Options:
    --collection      The destination collection in iRODS. Optional,
@@ -97,12 +111,14 @@ npg_pacbio_runmonitor --local-path </path/to/staging/area
                      are staged for loading into iRODS.
    --logconf         A log4perl configuration file. Optional.
    --verbose         Print messages while processing. Optional.
+   --sequel          If the target monitor is for the Sequel system. 
+                     Optional.
+
 
 =head1 DESCRIPTION
 
-This script queries a PacBio web service to determine which runs have
-reached completed status. It then loads these runs into iRODS using
-the WTSI::NPG::HTS::PacBio::RunPublisher.
+This script queries a PacBio web service for runs and loads completed
+runs into iRODS using the relevant PacBio RunPublisher module.
 
 =head1 AUTHOR
 

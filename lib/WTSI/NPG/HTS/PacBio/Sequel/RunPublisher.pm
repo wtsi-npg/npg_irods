@@ -40,7 +40,7 @@ override '_build_directory_pattern' => sub {
   Arg [1]    : smrt_names, ArrayRef[Str]. Optional.
 
   Example    : my ($num_files, $num_published, $num_errors) =
-                 $pub->publish_files(smrt_names => ['1_A01', '2_B01'])
+                 $pub->publish_files(['1_A01', '2_B01'])
   Description: Publish all files to iRODS. If the smrt_names argument is
                supplied, only those SMRT cells will be published. The default
                is to publish all SMRT cells. Return the number of files,
@@ -62,13 +62,20 @@ override 'publish_files' => sub {
 
    foreach my $smrt_name (@{$smrt_names}) {
 
-      my ($nfx, $npx, $nex) = $self->publish_xml_files($smrt_name);
-      my ($nfb, $npb, $neb) = $self->publish_sequence_files($smrt_name);
-      my ($nfp, $npp, $nep) = $self->publish_index_files($smrt_name);
+      my $seq_files = $self->list_sequence_files($smrt_name);
 
-      $num_files     += ($nfx + $nfb + $nfp);
-      $num_processed += ($npx + $npb + $npp);
-      $num_errors    += ($nex + $neb + $nep);
+      if (defined $seq_files->[0]) {
+         my ($nfx, $npx, $nex) = $self->publish_xml_files($smrt_name);
+         my ($nfb, $npb, $neb) = $self->publish_sequence_files($smrt_name);
+         my ($nfp, $npp, $nep) = $self->publish_index_files($smrt_name);
+
+         $num_files     += ($nfx + $nfb + $nfp);
+         $num_processed += ($npx + $npb + $npp);
+         $num_errors    += ($nex + $neb + $nep);
+
+      }else{
+          $self->warn("Skipping $smrt_name as no seq files found");
+      }
 
    }
 
@@ -92,7 +99,7 @@ override 'publish_files' => sub {
 sub publish_xml_files {
   my ($self, $smrt_name) = @_;
 
-  my $type = q[metadata|subreadset|sts];
+  my $type = q[subreadset|sts];
   my $num  = scalar split m/[|]/msx, $type;
 
   my $files = $self->list_xml_files($smrt_name, $type, $num);
@@ -123,7 +130,7 @@ sub publish_xml_files {
 sub publish_sequence_files {
   my ($self, $smrt_name) = @_;
 
-  my $metadata_file = $self->list_xml_files($smrt_name, 'metadata', '1')->[0];
+  my $metadata_file = $self->list_xml_files($smrt_name, 'subreadset', '1')->[0];
   $self->debug("Reading metadata from '$metadata_file'");
 
   my $metadata =
@@ -292,7 +299,7 @@ Data files are divided into three categories:
 
  - sequence files; sequence files for sequence data
  - index files; index files for sequence data
- - XML files; metadata, stats metadata and subset xml.
+ - XML files; stats and subset xml
 
 
 A RunPublisher provides methods to list the complement of these
