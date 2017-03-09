@@ -62,8 +62,8 @@ sub publish_completed_runs {
             $self->logcroak("Encountered $ne errors while processing ",
                             "[$np / $nf] files in '$runfolder_path'");
           }
+          $num_processed++;
         }
-        $num_processed++;
       } catch {
         $num_errors++;
         $self->error('Failed to process ', _run_info($run), ' cleanly ',
@@ -104,17 +104,23 @@ sub _get_runfolder_path {
       }
 
       if ($total_cells != ($num_cells_failed + $num_cells_completed)){
-        $self->info('IGNORING ', _run_info($run), ' (Some cells may not be complete)');
+        $self->warn('IGNORING ', _run_info($run), ' (Some cells may not be complete)');
         last SWITCH;
       }
 
       if ($num_cells_completed < 1){
-        $self->info('IGNORING ', _run_info($run), ' (No completed cells to load)');
+        $self->warn('IGNORING ', _run_info($run), ' (No completed cells to load)');
         last SWITCH;
       }
 
+      my $path = canonpath(catdir($self->local_staging_area, $run_folder));
+      if(! -e $path){
+          $self->warn('IGNORING ', _run_info($run), ' (Runfolder path not found)');
+          last SWITCH;
+      }
+
       $self->info(_run_info($run));
-      $runfolder_path = canonpath(catdir($self->local_staging_area, $run_folder));
+      $runfolder_path = $path;
   }
 
   return $runfolder_path;

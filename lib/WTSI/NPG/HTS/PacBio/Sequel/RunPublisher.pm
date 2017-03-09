@@ -74,7 +74,7 @@ override 'publish_files' => sub {
          $num_errors    += ($nex + $neb + $nep);
 
       }else{
-          $self->warn("Skipping $smrt_name as no seq files found");
+          $self->info("Skipping $smrt_name as no seq files found");
       }
 
    }

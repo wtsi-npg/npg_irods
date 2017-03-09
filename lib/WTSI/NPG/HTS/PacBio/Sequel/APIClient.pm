@@ -46,7 +46,7 @@ has 'default_interval' =>
   (isa           => 'Int',
    is            => 'ro',
    required      => 1,
-   default       => 21,
+   default       => 14,
    documentation => 'The default number of days activity to report');
 
 

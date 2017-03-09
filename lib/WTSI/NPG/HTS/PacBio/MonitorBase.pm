@@ -34,7 +34,7 @@ has 'mlwh_schema' =>
    documentation => 'A ML warehouse handle to obtain secondary metadata');
 
 
-no Moose;
+no Moose::Role;
 
 1;
 
