@@ -9,12 +9,12 @@ use MooseX::StrictConstructor;
 use Try::Tiny;
 use URI;
 
-use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::HTS::PacBio::APIClient;
 use WTSI::NPG::HTS::PacBio::RunPublisher;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
+         WTSI::NPG::HTS::PacBio::MonitorBase
        ];
 
 our $VERSION = '';
@@ -33,31 +33,6 @@ has 'path_uri_filter' =>
    default       => undef,
    documentation => 'A regex matching data path URIs to accept');
 
-has 'irods' =>
-  (isa           => 'WTSI::NPG::iRODS',
-   is            => 'ro',
-   required      => 1,
-   documentation => 'An iRODS handle to run searches and perform updates');
-
-has 'dest_collection' =>
-  (isa           => 'Maybe[Str]',
-   is            => 'ro',
-   required      => 1,
-   default       => undef,
-   documentation => 'The destination collection within iRODS to store data');
-
-has 'local_staging_area' =>
-  (isa           => 'Str',
-   is            => 'ro',
-   required      => 1,
-   documentation => 'A local filesystem path acting as a root path for ' .
-                    'runfolders');
-
-has 'mlwh_schema' =>
-  (is            => 'ro',
-   isa           => 'WTSI::DNAP::Warehouse::Schema',
-   required      => 1,
-   documentation => 'A ML warehouse handle to obtain secondary metadata');
 
 =head2 publish_completed_runs
 

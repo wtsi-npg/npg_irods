@@ -82,9 +82,9 @@ sub list_xml_files : Test(1) {
 
   my @expected_paths =
     map { catfile("$runfolder_path/1_A01", $_) }
-    ('m54097_161207_133626.metadata.xml');
+    ('m54097_161207_133626.subreadset.xml');
 
-  is_deeply($pub->list_xml_files('1_A01','metadata',1), \@expected_paths,
+  is_deeply($pub->list_xml_files('1_A01','subreadset',1), \@expected_paths,
      'Found meta XML file 1_A01');
 }
 
@@ -146,12 +146,12 @@ sub publish_files : Test(1) {
      runfolder_path  => $runfolder_path);
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
-  my $num_expected = 7;
+  my $num_expected = 6;
 
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
 }
 
-sub publish_xml_files : Test(19) {
+sub publish_xml_files : Test(14) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r54097_20161207_132758";
@@ -165,12 +165,11 @@ sub publish_xml_files : Test(19) {
 
   my @expected_paths =
     map { catfile("$dest_coll/1_A01", $_) }
-    ('m54097_161207_133626.metadata.xml',
-     'm54097_161207_133626.sts.xml',
+    ('m54097_161207_133626.sts.xml',
      'm54097_161207_133626.subreadset.xml');
 
   my ($num_files, $num_processed, $num_errors) =
-    $pub->publish_xml_files('1_A01', 'metadata|subreadset|sts',3);
+    $pub->publish_xml_files('1_A01', 'subreadset|sts',2);
   cmp_ok($num_files,     '==', scalar @expected_paths);
   cmp_ok($num_processed, '==', scalar @expected_paths);
   cmp_ok($num_errors,    '==', 0);
