@@ -728,8 +728,18 @@ sub publish_xml_files {
 
   $self->info('Publishing XML files');
 
-  return $self->_publish_support_files($self->list_xml_files,
-                                       $self->dest_collection);
+  my $primary_avus_callback = sub {
+    # Argument is a WTSI::NPG::iRODS::DataObject
+    return $self->_make_support_primary_meta(shift);
+  };
+
+  my $secondary_avus_callback = sub {
+    return ();
+  };
+
+  return $self->batch_publisher->publish_file_batch
+    ($self->list_xml_files, $self->dest_collection,
+     $primary_avus_callback, $secondary_avus_callback);
 }
 
 =head2 publish_xml_files
@@ -749,9 +759,18 @@ sub publish_interop_files {
 
   $self->info('Publishing InterOp files');
 
-  return $self->_publish_support_files($self->list_interop_files,
-                                       $self->interop_dest_collection);
+  my $primary_avus_callback = sub {
+    # Argument is a WTSI::NPG::iRODS::DataObject
+    return $self->_make_support_primary_meta(shift);
+  };
 
+  my $secondary_avus_callback = sub {
+    return ();
+  };
+
+  return $self->batch_publisher->publish_file_batch
+    ($self->list_interop_files, $self->interop_dest_collection,
+     $primary_avus_callback, $secondary_avus_callback);
 }
 
 =head2 publish_alignment_files
@@ -1306,10 +1325,12 @@ sub _publish_support_files {
   my ($self, $files, $dest_coll, $with_spiked_control) = @_;
 
   my $primary_avus_callback = sub {
+    # Argument is a WTSI::NPG::iRODS::DataObject
     return $self->_make_support_primary_meta(shift);
   };
 
   my $secondary_avus_callback = sub {
+    # Argument is a WTSI::NPG::iRODS::DataObject
     $self->_make_support_secondary_meta(shift, $with_spiked_control);
   };
 

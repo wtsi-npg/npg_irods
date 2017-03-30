@@ -129,7 +129,7 @@ sub list_index_files : Test(1) {
             'Found sequence index files 1_A01');
 }
 
-sub publish_files : Test(1) {
+sub publish_files : Test(2) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r54097_20161207_132758";
@@ -147,6 +147,7 @@ sub publish_files : Test(1) {
   my $num_expected = 6;
 
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
+  cmp_ok($num_errors,    '==', 0);
 }
 
 sub publish_xml_files : Test(14) {

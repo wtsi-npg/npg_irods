@@ -493,7 +493,7 @@ sub list_plex_ancillary_files : Test(16) {
   }
 }
 
-sub publish_xml_files : Test(14) {
+sub publish_xml_files : Test(15) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
@@ -513,6 +513,7 @@ sub publish_xml_files : Test(14) {
   my @expected_paths = ("$dest_coll/RunInfo.xml",
                         "$dest_coll/runParameters.xml");
   my ($num_files, $num_processed, $num_errors) = $pub->publish_xml_files;
+  cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', 2, 'Published 2 XML files');
 
   my @observed_paths = observed_data_objects($irods, $dest_coll, '[.]xml$');
@@ -529,7 +530,7 @@ sub publish_xml_files : Test(14) {
   }
 }
 
-sub publish_interop_files : Test(44) {
+sub publish_interop_files : Test(45) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
@@ -555,6 +556,7 @@ sub publish_interop_files : Test(44) {
         QMetricsOut.bin
         TileMetricsOut.bin];
   my ($num_files, $num_processed, $num_errors) = $pub->publish_interop_files;
+  cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', 7, 'Published 7 InterOp files');
 
   my @observed_paths = observed_data_objects($irods,
@@ -573,7 +575,7 @@ sub publish_interop_files : Test(44) {
   }
 }
 
-sub publish_lane_alignment_files_mlwh : Test(264) {
+sub publish_lane_alignment_files_mlwh : Test(272) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -584,7 +586,7 @@ sub publish_lane_alignment_files_mlwh : Test(264) {
                                      $lims_factory);
 }
 
-sub publish_lane_alignment_files_samplesheet : Test(264) {
+sub publish_lane_alignment_files_samplesheet : Test(272) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -598,7 +600,7 @@ sub publish_lane_alignment_files_samplesheet : Test(264) {
                                      $lims_factory);
 }
 
-sub publish_plex_alignment_files_mlwh : Test(811) {
+sub publish_plex_alignment_files_mlwh : Test(813) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20150914-100512/no_cal/archive';
@@ -609,7 +611,7 @@ sub publish_plex_alignment_files_mlwh : Test(811) {
                                      $lims_factory);
 }
 
-sub publish_plex_alignment_files_samplesheet : Test(811) {
+sub publish_plex_alignment_files_samplesheet : Test(813) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20150914-100512/no_cal/archive';
@@ -623,7 +625,7 @@ sub publish_plex_alignment_files_samplesheet : Test(811) {
                                      $lims_factory);
 }
 
-sub publish_lane_index_files : Test(91) {
+sub publish_lane_index_files : Test(99) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
@@ -657,6 +659,7 @@ sub publish_lane_index_files : Test(91) {
     my ($num_files, $num_processed, $num_errors) =
       $pub->publish_lane_index_files($position);
 
+    cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
     cmp_ok($num_processed, '==', $num_expected,
            "Published $num_expected $file_format lane $position index files");
 
@@ -679,7 +682,7 @@ sub publish_lane_index_files : Test(91) {
   }
 }
 
-sub publish_plex_index_files : Test(269) {
+sub publish_plex_index_files : Test(271) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -716,6 +719,7 @@ sub publish_plex_index_files : Test(269) {
     my ($num_files, $num_processed, $num_errors) =
       $pub->publish_plex_index_files($position);
 
+    cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
     cmp_ok($num_processed, '==', $num_expected,
            "Published $num_expected position $position " .
            "$file_format index files");
@@ -739,7 +743,7 @@ sub publish_plex_index_files : Test(269) {
   }
 }
 
-sub publish_lane_ancillary_files : Test(856) {
+sub publish_lane_ancillary_files : Test(864) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
@@ -767,6 +771,7 @@ sub publish_lane_ancillary_files : Test(856) {
     my ($num_files, $num_processed, $num_errors) =
       $pub->publish_lane_ancillary_files($position);
 
+    cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
     cmp_ok($num_processed, '==', $num_expected,
            "Published $num_expected $file_format lane " .
            "$position $file_format ancillary files");
@@ -786,7 +791,7 @@ sub publish_lane_ancillary_files : Test(856) {
   }
 }
 
-sub publish_plex_ancillary_files : Test(2804) {
+sub publish_plex_ancillary_files : Test(2806) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -817,6 +822,7 @@ sub publish_plex_ancillary_files : Test(2804) {
     my ($num_files, $num_processed, $num_errors) =
       $pub->publish_plex_ancillary_files($position);
 
+    cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
     cmp_ok($num_processed, '==', $num_expected,
            "Published $num_expected $file_format position $position " .
            "ancillary files");
@@ -836,7 +842,7 @@ sub publish_plex_ancillary_files : Test(2804) {
   }
 }
 
-sub publish_lane_qc_files : Test(736) {
+sub publish_lane_qc_files : Test(744) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -865,6 +871,7 @@ sub publish_lane_qc_files : Test(736) {
     my ($num_files, $num_processed, $num_errors) =
       $pub->publish_lane_qc_files($position);
 
+    cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
     cmp_ok($num_processed, '==', $num_expected,
            "Published $num_expected $file_format lane " .
            "$position QC files");
@@ -887,7 +894,7 @@ sub publish_lane_qc_files : Test(736) {
   }
 }
 
-sub publish_plex_qc_files : Test(1660) {
+sub publish_plex_qc_files : Test(1662) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -918,6 +925,7 @@ sub publish_plex_qc_files : Test(1660) {
     my ($num_files, $num_processed, $num_errors) =
       $pub->publish_plex_qc_files($position);
 
+    cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
     cmp_ok($num_processed, '==', $num_expected,
            "Published $num_expected $file_format position $position " .
            "JSON QC files");
@@ -940,7 +948,7 @@ sub publish_plex_qc_files : Test(1660) {
   }
 }
 
-sub publish_plex_alignment_files_alt_process : Test(922) {
+sub publish_plex_alignment_files_alt_process : Test(924) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -974,6 +982,7 @@ sub publish_plex_alignment_files_alt_process : Test(922) {
     my ($num_files, $num_processed, $num_errors) =
       $pub->publish_plex_alignment_files($position);
 
+    cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
     cmp_ok($num_processed, '==', $num_expected,
            "Published $num_expected position $position " .
            "$file_format alignment files");
@@ -996,7 +1005,7 @@ sub publish_plex_alignment_files_alt_process : Test(922) {
   }
 }
 
-sub publish_plex_alignment_files_human_split : Test(2) {
+sub publish_plex_alignment_files_human_split : Test(3) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -1028,13 +1037,15 @@ sub publish_plex_alignment_files_human_split : Test(2) {
            diag explain \@listed;
 
   my ($num_files, $num_processed, $num_errors) =
-      $pub->publish_plex_alignment_files($position);
+    $pub->publish_plex_alignment_files($position);
+
+  cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', $num_expected,
          "Published $num_expected position $position " .
          "$file_format alignment files");
 }
 
-sub publish_with_samplesheet_driver : Test(760) {
+sub publish_with_samplesheet_driver : Test(762) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
@@ -1067,6 +1078,7 @@ sub publish_with_samplesheet_driver : Test(760) {
     my ($num_files, $num_processed, $num_errors) =
       $pub->publish_plex_alignment_files($position);
 
+    cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
     cmp_ok($num_processed, '==', $num_expected,
            "Published $num_expected position $position " .
            "$file_format alignment files");
@@ -1162,6 +1174,7 @@ sub check_publish_lane_alignment_files {
     my ($num_files, $num_processed, $num_errors) =
       $pub->publish_lane_alignment_files($position);
 
+    cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
     cmp_ok($num_processed, '==', $num_expected,
            "Published $num_expected $file_format lane " .
            "$position alignment files");
@@ -1244,6 +1257,7 @@ sub check_publish_plex_alignment_files {
     my ($num_files, $num_processed, $num_errors) =
       $pub->publish_plex_alignment_files($position);
 
+    cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
     cmp_ok($num_processed, '==', $num_expected,
            "Published $num_expected position $position " .
            "$file_format alignment files");
