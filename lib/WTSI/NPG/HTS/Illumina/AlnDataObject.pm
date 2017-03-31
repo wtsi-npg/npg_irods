@@ -92,7 +92,7 @@ sub BUILD {
     $IS_PAIRED_READ,
     $POSITION,
     $REFERENCE,
-    $WTSI::NPG::HTS::Illumina::Annotator::SEQCHKSUM,
+    $SEQCHKSUM,
     $TAG_INDEX,
     $TARGET,
     $TOTAL_READS;
@@ -318,7 +318,8 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016, 2017 Genome Research Limited. All Rights
+Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

@@ -1,3 +1,9 @@
+ - Added a local cache of loaded file names. A restarted job will use
+   this to determine which files remain to be loaded.
+
+ - Added a CLI option to abort a loading run after a user-specified
+   maximum number of errors.
+
 Release 2.0
 
  - API change: removed WTSI::NPG::HTS::Annotator in favour of

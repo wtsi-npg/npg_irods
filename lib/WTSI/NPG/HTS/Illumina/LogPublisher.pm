@@ -9,10 +9,10 @@ use MooseX::StrictConstructor;
 use POSIX qw[strftime];
 use Try::Tiny;
 
-use WTSI::NPG::iRODS;
-use WTSI::NPG::iRODS::Metadata qw[$ID_RUN];
-use WTSI::NPG::HTS::Publisher;
 use WTSI::NPG::HTS::DataObject;
+use WTSI::NPG::iRODS::Metadata qw[$ID_RUN];
+use WTSI::NPG::iRODS::Publisher;
+use WTSI::NPG::iRODS;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
@@ -110,7 +110,7 @@ sub publish_logs {
     $self->logcroak(pop @stack); # Use a shortened error message
   };
 
-  my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $self->irods);
+  my $publisher = WTSI::NPG::iRODS::Publisher->new(irods => $self->irods);
   my $dest = $publisher->publish($tarpath, catfile($self->dest_collection,
                                                    $self->tarfile));
   my $obj = WTSI::NPG::HTS::DataObject->new($self->irods, $dest);

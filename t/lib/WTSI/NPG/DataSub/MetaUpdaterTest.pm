@@ -13,7 +13,7 @@ use base qw[WTSI::NPG::HTS::Test];
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
-use WTSI::NPG::HTS::Publisher;
+use WTSI::NPG::iRODS::Publisher;
 use WTSI::NPG::DataSub::MetaUpdater;
 use WTSI::NPG::DataSub::SubtrackClient;
 
@@ -31,7 +31,7 @@ sub setup_test : Test(setup) {
     $irods->add_collection("DatasubMetaUpdaterTest.$pid.$test_counter");
   $test_counter++;
 
-  my $publisher = WTSI::NPG::HTS::Publisher->new(irods => $irods);
+  my $publisher = WTSI::NPG::iRODS::Publisher->new(irods => $irods);
 
   # The files with distinct name and MD5
   $irods->add_collection("$irods_tmp_coll/valid");

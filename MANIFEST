@@ -51,7 +51,6 @@ lib/WTSI/NPG/HTS/PacBio/Sequel/MetaXMLParser.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunMonitor.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunPublisher.pm
 lib/WTSI/NPG/HTS/PathLister.pm
-lib/WTSI/NPG/HTS/Publisher.pm
 lib/WTSI/NPG/HTS/Seqchksum.pm
 lib/WTSI/NPG/HTS/Types.pm
 lib/WTSI/NPG/OM/BioNano/Annotator.pm
@@ -7585,7 +7584,6 @@ t/lib/WTSI/NPG/HTS/PacBio/RunMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/RunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunPublisherTest.pm
-t/lib/WTSI/NPG/HTS/PublisherTest.pm
 t/lib/WTSI/NPG/HTS/SeqchksumTest.pm
 t/lib/WTSI/NPG/HTS/Test.pm
 t/lib/WTSI/NPG/OM/BioNano/BnxFileTest.pm
@@ -7600,7 +7598,6 @@ t/pacbio_sequel_run_monitor.t
 t/pacbio_sequel_run_publisher.t
 t/params.t
 t/perlcriticrc
-t/publisher.t
 t/README
 t/run_publisher.t
 t/seqchksum.t

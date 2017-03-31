@@ -13,7 +13,6 @@ extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
 
 our $VERSION = '';
 
-
 # Sequence and index file suffixes
 our $SEQUENCE_FILE_FORMAT   = 'bam';
 our $SEQUENCE_INDEX_FORMAT  = 'pbi';
@@ -27,13 +26,11 @@ our $FILE_PREFIX_PATTERN    = 'm\d+_\d+_\d+';
 # Well directory pattern
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
-
 override '_build_directory_pattern' => sub {
    my ($self) = @_;
 
    return $WELL_DIRECTORY_PATTERN;
 };
-
 
 =head2 publish_files
 
@@ -49,39 +46,41 @@ override '_build_directory_pattern' => sub {
 
 =cut
 
-
 override 'publish_files' => sub {
+  my ($self, $smrt_names) = @_;
 
-   my ($self,$smrt_names) = @_;
+  if (!$smrt_names) {
+    $smrt_names = [$self->smrt_names];
+  }
 
-   if(!$smrt_names){ $smrt_names = [$self->smrt_names]; }
+  $self->info('Publishing files for SMRT cells: ', pp($smrt_names));
 
-   $self->info('Publishing files for SMRT cells: ', pp($smrt_names));
+  my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
-   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
+  foreach my $smrt_name (@{$smrt_names}) {
+    my $seq_files = $self->list_sequence_files($smrt_name);
 
-   foreach my $smrt_name (@{$smrt_names}) {
+    if (defined $seq_files->[0]) {
+      my ($nfx, $npx, $nex) = $self->publish_xml_files($smrt_name);
+      my ($nfb, $npb, $neb) = $self->publish_sequence_files($smrt_name);
+      my ($nfp, $npp, $nep) = $self->publish_index_files($smrt_name);
 
-      my $seq_files = $self->list_sequence_files($smrt_name);
+      $num_files     += ($nfx + $nfb + $nfp);
+      $num_processed += ($npx + $npb + $npp);
+      $num_errors    += ($nex + $neb + $nep);
+    }
+    else {
+      $self->info("Skipping $smrt_name as no seq files found");
+    }
 
-      if (defined $seq_files->[0]) {
-         my ($nfx, $npx, $nex) = $self->publish_xml_files($smrt_name);
-         my ($nfb, $npb, $neb) = $self->publish_sequence_files($smrt_name);
-         my ($nfp, $npp, $nep) = $self->publish_index_files($smrt_name);
+    if ($num_errors > 0) {
+      $self->error("Encountered errors on $num_errors / ",
+                   "$num_processed files processed");
+    }
+  }
 
-         $num_files     += ($nfx + $nfb + $nfp);
-         $num_processed += ($npx + $npb + $npp);
-         $num_errors    += ($nex + $neb + $nep);
-
-      }else{
-          $self->info("Skipping $smrt_name as no seq files found");
-      }
-
-   }
-
-   return ($num_files, $num_processed, $num_errors);
+  return ($num_files, $num_processed, $num_errors);
 };
-
 
 =head2 publish_xml_files
 
@@ -120,8 +119,8 @@ sub publish_xml_files {
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_sequence_files
-  Description: Publish sequence and index files for a SMRT cell to iRODS. Return
-               the number of files, the number published and the number
+  Description: Publish sequence and index files for a SMRT cell to iRODS.
+               Return the number of files, the number published and the number
                of errors.
   Returntype : Array[Int]
 
@@ -134,11 +133,13 @@ sub publish_sequence_files {
   $self->debug("Reading metadata from '$metadata_file'");
 
   my $metadata =
-    WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file($metadata_file);
+    WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file
+      ($metadata_file);
 
   # There will be 1 record for a non-multiplexed SMRT cell and >1
   # record for a multiplexed (currently no uuids recorded in XML).
-  my @run_records = $self->find_pacbio_runs($metadata->run_name,$metadata->well_name);
+  my @run_records =
+    $self->find_pacbio_runs($metadata->run_name, $metadata->well_name);
 
   # R & D runs have no records in the ML warehouse
   my $is_r_and_d = @run_records ? 0 : 1;
@@ -158,8 +159,6 @@ sub publish_sequence_files {
 
   return ($num_files, $num_processed, $num_errors);
 }
-
-
 
 =head2 publish_index_files
 
@@ -189,7 +188,6 @@ sub publish_index_files {
   return ($num_files, $num_processed, $num_errors);
 }
 
-
 =head2 list_sequence_files
 
   Arg [1]    : SMRT cell name, Str.
@@ -209,9 +207,8 @@ sub list_sequence_files {
   my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $SEQUENCE_TYPES .q{[.]}.
         $SEQUENCE_FILE_FORMAT .q{$};
 
-  return [$self->list_directory($self->smrt_path($name),$file_pattern)];
+  return [$self->list_directory($self->smrt_path($name), $file_pattern)];
 }
-
 
 =head2 list_index_files
 
@@ -232,10 +229,8 @@ sub list_index_files {
   my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $SEQUENCE_TYPES. q{[.]}.
         $SEQUENCE_FILE_FORMAT .q{[.]}. $SEQUENCE_INDEX_FORMAT .q{$};
 
-  return [$self->list_directory($self->smrt_path($name),$file_pattern)];
+  return [$self->list_directory($self->smrt_path($name), $file_pattern)];
 }
-
-
 
 =head2 list_xml_files
 
@@ -247,6 +242,7 @@ sub list_index_files {
   Description: Return the path of the metadata XML files for the given SMRT
                cell and type.  Calling this method will access the file system.
   Returntype : Str
+
 =cut
 
 sub list_xml_files {
@@ -265,14 +261,13 @@ sub list_xml_files {
 
   my $num_files = scalar @files;
   if ($num_files != $expect) {
-    $self->logconfess("Expected $expect but found $num_files XML metadata files for ",
-                      "SMRT cell '$smrt_name': ", pp(\@files));
+    $self->logconfess("Expected $expect but found $num_files XML ",
+                      "metadata files for SMRT cell '$smrt_name': ",
+                      pp(\@files));
   }
 
-  return [@files];
-
+  return \@files;
 }
-
 
 __PACKAGE__->meta->make_immutable;
 

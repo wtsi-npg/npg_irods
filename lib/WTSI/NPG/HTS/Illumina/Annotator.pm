@@ -9,11 +9,6 @@ use WTSI::DNAP::Utilities::Params qw[function_params];
 
 our $VERSION = '';
 
-# Sequence alignment filters
-our $YHUMAN = 'yhuman';  # FIXME
-
-our $SEQCHKSUM = 'seqchksum'; # FIXME -- move to WTSI::NPG::iRODS::Metadata
-
 with qw[
          WTSI::NPG::iRODS::Annotator
        ];
@@ -541,7 +536,8 @@ Keith James <kdj@sanger.ac.uk>, Iain Bancarz <ib5@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016, 2017 Genome Research Limited. All Rights
+Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
