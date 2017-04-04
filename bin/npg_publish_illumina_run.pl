@@ -56,6 +56,7 @@ my $interop = 1;
 my $log4perl_config;
 my $max_errors = 0;
 my $qc = 1;
+my $restart_file;
 my $runfolder_path;
 my $verbose;
 my $xml = 1;
@@ -81,6 +82,7 @@ GetOptions('alignment!'                        => \$alignment,
            'max-errors|max_errors=i'           => \$max_errors,
            'lanes|positions=i'                 => \@positions,
            'qc!'                               => \$qc,
+           'restart-file|restart_file=s'       => \$restart_file,
            'runfolder-path|runfolder_path=s'   => \$runfolder_path,
            'verbose'                           => \$verbose,
            'xml!'                              => \$xml);
@@ -146,6 +148,10 @@ if ($collection) {
 if ($alt_process) {
   push @pub_init_args, alt_process => $alt_process;
   $log->info("Using alt_process '$alt_process'");
+}
+if ($restart_file) {
+  push @pub_init_args, restart_file => $restart_file;
+  $log->info("Using restart_file '$restart_file'");
 }
 if ($max_errors) {
   push @pub_init_args, max_errors => $max_errors;
@@ -250,6 +256,12 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
    --max-errors      The maximum number of errors permitted before aborting.
                      Optional, defaults to unlimited.
    --qc              Load QC JSON files. Optional, defaults to true.
+   --restart-file
+   --restart_file    A file path where a record of successfully published
+                     files will be recorded in JSON format on exit. If the
+                     jobs is restarted, no attempt will be made to publish
+                     or even check these files in iRODS. Optional. The
+                     default restart file is "<archive dir>/published.json".
    --runfolder-path
    --runfolder_path  The instrument runfolder path to load.
    --logconf         A log4perl configuration file. Optional.
