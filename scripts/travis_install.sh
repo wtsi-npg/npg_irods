@@ -31,18 +31,25 @@ wget -q https://github.com/wtsi-npg/baton/releases/download/${BATON_VERSION}/bat
 tar xfz /tmp/baton-${BATON_VERSION}.tar.gz -C /tmp
 cd /tmp/baton-${BATON_VERSION}
 
-
 IRODS_HOME=
-baton_irods_conf="--with-irods"
+irods_conf="--with-irods"
 
 if [ -n "$IRODS_RIP_DIR" ]
 then
     export IRODS_HOME="$IRODS_RIP_DIR/iRODS"
-    baton_irods_conf="--with-irods=$IRODS_HOME"
+    irods_conf="--with-irods=$IRODS_HOME"
 fi
 
-./configure ${baton_irods_conf} ; make ; sudo make install
+./configure ${irods_conf} ; make ; sudo make install
 sudo ldconfig
+
+# tears
+wget -q https://github.com/whitwham/tears/archive/v${TEARS_VERSION}.tar.gz -O /tmp/tears-${TEARS_VERSION}.tar.gz
+tar xfz /tmp/tears-${TEARS_VERSION}.tar.gz -C /tmp
+cd /tmp/tears-${TEARS_VERSION}
+
+autoreconf -fi
+./configure ${irods_conf} ; make ; sudo make install
 
 # htslib/samtools
 wget -q https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/htslib-${HTSLIB_VERSION}.tar.bz2 -O /tmp/htslib-${HTSLIB_VERSION}.tar.bz2
