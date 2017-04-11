@@ -14,6 +14,7 @@ use Try::Tiny;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
+         WTSI::NPG::HTS::ArchiveSession
        ];
 
 our $VERSION = '';
@@ -21,7 +22,6 @@ our $VERSION = '';
 our $SELECT_TIMEOUT = 2;
 our $ISO8601_BASIC  = '%Y-%m-%dT%H%M%S';
 
-##no critic (ValuesAndExpressions::ProhibitMagicNumbers)
 has 'dest_collection' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -42,33 +42,6 @@ has 'runfolder_path' =>
    required      => 1,
    documentation => 'A directory path under which numbered directories of ' .
                     'fast5 files are located');
-
-has 'tar_capacity' =>
-  (isa           => 'Int',
-   is            => 'ro',
-   required      => 1,
-   default       => 10_000,
-   documentation => 'The maximum number of files that will be added to any ' .
-                    'tar file. Increasing this number will result in ' .
-                    'connections to iRODS being open for longer');
-
-has 'tar_timeout' =>
-  (isa           => 'Int',
-   is            => 'ro',
-   required      => 1,
-   default       => 60 * 5,
-   documentation => 'The number of seconds idle time since the previous ' .
-                    'file was added to an open tar archive, after which ' .
-                    'the archive will be closed will be closed, even if ' .
-                    'not at capacity');
-
-has 'session_timeout' =>
-  (isa           => 'Int',
-   is            => 'ro',
-   required      => 1,
-   default       => 60 * 20,
-   documentation => 'The number of seconds idle time (no files added) ' .
-                    'after which it will be ended automatically');
 
 has 'inotify' =>
   (isa           => 'Linux::Inotify2',
@@ -93,7 +66,6 @@ has 'watches' =>
    default       => sub { return {} },
    documentation => 'A mapping of absolute paths of watched directories '.
                     'to a corresponding Linux::Inotify2::Watch instance');
-##use critic
 
 =head2 publish_files
 
@@ -196,9 +168,9 @@ sub publish_files {
           $manifest_index->{$abs_path} = $tar_file;
           $file_count++;
 
-          my $tar_capacity = $self->tar_capacity;
-          if ($file_count >= $tar_capacity) {
-            $self->info("'$tar_file' reached capacity of $tar_capacity");
+          my $arch_capacity = $self->arch_capacity;
+          if ($file_count >= $arch_capacity) {
+            $self->info("'$tar_file' reached capacity of $arch_capacity");
             $tar = $self->_close_fh($tar, $tar_file);
             $tar_count++;
           }
@@ -209,9 +181,9 @@ sub publish_files {
         my $now     = time;
         my $elapsed = $now - $tar_begin; # tar timer
 
-        my $tar_timeout = $self->tar_timeout;
-        if (defined $tar and $file_count > 0 and $elapsed > $tar_timeout) {
-          $self->debug("Archive timeout $tar_timeout reached waiting ",
+        my $arch_timeout = $self->arch_timeout;
+        if (defined $tar and $file_count > 0 and $elapsed > $arch_timeout) {
+          $self->debug("Archive timeout $arch_timeout reached waiting ",
                        "for more files. Archiving $file_count files in ",
                        "'$tar_file'");
           $tar = $self->_close_fh($tar, $tar_file);
@@ -228,7 +200,7 @@ sub publish_files {
         if (defined $tar_file) {
           $self->debug(sprintf 'tar: %s, tar time elapsed: %d / %d, ' .
                                'session idle: %d / %d, files: %d',
-                       $tar_file, $elapsed, $self->tar_timeout,
+                       $tar_file, $elapsed, $self->arch_timeout,
                        $session_idle, $self->session_timeout, $file_count);
         }
         else {
@@ -520,7 +492,7 @@ detected by inotify.
 
 An instance will only publish fast5 files produced by a single,
 specified MinION. If any tar archive takes longer to reach its
-capacity than the tar_timeout in seconds, that archive is
+capacity than the arch_timeout in seconds, that archive is
 automatically closed. Any further fast5 file(s) will be added to a new
 archive.
 

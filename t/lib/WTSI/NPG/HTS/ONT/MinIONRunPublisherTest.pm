@@ -48,17 +48,17 @@ sub publish_files : Test(7) {
 
   mkpath("$staging_dir/run_a/basecalled");
   my $dest_coll = $irods_tmp_coll;
-  my $tar_capacity = 12;
+  my $arch_capacity = 12;
 
   my $pid = fork();
   die "Failed to fork a test process" unless defined $pid;
 
   if ($pid == 0) {
     my $pub = WTSI::NPG::HTS::ONT::MinIONRunPublisher->new
-      (dest_collection => $dest_coll,
+      (arch_capacity   => $arch_capacity,
+       arch_timeout    => 10,
+       dest_collection => $dest_coll,
        runfolder_path  => $staging_dir,
-       tar_capacity    => $tar_capacity,
-       tar_timeout     => 10,
        session_timeout => 30);
 
     my ($tar_count, $num_errors) = $pub->publish_files;
@@ -127,8 +127,8 @@ sub publish_files : Test(7) {
               diag explain [\@observed_md5_checksums,
                             \@observed_md5_metadata];
 
-  my @expected_file_counts = ($tar_capacity, $tar_capacity,
-                              $fast5_count - $tar_capacity * 2);
+  my @expected_file_counts = ($arch_capacity, $arch_capacity,
+                              $fast5_count - $arch_capacity * 2);
   is_deeply(\@observed_file_counts, \@expected_file_counts ,
             'Expected file counts') or
               diag explain \@observed_file_counts;

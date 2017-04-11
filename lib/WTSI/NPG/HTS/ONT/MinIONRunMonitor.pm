@@ -17,13 +17,13 @@ use WTSI::NPG::HTS::ONT::MinIONRunPublisher;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
+         WTSI::NPG::HTS::ArchiveSession
        ];
 
 our $VERSION = '';
 
 our $SELECT_TIMEOUT = 2;
 
-##no critic (ValuesAndExpressions::ProhibitMagicNumbers)
 has 'dest_collection' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -35,33 +35,6 @@ has 'staging_path' =>
    is            => 'ro',
    required      => 1,
    documentation => 'The directory in which MinION runfolders appear');
-
-has 'tar_capacity' =>
-  (isa           => 'Int',
-   is            => 'ro',
-   required      => 1,
-   default       => 10_000,
-   documentation => 'The maximum number of files that will be added to any ' .
-                    'tar file. Increasing this number will result in ' .
-                    'connections to iRODS being open for longer');
-
-has 'tar_timeout' =>
-  (isa           => 'Int',
-   is            => 'ro',
-   required      => 1,
-   default       => 60 * 5,
-   documentation => 'The number of seconds idle time since the previous ' .
-                    'file was added to an open tar archive, after which ' .
-                    'the archive will be closed will be closed, even if ' .
-                    'not at capacity');
-
-has 'session_timeout' =>
-  (isa           => 'Int',
-   is            => 'ro',
-   required      => 1,
-   default       => 60 * 20,
-   documentation => 'The number of seconds idle time (no files added) ' .
-                    'after which it will be ended automatically');
 
 has 'max_processes' =>
   (isa           => 'Int',
@@ -85,7 +58,6 @@ has 'event_queue' =>
    default       => sub { return [] },
    documentation => 'A queue of Linux::Inotify2::Event objects to be ' .
                     'processed. Inotify callbacks push events here');
-##use critic
 
 sub start {
   my ($self) = @_;
@@ -100,7 +72,7 @@ sub start {
               q[Started MinIONRunMonitor; staging path: '%s', ] .
               q[tar capacity: %d files, tar timeout %d sec ] .
               q[max processes: %d, session timeout %d sec],
-              $self->staging_path, $self->tar_capacity, $self->tar_timeout,
+              $self->staging_path, $self->arch_capacity, $self->arch_timeout,
               $self->max_processes, $self->session_timeout);
 
   my $pm = Parallel::ForkManager->new($self->max_processes);
@@ -157,8 +129,8 @@ sub start {
             (dest_collection => $self->dest_collection,
              runfolder_path  => $abs_path,
              session_timeout => $self->session_timeout,
-             tar_capacity    => $self->tar_capacity,
-             tar_timeout     => $self->tar_timeout);
+             arch_capacity   => $self->arch_capacity,
+             arch_timeout    => $self->arch_timeout);
 
           my ($nf, $ne) = $publisher->publish_files;
           my $exit_code = $ne == 0 ? 0 : 1;

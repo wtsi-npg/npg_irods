@@ -18,13 +18,13 @@ use WTSI::NPG::HTS::ONT::MinIONRunMonitor;
 our $VERSION = '';
 
 ##no critic (ValuesAndExpressions::ProhibitMagicNumbers)
+my $arch_capacity   = 10_000;
+my $arch_timeout    = 60 * 5;
 my $collection;
 my $debug;
 my $log4perl_config;
 my $session_timeout = 60 * 20;
 my $staging_path;
-my $tar_capacity = 10_000;
-my $tar_timeout  = 60 * 5;
 my $verbose;
 #use critic
 
@@ -37,8 +37,8 @@ GetOptions('collection=s'                      => \$collection,
            'logconf=s'                         => \$log4perl_config,
            'session-timeout|session_timeout=s' => \$session_timeout,
            'staging_path|staging-path=s'       => \$staging_path,
-           'tar_capacity|tar-capacity=i'       => \$tar_capacity,
-           'tar_timeout|tar-timeout=i'         => \$tar_timeout,
+           'tar_capacity|tar-capacity=i'       => \$arch_capacity,
+           'tar_timeout|tar-timeout=i'         => \$arch_timeout,
            'verbose'                           => \$verbose);
 
 if ($log4perl_config) {
@@ -61,11 +61,11 @@ $collection or
 
 
 my $monitor = WTSI::NPG::HTS::ONT::MinIONRunMonitor->new
-  (dest_collection => $collection,
+  (arch_capacity   => $arch_capacity,
+   arch_timeout    => $arch_timeout,
+   dest_collection => $collection,
    session_timeout => $session_timeout,
-   staging_path    => $staging_path,
-   tar_capacity    => $tar_capacity,
-   tar_timeout     => $tar_timeout);
+   staging_path    => $staging_path);
 
 my $num_errors = $monitor->start;
 my $exit_code  = $num_errors == 0 ? 0 : 4;
@@ -88,6 +88,10 @@ npg_minion_run_monitor [--debug] [--logconf <path>] --staging-path <path>
                      false.
    --help            Display help.
    --logconf         A log4perl configuration file. Optional.
+   --session-timeout
+   --session_timeout The number of seconds idle time after which a multi-file
+                     tar session will be closed. Optional, defaults to 60 * 20
+                     seconds.
    --staging-path
    --staging_path    The data staging path to watch.
    --tar-capacity
@@ -96,7 +100,7 @@ npg_minion_run_monitor [--debug] [--logconf <path>] --staging-path <path>
    --tar-timeout
    --tar_timeout     The number of seconds idle time after which a tar file
                      open for writing, will be closed. even if it has not
-                     reached capacity. Optional, defaults to 300 seconds.
+                     reached capacity. Optional, defaults to 60 * 5 seconds.
    --verbose         Print messages while processing. Optional.
 
 =head1 DESCRIPTION

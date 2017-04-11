@@ -17,28 +17,28 @@ use WTSI::NPG::HTS::ONT::MinIONRunPublisher;
 our $VERSION = '';
 
 ##no critic (ValuesAndExpressions::ProhibitMagicNumbers)
+my $arch_capacity   = 10_000;
+my $arch_timeout    = 60 * 5;
 my $collection;
 my $debug;
 my $log4perl_config;
-my $expected_minion_id;
 my $runfolder_path;
-my $tar_capacity = 10_000;
-my $tar_timeout  = 60 * 5;
+my $session_timeout = 60 * 20;
 my $verbose;
 ##use critic
 
-GetOptions('collection=s'                    => \$collection,
-           'debug'                           => \$debug,
-           'help'                            => sub {
+GetOptions('collection=s'                      => \$collection,
+           'debug'                             => \$debug,
+           'help'                              => sub {
              pod2usage(-verbose => 2,
                        -exitval => 0)
            },
-           'logconf=s'                       => \$log4perl_config,
-           'minion-id=s'                     => \$expected_minion_id,
-           'runfolder_path|runfolder-path=s' => \$runfolder_path,
-           'tar_capacity|tar-capacity=i'     => \$tar_capacity,
-           'tar_timeout|tar-timeout=i'       => \$tar_timeout,
-           'verbose'                         => \$verbose);
+           'logconf=s'                         => \$log4perl_config,
+           'runfolder_path|runfolder-path=s'   => \$runfolder_path,
+           'session-timeout|session_timeout=s' => \$session_timeout,
+           'tar_capacity|tar-capacity=i'       => \$arch_capacity,
+           'tar_timeout|tar-timeout=i'         => \$arch_timeout,
+           'verbose'                           => \$verbose);
 
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
@@ -58,9 +58,6 @@ if ($log4perl_config) {
 $collection or
   $log->logcroak('A collection argument is required');
 
-$expected_minion_id or
-  $log->logcroak('A minion-id argument is required');
-
 $runfolder_path or
   $log->logcroak('A runfolder-path argument is required');
 -d $runfolder_path or
@@ -69,12 +66,11 @@ $runfolder_path or
 $runfolder_path = rel2abs($runfolder_path);
 
 my $publisher = WTSI::NPG::HTS::ONT::MinIONRunPublisher->new
-  (dest_collection => $collection,
-   minion_id       => $expected_minion_id,
+  (arch_capacity   => $arch_capacity,
+   arch_timeout    => $arch_timeout,
+   dest_collection => $collection,
    runfolder_path  => $runfolder_path,
-   session_timeout => 200,
-   tar_capacity    => $tar_capacity,
-   tar_timeout     => $tar_timeout)->publish_files;
+   session_timeout => 200)->publish_files;
 
 __END__
 
@@ -97,17 +93,19 @@ npg_publish_minion_run --collection <path> [--debug] [--logconf <path>]
                      defaults to CRAM format.
    --help            Display help.
    --logconf         A log4perl configuration file. Optional.
-   --minion-id
-   --minion_id       The ID of the MinION whose data are to be published.
    --runfolder-path
    --runfolder_path  The instrument runfolder path to watch.
+   --session-timeout
+   --session_timeout The number of seconds idle time after which a multi-file
+                     tar session will be closed. Optional, defaults to 60 * 20
+                     seconds.
    --tar-capacity
    --tar_capacity    The number of read files to be archived per tar file.
                      Optional, defaults to 10,000.
    --tar-timeout
    --tar_timeout     The number of seconds idle time after which a tar file
                      open for writing, will be closed. even if it has not
-                     reached capacity. Optional, defaults to 300 seconds.
+                     reached capacity. Optional, defaults to 60 * 5 seconds.
    --verbose         Print messages while processing. Optional.
 
 =head1 DESCRIPTION
