@@ -4,7 +4,7 @@ use namespace::autoclean;
 
 use Data::Dump qw[pp];
 use English qw[-no_match_vars];
-use File::Spec::Functions qw[abs2rel catfile splitpath];
+use File::Spec::Functions qw[abs2rel catdir catfile splitpath];
 use IO::Select;
 use Linux::Inotify2;
 use Moose;
@@ -24,6 +24,12 @@ our $VERSION = '';
 our $SELECT_TIMEOUT = 2;
 
 ##no critic (ValuesAndExpressions::ProhibitMagicNumbers)
+has 'dest_collection' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 1,
+   documentation => 'The destination collection within iRODS to store data');
+
 has 'staging_path' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -141,28 +147,22 @@ sub start {
             next EVENT;
           }
 
-          my $minion_id = $self->_get_minion_id($abs_path);
-          if (not $minion_id) {
-            next EVENT;
-          }
-
           my $pid = $pm->start($abs_path) and next EVENT;
 
           # Child process
           $self->info("Started MinIONRunPublisher with PID $pid on ",
-                      "'$abs_path' (MinION $minion_id)");
+                      "'$abs_path'");
 
           my $publisher = WTSI::NPG::HTS::ONT::MinIONRunPublisher->new
-            (dest_collection => '/Sanger1/home/kdj',
-             minion_id       => $minion_id,
+            (dest_collection => $self->dest_collection,
              runfolder_path  => $abs_path,
-             session_timeout => 200,
-             tar_capacity    => 10,
-             tar_timeout     => 300);
+             session_timeout => $self->session_timeout,
+             tar_capacity    => $self->tar_capacity,
+             tar_timeout     => $self->tar_timeout);
 
           my ($nf, $ne) = $publisher->publish_files;
           my $exit_code = $ne == 0 ? 0 : 1;
-          $self->info("Finished publishing $nf files for MinION $minion_id ",
+          $self->info("Finished publishing $nf files on '$abs_path' ",
                       "with $ne errors and exit code $exit_code");
 
           $pm->finish($exit_code);
@@ -246,69 +246,6 @@ sub _make_callback {
       }
     }
   };
-}
-
-sub _get_minion_id {
-  my ($self, $path) = @_;
-
-  $self->debug("Identifying a MinION ID from fast5 files under '$path'");
-  my ($hostname, $run_date, $asic_id, $minion_id);
-
-  my $file = $self->_find_fast5_file($path);
-  if ($file) {
-    ($hostname, $run_date, $asic_id, $minion_id) =
-      $self->_parse_file_name($file);
-    if (not $minion_id) {
-      $self->error("Failed to parse a MinION ID from '$file'");
-    }
-  }
-  else {
-    $self->warn("Failed to find any fast5 file in '$path'");
-  }
-
-  return $minion_id;
-}
-
-# Expect to find a fast5 file in /<staging path>/<run folder>/[0-9]+/
-sub _find_fast5_file {
-  my ($self, $path) = @_;
-
-  $self->debug("Looking for numbered subdirectories in '$path'");
-
-  opendir my $dh1, $path or
-    $self->logcroak("Failed to opendir '$path': $ERRNO");
-
-  my @dirs = grep { -d } map { "$path/$_" }
-    grep { m{^\d+$}msx } readdir $dh1;
-  closedir $dh1;
-
-  my $fast5_file;
-  foreach my $dir (@dirs) {
-    $self->debug("Checking for fast5 files in '$dir'");
-
-    opendir my $dh2, $dir or
-      $self->logcroak("Failed to opendir '$dir': $ERRNO");
-
-    my @files = grep { -f } map { "$dir/$_" }
-      grep { m{[.]fast5$}msx } readdir $dh2;
-    closedir $dh2;
-
-    if (@files) {
-      $fast5_file = shift @files;
-      last;
-    }
-  }
-
-  return $fast5_file;
-}
-
-sub _parse_file_name {
-  my ($self, $path) = @_;
-
-  my ($volume, $dirs, $file) = splitpath($path);
-  my ($hostname, $run_date, $asic_id, $minion_id) = split /_/msx, $file;
-
-  return ($hostname, $run_date, $asic_id, $minion_id);
 }
 
 __PACKAGE__->meta->make_immutable;

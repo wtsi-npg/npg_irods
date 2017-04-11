@@ -16,10 +16,6 @@ make_temp_dir() {
     echo $(mktemp -d ${TMPDIR:-/tmp/}$(basename -- "$0").XXXXXXXXXX)
 }
 
-TEARS=tears
-BATON_LIST=baton-list
-BATON_METAMOD=baton-metamod
-
 [ -z "$1" ] && exit 2
 
 TIMESTAMP=$(date +'%Y:%m:%dT%H:%m:%S')
@@ -34,21 +30,24 @@ MD5_FILE="$TMPD/$OBJ.md5"
 
 # Overwriting with tears is an error, so remove any file already
 # present
-jq . << EOF | "$BATON_LIST" >/dev/null 2>&1 && irm "$1"
+jq . << EOF | baton-list >/dev/null 2>&1 && irm "$1" >/dev/null 2>&1
 {
    "collection": "$COL",
    "data_object": "$OBJ"
 }
 EOF
 
+# Ensure that the leading path exists
+imkdir -p "$COL"
+
 tee >(md5sum - | awk '{print $1}' > "$MD5_FILE" ) </dev/stdin |\
-    "$TEARS" "$1" && ichksum "$1"
+    tears "$1" && ichksum "$1" >/dev/null 2>&1
 
 # Add minimal metadata
 if [ -e "$MD5_FILE" ];
 then
     MD5=$(cat "$MD5_FILE")
-    jq . << EOF | "$BATON_METAMOD" --operation add | jq .
+    jq . << EOF | baton-metamod --operation add | jq .
     {
         "collection": "$COL",
         "data_object": "$OBJ",

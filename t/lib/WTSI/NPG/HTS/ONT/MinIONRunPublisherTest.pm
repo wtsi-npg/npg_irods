@@ -56,11 +56,10 @@ sub publish_files : Test(7) {
   if ($pid == 0) {
     my $pub = WTSI::NPG::HTS::ONT::MinIONRunPublisher->new
       (dest_collection => $dest_coll,
-       minion_id       => 'MN12345',
        runfolder_path  => $staging_dir,
        tar_capacity    => $tar_capacity,
        tar_timeout     => 10,
-       session_timeout => 15);
+       session_timeout => 30);
 
     my ($tar_count, $num_errors) = $pub->publish_files;
 
@@ -79,7 +78,7 @@ sub publish_files : Test(7) {
 
   my $fast5_count = scalar @fast5_files;
 
-  # Simulate writing new fast5 
+  # Simulate writing new fast5 files
   foreach my $file (@fast5_files) {
     copy($file, $pass_dir) or die "Failed to copy $file: $ERRNO";
   }
@@ -90,7 +89,8 @@ sub publish_files : Test(7) {
   # Count the tar files created in iRODS
   my $irods = WTSI::NPG::iRODS->new;
 
-  my ($observed_paths) = $irods->list_collection($dest_coll);
+  my $tar_coll = "$dest_coll/MN12345/FNFAF12345";
+  my ($observed_paths) = $irods->list_collection($tar_coll);
   my @observed_paths = @{$observed_paths};
   my $num_expected = 3;
   cmp_ok(scalar @observed_paths, '==', $num_expected,

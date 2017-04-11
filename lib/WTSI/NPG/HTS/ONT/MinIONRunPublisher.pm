@@ -5,7 +5,7 @@ use namespace::autoclean;
 use DateTime;
 use English qw[-no_match_vars];
 use File::Basename;
-use File::Spec::Functions qw[abs2rel catfile rel2abs splitpath];
+use File::Spec::Functions qw[abs2rel catdir catfile rel2abs splitpath];
 use IO::Select;
 use Linux::Inotify2;
 use Moose;
@@ -30,8 +30,9 @@ has 'dest_collection' =>
 
 has 'minion_id' =>
   (isa           => 'Str',
-   is            => 'ro',
-   required      => 1,
+   is            => 'rw',
+   required      => 0,
+   predicate     => 'has_minion_id',
    documentation => 'The ID of a MinION. Only files matching this ID will ' .
                     'be published. This provides a consistency check');
 
@@ -157,7 +158,7 @@ sub publish_files {
             next EVENT;
           }
 
-          my ($hostname, $run_date, $flowcell_id, $observed_minion_id) =
+          my ($hostname, $run_date, $observed_minion_id, $flowcell_id) =
             $self->_parse_file_name($abs_path);
 
           if (not $self->_minion_match($abs_path, $observed_minion_id)) {
@@ -172,8 +173,8 @@ sub publish_files {
           }
 
           if (not $tar) {
-            $tar_file = $self->_tar_filename($flowcell_id, $run_date,
-                                             $session_name, $tar_count);
+            $tar_file = $self->_tar_path($observed_minion_id, $flowcell_id,
+                                         $run_date, $session_name, $tar_count);
             $tar_begin = time; # tar timer
             $file_count = 0;
             $tar = $self->_open_tar($tar_file);
@@ -225,11 +226,14 @@ sub publish_files {
         }
 
         if (defined $tar_file) {
-          $self->debug("tar: $tar_file, elapsed: $elapsed, ",
-                       "session idle: $session_idle, files: $file_count");
+          $self->debug(sprintf 'tar: %s, tar time elapsed: %d / %d, ' .
+                               'session idle: %d / %d, files: %d',
+                       $tar_file, $elapsed, $self->tar_timeout,
+                       $session_idle, $self->session_timeout, $file_count);
         }
         else {
-          $self->debug("Session idle: $session_idle");
+          $self->debug(sprintf 'Session idle: %d / %d', $session_idle,
+                       $self->session_timeout);
         }
       } # Read timeout
     } # Continue
@@ -374,9 +378,13 @@ sub _parse_file_name {
   my ($self, $path) = @_;
 
   my ($volume, $dirs, $file) = splitpath($path);
-  my ($hostname, $run_date, $asic_id, $minion_id) = split /_/msx, $file;
+  my ($hostname, $run_date, $flowcell_id, $minion_id) = split /_/msx, $file;
 
-  return ($hostname, $run_date, $asic_id, $minion_id);
+  if (not ($hostname and $run_date and $flowcell_id and $minion_id)) {
+    $self->logcroak("Failed to parse file name '$file'");
+  }
+
+  return ($hostname, $run_date, $minion_id, $flowcell_id);
 }
 
 sub _fast5_match {
@@ -393,19 +401,21 @@ sub _fast5_match {
 sub _minion_match {
   my ($self, $path, $observed_minion_id) = @_;
 
-  my $expected_minion_id = $self->minion_id;
   my $match = 0;
-  if ($observed_minion_id) {
-    $match = $observed_minion_id eq $expected_minion_id;
 
-    if (not $match) {
-      $self->warn("Ignoring file (MinION '$observed_minion_id', ",
-                  "expected MinION '$expected_minion_id'): '$path'");
+  if ($observed_minion_id) {
+    if ($self->has_minion_id) {
+      $match = $observed_minion_id eq $self->minion_id;
+    }
+    else {
+      $self->minion_id($observed_minion_id);
+      $match = 1;
     }
   }
-  else {
-    $self->warn('Ignoring file (failed to identify MinION, ',
-                "expected MinION '$expected_minion_id'): '$path'");
+
+  if (not $match) {
+    $self->warn(qq[Ignoring file (MinION '$observed_minion_id'), ],
+                q[expected MinION '], $self->minion_id, qq['): '$path']);
   }
 
   return $match;
@@ -449,13 +459,16 @@ sub _load_manifest_index {
   return \%index;
 }
 
-sub _tar_filename {
-  my ($self, $flowcell_id, $run_date, $session, $tar_count) = @_;
+## no critic (Subroutines::ProhibitManyArgs)
+sub _tar_path {
+  my ($self, $minion_id, $flowcell_id, $run_date, $session, $tar_count) = @_;
 
-  return catfile($self->dest_collection, sprintf '%s_%s_%s.%s.%d.tar',
-                 $self->minion_id, $flowcell_id, $run_date, $session,
-                 $tar_count);
+  my $coll = catdir($self->dest_collection, $minion_id, $flowcell_id);
+
+  return catfile($coll, sprintf '%s_%s_%s.%s.%d.tar', $self->minion_id,
+                 $flowcell_id, $run_date, $session, $tar_count);
 }
+## use critic
 
 sub _open_tar {
   my ($self, $path) = @_;
@@ -515,8 +528,13 @@ A publishing session is started by calling the 'publish_files' method
 which will return when the process is complete. If processing a run
 takes longer than session_timeout seconds, any currently open archive
 will be closed and published and the publish_files method will
-return. Any inotify watches will br released and no further files will
+return. Any inotify watches will be released and no further files will
 be processed until publish_files is called again.
+
+The publisher will create new collections in iRODS into which the tar
+files will be written. These collections will be named
+
+  <dest collection>/<MinION ID>/<Flowcell ID>/
 
 =head1 AUTHOR
 
