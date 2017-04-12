@@ -8,9 +8,10 @@ use English qw[-no_match_vars];
 use File::Basename;
 use File::Copy;
 use File::Spec::Functions qw[catfile];
-use File::Path;
+use File::Path qw[make_path];
 use File::Temp;
 use Log::Log4perl;
+use List::AllUtils qw[uniq];
 use Test::More;
 
 use base qw[WTSI::NPG::HTS::Test];
@@ -43,10 +44,12 @@ sub teardown_test : Test(teardown) {
   $irods->remove_collection($irods_tmp_coll);
 }
 
-sub publish_files : Test(7) {
-  my $staging_dir = File::Temp->newdir->dirname;
+sub publish_files : Test(39) {
+  my $staging_dir    = File::Temp->newdir->dirname;
+  my $runfolder_path = "$staging_dir/run_a";
+  my $pass_dir       = "$runfolder_path/basecalled/pass";
+  make_path($pass_dir);
 
-  mkpath("$staging_dir/run_a/basecalled");
   my $dest_coll = $irods_tmp_coll;
   my $arch_capacity = 12;
 
@@ -58,7 +61,7 @@ sub publish_files : Test(7) {
       (arch_capacity   => $arch_capacity,
        arch_timeout    => 10,
        dest_collection => $dest_coll,
-       runfolder_path  => $staging_dir,
+       runfolder_path  => $runfolder_path,
        session_timeout => 30);
 
     my ($tar_count, $num_errors) = $pub->publish_files;
@@ -67,9 +70,6 @@ sub publish_files : Test(7) {
   }
 
   sleep 5;
-
-  my $pass_dir = "$staging_dir/run_a/basecalled/pass";
-  mkpath($pass_dir);
 
   opendir my $dh, $data_path or die "Failed to opendir '$data_path': $!";
   my @fast5_files = map { catfile($data_path, $_) }
@@ -85,6 +85,26 @@ sub publish_files : Test(7) {
 
   waitpid($pid, 0);
   cmp_ok($CHILD_ERROR, '==', 0, 'Publisher exited cleanly');
+
+  # Check the manifest
+  my $manifest_file     = 'MN12345_FNFAF12345_20170331.txt';
+  my $expected_manifest = "$runfolder_path/$manifest_file";
+
+  ok(-e $expected_manifest, "Manifest file '$expected_manifest' exists");
+
+  my %manifest;
+  open my $fh, '<', $expected_manifest or
+    die "Failed to open manifest '$expected_manifest': $ERRNO";
+  while (my $line = <$fh>) {
+    chomp $line;
+
+    my ($tar_path, $fast5_path) = split /\t/msx, $line;
+    $manifest{$fast5_path} = $tar_path;
+  }
+  close $fh or die "Failed to close '$expected_manifest': $ERRNO";
+
+  cmp_ok(scalar uniq(values %manifest), '==', 3, 'Manifest lists 3 tar files')
+    or diag explain \%manifest;
 
   # Count the tar files created in iRODS
   my $irods = WTSI::NPG::iRODS->new;
@@ -106,7 +126,7 @@ sub publish_files : Test(7) {
     push @observed_md5_metadata, $avu[0]->{value};
   }
 
-  # Fetch the tar files and calculate their MD5s
+  # Fetch the tar file data objects from iRODS and calculate their MD5s
   my @observed_md5_checksums;
   my @observed_file_counts;
   foreach my $tar (@observed_paths) {
@@ -120,6 +140,15 @@ sub publish_files : Test(7) {
     $arch->read($file);
     my @entries = $arch->list_files;
     push @observed_file_counts, scalar @entries;
+
+    foreach my $entry (@entries) {
+      # Caculate original fast5 file from tar entry relative path
+      my $entry_file = catfile($runfolder_path, $entry);
+      # Look up the tar file iRODS data object in the manifest
+      my $manifest_tar = $manifest{$entry_file};
+      is($tar, $manifest_tar,
+         "Manifest describes tar data object for '$entry_file'");
+    }
   }
 
   is_deeply(\@observed_md5_checksums, \@observed_md5_metadata,
@@ -132,6 +161,7 @@ sub publish_files : Test(7) {
   is_deeply(\@observed_file_counts, \@expected_file_counts ,
             'Expected file counts') or
               diag explain \@observed_file_counts;
+
 }
 
 1;

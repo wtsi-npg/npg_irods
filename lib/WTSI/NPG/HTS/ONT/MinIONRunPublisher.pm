@@ -81,28 +81,30 @@ has 'watches' =>
 sub publish_files {
   my ($self) = @_;
 
+  -e $self->runfolder_path or
+    $self->logconfess(q[MinION runfolder path '], $self->runfolder_path,
+                      q[' does not exist]);
+
   my $select = IO::Select->new;
   $select->add($self->inotify->fileno);
   $self->_start_watches;
 
   # A manifest of loaded read files.
-  my $manifest;       # The file handle for writing
-  my $manifest_file;  # The file name
+  my $manifest_file;  # The manifest file name
   my $manifest_index; # Used where manifest is loaded by follow-up session
 
   # The current tar file. There will be one or more tar files per
   # loading session.
   my $tar;            # The file handle for writing
   my $tar_file;       # The current file name
-  my $tar_count = 0;  # The number of tar files loaded this session
+  my %tar_content;    # The read files in the current tar archive, by path
   my $tar_begin = time;
 
   # The current loading session.
   my $session_name   = DateTime->now->strftime('%Y-%m-%dT%H%m%S');
   my $session_active = $tar_begin;
-  my $file_count     = 0; # Number of read files loaded this session
   my $continue       = 1; # While true, continue loading
-
+  my $tar_count      = 0; # The number of tar files loaded this session
   my $num_errors     = 0;
 
   # Ensure a clean exit on SIGTERM, so that any partly-created tar file
@@ -137,19 +139,17 @@ sub publish_files {
             next EVENT;
           }
 
-          if (not $manifest) {
-            $manifest_file = $self->_manifest_filename($flowcell_id,
-                                                       $run_date);
+          if (not $manifest_file) {
+            $manifest_file  = $self->_manifest_path($flowcell_id, $run_date);
             $manifest_index = $self->_load_manifest_index($manifest_file);
-            $manifest = $self->_open_manifest_write($manifest_file);
           }
 
           if (not $tar) {
             $tar_file = $self->_tar_path($observed_minion_id, $flowcell_id,
                                          $run_date, $session_name, $tar_count);
-            $tar_begin = time; # tar timer
-            $file_count = 0;
-            $tar = $self->_open_tar($tar_file);
+            $tar_begin   = time; # tar timer
+            $tar         = $self->_open_tar($tar_file);
+            %tar_content = ();
           }
 
           if (exists $manifest_index->{$abs_path}) {
@@ -161,36 +161,41 @@ sub publish_files {
           $self->debug("Adding '$rel_path' to '$tar_file'");
           print $tar "$rel_path\n" or
             $self->logcroak("Failed write to filehandle of '$tar_file'");
+          $tar_content{$abs_path} = $tar_file;
 
-          print $manifest "$tar_file\t$abs_path\n" or
-            $self->logcroak('Failed to write to filehandle of ',
-                            "'$manifest_file'");
-          $manifest_index->{$abs_path} = $tar_file;
-          $file_count++;
-
+          my $file_count    = scalar keys %tar_content;
           my $arch_capacity = $self->arch_capacity;
           if ($file_count >= $arch_capacity) {
             $self->info("'$tar_file' reached capacity of $arch_capacity");
+
             $tar = $self->_close_fh($tar, $tar_file);
             $tar_count++;
+            $manifest_index = $self->_update_manifest($manifest_file,
+                                                      $tar_file,
+                                                      \%tar_content);
           }
         }
       } # Can read
       else {
         $self->debug("Select timeout ($SELECT_TIMEOUT sec) ...");
-        my $now     = time;
-        my $elapsed = $now - $tar_begin; # tar timer
-
+        my $now          = time;
+        my $elapsed      = $now - $tar_begin; # tar timer
+        my $file_count   = scalar keys %tar_content;
         my $arch_timeout = $self->arch_timeout;
+
         if (defined $tar and $file_count > 0 and $elapsed > $arch_timeout) {
           $self->debug("Archive timeout $arch_timeout reached waiting ",
                        "for more files. Archiving $file_count files in ",
                        "'$tar_file'");
+
           $tar = $self->_close_fh($tar, $tar_file);
           $tar_count++;
+          $manifest_index = $self->_update_manifest($manifest_file,
+                                                    $tar_file,
+                                                    \%tar_content);
         }
 
-        my $session_idle = $now - $session_active;
+        my $session_idle    = $now - $session_active;
         my $session_timeout = $self->session_timeout;
         if ($session_idle >= $session_timeout) {
           $self->info("Session timeout reached after $session_idle seconds");
@@ -211,7 +216,6 @@ sub publish_files {
     } # Continue
 
     $self->_close_fh($tar, $tar_file);
-    $self->_close_fh($manifest, $manifest_file);
   } catch {
     $self->error($_);
     $num_errors++;
@@ -393,20 +397,11 @@ sub _minion_match {
   return $match;
 }
 
-sub _manifest_filename {
+sub _manifest_path {
   my ($self, $flowcell_id, $run_date) = @_;
 
   return catfile($self->runfolder_path, sprintf '%s_%s_%s.txt',
                  $self->minion_id, $flowcell_id, $run_date);
-}
-
-sub _open_manifest_write {
-  my ($self, $path) = @_;
-
-  open my $fh, '>>', $path
-    or $self->logcroak("Failed to open '$path' for appending: $ERRNO");
-
-  return $fh;
 }
 
 sub _load_manifest_index {
@@ -420,15 +415,31 @@ sub _load_manifest_index {
 
     while (my $line = <$fh>) {
       chomp $line;
-      my ($tarname, $filename) = split /\t/msx, $line;
-      $self->debug("Added '$filename' to manifest index");
-      $index{$filename} = $tarname;
+      my ($tar_path, $fast5_path) = split /\t/msx, $line;
+      $self->debug("Added '$fast5_path' to manifest index");
+      $index{$fast5_path} = $tar_path;
     }
 
     close $fh or $self->logcroak("Failed to close '$path': $ERRNO");
   }
 
   return \%index;
+}
+
+sub _update_manifest {
+  my ($self, $path, $tar_path, $items) = @_;
+
+  open my $fh, '>>', $path
+    or $self->logcroak("Failed to open '$path' for appending: $ERRNO");
+
+  foreach my $fast5_path (sort keys %{$items}) {
+    print $fh "$tar_path\t$fast5_path\n" or
+      $self->logcroak("Failed to write to filehandle of '$path'");
+  }
+
+  close $fh or $self->logcroak("Failed to close '$path': $ERRNO");
+
+  return $self->_load_manifest_index($path);
 }
 
 ## no critic (Subroutines::ProhibitManyArgs)
