@@ -24,6 +24,21 @@ our $VERSION = '';
 
 our $SELECT_TIMEOUT = 2;
 
+our $DEFAULT_PUBLISHER_LOG_TEMPLATE = << 'LOGCONF'
+log4perl.logger = ERROR, A1
+
+log4perl.logger.WTSI.NPG.HTS.ONT = INFO, A1
+
+log4perl.appender.A1 = Log::Log4perl::Appender::File
+log4perl.appender.A1.layout = Log::Log4perl::Layout::PatternLayout
+log4perl.appender.A1.layout.ConversionPattern = %%d %%-5p %%c - %%m%%n
+log4perl.appender.A1.utf8 = 1
+log4perl.appender.A1.filename = %s
+
+log4perl.oneMessagePerAppender = 1
+LOGCONF
+;
+
 has 'dest_collection' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -124,13 +139,15 @@ sub start {
           # Child process
           $self->info("Started MinIONRunPublisher with PID $pid on ",
                       "'$abs_path'");
+          my $logconf = $self->_make_publisher_logconf($abs_path, $pid);
+          Log::Log4perl::init(\$logconf);
 
           my $publisher = WTSI::NPG::HTS::ONT::MinIONRunPublisher->new
-            (dest_collection => $self->dest_collection,
+            (arch_capacity   => $self->arch_capacity,
+             arch_timeout    => $self->arch_timeout,
+             dest_collection => $self->dest_collection,
              runfolder_path  => $abs_path,
-             session_timeout => $self->session_timeout,
-             arch_capacity   => $self->arch_capacity,
-             arch_timeout    => $self->arch_timeout);
+             session_timeout => $self->session_timeout);
 
           my ($nf, $ne) = $publisher->publish_files;
           my $exit_code = $ne == 0 ? 0 : 1;
@@ -220,12 +237,19 @@ sub _make_callback {
   };
 }
 
+sub _make_publisher_logconf {
+  my ($self, $path, $pid) = @_;
+
+  my $logfile = catfile($path, sprintf 'run_publisher.%d.log', $pid);
+
+  return sprintf $DEFAULT_PUBLISHER_LOG_TEMPLATE, $logfile;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 no Moose;
 
 1;
-
 
 __END__
 
