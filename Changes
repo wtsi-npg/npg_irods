@@ -1,8 +1,24 @@
+Release 2.1
+
+ - Added --restart-file CLI option to the Illumina run publisher to enable
+   job-specific file naming.
+
  - Added a local cache of loaded file names. A restarted job will use
    this to determine which files remain to be loaded.
 
  - Added a CLI option to abort a loading run after a user-specified
    maximum number of errors.
+
+ - Use WTSI::NPG::iRODS::Publisher, removed deprecated
+   WTSI::NPG::HTS::Publisher.
+
+ - Added monitor for PacBio Sequel and changed metadata files after v4
+   upgrade.
+
+ - Added library_name meta data for PacBio.
+
+ - Added support for PacBio Sequel.
+
 
 Release 2.0
 
@@ -16,11 +32,16 @@ Release 2.0
    Change run_uuid field to optional to support R&D runs/wells.
 
 Release 1.6
- - BioNano: add command line script for publication
- - Added a script to update PacBio metadata in iRODS
- - added support for PacBio legacy metadata
- - added PacBio run monitor CLI script
- - archival of bam_stats files
+
+ - BioNano: add command line script for publication.
+
+ - Added a script to update PacBio metadata in iRODS.
+
+ - Added support for PacBio legacy metadata.
+
+ - Added PacBio run monitor CLI script.
+
+ - Archival of bam_stats files.
 
 Release 1.5
 
