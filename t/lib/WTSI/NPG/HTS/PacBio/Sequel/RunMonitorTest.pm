@@ -39,6 +39,7 @@ my $test_response =
    {
    reserved => 'true',
    name => 50916,
+   completedAt => '2016-12-07T16:36:25.087Z',
    instrumentName => 'SQ54097',
    context => 'r54097_20161207_132758',
    instrumentSwVersion => '3.1.1.183540',
@@ -51,6 +52,7 @@ my $test_response =
    createdBy => 'unknown',
    numCellsFailed => 0,
    instrumentSerialNumber => 54097,
+   transfersCompletedAt => '2016-12-07T17:36:25.087Z',
    uniqueId => 'ecbf020d-4437-48d8-9d00-935142094728',
    summary => 'DN468178B-A1 initial titration 7pM'
    }

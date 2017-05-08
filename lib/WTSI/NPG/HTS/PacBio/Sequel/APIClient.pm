@@ -57,9 +57,11 @@ has 'default_interval' =>
   Arg [2]    : End date. Optional.
 
   Example    : my $runs = $client->query_runs
-  Description: Return runs. Optionally restrict to runs started (completed
-               date not available) within a specific date range, otherwise
-               runs started in the last 3 weeks will be returned.
+  Description: Return runs. Optionally restrict to runs completed within
+               a specific date range, otherwise runs completed in the 
+               last 2 weeks will be returned. A completedAt date is 
+               available for runs using primary analysis version 4+ 
+               (pre V4 runs will never have a completedAt date).
   Returntype : ArrayRef[HashRef]
 
 =cut
@@ -92,9 +94,9 @@ sub query_runs {
   my @runs;
   if (ref $content eq 'ARRAY') {
       foreach my $run (@{$content}) {
-          if($run->{startedAt}                      &&
-             ($run->{startedAt} gt $begin->iso8601) &&
-             ($run->{startedAt} lt $end->iso8601)){
+          if($run->{completedAt}                      &&
+             ($run->{completedAt} gt $begin->iso8601) &&
+             ($run->{completedAt} lt $end->iso8601)){
               push @runs, $run;
           }
       }
@@ -127,7 +129,7 @@ Guoying Qi E<lt>gq1@sanger.ac.ukE<gt>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2011, 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2017 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
