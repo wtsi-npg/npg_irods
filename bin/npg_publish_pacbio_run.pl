@@ -71,7 +71,7 @@ if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
 }
 else {
-  my $level = $debug ? $DEBUG : $verbose ? $INFO : $ERROR;
+  my $level = $debug ? $DEBUG : $verbose ? $INFO : $WARN;
   Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
                             level  => $level,
                             utf8   => 1});

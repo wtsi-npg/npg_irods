@@ -144,6 +144,10 @@ sub publish_sequence_files {
   # R & D runs have no records in the ML warehouse
   my $is_r_and_d = @run_records ? 0 : 1;
 
+  if($is_r_and_d){
+      $self->warn($metadata->run_name, " : publishing '$smrt_name' as R and D data");
+  }
+
   my @primary_avus   = $self->make_primary_metadata($metadata, $is_r_and_d);
   my @secondary_avus = $self->make_secondary_metadata(@run_records);
 
