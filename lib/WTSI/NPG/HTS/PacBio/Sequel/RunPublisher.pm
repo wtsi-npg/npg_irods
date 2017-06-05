@@ -64,10 +64,11 @@ override 'publish_files' => sub {
       my ($nfx, $npx, $nex) = $self->publish_xml_files($smrt_name);
       my ($nfb, $npb, $neb) = $self->publish_sequence_files($smrt_name);
       my ($nfp, $npp, $nep) = $self->publish_index_files($smrt_name);
+      my ($nfa, $npa, $nea) = $self->publish_adapter_files($smrt_name);
 
-      $num_files     += ($nfx + $nfb + $nfp);
-      $num_processed += ($npx + $npb + $npp);
-      $num_errors    += ($nex + $neb + $nep);
+      $num_files     += ($nfx + $nfb + $nfp + $nfa);
+      $num_processed += ($npx + $npb + $npp + $npa);
+      $num_errors    += ($nex + $neb + $nep + $nea);
     }
     else {
       $self->info("Skipping $smrt_name as no seq files found");
@@ -192,6 +193,37 @@ sub publish_index_files {
   return ($num_files, $num_processed, $num_errors);
 }
 
+=head2 publish_adapter_files
+
+  Arg [1]    : smrt_name,  Str.
+
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_index_files
+  Description: Publish adapter files for a SMRT cell to iRODS. Return
+               the number of files, the number published and the number
+               of errors.
+  Returntype : Array[Int]
+
+=cut
+
+sub publish_adapter_files {
+  my ($self, $smrt_name) = @_;
+
+  my $files = $self->list_adapter_files($smrt_name);
+  my $dest_coll = catdir($self->dest_collection, $smrt_name);
+
+  my ($num_files, $num_processed, $num_errors) =
+    $self->_publish_files($files, $dest_coll);
+
+  $self->info("Published $num_processed / $num_files index files ",
+              "in SMRT cell '$smrt_name'");
+
+  return ($num_files, $num_processed, $num_errors);
+}
+
+
+
+
 =head2 list_sequence_files
 
   Arg [1]    : SMRT cell name, Str.
@@ -236,6 +268,8 @@ sub list_index_files {
   return [$self->list_directory($self->smrt_path($name), $file_pattern)];
 }
 
+
+
 =head2 list_xml_files
 
   Arg [1]    : SMRT cell name, Str.
@@ -245,7 +279,7 @@ sub list_index_files {
   Example    : $pub->list_xml_files('1_A01')
   Description: Return the path of the metadata XML files for the given SMRT
                cell and type.  Calling this method will access the file system.
-  Returntype : Str
+  Returntype : ArrayRef[Str]
 
 =cut
 
@@ -273,6 +307,28 @@ sub list_xml_files {
   return \@files;
 }
 
+=head2 list_adapter_files
+
+  Arg [1]    : SMRT cell name, Str.
+
+  Example    : $pub->list_adapter_files('1_A01')
+  Description: Return the path of the adapter files for the given SMRT
+               cell. Calling this method will access the file system.
+  Returntype : ArrayRef[Str]
+
+=cut
+
+sub list_adapter_files {
+  my ($self, $smrt_name) = @_;
+
+  my $name = $self->_check_smrt_name($smrt_name);
+
+  my $file_pattern = $FILE_PREFIX_PATTERN .'[.]adapters[.]fasta$';
+
+  return [$self->list_directory($self->smrt_path($name), $file_pattern)];
+}
+
+
 __PACKAGE__->meta->make_immutable;
 
 no Moose;
@@ -287,19 +343,18 @@ WTSI::NPG::HTS::PacBio::Sequel::RunPublisher
 
 =head1 DESCRIPTION
 
-Publishes xml, sequence and index files to iRODS, adds metadata and sets 
-permissions.
+Publishes relevant files to iRODS, adds metadata and sets permissions.
 
 An instance of RunPublisher is responsible for copying PacBio sequencing
 data from the instrument run folder to a collection in iRODS for a
 single, specific run.
 
-Data files are divided into three categories:
+Data files are divided into a number of categories:
 
  - sequence files; sequence files for sequence data
  - index files; index files for sequence data
  - XML files; stats and subset xml
-
+ - adapter fasta file
 
 A RunPublisher provides methods to list the complement of these
 categories and to copy ("publish") them. Each of these list or publish
