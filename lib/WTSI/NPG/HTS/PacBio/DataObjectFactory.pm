@@ -19,9 +19,7 @@ has 'irods' =>
   (is            => 'ro',
    isa           => 'WTSI::NPG::iRODS',
    required      => 1,
-   default       => sub { return WTSI::NPG::iRODS->new },
    documentation => 'The iRODS connection handle');
-
 
 my $sequence_regex = qr{[.](h5|bam)$}msx;
 
@@ -31,8 +29,8 @@ my $sequence_regex = qr{[.](h5|bam)$}msx;
   Arg [1]      Data object path, Str.
 
   Example    : my $obj = $factory->make_data_object($path);
-  Description: Return a new data object for a path. 
-  Returntype : WTSI::NPG::HTS::DataObject 
+  Description: Return a new data object for a path.
+  Returntype : WTSI::NPG::HTS::DataObject
 
 =cut
 
@@ -44,19 +42,21 @@ sub make_data_object {
 
   my ($filename, $collection) = fileparse($path);
 
-  my($obj);
-  if($filename =~ m{$sequence_regex}mxsi){
-    ($obj)= WTSI::NPG::HTS::PacBio::SeqDataObject->new(collection  => $collection,
-                                                       data_object => $filename,
-                                                       irods       => $self->irods);
-  }else{
-    ($obj)= WTSI::NPG::HTS::DataObject->new(collection  => $collection,
-                                            data_object => $filename,
-                                            irods       => $self->irods);
+  my $obj;
+  if ($filename =~ m{$sequence_regex}mxsi) {
+    $obj =
+      WTSI::NPG::HTS::PacBio::SeqDataObject->new(collection  => $collection,
+                                                 data_object => $filename,
+                                                 irods       => $self->irods);
   }
+  else {
+    $obj = WTSI::NPG::HTS::DataObject->new(collection  => $collection,
+                                           data_object => $filename,
+                                           irods       => $self->irods);
+  }
+
   return $obj;
 }
-
 
 __PACKAGE__->meta->make_immutable;
 
