@@ -6,7 +6,7 @@ use Moose;
 use MooseX::StrictConstructor;
 use Try::Tiny;
 
-use WTSI::NPG::HTS::DataObject;
+use WTSI::NPG::HTS::PacBio::DataObjectFactory;
 use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::Metadata qw[$PACBIO_RUN $PACBIO_WELL];
 
@@ -23,6 +23,14 @@ has 'irods' =>
    isa           => 'WTSI::NPG::iRODS',
    required      => 1,
    documentation => 'An iRODS handle to run searches and perform updates');
+
+has 'obj_factory' =>
+  (is            => 'ro',
+   isa           => 'WTSI::NPG::HTS::DataObjectFactory',
+   required      => 1,
+   lazy          => 1,
+   builder       => '_build_obj_factory',
+   documentation => 'A factory building data objects from files');
 
 
 =head2 update_secondary_metadata
@@ -53,7 +61,7 @@ sub update_secondary_metadata {
   foreach my $path (@{$paths}) {
     $self->info("Updating metadata on '$path' [$num_processed / $num_paths]");
 
-    my $obj = WTSI::NPG::HTS::DataObject->new($self->irods, $path);
+    my $obj = $self->obj_factory->make_data_object($path);
 
     my $id_run = $obj->get_avu($PACBIO_RUN)->{value};
     my $well   = $obj->get_avu($PACBIO_WELL)->{value};
@@ -76,6 +84,14 @@ sub update_secondary_metadata {
 
   return $num_processed - $num_errors;
 }
+
+
+sub _build_obj_factory {
+  my ($self) = @_;
+
+  return WTSI::NPG::HTS::PacBio::DataObjectFactory->new(irods => $self->irods);
+}
+
 
 __PACKAGE__->meta->make_immutable;
 
