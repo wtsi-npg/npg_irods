@@ -12,7 +12,7 @@ use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::BatchPublisher;
-use WTSI::NPG::HTS::DataObject;
+use WTSI::NPG::HTS::PacBio::DataObjectFactory;
 use WTSI::NPG::HTS::PacBio::MetaXMLParser;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS::Publisher;
@@ -41,6 +41,14 @@ has 'irods' =>
    is            => 'ro',
    required      => 1,
    documentation => 'An iRODS handle to run searches and perform updates');
+
+has 'obj_factory' =>
+  (does          => 'WTSI::NPG::HTS::DataObjectFactory',
+   is            => 'ro',
+   required      => 1,
+   lazy          => 1,
+   builder       => '_build_obj_factory',
+   documentation => 'A factory building data objects from files');
 
 has 'runfolder_path' =>
   (isa           => 'Str',
@@ -418,7 +426,7 @@ sub publish_basx_files {
   # A production well will always have run_uuid and records in ML
   # warehouse. Production data are not published unless ML warehouse
   # records are present.
-  if ($metadata->has_run_uuid && $is_r_and_d == 1) {
+  if ($metadata->has_run_uuid && $is_r_and_d) {
     $self->error("Failed to publish $num_files bas/x files for run ",
                  $metadata->run_name, ' well ', $metadata->well_name ,
                  ' as data missing from ML warehouse');
@@ -529,6 +537,7 @@ sub _build_batch_publisher {
   return WTSI::NPG::HTS::BatchPublisher->new
     (force                  => $self->force,
      irods                  => $self->irods,
+     obj_factory            => $self->obj_factory,
      state_file             => $self->restart_file,
      require_checksum_cache => []); ## no md5s precreated for PacBio
 }
@@ -543,6 +552,12 @@ sub _build_directory_pattern{
    my ($self) = @_;
 
    return $WELL_DIRECTORY_PATTERN;
+}
+
+sub _build_obj_factory {
+  my ($self) = @_;
+
+  return WTSI::NPG::HTS::PacBio::DataObjectFactory->new(irods => $self->irods);
 }
 
 # Check that a SMRT cell name argument is given and valid

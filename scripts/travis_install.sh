@@ -61,6 +61,9 @@ tar xfj /tmp/samtools-${SAMTOOLS_VERSION}.tar.bz2 -C /tmp
 cd /tmp/samtools-${SAMTOOLS_VERSION}
 ./configure --enable-plugins --with-htslib=system ; make ; sudo make install
 sudo ln -s /usr/local/bin/samtools /usr/local/bin/samtools_irods
+sudo ln -s /tmp/samtools-${SAMTOOLS_VERSION}/sam.h /usr/local/include/sam.h #hack for npg_qc outdated C code
+sudo ln -s /tmp/samtools-${SAMTOOLS_VERSION}/bam.h /usr/local/include/bam.h #hack for npg_qc outdated C code
+sudo ln -s /tmp/samtools-${SAMTOOLS_VERSION}/libbam.a /usr/local/lib/libbam.a #hack for npg_qc outdated C code
 
 # CPAN
 cpanm --quiet --notest Alien::Tidyp # For npg_tracking

@@ -87,6 +87,26 @@ sub list_xml_files : Test(1) {
      'Found meta XML file 1_A01');
 }
 
+sub list_adapter_files : Test(1) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/r54097_20161207_132758";
+  my $dest_coll = $irods_tmp_coll;
+
+  my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
+    (dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     runfolder_path  => $runfolder_path);
+
+  my @expected_paths =
+    map { catfile("$runfolder_path/1_A01", $_) }
+    ('m54097_161207_133626.adapters.fasta');
+
+  is_deeply($pub->list_adapter_files('1_A01'), \@expected_paths,
+     'Found adapter fasta file 1_A01');
+}
+
 sub list_sequence_files : Test(1) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -144,7 +164,7 @@ sub publish_files : Test(2) {
      runfolder_path  => $runfolder_path);
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
-  my $num_expected = 6;
+  my $num_expected = 7;
 
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
   cmp_ok($num_errors,    '==', 0);
@@ -171,6 +191,38 @@ sub publish_xml_files : Test(14) {
 
   my ($num_files, $num_processed, $num_errors) =
     $pub->publish_xml_files('1_A01', 'subreadset|sts',2);
+  cmp_ok($num_files,     '==', scalar @expected_paths);
+  cmp_ok($num_processed, '==', scalar @expected_paths);
+  cmp_ok($num_errors,    '==', 0);
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named metadata XML files') or
+              diag explain \@observed_paths;
+
+  check_common_metadata($irods, @observed_paths);
+}
+
+sub publish_adapter_files : Test(9) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/r54097_20161207_132758";
+  my $dest_coll = "$irods_tmp_coll/publish_adapter_files";
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
+    (dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
+     runfolder_path  => $runfolder_path);
+
+  my @expected_paths =
+    map { catfile("$dest_coll/1_A01", $_) }
+    ('m54097_161207_133626.adapters.fasta');
+
+  my ($num_files, $num_processed, $num_errors) =
+    $pub->publish_adapter_files('1_A01');
   cmp_ok($num_files,     '==', scalar @expected_paths);
   cmp_ok($num_processed, '==', scalar @expected_paths);
   cmp_ok($num_errors,    '==', 0);
