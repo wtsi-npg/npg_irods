@@ -3,7 +3,6 @@ sudo: required
 language: perl
 
 perl:
-  - "5.16"
   - "5.22"
 
 addons:
@@ -16,6 +15,7 @@ env:
     - BATON_VERSION="1.0.0"
     - SAMTOOLS_VERSION="1.4.1"
     - HTSLIB_VERSION="1.4.1"
+    - TEARS_VERSION="1.2.3"
     - DISPOSABLE_IRODS_VERSION="1.2"
     - RENCI_FTP_URL=ftp://ftp.renci.org
     - WTSI_NPG_GITHUB_URL=https://github.com/wtsi-npg
