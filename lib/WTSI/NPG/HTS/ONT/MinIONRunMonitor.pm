@@ -259,7 +259,9 @@ WTSI::NPG::HTS::ONT::MinIONRunMonitor
 
 =head1 DESCRIPTION
 
-
+Uses inotify to monitor a directory for new MinION run
+folders. Launches a WTSI::NPG::HTS::ONT::MinIONRunPublisher for each
+new run folder detected.
 
 =head1 AUTHOR
 

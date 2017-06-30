@@ -92,6 +92,11 @@ Data will be written to /seq/ont/minion (for a production user) or to
 ./ont/minion in the user's iRODS home directory (for a non-production
 user).
 
+This program is useful only in cases where we need to use a staging
+area to marshall data before loading into iRODS e.g. where firewalls
+prevent direct access. It is not required in cases where we can stream
+to iRODS directly fom the instrument machine.
+
 =head1 AUTHOR
 
 Keith James <kdj@sanger.ac.uk>

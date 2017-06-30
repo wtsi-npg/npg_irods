@@ -1,4 +1,5 @@
 .travis.yml
+bin/npg_irods_putstream.sh
 bin/npg_pacbio_runmonitor.pl
 bin/npg_publish_bionano_run.pl
 bin/npg_publish_illumina_logs.pl

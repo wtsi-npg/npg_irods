@@ -456,8 +456,16 @@ sub _tar_path {
 sub _open_tar {
   my ($self, $path) = @_;
 
+  my ($obj_name, $collections, $suffix) = fileparse($path, qr{[.][^.]*}msx);
+  $suffix =~ s/^[.]//msx; # Strip leading dot from suffix
+
+  if (not $suffix) {
+    $self->logconfess("Invalid tar file path '$path'");
+  }
+
   my $runfolder_path = $self->runfolder_path;
-  my $tar_cmd = qq[tar -C $runfolder_path -c -T - | publish.sh $path];
+  my $tar_cmd = qq[tar -C $runfolder_path -c -T - | ] .
+                qq[npg_irods_putstream.sh -t $suffix $path];
   $self->info("Opening pipe to '$tar_cmd' in $runfolder_path");
 
   open my $fh, q[|-], $tar_cmd
