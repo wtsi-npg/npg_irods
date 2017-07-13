@@ -98,8 +98,7 @@ sub update_secondary_metadata : Test(2) {
      {attribute => $STUDY_NAME,              value => 'Ag 1000g'},
      {attribute => $STUDY_ACCESSION_NUMBER,  value => 'ERP002372'},
      {attribute => $STUDY_ID,                value => 2572},
-     {attribute => $WTSI::NPG::HTS::PacBio::Annotator::PACBIO_STUDY_NAME,
-      value => 'Ag 1000g'},
+     {attribute => $PACBIO_STUDY_NAME,       value => 'Ag 1000g'},
      {attribute => $STUDY_TITLE,
       value     => 'Anopheles Genome Variation Project'},
      {attribute => $PACBIO_WELL,             value     => 'A01'}

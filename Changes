@@ -1,3 +1,12 @@
+
+Release 2.2
+
+ - PacBio
+    Sequel monitor to use new completedAt date
+    add warning for Sequel R&D run entry
+    archive Sequel adapters.fasta
+    restrict access for relevant PacBio files 
+
 Release 2.1
 
  - Added --restart-file CLI option to the Illumina run publisher to enable

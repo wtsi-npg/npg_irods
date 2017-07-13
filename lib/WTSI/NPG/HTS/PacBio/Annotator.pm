@@ -12,10 +12,6 @@ with qw[
 
 
 
-# Legacy PacBio study_name meta data (duplicated with study)
-our $PACBIO_STUDY_NAME = 'study_name';
-
-
 =head2 make_primary_metadata
 
   Arg [1]      PacBio run metadata, WTSI::NPG::HTS::PacBio::Metadata.
