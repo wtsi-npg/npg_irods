@@ -235,7 +235,7 @@ sub publish_adapter_files : Test(9) {
   check_common_metadata($irods, @observed_paths);
 }
 
-sub publish_sequence_files : Test(32) {
+sub publish_sequence_files : Test(34) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r54097_20161207_132758";
@@ -363,7 +363,8 @@ sub check_study_metadata {
     my $file_name = fileparse($obj->str);
 
     # study_name is legacy metadata
-    foreach my $attr ($STUDY_ID, $STUDY_NAME, $STUDY_ACCESSION_NUMBER) {
+    foreach my $attr ($STUDY_ID, $STUDY_NAME, $STUDY_ACCESSION_NUMBER,
+                      $PACBIO_STUDY_NAME) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }

@@ -10,6 +10,8 @@ with qw[
          WTSI::NPG::iRODS::Annotator
        ];
 
+
+
 =head2 make_primary_metadata
 
   Arg [1]      PacBio run metadata, WTSI::NPG::HTS::PacBio::Metadata.
@@ -74,6 +76,10 @@ sub make_secondary_metadata {
     push @avus, $self->make_study_metadata(@run_records);
     push @avus, $self->make_sample_metadata(@run_records);
     push @avus, $self->make_tag_metadata(@run_records);
+
+    # May be removed in future if legacy data no longer required
+    push @avus, $self->make_legacy_metadata(@run_records);
+
   }
 
   return @avus;
@@ -160,8 +166,7 @@ sub make_library_metadata {
 
   Example    : my @avus = $ann->make_legacy_metadata($path, @run_records);
   Description: Return legacy AVU metadata for a run; study name under
-               the attribute 'study_name' and 'bas' under the attribute
-               'type'.
+               the attribute 'study_name'.
   Returntype : Array[HashRef]
 
 =cut
@@ -172,7 +177,7 @@ sub make_legacy_metadata {
   my @avus;
   my @studies = map { $_->study } @run_records;
 
-  my $method_attr = {name => 'study_name'};
+  my $method_attr = {name => $PACBIO_STUDY_NAME};
   push @avus, $self->_make_multi_value_metadata(\@studies, $method_attr);
 
   return @avus;

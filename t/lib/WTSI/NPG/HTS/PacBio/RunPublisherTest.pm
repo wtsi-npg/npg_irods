@@ -349,7 +349,7 @@ sub check_study_metadata {
 
     # study_name is legacy metadata
     foreach my $attr ($STUDY_ID, $STUDY_NAME, $STUDY_ACCESSION_NUMBER,
-                      'study_name') {
+                      $PACBIO_STUDY_NAME) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
