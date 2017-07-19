@@ -10,7 +10,9 @@ bin/npg_update_hts_metadata.pl
 bin/npg_update_pacbio_metadata.pl
 bin/samgen.pl
 Build.PL
+BuildONT.PL
 Build.pm
+BuildONT.pm
 Changes
 etc/log4perl_example1.conf
 etc/log4perl_example2.conf
