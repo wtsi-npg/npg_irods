@@ -142,8 +142,8 @@ has 'tmpfs' =>
   (isa           => 'Str',
    is            => 'ro',
    required      => 1,
-   default       => '/dev/shm',
-   documentation => 'Fast temporary filesystem for file manipulation');
+   default       => '/tmp',
+   documentation => 'Temporary filesystem for file manipulation');
 
 has 'tmpdir' =>
   (isa           => 'File::Temp::Dir',
