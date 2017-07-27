@@ -157,7 +157,8 @@ sub start {
              arch_timeout    => $self->arch_timeout,
              dest_collection => $coll,
              runfolder_path  => $abs_path,
-             session_timeout => $self->session_timeout);
+             session_timeout => $self->session_timeout,
+             f5_uncompress   => 0);
 
           my ($nf, $ne) = $publisher->publish_files;
           my $exit_code = $ne == 0 ? 0 : 1;

@@ -155,6 +155,20 @@ has 'tmpdir' =>
    builder       => '_build_tmpdir',
    documentation => 'Fast temporary directory for file manipulation');
 
+has 'f5_uncompress' =>
+  (isa           => 'Bool',
+   is            => 'rw',
+   required      => 1,
+   default       => 0,
+   documentation => 'Export the Fast5 files without internal compression');
+
+has 'f5_bzip2' =>
+  (isa           => 'Bool',
+   is            => 'rw',
+   required      => 1,
+   default       => 1,
+   documentation => 'Externally compress the Fast5 files with bzip2');
+
 =head2 publish_files
 
   Arg [1]    : None
@@ -434,22 +448,22 @@ sub _identify_run_fast5 {
   my $sample_id = 'unknown_sample_id';
   my $version   = 'unknown_minknow_version';
 
-  my $h5;
+  my $f5;
   my $retries = 0;
   my $backoff = 1;
 
   # If we are responding to IN_CREATE/IN_MOVED_TO, the file may not be
   # fully written
-  while (not defined $h5 and $retries < $FILE_COMPLETE_RETRIES) {
+  while (not defined $f5 and $retries < $FILE_COMPLETE_RETRIES) {
     sleep $backoff;
-    $h5 = PDL::IO::HDF5->new($path);
+    $f5 = PDL::IO::HDF5->new($path);
     $backoff *= $FILE_COMPLETE_BACKOFF;
     $retries++;
   }
 
   try {
     my $tracking_group =
-      $h5->group($FAST5_GLOBAL_GROUP)->group($FAST5_TRACKING_GROUP);
+      $f5->group($FAST5_GLOBAL_GROUP)->group($FAST5_TRACKING_GROUP);
 
     if ($tracking_group) {
       ($device_id) = $tracking_group->attrGet($FAST5_DEVICE_ID_ATTR);
@@ -462,7 +476,7 @@ sub _identify_run_fast5 {
     else {
       croak "Failed to read the tracking group from '$path'";
     }
-  }catch {
+  } catch {
     $self->error("Failed to read from fast5 file '$path': $_");
   };
 
@@ -512,11 +526,17 @@ sub _do_publish {
 
       my $tmp_dir  = catdir($self->tmpdir, $relative_path);
       my $tmp_path = catfile($tmp_dir, $filename);
-      my $bz2_path = "$tmp_path.bz2";
 
       make_path($tmp_dir);
       copy($path, $tmp_path) or
         $self->logcroak("Failed to copy '$path' to '$tmp_path': ", $ERRNO);
+
+      if(-e $tmp_path) {
+        $self->debug("'$tmp_path' exists!");
+      }
+      else {
+        $self->logcroak("'$tmp_path' has disappeared!");
+      }
 
       if ($format =~ /fast5/msx) {
         if (not ($self->has_run_id and $self->has_sample_id)) {
@@ -525,27 +545,18 @@ sub _do_publish {
           $self->sample_id($sid);
         }
 
-        my $repacked = "$tmp_path.repacked";
-        WTSI::DNAP::Utilities::Runnable->new
-            (executable => $H5REPACK,
-             arguments  => ['-f', 'SHUF', '-f', 'GZIP=0',
-                            $tmp_path, $repacked])->run;
-        $self->debug("Repacked '$tmp_path' to '$repacked'");
+        if ($self->f5_uncompress) {
+          $tmp_path = $self->_h5repack_filter($tmp_path, "$tmp_path.repacked");
+        }
 
-        move($repacked, $tmp_path) or
-          $self->logcroak("Failed to move '$repacked' to '$tmp_path': ",
-                          $ERRNO);
-        $self->debug("Moved '$repacked' to '$tmp_path'");
+        if ($self->f5_bzip2) {
+          $tmp_path = $self->_bzip2_filter($tmp_path, "$tmp_path.bz2");
+        }
 
-        bzip2 $tmp_path => $bz2_path or
-          $self->logcroak("Failed to compress '$tmp_path': $Bzip2Error");
-        $self->debug("Compressed '$tmp_path' to '$bz2_path'");
-        unlink $tmp_path;
-
-        # Don't unlink the bzip2 file yet because the tar will process
-        # it asynchronously. Use the 'remove_file' attribute on the
-        # tar stream to recover space..
-        $self->f5_publisher->publish_file($bz2_path);
+        # Don't unlink the file yet because the tar will process it
+        # asynchronously. Use the 'remove_file' attribute on the tar
+        # stream to recover space.
+        $self->f5_publisher->publish_file($tmp_path);
 
         last CASE;
       }
@@ -557,13 +568,10 @@ sub _do_publish {
           $self->sample_id($sid);
         }
 
-        bzip2 $tmp_path => $bz2_path or
-          $self->logcroak("Failed to compress '$tmp_path': $Bzip2Error");
-        $self->debug("Compressed '$tmp_path' to '$bz2_path'");
-        unlink $tmp_path;
+        $tmp_path = $self->_bzip2_filter($tmp_path, "$tmp_path.bz2");
 
-        # Don't unlink the bzip2 file yet
-        $self->fq_publisher->publish_file($bz2_path);
+        # Don't unlink the file yet
+        $self->fq_publisher->publish_file($tmp_path);
 
         last CASE;
       }
@@ -571,6 +579,33 @@ sub _do_publish {
   }
 
   return;
+}
+
+sub _h5repack_filter {
+  my ($self, $in_path, $out_path) = @_;
+
+  WTSI::DNAP::Utilities::Runnable->new
+      (executable => $H5REPACK,
+       arguments  => ['-f', 'SHUF', '-f', 'GZIP=0',
+                      $in_path, $out_path])->run;
+  $self->debug("Repacked '$in_path' to '$out_path'");
+
+  move($out_path, $in_path) or
+    $self->logcroak("Failed to move '$out_path' to '$in_path': ", $ERRNO);
+
+  return $in_path;
+}
+
+sub _bzip2_filter {
+  my ($self, $in_path, $out_path) = @_;
+
+  bzip2 $in_path => $out_path or
+    $self->logcroak("Failed to compress '$in_path': $Bzip2Error");
+  $self->debug("Compressed '$in_path' to '$out_path'");
+
+  unlink $in_path;
+
+  return $out_path;
 }
 
 sub _catchup {
@@ -606,7 +641,7 @@ sub _build_tmpdir {
   my ($self) = @_;
 
   return File::Temp->newdir('MinIONRunPublisher.' . $PID . '.XXXXXXXXX',
-                            DIR => $self->tmpfs);
+                            DIR => $self->tmpfs, CLEANUP => 1);
 }
 
 sub _build_f5_publisher {
