@@ -23,6 +23,7 @@ use WTSI::DNAP::Utilities::Runnable;
 use WTSI::NPG::HTS::TarPublisher;
 use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::iRODS::Metadata;
+use WTSI::NPG::iRODS;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
@@ -290,7 +291,10 @@ after 'publish_files' => sub {
                                                DateTime->now,
                                                $self->accountee_uri);
   push @metadata, $self->make_avu($ID_RUN, $self->run_id);
-  push @metadata, $self->make_avu($SAMPLE_NAME, $self->sample_id);
+
+  if ($self->has_sample_id) {
+    push @metadata, $self->make_avu($SAMPLE_NAME, $self->sample_id);
+  }
 
   my $coll = WTSI::NPG::iRODS::Collection->new($self->irods,
                                                $self->dest_collection);
@@ -368,11 +372,9 @@ sub _recurse_setup_callbacks {
   my @dirent = grep { ! m{[.]{1,2}$}msx } readdir $dh;
   closedir $dh or $self->warn("Failed to close '$directory': $ERRNO");
 
-  foreach my $ent (@dirent) {
-    my $path = rel2abs("$directory/$ent");
-    if (-d $path) {
-      $self->_recurse_setup_callbacks($path, $events);
-    }
+  my @dirs = grep { -d } map { rel2abs($_, $directory) } @dirent;
+  foreach my $dir (@dirs) {
+    $self->_recurse_setup_callbacks($dir, $events);
   }
 
   return;
@@ -486,8 +488,9 @@ sub _identify_run_fast5 {
 sub _identify_run_fastq {
   my ($self, $path) = @_;
 
-  my $run_id    = 'unknown_run_id';
-  my $sample_id = 'unknown_sample_id';
+  my $run_id;
+  my $sample_id; # TODO -- Always undef at the moment; configure
+                 # Albacore to put this in the Fastq header
 
   try {
     open my $fh, '<', $path or croak "Failed to open '$path': $ERRNO";
@@ -500,14 +503,6 @@ sub _identify_run_fastq {
   } catch {
     $self->error("Failed to read from Fastq file '$path': $_");
   };
-
-  my ($vol, $relative_path) = splitpath(abs2rel($path, $self->runfolder_path));
-  my @path_components = grep { length } splitdir($relative_path);
-  my $relative_root   = shift @path_components;
-
-  if ($relative_root =~ m{^\d_\d+_(\S+)}msx) {
-    $sample_id = $1;
-  }
 
   return ($run_id, $sample_id);
 }
@@ -562,10 +557,10 @@ sub _do_publish {
       }
 
       if ($format =~ /fastq/msx) {
-        if (not ($self->has_run_id and $self->has_sample_id)) {
+        if (not ($self->has_run_id)) {
           my ($rid, $sid) = $self->_identify_run_fastq($path);
           $self->run_id($rid);
-          $self->sample_id($sid);
+          # $self->sample_id($sid); # Currently unavailable
         }
 
         $tmp_path = $self->_bzip2_filter($tmp_path, "$tmp_path.bz2");
@@ -708,8 +703,36 @@ and the tears iRODS client, directly into a series of tar archives in
 an iRODS collection.
 
 The fast5 and fastq files must be located under a single top level
-directory (the 'runfolder'). New directories and files under the
-runfolder are detected by inotify.
+directory (the 'runfolder'). Directories and files under the
+runfolder are monitored by recursively adding new inotify watches.
+
+The publisher will attempt to capture the sample_id (or "experiment
+name" for GridION) and run_id for a run. It does this by examining the
+tracking_id group within each Fast5 file. Once the sample_id and
+run_id are established, the publisher assumes that they apply to the
+entire run.
+
+If Fast5 files are unavailable, the publisher attempts to read the
+run_id from the header of each Fastq file. Again, once the run_id is
+established, the publisher assumes that it applies to the entire
+run. As the Fastq header does not contain a sample_id, it will not be
+captured.
+
+All tar files will be written to 'dest_collection'. Metadata will be
+added to dest_collection:
+
+  'id_run'            => MinION run_id
+  'sample'            => MinION sample_id (if available)
+  'dcterms:creator'   => URI
+  'dcterms:created'   => Timestamp
+  'dcterms:publisher' => URI
+
+Metadata will also be added to each tar file, but only minimally so:
+
+
+  'dcterms:created'   => Timestamp
+  'md5'               => MD5
+  'type'              => File suffix
 
 If any tar archive takes longer to reach its capacity than the
 arch_timeout in seconds, that archive is automatically closed. Any

@@ -43,26 +43,25 @@ sub setup_test : Test(setup) {
 sub teardown_test : Test(teardown) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  # $irods->remove_collection($irods_tmp_coll);
+  $irods->remove_collection($irods_tmp_coll);
 }
 
-
-sub publish_files : Test(40) {
+sub publish_files : Test(55) {
   my $session_name  = 'test';
   my $f5_uncompress = 0;
 
   _do_publish_files($session_name, $irods_tmp_coll, $f5_uncompress);
 }
 
-sub publish_files_f5_uncompress : Test(40) {
+sub publish_files_f5_uncompress : Test(55) {
   my $session_name  = 'test_uncompress';
   my $f5_uncompress = 1;
 
- TODO: {
+ SKIP: {
     # h5repack fails with a 'file not found error', however, a
     # subsequent test for the file's presence usoing Perl's '-e' shows
     # it was there.
-    local $TODO = 'h5repack sometimes fails to open the input';
+    skip 'h5repack not required', 55, if not $ENV{TEST_WITH_H5REPACK};
 
     _do_publish_files($session_name, $irods_tmp_coll, $f5_uncompress);
   }
@@ -132,6 +131,20 @@ sub _do_publish_files {
   my %expected_num_items = (fast5 => [6, 6, 6, 2],
                             fastq => [4]);
 
+  my $irods = WTSI::NPG::iRODS->new;
+  my $tar_coll = WTSI::NPG::iRODS::Collection->new($irods, $dest_coll);
+
+  ok($tar_coll->get_avu($ID_RUN, '9c461c741cb14362e613136e235aa38b67ef2f6d'),
+     "Collection has expected $ID_RUN");
+  ok($tar_coll->get_avu($SAMPLE_NAME, 'pc3_linuxtext'),
+     "Collection has expected $SAMPLE_NAME");
+  foreach my $attr ($DCTERMS_CREATED, $DCTERMS_CREATOR, $DCTERMS_PUBLISHER) {
+    my @avu = $tar_coll->find_in_metadata($attr);
+    cmp_ok(scalar @avu, '==', 1, "Collection $attr metadata present");
+  }
+
+  my ($objs, $colls) = $tar_coll->get_contents;
+
   foreach my $format (qw[fast5 fastq]) {
     my $manifest_file = sprintf '%s_%s_manifest.txt', $run_id, $format;
     my $expected_manifest = "$runfolder_path/$manifest_file";
@@ -155,21 +168,15 @@ sub _do_publish_files {
     cmp_ok(scalar uniq(values %manifest), '==', $n,
            "Manifest lists $n tar files") or diag explain \%manifest;
 
+    my @observed_objs = grep { $_->str =~ m{$format[.]\d+[.]tar$}msx } @{$objs};
+
     # Count the tar files created in iRODS
-    my $irods = WTSI::NPG::iRODS->new;
-
-    my $tar_coll = "$dest_coll";
-    my ($observed_paths) = $irods->list_collection($tar_coll);
-    my @observed_paths = grep { m{$format[.]\d+[.]tar$}msx }
-      @{$observed_paths};
-
-    cmp_ok(scalar @observed_paths, '==', $n, "Published $n $format tar files")
-      or diag explain \@observed_paths;
+    cmp_ok(scalar @observed_objs, '==', $n, "Published $n $format tar files")
+      or diag explain \@observed_objs;
 
     # Fetch the MD5 metadata
     my @observed_md5_metadata;
-    foreach my $path (@observed_paths) {
-      my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $path);
+    foreach my $obj (@observed_objs) {
       my @avu = $obj->find_in_metadata($FILE_MD5);
       cmp_ok(scalar @avu, '==', 1, 'Single md5 attribute present');
       push @observed_md5_metadata, $avu[0]->{value};
@@ -178,9 +185,9 @@ sub _do_publish_files {
     # Fetch the tar file data objects from iRODS and calculate their MD5s
     my @observed_md5_checksums;
     my @observed_file_counts;
-    foreach my $tar (@observed_paths) {
-      my $filename = fileparse($tar);
-      my $file = $irods->get_object($tar, catfile($staging_dir, $filename));
+    foreach my $tar (@observed_objs) {
+      my $filename = fileparse($tar->str);
+      my $file = $irods->get_object($tar->str, catfile($staging_dir, $filename));
 
       my $md5 = $irods->md5sum($file);
       push @observed_md5_checksums, $md5;
@@ -194,7 +201,7 @@ sub _do_publish_files {
       foreach my $entry (@entries) {
         # Look up the tar file iRODS data object in the manifest
         my $manifest_tar = $manifest{$entry};
-        is($tar, $manifest_tar,
+        is($tar->str, $manifest_tar,
            "Manifest describes tar file for '$entry'") or $manifest_fail++;
       }
 
@@ -211,6 +218,22 @@ sub _do_publish_files {
     is_deeply(\@observed_file_counts, $expected_num_items{$format} ,
               "$format tar file contains expected number of items") or
                 diag explain \@observed_file_counts;
+
+    # Check the other metadata
+    check_primary_metadata($irods, @observed_objs);
+  }
+}
+
+sub check_primary_metadata {
+  my ($irods, @objs) = @_;
+
+  foreach my $obj (@objs) {
+    my $file_name = fileparse($obj->str);
+
+    foreach my $attr ($DCTERMS_CREATED, $FILE_TYPE) {
+      my @avu = $obj->find_in_metadata($attr);
+      cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
+    }
   }
 }
 

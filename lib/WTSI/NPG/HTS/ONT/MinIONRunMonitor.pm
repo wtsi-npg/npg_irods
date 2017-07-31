@@ -110,6 +110,10 @@ sub start {
 
   $pm->run_on_wait(sub { $self->debug('Waiting for a child process...') }, 2);
 
+  # TODO -- on startup we may find existing runfolders where runs have
+  # already begun. We could monitor these automatically to avoid the
+  # operator having to touch them.
+
   my $continue   = 1; # While true, continue monitoring
   my $num_errors = 0;
 
@@ -274,7 +278,19 @@ WTSI::NPG::HTS::ONT::MinIONRunMonitor
 
 Uses inotify to monitor a directory for new MinION run
 folders. Launches a WTSI::NPG::HTS::ONT::MinIONRunPublisher for each
-new run folder detected.
+new run folder detected. A MinIONRunMonitor does not monitor its
+directory recursively; that responsibility is delegated to its child
+processes. Each child process is responsible for its own subdirectory.
+
+A MinIONRunMonitor will store data in iRODS beneath
+dest_collection. To avoid this collection becoming too full,
+additional levels of collections will be added beneath dest_collection
+to contain the data objects. These are not random, but generated from
+a hexdigest of the absolute path of each source directory containing
+the data. The left-most 6 characters of the hexdigest will be used to
+create three additional levels of collection of the form
+<dest_collection>/aa/bb/cc, where the data objects will be stored in
+'cc'.
 
 =head1 AUTHOR
 
