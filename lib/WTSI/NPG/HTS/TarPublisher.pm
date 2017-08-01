@@ -87,6 +87,17 @@ sub BUILD {
   return;
 }
 
+=head2 publish_file
+
+  Arg [1]    : File path, Str.
+
+  Example    : my $path = $obj->publish_file('/path/to/file');
+  Description: Add a file to the current tar stream and return the
+               path of the tar file to which it was added.
+  Returntype : Str
+
+=cut
+
 sub publish_file {
   my ($self, $path) = @_;
 
@@ -119,17 +130,49 @@ sub publish_file {
   return $self->manifest_index->{$path};
 }
 
+=head2 file_published
+
+  Arg [1]    : File path, Str.
+
+  Example    : $obj->file_published('/path/to/file');
+  Description: Return true if file has been published by this instance.
+  Returntype : Bool
+
+=cut
+
 sub file_published {
   my ($self, $path) = @_;
 
   return exists $self->manifest_index->{$path};
 }
 
+=head2 tar_in_progress
+
+  Arg [1]    : None.
+
+  Example    : $obj->tar_in_progress;
+  Description: Return true if a tar stream is currently open and has been
+               used for at least one file.
+  Returntype : Bool
+
+=cut
+
 sub tar_in_progress {
   my ($self) = @_;
 
   return ($self->has_tar_stream and $self->tar_stream->file_count > 0);
 }
+
+=head2 close_stream
+
+  Arg [1]    : None
+
+  Example    : $obj->close_stream
+  Description: Close any current stream safely, incrementing the tar count
+               if appropriate.
+  Returntype : Undef
+
+=cut
 
 sub close_stream {
   my ($self) = @_;
@@ -212,6 +255,27 @@ WTSI::NPG::HTS::TarPublisher
 
 =head1 DESCRIPTION
 
+Publishes files to iRODS, archiving them in sequentially numbered tar
+files on-the-fly. The capacity of each tar file is determined by
+setting the 'tar_capacity' attribute and when one tar file is full, it
+is closed automaticallyt and a new file opened. The number of tar
+files created during the lifetime of the TarPublisher may be found
+from the 'tar_count' attribute, which is automatically incremented
+when each tar file is closed successfully.
+
+A record of which local file is stored in each tar file is saved in a
+local manifest file, which is updated only after each tar file is
+closed successfully. The manifest serves to allow restarting a large
+archiving operation. If the manifest is present when the TarPublisher
+is created, it will be read. Attempts to publish any local file
+already present in the manifest will be skipped. The manifest will
+continue to be updated and saved when each subsequent tar file is
+closed successfully.
+
+The manifest is a text file containing one row per local file
+archived, associating that file with a tar file in iRODS:
+
+<Tar file path in iRODS><tab><Local file path>
 
 =head1 AUTHOR
 

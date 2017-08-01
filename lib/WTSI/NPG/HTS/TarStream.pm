@@ -60,6 +60,17 @@ sub BUILD {
   return;
 }
 
+=head2 open_stream
+
+  Arg [1]    : None
+
+  Example    : $obj->open_stream
+  Description: Open a new stream to a tar file in iRODS. Return the new
+               filehandle.
+  Returntype : FileHandle
+
+=cut
+
 sub open_stream {
   my ($self) = @_;
 
@@ -89,6 +100,15 @@ sub open_stream {
   return $self->tar;
 }
 
+=head2 close_stream
+
+  Arg [1]    : None
+
+  Example    : $obj->close_stream
+  Description: Close any current stream safely.
+  Returntype : Undef
+
+=cut
 sub close_stream {
   my ($self) = @_;
 
@@ -102,6 +122,18 @@ sub close_stream {
 
   return;
 }
+
+=head2 add_file
+
+  Arg [1]    : File path, Str.
+
+  Example    : my $path = $obj->add_file('/path/to/file');
+  Description: Add a file to the current tar stream and return its
+               path relative to the tar CWD (i.e. return its path
+               within the archive).
+  Returntype : Str
+
+=cut
 
 sub add_file {
   my ($self, $path) = @_;
@@ -120,6 +152,16 @@ sub add_file {
 
   return $rel_path;
 }
+
+=head2 file_count
+
+  Arg [1]    : None
+
+  Example    : my $n = $obj->file_count;
+  Description: Return the number of files added to the archive.
+  Returntype : Int
+
+=cut
 
 sub file_count {
   my ($self) = @_;
@@ -151,10 +193,12 @@ WTSI::NPG::HTS::TarStream
 
 =head1 DESCRIPTION
 
+Creates a tar stream into iRODS using GNU tar and tears for data and
+baton for iRODS metadata.
 
 =head1 AUTHOR
 
-Keith James E<lt>kdj@sanger.ac.ukE<gt>
+Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
