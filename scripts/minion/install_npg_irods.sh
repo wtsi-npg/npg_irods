@@ -31,11 +31,11 @@ install_from_source() {
     git clone -b "$repo_branch" ${GITHUB_URL}/${GITHUB_USER}/${repo_name}.git
     pushd "$repo_name"
 
-    perl "$build_script".PL
-    ./"$build_script" --install_base "'$PREFIX'" \
-      --cpan_client "cpanm --notest -L '$PREFIX'" installdeps
-    ./"$build_script" --install_base "'$PREFIX'" \
-      --cpan_client "cpanm --notest -L '$PREFIX'" install
+    perl "$build_script.PL"
+    ./"$build_script --install_base $PREFIX" \
+      --cpan_client "cpanm --notest -L $PREFIX" installdeps
+    ./"$build_script --install_base $PREFIX" \
+      --cpan_client "cpanm --notest -L $PREFIX" install
 
     popd
     popd
@@ -48,16 +48,17 @@ sudo mkdir -p "$PREFIX"
 sudo chown -R ${USER}:${USER} "$PREFIX"
 
 PERL_LOCAL_LIB_ROOT="$PREFIX"
-PERL5LIB="$PREFIX"/lib/perl5
+PERL5LIB="$PREFIX"/lib/perl5/
 eval $(perl -Mlocal::lib="$PREFIX")
 
 
 export PERL_MM_USE_DEFAULT=1
 
-# The following is not declared in our build file dependencies
-cpanm --notest -L "$PREFIX" DateTime
 # The following is not declared in the CPAN dependency graph
 cpanm --notest -L "$PREFIX" Params::Util
+
+# The following are not declared in our build file dependencies
+cpanm --notest -L "$PREFIX" DateTime
 
 install_from_source perl-dnap-utilities "$PERL_DNAP_UTILITIES_VERSION" Build
 install_from_source perl-irods-wrap "$PERL_IRODS_WRAP_VERSION" Build

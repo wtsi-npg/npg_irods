@@ -13,15 +13,18 @@ IRODS_USER=${IRODS_USER:=irods}
 IRODS_HOME=${IRODS_HOME:=/$IRODS_ZONE/home/$IRODS_USER}
 IRODS_DEFAULT_RESC=${IRODS_DEFAULT_RESC:=demoResc}
 
-
 TMPDIR=$PWD/
 TMP=$(mktemp -d ${TMPDIR:-/tmp/}$(basename -- "$0").XXXXXXXXXX)
+
+export PREFIX TMPDIR
 
 trap cleanup EXIT INT TERM
 
 cleanup() {
     rm -rf "$TMP"
 }
+
+sudo apt-get install -y gcc g++ make autoconf libtool libc++-dev
 
 ./install_hdf5.sh
 ./install_irods.sh
@@ -49,12 +52,6 @@ done
 
 mkdir -p "$PREFIX/var/lib/irods/plugins"
 cp -R /var/lib/irods/plugins/* "$PREFIX/var/lib/irods/plugins"
-
-for h5command in \
-    h5dump \
-    h5repack ; do
-    cp /usr/bin/$h5command "$PREFIX/bin/$h5command"
-done
 
 sudo apt-get install -y jq
 mkdir -p "$PREFIX/etc"

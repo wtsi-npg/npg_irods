@@ -40,6 +40,8 @@ install_irods() {
     sudo dpkg -i "$IRODS_DEV" "$IRODS_ICOMMANDS"
 }
 
+sudo apt-get install -y libssl-dev
+
 pushd "$TMP"
 download_irods
 verify_irods_packages

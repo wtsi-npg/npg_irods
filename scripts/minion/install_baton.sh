@@ -31,6 +31,10 @@ verify_baton_source() {
 install_baton() {
     tar xfz baton-${BATON_VERSION}.tar.gz -C "$TMP"
     pushd "$TMP/baton-${BATON_VERSION}"
+
+    # Fixed by https://github.com/wtsi-npg/baton/pull/191
+    sed -i -e 's/__FUNCTION__/__func__/' src/log.h
+
     ./configure --prefix="$PREFIX" --with-irods CPPFLAGS="-I/usr/include/irods -I$PREFIX/include" LDFLAGS="-L/usr/lib/irods/externals -L$PREFIX/lib"
     make install
     popd
