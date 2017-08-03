@@ -38,23 +38,23 @@ my $test_response =
   [
    {
    reserved => 'true',
-   name => 50916,
-   completedAt => '2016-12-07T16:36:25.087Z',
+   name => 55639,
+   completedAt => '2017-07-27T16:36:25.087Z',
    instrumentName => 'SQ54097',
-   context => 'r54097_20161207_132758',
-   instrumentSwVersion => '3.1.1.183540',
+   context => 'r54097_20170727_165601',
+   instrumentSwVersion => '5.0.0.6235',
    numCellsCompleted => 1,
    totalCells => 1,
-   primaryAnalysisSwVersion => '3.1.1-182013',
+   primaryAnalysisSwVersion => '5.0.0.6236',
    status => 'Complete',
-   createdAt => '2016-12-07T12:39:11.108Z',
-   startedAt => '2016-12-07T13:36:25.087Z',
+   createdAt => '2017-07-27T12:39:11.108Z',
+   startedAt => '2017-07-27T13:36:25.087Z',
    createdBy => 'unknown',
    numCellsFailed => 0,
    instrumentSerialNumber => 54097,
-   transfersCompletedAt => '2016-12-07T17:36:25.087Z',
+   transfersCompletedAt => '2017-07-27T17:36:25.087Z',
    uniqueId => 'ecbf020d-4437-48d8-9d00-935142094728',
-   summary => 'DN468178B-A1 initial titration 7pM'
+   summary => 'initial titration 7pM'
    }
   ];
 
