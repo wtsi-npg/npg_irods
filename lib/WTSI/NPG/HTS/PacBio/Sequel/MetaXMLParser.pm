@@ -52,7 +52,7 @@ sub parse_file {
       $dom->getElementsByTagName($COLL_NUMBER_TAG)->[0]->string_value;
   my $cell_index =
       $dom->getElementsByTagName($CELL_INDEX_TAG)->[0]->string_value;
-  
+
   return WTSI::NPG::HTS::PacBio::Metadata->new
     (file_path          => $file_path,
      instrument_name    => $instrument_name,
