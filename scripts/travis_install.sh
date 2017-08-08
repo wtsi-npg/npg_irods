@@ -9,6 +9,7 @@ WTSI_NPG_BUILD_BRANCH=${WTSI_NPG_BUILD_BRANCH:=$TRAVIS_BRANCH}
 sudo apt-get install -qq odbc-postgresql
 sudo apt-get install libgd2-xpm-dev # For npg_tracking
 sudo apt-get install liblzma-dev # For npg_qc
+sudo apt-get install hdf5-tools libhdf5-serial-dev
 
 # iRODS
 wget -q https://github.com/wtsi-npg/disposable-irods/releases/download/${DISPOSABLE_IRODS_VERSION}/disposable-irods-${DISPOSABLE_IRODS_VERSION}.tar.gz -O /tmp/disposable-irods-${DISPOSABLE_IRODS_VERSION}.tar.gz
@@ -31,18 +32,25 @@ wget -q https://github.com/wtsi-npg/baton/releases/download/${BATON_VERSION}/bat
 tar xfz /tmp/baton-${BATON_VERSION}.tar.gz -C /tmp
 cd /tmp/baton-${BATON_VERSION}
 
-
 IRODS_HOME=
-baton_irods_conf="--with-irods"
+irods_conf="--with-irods"
 
 if [ -n "$IRODS_RIP_DIR" ]
 then
     export IRODS_HOME="$IRODS_RIP_DIR/iRODS"
-    baton_irods_conf="--with-irods=$IRODS_HOME"
+    irods_conf="--with-irods=$IRODS_HOME"
 fi
 
-./configure ${baton_irods_conf} ; make ; sudo make install
+./configure ${irods_conf} ; make ; sudo make install
 sudo ldconfig
+
+# tears
+wget -q https://github.com/whitwham/tears/archive/v${TEARS_VERSION}.tar.gz -O /tmp/tears-${TEARS_VERSION}.tar.gz
+tar xfz /tmp/tears-${TEARS_VERSION}.tar.gz -C /tmp
+cd /tmp/tears-${TEARS_VERSION}
+
+autoreconf -fi
+./configure ${irods_conf} ; make ; sudo make install
 
 # htslib/samtools
 wget -q https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/htslib-${HTSLIB_VERSION}.tar.bz2 -O /tmp/htslib-${HTSLIB_VERSION}.tar.bz2
