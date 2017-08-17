@@ -46,11 +46,18 @@ sub teardown_test : Test(teardown) {
   $irods->remove_collection($irods_tmp_coll);
 }
 
-sub publish_files : Test(55) {
+sub publish_files_copy : Test(55) {
   my $session_name  = 'test';
   my $f5_uncompress = 0;
 
-  _do_publish_files($session_name, $irods_tmp_coll, $f5_uncompress);
+  _do_publish_files($session_name, $irods_tmp_coll, 'copy', $f5_uncompress);
+}
+
+sub publish_files_move : Test(55) {
+  my $session_name  = 'test';
+  my $f5_uncompress = 0;
+
+  _do_publish_files($session_name, $irods_tmp_coll, 'move', $f5_uncompress);
 }
 
 sub publish_files_f5_uncompress : Test(55) {
@@ -59,16 +66,22 @@ sub publish_files_f5_uncompress : Test(55) {
 
  SKIP: {
     # h5repack fails with a 'file not found error', however, a
-    # subsequent test for the file's presence usoing Perl's '-e' shows
+    # subsequent test for the file's presence using Perl's '-e' shows
     # it was there.
     skip 'h5repack not required', 55, if not $ENV{TEST_WITH_H5REPACK};
 
-    _do_publish_files($session_name, $irods_tmp_coll, $f5_uncompress);
+    _do_publish_files($session_name, $irods_tmp_coll, 'copy', $f5_uncompress);
   }
 }
 
 sub _do_publish_files {
-  my ($session_name, $dest_coll, $f5_uncompress) = @_;
+  my ($session_name, $dest_coll, $data_mode, $f5_uncompress) = @_;
+
+  # File::Copy::copy uses open -> syswrite -> close, so we will get a
+  # CLOSE event
+  if (not ($data_mode eq 'copy' or $data_mode eq 'move')) {
+    fail "Invalid data mode '$data_mode'";
+  }
 
   my $staging_dir    = File::Temp->newdir->dirname;
   my $runfolder_path = "$staging_dir/$run_name";
@@ -116,10 +129,20 @@ sub _do_publish_files {
 
   # Simulate writing new fast5 and fastq files
   foreach my $file (@{$fast5_files}) {
-    copy($file, $f5_pass_dir) or die "Failed to copy $file: $ERRNO";
+    if ($data_mode eq 'copy') {
+      copy($file, $f5_pass_dir) or die "Failed to copy $file: $ERRNO";
+    }
+    elsif ($data_mode eq 'move') {
+      _move($file, $f5_pass_dir);
+    }
   }
   foreach my $file (@{$fastq_files}) {
-    copy($file, $fq_pass_dir) or die "Failed to copy $file: $ERRNO";
+    if ($data_mode eq 'copy') {
+      copy($file, $fq_pass_dir) or die "Failed to copy $file: $ERRNO";
+    }
+    elsif ($data_mode eq 'move') {
+      _move($file, $fq_pass_dir);
+    }
   }
 
   waitpid($pid, 0);
@@ -235,6 +258,31 @@ sub check_primary_metadata {
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
   }
+}
+
+sub _move {
+  my ($source, $dest) = @_;
+
+  my ($file_name) = fileparse($source);
+
+  my $tmp_dir  = File::Temp->newdir->dirname;
+  make_path($tmp_dir);
+
+  my $tmp_file = catfile($tmp_dir, $file_name);
+
+  copy($source, $tmp_file) or
+    die "Failed to copy '$source' to '$tmp_file': $ERRNO";
+
+  my $dest_path;
+  if (-d $dest) {
+    $dest_path = catfile($dest, $file_name);
+  }
+  else {
+    $dest_path = $dest;
+  }
+
+  move($tmp_file, $dest_path) or
+    die "Failed to move '$tmp_file' to '$dest_path': $ERRNO";
 }
 
 1;
