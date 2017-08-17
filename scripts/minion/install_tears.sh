@@ -4,7 +4,7 @@ set -eou pipefail
 
 set -x
 
-PREFIX=${PREFIX:=/usr/local/minion}
+PREFIX=${PREFIX:=/usr/local/npg}
 
 TMPDIR=$PWD/
 TMP=$(mktemp -d ${TMPDIR:-/tmp/}$(basename -- "$0").XXXXXXXXXX)
@@ -36,9 +36,6 @@ install_tears() {
     make install
     popd
 }
-
-sudo mkdir -p "$PREFIX"
-sudo chown -R ${USER}:${USER} "$PREFIX"
 
 pushd "$TMP"
 download_tears_source

@@ -4,13 +4,14 @@ set -eou pipefail
 
 set -x
 
-PREFIX=${PREFIX:=/usr/local/minion}
+PREFIX=${PREFIX:=/usr/local/npg}
 
-USER=${USER:=minion}
+MINION_USER=${USER:=minion}
+
 IRODS_HOST=${IRODS_HOST:=localhost}
 IRODS_ZONE=${IRODS_ZONE:=tempZone}
 IRODS_USER=${IRODS_USER:=irods}
-IRODS_HOME=${IRODS_HOME:=/$IRODS_ZONE/home/$IRODS_USER}
+IRODS_ROOT=${IRODS_ROOT:=/$IRODS_ZONE/home/$IRODS_USER}
 IRODS_DEFAULT_RESC=${IRODS_DEFAULT_RESC:=demoResc}
 
 TMPDIR=$PWD/
@@ -24,11 +25,15 @@ cleanup() {
     rm -rf "$TMP"
 }
 
-sudo apt-get install -y gcc g++ make autoconf libtool libc++-dev
+sudo apt-get install -y gcc g++ make autoconf libtool bison libc++-dev
+
+sudo mkdir -p "$PREFIX"
+sudo chown -R ${USER}:${USER} "$PREFIX"
 
 ./install_hdf5.sh
 ./install_irods.sh
 ./install_jansson.sh
+./install_jq.sh
 ./install_baton.sh
 ./install_tears.sh
 ./install_npg_irods.sh
@@ -45,6 +50,7 @@ for icommand in \
     imeta \
     imkdir \
     imv \
+    ipasswd \
     iput \
     irm ; do
     cp /usr/bin/$icommand "$PREFIX/bin/$icommand"
@@ -65,7 +71,7 @@ jq '.' <<EOF > "$PREFIX/etc/irods_environment.json"
     "irods_zone_name": "$IRODS_ZONE",
     "irods_default_resource": "$IRODS_DEFAULT_RESC",
     "irods_authentication_scheme": "native",
-    "irods_authentication_file": "/home/$USER/.irods/irods_environment.json",
+    "irods_authentication_file": "/home/$MINION_USER/.irods/irods_environment.auth",
     "irods_plugins_home": "$PREFIX/var/lib/irods/plugins/"
 }
 EOF
