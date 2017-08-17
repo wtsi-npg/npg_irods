@@ -31,7 +31,7 @@ install_hdf5() {
     tar xfz hdf5-${HDF5_VERSION}.tar.gz -C "$TMP"
     pushd "$TMP/hdf5-${HDF5_VERSION}"
     ./configure --prefix="$PREFIX"
-    make install
+    make -j 2 install
     popd
 }
 
