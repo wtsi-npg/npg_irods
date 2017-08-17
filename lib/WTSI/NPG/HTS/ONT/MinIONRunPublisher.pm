@@ -393,50 +393,49 @@ sub _make_callback {
       $self->warn('Some events were lost!');
     }
 
-    # Path was added to the watched hierarchy
-    if ($event->IN_CREATE or $event->IN_MOVED_TO) {
-      my $path = $event->fullname;
+    my $path = $event->fullname;
 
-      if ($event->IN_ISDIR) {
-        # Path added is a directory; add a watch unless already
-        # watched
+    if ($event->IN_ISDIR) {
+      if ($event->IN_CREATE or $event->IN_MOVED_TO) {
+        # Directory was added to the watched hierarchy; if not already
+        # watched, add a watch
         if (exists $self->watches->{$path}) {
-          $self->debug("Already watching '$path'");
+          $self->debug("Already watching dir '$path'");
         }
         else {
           my $watch = $inotify->watch($path, $events,
                                       $self->_make_callback($events));
           if ($watch) {
-            $self->debug("Started watching '$path'");
+            $self->debug("Started watching dir '$path'");
             $self->watches->{$path} = $watch;
           }
           else {
-            $self->logconfess("Failed to start watching '$path': $ERRNO");
+            $self->logconfess("Failed to start watching dir '$path': $ERRNO");
           }
         }
       }
-      else {
-        # Path added was a file; add the event to the queue, to be
-        # handled in the main loop
-        $self->debug("Event IN_CREATE/IN_MOVED_TO on '$path'");
-        push @{$event_queue}, $event;
-      }
-    }
-
-    # Path was removed from the watched hierarchy
-    if ($event->IN_DELETE or $event->IN_MOVED_FROM) {
-      my $path = $event->fullname;
-
-      if ($event->IN_ISDIR) {
-        # Path is a directory being watched; remove the watch
+      elsif ($event->IN_DELETE or $event->IN_MOVED_FROM) {
+        # Directory was removed from the watched hierarchy; if watched,
+        # remove the watch
         if (exists $self->watches->{$path}) {
           my $watch = delete $self->watches->{$path};
           $watch->cancel;
-          $self->debug("Stopped watching '$path'");
+          $self->debug("Stopped watching dir '$path'");
         }
       }
       else {
-        $self->debug("Event IN_DELETE/IN_MOVED_FROM on '$path'");
+        $self->debug("Event IN_DELETE/IN_MOVED_FROM on dir '$path'");
+      }
+    }
+    else {
+      # Path added was a file; add the event to the queue, to be
+      # handled in the main loop
+      if ($event->IN_MOVED_TO or $event->IN_CLOSE_WRITE) {
+        $self->debug("Event IN_MOVED_TO/IN_CLOSE_WRITE on file '$path'");
+        push @{$event_queue}, $event;
+      }
+      else {
+        $self->debug("Ignoring uninteresting event on file '$path'");
       }
     }
   };
@@ -527,7 +526,7 @@ sub _do_publish {
         $self->logcroak("Failed to copy '$path' to '$tmp_path': ", $ERRNO);
 
       if(-e $tmp_path) {
-        $self->debug("'$tmp_path' exists!");
+        $self->debug("'$tmp_path' exists");
       }
       else {
         $self->logcroak("'$tmp_path' has disappeared!");

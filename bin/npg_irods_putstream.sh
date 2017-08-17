@@ -127,7 +127,7 @@ COLLECTION=$(dirname -- "$IRODS_PATH")
 DATA_OBJECT=$(basename -- "$IRODS_PATH")
 TIMESTAMP=$(date +'%Y:%m:%dT%H:%m:%S')
 
-TMPDIR=$PWD/
+TMPDIR=/tmp/
 TMPD=$(make_temp_dir)
 MD5_FILE="$TMPD/$DATA_OBJECT.md5"
 
