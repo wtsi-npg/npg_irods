@@ -70,7 +70,7 @@ sub require : Test(1) {
 sub list_xml_files : Test(1) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my $runfolder_path = "$data_path/r54097_20161207_132758";
+  my $runfolder_path = "$data_path/r54097_20170727_165601";
   my $dest_coll = $irods_tmp_coll;
 
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
@@ -80,17 +80,17 @@ sub list_xml_files : Test(1) {
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =
-    map { catfile("$runfolder_path/1_A01", $_) }
-    ('m54097_161207_133626.subreadset.xml');
+    map { catfile("$runfolder_path/1_A02", $_) }
+    ('m54097_170727_170646.subreadset.xml');
 
-  is_deeply($pub->list_xml_files('1_A01','subreadset',1), \@expected_paths,
-     'Found meta XML file 1_A01');
+  is_deeply($pub->list_xml_files('1_A02','subreadset',1), \@expected_paths,
+     'Found meta XML file 1_A02');
 }
 
 sub list_adapter_files : Test(1) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my $runfolder_path = "$data_path/r54097_20161207_132758";
+  my $runfolder_path = "$data_path/r54097_20170727_165601";
   my $dest_coll = $irods_tmp_coll;
 
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
@@ -100,17 +100,17 @@ sub list_adapter_files : Test(1) {
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =
-    map { catfile("$runfolder_path/1_A01", $_) }
-    ('m54097_161207_133626.adapters.fasta');
+    map { catfile("$runfolder_path/1_A02", $_) }
+    ('m54097_170727_170646.adapters.fasta');
 
-  is_deeply($pub->list_adapter_files('1_A01'), \@expected_paths,
-     'Found adapter fasta file 1_A01');
+  is_deeply($pub->list_adapter_files('1_A02'), \@expected_paths,
+     'Found adapter fasta file 1_A02');
 }
 
 sub list_sequence_files : Test(1) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my $runfolder_path = "$data_path/r54097_20161207_132758";
+  my $runfolder_path = "$data_path/r54097_20170727_165601";
   my $dest_coll = $irods_tmp_coll;
 
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
@@ -120,18 +120,18 @@ sub list_sequence_files : Test(1) {
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =
-    map { catfile("$runfolder_path/1_A01", $_) }
-    ('m54097_161207_133626.scraps.bam',
-     'm54097_161207_133626.subreads.bam');
+    map { catfile("$runfolder_path/1_A02", $_) }
+    ('m54097_170727_170646.scraps.bam',
+     'm54097_170727_170646.subreads.bam');
 
-  is_deeply($pub->list_sequence_files('1_A01'), \@expected_paths,
+  is_deeply($pub->list_sequence_files('1_A02'), \@expected_paths,
             'Found sequence files A01_1');
 }
 
 sub list_index_files : Test(1) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my $runfolder_path = "$data_path/r54097_20161207_132758";
+  my $runfolder_path = "$data_path/r54097_20170727_165601";
   my $dest_coll = $irods_tmp_coll;
 
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
@@ -141,18 +141,18 @@ sub list_index_files : Test(1) {
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =
-    map { catfile("$runfolder_path/1_A01", $_) }
-    ('m54097_161207_133626.scraps.bam.pbi',
-     'm54097_161207_133626.subreads.bam.pbi');
+    map { catfile("$runfolder_path/1_A02", $_) }
+    ('m54097_170727_170646.scraps.bam.pbi',
+     'm54097_170727_170646.subreads.bam.pbi');
 
-  is_deeply($pub->list_index_files('1_A01'), \@expected_paths,
-            'Found sequence index files 1_A01');
+  is_deeply($pub->list_index_files('1_A02'), \@expected_paths,
+            'Found sequence index files 1_A02');
 }
 
 sub publish_files : Test(2) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my $runfolder_path = "$data_path/r54097_20161207_132758";
+  my $runfolder_path = "$data_path/r54097_20170727_165601";
   my $dest_coll = "$irods_tmp_coll/publish_files";
 
   my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
@@ -173,7 +173,7 @@ sub publish_files : Test(2) {
 sub publish_xml_files : Test(14) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my $runfolder_path = "$data_path/r54097_20161207_132758";
+  my $runfolder_path = "$data_path/r54097_20170727_165601";
   my $dest_coll = "$irods_tmp_coll/publish_xml_files";
 
   my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
@@ -185,12 +185,12 @@ sub publish_xml_files : Test(14) {
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =
-    map { catfile("$dest_coll/1_A01", $_) }
-    ('m54097_161207_133626.sts.xml',
-     'm54097_161207_133626.subreadset.xml');
+    map { catfile("$dest_coll/1_A02", $_) }
+    ('m54097_170727_170646.sts.xml',
+     'm54097_170727_170646.subreadset.xml');
 
   my ($num_files, $num_processed, $num_errors) =
-    $pub->publish_xml_files('1_A01', 'subreadset|sts',2);
+    $pub->publish_xml_files('1_A02', 'subreadset|sts',2);
   cmp_ok($num_files,     '==', scalar @expected_paths);
   cmp_ok($num_processed, '==', scalar @expected_paths);
   cmp_ok($num_errors,    '==', 0);
@@ -206,7 +206,7 @@ sub publish_xml_files : Test(14) {
 sub publish_adapter_files : Test(9) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my $runfolder_path = "$data_path/r54097_20161207_132758";
+  my $runfolder_path = "$data_path/r54097_20170727_165601";
   my $dest_coll = "$irods_tmp_coll/publish_adapter_files";
 
   my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
@@ -218,11 +218,11 @@ sub publish_adapter_files : Test(9) {
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =
-    map { catfile("$dest_coll/1_A01", $_) }
-    ('m54097_161207_133626.adapters.fasta');
+    map { catfile("$dest_coll/1_A02", $_) }
+    ('m54097_170727_170646.adapters.fasta');
 
   my ($num_files, $num_processed, $num_errors) =
-    $pub->publish_adapter_files('1_A01');
+    $pub->publish_adapter_files('1_A02');
   cmp_ok($num_files,     '==', scalar @expected_paths);
   cmp_ok($num_processed, '==', scalar @expected_paths);
   cmp_ok($num_errors,    '==', 0);
@@ -235,10 +235,10 @@ sub publish_adapter_files : Test(9) {
   check_common_metadata($irods, @observed_paths);
 }
 
-sub publish_sequence_files : Test(32) {
+sub publish_sequence_files : Test(34) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my $runfolder_path = "$data_path/r54097_20161207_132758";
+  my $runfolder_path = "$data_path/r54097_20170727_165601";
   my $dest_coll = "$irods_tmp_coll/publish_sequence_files";
 
   my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
@@ -250,12 +250,12 @@ sub publish_sequence_files : Test(32) {
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =
-    map { catfile("$dest_coll/1_A01", $_) }
-    ('m54097_161207_133626.scraps.bam',
-     'm54097_161207_133626.subreads.bam');
+    map { catfile("$dest_coll/1_A02", $_) }
+    ('m54097_170727_170646.scraps.bam',
+     'm54097_170727_170646.subreads.bam');
 
   my ($num_files, $num_processed, $num_errors) =
-    $pub->publish_sequence_files('1_A01');
+    $pub->publish_sequence_files('1_A02');
   cmp_ok($num_files,     '==', scalar @expected_paths);
   cmp_ok($num_processed, '==', scalar @expected_paths);
   cmp_ok($num_errors,    '==', 0);
@@ -275,7 +275,7 @@ sub publish_sequence_files : Test(32) {
 sub publish_index_files : Test(14) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my $runfolder_path = "$data_path/r54097_20161207_132758";
+  my $runfolder_path = "$data_path/r54097_20170727_165601";
   my $dest_coll = "$irods_tmp_coll/publish_sequence_files";
 
   my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
@@ -287,12 +287,12 @@ sub publish_index_files : Test(14) {
      runfolder_path  => $runfolder_path);
 
   my @expected_paths =
-    map { catfile("$dest_coll/1_A01", $_) }
-    ('m54097_161207_133626.scraps.bam.pbi',
-     'm54097_161207_133626.subreads.bam.pbi');
+    map { catfile("$dest_coll/1_A02", $_) }
+    ('m54097_170727_170646.scraps.bam.pbi',
+     'm54097_170727_170646.subreads.bam.pbi');
 
   my ($num_files, $num_processed, $num_errors) =
-    $pub->publish_index_files('1_A01');
+    $pub->publish_index_files('1_A02');
   cmp_ok($num_files,     '==', scalar @expected_paths);
   cmp_ok($num_processed, '==', scalar @expected_paths);
   cmp_ok($num_errors,    '==', 0);
@@ -363,7 +363,8 @@ sub check_study_metadata {
     my $file_name = fileparse($obj->str);
 
     # study_name is legacy metadata
-    foreach my $attr ($STUDY_ID, $STUDY_NAME, $STUDY_ACCESSION_NUMBER) {
+    foreach my $attr ($STUDY_ID, $STUDY_NAME, $STUDY_ACCESSION_NUMBER,
+                      $PACBIO_STUDY_NAME) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }

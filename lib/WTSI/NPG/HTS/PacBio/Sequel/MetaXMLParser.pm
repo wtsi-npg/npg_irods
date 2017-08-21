@@ -12,18 +12,18 @@ with qw[WTSI::DNAP::Utilities::Loggable];
 our $VERSION = '';
 
 # XML tags in the PacBio metadata XML files
-our $RUN_TAG               = 'pbmeta:RunDetails';
-our $NAME_TAG              = 'pbmeta:Name';
+our $RUN_TAG               = 'RunDetails';
+our $NAME_TAG              = 'Name';
 
-our $SAMPLE_TAG            = 'pbmeta:WellSample';
-our $WELL_TAG              = 'pbmeta:WellName';
+our $SAMPLE_TAG            = 'WellSample';
+our $WELL_TAG              = 'WellName';
 our $SAMPLE_NAME_TAG       = 'Name';
 
-our $COLLECTION_TAG        = 'pbmeta:CollectionMetadata';
+our $COLLECTION_TAG        = 'CollectionMetadata';
 our $INSTRUMENT_NAME_TAG   = 'InstrumentName';
 
-our $COLL_NUMBER_TAG       = 'pbmeta:CollectionNumber';
-our $CELL_INDEX_TAG        = 'pbmeta:CellIndex';
+our $COLL_NUMBER_TAG       = 'CollectionNumber';
+our $CELL_INDEX_TAG        = 'CellIndex';
 
 
 

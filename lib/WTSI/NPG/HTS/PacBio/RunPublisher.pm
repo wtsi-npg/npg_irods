@@ -437,10 +437,6 @@ sub publish_basx_files {
     my @secondary_avus = $self->make_secondary_metadata(@run_records);
     my @extra_avus     = $self->make_avu($FILE_TYPE, 'bas');
 
-    # This call may be removed when the legacy metadata are no longer
-    # required
-    push @secondary_avus, $self->make_legacy_metadata(@run_records);
-
     ($num_files, $num_processed, $num_errors) =
       $self->_publish_files($files, $dest_coll,
                             \@primary_avus, \@secondary_avus, \@extra_avus);

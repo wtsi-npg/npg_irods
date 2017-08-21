@@ -1,3 +1,13 @@
+Release 2.3
+
+ - Made tests requiring h5repack TODO until we work out why it fails intermittently
+ - MinIONRunPublisher
+     use /tmp instead of /dev/shm
+     added boolean attributes to control compression
+ - Support streaming MinION data to iRODS;
+     this adds dependencies on tears, GNU tar and h5 tools (h5repack)
+ - Update as well as add PacBio legacy meta data
+ - Test against htslib 1.5, samtools 1.5
 
 Release 2.2
 

@@ -4,7 +4,7 @@ use warnings;
 
 # These paths are propagated to @INC in the build script. The 't/lib'
 # directory is added because the Test::Class tests are there.
-use lib qw(lib t/lib);
+use lib qw[lib t/lib];
 
 use Build;
 
@@ -34,16 +34,19 @@ my $build = Build->new
    {
     'Carp'                          => '>= 1.20',
     'Data::Dump'                    => 0,
+    'DateTime'                      => '>= 1.18',
     'DateTime::Format::ISO8601'     => 0,
     'Log::Log4perl'                 => '>= 1.42',
     'List::AllUtils'                => '>= 0.09',
+    'Linux::Inotify2'               => 0,
     'Moose'                         => '>= 2.1',
     'MooseX::Types'                 => '>= 0.45',
     'MooseX::StrictConstructor'     => 0,
+    'Parallel::ForkManager'         => 0,
+    'PDL::IO::HDF5'                 => 0,
     'Text::CSV'                     => '>= 1.33',
     'Try::Tiny'                     => '>= 0.12',
     'URI'                           => 0,
-    'URI::Split'                    => 0,
     'UUID'                          => 0,
     'WTSI::DNAP::Utilities'         => '>= 0.5.2',   # perl-dnap-utilities
     'WTSI::NPG::iRODS'              => '>= 2.5.0',   # perl-irods-wrap
@@ -54,9 +57,6 @@ my $build = Build->new
    recommends =>
    {
     'npg_common::roles::software_location' => 0,     # npg_seq_common
-    # Prefer higher versions for improved logging
-    'WTSI::DNAP::Utilities'                => '>= 0.5.2',
-    'WTSI::NPG::iRODS'                     => '>= 2.5.0'
    }
   );
 
