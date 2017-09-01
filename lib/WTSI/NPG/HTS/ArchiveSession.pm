@@ -13,6 +13,14 @@ has 'arch_capacity' =>
    documentation => 'The maximum number of files that will be added to any ' .
                     'archive file');
 
+has 'arch_bytes' =>
+  (isa           => 'Int',
+   is            => 'ro',
+   required      => 1,
+   default       => 10_000_000,
+   documentation => 'The maximum number of bytes that will be added to any ' .
+                    'archive file');
+
 has 'arch_timeout' =>
   (isa           => 'Int',
    is            => 'ro',

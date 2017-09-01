@@ -16,6 +16,14 @@ with qw[
          WTSI::DNAP::Utilities::Loggable
        ];
 
+has 'byte_count' =>
+  (isa           => 'Int',
+   is            => 'rw',
+   required      => 1,
+   default       => 0,
+   init_arg      => undef,
+   documentation => 'The total number of bytes published');
+
 has 'tar' =>
   (isa           => 'FileHandle',
    is            => 'rw',
@@ -142,13 +150,15 @@ sub add_file {
 
   my $rel_path = abs2rel($path, $self->tar_cwd);
 
+  my $size     = -s $path;
   my $filename = $self->tar_file;
-  $self->debug("Adding '$rel_path' to '$filename'");
+  $self->debug("Adding '$rel_path' ($size bytes) to '$filename'");
 
   print {$self->tar} "$rel_path\n" or
     $self->logcroak("Failed write to filehandle of '$filename'");
 
   $self->tar_content->{$rel_path} = 1;
+  $self->byte_count($self->byte_count + $size);
 
   return $rel_path;
 }

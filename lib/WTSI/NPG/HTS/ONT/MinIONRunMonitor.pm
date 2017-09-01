@@ -88,10 +88,11 @@ sub start {
 
   $self->info(sprintf
               q[Started MinIONRunMonitor; staging path: '%s', ] .
-              q[tar capacity: %d files, tar timeout %d sec ] .
+              q[tar capacity: %d files or %d bytes, tar timeout %d sec ] .
               q[max processes: %d, session timeout %d sec],
-              $self->staging_path, $self->arch_capacity, $self->arch_timeout,
-              $self->max_processes, $self->session_timeout);
+              $self->staging_path, $self->arch_capacity, $self->arch_bytes,
+              $self->arch_timeout, $self->max_processes,
+              $self->session_timeout);
 
   my $pm = Parallel::ForkManager->new($self->max_processes);
 
@@ -157,7 +158,8 @@ sub start {
           $self->info("Publishing to '$coll'");
 
           my $publisher = WTSI::NPG::HTS::ONT::MinIONRunPublisher->new
-            (arch_capacity   => $self->arch_capacity,
+            (arch_bytes      => $self->arch_bytes,
+             arch_capacity   => $self->arch_capacity,
              arch_timeout    => $self->arch_timeout,
              dest_collection => $coll,
              runfolder_path  => $abs_path,

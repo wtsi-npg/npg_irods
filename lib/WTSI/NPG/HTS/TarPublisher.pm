@@ -29,6 +29,14 @@ has 'manifest_path' =>
    required      => 1,
    documentation => 'A manifest of published read files');
 
+has 'tar_bytes' =>
+  (isa           => 'Int',
+   is            => 'ro',
+   required      => 1,
+   default       => 10_000_000,
+   documentation => 'The maximum number of bytes that will be added to any ' .
+                    'tar file');
+
 has 'tar_capacity' =>
   (isa           => 'Int',
    is            => 'ro',
@@ -101,13 +109,14 @@ sub BUILD {
 sub publish_file {
   my ($self, $path) = @_;
 
+  my $tar_dest;
   if ($self->file_published($path)) {
     $self->debug("Skipping '$path'; already published");
   }
   else {
-    if (not $self->has_tar_stream) {
-      my $tar_file = sprintf '%s.%d.tar', $self->tar_path, $self->tar_count;
+    my $tar_file = sprintf '%s.%d.tar', $self->tar_path, $self->tar_count;
 
+    if (not $self->has_tar_stream) {
       $self->info(sprintf q[Opening '%s' with capacity %d from tar CWD '%s'],
                   $self->tar_path, $self->tar_capacity, $self->tar_cwd);
 
@@ -118,16 +127,30 @@ sub publish_file {
       $self->tar_stream->open_stream;
     }
 
-    $self->tar_stream->add_file($path);
+    if ($self->tar_stream->byte_count >= $self->tar_bytes) {
+      $self->info(sprintf q['%s' reached capacity of %d bytes],
+                  $self->tar_stream->tar_file, $self->tar_bytes);
+      $self->close_stream; # Pre-op check: file was not added
+    }
+    else {
+      $self->debug(sprintf q[Adding '%s' to '%s'], $path, $self->tar_path);
 
-    if ($self->tar_stream->file_count >= $self->tar_capacity) {
-      $self->info(sprintf q['%s' reached capacity of '%d'],
-                  $self->tar_stream->tar_file, $self->tar_capacity);
-      $self->close_stream;
+      $self->tar_stream->add_file($path);
+      $tar_dest = $tar_file;
+
+      $self->debug(sprintf q[Capacity now at %d / %d files, %d / %d bytes],
+                   $self->tar_stream->file_count, $self->tar_capacity,
+                   $self->tar_stream->byte_count, $self->tar_bytes);
+
+      if ($self->tar_stream->file_count >= $self->tar_capacity) {
+        $self->info(sprintf q['%s' reached capacity of %d files],
+                    $self->tar_stream->tar_file, $self->tar_capacity);
+        $self->close_stream; # Post-op check: file was added
+      }
     }
   }
 
-  return $self->manifest_index->{$path};
+  return $tar_dest;
 }
 
 =head2 file_published
