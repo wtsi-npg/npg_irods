@@ -7,7 +7,7 @@ use Archive::Tar;
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Copy;
-use File::Spec::Functions qw[catfile];
+use File::Spec::Functions qw[catdir catfile];
 use File::Path qw[make_path];
 use File::Temp;
 use Log::Log4perl;
@@ -155,15 +155,17 @@ sub _do_publish_files {
                             fastq => [4]);
 
   my $irods = WTSI::NPG::iRODS->new;
-  my $tar_coll = WTSI::NPG::iRODS::Collection->new($irods, $dest_coll);
+  my $run_coll = catdir($dest_coll, $run_id);
+  my $tar_coll = WTSI::NPG::iRODS::Collection->new($irods, $run_coll);
 
-  ok($tar_coll->get_avu($ID_RUN, '9c461c741cb14362e613136e235aa38b67ef2f6d'),
-     "Collection has expected $ID_RUN");
+  ok($tar_coll->get_avu($ID_RUN, $run_id),
+     "Collection '$run_coll' has expected $ID_RUN");
   ok($tar_coll->get_avu($SAMPLE_NAME, 'pc3_linuxtext'),
-     "Collection has expected $SAMPLE_NAME");
+     "Collection '$run_coll' has expected $SAMPLE_NAME");
   foreach my $attr ($DCTERMS_CREATED, $DCTERMS_CREATOR, $DCTERMS_PUBLISHER) {
     my @avu = $tar_coll->find_in_metadata($attr);
-    cmp_ok(scalar @avu, '==', 1, "Collection $attr metadata present");
+    cmp_ok(scalar @avu, '==', 1,
+           "Collection $attr metadata present on collection '$run_coll'");
   }
 
   my ($objs, $colls) = $tar_coll->get_contents;
