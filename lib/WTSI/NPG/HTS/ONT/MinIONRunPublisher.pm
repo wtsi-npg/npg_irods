@@ -696,6 +696,7 @@ sub _make_tar_publisher {
   return WTSI::NPG::HTS::TarPublisher->new
     (manifest_path => $manifest_path,
      remove_files  => 1,
+     tar_bytes     => $self->arch_bytes,
      tar_capacity  => $self->arch_capacity,
      tar_cwd       => $tar_cwd,
      tar_path      => $tar_path);

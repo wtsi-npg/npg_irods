@@ -48,20 +48,33 @@ sub teardown_test : Test(teardown) {
 
 sub publish_files_copy : Test(55) {
   my $session_name  = 'test';
-  my $f5_uncompress = 0;
+  my $expected_num_files = {fast5 => 4,
+                            fastq => 1};
+  my $expected_num_items = {fast5 => [6, 6, 6, 2],
+                            fastq => [4]};
 
-  _do_publish_files($session_name, $irods_tmp_coll, 'copy', $f5_uncompress);
+  _do_publish_files($session_name, $irods_tmp_coll, 'copy',
+                    $expected_num_files, $expected_num_items);
 }
 
 sub publish_files_move : Test(55) {
   my $session_name  = 'test';
-  my $f5_uncompress = 0;
+  my $expected_num_files = {fast5 => 4,
+                            fastq => 1};
+  my $expected_num_items = {fast5 => [6, 6, 6, 2],
+                            fastq => [4]};
 
-  _do_publish_files($session_name, $irods_tmp_coll, 'move', $f5_uncompress);
+  _do_publish_files($session_name, $irods_tmp_coll, 'move',
+                    $expected_num_files, $expected_num_items);
 }
 
 sub publish_files_f5_uncompress : Test(55) {
   my $session_name  = 'test_uncompress';
+  my $expected_num_files = {fast5 => 4,
+                            fastq => 1};
+  my $expected_num_items = {fast5 => [6, 6, 6, 2],
+                            fastq => [4]};
+
   my $f5_uncompress = 1;
 
  SKIP: {
@@ -70,18 +83,41 @@ sub publish_files_f5_uncompress : Test(55) {
     # it was there.
     skip 'h5repack not required', 55, if not $ENV{TEST_WITH_H5REPACK};
 
-    _do_publish_files($session_name, $irods_tmp_coll, 'copy', $f5_uncompress);
+    _do_publish_files($session_name, $irods_tmp_coll, 'copy',
+                      $expected_num_files, $expected_num_items,
+                      $f5_uncompress);
   }
 }
 
+sub publish_files_tar_bytes : Test(52) {
+  my $session_name  = 'test_tar_bytes';
+  my $expected_num_files = {fast5 => 4,
+                            fastq => 1};
+  my $expected_num_items = {fast5 => [5, 4, 5, 3],
+                            fastq => [4]};
+
+  my $f5_uncompress = 0;
+  my $arch_capacity = 6;
+  my $arch_bytes    = 2_500_000;
+
+  _do_publish_files($session_name, $irods_tmp_coll, 'copy',
+                    $expected_num_files, $expected_num_items,
+                    $f5_uncompress, $arch_capacity, $arch_bytes);
+}
+
 sub _do_publish_files {
-  my ($session_name, $dest_coll, $data_mode, $f5_uncompress) = @_;
+  my ($session_name, $dest_coll, $data_mode,
+      $expected_num_files, $expected_num_items,
+      $f5_uncompress, $arch_capacity, $arch_bytes) = @_;
 
   # File::Copy::copy uses open -> syswrite -> close, so we will get a
   # CLOSE event
   if (not ($data_mode eq 'copy' or $data_mode eq 'move')) {
     fail "Invalid data mode '$data_mode'";
   }
+
+  $arch_capacity ||= 6;
+  $arch_bytes    ||= 10_000_000;
 
   my $staging_dir    = File::Temp->newdir->dirname;
   my $runfolder_path = "$staging_dir/$run_name";
@@ -90,14 +126,13 @@ sub _do_publish_files {
   make_path($f5_pass_dir);
   make_path($fq_pass_dir);
 
-  my $arch_capacity = 6;
-
   my $pid = fork();
   die "Failed to fork a test process" unless defined $pid;
 
   if ($pid == 0) {
     my $pub = WTSI::NPG::HTS::ONT::MinIONRunPublisher->new
-      (arch_capacity   => $arch_capacity,
+      (arch_bytes      => $arch_bytes,
+       arch_capacity   => $arch_capacity,
        arch_timeout    => 10,
        dest_collection => $dest_coll,
        runfolder_path  => $runfolder_path,
@@ -128,19 +163,23 @@ sub _do_publish_files {
   my $fastq_count = scalar @$fastq_files;
 
   # Simulate writing new fast5 and fastq files
-  foreach my $file (@{$fast5_files}) {
+  foreach my $file (sort @{$fast5_files}) {
     if ($data_mode eq 'copy') {
+      sleep 1;
       copy($file, $f5_pass_dir) or die "Failed to copy $file: $ERRNO";
     }
     elsif ($data_mode eq 'move') {
+      sleep 1;
       _move($file, $f5_pass_dir);
     }
   }
-  foreach my $file (@{$fastq_files}) {
+  foreach my $file (sort @{$fastq_files}) {
     if ($data_mode eq 'copy') {
+      sleep 1;
       copy($file, $fq_pass_dir) or die "Failed to copy $file: $ERRNO";
     }
     elsif ($data_mode eq 'move') {
+      sleep 1;
       _move($file, $fq_pass_dir);
     }
   }
@@ -149,11 +188,6 @@ sub _do_publish_files {
   cmp_ok($CHILD_ERROR, '==', 0, 'Publisher exited cleanly');
 
   # Check the manifests
-  my %expected_num_files = (fast5 => 4,
-                            fastq => 1);
-  my %expected_num_items = (fast5 => [6, 6, 6, 2],
-                            fastq => [4]);
-
   my $irods = WTSI::NPG::iRODS->new;
   my $run_coll = catdir($dest_coll, $run_id);
   my $tar_coll = WTSI::NPG::iRODS::Collection->new($irods, $run_coll);
@@ -189,7 +223,7 @@ sub _do_publish_files {
     }
     close $fh or die "Failed to close '$expected_manifest': $ERRNO";
 
-    my $n = $expected_num_files{$format};
+    my $n = $expected_num_files->{$format};
     cmp_ok(scalar uniq(values %manifest), '==', $n,
            "Manifest lists $n tar files") or diag explain \%manifest;
 
@@ -212,7 +246,8 @@ sub _do_publish_files {
     my @observed_file_counts;
     foreach my $tar (@observed_objs) {
       my $filename = fileparse($tar->str);
-      my $file = $irods->get_object($tar->str, catfile($staging_dir, $filename));
+      my $file =
+        $irods->get_object($tar->str, catfile($staging_dir, $filename));
 
       my $md5 = $irods->md5sum($file);
       push @observed_md5_checksums, $md5;
@@ -240,9 +275,10 @@ sub _do_publish_files {
                 diag explain [\@observed_md5_checksums,
                               \@observed_md5_metadata];
 
-    is_deeply(\@observed_file_counts, $expected_num_items{$format} ,
+    is_deeply(\@observed_file_counts, $expected_num_items->{$format} ,
               "$format tar file contains expected number of items") or
-                diag explain \@observed_file_counts;
+                diag explain [\@observed_file_counts,
+                              \%manifest];
 
     # Check the other metadata
     check_primary_metadata($irods, @observed_objs);
