@@ -78,11 +78,11 @@ has 'monitor' =>
    is            => 'rw',
    required      => 1,
    default       => 1,
-   documentation => 'While true, continue monitoring the staging_path. ' .
+   documentation => 'While true, continue monitoring the source_dir. ' .
                     'A caller may set this to false in order to stop ' .
                     'monitoring and wait for any child processes to finish');
 
-has 'staging_path' =>
+has 'source_dir' =>
   (isa           => 'Str',
    is            => 'ro',
    required      => 1,
@@ -120,7 +120,7 @@ sub start {
               q[Started GridIONRunMonitor; staging path: '%s', ] .
               q[tar capacity: %d files, tar timeout %d sec ] .
               q[max processes: %d, session timeout %d sec],
-              $self->staging_path, $self->arch_capacity, $self->arch_timeout,
+              $self->source_dir, $self->arch_capacity, $self->arch_timeout,
               $self->max_processes, $self->session_timeout);
 
   my $pm = Parallel::ForkManager->new($self->max_processes);
@@ -212,7 +212,7 @@ sub _start_watches {
   my $events = IN_MOVED_TO | IN_CREATE | IN_MOVED_FROM | IN_DELETE | IN_ATTRIB;
   my $cb     = $self->_make_callback($events);
 
-  my $spath = rel2abs($self->staging_path);
+  my $spath = rel2abs($self->source_dir);
   $self->_start_watch($spath, $events, $cb);
 
   # Start watches on any existing expt dirs
@@ -285,7 +285,7 @@ sub _stop_watch {
 }
 
 # Return a callback to be fired each time an experiment directory is
-# added to the staging_path or a device directory is added to an
+# added to the source_dir or a device directory is added to an
 # experiment directory. For the former, the callback adds itself as an
 # event handler and for the latter, the callback pushes the event's
 # directory path onto a queue to be handled by the main loop.
@@ -371,7 +371,7 @@ sub _is_expt_dir {
   my $leaf   = pop @elts;
   my $parent = catdir(@elts);
 
-  return $parent eq $self->staging_path;
+  return $parent eq $self->source_dir;
 }
 
 # Return true if the path is a "device" directory
