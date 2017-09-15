@@ -43,24 +43,20 @@ log4perl.oneMessagePerAppender = 1
 LOGCONF
 ;
 
+# Please keep attributes sorted alphabetically
 has 'dest_collection' =>
   (isa           => 'Str',
    is            => 'ro',
    required      => 1,
    documentation => 'The destination collection within iRODS to store data');
 
-has 'staging_path' =>
-  (isa           => 'Str',
+has 'device_dir_queue' =>
+  (isa           => 'ArrayRef',
    is            => 'ro',
    required      => 1,
-   documentation => 'The directory in which GridION results appear');
-
-has 'max_processes' =>
-  (isa           => 'Int',
-   is            => 'ro',
-   required      => 1,
-   default       => 50,
-   documentation => 'The maximum number of child processes to fork');
+   default       => sub { return [] },
+   init_arg      => undef,
+   documentation => 'A queue of device directories to be processed');
 
 has 'inotify' =>
   (isa           => 'Linux::Inotify2',
@@ -69,6 +65,28 @@ has 'inotify' =>
    builder       => '_build_inotify',
    lazy          => 1,
    documentation => 'The inotify instance');
+
+has 'max_processes' =>
+  (isa           => 'Int',
+   is            => 'ro',
+   required      => 1,
+   default       => 50,
+   documentation => 'The maximum number of child processes to fork');
+
+has 'monitor' =>
+  (isa           => 'Bool',
+   is            => 'rw',
+   required      => 1,
+   default       => 1,
+   documentation => 'While true, continue monitoring the staging_path. ' .
+                    'A caller may set this to false in order to stop ' .
+                    'monitoring and wait for any child processes to finish');
+
+has 'staging_path' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 1,
+   documentation => 'The directory in which GridION results appear');
 
 has 'watches' =>
   (isa           => 'HashRef',
@@ -88,23 +106,6 @@ has 'watch_history' =>
                     'This is updated automatically by the instance. A ' .
                     'directory will appear multiple times if it is deleted' .
                     'and re-created');
-
-has 'device_dir_queue' =>
-  (isa           => 'ArrayRef',
-   is            => 'ro',
-   required      => 1,
-   default       => sub { return [] },
-   init_arg      => undef,
-   documentation => 'A queue of device directories to be processed');
-
-has 'monitor' =>
-  (isa           => 'Bool',
-   is            => 'rw',
-   required      => 1,
-   default       => 1,
-   documentation => 'While true, continue monitoring the staging_path. ' .
-                    'A caller may set this to false in order to stop ' .
-                    'monitoring and wait for any child processes to finish');
 
 sub start {
   my ($self) = @_;
