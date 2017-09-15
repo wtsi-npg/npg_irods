@@ -18,7 +18,7 @@ my $data_path = 't/data/ont/gridion';
 sub start : Test(1) {
   my $monitor = WTSI::NPG::HTS::ONT::GridIONRunMonitor->new
     (dest_collection => '/test',
-     staging_path    => $data_path);
+     source_dir      => $data_path);
 
   local $SIG{ALRM} = sub { $monitor->monitor(0) };
   alarm 10;
@@ -30,7 +30,7 @@ sub start : Test(1) {
 sub watch_history : Test(1) {
   my $monitor = WTSI::NPG::HTS::ONT::GridIONRunMonitor->new
     (dest_collection => '/test',
-     staging_path    => $data_path);
+     source_dir      => $data_path);
 
   local $SIG{ALRM} = sub { $monitor->monitor(0) };
   alarm 10;
