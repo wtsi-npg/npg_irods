@@ -16,8 +16,9 @@ use Try::Tiny;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
-         WTSI::NPG::HTS::ArchiveSession
          WTSI::NPG::iRODS::Utilities
+         WTSI::NPG::HTS::ArchiveSession
+         WTSI::NPG::HTS::ONT::Watcher
        ];
 
 our $VERSION = '';
@@ -58,14 +59,6 @@ has 'device_dir_queue' =>
    init_arg      => undef,
    documentation => 'A queue of device directories to be processed');
 
-has 'inotify' =>
-  (isa           => 'Linux::Inotify2',
-   is            => 'ro',
-   required      => 1,
-   builder       => '_build_inotify',
-   lazy          => 1,
-   documentation => 'The inotify instance');
-
 has 'max_processes' =>
   (isa           => 'Int',
    is            => 'ro',
@@ -87,25 +80,6 @@ has 'source_dir' =>
    is            => 'ro',
    required      => 1,
    documentation => 'The directory in which GridION results appear');
-
-has 'watches' =>
-  (isa           => 'HashRef',
-   is            => 'rw',
-   required      => 1,
-   default       => sub { return {} },
-   documentation => 'A mapping of absolute paths of watched directories '.
-                    'to a corresponding Linux::Inotify2::Watch instance');
-
-has 'watch_history' =>
-  (isa           => 'ArrayRef',
-   is            => 'ro',
-   required      => 1,
-   default       => sub { return [] },
-   init_arg      => undef,
-   documentation => 'All directories watched over the instance lifetime. '.
-                    'This is updated automatically by the instance. A ' .
-                    'directory will appear multiple times if it is deleted' .
-                    'and re-created');
 
 sub start {
   my ($self) = @_;
@@ -194,7 +168,7 @@ sub start {
     $num_errors++;
   };
 
-  $self->_stop_watches;
+  $self->stop_watches;
   $select->remove($self->inotify->fileno);
 
   my @running = $pm->running_procs;
@@ -213,72 +187,18 @@ sub _start_watches {
   my $cb     = $self->_make_callback($events);
 
   my $spath = rel2abs($self->source_dir);
-  $self->_start_watch($spath, $events, $cb);
+  $self->start_watch($spath, $events, $cb);
 
   # Start watches on any existing expt dirs
   my @expt_dirs = $self->_find_dirs($spath);
   foreach my $expt_dir (@expt_dirs) {
-    $self->_start_watch($expt_dir, $events, $cb);
+    $self->start_watch($expt_dir, $events, $cb);
 
     # Queue any existing device dirs
     my @device_dirs = $self->_find_dirs($expt_dir);
     foreach my $device_dir (@device_dirs) {
       push @{$self->device_dir_queue}, $device_dir;
     }
-  }
-
-  return;
-}
-
-sub _start_watch {
-  my ($self, $dir, $events, $callback) = @_;
-
-  $self->debug("Starting watch on '$dir'");
-  my $watch;
-
-  -e $dir or
-    croak("Invalid directory to watch '$dir'; directory does not exist");
-  -d $dir or croak("Invalid directory to watch '$dir'; not a directory");
-
-  if (exists $self->watches->{$dir}) {
-    $watch = $self->watches->{$dir};
-    $self->debug("Already watching directory '$dir'");
-  }
-  else {
-    $watch = $self->inotify->watch($dir, $events, $callback);
-    if ($watch) {
-      $self->debug("Started watching directory '$dir'");
-      $self->watches->{$dir} = $watch;
-      push @{$self->watch_history}, $dir;
-    }
-    else {
-      croak("Failed to start watching directory '$dir': $ERRNO");
-    }
-  }
-
-  return $watch;
-}
-
-sub _stop_watches {
-  my ($self) = @_;
-
-  foreach my $dir (keys %{$self->watches}) {
-    $self->_stop_watch($dir);
-  }
-
-  return $self;
-}
-
-sub _stop_watch {
-  my ($self, $dir) = @_;
-
-  $self->debug("Stopping watch on '$dir'");
-  if (exists $self->watches->{$dir}) {
-    $self->watches->{$dir}->cancel;
-    delete $self->watches->{$dir};
-  }
-  else {
-    $self->warn("Not watching directory '$dir'; stop request ignored");
   }
 
   return;
@@ -310,7 +230,7 @@ sub _make_callback {
           $self->debug("Event on experiment dir '$dir'");
           my $cb = $self->_make_callback($events);
           try {
-            $self->_start_watch($dir, $events, $cb);
+            $self->start_watch($dir, $events, $cb);
           } catch {
             $self->error($_);
           };
@@ -320,7 +240,7 @@ sub _make_callback {
           # handled in the main loop
           $self->debug("Event on device dir '$dir'");
           $self->debug("Event IN_CREATE/IN_MOVED_TO/IN_ATTRIB on '$dir'");
-          push @{$device_dir_queue}, $event->fullpath;
+          push @{$device_dir_queue}, $dir;
         }
         else {
           # Path is something else
@@ -331,7 +251,7 @@ sub _make_callback {
       # Path was removed from the watched hierarchy
       if ($event->IN_DELETE or $event->IN_MOVED_FROM) {
         $self->debug("Event IN_DELETE/IN_MOVED_FROM on '$dir'");
-        $self->_stop_watch($dir);
+        $self->stop_watch($dir);
       }
     }
   };
@@ -386,15 +306,6 @@ sub _is_device_dir {
   my $is_device = $leaf =~ $DEVICE_DIR_REGEX and $self->_is_expt_dir($parent);
 
   return $is_device;
-}
-
-sub _build_inotify {
-  my ($self) = @_;
-
-  my $inotify = Linux::Inotify2->new or
-    $self->logcroak("Failed to create a new Linux::Inotify2 object: $ERRNO");
-
-  return $inotify;
 }
 
 __PACKAGE__->meta->make_immutable;
