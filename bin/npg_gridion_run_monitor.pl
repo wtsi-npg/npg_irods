@@ -24,7 +24,7 @@ my $collection;
 my $debug;
 my $log4perl_config;
 my $session_timeout = 60 * 20;
-my $staging_path;
+my $staging_dir;
 my $verbose;
 #use critic
 
@@ -36,7 +36,7 @@ GetOptions('collection=s'                      => \$collection,
            },
            'logconf=s'                         => \$log4perl_config,
            'session-timeout|session_timeout=s' => \$session_timeout,
-           'staging_path|staging-path=s'       => \$staging_path,
+           'staging-dir|staging_dir=s'         => \$staging_dir,
            'tar_capacity|tar-capacity=i'       => \$arch_capacity,
            'tar_timeout|tar-timeout=i'         => \$arch_timeout,
            'verbose'                           => \$verbose);
@@ -65,7 +65,7 @@ my $monitor = WTSI::NPG::HTS::ONT::GridIONRunMonitor->new
    arch_timeout    => $arch_timeout,
    dest_collection => $collection,
    session_timeout => $session_timeout,
-   staging_path    => $staging_path);
+   source_dir      => $staging_dir);
 
 # Ensure a clean exit
 local $SIG{INT}  = sub { $monitor->monitor(0) };
@@ -90,7 +90,7 @@ npg_gridion_run_monitor
 
 =head1 SYNOPSIS
 
-npg_gridion_run_monitor [--debug] [--logconf <path>] --staging-path <path>
+npg_gridion_run_monitor [--debug] [--logconf <path>] --staging-dir <path>
   [--tar-capacity <n>] [--tar-timeout <n>] [--verbose]
 
  Options:
@@ -102,8 +102,8 @@ npg_gridion_run_monitor [--debug] [--logconf <path>] --staging-path <path>
    --session_timeout The number of seconds idle time after which a multi-file
                      tar session will be closed. Optional, defaults to 60 * 20
                      seconds.
-   --staging-path
-   --staging_path    The data staging path to watch.
+   --staging-dir
+   --staging_dir     The data staging directory path to watch.
    --tar-capacity
    --tar_capacity    The number of read files to be archived per tar file.
                      Optional, defaults to 10,000.

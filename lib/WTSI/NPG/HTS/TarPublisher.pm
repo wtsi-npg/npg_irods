@@ -3,6 +3,7 @@ package WTSI::NPG::HTS::TarPublisher;
 use namespace::autoclean;
 
 use English qw[-no_match_vars];
+use File::Spec::Functions qw[abs2rel];
 use Moose;
 use MooseX::StrictConstructor;
 
@@ -89,7 +90,7 @@ sub BUILD {
 
   # Read any manifest of published files left by a previous process
   if (-e $self->manifest_path) {
-    $self->_read_manifest;
+    $self->_read_manifest_file;
   }
 
   return;
@@ -97,7 +98,7 @@ sub BUILD {
 
 =head2 publish_file
 
-  Arg [1]    : File path, Str.
+  Arg [1]    : Absolute file path, Str.
 
   Example    : my $path = $obj->publish_file('/path/to/file');
   Description: Add a file to the current tar stream and return the
@@ -155,10 +156,11 @@ sub publish_file {
 
 =head2 file_published
 
-  Arg [1]    : File path, Str.
+  Arg [1]    : Absolute file path, Str.
 
   Example    : $obj->file_published('/path/to/file');
-  Description: Return true if file has been published by this instance.
+  Description: Return true if file has been published successfully by this
+               instance or a previous one.
   Returntype : Bool
 
 =cut
@@ -166,7 +168,21 @@ sub publish_file {
 sub file_published {
   my ($self, $path) = @_;
 
-  return exists $self->manifest_index->{$path};
+  defined $path or $self->logconfess('A defined path argument is required');
+  $path =~ m{^/}msx or
+    $self->logconfess("An absolute path argument is required: '$path'");
+
+  my $ipath = abs2rel($path, $self->tar_cwd);
+  my $published = 0;
+
+  if (exists $self->manifest_index->{$ipath} or
+      ($self->tar_in_progress and $self->tar_stream->file_added($path))) {
+    $published = 1;
+  }
+
+  $self->debug("File '$path' published? ", ($published ? 'yes': 'no'));
+
+  return $published;
 }
 
 =head2 tar_in_progress
@@ -203,20 +219,44 @@ sub close_stream {
   if ($self->tar_in_progress) {
     $self->tar_stream->close_stream;
     $self->tar_count($self->tar_count + 1);
-    $self->_write_manifest;
+    $self->_update_manifest_index;
+    $self->_append_manifest_file;
     $self->clear_tar_stream;
 
-    $self->debug('Closed tar file #', $self->tar_count);
+    my $tar_file = sprintf '%s.%d.tar', $self->tar_path, $self->tar_count;
+    $self->info("Closed tar file '$tar_file'");
   }
 
   return;
 }
 
-sub _read_manifest {
+sub _update_manifest_index {
+  my ($self) = @_;
+
+  if (not $self->has_tar_stream) {
+    $self->logconfess('Internal error: attempted to update a manifest ',
+                      'of tar contents with no tar stream available');
+  }
+
+  my $index = $self->manifest_index;
+  my $tpath = $self->tar_stream->tar_file;
+  my $items = $self->tar_stream->tar_content;
+
+  foreach my $ipath (keys %{$items}) {
+    $self->debug("Adding to manifest index '$ipath' => '$tpath'");
+    $index->{$ipath} = $tpath;
+  }
+
+  return;
+}
+
+sub _read_manifest_file {
   my ($self) = @_;
 
   my $mpath = $self->manifest_path;
   my $index = $self->manifest_index;
+
+  %{$index} = (); # Clear existing entries
 
   if (-e $mpath) {
     open my $fh, '<', $mpath or
@@ -236,7 +276,9 @@ sub _read_manifest {
   return;
 }
 
-sub _write_manifest {
+# Append to manifest on disk all entries from the current tar stream's
+# tar file. Called after the tar stream is closed successfully.
+sub _append_manifest_file {
   my ($self) = @_;
 
   if (not $self->has_tar_stream) {
@@ -245,7 +287,6 @@ sub _write_manifest {
   }
 
   my $mpath = $self->manifest_path;
-  my $index = $self->manifest_index;
   my $tpath = $self->tar_stream->tar_file;
   my $items = $self->tar_stream->tar_content;
 
@@ -254,7 +295,7 @@ sub _write_manifest {
                        "for appending: $ERRNO");
 
   foreach my $ipath (sort keys %{$items}) {
-    $index->{$ipath} = $tpath;
+    $self->debug("Adding to manifest file '$ipath' => '$tpath'");
     print $fh "$tpath\t$ipath\n" or
       $self->logcroak("Failed to write to filehandle of '$mpath'");
   }

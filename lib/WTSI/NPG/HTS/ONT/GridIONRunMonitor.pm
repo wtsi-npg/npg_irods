@@ -14,6 +14,8 @@ use Parallel::ForkManager;
 use POSIX;
 use Try::Tiny;
 
+use WTSI::NPG::HTS::ONT::GridIONRunPublisher;
+
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::iRODS::Utilities
@@ -31,8 +33,9 @@ our $DEVICE_DIR_REGEX = qr{^GA\d+}msx;
 our $DEFAULT_PUBLISHER_LOG_TEMPLATE = << 'LOGCONF'
 log4perl.logger = ERROR, A1
 
-log4perl.logger.WTSI.NPG.HTS.ONT = INFO, A1
-log4perl.logger.WTSI.NPG.HTS.TarPublisher = INFO, A1
+log4perl.logger.WTSI.NPG.HTS.ONT = %s, A1
+log4perl.logger.WTSI.NPG.HTS.TarPublisher = %s, A1
+log4perl.logger.WTSI.NPG.HTS.TarStream = %s, A1
 
 log4perl.appender.A1 = Log::Log4perl::Appender::File
 log4perl.appender.A1.layout = Log::Log4perl::Layout::PatternLayout
@@ -137,6 +140,8 @@ sub start {
             next EVENT;
           }
 
+          my $log_level = Log::Log4perl->get_logger($self->meta->name)->level;
+
           my $pid = $pm->start($device_dir) and next EVENT;
 
           # Child process
@@ -144,12 +149,20 @@ sub start {
           $self->info("Started GridIONRunPublisher with PID $child_pid on ",
                       "'$device_dir'");
           my $logconf =
-            $self->_make_publisher_logconf($device_dir, $child_pid);
+            $self->_make_publisher_logconf($device_dir, $child_pid,
+                                           $log_level);
           Log::Log4perl::init(\$logconf);
 
-          # Make $publisher here
+          my $publisher = WTSI::NPG::HTS::ONT::GridIONRunPublisher->new
+            (arch_bytes      => $self->arch_bytes,
+             arch_capacity   => $self->arch_capacity,
+             arch_timeout    => $self->arch_timeout,
+             dest_collection => $self->dest_collection,
+             f5_uncompress   => 0,
+             source_dir      => $device_dir,
+             session_timeout => $self->session_timeout);
 
-          my ($nf, $ne) = (0, 0); # $publisher->publish_files;
+          my ($nf, $ne) = $publisher->publish_files;
           my $exit_code = $ne == 0 ? 0 : 1;
           $self->info("Finished publishing $nf files from '$device_dir' ",
                       "with $ne errors and exit code $exit_code");
@@ -258,13 +271,14 @@ sub _make_callback {
 };
 
 sub _make_publisher_logconf {
-  my ($self, $path, $pid) = @_;
+  my ($self, $path, $pid, $level) = @_;
 
   my $name = $self->meta->name;
   $name =~ s/::/_/gmsx;
   my $logfile = catfile($path, sprintf '%s.%d.log', $name, $pid);
-
-  return sprintf $DEFAULT_PUBLISHER_LOG_TEMPLATE, $logfile;
+  my $level_name = Log::Log4perl::Level::to_level($level);
+  return sprintf $DEFAULT_PUBLISHER_LOG_TEMPLATE,
+    $level_name, $level_name, $level_name, $logfile;
 }
 
 # Return a sorted list of absolute paths of directories within a
@@ -330,8 +344,12 @@ not monitor directories below a device directory; that responsibility
 is delegated to its child processes. Each child process is responsible
 for one device directory.
 
-A GridIONRunMonitor will store data in iRODS beneath
-dest_collection.
+A GridIONRunMonitor will store data in iRODS beneath one collection:
+
+<collection>/<gridion hostname>/<experiment name><device id>/
+
+
+
 
 =head1 AUTHOR
 
