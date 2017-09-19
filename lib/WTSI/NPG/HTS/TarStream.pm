@@ -24,10 +24,21 @@ has 'byte_count' =>
    init_arg      => undef,
    documentation => 'The total number of bytes published');
 
+has 'pid' =>
+  (isa           => 'Int',
+   is            => 'rw',
+   required      => 0,
+   predicate     => 'has_pid',
+   clearer       => 'clear_pid',
+   init_arg      => undef,
+   documentation => 'The child process ID');
+
 has 'tar' =>
   (isa           => 'FileHandle',
    is            => 'rw',
    required      => 0,
+   predicate     => 'has_tar',
+   clearer       => 'clear_tar',
    init_arg      => undef,
    documentation => 'The tar file handle for writing');
 
@@ -100,10 +111,12 @@ sub open_stream {
                 "$PUT_STREAM -t $suffix '$tar_path' >/dev/null";
   $self->info("Opening pipe to '$tar_cmd' in '$tar_cwd'");
 
-  open my $fh, q[|-], $tar_cmd
+  my $pid = open my $fh, q[|-], $tar_cmd
     or $self->logcroak("Failed to open pipe to '$tar_cmd': $ERRNO");
 
+  $self->info("Started tar process to '$tar_path' with PID $pid");
   $self->tar($fh);
+  $self->pid($pid);
 
   return $self->tar;
 }
@@ -120,20 +133,25 @@ sub open_stream {
 sub close_stream {
   my ($self) = @_;
 
-  my $filename = $self->tar_file;
-  if (defined $self->tar) {
-    close $self->tar or
-      $self->logcroak("Failed to close '$filename': $ERRNO");
+  my $tar_path = $self->tar_file;
+  if ($self->has_tar) {
+    my $pid = $self->pid;
 
-    $self->debug("Closed '$filename'");
+    close $self->tar or
+      $self->logcroak("Failed close tar process to '$tar_path' with PID ",
+                      "$pid: $ERRNO");
+
+    $self->debug("Closed tar process to '$tar_path' with PID $pid: $ERRNO");
   }
+  $self->clear_tar;
+  $self->clear_pid;
 
   return;
 }
 
 =head2 add_file
 
-  Arg [1]    : File path, Str.
+  Arg [1]    : Absolute file path, Str.
 
   Example    : my $path = $obj->add_file('/path/to/file');
   Description: Add a file to the current tar stream and return its
@@ -161,6 +179,15 @@ sub add_file {
   $self->byte_count($self->byte_count + $size);
 
   return $rel_path;
+}
+
+sub file_added {
+  my ($self, $path) = @_;
+
+  $self->_check_absolute($path);
+  my $rel_path = abs2rel($path, $self->tar_cwd);
+
+  return exists $self->tar_content->{$rel_path};
 }
 
 =head2 file_count
