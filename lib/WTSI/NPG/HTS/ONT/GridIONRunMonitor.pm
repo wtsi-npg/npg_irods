@@ -348,8 +348,12 @@ A GridIONRunMonitor will store data in iRODS beneath one collection:
 
 <collection>/<gridion hostname>/<experiment name><device id>/
 
+=head1 BUGS
 
-
+This class uses inotify to detect when data files to be published are
+closed after writing. If experiment and device directories are created
+before inotify watches are set up, they will not be detected and their
+contents will not published.
 
 =head1 AUTHOR
 

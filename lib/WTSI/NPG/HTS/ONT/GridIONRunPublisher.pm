@@ -634,13 +634,68 @@ WTSI::NPG::HTS::ONT::GridIONRunPublisher
 
 =head1 DESCRIPTION
 
+Publishes ONT fast5 and fastq files by streaming them through GNU tar
+and the tears iRODS client, directly into a series of tar archives in
+an iRODS collection.
 
+The fast5 and fastq files must be located under a single top level
+directory (the 'source_dir'). Directories and files under the
+runfolder are monitored by recursively adding new inotify watches.
+
+The publisher will attempt to capture the sample_id (or "experiment
+name" for GridION) and device_id for a run. It does this by examining
+the tracking_id group within each Fast5 file. Once the sample_id and
+device_id are established, the publisher assumes that they apply to
+the entire run.
+
+If Fast5 files are unavailable, the publisher attempts to read the
+sample_id and device_id from the path of each Fastq file. Again, once
+the device_id is established, the publisher assumes that it applies to
+the entire run.
+
+All tar files will be written to 'dest_collection'. Metadata will be
+added to dest_collection:
+
+  'experiment_name'   => GridION experiment name (aka sample_id)
+  'device_id'         => GridIOn device_id
+  'dcterms:creator'   => URI
+  'dcterms:created'   => Timestamp
+  'dcterms:publisher' => URI
+
+Metadata will also be added to each tar file:
+
+  'dcterms:created'   => Timestamp
+  'md5'               => MD5
+  'type'              => File suffix
+
+A publishing session is started by calling the 'publish_files' method
+which will return when the process is complete. If processing a run
+becomes idle (has no inotify events) for longer than session_timeout
+seconds, any currently open tar file will be closed and published and
+the publish_files method will return, ending the session. Any inotify
+watches will be released and no further files will be processed until
+publish_files is called again.
+
+If any tar file takes longer to reach its capacity than the
+arch_timeout in seconds, that archive is automatically closed. Any
+further file(s) will be added to a new tar file.
+
+The publisher will place all tar files will be written in the
+specified destination collection. It is the responsibilty of the
+calling code to manage which destination collection is used.
+
+When the publish_file method is about to exit, it will enter a
+clean-up phase where it will perform a search for all files under
+source_dir and attempt to publish every one. If they have already been
+published, the underlying TarPublisher will skip them because they
+will be present in its manifest.
 
 =head1 BUGS
 
 This class uses inotify to detect when data files to be published are
 closed after writing. If files are written before inotify watches are
-set up, they will not be detected and published.
+set up, they will not be detected and published immediately. Instead,
+they will be published during the clean-up phase.
 
 =head1 AUTHOR
 
