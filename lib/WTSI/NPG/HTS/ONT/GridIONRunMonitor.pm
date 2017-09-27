@@ -162,7 +162,9 @@ sub start {
              source_dir      => $device_dir,
              session_timeout => $self->session_timeout);
 
-          my ($nf, $ne) = $publisher->publish_files;
+          my ($nf, $np, $ne) = $publisher->publish_files;
+          $self->debug("GridIONRunPublisher returned [$nf, $np, $ne]");
+
           my $exit_code = $ne == 0 ? 0 : 1;
           $self->info("Finished publishing $nf files from '$device_dir' ",
                       "with $ne errors and exit code $exit_code");

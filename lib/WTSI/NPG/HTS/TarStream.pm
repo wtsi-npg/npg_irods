@@ -141,7 +141,7 @@ sub close_stream {
       $self->logcroak("Failed close tar process to '$tar_path' with PID ",
                       "$pid: $ERRNO");
 
-    $self->debug("Closed tar process to '$tar_path' with PID $pid: $ERRNO");
+    $self->debug("Closed tar process to '$tar_path' with PID $pid");
   }
   $self->clear_tar;
   $self->clear_pid;

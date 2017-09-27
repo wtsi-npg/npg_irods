@@ -71,6 +71,9 @@ sub watch_history : Test(1) {
 
   $monitor->start;
 
+  # Simulate adding further directories under an existing one. This
+  # should not cause the expt2 directory to be added to the watch
+  # history multiple times
   foreach my $i (0 .. 9) {
     make_path catdir(@tmp_dirs, "expt2", "GA20000", "reads", $i);
   }

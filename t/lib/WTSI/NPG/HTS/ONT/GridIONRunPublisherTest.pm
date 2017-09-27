@@ -24,11 +24,34 @@ use WTSI::NPG::iRODS::Metadata;
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
+{
+  package TestDB;
+  use Moose;
+
+  with 'npg_testing::db';
+}
+
 my $pid          = $PID;
 my $test_counter = 0;
 my $data_path    = 't/data/ont/gridion';
+my $fixture_path = "t/fixtures";
+my $db_dir       = File::Temp->newdir;
+
+my $wh_schema;
 
 my $irods_tmp_coll;
+
+sub setup_databases : Test(startup) {
+  my $wh_db_file = catfile($db_dir, 'ml_wh.db');
+  $wh_schema = TestDB->new(sqlite_utf8_enabled => 1,
+                           verbose             => 0)->create_test_db
+    ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
+     $wh_db_file);
+}
+
+sub teardown_databases : Test(shutdown) {
+  $wh_schema->storage->disconnect;
+}
 
 sub setup_test : Test(setup) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -45,7 +68,7 @@ sub teardown_test : Test(teardown) {
   $irods->remove_collection($irods_tmp_coll);
 }
 
-sub publish_files_copy : Test(73) {
+sub publish_files_copy : Test(81) {
   my $expected_num_files = {fast5 => 7,
                             fastq => 1};
   my $expected_num_items = {fast5 => [6, 6, 6, 6, 6, 6, 4], # total 40
@@ -55,7 +78,7 @@ sub publish_files_copy : Test(73) {
                     $expected_num_files, $expected_num_items);
 }
 
-sub publish_files_move : Test(73) {
+sub publish_files_move : Test(81) {
   my $expected_num_files = {fast5 => 7,
                             fastq => 1};
   my $expected_num_items = {fast5 => [6, 6, 6, 6, 6, 6, 4], # total 40
@@ -65,7 +88,7 @@ sub publish_files_move : Test(73) {
                     $expected_num_files, $expected_num_items);
 }
 
-sub publish_files_f5_uncompress : Test(73) {
+sub publish_files_f5_uncompress : Test(81) {
   my $expected_num_files = {fast5 => 7,
                             fastq => 1};
   my $expected_num_items = {fast5 => [6, 6, 6, 6, 6, 6, 4], # total 40
@@ -77,7 +100,7 @@ sub publish_files_f5_uncompress : Test(73) {
     # h5repack fails with a 'file not found error', however, a
     # subsequent test for the file's presence using Perl's '-e' shows
     # it was there.
-    skip 'h5repack not required', 73, if not $ENV{TEST_WITH_H5REPACK};
+    skip 'h5repack not required', 81, if not $ENV{TEST_WITH_H5REPACK};
 
     _do_publish_files($irods_tmp_coll, 'copy',
                       $expected_num_files, $expected_num_items,
@@ -85,7 +108,7 @@ sub publish_files_f5_uncompress : Test(73) {
   }
 }
 
-sub publish_files_tar_bytes : Test(64) {
+sub publish_files_tar_bytes : Test(69) {
   my $expected_num_files = {fast5 => 4,
                             fastq => 1};
   my $expected_num_items = {fast5 => [23, 8, 7, 2], # total 40
@@ -135,11 +158,12 @@ sub _do_publish_files {
        arch_capacity   => $arch_capacity,
        arch_timeout    => 10,
        dest_collection => $dest_coll,
+       mlwh_schema     => $wh_schema,
        session_timeout => 30,
        source_dir      => $tmp_dir,
        f5_uncompress   => $f5_uncompress);
 
-    my ($tar_count, $num_errors) = $pub->publish_files;
+    my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
     exit $num_errors;
   }
@@ -241,6 +265,25 @@ sub _do_publish_files {
       if ($manifest_fail) {
         diag explain \%manifest;
       }
+
+      my $expected_meta =
+        [{attribute => 'device_id',            value => 'GA10000'},
+         {attribute => 'experiment_name',      value => '2'},
+         {attribute => 'sample',               value => '4944STDY7082749'},
+         {attribute => 'sample_donor_id',      value => '4944STDY7082749'},
+         {attribute => 'sample_id',            value => '3302237'},
+         {attribute => 'sample_supplier_name', value => 'Lambda1'},
+         {attribute => 'study',                value => 'GridION test study'},
+         {attribute => 'study_id',             value => '4944'},
+         {attribute => 'study_title',          value => 'GridION test study'},
+         {attribute => 'type',                 value => 'tar'}];
+
+      my @filtered_meta = grep { $_->{attribute} !~ m{(md5|dcterms)}msx }
+        @{$obj->metadata};
+
+      is_deeply(\@filtered_meta, $expected_meta,
+                "Expected metadata present on '$path'")
+        or diag explain \@filtered_meta;
 
       $i++;
     }

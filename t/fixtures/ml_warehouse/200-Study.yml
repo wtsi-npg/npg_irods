@@ -1,80 +1,4 @@
 ---
-- abbreviation: 425STDY
-  abstract: "Very little is known about genome diversity of herpesviruses and there are currently very few genome sequences in Genbank. Whole genome sequencing of large DNA viruses is complicated by the difficulty in separating virus DNA from human DNA. In this project we will address this issue by using Agilent SureSelect technology and Illumina deep sequencing to sequence several members of the herpesvirus family, including Epstein Barr virus (EBV, HHV4), Kaposiâ€™s sarcoma associated herpesvirus (KSHV, HHV8) and varicella zoster virus (VZV, HHV3). We have designed custom baits to the available reference sequences and will use these to pull out virus sequence from host DNA and then Illumina sequence the captured virus DNA. The short read data will be assembled into a genome consensus sequence for each virus and importantly, allow analysis of virus minority species, which may be important for pathogenesis.\r\n\r\nWe will use a range of samples including DNA from cell lines latently infected with either EBV or KSHV or both viruses. These data will enable an initial estimation of genome diversity and highlight differences at the genetic level between EBV and KSHV from different cell lines. Further studies will generate herpesvirus genome sequences from clinical samples, including varicella, Kaposiâ€™s sarcoma and nasopharyngeal carcinoma to investigate virus genetic diversity and pathogenic determinants.\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-lymphocryptovirus.html\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-rhadinovirus.html\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-simplexvirus.html\r\n"
-  accession_number: ERP001026
-  aligned: 1
-  array_express_accession_number: ~
-  contains_human_dna: 1
-  contaminated_human_dna: 1
-  created: 2010-01-08 15:13:47
-  data_access_group: ~
-  data_destination: ~
-  data_release_delay_period: 3 months
-  data_release_delay_reason: other
-  data_release_sort_of_study: genomic sequencing
-  data_release_strategy: open
-  data_release_timing: delayed
-  deleted_at: ~
-  description: "This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/\r\n\r\nThis project aims to generate full genome sequences for several members of the human herpesvirus family, including Epstein Barr virus (EBV, HHV4), Kaposiâ€™s sarcoma associated herpesvirus (KSHV, HHV8) and varicella zoster virus (VZV, HHV3). We have designed a new custom pulldown protocol to separate virus DNA from human DNA prior to sequencing and this method will be tested on a range of samples. Virus genome diversity will then be examined by sequencing the virus genome from a large number of different samples.\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-lymphocryptovirus.html\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-rhadinovirus.html\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-simplexvirus.html\r\n"
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: 0
-  ethically_approved: ~
-  faculty_sponsor: Paul Kellam
-  hmdmc_number: ~
-  id_lims: SQSCP
-  id_study_lims: 425
-  id_study_tmp: 400
-  last_updated: 2016-05-12 16:10:07
-  name: Virus Genome Herpesvirus
-  prelim_id: ~
-  recorded_at: 2016-05-12 16:10:09
-  reference_genome: Human_herpesvirus_4 (Wild_type)
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: 'Herpesvirus whole genome sequencing[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
-  study_type: Whole Genome Sequencing
-  study_visibility: Hold
-  uuid_study_lims: 2c847286-a557-11df-8092-00144f01a414
-- abbreviation: 1864STDY
-  abstract: Illumina sequencing of various Plasmodium species for de novo assembly and comparative genomics
-  accession_number: ERP000730
-  aligned: 1
-  array_express_accession_number: ~
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2011-06-14 10:14:37
-  data_access_group: ~
-  data_destination: ~
-  data_release_delay_period: ~
-  data_release_delay_reason: ~
-  data_release_sort_of_study: genomic sequencing
-  data_release_strategy: open
-  data_release_timing: standard
-  deleted_at: ~
-  description: 'llumina sequencing of various Plasmodium species is being carried out for de novo assembly and comparative genomics. This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/'
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: ~
-  ethically_approved: ~
-  faculty_sponsor: Matthew Berriman
-  hmdmc_number: ~
-  id_lims: SQSCP
-  id_study_lims: 1864
-  id_study_tmp: 1838
-  last_updated: 2016-05-12 16:12:55
-  name: Plasmodium species genome sequencing
-  prelim_id: ~
-  recorded_at: 2016-05-12 16:12:56
-  reference_genome: Plasmodium_falciparum (3D7_Oct11v3)
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: Genome sequencing of Plasmodium species
-  study_type: Whole Genome Sequencing
-  study_visibility: Hold
-  uuid_study_lims: 1beadfe6-966f-11e0-b43a-00144f206e2e
 - abbreviation: 3573STDY
   abstract: 'Pf3k is a global collaboration using the latest sequencing technologies to provide a high-resolution view of natural variation in the malaria parasite Plasmodium falciparum. '
   accession_number: ERP009847
@@ -84,6 +8,7 @@
   contaminated_human_dna: 0
   created: 2015-03-13 12:49:15
   data_access_group: ~
+  data_deletion_period: ~
   data_destination: ~
   data_release_delay_period: ~
   data_release_delay_reason: ~
@@ -101,322 +26,19 @@
   id_lims: SQSCP
   id_study_lims: 3573
   id_study_tmp: 3537
-  last_updated: 2016-08-23 11:50:25
+  last_updated: 2017-05-30 16:17:36
   name: Pf3k
   prelim_id: I2157
-  recorded_at: 2016-08-23 11:50:25
+  recorded_at: 2017-05-30 16:17:36
   reference_genome: Plasmodium_falciparum (3D7_Oct11v3)
   remove_x_and_autosomes: 0
+  s3_email_list: ~
   separate_y_chromosome_data: 0
   state: active
   study_title: 'Comprehensive analysis of genome variation in 3,000 Plasmodium falciparum samples representing the major malaria endemic regions of the world'
   study_type: Whole Genome Sequencing
   study_visibility: Hold
   uuid_study_lims: 5add9c60-c97f-11e4-9be6-68b59976a382
-- abbreviation: SC_LB_LCSeq
-  abstract: 'The Middle East is a key area for understanding the evolutionary history of humans, and one of the most complex. It is one of the possible centres of the expansion of modern humans outside Africa and an established source of subsequent expansions such as that during the Neolithic into Europe and possibly North Africa. It is also likely to have experienced many less-understood migrations in several directions relevant to the history of Africa, Asia and Europe. Yet the genomics of populations in this area have been little-studied. In the current project, we propose to investigate the genomics of a Lebanese sample. We chose Lebanon because its history in the last few thousand years is relatively well-understood. In addition, our previous studies on the Lebanese population suggest Lebanon could have been a refuge for the earliest indigenous populations in the region. In this project we plan to (1) genotype 120 Lebanese individuals analyzing 2.5M variants (2) 8x sequence 100 individuals and (3) 30x sequence 4 individuals. '
-  accession_number: EGAS00001002084
-  aligned: 1
-  array_express_accession_number: ~
-  contains_human_dna: 1
-  contaminated_human_dna: 0
-  created: 2014-03-04 15:17:20
-  data_access_group: lebanon
-  data_destination: ~
-  data_release_delay_period: ~
-  data_release_delay_reason: ~
-  data_release_sort_of_study: genomic sequencing
-  data_release_strategy: managed
-  data_release_timing: standard
-  deleted_at: ~
-  description: "we propose to investigate the genomics of a Lebanese sample. we plan (1) genotyping (2.5M) of 120 Lebanese individuals, choosing this platform to allow comparison with the 1000 Genomes and African Genome Variation project populations, (2) 8x sequencing of 100 individuals to provide unbiased population-level sequence information including allele frequencies, and (3) 30x sequencing of four individuals to allow inferences such as from PSMC/MSMC to be obtained. The current form is for the low-coverage sequencing.  \r\nThis data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/   "
-  ega_dac_accession_number: EGAC00001000205
-  ega_policy_accession_number: EGAP00001000210
-  ena_project_id: ~
-  ethically_approved: 1
-  faculty_sponsor: Chris Tyler-Smith
-  hmdmc_number: 13/010
-  id_lims: SQSCP
-  id_study_lims: 2967
-  id_study_tmp: 2934
-  last_updated: 2016-10-14 11:47:59
-  name: SEQCAP_Lebanon_LowCov-seq
-  prelim_id: ~
-  recorded_at: 2016-10-14 11:47:59
-  reference_genome: Homo_sapiens (1000Genomes_hs37d5)
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: 'Lebanon_LowCov-seq[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
-  study_type: Whole Genome Sequencing
-  study_visibility: Hold
-  uuid_study_lims: 146f0ac0-a3b0-11e3-b2a7-68b59976a382
-- abbreviation: 315STDY
-  abstract: Pair-end sequencing has been generated from whole genomic DNA from a range of Leishmania species. This data is used to improve the sequence and assembly of Leishmania reference genomes and to examine heterozygosities and interstrain variation between genes that may account for differences in disease phenotypes.
-  accession_number: ERP000169
-  aligned: 1
-  array_express_accession_number: ~
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2009-05-28 13:55:35
-  data_access_group: ~
-  data_destination: ~
-  data_release_delay_period: ~
-  data_release_delay_reason: ~
-  data_release_sort_of_study: genomic sequencing
-  data_release_strategy: open
-  data_release_timing: standard
-  deleted_at: ~
-  description: 'Leishmania is an intracellular protistan parasite affecting macrophages and dendritic cells. Leishmania infections result in a wide range of symptoms in human hosts depending on the species or strain involved. Several whole genome sequences currently exist for Leishmania species. To correct sequencing and assembly errors and examine interstrain variation pair-end sequencing runs were performed with 76 base pair reads on the Illumina genome analyzer.. This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/'
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: 0
-  ethically_approved: ~
-  faculty_sponsor: Matthew Berriman
-  hmdmc_number: ~
-  id_lims: SQSCP
-  id_study_lims: 315
-  id_study_tmp: 291
-  last_updated: 2016-05-12 16:09:51
-  name: Leishmania species
-  prelim_id: ~
-  recorded_at: 2016-05-12 16:09:51
-  reference_genome: ' '
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: Leishmania species
-  study_type: Whole Genome Sequencing
-  study_visibility: Hold
-  uuid_study_lims: 2b9148ea-a557-11df-8092-00144f01a414
-- abbreviation: 3012STDY
-  abstract: http://www.sanger.ac.uk/resources/downloads/bacteria/nctc/
-  accession_number: ERP005928
-  aligned: 1
-  array_express_accession_number: ~
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2014-03-19 13:19:46
-  data_access_group: ~
-  data_destination: ~
-  data_release_delay_period: ~
-  data_release_delay_reason: ~
-  data_release_sort_of_study: genomic sequencing
-  data_release_strategy: open
-  data_release_timing: standard
-  deleted_at: ~
-  description: http://www.sanger.ac.uk/resources/downloads/bacteria/nctc/
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: 0
-  ethically_approved: ~
-  faculty_sponsor: Julian Parkhill
-  hmdmc_number: ~
-  id_lims: SQSCP
-  id_study_lims: 3012
-  id_study_tmp: 2979
-  last_updated: 2016-05-12 16:14:48
-  name: NCTC 3000
-  prelim_id: ~
-  recorded_at: 2016-05-12 16:14:49
-  reference_genome: Not suitable for alignment
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: NCTC 3000
-  study_type: Whole Genome Sequencing
-  study_visibility: Public
-  uuid_study_lims: 241268e0-af69-11e3-aa25-68b59976a382
-- abbreviation: 2905STDY
-  abstract: 'AML is an unmet medical need and therapeutic progress will not be made without a greater understanding of this heterogeneous disease. The largest subgroup of AML patients lack a cytogenetic abnormality (AML with normal Karyotype, AML-NK). For this reason, the biology of this subtype have been historically poorly understood. Recently, next generation sequencing efforts in AML-NK genomes has described a number of recurrent abnormalities. In parallel, mouse models have dramatically improved our understanding of disease and due to the great similarities between mouse and human haematopoiesis, have been particularly informative for leukaemia. We aim to model 4 of the most frequent AML-NK mutations using sophisticated mouse models. We will assess the preleukaemic/leukaemic cellular characteristics of these models, particularly their effects on the homeostasis of the haematopoietic stem and progenitor cell (HSPC) compartment. We will also perform integrated genomic analysis to link the mutations and their altered cellular phenotype to aberrant epigenetic control and pre/leukaemic gene expression programmes.     '
-  accession_number: ERP004563
-  aligned: 1
-  array_express_accession_number: ~
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2014-01-10 09:16:27
-  data_access_group: ~
-  data_destination: ~
-  data_release_delay_period: 6 months
-  data_release_delay_reason: other
-  data_release_sort_of_study: genomic sequencing
-  data_release_strategy: open
-  data_release_timing: delayed
-  deleted_at: ~
-  description: "This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/\r\n\r\n"
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: ~
-  ethically_approved: ~
-  faculty_sponsor: George Vassiliou
-  hmdmc_number: ~
-  id_lims: SQSCP
-  id_study_lims: 2905
-  id_study_tmp: 2872
-  last_updated: 2016-11-09 16:07:09
-  name: Analysis of the chromatin state of mouse stem and progenitor cell compartment
-  prelim_id: ~
-  recorded_at: 2016-11-09 16:07:10
-  reference_genome: Mus_musculus (GRCm38)
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: 'Analysis of the chromatin state of mouse stem and progenitor cell compartment      [UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
-  study_type: Cancer Genomics
-  study_visibility: Hold
-  uuid_study_lims: e29286f0-79d7-11e3-876e-68b59976a382
-- abbreviation: 2690STDY
-  abstract: http://www.sanger.ac.uk/resources/downloads/bacteria/streptococcus-pneumoniae.html
-  accession_number: ERP003770
-  aligned: 1
-  array_express_accession_number: ~
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2013-07-02 10:43:37
-  data_access_group: ~
-  data_destination: ~
-  data_release_delay_period: ~
-  data_release_delay_reason: ~
-  data_release_sort_of_study: genomic sequencing
-  data_release_strategy: open
-  data_release_timing: standard
-  deleted_at: ~
-  description: "http://www.sanger.ac.uk/resources/downloads/bacteria/streptococcus-pneumoniae.html\r\nThese data are part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/\r\n"
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: ~
-  ethically_approved: ~
-  faculty_sponsor: Julian Parkhill
-  hmdmc_number: ~
-  id_lims: SQSCP
-  id_study_lims: 2690
-  id_study_tmp: 2658
-  last_updated: 2016-05-12 16:14:16
-  name: ILB 1142 Discovery of natural pneumococcal mutation rates during controlled colonisation of the human nasopharynx (JP)
-  prelim_id: ~
-  recorded_at: 2016-05-12 16:14:16
-  reference_genome: Streptococcus_pneumoniae (ATCC_700669)
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: Discovery of natural pneumococcal mutation rates during controlled colonisation of the human nasopharynx
-  study_type: Whole Genome Sequencing
-  study_visibility: Hold
-  uuid_study_lims: 4059fdb0-e304-11e2-b233-68b59976a382
-- abbreviation: 619STDY
-  abstract: For further information on this study please see http://www.sanger.ac.uk/resources/downloads/bacteria/burkholderia-pseudomallei.html
-  accession_number: ERP000251
-  aligned: 1
-  array_express_accession_number: ~
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2010-06-25 11:19:52
-  data_access_group: ~
-  data_destination: ~
-  data_release_delay_period: ~
-  data_release_delay_reason: ~
-  data_release_sort_of_study: genomic sequencing
-  data_release_strategy: open
-  data_release_timing: standard
-  deleted_at: ~
-  description: 'For further information on this study please see http://www.sanger.ac.uk/resources/downloads/bacteria/burkholderia-pseudomallei.html This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/'
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: 0
-  ethically_approved: ~
-  faculty_sponsor: Julian Parkhill
-  hmdmc_number: ~
-  id_lims: SQSCP
-  id_study_lims: 619
-  id_study_tmp: 594
-  last_updated: 2016-05-12 16:10:31
-  name: Burkholderia pseudomallei diversity
-  prelim_id: ~
-  recorded_at: 2016-05-12 16:10:50
-  reference_genome: ' '
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: 'Burkholderia pseudomallei diversity[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
-  study_type: Whole Genome Sequencing
-  study_visibility: Hold
-  uuid_study_lims: 2e5202a4-a557-11df-8092-00144f01a414
-- abbreviation: 3745STDY
-  abstract: RNA-seq study on stably transfected cell lines
-  accession_number: ERP011057
-  aligned: 1
-  array_express_accession_number: E-ERAD-414
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2015-07-16 15:28:11
-  data_access_group: ~
-  data_destination: ~
-  data_release_delay_period: ~
-  data_release_delay_reason: ~
-  data_release_sort_of_study: transcriptomics
-  data_release_strategy: open
-  data_release_timing: standard
-  deleted_at: ~
-  description: "RNA-seq study on stably transfected cell lines\r\nThese data are part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/"
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: ~
-  ethically_approved: ~
-  faculty_sponsor: Paul Kellam
-  hmdmc_number: ~
-  id_lims: SQSCP
-  id_study_lims: 3745
-  id_study_tmp: 3718
-  last_updated: 2016-05-12 16:15:52
-  name: RNASeq stable cell lines (PK)
-  prelim_id: ~
-  recorded_at: 2016-05-12 16:15:52
-  reference_genome: ' '
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: 'RNASeq stable cell lines[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
-  study_type: Transcriptome Analysis
-  study_visibility: Hold
-  uuid_study_lims: 44a66b90-2bcf-11e5-a6a1-68b59976a382
-- abbreviation: 3784STDY
-  abstract: To produce whole transcriptome datasets from human organoids stimulated with IL-22
-  accession_number: ~
-  aligned: 1
-  array_express_accession_number: ~
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2015-08-18 14:21:29
-  data_access_group: ~
-  data_destination: ~
-  data_release_delay_period: 12 months
-  data_release_delay_reason: phd study
-  data_release_sort_of_study: transcriptomics
-  data_release_strategy: open
-  data_release_timing: delayed
-  deleted_at: ~
-  description: "To generate an RNA-Seq dataset for organoids stimulated with IL-22; Salmonella Typhimurium; IL-22 and Salmonella Typhimurium; and unstimulated.\r\nThese data are part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/\r\n"
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: ~
-  ethically_approved: ~
-  faculty_sponsor: Gordon Dougan
-  hmdmc_number: ~
-  id_lims: SQSCP
-  id_study_lims: 3784
-  id_study_tmp: 3758
-  last_updated: 2016-05-12 16:15:56
-  name: I2134 Transcriptional response of Kolf2 intestinal organoids to IL-22 (GD)
-  prelim_id: I2134
-  recorded_at: 2016-05-12 16:15:56
-  reference_genome: Homo_sapiens (GRCh38_15)
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 1
-  state: active
-  study_title: 'Transcriptional response of Kolf2 intestinal organoids to IL-22[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
-  study_type: Transcriptome Analysis
-  study_visibility: Hold
-  uuid_study_lims: 6b316fe0-45b4-11e5-af59-68b59976a382
 - abbreviation: 375STDY
   abstract: 'Project to produce a reference quality genome of Trichuris muris, a model whipworm. '
   accession_number: ERP000162
@@ -426,6 +48,7 @@
   contaminated_human_dna: 1
   created: 2009-09-29 10:00:33
   data_access_group: ~
+  data_deletion_period: ~
   data_destination: ~
   data_release_delay_period: ~
   data_release_delay_reason: ~
@@ -443,170 +66,19 @@
   id_lims: SQSCP
   id_study_lims: 375
   id_study_tmp: 351
-  last_updated: 2016-05-12 16:10:00
+  last_updated: 2017-05-11 12:29:57
   name: Trichuris muris genome sequencing
   prelim_id: ~
-  recorded_at: 2016-05-12 16:10:00
+  recorded_at: 2017-05-11 12:29:57
   reference_genome: ' '
   remove_x_and_autosomes: 0
+  s3_email_list: ~
   separate_y_chromosome_data: 0
   state: active
   study_title: 'The genome sequence of the murine whipworm Trichuris muris '
   study_type: Whole Genome Sequencing
   study_visibility: Public
   uuid_study_lims: 2c31c0f4-a557-11df-8092-00144f01a414
-- abbreviation: 3291STDY
-  abstract: "Comprehensive analysis of AML genomes has revealed co-occurring mutations in DNA and\r\nhistone modifying enzymes suggesting their crucial role in tumourigenesis. To gain inside into\r\nthe role of those genes in AML we generated mouse models recapitulating mutations in part\r\nof the most frequent ones. We hypothesise that aberrant chromatin modification and\r\nunderlying effect on gene expression largely contribute to leukemogenesis. To test this\r\nhypothesis we propose to compare gene expression and DNA and histone modification in the\r\npresence or absence of single gene mutation in mouse hematopoietic stem and progenitor\r\ncompartment in a pre-leukaemia setting. Characterisation of these models will inform the\r\nbiology of AML, identify potential therapeutic targets and provide platforms for the\r\nassessment of novel therapeutics.\r\n"
-  accession_number: ERP006862
-  aligned: 1
-  array_express_accession_number: E-ERAD-322
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2014-09-04 14:13:42
-  data_access_group: ~
-  data_destination: ~
-  data_release_delay_period: 6 months
-  data_release_delay_reason: other
-  data_release_sort_of_study: transcriptomics
-  data_release_strategy: open
-  data_release_timing: delayed
-  deleted_at: ~
-  description: "Comprehensive analysis of AML genomes has revealed co-occurring mutations in DNA and\r\nhistone modifying enzymes suggesting their crucial role in tumourigenesis. To gain inside into\r\nthe role of those genes in AML we generated mouse models recapitulating mutations in part\r\nof the most frequent ones. We hypothesise that aberrant chromatin modification and\r\nunderlying effect on gene expression largely contribute to leukemogenesis. To test this\r\nhypothesis we propose to compare gene expression and DNA and histone modification in the\r\npresence or absence of single gene mutation in mouse hematopoietic stem and progenitor\r\ncompartment in a pre-leukaemia setting. Characterisation of these models will inform the\r\nbiology of AML, identify potential therapeutic targets and provide platforms for the\r\nassessment of novel therapeutics.\r\n\r\n\r\nThis data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/"
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: ~
-  ethically_approved: ~
-  faculty_sponsor: George Vassiliou
-  hmdmc_number: ~
-  id_lims: SQSCP
-  id_study_lims: 3291
-  id_study_tmp: 3258
-  last_updated: 2016-11-09 15:44:58
-  name: RNA sequencing of mouse haemopoietic cells 2014/15
-  prelim_id: ~
-  recorded_at: 2016-11-09 15:44:58
-  reference_genome: Mus_musculus (GRCm38 + ensembl_75_transcriptome)
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: 'RNA sequencing of mouse haemopoietic cells 2014/15[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
-  study_type: Cancer Genomics
-  study_visibility: Hold
-  uuid_study_lims: acd495a0-343d-11e4-aa9b-68b59976a382
-- abbreviation: pbsys
-  abstract: "In the past we have sequenced a variety of S.cerevisiae and S.paradoxus yeast strains with\r\nboth capillary and Illumina sequencing (Nature 2009) and used them for functional variation\r\ngenetics (Genome Research 2011, PLoS Genetics 2011, Genetics 2013). However most\r\nchromosomes and in particular sub-telomeric regions are still incompletely assembled.\r\nTherefore we have applied PacBio long-read sequencing to 10 natural strains of S. cerevisiae\r\nand S. paradoxus.\r\nYeast strains to sequenced:\r\nS. cereviaise\r\nSc. DBVPG6044 West African\r\nYPS128 North America\r\nDBVPG6765 Wine European\r\nY12 Sake\r\nUWOPS03.461.4 Malaysian\r\nSK1 Lab\r\nS. paradoxus\r\nYPS138 North Ameican\r\nZ1.1 Europe (Silwood Park)\r\nN44 Far Eastern Russia\r\nUWOPS91-917.1 Hawaii"
-  accession_number: ERP006949
-  aligned: 1
-  array_express_accession_number: ~
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2013-11-18 10:13:22
-  data_access_group: ~
-  data_destination: ~
-  data_release_delay_period: ~
-  data_release_delay_reason: ~
-  data_release_sort_of_study: genomic sequencing
-  data_release_strategy: open
-  data_release_timing: standard
-  deleted_at: ~
-  description: "In the past we have sequenced a variety of S.cerevisiae and S.paradoxus yeast strains with\r\nboth capillary and Illumina sequencing (Nature 2009) and used them for functional variation\r\ngenetics (Genome Research 2011, PLoS Genetics 2011, Genetics 2013). However most\r\nchromosomes and in particular sub-telomeric regions are still incompletely assembled.\r\nTherefore we have applied PacBio long-read sequencing to 10 natural strains of S. cerevisiae\r\nand S. paradoxus.\r\nYeast strains to sequenced:\r\nS. cereviaise\r\nSc. DBVPG6044 West African\r\nYPS128 North America\r\nDBVPG6765 Wine European\r\nY12 Sake\r\nUWOPS03.461.4 Malaysian\r\nSK1 Lab\r\nS. paradoxus\r\nYPS138 North Ameican\r\nZ1.1 Europe (Silwood Park)\r\nN44 Far Eastern Russia\r\nUWOPS91-917.1 Hawaii\r\nThis data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/"
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: 0
-  ethically_approved: ~
-  faculty_sponsor: Richard Durbin
-  hmdmc_number: ~
-  id_lims: SQSCP
-  id_study_lims: 2849
-  id_study_tmp: 2817
-  last_updated: 2016-05-12 16:14:32
-  name: 'Pac-Bio sequencing of yeast strains [pacbio_pbsys](pbsys)'
-  prelim_id: ~
-  recorded_at: 2016-05-12 16:14:32
-  reference_genome: Saccharomyces_cerevisiae (S288c_SGD2012)
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: PacBio sequencing of yeast strains
-  study_type: Whole Genome Sequencing
-  study_visibility: Hold
-  uuid_study_lims: 0dcb7650-503a-11e3-8a09-68b59976a382
-- abbreviation: 286STDY
-  abstract: Illumina sequencing of P. chabaudi chabaudi AS clone to aid de novo assembly and also to improve base accuracy.
-  accession_number: ERP000091
-  aligned: 1
-  array_express_accession_number: ~
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2009-04-02 15:58:24
-  data_access_group: ~
-  data_destination: ~
-  data_release_delay_period: ~
-  data_release_delay_reason: ~
-  data_release_sort_of_study: genomic sequencing
-  data_release_strategy: open
-  data_release_timing: standard
-  deleted_at: ~
-  description: 'The Wellcome Trust Sanger Institute Pathogen Genomics group is sequencing a number of different species of malaria parasites. As part of this project, the mouse malaria parasite P. chabaudi chabaudi AS is being sequenced to a high coverage with sequence reads from a combination of different sequencing technologies. P. chabaudi is an important model malaria parasite and sequencing the genome will not only provide a platform for comparative genomic studies to be performed but also provide the raw material for large scale gene knockout or knockdown studies to be performed in the future. Illumina sequencing reads are being used for improving the assembly and for accurate base calling.. This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/'
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: 0
-  ethically_approved: ~
-  faculty_sponsor: Matthew Berriman
-  hmdmc_number: ~
-  id_lims: SQSCP
-  id_study_lims: 286
-  id_study_tmp: 263
-  last_updated: 2016-05-12 16:09:45
-  name: Plasmodium chabaudi genome sequencing
-  prelim_id: ~
-  recorded_at: 2016-05-12 16:09:45
-  reference_genome: ' '
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: 'WGS of P. chabaudi chabaudi AS clone '
-  study_type: Whole Genome Sequencing
-  study_visibility: Public
-  uuid_study_lims: 2b677164-a557-11df-8092-00144f01a414
-- abbreviation: 198STDY
-  abstract: ~
-  accession_number: ~
-  aligned: 1
-  array_express_accession_number: ~
-  contains_human_dna: 0
-  contaminated_human_dna: 0
-  created: 2008-11-13 13:27:48
-  data_access_group: ~
-  data_destination: ~
-  data_release_delay_period: ~
-  data_release_delay_reason: ~
-  data_release_sort_of_study: genotyping or cytogenetics
-  data_release_strategy: open
-  data_release_timing: standard
-  deleted_at: ~
-  description: None
-  ega_dac_accession_number: ~
-  ega_policy_accession_number: ~
-  ena_project_id: ~
-  ethically_approved: ~
-  faculty_sponsor: None
-  hmdmc_number: ~
-  id_lims: SQSCP
-  id_study_lims: 198
-  id_study_tmp: 177
-  last_updated: 2016-05-12 16:09:29
-  name: Illumina Controls
-  prelim_id: ~
-  recorded_at: 2016-05-12 16:09:29
-  reference_genome: ' '
-  remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
-  state: active
-  study_title: ~
-  study_type: Resequencing
-  study_visibility: Hold
-  uuid_study_lims: 2aa1cd2e-a557-11df-8092-00144f01a414
 - abbreviation: 3565STDY
   abstract: "Multidrug resistance, strong side effects, and compliance problems in TB chemotherapy mandate new ways to kill Mycobacterium tuberculosis (Mtb). Here we show that deletion of the gene encoding homoserine transacetylase (metA) inactivates methionine and S-adenosylmethionine (SAM) biosynthesis in Mtb and renders this pathogen exquisitely sensitive to killing in immunocompetent or immunocompromised mice, leading to rapid clearance from host tissues. Mtb ?metA is unable to proliferate in primary human macrophages, and in vitro starvation leads to extraordinarily rapid killing with no appearance of suppressor mutants. Cell death of Mtb ?metA is faster than that of other auxotrophic mutants (i.e., tryptophan, pantothenate, leucine, biotin), suggesting a particularly potent mechanism of killing. Time-course metabolomics showed complete depletion of intracellular methionine and SAM. SAM depletion was consistent with a significant decrease in methylation at the DNA level (measured by single-molecule real-time sequencing) and with the induction of several essential methyltransferases involved in biotin and menaquinone biosynthesis, both of which are vital biological processes and validated targets of antimycobacterial drugs. Mtb ?metA could be partially rescued by biotin supplementation, confirming a multitarget cell death mechanism. The work presented here uncovers a previously unidentified vulnerability of Mtb-the incapacity to scavenge intermediates of SAM and methionine biosynthesis from the host. This vulnerability unveils an entirely new drug target space with the promise of rapid killing of the tubercle bacillus by a new mechanism of action.\r\nThis data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/about/who-we-are/policies/open-access-science \r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/bacteria/ "
   accession_number: ERP009820
@@ -616,6 +88,7 @@
   contaminated_human_dna: 0
   created: 2015-03-12 09:20:20
   data_access_group: ~
+  data_deletion_period: ~
   data_destination: ~
   data_release_delay_period: ~
   data_release_delay_reason: ~
@@ -633,27 +106,29 @@
   id_lims: SQSCP
   id_study_lims: 3565
   id_study_tmp: 3529
-  last_updated: 2016-06-08 07:01:20
+  last_updated: 2017-05-29 03:24:35
   name: I1939 Determining the methylome of Mycobacterium tuberculosis
   prelim_id: I1939
-  recorded_at: 2016-06-08 07:01:21
+  recorded_at: 2017-05-29 03:24:35
   reference_genome: Mycobacterium_tuberculosis (H37Rv)
   remove_x_and_autosomes: 0
+  s3_email_list: ~
   separate_y_chromosome_data: 0
   state: active
   study_title: Determining the methylome of Mycobacterium tuberculosis
   study_type: Whole Genome Sequencing
   study_visibility: Hold
   uuid_study_lims: 016e39f0-c899-11e4-9be6-68b59976a382
-- abbreviation: 3749STDY
-  abstract: 'RNAseq data was generated from zebrafish embryos at 80% epiboly, genotyped for tcf3a and tcf3b to identify wild type, '
-  accession_number: ERP011114
+- abbreviation: 3784STDY
+  abstract: To produce whole transcriptome datasets from human organoids stimulated with IL-22
+  accession_number: ERP024278
   aligned: 1
-  array_express_accession_number: E-ERAD-416
+  array_express_accession_number: E-ERAD-724
   contains_human_dna: 0
   contaminated_human_dna: 0
-  created: 2015-07-23 11:32:25
+  created: 2015-08-18 14:21:29
   data_access_group: ~
+  data_deletion_period: ~
   data_destination: ~
   data_release_delay_period: ~
   data_release_delay_reason: ~
@@ -661,28 +136,189 @@
   data_release_strategy: open
   data_release_timing: standard
   deleted_at: ~
-  description: "Total RNA was extracted from zebrafish embryos at 80% epiboly and genotyped for tcf3a and tcf3b to identify wild type, heterozygous and homozygous knockout embryos. The RNA was DNase treated.  Stranded RNAseq libraries were constructed using the Illumina TruSeq Stranded RNA protocol with oligo dT pulldown.\r\n\r\nThis data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/"
+  description: "To generate an RNA-Seq dataset for organoids stimulated with IL-22; Salmonella Typhimurium; IL-22 and Salmonella Typhimurium; and unstimulated.\r\nThese data are part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/\r\n"
   ega_dac_accession_number: ~
   ega_policy_accession_number: ~
   ena_project_id: ~
   ethically_approved: ~
-  faculty_sponsor: Derek Stemple
+  faculty_sponsor: Gordon Dougan
   hmdmc_number: ~
   id_lims: SQSCP
-  id_study_lims: 3749
-  id_study_tmp: 3722
-  last_updated: 2016-05-12 16:15:52
-  name: Transcriptome profiling of zebrafish tcf3a and tcf3b knockout embryos
-  prelim_id: ~
-  recorded_at: 2016-05-12 16:15:52
-  reference_genome: Danio_rerio (zv9)
+  id_study_lims: 3784
+  id_study_tmp: 3758
+  last_updated: 2017-08-07 20:46:15
+  name: I2134 Transcriptional response of Kolf2 intestinal organoids to IL-22 (GD)
+  prelim_id: I2134
+  recorded_at: 2017-08-07 20:46:15
+  reference_genome: Homo_sapiens (GRCh38_15)
   remove_x_and_autosomes: 0
-  separate_y_chromosome_data: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 1
   state: active
-  study_title: 'Transcriptome profiling of zebrafish tcf3a and tcf3b knockout embryos[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
+  study_title: 'Transcriptional response of Kolf2 intestinal organoids to IL-22[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
   study_type: Transcriptome Analysis
   study_visibility: Hold
-  uuid_study_lims: 7e285fe0-312e-11e5-b214-68b59976a382
+  uuid_study_lims: 6b316fe0-45b4-11e5-af59-68b59976a382
+- abbreviation: SC_LB_LCSeq
+  abstract: 'The Middle East is a key area for understanding the evolutionary history of humans, and one of the most complex. It is one of the possible centres of the expansion of modern humans outside Africa and an established source of subsequent expansions such as that during the Neolithic into Europe and possibly North Africa. It is also likely to have experienced many less-understood migrations in several directions relevant to the history of Africa, Asia and Europe. Yet the genomics of populations in this area have been little-studied. In the current project, we propose to investigate the genomics of a Lebanese sample. We chose Lebanon because its history in the last few thousand years is relatively well-understood. In addition, our previous studies on the Lebanese population suggest Lebanon could have been a refuge for the earliest indigenous populations in the region. In this project we plan to (1) genotype 120 Lebanese individuals analyzing 2.5M variants (2) 8x sequence 100 individuals and (3) 30x sequence 4 individuals. '
+  accession_number: EGAS00001002084
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 1
+  contaminated_human_dna: 0
+  created: 2014-03-04 15:17:20
+  data_access_group: lebanon
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: managed
+  data_release_timing: standard
+  deleted_at: ~
+  description: "we propose to investigate the genomics of a Lebanese sample. we plan (1) genotyping (2.5M) of 120 Lebanese individuals, choosing this platform to allow comparison with the 1000 Genomes and African Genome Variation project populations, (2) 8x sequencing of 100 individuals to provide unbiased population-level sequence information including allele frequencies, and (3) 30x sequencing of four individuals to allow inferences such as from PSMC/MSMC to be obtained. The current form is for the low-coverage sequencing.  \r\nThis data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/   "
+  ega_dac_accession_number: EGAC00001000205
+  ega_policy_accession_number: EGAP00001000210
+  ena_project_id: ~
+  ethically_approved: 1
+  faculty_sponsor: Chris Tyler-Smith
+  hmdmc_number: 13/010
+  id_lims: SQSCP
+  id_study_lims: 2967
+  id_study_tmp: 2934
+  last_updated: 2017-05-11 12:32:28
+  name: SEQCAP_Lebanon_LowCov-seq
+  prelim_id: ~
+  recorded_at: 2017-05-11 12:33:09
+  reference_genome: Homo_sapiens (1000Genomes_hs37d5)
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: 'Lebanon_LowCov-seq[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
+  study_type: Whole Genome Sequencing
+  study_visibility: Hold
+  uuid_study_lims: 146f0ac0-a3b0-11e3-b2a7-68b59976a382
+- abbreviation: 3291STDY
+  abstract: "Comprehensive analysis of AML genomes has revealed co-occurring mutations in DNA and\r\nhistone modifying enzymes suggesting their crucial role in tumourigenesis. To gain inside into\r\nthe role of those genes in AML we generated mouse models recapitulating mutations in part\r\nof the most frequent ones. We hypothesise that aberrant chromatin modification and\r\nunderlying effect on gene expression largely contribute to leukemogenesis. To test this\r\nhypothesis we propose to compare gene expression and DNA and histone modification in the\r\npresence or absence of single gene mutation in mouse hematopoietic stem and progenitor\r\ncompartment in a pre-leukaemia setting. Characterisation of these models will inform the\r\nbiology of AML, identify potential therapeutic targets and provide platforms for the\r\nassessment of novel therapeutics.\r\n"
+  accession_number: ERP006862
+  aligned: 1
+  array_express_accession_number: E-ERAD-322
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2014-09-04 14:13:42
+  data_access_group: cancer team163
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: 6 months
+  data_release_delay_reason: other
+  data_release_sort_of_study: transcriptomics
+  data_release_strategy: open
+  data_release_timing: delayed
+  deleted_at: ~
+  description: "Comprehensive analysis of AML genomes has revealed co-occurring mutations in DNA and\r\nhistone modifying enzymes suggesting their crucial role in tumourigenesis. To gain inside into\r\nthe role of those genes in AML we generated mouse models recapitulating mutations in part\r\nof the most frequent ones. We hypothesise that aberrant chromatin modification and\r\nunderlying effect on gene expression largely contribute to leukemogenesis. To test this\r\nhypothesis we propose to compare gene expression and DNA and histone modification in the\r\npresence or absence of single gene mutation in mouse hematopoietic stem and progenitor\r\ncompartment in a pre-leukaemia setting. Characterisation of these models will inform the\r\nbiology of AML, identify potential therapeutic targets and provide platforms for the\r\nassessment of novel therapeutics.\r\n\r\n\r\nThis data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/"
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: ~
+  ethically_approved: ~
+  faculty_sponsor: George Vassiliou
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 3291
+  id_study_tmp: 3258
+  last_updated: 2017-08-22 11:05:14
+  name: RNA sequencing of mouse haemopoietic cells 2014/15
+  prelim_id: ~
+  recorded_at: 2017-08-22 11:05:14
+  reference_genome: Mus_musculus (GRCm38 + ensembl_75_transcriptome)
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: 'RNA sequencing of mouse haemopoietic cells 2014/15[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
+  study_type: Cancer Genomics
+  study_visibility: Hold
+  uuid_study_lims: acd495a0-343d-11e4-aa9b-68b59976a382
+- abbreviation: 3012STDY
+  abstract: http://www.sanger.ac.uk/resources/downloads/bacteria/nctc/
+  accession_number: ERP005928
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2014-03-19 13:19:46
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: http://www.sanger.ac.uk/resources/downloads/bacteria/nctc/
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: 0
+  ethically_approved: ~
+  faculty_sponsor: Julian Parkhill
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 3012
+  id_study_tmp: 2979
+  last_updated: 2017-08-10 15:44:51
+  name: NCTC 3000
+  prelim_id: ~
+  recorded_at: 2017-08-10 15:44:52
+  reference_genome: Not suitable for alignment
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: NCTC 3000
+  study_type: Whole Genome Sequencing
+  study_visibility: Public
+  uuid_study_lims: 241268e0-af69-11e3-aa25-68b59976a382
+- abbreviation: 4944STDY
+  abstract: Test study for the GridION
+  accession_number: ~
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2017-09-06 07:44:12
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: not applicable
+  data_release_timing: never
+  deleted_at: ~
+  description: Test study for the GridION
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: 0
+  ethically_approved: ~
+  faculty_sponsor: None
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 4944
+  id_study_tmp: 4840
+  last_updated: 2017-09-06 08:59:34
+  name: GridION test study
+  prelim_id: ~
+  recorded_at: 2017-09-06 08:59:34
+  reference_genome: Lambda (NEB3011)
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: GridION test study
+  study_type: Cancer Genomics
+  study_visibility: Hold
+  uuid_study_lims: 2ccfe00c-92d7-11e7-87e5-68b59976a384
 - abbreviation: 3606STDY
   abstract: 'We propose to sequence 35 Tibetan samples to provide a comparative dataset for a project examining Himalayan samples (I1911). Tibetans have been studied in several ways such as their adaptations to high altitude life, although not, thus far, at the genome sequence level. We chose this number of individuals because similar numbers will be sequenced from many African, European and HGDP populations, and thus the Tibetan data can also be included in many other analyses.'
   accession_number: ERP010096
@@ -692,6 +328,7 @@
   contaminated_human_dna: 0
   created: 2015-04-03 21:11:54
   data_access_group: ~
+  data_deletion_period: ~
   data_destination: ~
   data_release_delay_period: ~
   data_release_delay_reason: ~
@@ -709,18 +346,99 @@
   id_lims: SQSCP
   id_study_lims: 3606
   id_study_tmp: 3570
-  last_updated: 2016-05-12 16:15:39
+  last_updated: 2017-05-11 12:33:24
   name: IHTP_MWGS T19_Tibet
   prelim_id: ~
-  recorded_at: 2016-05-12 16:15:39
+  recorded_at: 2017-05-11 12:33:49
   reference_genome: Homo_sapiens (GRCh38_full_analysis_set_plus_decoy_hla)
   remove_x_and_autosomes: 0
+  s3_email_list: ~
   separate_y_chromosome_data: 0
   state: active
   study_title: 'T19 Tibet[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
   study_type: Whole Genome Sequencing
   study_visibility: Public
   uuid_study_lims: 0e3c3470-da46-11e4-808c-68b59976a382
+- abbreviation: 2690STDY
+  abstract: http://www.sanger.ac.uk/resources/downloads/bacteria/streptococcus-pneumoniae.html
+  accession_number: ERP003770
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2013-07-02 10:43:37
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: "http://www.sanger.ac.uk/resources/downloads/bacteria/streptococcus-pneumoniae.html\r\nThese data are part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/\r\n"
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: ~
+  ethically_approved: ~
+  faculty_sponsor: Julian Parkhill
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 2690
+  id_study_tmp: 2658
+  last_updated: 2017-05-11 12:32:06
+  name: ILB 1142 Discovery of natural pneumococcal mutation rates during controlled colonisation of the human nasopharynx (JP)
+  prelim_id: ~
+  recorded_at: 2017-05-11 12:32:06
+  reference_genome: Streptococcus_pneumoniae (ATCC_700669)
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: Discovery of natural pneumococcal mutation rates during controlled colonisation of the human nasopharynx
+  study_type: Whole Genome Sequencing
+  study_visibility: Hold
+  uuid_study_lims: 4059fdb0-e304-11e2-b233-68b59976a382
+- abbreviation: 425STDY
+  abstract: "Very little is known about genome diversity of herpesviruses and there are currently very few genome sequences in Genbank. Whole genome sequencing of large DNA viruses is complicated by the difficulty in separating virus DNA from human DNA. In this project we will address this issue by using Agilent SureSelect technology and Illumina deep sequencing to sequence several members of the herpesvirus family, including Epstein Barr virus (EBV, HHV4), Kaposiâ€™s sarcoma associated herpesvirus (KSHV, HHV8) and varicella zoster virus (VZV, HHV3). We have designed custom baits to the available reference sequences and will use these to pull out virus sequence from host DNA and then Illumina sequence the captured virus DNA. The short read data will be assembled into a genome consensus sequence for each virus and importantly, allow analysis of virus minority species, which may be important for pathogenesis.\r\n\r\nWe will use a range of samples including DNA from cell lines latently infected with either EBV or KSHV or both viruses. These data will enable an initial estimation of genome diversity and highlight differences at the genetic level between EBV and KSHV from different cell lines. Further studies will generate herpesvirus genome sequences from clinical samples, including varicella, Kaposiâ€™s sarcoma and nasopharyngeal carcinoma to investigate virus genetic diversity and pathogenic determinants.\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-lymphocryptovirus.html\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-rhadinovirus.html\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-simplexvirus.html\r\n"
+  accession_number: ERP001026
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 1
+  contaminated_human_dna: 1
+  created: 2010-01-08 15:13:47
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: 3 months
+  data_release_delay_reason: other
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: open
+  data_release_timing: delayed
+  deleted_at: ~
+  description: "This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/\r\n\r\nThis project aims to generate full genome sequences for several members of the human herpesvirus family, including Epstein Barr virus (EBV, HHV4), Kaposiâ€™s sarcoma associated herpesvirus (KSHV, HHV8) and varicella zoster virus (VZV, HHV3). We have designed a new custom pulldown protocol to separate virus DNA from human DNA prior to sequencing and this method will be tested on a range of samples. Virus genome diversity will then be examined by sequencing the virus genome from a large number of different samples.\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-lymphocryptovirus.html\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-rhadinovirus.html\r\n\r\nhttp://www.sanger.ac.uk/resources/downloads/viruses/herpesviridae-simplexvirus.html\r\n"
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: 0
+  ethically_approved: ~
+  faculty_sponsor: Paul Kellam
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 425
+  id_study_tmp: 400
+  last_updated: 2017-05-11 12:30:02
+  name: Virus Genome Herpesvirus
+  prelim_id: ~
+  recorded_at: 2017-05-11 12:30:02
+  reference_genome: Human_herpesvirus_4 (Wild_type)
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: 'Herpesvirus whole genome sequencing[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
+  study_type: Whole Genome Sequencing
+  study_visibility: Hold
+  uuid_study_lims: 2c847286-a557-11df-8092-00144f01a414
 - abbreviation: 2572STDY
   abstract: 'For information on this project, contributing investigators and studies, sample details, and data sharing policies please visit http://www.malariagen.net/node/287'
   accession_number: ERP002372
@@ -730,6 +448,7 @@
   contaminated_human_dna: 0
   created: 2013-03-19 15:19:11
   data_access_group: ~
+  data_deletion_period: ~
   data_destination: ~
   data_release_delay_period: ~
   data_release_delay_reason: ~
@@ -747,15 +466,456 @@
   id_lims: SQSCP
   id_study_lims: 2572
   id_study_tmp: 2541
-  last_updated: 2016-05-19 15:22:54
+  last_updated: 2017-05-11 12:31:58
   name: Ag 1000g
   prelim_id: ~
-  recorded_at: 2016-05-19 15:22:54
+  recorded_at: 2017-05-11 12:31:58
   reference_genome: Anopheles_gambiae (PEST)
   remove_x_and_autosomes: 0
+  s3_email_list: ~
   separate_y_chromosome_data: 0
   state: active
   study_title: Anopheles Genome Variation Project
   study_type: Whole Genome Sequencing
   study_visibility: Hold
   uuid_study_lims: 5a4df4a0-90a8-11e2-b5c0-68b59976a382
+- abbreviation: 1864STDY
+  abstract: Illumina sequencing of various Plasmodium species for de novo assembly and comparative genomics
+  accession_number: ERP000730
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2011-06-14 10:14:37
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: 'llumina sequencing of various Plasmodium species is being carried out for de novo assembly and comparative genomics. This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/'
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: ~
+  ethically_approved: ~
+  faculty_sponsor: Matthew Berriman
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 1864
+  id_study_tmp: 1838
+  last_updated: 2017-09-06 12:29:37
+  name: Plasmodium species genome sequencing
+  prelim_id: ~
+  recorded_at: 2017-09-06 12:29:38
+  reference_genome: Plasmodium_falciparum (3D7_Oct11v3)
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: Genome sequencing of Plasmodium species
+  study_type: Whole Genome Sequencing
+  study_visibility: Hold
+  uuid_study_lims: 1beadfe6-966f-11e0-b43a-00144f206e2e
+- abbreviation: 286STDY
+  abstract: Illumina sequencing of P. chabaudi chabaudi AS clone to aid de novo assembly and also to improve base accuracy.
+  accession_number: ERP000091
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2009-04-02 15:58:24
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: 'The Wellcome Trust Sanger Institute Pathogen Genomics group is sequencing a number of different species of malaria parasites. As part of this project, the mouse malaria parasite P. chabaudi chabaudi AS is being sequenced to a high coverage with sequence reads from a combination of different sequencing technologies. P. chabaudi is an important model malaria parasite and sequencing the genome will not only provide a platform for comparative genomic studies to be performed but also provide the raw material for large scale gene knockout or knockdown studies to be performed in the future. Illumina sequencing reads are being used for improving the assembly and for accurate base calling.. This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/'
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: 0
+  ethically_approved: ~
+  faculty_sponsor: Matthew Berriman
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 286
+  id_study_tmp: 263
+  last_updated: 2017-05-11 12:29:48
+  name: Plasmodium chabaudi genome sequencing
+  prelim_id: ~
+  recorded_at: 2017-05-11 12:29:48
+  reference_genome: ' '
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: 'WGS of P. chabaudi chabaudi AS clone '
+  study_type: Whole Genome Sequencing
+  study_visibility: Public
+  uuid_study_lims: 2b677164-a557-11df-8092-00144f01a414
+- abbreviation: 3745STDY
+  abstract: RNA-seq study on stably transfected cell lines
+  accession_number: ERP011057
+  aligned: 1
+  array_express_accession_number: E-ERAD-414
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2015-07-16 15:28:11
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: transcriptomics
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: "RNA-seq study on stably transfected cell lines\r\nThese data are part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/"
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: ~
+  ethically_approved: ~
+  faculty_sponsor: Paul Kellam
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 3745
+  id_study_tmp: 3718
+  last_updated: 2017-05-11 12:33:35
+  name: RNASeq stable cell lines (PK)
+  prelim_id: ~
+  recorded_at: 2017-05-11 12:34:01
+  reference_genome: ' '
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: 'RNASeq stable cell lines[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
+  study_type: Transcriptome Analysis
+  study_visibility: Hold
+  uuid_study_lims: 44a66b90-2bcf-11e5-a6a1-68b59976a382
+- abbreviation: 4616STDY
+  abstract: 'Part of the Vertebrate Genome Project, fish study.'
+  accession_number: ERP021269
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2017-02-01 15:05:55
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: "Part of the Vertebrate Genome Project, fish study.\r\nThis data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/"
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: 0
+  ethically_approved: ~
+  faculty_sponsor: Richard Durbin
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 4616
+  id_study_tmp: 4559
+  last_updated: 2017-09-18 14:09:10
+  name: Vertebrate Genome Project_FISH
+  prelim_id: ~
+  recorded_at: 2017-09-18 14:09:10
+  reference_genome: ' '
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: Vertebrate Genome Project_FISH
+  study_type: Whole Genome Sequencing
+  study_visibility: Hold
+  uuid_study_lims: ee63e3f0-e88f-11e6-9a95-68b59976a384
+- abbreviation: 3749STDY
+  abstract: 'RNAseq data was generated from zebrafish embryos at 80% epiboly, genotyped for tcf3a and tcf3b to identify wild type, '
+  accession_number: ERP011114
+  aligned: 1
+  array_express_accession_number: E-ERAD-416
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2015-07-23 11:32:25
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: transcriptomics
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: "Total RNA was extracted from zebrafish embryos at 80% epiboly and genotyped for tcf3a and tcf3b to identify wild type, heterozygous and homozygous knockout embryos. The RNA was DNase treated.  Stranded RNAseq libraries were constructed using the Illumina TruSeq Stranded RNA protocol with oligo dT pulldown.\r\n\r\nThis data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/"
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: ~
+  ethically_approved: ~
+  faculty_sponsor: Derek Stemple
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 3749
+  id_study_tmp: 3722
+  last_updated: 2017-05-11 12:33:35
+  name: Transcriptome profiling of zebrafish tcf3a and tcf3b knockout embryos
+  prelim_id: ~
+  recorded_at: 2017-05-11 12:34:01
+  reference_genome: Danio_rerio (zv9)
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: 'Transcriptome profiling of zebrafish tcf3a and tcf3b knockout embryos[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
+  study_type: Transcriptome Analysis
+  study_visibility: Hold
+  uuid_study_lims: 7e285fe0-312e-11e5-b214-68b59976a382
+- abbreviation: 619STDY
+  abstract: For further information on this study please see http://www.sanger.ac.uk/resources/downloads/bacteria/burkholderia-pseudomallei.html
+  accession_number: ERP000251
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2010-06-25 11:19:52
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: 'For further information on this study please see http://www.sanger.ac.uk/resources/downloads/bacteria/burkholderia-pseudomallei.html This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/'
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: 0
+  ethically_approved: ~
+  faculty_sponsor: Julian Parkhill
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 619
+  id_study_tmp: 594
+  last_updated: 2017-05-11 12:30:19
+  name: Burkholderia pseudomallei diversity
+  prelim_id: ~
+  recorded_at: 2017-05-11 12:30:21
+  reference_genome: ' '
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: 'Burkholderia pseudomallei diversity[UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
+  study_type: Whole Genome Sequencing
+  study_visibility: Hold
+  uuid_study_lims: 2e5202a4-a557-11df-8092-00144f01a414
+- abbreviation: pbsys
+  abstract: "In the past we have sequenced a variety of S.cerevisiae and S.paradoxus yeast strains with\r\nboth capillary and Illumina sequencing (Nature 2009) and used them for functional variation\r\ngenetics (Genome Research 2011, PLoS Genetics 2011, Genetics 2013). However most\r\nchromosomes and in particular sub-telomeric regions are still incompletely assembled.\r\nTherefore we have applied PacBio long-read sequencing to 10 natural strains of S. cerevisiae\r\nand S. paradoxus.\r\nYeast strains to sequenced:\r\nS. cereviaise\r\nSc. DBVPG6044 West African\r\nYPS128 North America\r\nDBVPG6765 Wine European\r\nY12 Sake\r\nUWOPS03.461.4 Malaysian\r\nSK1 Lab\r\nS. paradoxus\r\nYPS138 North Ameican\r\nZ1.1 Europe (Silwood Park)\r\nN44 Far Eastern Russia\r\nUWOPS91-917.1 Hawaii"
+  accession_number: ERP006949
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2013-11-18 10:13:22
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: "In the past we have sequenced a variety of S.cerevisiae and S.paradoxus yeast strains with\r\nboth capillary and Illumina sequencing (Nature 2009) and used them for functional variation\r\ngenetics (Genome Research 2011, PLoS Genetics 2011, Genetics 2013). However most\r\nchromosomes and in particular sub-telomeric regions are still incompletely assembled.\r\nTherefore we have applied PacBio long-read sequencing to 10 natural strains of S. cerevisiae\r\nand S. paradoxus.\r\nYeast strains to sequenced:\r\nS. cereviaise\r\nSc. DBVPG6044 West African\r\nYPS128 North America\r\nDBVPG6765 Wine European\r\nY12 Sake\r\nUWOPS03.461.4 Malaysian\r\nSK1 Lab\r\nS. paradoxus\r\nYPS138 North Ameican\r\nZ1.1 Europe (Silwood Park)\r\nN44 Far Eastern Russia\r\nUWOPS91-917.1 Hawaii\r\nThis data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/"
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: 0
+  ethically_approved: ~
+  faculty_sponsor: Richard Durbin
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 2849
+  id_study_tmp: 2817
+  last_updated: 2017-05-11 12:32:19
+  name: 'Pac-Bio sequencing of yeast strains [pacbio_pbsys](pbsys)'
+  prelim_id: ~
+  recorded_at: 2017-05-11 12:32:19
+  reference_genome: Saccharomyces_cerevisiae (S288c_SGD2012)
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: PacBio sequencing of yeast strains
+  study_type: Whole Genome Sequencing
+  study_visibility: Hold
+  uuid_study_lims: 0dcb7650-503a-11e3-8a09-68b59976a382
+- abbreviation: 315STDY
+  abstract: Pair-end sequencing has been generated from whole genomic DNA from a range of Leishmania species. This data is used to improve the sequence and assembly of Leishmania reference genomes and to examine heterozygosities and interstrain variation between genes that may account for differences in disease phenotypes.
+  accession_number: ERP000169
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2009-05-28 13:55:35
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: 'Leishmania is an intracellular protistan parasite affecting macrophages and dendritic cells. Leishmania infections result in a wide range of symptoms in human hosts depending on the species or strain involved. Several whole genome sequences currently exist for Leishmania species. To correct sequencing and assembly errors and examine interstrain variation pair-end sequencing runs were performed with 76 base pair reads on the Illumina genome analyzer.. This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/'
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: 0
+  ethically_approved: ~
+  faculty_sponsor: Matthew Berriman
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 315
+  id_study_tmp: 291
+  last_updated: 2017-05-11 12:29:51
+  name: Leishmania species
+  prelim_id: ~
+  recorded_at: 2017-05-11 12:29:52
+  reference_genome: ' '
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: Leishmania species
+  study_type: Whole Genome Sequencing
+  study_visibility: Hold
+  uuid_study_lims: 2b9148ea-a557-11df-8092-00144f01a414
+- abbreviation: 198STDY
+  abstract: ~
+  accession_number: ~
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2008-11-13 13:27:48
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: genotyping or cytogenetics
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: None
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: ~
+  ethically_approved: ~
+  faculty_sponsor: None
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 198
+  id_study_tmp: 177
+  last_updated: 2017-05-11 12:29:38
+  name: Illumina Controls
+  prelim_id: ~
+  recorded_at: 2017-05-11 12:29:38
+  reference_genome: ' '
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: ~
+  study_type: Resequencing
+  study_visibility: Hold
+  uuid_study_lims: 2aa1cd2e-a557-11df-8092-00144f01a414
+- abbreviation: cichlid_pacbio
+  abstract: 'High-coverage ~50x PacBio sequencing of the Lake Malawi cichlid Astatotilapia calliptera, used for de-novo genome assembly using a hybrid PacBio-Illumina approach together with Illumina data under paired-end accessions: ERX276680, ERX276698, ERX276707, ERX276716, ERX276725, ERX276734, ERX276743, ERX288375 and 1.5kb mate-pair accession: ERX267990.'
+  accession_number: ERP022155
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2015-11-17 15:04:35
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: open
+  data_release_timing: standard
+  deleted_at: ~
+  description: "Genome assembly in vertebrates is still very difficult, mainly due to the typically large repeat content. Consequently, genome assemblies based purely on Illumina short reads tend to be highly fragmented and/or contain large gaps. Recently, PacBio long reads have been used successfully by a number of genome projects to span across the repetitive regions and provide highly contiguous assemblies.   Milan Malinsky has generated three Illumina assemblies of cichlid genomes, using a trio assembly approach he developed during his PhD with Richard Durbin. Here we are proposing to obtain long PacBio reads to: a) greatly improve one of the cichlid assemblies (A. calliptera) for use in ongoing population genomics research; b) build up informatics expertise in the rapidly expanding field of PacBio genome assembly.\r\nThis data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute please see http://www.sanger.ac.uk/datasharing/"
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: 0
+  ethically_approved: ~
+  faculty_sponsor: Richard Durbin
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 3993
+  id_study_tmp: 3970
+  last_updated: 2017-05-11 12:33:54
+  name: '[Cichlid PacBio assembly] PacBio improvement of A. calliptera cichlid genome assembly [pacbio_cichlid](cichlid)'
+  prelim_id: I2243
+  recorded_at: 2017-05-11 12:34:15
+  reference_genome: ' '
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: '[Cichlid PacBio assembly] PacBio improvement of A. calliptera cichlid genome assembly'
+  study_type: Whole Genome Sequencing
+  study_visibility: Hold
+  uuid_study_lims: 83f93650-8d3c-11e5-8c38-68b59976a382
+- abbreviation: 2905STDY
+  abstract: 'AML is an unmet medical need and therapeutic progress will not be made without a greater understanding of this heterogeneous disease. The largest subgroup of AML patients lack a cytogenetic abnormality (AML with normal Karyotype, AML-NK). For this reason, the biology of this subtype have been historically poorly understood. Recently, next generation sequencing efforts in AML-NK genomes has described a number of recurrent abnormalities. In parallel, mouse models have dramatically improved our understanding of disease and due to the great similarities between mouse and human haematopoiesis, have been particularly informative for leukaemia. We aim to model 4 of the most frequent AML-NK mutations using sophisticated mouse models. We will assess the preleukaemic/leukaemic cellular characteristics of these models, particularly their effects on the homeostasis of the haematopoietic stem and progenitor cell (HSPC) compartment. We will also perform integrated genomic analysis to link the mutations and their altered cellular phenotype to aberrant epigenetic control and pre/leukaemic gene expression programmes.     '
+  accession_number: ERP004563
+  aligned: 1
+  array_express_accession_number: ~
+  contains_human_dna: 0
+  contaminated_human_dna: 0
+  created: 2014-01-10 09:16:27
+  data_access_group: ~
+  data_deletion_period: ~
+  data_destination: ~
+  data_release_delay_period: 6 months
+  data_release_delay_reason: other
+  data_release_sort_of_study: genomic sequencing
+  data_release_strategy: open
+  data_release_timing: delayed
+  deleted_at: ~
+  description: "This data is part of a pre-publication release. For information on the proper use of pre-publication data shared by the Wellcome Trust Sanger Institute (including details of any publication moratoria), please see http://www.sanger.ac.uk/datasharing/\r\n\r\n"
+  ega_dac_accession_number: ~
+  ega_policy_accession_number: ~
+  ena_project_id: ~
+  ethically_approved: ~
+  faculty_sponsor: George Vassiliou
+  hmdmc_number: ~
+  id_lims: SQSCP
+  id_study_lims: 2905
+  id_study_tmp: 2872
+  last_updated: 2017-05-11 12:32:23
+  name: Analysis of the chromatin state of mouse stem and progenitor cell compartment
+  prelim_id: ~
+  recorded_at: 2017-05-11 12:33:05
+  reference_genome: Mus_musculus (GRCm38)
+  remove_x_and_autosomes: 0
+  s3_email_list: ~
+  separate_y_chromosome_data: 0
+  state: active
+  study_title: 'Analysis of the chromatin state of mouse stem and progenitor cell compartment      [UTF-8 test: Τὴ γλῶσσα μοῦ ἔδωσαν ἑλληνικὴ το σπίτι φτωχικό στις αμμουδιές του Ομήρου.]'
+  study_type: Cancer Genomics
+  study_visibility: Hold
+  uuid_study_lims: e29286f0-79d7-11e3-876e-68b59976a382
