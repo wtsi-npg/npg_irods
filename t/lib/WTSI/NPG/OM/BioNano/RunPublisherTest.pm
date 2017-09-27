@@ -7,7 +7,7 @@ use URI;
 
 use base qw[WTSI::NPG::HTS::Test]; # FIXME better path for shared base
 
-use Test::More tests => 17;
+use Test::More;
 use Test::Exception;
 
 use English qw[-no_match_vars];
@@ -15,8 +15,6 @@ use File::Spec::Functions;
 use File::Temp qw[tempdir];
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
-
-BEGIN { use_ok('WTSI::NPG::OM::BioNano::RunPublisher'); }
 
 use WTSI::NPG::iRODS;
 use WTSI::NPG::OM::BioNano::RunPublisher;
@@ -59,10 +57,10 @@ sub teardown : Test(teardown) {
 sub publish : Test(2) {
     my $irods = WTSI::NPG::iRODS->new();
     my $publication_time = DateTime->now;
-    my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new(
-        directory => $test_run_path,
-        publication_time => $publication_time,
-    );
+    my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new
+      (directory        => $test_run_path,
+       irods            => $irods,
+       publication_time => $publication_time);
     ok($publisher, "BioNano RunPublisher object created");
 
     my $run_collection;
@@ -83,9 +81,9 @@ sub metadata : Test(4) {
     );
     my $user_name = getpwuid $REAL_USER_ID;
     my $affiliation_uri = URI->new('http://www.sanger.ac.uk');
-    my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new(
-        directory => $test_run_path
-    );
+    my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new
+      (directory => $test_run_path,
+       irods     => $irods);
     my $bionano_coll = $publisher->publish($irods_tmp_coll,
                                            $publication_time);
     my @collection_meta = $irods->get_collection_meta($bionano_coll);
@@ -196,6 +194,5 @@ sub script : Test(10) {
     ok($irods->is_object($expected_bnx),
        "Script publishes expected filtered BNX file");
 }
-
 
 1;

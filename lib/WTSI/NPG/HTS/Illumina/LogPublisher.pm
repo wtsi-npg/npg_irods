@@ -112,7 +112,7 @@ sub publish_logs {
 
   my $publisher = WTSI::NPG::iRODS::Publisher->new(irods => $self->irods);
   my $dest = $publisher->publish($tarpath, catfile($self->dest_collection,
-                                                   $self->tarfile));
+                                                   $self->tarfile))->str;
   my $obj = WTSI::NPG::HTS::DataObject->new($self->irods, $dest);
 
   my @primary_avus = $self->make_avu($ID_RUN, $self->id_run);

@@ -155,8 +155,7 @@ sub publish_file_batch {
         $self->logconfess("Failed to parse and make an object from '$path'");
       }
 
-      $dest = $obj->str;
-      $dest = $publisher->publish($file, $dest);
+      $dest = $publisher->publish($file, $obj->str)->str;
 
       my @primary_avus = $primary_avus_callback->($obj);
       my ($num_pattr, $num_pproc, $num_perr) =
