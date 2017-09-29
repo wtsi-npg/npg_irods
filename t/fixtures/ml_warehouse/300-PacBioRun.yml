@@ -6,6 +6,7 @@
   id_sample_tmp: 2546241
   id_study_tmp: 2541
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT759603V
   pac_bio_library_tube_legacy_id: 15977171
   pac_bio_library_tube_name: DN434306G-A1
@@ -27,6 +28,7 @@
   id_sample_tmp: 2546242
   id_study_tmp: 2541
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT759604W
   pac_bio_library_tube_legacy_id: 15977172
   pac_bio_library_tube_name: DN434306G-B1
@@ -48,6 +50,7 @@
   id_sample_tmp: 2538162
   id_study_tmp: 2658
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT758272S
   pac_bio_library_tube_legacy_id: 15958888
   pac_bio_library_tube_name: DN434137H-A1
@@ -69,6 +72,7 @@
   id_sample_tmp: 2550516
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT758946O
   pac_bio_library_tube_legacy_id: 15976081
   pac_bio_library_tube_name: DN434932D-A2
@@ -90,6 +94,7 @@
   id_sample_tmp: 2550517
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT758947P
   pac_bio_library_tube_legacy_id: 15976082
   pac_bio_library_tube_name: DN434932D-B2
@@ -111,6 +116,7 @@
   id_sample_tmp: 2550518
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT758948Q
   pac_bio_library_tube_legacy_id: 15976083
   pac_bio_library_tube_name: DN434932D-C2
@@ -132,6 +138,7 @@
   id_sample_tmp: 2550519
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT758949R
   pac_bio_library_tube_legacy_id: 15976084
   pac_bio_library_tube_name: DN434932D-D2
@@ -153,6 +160,7 @@
   id_sample_tmp: 1991865
   id_study_tmp: 351
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT447149M
   pac_bio_library_tube_legacy_id: 11651816
   pac_bio_library_tube_name: DN362988U-A1
@@ -174,6 +182,7 @@
   id_sample_tmp: 2085346
   id_study_tmp: 263
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540295W
   pac_bio_library_tube_legacy_id: 11800135
   pac_bio_library_tube_name: DN365397P-A1
@@ -195,6 +204,7 @@
   id_sample_tmp: 2085346
   id_study_tmp: 263
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540295W
   pac_bio_library_tube_legacy_id: 11800135
   pac_bio_library_tube_name: DN365397P-A1
@@ -216,6 +226,7 @@
   id_sample_tmp: 2030286
   id_study_tmp: 291
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540288A
   pac_bio_library_tube_legacy_id: 11799643
   pac_bio_library_tube_name: DN361557U-A1
@@ -237,6 +248,7 @@
   id_sample_tmp: 2030286
   id_study_tmp: 291
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540288A
   pac_bio_library_tube_legacy_id: 11799643
   pac_bio_library_tube_name: DN361557U-A1
@@ -258,6 +270,7 @@
   id_sample_tmp: 2030286
   id_study_tmp: 291
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540288A
   pac_bio_library_tube_legacy_id: 11799643
   pac_bio_library_tube_name: DN361557U-A1
@@ -279,6 +292,7 @@
   id_sample_tmp: 2030850
   id_study_tmp: 1838
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540293U
   pac_bio_library_tube_legacy_id: 11799745
   pac_bio_library_tube_name: DN362987T-A1
@@ -300,6 +314,7 @@
   id_sample_tmp: 2030850
   id_study_tmp: 1838
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540293U
   pac_bio_library_tube_legacy_id: 11799745
   pac_bio_library_tube_name: DN362987T-A1
@@ -321,6 +336,7 @@
   id_sample_tmp: 2030850
   id_study_tmp: 1838
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540293U
   pac_bio_library_tube_legacy_id: 11799745
   pac_bio_library_tube_name: DN362987T-A1
@@ -342,6 +358,7 @@
   id_sample_tmp: 2030850
   id_study_tmp: 1838
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540293U
   pac_bio_library_tube_legacy_id: 11799745
   pac_bio_library_tube_name: DN362987T-A1
@@ -363,6 +380,7 @@
   id_sample_tmp: 2030850
   id_study_tmp: 1838
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540293U
   pac_bio_library_tube_legacy_id: 11799745
   pac_bio_library_tube_name: DN362987T-A1
@@ -384,6 +402,7 @@
   id_sample_tmp: 2030850
   id_study_tmp: 1838
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540293U
   pac_bio_library_tube_legacy_id: 11799745
   pac_bio_library_tube_name: DN362987T-A1
@@ -405,6 +424,7 @@
   id_sample_tmp: 2030850
   id_study_tmp: 1838
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540293U
   pac_bio_library_tube_legacy_id: 11799745
   pac_bio_library_tube_name: DN362987T-A1
@@ -426,6 +446,7 @@
   id_sample_tmp: 2030850
   id_study_tmp: 1838
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540293U
   pac_bio_library_tube_legacy_id: 11799745
   pac_bio_library_tube_name: DN362987T-A1
@@ -447,6 +468,7 @@
   id_sample_tmp: 2030850
   id_study_tmp: 1838
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540293U
   pac_bio_library_tube_legacy_id: 11799745
   pac_bio_library_tube_name: DN362987T-A1
@@ -468,6 +490,7 @@
   id_sample_tmp: 2030850
   id_study_tmp: 1838
   last_updated: 2016-03-31 14:19:44
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540293U
   pac_bio_library_tube_legacy_id: 11799745
   pac_bio_library_tube_name: DN362987T-A1
@@ -489,6 +512,7 @@
   id_sample_tmp: 1751257
   id_study_tmp: 2817
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT365899Q
   pac_bio_library_tube_legacy_id: 9445461
   pac_bio_library_tube_name: DN323980T-B1
@@ -510,6 +534,7 @@
   id_sample_tmp: 2307088
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT661823V
   pac_bio_library_tube_legacy_id: 14427602
   pac_bio_library_tube_name: DN407857G-E1
@@ -531,6 +556,7 @@
   id_sample_tmp: 2307089
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT661824W
   pac_bio_library_tube_legacy_id: 14427603
   pac_bio_library_tube_name: DN407857G-F1
@@ -552,6 +578,7 @@
   id_sample_tmp: 1751260
   id_study_tmp: 2817
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT365901Q
   pac_bio_library_tube_legacy_id: 9445463
   pac_bio_library_tube_name: DN323980T-C1
@@ -573,6 +600,7 @@
   id_sample_tmp: 2332894
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT668806C
   pac_bio_library_tube_legacy_id: 14528970
   pac_bio_library_tube_name: DN410794I-E3
@@ -594,6 +622,7 @@
   id_sample_tmp: 1751261
   id_study_tmp: 2817
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT365902R
   pac_bio_library_tube_legacy_id: 9445464
   pac_bio_library_tube_name: DN323980T-D1
@@ -615,6 +644,7 @@
   id_sample_tmp: 2341023
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT676342L
   pac_bio_library_tube_legacy_id: 14643677
   pac_bio_library_tube_name: DN411853G-A1
@@ -636,6 +666,7 @@
   id_sample_tmp: 1751254
   id_study_tmp: 2817
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT365903S
   pac_bio_library_tube_legacy_id: 9445465
   pac_bio_library_tube_name: DN323980T-E1
@@ -657,6 +688,7 @@
   id_sample_tmp: 2341024
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT676343M
   pac_bio_library_tube_legacy_id: 14643678
   pac_bio_library_tube_name: DN411853G-B1
@@ -678,6 +710,7 @@
   id_sample_tmp: 1751255
   id_study_tmp: 2817
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT365904T
   pac_bio_library_tube_legacy_id: 9445466
   pac_bio_library_tube_name: DN323980T-F1
@@ -699,6 +732,7 @@
   id_sample_tmp: 2341025
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT676344N
   pac_bio_library_tube_legacy_id: 14643679
   pac_bio_library_tube_name: DN411853G-C1
@@ -720,6 +754,7 @@
   id_sample_tmp: 1751263
   id_study_tmp: 2817
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT365898P
   pac_bio_library_tube_legacy_id: 9445460
   pac_bio_library_tube_name: DN323980T-A2
@@ -741,6 +776,7 @@
   id_sample_tmp: 2341026
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT676345O
   pac_bio_library_tube_legacy_id: 14643680
   pac_bio_library_tube_name: DN411853G-D1
@@ -762,6 +798,7 @@
   id_sample_tmp: 1751268
   id_study_tmp: 2817
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT365900P
   pac_bio_library_tube_legacy_id: 9445462
   pac_bio_library_tube_name: DN323980T-B2
@@ -783,6 +820,7 @@
   id_sample_tmp: 2341027
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT676346P
   pac_bio_library_tube_legacy_id: 14643681
   pac_bio_library_tube_name: DN411853G-E1
@@ -804,6 +842,7 @@
   id_sample_tmp: 2307088
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT661823V
   pac_bio_library_tube_legacy_id: 14427602
   pac_bio_library_tube_name: DN407857G-E1
@@ -825,6 +864,7 @@
   id_sample_tmp: 2307089
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT661824W
   pac_bio_library_tube_legacy_id: 14427603
   pac_bio_library_tube_name: DN407857G-F1
@@ -846,6 +886,7 @@
   id_sample_tmp: 2341028
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:50
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT676347Q
   pac_bio_library_tube_legacy_id: 14643682
   pac_bio_library_tube_name: DN411853G-F1
@@ -867,6 +908,7 @@
   id_sample_tmp: 2252521
   id_study_tmp: 3537
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT655764P
   pac_bio_library_tube_legacy_id: 14270042
   pac_bio_library_tube_name: DN399792H-A1
@@ -888,6 +930,7 @@
   id_sample_tmp: 2279041
   id_study_tmp: 3529
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT646913J
   pac_bio_library_tube_legacy_id: 14198957
   pac_bio_library_tube_name: DN404324Q-A1
@@ -909,6 +952,7 @@
   id_sample_tmp: 2252521
   id_study_tmp: 3537
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT655764P
   pac_bio_library_tube_legacy_id: 14270042
   pac_bio_library_tube_name: DN399792H-A1
@@ -930,6 +974,7 @@
   id_sample_tmp: 2302860
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT656843R
   pac_bio_library_tube_legacy_id: 14295273
   pac_bio_library_tube_name: DN407389W-B1
@@ -951,6 +996,7 @@
   id_sample_tmp: 1751253
   id_study_tmp: 2817
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT365897O
   pac_bio_library_tube_legacy_id: 9445459
   pac_bio_library_tube_name: DN323980T-A1
@@ -972,6 +1018,7 @@
   id_sample_tmp: 2302861
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT656844S
   pac_bio_library_tube_legacy_id: 14295274
   pac_bio_library_tube_name: DN407389W-C1
@@ -993,6 +1040,7 @@
   id_sample_tmp: 1751253
   id_study_tmp: 2817
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT365897O
   pac_bio_library_tube_legacy_id: 9445459
   pac_bio_library_tube_name: DN323980T-A1
@@ -1014,6 +1062,7 @@
   id_sample_tmp: 2302862
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT656845T
   pac_bio_library_tube_legacy_id: 14295275
   pac_bio_library_tube_name: DN407389W-D1
@@ -1035,6 +1084,7 @@
   id_sample_tmp: 2307085
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT661821T
   pac_bio_library_tube_legacy_id: 14427600
   pac_bio_library_tube_name: DN407857G-B1
@@ -1056,6 +1106,7 @@
   id_sample_tmp: 2307086
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT661822U
   pac_bio_library_tube_legacy_id: 14427601
   pac_bio_library_tube_name: DN407857G-C1
@@ -1077,6 +1128,7 @@
   id_sample_tmp: 2302863
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT656846U
   pac_bio_library_tube_legacy_id: 14295276
   pac_bio_library_tube_name: DN407389W-E1
@@ -1098,6 +1150,7 @@
   id_sample_tmp: 2307088
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT661823V
   pac_bio_library_tube_legacy_id: 14427602
   pac_bio_library_tube_name: DN407857G-E1
@@ -1119,6 +1172,7 @@
   id_sample_tmp: 2307089
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT661824W
   pac_bio_library_tube_legacy_id: 14427603
   pac_bio_library_tube_name: DN407857G-F1
@@ -1140,6 +1194,7 @@
   id_sample_tmp: 2302864
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT656847V
   pac_bio_library_tube_legacy_id: 14295277
   pac_bio_library_tube_name: DN407389W-F1
@@ -1161,6 +1216,7 @@
   id_sample_tmp: 2302865
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT656848W
   pac_bio_library_tube_legacy_id: 14295278
   pac_bio_library_tube_name: DN407389W-G1
@@ -1182,6 +1238,7 @@
   id_sample_tmp: 2030290
   id_study_tmp: 291
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT540292T
   pac_bio_library_tube_legacy_id: 11799647
   pac_bio_library_tube_name: DN361557U-E1
@@ -1203,6 +1260,7 @@
   id_sample_tmp: 2302866
   id_study_tmp: 2979
   last_updated: 2016-03-31 14:19:53
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT656849A
   pac_bio_library_tube_legacy_id: 14295279
   pac_bio_library_tube_name: DN407389W-H1
@@ -1221,9 +1279,10 @@
   id_lims: SQSCP
   id_pac_bio_run_lims: 50916
   id_pac_bio_tmp: 5317
-  id_sample_tmp: 2302866
-  id_study_tmp: 2979
-  last_updated: 2016-03-31 14:19:53
+  id_sample_tmp: 2817558
+  id_study_tmp: 3970
+  last_updated: 2016-12-15 11:23:15
+  library_created_at: ~
   pac_bio_library_tube_id_lims: NT871610E
   pac_bio_library_tube_legacy_id: 18200561
   pac_bio_library_tube_name: DN468178B-A1
@@ -1231,7 +1290,7 @@
   pac_bio_run_uuid: 4f19b100-bc78-11e6-94ff-68b599768938
   plate_barcode: DN470775M
   plate_uuid_lims: 66bcde90-bc78-11e6-9bff-68b59976a384
-  recorded_at: 2016-04-04 10:08:18
+  recorded_at: 2016-12-15 11:23:27
   tag_identifier: ~
   tag_sequence: ~
   tag_set_id_lims: ~
@@ -1259,4 +1318,3 @@
   tag_set_name: ~
   well_label: A2
   well_uuid_lims: 66f46950-bc78-11e6-9bff-68b59976a384
-
