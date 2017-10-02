@@ -4,6 +4,7 @@ use namespace::autoclean;
 
 use Carp;
 use IO::Compress::Bzip2 qw[bzip2 $Bzip2Error];
+use Data::Dump qw[pp];
 use DateTime;
 use English qw[-no_match_vars];
 use File::Basename;
@@ -22,6 +23,7 @@ use Sys::Hostname;
 use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Runnable;
+use WTSI::NPG::HTS::ONT::TarDataObject;
 use WTSI::NPG::HTS::TarPublisher;
 use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::iRODS::Metadata;
@@ -33,6 +35,8 @@ with qw[
          WTSI::NPG::iRODS::Annotator
          WTSI::NPG::iRODS::Utilities
          WTSI::NPG::HTS::ArchiveSession
+         WTSI::NPG::HTS::ONT::MetaQuery
+         WTSI::NPG::HTS::ONT::Annotator
          WTSI::NPG::HTS::ONT::Watcher
        ];
 
@@ -251,20 +255,93 @@ sub publish_files {
     $num_errors++;
   };
 
+  # Add metadata here
+  my ($nf, $np, $ne) = $self->_add_metadata;
+  $num_errors += $ne;
+
   $self->stop_watches;
   $select->remove($self->inotify->fileno);
 
-  my $tar_count = 0;
+  my $num_files = 0;
   if ($self->has_f5_publisher) {
-    $tar_count += $self->f5_publisher->tar_count;
+    $num_files += $self->f5_publisher->tar_count;
   }
   if ($self->has_fq_publisher) {
-    $tar_count += $self->fq_publisher->tar_count;
+    $num_files += $self->fq_publisher->tar_count;
   }
 
   $self->clear_tmpdir;
 
-  return ($tar_count, $num_errors);
+  return ($num_files, $num_files, $num_errors);
+}
+
+sub _list_published_tar_paths {
+  my ($self) = @_;
+
+  my $gridion = hostname;
+  my $coll = catdir($self->dest_collection, $gridion,
+                    $self->experiment_name, $self->device_id);
+  my ($obj_paths) = $self->irods->list_collection($coll);
+
+  my @tar_paths = sort grep { m{[.]tar$}msx } @{$obj_paths};
+
+  return @tar_paths;
+}
+
+sub _add_metadata {
+  my ($self) = @_;
+
+  my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
+
+  my @primary_avus;
+  my @secondary_avus;
+
+  try {
+    @primary_avus = $self->make_primary_metadata($self->experiment_name,
+                                                 $self->device_id);
+    my @run_records = $self->find_oseq_flowcells($self->experiment_name,
+                                                 $self->device_id);
+    @secondary_avus = $self->make_secondary_metadata(@run_records);
+  } catch {
+    $num_errors++;
+  };
+
+  my @tar_paths;
+  try {
+    @tar_paths = $self->_list_published_tar_paths;
+    $num_files = scalar @tar_paths;
+  } catch {
+    $num_errors++;
+  };
+
+  try {
+    foreach my $path (@tar_paths) {
+      my ($filename, $collection) = fileparse($path);
+      my $obj = WTSI::NPG::HTS::ONT::TarDataObject->new
+        (collection  => $collection,
+         data_object => $filename,
+         irods       => $self->irods);
+
+      $self->debug("Adding primary metadata to '$path'");
+      my ($num_pattr, $num_pproc, $num_perr) =
+        $obj->set_primary_metadata(@primary_avus);
+      my ($num_sattr, $num_sproc, $num_serr) =
+        $obj->update_secondary_metadata(@secondary_avus);
+
+      if ($num_perr > 0) {
+        croak("Failed to set primary metadata cleanly on '$path'");
+      }
+      if ($num_serr > 0) {
+        croak("Failed to set secondary metadata cleanly on '$path'");
+      }
+
+      $num_processed++;
+    }
+  } catch {
+    $num_errors++;
+  };
+
+  return ($num_files, $num_processed, $num_errors);
 }
 
 sub _start_watches {

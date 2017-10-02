@@ -105,7 +105,6 @@ no Moose::Role;
 
 1;
 
-
 __END__
 
 =head1 NAME

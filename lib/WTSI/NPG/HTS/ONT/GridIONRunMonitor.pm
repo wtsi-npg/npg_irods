@@ -95,7 +95,7 @@ sub start {
 
   $self->info(sprintf
               q[Started GridIONRunMonitor; staging path: '%s', ] .
-              q[tar capacity: %d files, tar timeout %d sec ] .
+              q[tar capacity: %d files, tar timeout %d sec, ] .
               q[max processes: %d, session timeout %d sec],
               $self->source_dir, $self->arch_capacity, $self->arch_timeout,
               $self->max_processes, $self->session_timeout);
@@ -162,7 +162,9 @@ sub start {
              source_dir      => $device_dir,
              session_timeout => $self->session_timeout);
 
-          my ($nf, $ne) = $publisher->publish_files;
+          my ($nf, $np, $ne) = $publisher->publish_files;
+          $self->debug("GridIONRunPublisher returned [$nf, $np, $ne]");
+
           my $exit_code = $ne == 0 ? 0 : 1;
           $self->info("Finished publishing $nf files from '$device_dir' ",
                       "with $ne errors and exit code $exit_code");
@@ -273,7 +275,7 @@ sub _make_callback {
 sub _make_publisher_logconf {
   my ($self, $path, $pid, $level) = @_;
 
-  my $name = $self->meta->name;
+  my $name = 'WTSI::NPG::HTS::ONT::GridIONRunPublisher';
   $name =~ s/::/_/gmsx;
   my $logfile = catfile($path, sprintf '%s.%d.log', $name, $pid);
   my $level_name = Log::Log4perl::Level::to_level($level);
@@ -338,22 +340,62 @@ WTSI::NPG::HTS::ONT::GridIONRunMonitor
 
 Uses inotify to monitor a staging area for new GridION experiment
 result directories. Launches a
-WTSI::NPG::HTS::ONT::GridIONRunPublisher for each new device directory
-detected within the experiment directories. A GridIONRunMonitor does
-not monitor directories below a device directory; that responsibility
-is delegated to its child processes. Each child process is responsible
-for one device directory.
+WTSI::NPG::HTS::ONT::GridIONRunPublisher for each existing device
+directory and for any new device directory created. A
+GridIONRunMonitor does not monitor directories below a device
+directory; that responsibility is delegated to its child
+processes. Each child process is responsible for one device directory.
 
 A GridIONRunMonitor will store data in iRODS beneath one collection:
 
 <collection>/<gridion hostname>/<experiment name><device id>/
 
+The following scenarios are supported:
+
+
+1. Pre-existing complete (inactive) and fully published runs
+
+A publisher is started and will time out due to inactivity. On exiting
+it will check that all files are published and exit without publishing
+any. It will check and update secondary metadata on all files
+previously published.
+
+
+2. Pre-existing complete (inactive) and partially published runs
+
+A publisher is started and will time out due to inactivity. On exiting
+it will check that all files are published and exit after publishing
+the remainder. It will check and update secondary metadata on all
+files published and previously published.
+
+
+3. Pre-existing incomplete (active) runs
+
+A publisher is started and will first publish new files as it detects
+their creation. On exiting it will check that all files are published
+and exit after publishing the remainder. It will check and update
+secondary metadata on all files published and previously published.
+
+
+4. Future runs
+
+A publisher is started when a ne device directory is created. It will
+first publish new files as it detects their creation. On exiting it
+will check that all files are published and exit after publishing any
+remainder. It will check and update secondary metadata on all files
+published and previouslt published.
+
+
 =head1 BUGS
 
-This class uses inotify to detect when data files to be published are
-closed after writing. If experiment and device directories are created
-before inotify watches are set up, they will not be detected and their
-contents will not published.
+This class uses inotify to detect when directories are created and
+when data files are closed after writing. If experiment and device
+directories are created after the monitor has started up and checked
+for existing directories, but before inotify watches are set up, they
+will not be detected and their contents will not published.
+
+TODO -- replace the on-startup check for unknown directories with a
+periodic check.
 
 =head1 AUTHOR
 
