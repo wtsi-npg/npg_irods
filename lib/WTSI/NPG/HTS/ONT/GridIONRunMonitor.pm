@@ -27,6 +27,8 @@ our $VERSION = '';
 
 our $SELECT_TIMEOUT   = 2;
 
+our $EVENTS = IN_MOVED_TO | IN_CREATE | IN_MOVED_FROM | IN_DELETE | IN_ATTRIB;
+
 # GridION device directory names match this pattern
 our $DEVICE_DIR_REGEX = qr{^GA\d+}msx;
 
@@ -89,7 +91,8 @@ sub start {
 
   my $select = IO::Select->new;
   $select->add($self->inotify->fileno);
-  $self->_start_watches;
+  $self->_start_watch_source_dir($EVENTS);
+  $self->_start_watch_expt_dirs($EVENTS);
 
   my %in_progress; # Map device directory path to PID
 
@@ -153,11 +156,14 @@ sub start {
                                            $log_level);
           Log::Log4perl::init(\$logconf);
 
+          my ($expt_name, $device_id) = $self->_parse_device_dir($device_dir);
           my $publisher = WTSI::NPG::HTS::ONT::GridIONRunPublisher->new
             (arch_bytes      => $self->arch_bytes,
              arch_capacity   => $self->arch_capacity,
              arch_timeout    => $self->arch_timeout,
              dest_collection => $self->dest_collection,
+             device_id       => $device_id,
+             experiment_name => $expt_name,
              f5_uncompress   => 0,
              source_dir      => $device_dir,
              session_timeout => $self->session_timeout);
@@ -176,6 +182,11 @@ sub start {
         $self->debug("Select timeout ($SELECT_TIMEOUT sec) ...");
         $self->debug('Running processes with PIDs ', pp($pm->running_procs));
         $pm->reap_finished_children;
+
+        # Check for any other expt dirs that we missed so far e.g. any
+        # which appeared while watches were in the process of being
+        # set up
+        $self->_start_watch_expt_dirs($EVENTS);
       }
     }
   } catch {
@@ -195,24 +206,37 @@ sub start {
   return $num_errors;
 }
 
-sub _start_watches {
-  my ($self) = @_;
-
-  my $events = IN_MOVED_TO | IN_CREATE | IN_MOVED_FROM | IN_DELETE | IN_ATTRIB;
-  my $cb     = $self->_make_callback($events);
+# Start watches on the top level data source directory
+sub _start_watch_source_dir {
+  my ($self, $inotify_events) = @_;
 
   my $spath = rel2abs($self->source_dir);
-  $self->start_watch($spath, $events, $cb);
+  my $cb    = $self->_make_callback($inotify_events);
 
-  # Start watches on any existing expt dirs
+  if (not $self->is_watched($spath)) {
+    $self->start_watch($spath, $inotify_events, $cb);
+  }
+
+  return;
+}
+
+# Start watches on any existing expt dirs
+sub _start_watch_expt_dirs {
+  my ($self, $inotify_events) = @_;
+
+  my $spath = rel2abs($self->source_dir);
+  my $cb    = $self->_make_callback($inotify_events);
+
   my @expt_dirs = $self->_find_dirs($spath);
   foreach my $expt_dir (@expt_dirs) {
-    $self->start_watch($expt_dir, $events, $cb);
+    if (not $self->is_watched($expt_dir)) {
+      $self->start_watch($expt_dir, $inotify_events, $cb);
 
-    # Queue any existing device dirs
-    my @device_dirs = $self->_find_dirs($expt_dir);
-    foreach my $device_dir (@device_dirs) {
-      push @{$self->device_dir_queue}, $device_dir;
+      # Queue any existing device dirs, only when starting to watch
+      my @device_dirs = $self->_find_dirs($expt_dir);
+      foreach my $device_dir (@device_dirs) {
+        push @{$self->device_dir_queue}, $device_dir;
+      }
     }
   }
 
@@ -322,6 +346,29 @@ sub _is_device_dir {
   my $is_device = $leaf =~ $DEVICE_DIR_REGEX and $self->_is_expt_dir($parent);
 
   return $is_device;
+}
+
+sub _parse_device_dir {
+  my ($self, $dir) = @_;
+
+  if (not $self->_is_device_dir($dir)) {
+    croak "Failed to parse '$dir'; is is not a device directory";
+  }
+
+  my $abs_dir = rel2abs($dir);
+  my @elts = splitdir($abs_dir);
+
+  my $device_id = pop @elts;
+  my $expt_name = pop @elts;
+
+  if (not defined $expt_name) {
+    croak "Failed to parse an experiment name from '$dir'";
+  }
+  if (not defined $device_id) {
+    croak "Failed to parse a device_id from '$dir'";
+  }
+
+  return ($expt_name, $device_id);
 }
 
 __PACKAGE__->meta->make_immutable;

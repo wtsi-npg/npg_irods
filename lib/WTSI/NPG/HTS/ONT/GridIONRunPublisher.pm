@@ -72,7 +72,6 @@ has 'device_id' =>
    is            => 'rw',
    required      => 0,
    predicate     => 'has_device_id',
-   init_arg      => undef,
    documentation => 'The GridION device identifier for this run');
 
 has 'experiment_name' =>
@@ -80,7 +79,6 @@ has 'experiment_name' =>
    is            => 'rw',
    required      => 0,
    predicate     => 'has_experiment_name',
-   init_arg      => undef,
    documentation => 'The experiment name provided by LIMS');
 
 has 'f5_bzip2' =>
@@ -721,7 +719,6 @@ __PACKAGE__->meta->make_immutable;
 no Moose;
 
 1;
-
 
 __END__
 

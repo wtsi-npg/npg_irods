@@ -48,7 +48,7 @@ sub start_watch {
     croak("Invalid directory to watch '$dir'; directory does not exist");
   -d $dir or croak("Invalid directory to watch '$dir'; not a directory");
 
-  if (exists $self->watches->{$dir}) {
+  if ($self->is_watched($dir)) {
     $watch = $self->watches->{$dir};
     $self->debug("Already watching directory '$dir'");
   }
@@ -71,7 +71,7 @@ sub stop_watch {
   my ($self, $dir) = @_;
 
   $self->debug("Stopping watch on '$dir'");
-  if (exists $self->watches->{$dir}) {
+  if ($self->is_watched($dir)) {
     $self->watches->{$dir}->cancel;
     delete $self->watches->{$dir};
   }
@@ -80,6 +80,12 @@ sub stop_watch {
   }
 
   return;
+}
+
+sub is_watched {
+  my ($self, $dir) = @_;
+
+  return exists $self->watches->{$dir};
 }
 
 sub stop_watches {
