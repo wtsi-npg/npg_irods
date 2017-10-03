@@ -266,7 +266,7 @@ sub _read_manifest_file {
     while (my $line = <$fh>) {
       chomp $line;
       my ($tpath, $ipath) = split /\t/msx, $line;
-      $self->debug("Added '$ipath' to manifest index");
+      $self->debug("Read '$ipath' from existing manifest into index");
       $index->{$ipath} = $tpath;
     }
 

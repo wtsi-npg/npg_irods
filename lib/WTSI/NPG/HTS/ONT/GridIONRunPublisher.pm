@@ -189,6 +189,14 @@ sub publish_files {
     $self->irods->add_collection($dest);
   }
 
+  $self->info(sprintf
+              q[Started GridIONPublisher; source dir: '%s',] .
+              q[tar capacity: %d files or %d bytes, tar timeout %d sec, ] .
+              q[session timeout %d sec],
+              $self->source_dir,
+              $self->arch_capacity, $self->arch_bytes, $self->arch_timeout,
+              $self->session_timeout);
+
   my $select = IO::Select->new;
   $select->add($self->inotify->fileno);
   $self->_start_watches;
@@ -257,6 +265,7 @@ sub publish_files {
 
   # Add metadata here
   my ($nf, $np, $ne) = $self->_add_metadata;
+  $self->debug("Metadata operations returned [$nf, $np, $ne]");
   $num_errors += $ne;
 
   $self->stop_watches;
@@ -303,6 +312,7 @@ sub _add_metadata {
                                                  $self->device_id);
     @secondary_avus = $self->make_secondary_metadata(@run_records);
   } catch {
+    $self->error($_);
     $num_errors++;
   };
 
@@ -311,6 +321,7 @@ sub _add_metadata {
     @tar_paths = $self->_list_published_tar_paths;
     $num_files = scalar @tar_paths;
   } catch {
+    $self->error($_);
     $num_errors++;
   };
 
@@ -338,6 +349,7 @@ sub _add_metadata {
       $num_processed++;
     }
   } catch {
+    $self->error($_);
     $num_errors++;
   };
 
@@ -458,19 +470,21 @@ sub _do_publish {
           $self->experiment_name($ename);
           $self->device_id($device_id);
         }
+        if (not ($self->f5_publisher->file_published($tmp_path) or
+                 $self->f5_publisher->file_published("$tmp_path.bz2"))) {
 
-        if ($self->f5_uncompress) {
-          $tmp_path = $self->_h5repack_filter($tmp_path, "$tmp_path.repacked");
+          if ($self->f5_uncompress) {
+            $tmp_path = $self->_h5repack_filter($tmp_path);
+          }
+          if ($self->f5_bzip2) {
+            $tmp_path = $self->_bzip2_filter($tmp_path);
+          }
+
+          # Don't unlink the file yet because the tar will process it
+          # asynchronously. Use the 'remove_file' attribute on the tar
+          # stream to recover space.
+          $self->f5_publisher->publish_file($tmp_path);
         }
-
-        if ($self->f5_bzip2) {
-          $tmp_path = $self->_bzip2_filter($tmp_path, "$tmp_path.bz2");
-        }
-
-        # Don't unlink the file yet because the tar will process it
-        # asynchronously. Use the 'remove_file' attribute on the tar
-        # stream to recover space.
-        $self->f5_publisher->publish_file($tmp_path);
 
         last CASE;
       }
@@ -482,10 +496,12 @@ sub _do_publish {
           $self->device_id($device_id);
         }
 
-        $tmp_path = $self->_bzip2_filter($tmp_path, "$tmp_path.bz2");
+        if (not $self->fq_publisher->file_published("$tmp_path.bz2")) {
+          $tmp_path = $self->_bzip2_filter($tmp_path);
 
-        # Don't unlink the file yet
-        $self->fq_publisher->publish_file($tmp_path);
+          # Don't unlink the file yet
+          $self->fq_publisher->publish_file($tmp_path);
+        }
 
         last CASE;
       }
@@ -496,8 +512,9 @@ sub _do_publish {
 }
 
 sub _h5repack_filter {
-  my ($self, $in_path, $out_path) = @_;
+  my ($self, $in_path) = @_;
 
+  my $out_path = "$in_path.repacked";
   WTSI::DNAP::Utilities::Runnable->new
       (executable => $H5REPACK,
        arguments  => ['-f', 'SHUF', '-f', 'GZIP=0',
@@ -511,8 +528,9 @@ sub _h5repack_filter {
 }
 
 sub _bzip2_filter {
-  my ($self, $in_path, $out_path) = @_;
+  my ($self, $in_path) = @_;
 
+  my $out_path = "$in_path.bz2";
   bzip2 $in_path => $out_path or
     $self->logcroak("Failed to compress '$in_path': $Bzip2Error");
   $self->debug("Compressed '$in_path' to '$out_path'");
@@ -539,6 +557,8 @@ sub _catchup {
            }
          },
          $dir);
+
+    $self->info('Catching up ', scalar @files, ' files');
 
     foreach my $file (@files) {
       $self->debug("Catching up '$file'");
