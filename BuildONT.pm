@@ -8,6 +8,7 @@ use base 'WTSI::DNAP::Utilities::Build';
 
 # Build only this subset of files
 our @ont_subset = (
+                   'npg_gridion_run_monitor.pl',
                    'npg_minion_run_monitor.pl',
                    'npg_publish_minion_run.pl',
                    'WTSI/DNAP/Utilities/Params.pm',
@@ -20,6 +21,9 @@ our @ont_subset = (
                    'WTSI/NPG/HTS/DataObjectFactory.pm',
                    'WTSI/NPG/HTS/ONT/MinIONRunMonitor.pm',
                    'WTSI/NPG/HTS/ONT/MinIONRunPublisher.pm',
+                   'WTSI/NPG/HTS/ONT/GridIONRunMonitor.pm',
+                   'WTSI/NPG/HTS/ONT/GridIONRunPublisher.pm',
+                   'WTSI/NPG/HTS/ONT/Watcher.pm',
                    'WTSI/NPG/HTS/ArchiveSession.pm',
                    'WTSI/NPG/HTS/TarPublisher.pm',
                    'WTSI/NPG/HTS/TarStream.pm',
