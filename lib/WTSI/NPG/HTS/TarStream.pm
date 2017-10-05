@@ -2,6 +2,7 @@ package WTSI::NPG::HTS::TarStream;
 
 use namespace::autoclean;
 
+use DateTime;
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions qw[abs2rel];
@@ -10,7 +11,8 @@ use MooseX::StrictConstructor;
 
 our $VERSION = '';
 
-our $PUT_STREAM = 'npg_irods_putstream.sh';
+our $ISO8601_DATETIME = '%Y-%m-%dT%H%m%S';
+our $PUT_STREAM       = 'npg_irods_putstream.sh';
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
@@ -70,6 +72,16 @@ has 'remove_files' =>
    documentation => 'Enable GNU tar --remove-files option to remove the ' .
                     'original file once archived');
 
+has 'time_started' =>
+  (isa           => 'DateTime',
+   is            => 'ro',
+   required      => 1,
+   predicate     => 'has_time_started',
+   builder       => '_build_time_started',
+   lazy          => 1,
+   init_arg      => undef,
+   documentation => 'The time at which the tar stream was opened');
+
 sub BUILD {
   my ($self) = @_;
 
@@ -114,7 +126,10 @@ sub open_stream {
   my $pid = open my $fh, q[|-], $tar_cmd
     or $self->logcroak("Failed to open pipe to '$tar_cmd': $ERRNO");
 
-  $self->info("Started tar process to '$tar_path' with PID $pid");
+  my $now_datetime = $self->time_started->strftime($ISO8601_DATETIME);
+  $self->info("Started tar process to '$tar_path' with PID ",
+              "$pid at $now_datetime");
+
   $self->tar($fh);
   $self->pid($pid);
 
@@ -214,6 +229,12 @@ sub _check_absolute {
     $self->logconfess("An absolute path argument is required: '$path'");
 
   return;
+}
+
+sub _build_time_started {
+  my ($self) = @_;
+
+  return DateTime->now;
 }
 
 __PACKAGE__->meta->make_immutable;

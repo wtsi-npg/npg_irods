@@ -99,8 +99,10 @@ sub start {
   $self->info(sprintf
               q[Started GridIONRunMonitor; staging path: '%s', ] .
               q[tar capacity: %d files, tar timeout %d sec, ] .
+              q[tar duration: %d, ] .
               q[max processes: %d, session timeout %d sec],
               $self->source_dir, $self->arch_capacity, $self->arch_timeout,
+              $self->arch_duration,
               $self->max_processes, $self->session_timeout);
 
   my $pm = Parallel::ForkManager->new($self->max_processes);
@@ -160,6 +162,7 @@ sub start {
           my $publisher = WTSI::NPG::HTS::ONT::GridIONRunPublisher->new
             (arch_bytes      => $self->arch_bytes,
              arch_capacity   => $self->arch_capacity,
+             arch_duration   => $self->arch_duration,
              arch_timeout    => $self->arch_timeout,
              dest_collection => $self->dest_collection,
              device_id       => $device_id,

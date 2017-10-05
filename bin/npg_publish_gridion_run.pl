@@ -18,6 +18,7 @@ our $VERSION = '';
 
 ##no critic (ValuesAndExpressions::ProhibitMagicNumbers)
 my $arch_capacity   = 10_000;
+my $arch_duration   = 60 * 60 * 6;
 my $arch_timeout    = 60 * 5;
 my $collection;
 my $debug;
@@ -36,8 +37,9 @@ GetOptions('collection=s'                      => \$collection,
            'logconf=s'                         => \$log4perl_config,
            'session-timeout|session_timeout=s' => \$session_timeout,
            'source_dir|source-dir=s'           => \$source_dir,
-           'tar_capacity|tar-capacity=i'       => \$arch_capacity,
-           'tar_timeout|tar-timeout=i'         => \$arch_timeout,
+           'tar-capacity|tar_capacity=i'       => \$arch_capacity,
+           'tar-duration|tar_duration=i'       => \$arch_duration,
+           'tar-timeout|tar_timeout=i'         => \$arch_timeout,
            'verbose'                           => \$verbose);
 
 if ($log4perl_config) {
@@ -67,6 +69,7 @@ $source_dir = rel2abs($source_dir);
 
 my $publisher = WTSI::NPG::HTS::ONT::GridIONRunPublisher->new
   (arch_capacity   => $arch_capacity,
+   arch_duration   => $arch_duration,
    arch_timeout    => $arch_timeout,
    dest_collection => $collection,
    source_dir      => $source_dir,
@@ -81,7 +84,8 @@ npg_publish_gridion_run
 =head1 SYNOPSIS
 
 npg_publish_gridion_run --collection <path> [--debug] [--logconf <path>]
-  --source-dir <path> [--tar-capacity <n>] [--tar-timeout <n>] [--verbose]
+  --source-dir <path> [--tar-capacity <n>] [--tar-duration <n>]
+  [--tar-timeout <n>] [--verbose]
 
  Options:
    --collection      The destination collection in iRODS.
@@ -98,6 +102,9 @@ npg_publish_gridion_run --collection <path> [--debug] [--logconf <path>]
    --tar-capacity
    --tar_capacity    The number of read files to be archived per tar file.
                      Optional, defaults to 10,000.
+   --tar-duration
+   --tar_duration    The maximum number of seconds a tar file may be open for
+                     writing. Optional, defaults to 60 * 60 * 6 seconds.
    --tar-timeout
    --tar_timeout     The number of seconds idle time after which a tar file
                      open for writing, will be closed. even if it has not

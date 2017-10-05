@@ -190,10 +190,10 @@ sub publish_files {
   $self->info(sprintf
               q[Started GridIONPublisher; source dir: '%s',] .
               q[tar capacity: %d files or %d bytes, tar timeout %d sec, ] .
-              q[session timeout %d sec],
+              q[tar duration: %d, session timeout %d sec],
               $self->source_dir,
               $self->arch_capacity, $self->arch_bytes, $self->arch_timeout,
-              $self->session_timeout);
+              $self->arch_duration, $self->session_timeout);
 
   my $select = IO::Select->new;
   $select->add($self->inotify->fileno);
@@ -205,41 +205,38 @@ sub publish_files {
   my $num_errors     = 0;    # The number of errors this session
   my $session_closed = 0;
 
+
   try {
     while ($continue) {
       $self->debug('Continue ...');
+      $self->_close_f5_on_duration; # Close if max duration reached
+      $self->_close_fq_on_duration; # Close if max duration reached
+
       if ($select->can_read($SELECT_TIMEOUT)) {
         my $n = $self->inotify->poll;
         $self->debug("$n events");
-      }
 
-      if (@{$self->file_queue}) {
-        $self->debug(scalar @{$self->file_queue}, ' files in queue');
+        if (@{$self->file_queue}) {
+          $self->debug(scalar @{$self->file_queue}, ' files in queue');
 
-      EVENT: while (my $file = shift @{$self->file_queue}) {
-          $session_active = time; # No longer idle
-          $self->debug("Event on '$file'");
-          $self->_do_publish($file);
+          while (my $file = shift @{$self->file_queue}) {
+            $session_active = time; # No longer idle
+            $self->debug("Event on '$file'");
+            $self->_do_publish($file);
+          }
         }
       } # Can read
       else {
         $self->debug("Select timeout ($SELECT_TIMEOUT sec) ...");
+        $self->_close_f5_on_duration; # Close if max duration reached
+        $self->_close_fq_on_duration; # Close if max duration reached
+
         my $now          = time;
         my $session_idle = $now - $session_active;
 
-        if ($session_idle > $self->arch_timeout) {
-          $self->debug("Tar timeout reached after $session_idle seconds");
-
-          if ($self->has_f5_publisher) {
-            $self->f5_publisher->close_stream;
-          }
-          if ($self->has_fq_publisher) {
-            $self->fq_publisher->close_stream;
-          }
-        }
-
         if ($session_idle >= $self->session_timeout) {
           $self->info("Session timeout reached after $session_idle seconds");
+          $self->_close_all;
 
           $continue = 0;
         }
@@ -249,13 +246,7 @@ sub publish_files {
     # Here we run a final check of all files present in the source_dir
     # to catch any we missed. See POD for explanation.
     $self->_catchup;
-
-    if ($self->has_f5_publisher) {
-      $self->f5_publisher->close_stream;
-    }
-    if ($self->has_fq_publisher) {
-      $self->fq_publisher->close_stream;
-    }
+    $self->_close_all;
   } catch {
     $self->error($_);
     $num_errors++;
@@ -679,6 +670,52 @@ sub _make_tar_publisher {
      tar_capacity  => $self->arch_capacity,
      tar_cwd       => $tar_cwd,
      tar_path      => $tar_path);
+}
+
+sub _close_f5_on_duration {
+  my ($self) = @_;
+
+  if ($self->has_f5_publisher) {
+    $self->_close_on_duration($self->f5_publisher);
+  }
+
+  return;
+}
+
+sub _close_fq_on_duration {
+  my ($self) = @_;
+
+  if ($self->has_fq_publisher) {
+    $self->_close_on_duration($self->fq_publisher);
+  }
+
+  return;
+}
+
+sub _close_on_duration {
+  my ($self, $tar_publisher) = @_;
+
+  if ($tar_publisher->stream_elapsed_time >= $self->arch_duration) {
+    $self->info(sprintf q[Closing current tar stream to '%s'; ] .
+                q[maximum duration %d sec reached],
+                $tar_publisher->tar_stream->tar_file, $self->arch_duration);
+    $tar_publisher->close_stream;
+  }
+
+  return;
+}
+
+sub _close_all {
+  my ($self) = @_;
+
+  if ($self->has_f5_publisher) {
+    $self->f5_publisher->close_stream;
+  }
+  if ($self->has_fq_publisher) {
+    $self->fq_publisher->close_stream;
+  }
+
+  return;
 }
 
 sub _build_f5_publisher {

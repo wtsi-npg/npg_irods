@@ -34,7 +34,7 @@ has 'tar_bytes' =>
   (isa           => 'Int',
    is            => 'ro',
    required      => 1,
-   default       => 10_000_000,
+   default       => 1024 * 1024 * 1024 * 32,
    documentation => 'The maximum number of bytes that will be added to any ' .
                     'tar file');
 
@@ -42,7 +42,7 @@ has 'tar_capacity' =>
   (isa           => 'Int',
    is            => 'ro',
    required      => 1,
-   default       => 10_000,
+   default       => 1024 * 1024,
    documentation => 'The maximum number of files that will be added to any ' .
                     'tar file');
 
@@ -84,6 +84,7 @@ has 'remove_files' =>
    default       => 0,
    documentation => 'Enable GNU tar --remove-files option to remove the ' .
                     'original file once archived');
+
 
 sub BUILD {
   my ($self) = @_;
@@ -200,6 +201,18 @@ sub tar_in_progress {
   my ($self) = @_;
 
   return ($self->has_tar_stream and $self->tar_stream->file_count > 0);
+}
+
+sub stream_elapsed_time {
+  my ($self) = @_;
+
+  my $elapsed = 0;
+  if ($self->has_tar_stream) {
+    my $now  = time;
+    $elapsed = $now - $self->tar_stream->time_started->epoch;
+  }
+
+  return $elapsed;
 }
 
 =head2 close_stream
