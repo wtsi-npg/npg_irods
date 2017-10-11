@@ -24,13 +24,6 @@ use WTSI::NPG::iRODS::Metadata;
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
-{
-  package TestDB;
-  use Moose;
-
-  with 'npg_testing::db';
-}
-
 my $pid          = $PID;
 my $test_counter = 0;
 my $data_path    = 't/data/ont/gridion';
@@ -40,18 +33,6 @@ my $db_dir       = File::Temp->newdir;
 my $wh_schema;
 
 my $irods_tmp_coll;
-
-sub setup_databases : Test(startup) {
-  my $wh_db_file = catfile($db_dir, 'ml_wh.db');
-  $wh_schema = TestDB->new(sqlite_utf8_enabled => 1,
-                           verbose             => 0)->create_test_db
-    ('WTSI::DNAP::Warehouse::Schema', "$fixture_path/ml_warehouse",
-     $wh_db_file);
-}
-
-sub teardown_databases : Test(shutdown) {
-  $wh_schema->storage->disconnect;
-}
 
 sub setup_test : Test(setup) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -158,7 +139,6 @@ sub _do_publish_files {
        arch_capacity   => $arch_capacity,
        arch_timeout    => 10,
        dest_collection => $dest_coll,
-       mlwh_schema     => $wh_schema,
        session_timeout => 30,
        source_dir      => $tmp_dir,
        f5_uncompress   => $f5_uncompress);
@@ -267,16 +247,9 @@ sub _do_publish_files {
       }
 
       my $expected_meta =
-        [{attribute => 'device_id',            value => 'GA10000'},
-         {attribute => 'experiment_name',      value => '2'},
-         {attribute => 'sample',               value => '4944STDY7082749'},
-         {attribute => 'sample_donor_id',      value => '4944STDY7082749'},
-         {attribute => 'sample_id',            value => '3302237'},
-         {attribute => 'sample_supplier_name', value => 'Lambda1'},
-         {attribute => 'study',                value => 'GridION test study'},
-         {attribute => 'study_id',             value => '4944'},
-         {attribute => 'study_title',          value => 'GridION test study'},
-         {attribute => 'type',                 value => 'tar'}];
+        [{attribute => 'device_id',       value => 'GA10000'},
+         {attribute => 'experiment_name', value => '2'},
+         {attribute => 'type',            value => 'tar'}];
 
       my @filtered_meta = grep { $_->{attribute} !~ m{(md5|dcterms)}msx }
         @{$obj->metadata};

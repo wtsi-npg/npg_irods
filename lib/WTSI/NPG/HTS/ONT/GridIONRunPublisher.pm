@@ -35,7 +35,6 @@ with qw[
          WTSI::NPG::iRODS::Annotator
          WTSI::NPG::iRODS::Utilities
          WTSI::NPG::HTS::ArchiveSession
-         WTSI::NPG::HTS::ONT::MetaQuery
          WTSI::NPG::HTS::ONT::Annotator
          WTSI::NPG::HTS::ONT::Watcher
        ];
@@ -292,14 +291,10 @@ sub _add_metadata {
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
   my @primary_avus;
-  my @secondary_avus;
 
   try {
     @primary_avus = $self->make_primary_metadata($self->experiment_name,
                                                  $self->device_id);
-    my @run_records = $self->find_oseq_flowcells($self->experiment_name,
-                                                 $self->device_id);
-    @secondary_avus = $self->make_secondary_metadata(@run_records);
   } catch {
     $self->error($_);
     $num_errors++;
@@ -325,14 +320,9 @@ sub _add_metadata {
       $self->debug("Adding primary metadata to '$path'");
       my ($num_pattr, $num_pproc, $num_perr) =
         $obj->set_primary_metadata(@primary_avus);
-      my ($num_sattr, $num_sproc, $num_serr) =
-        $obj->update_secondary_metadata(@secondary_avus);
 
       if ($num_perr > 0) {
         croak("Failed to set primary metadata cleanly on '$path'");
-      }
-      if ($num_serr > 0) {
-        croak("Failed to set secondary metadata cleanly on '$path'");
       }
 
       $num_processed++;
