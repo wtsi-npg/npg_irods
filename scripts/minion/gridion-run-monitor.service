@@ -1,0 +1,15 @@
+[Unit]
+Description=Monitor daemon for results produced by ONT GridION
+
+
+[Service]
+Type=simple
+Restart=on-failure
+User=grid
+Group=grid
+Environment="PATH=/usr/local/npg/bin:/bin:/usr/sbin:/usr/bin"
+WorkingDirectory=/data/basecalled
+ExecStart=/bin/bash -c "/usr/local/npg/npg_gridion_run_monitor.pl --collection /seq/ont/gridion --staging-dir /data/basecalled"
+
+[Install]
+WantedBy=multi-user.target

@@ -4,7 +4,7 @@ set -eou pipefail
 
 set -x
 
-PREFIX=${PREFIX:=/usr/local/minion}
+PREFIX=${PREFIX:=/usr/local/npg}
 
 TMPDIR=$PWD/
 TMP=$(mktemp -d ${TMPDIR:-/tmp/}$(basename -- "$0").XXXXXXXXXX)
