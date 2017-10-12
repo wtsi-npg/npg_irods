@@ -9,7 +9,7 @@ has 'arch_capacity' =>
   (isa           => 'Int',
    is            => 'ro',
    required      => 1,
-   default       => 10_000,
+   default       => 1024 * 1024,
    documentation => 'The maximum number of files that will be added to any ' .
                     'archive file');
 
@@ -17,7 +17,7 @@ has 'arch_bytes' =>
   (isa           => 'Int',
    is            => 'ro',
    required      => 1,
-   default       => 10_000_000,
+   default       => 1024 * 1024 * 1024 * 32, # 32 GiB
    documentation => 'The maximum number of bytes that will be added to any ' .
                     'archive file');
 
@@ -25,11 +25,20 @@ has 'arch_timeout' =>
   (isa           => 'Int',
    is            => 'ro',
    required      => 1,
-   default       => 60 * 5,
+   default       => 60 * 10,                 # 10 minutes
    documentation => 'The number of seconds idle time since the previous ' .
                     'file was added to an open archive file, after which ' .
                     'the archive will be closed will be closed, even if ' .
                     'not at capacity');
+
+has 'arch_duration' =>
+  (isa           => 'Int',
+   is            => 'ro',
+   required      => 1,
+   default       => 60 * 60 * 6,             # 6 hours
+   documentation => 'The maximum number of seconds permitted for an ' .
+                    'archive file to be open, regardless the time since a ' .
+                    'file was last added to it');
 
 has 'session_begin' =>
   (isa           => 'Int',
@@ -41,9 +50,10 @@ has 'session_timeout' =>
   (isa           => 'Int',
    is            => 'ro',
    required      => 1,
-   default       => 60 * 20,
+   default       => 60 * 20,                 # 20 minutes
    documentation => 'The number of seconds idle time (no files added) ' .
-                    'after which it will be ended automatically');
+                    'after which a multi-archive file session will be ended ' .
+                    'automatically');
 ## use critic
 
 no Moose::Role;

@@ -35,7 +35,6 @@ with qw[
          WTSI::NPG::iRODS::Annotator
          WTSI::NPG::iRODS::Utilities
          WTSI::NPG::HTS::ArchiveSession
-         WTSI::NPG::HTS::ONT::MetaQuery
          WTSI::NPG::HTS::ONT::Annotator
          WTSI::NPG::HTS::ONT::Watcher
        ];
@@ -72,7 +71,6 @@ has 'device_id' =>
    is            => 'rw',
    required      => 0,
    predicate     => 'has_device_id',
-   init_arg      => undef,
    documentation => 'The GridION device identifier for this run');
 
 has 'experiment_name' =>
@@ -80,7 +78,6 @@ has 'experiment_name' =>
    is            => 'rw',
    required      => 0,
    predicate     => 'has_experiment_name',
-   init_arg      => undef,
    documentation => 'The experiment name provided by LIMS');
 
 has 'f5_bzip2' =>
@@ -189,6 +186,14 @@ sub publish_files {
     $self->irods->add_collection($dest);
   }
 
+  $self->info(sprintf
+              q[Started GridIONPublisher; source dir: '%s',] .
+              q[tar capacity: %d files or %d bytes, tar timeout %d sec, ] .
+              q[tar duration: %d, session timeout %d sec],
+              $self->source_dir,
+              $self->arch_capacity, $self->arch_bytes, $self->arch_timeout,
+              $self->arch_duration, $self->session_timeout);
+
   my $select = IO::Select->new;
   $select->add($self->inotify->fileno);
   $self->_start_watches;
@@ -199,41 +204,38 @@ sub publish_files {
   my $num_errors     = 0;    # The number of errors this session
   my $session_closed = 0;
 
+
   try {
     while ($continue) {
       $self->debug('Continue ...');
+      $self->_close_f5_on_duration; # Close if max duration reached
+      $self->_close_fq_on_duration; # Close if max duration reached
+
       if ($select->can_read($SELECT_TIMEOUT)) {
         my $n = $self->inotify->poll;
         $self->debug("$n events");
-      }
 
-      if (@{$self->file_queue}) {
-        $self->debug(scalar @{$self->file_queue}, ' files in queue');
+        if (@{$self->file_queue}) {
+          $self->debug(scalar @{$self->file_queue}, ' files in queue');
 
-      EVENT: while (my $file = shift @{$self->file_queue}) {
-          $session_active = time; # No longer idle
-          $self->debug("Event on '$file'");
-          $self->_do_publish($file);
+          while (my $file = shift @{$self->file_queue}) {
+            $session_active = time; # No longer idle
+            $self->debug("Event on '$file'");
+            $self->_do_publish($file);
+          }
         }
       } # Can read
       else {
         $self->debug("Select timeout ($SELECT_TIMEOUT sec) ...");
+        $self->_close_f5_on_duration; # Close if max duration reached
+        $self->_close_fq_on_duration; # Close if max duration reached
+
         my $now          = time;
         my $session_idle = $now - $session_active;
 
-        if ($session_idle > $self->arch_timeout) {
-          $self->debug("Tar timeout reached after $session_idle seconds");
-
-          if ($self->has_f5_publisher) {
-            $self->f5_publisher->close_stream;
-          }
-          if ($self->has_fq_publisher) {
-            $self->fq_publisher->close_stream;
-          }
-        }
-
         if ($session_idle >= $self->session_timeout) {
           $self->info("Session timeout reached after $session_idle seconds");
+          $self->_close_all;
 
           $continue = 0;
         }
@@ -243,13 +245,7 @@ sub publish_files {
     # Here we run a final check of all files present in the source_dir
     # to catch any we missed. See POD for explanation.
     $self->_catchup;
-
-    if ($self->has_f5_publisher) {
-      $self->f5_publisher->close_stream;
-    }
-    if ($self->has_fq_publisher) {
-      $self->fq_publisher->close_stream;
-    }
+    $self->_close_all;
   } catch {
     $self->error($_);
     $num_errors++;
@@ -257,6 +253,7 @@ sub publish_files {
 
   # Add metadata here
   my ($nf, $np, $ne) = $self->_add_metadata;
+  $self->debug("Metadata operations returned [$nf, $np, $ne]");
   $num_errors += $ne;
 
   $self->stop_watches;
@@ -294,15 +291,12 @@ sub _add_metadata {
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
   my @primary_avus;
-  my @secondary_avus;
 
   try {
     @primary_avus = $self->make_primary_metadata($self->experiment_name,
                                                  $self->device_id);
-    my @run_records = $self->find_oseq_flowcells($self->experiment_name,
-                                                 $self->device_id);
-    @secondary_avus = $self->make_secondary_metadata(@run_records);
   } catch {
+    $self->error($_);
     $num_errors++;
   };
 
@@ -311,6 +305,7 @@ sub _add_metadata {
     @tar_paths = $self->_list_published_tar_paths;
     $num_files = scalar @tar_paths;
   } catch {
+    $self->error($_);
     $num_errors++;
   };
 
@@ -325,19 +320,15 @@ sub _add_metadata {
       $self->debug("Adding primary metadata to '$path'");
       my ($num_pattr, $num_pproc, $num_perr) =
         $obj->set_primary_metadata(@primary_avus);
-      my ($num_sattr, $num_sproc, $num_serr) =
-        $obj->update_secondary_metadata(@secondary_avus);
 
       if ($num_perr > 0) {
         croak("Failed to set primary metadata cleanly on '$path'");
-      }
-      if ($num_serr > 0) {
-        croak("Failed to set secondary metadata cleanly on '$path'");
       }
 
       $num_processed++;
     }
   } catch {
+    $self->error($_);
     $num_errors++;
   };
 
@@ -458,19 +449,21 @@ sub _do_publish {
           $self->experiment_name($ename);
           $self->device_id($device_id);
         }
+        if (not ($self->f5_publisher->file_published($tmp_path) or
+                 $self->f5_publisher->file_published("$tmp_path.bz2"))) {
 
-        if ($self->f5_uncompress) {
-          $tmp_path = $self->_h5repack_filter($tmp_path, "$tmp_path.repacked");
+          if ($self->f5_uncompress) {
+            $tmp_path = $self->_h5repack_filter($tmp_path);
+          }
+          if ($self->f5_bzip2) {
+            $tmp_path = $self->_bzip2_filter($tmp_path);
+          }
+
+          # Don't unlink the file yet because the tar will process it
+          # asynchronously. Use the 'remove_file' attribute on the tar
+          # stream to recover space.
+          $self->f5_publisher->publish_file($tmp_path);
         }
-
-        if ($self->f5_bzip2) {
-          $tmp_path = $self->_bzip2_filter($tmp_path, "$tmp_path.bz2");
-        }
-
-        # Don't unlink the file yet because the tar will process it
-        # asynchronously. Use the 'remove_file' attribute on the tar
-        # stream to recover space.
-        $self->f5_publisher->publish_file($tmp_path);
 
         last CASE;
       }
@@ -482,10 +475,12 @@ sub _do_publish {
           $self->device_id($device_id);
         }
 
-        $tmp_path = $self->_bzip2_filter($tmp_path, "$tmp_path.bz2");
+        if (not $self->fq_publisher->file_published("$tmp_path.bz2")) {
+          $tmp_path = $self->_bzip2_filter($tmp_path);
 
-        # Don't unlink the file yet
-        $self->fq_publisher->publish_file($tmp_path);
+          # Don't unlink the file yet
+          $self->fq_publisher->publish_file($tmp_path);
+        }
 
         last CASE;
       }
@@ -496,8 +491,9 @@ sub _do_publish {
 }
 
 sub _h5repack_filter {
-  my ($self, $in_path, $out_path) = @_;
+  my ($self, $in_path) = @_;
 
+  my $out_path = "$in_path.repacked";
   WTSI::DNAP::Utilities::Runnable->new
       (executable => $H5REPACK,
        arguments  => ['-f', 'SHUF', '-f', 'GZIP=0',
@@ -511,8 +507,9 @@ sub _h5repack_filter {
 }
 
 sub _bzip2_filter {
-  my ($self, $in_path, $out_path) = @_;
+  my ($self, $in_path) = @_;
 
+  my $out_path = "$in_path.bz2";
   bzip2 $in_path => $out_path or
     $self->logcroak("Failed to compress '$in_path': $Bzip2Error");
   $self->debug("Compressed '$in_path' to '$out_path'");
@@ -539,6 +536,8 @@ sub _catchup {
            }
          },
          $dir);
+
+    $self->info('Catching up ', scalar @files, ' files');
 
     foreach my $file (@files) {
       $self->debug("Catching up '$file'");
@@ -663,6 +662,52 @@ sub _make_tar_publisher {
      tar_path      => $tar_path);
 }
 
+sub _close_f5_on_duration {
+  my ($self) = @_;
+
+  if ($self->has_f5_publisher) {
+    $self->_close_on_duration($self->f5_publisher);
+  }
+
+  return;
+}
+
+sub _close_fq_on_duration {
+  my ($self) = @_;
+
+  if ($self->has_fq_publisher) {
+    $self->_close_on_duration($self->fq_publisher);
+  }
+
+  return;
+}
+
+sub _close_on_duration {
+  my ($self, $tar_publisher) = @_;
+
+  if ($tar_publisher->stream_elapsed_time >= $self->arch_duration) {
+    $self->info(sprintf q[Closing current tar stream to '%s'; ] .
+                q[maximum duration %d sec reached],
+                $tar_publisher->tar_stream->tar_file, $self->arch_duration);
+    $tar_publisher->close_stream;
+  }
+
+  return;
+}
+
+sub _close_all {
+  my ($self) = @_;
+
+  if ($self->has_f5_publisher) {
+    $self->f5_publisher->close_stream;
+  }
+  if ($self->has_fq_publisher) {
+    $self->fq_publisher->close_stream;
+  }
+
+  return;
+}
+
 sub _build_f5_publisher {
   my ($self) = @_;
 
@@ -701,7 +746,6 @@ __PACKAGE__->meta->make_immutable;
 no Moose;
 
 1;
-
 
 __END__
 

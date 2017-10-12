@@ -4,7 +4,7 @@ set -eou pipefail
 
 set -x
 
-PREFIX=${PREFIX:=/usr/local/minion}
+PREFIX=${PREFIX:=/usr/local/npg}
 
 TMPDIR=$PWD/
 TMP=$(mktemp -d ${TMPDIR:-/tmp/}$(basename -- "$0").XXXXXXXXXX)
@@ -33,9 +33,9 @@ install_from_source() {
 
     perl "$build_script.PL"
     ./"$build_script" --install_base "$PREFIX" \
-      --cpan_client "cpanm --notest -L $PREFIX" installdeps
+      --cpan_client "cpanm --notest -L '$PREFIX'" installdeps
     ./"$build_script" --install_base "$PREFIX" \
-      --cpan_client "cpanm --notest -L $PREFIX" install
+      --cpan_client "cpanm --notest -L '$PREFIX'" install
 
     popd
     popd
