@@ -61,8 +61,8 @@ lib/WTSI/NPG/HTS/Types.pm
 lib/WTSI/NPG/OM/BioNano/Annotator.pm
 lib/WTSI/NPG/OM/BioNano/BnxFile.pm
 lib/WTSI/NPG/OM/BioNano/ResultSet.pm
+lib/WTSI/NPG/OM/BioNano/RunFinder.pm
 lib/WTSI/NPG/OM/BioNano/RunPublisher.pm
-lib/WTSI/NPG/OM/Metadata.pm
 LICENSE
 MANIFEST			This list of files
 META.json
@@ -75,6 +75,7 @@ t/aln_data_object.t
 t/anc_data_object.t
 t/bionano_bnx_file.t
 t/bionano_result_set.t
+t/bionano_run_finder.t
 t/bionano_run_publisher.t
 t/compile_scripts.t
 t/critic.t
@@ -129,14 +130,14 @@ t/data/anc_data_object/17550_3#1_quality_cycle_surv.txt
 t/data/anc_data_object/17550_3#1_quality_error.txt
 t/data/bionano/MoleculesDummy.bnx
 t/data/bionano/MoleculesDummyBadHeader.bnx
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect_Molecules/analysisLog.txt
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect_Molecules/analysisResult.json
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect_Molecules/iovars.json
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect_Molecules/Molecules.bnx
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect_Molecules/RawMolecules.bnx
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect_Molecules/RunReport.txt
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/Detect_Molecules/Stitch.fov
-t/data/bionano/sample_barcode_01234_2016-10-04_09_00/workset.json
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/Detect_Molecules/analysisLog.txt
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/Detect_Molecules/analysisResult.json
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/Detect_Molecules/iovars.json
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/Detect_Molecules/Molecules.bnx
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/Detect_Molecules/RawMolecules.bnx
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/Detect_Molecules/RunReport.txt
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/Detect_Molecules/Stitch.fov
+t/data/bionano/stock_barcode_01234_2016-10-04_09_00/workset.json
 t/data/datasub/invalid/a.txt
 t/data/datasub/invalid/x/a.txt
 t/data/datasub/valid/a.txt
@@ -7647,6 +7648,7 @@ t/lib/WTSI/NPG/HTS/SeqchksumTest.pm
 t/lib/WTSI/NPG/HTS/Test.pm
 t/lib/WTSI/NPG/OM/BioNano/BnxFileTest.pm
 t/lib/WTSI/NPG/OM/BioNano/ResultSetTest.pm
+t/lib/WTSI/NPG/OM/BioNano/RunFinderTest.pm
 t/lib/WTSI/NPG/OM/BioNano/RunPublisherTest.pm
 t/log_publisher.t
 t/pacbio_apiclient.t

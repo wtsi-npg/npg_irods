@@ -86,13 +86,13 @@ has 'ancillary_files' =>
    documentation => 'Paths of ancillary files with information on the run',
 );
 
-has 'sample' =>
+has 'stock' =>
   (is       => 'ro',
    isa      => 'Str',
    lazy     => 1,
-   builder  => '_build_sample',
+   builder  => '_build_stock',
    init_arg => undef,
-   documentation => 'Sample barcode parsed from the main directory name',
+   documentation => 'Stock barcode parsed from the main directory name',
 );
 
 
@@ -184,8 +184,8 @@ sub _build_run_date {
     return $datetime;
 }
 
-sub _build_sample {
-    # parse sample barcode from main directory name
+sub _build_stock {
+    # parse stock barcode from main directory name
     my ($self) = @_;
     my ($barcode, $datetime) = $self->_parse_runfolder_name();
     return $barcode;
