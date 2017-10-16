@@ -1,0 +1,64 @@
+---
+- id_stock_resource_tmp: 2345678
+  last_updated: 2016-12-12 14:57:00
+  recorded_at: 2016-12-12 14:57:01
+  created: 2016-12-01 12:00:00
+  deleted_at: ~
+  id_sample_tmp: 2235713
+  id_study_tmp: 400
+  id_lims: SQSCP
+  id_stock_resource_lims: stock_barcode_01234
+  stock_resource_uuid: 3d4c7a62-12c5-4d4c-8697-b40d4ecac164
+  labware_type: Tube
+  labware_machine_barcode: machine_abcdef_345678
+  labware_human_barcode: human_abcdef_345678
+  labware_coordinate: ~
+  current_volume: ~
+  initial_volume: ~
+  concentration: ~
+  gel_pass: ~
+  pico_pass: ~
+  snp_count: ~
+  measured_gender: ~
+- id_stock_resource_tmp: 2345679
+  last_updated: 2016-12-12 14:57:00
+  recorded_at: 2016-12-12 14:57:01
+  created: 2016-12-01 12:00:00
+  deleted_at: ~
+  id_sample_tmp: 2235701
+  id_study_tmp: 2934
+  id_lims: SQSCP
+  id_stock_resource_lims: stock_barcode_01235
+  stock_resource_uuid: a4b72f81-cee8-4413-9054-3b0fcfdc9f27
+  labware_type: Tube
+  labware_machine_barcode: machine_wxydef_345678
+  labware_human_barcode: human_wxydef_345678
+  labware_coordinate: ~
+  current_volume: ~
+  initial_volume: ~
+  concentration: ~
+  gel_pass: ~
+  pico_pass: ~
+  snp_count: ~
+  measured_gender: ~
+- id_stock_resource_tmp: 2345680
+  last_updated: 2016-12-12 14:57:00
+  recorded_at: 2016-12-12 14:57:01
+  created: 2016-12-01 12:00:00
+  deleted_at: ~
+  id_sample_tmp: 2235741
+  id_study_tmp: 1838
+  id_lims: SQSCP
+  id_stock_resource_lims: stock_barcode_01236
+  stock_resource_uuid: 43f88aff-9289-41a8-8431-f82678f69db9
+  labware_type: Tube
+  labware_machine_barcode: machine_xyzdef_345678
+  labware_human_barcode: human_xyzdef_345678
+  labware_coordinate: ~
+  current_volume: ~
+  initial_volume: ~
+  concentration: ~
+  gel_pass: ~
+  pico_pass: ~
+  snp_count: ~
+  measured_gender: ~
