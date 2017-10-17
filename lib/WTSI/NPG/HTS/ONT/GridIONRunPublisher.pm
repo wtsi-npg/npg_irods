@@ -138,6 +138,13 @@ has 'monitor' =>
                     'A caller may set this to false in order to stop ' .
                     'monitoring and wait for any child processes to finish');
 
+has 'output_dir' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 1,
+   documentation => 'A directory path under which publisher logs and ' .
+                    'manifests will be written');
+
 has 'source_dir' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -169,10 +176,16 @@ has 'tmpdir' =>
 sub publish_files {
   my ($self) = @_;
 
+  -e $self->output_dir or
+    $self->logconfess(sprintf q[Output directory '%s' does not exist],
+                      $self->output_dir);
+  -d $self->output_dir or
+    $self->logconfess(sprintf q[Output directory '%s' is not a directory],
+                      $self->output_dir);
+
   -e $self->source_dir or
     $self->logconfess(sprintf q[Data directory '%s' does not exist],
                       $self->source_dir);
-
   -d $self->source_dir or
     $self->logconfess(sprintf q[Data directory '%s' is not a directory],
                       $self->source_dir);
@@ -187,10 +200,11 @@ sub publish_files {
   }
 
   $self->info(sprintf
-              q[Started GridIONPublisher; source dir: '%s',] .
+              q[Started GridIONPublisher with ] .
+              q[source dir: '%s', output dir: '%s', ] .
               q[tar capacity: %d files or %d bytes, tar timeout %d sec, ] .
               q[tar duration: %d, session timeout %d sec],
-              $self->source_dir,
+              $self->source_dir, $self->output_dir,
               $self->arch_capacity, $self->arch_bytes, $self->arch_timeout,
               $self->arch_duration, $self->session_timeout);
 
@@ -203,7 +217,6 @@ sub publish_files {
   my $continue       = 1;    # While true, continue loading
   my $num_errors     = 0;    # The number of errors this session
   my $session_closed = 0;
-
 
   try {
     while ($continue) {
@@ -616,7 +629,7 @@ sub _manifest_file_path {
   # publishing device's output. This means that repeated sessions will
   # incrementally publish the results of the device, or do nothing if
   # it is already completely published.
-  return catfile($self->source_dir,
+  return catfile($self->output_dir,
                  sprintf '%s_%s_%s_manifest.txt',
                  $self->experiment_name, $self->device_id, $format);
 }
