@@ -27,6 +27,7 @@ use WTSI::NPG::HTS::ONT::TarDataObject;
 use WTSI::NPG::HTS::TarPublisher;
 use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::iRODS::Metadata;
+use WTSI::NPG::iRODS::Publisher;
 use WTSI::NPG::iRODS;
 
 with qw[
@@ -58,7 +59,6 @@ our $FAST5_DEVICE_ID_ATTR   = 'device_id';
 our $FAST5_RUN_ID_ATTR      = 'run_id';
 our $FAST5_SAMPLE_ID_ATTR   = 'sample_id';
 our $FAST5_SOFTWARE_VERSION = 'version';
-
 
 has 'dest_collection' =>
   (isa           => 'Str',
@@ -264,10 +264,15 @@ sub publish_files {
     $num_errors++;
   };
 
-  # Add metadata here
-  my ($nf, $np, $ne) = $self->_add_metadata;
-  $self->debug("Metadata operations returned [$nf, $np, $ne]");
+  # Tar manifest, sequence_summary_n.txt and configuration.cfg files
+  my ($nf, $np, $ne)= $self->_publish_ancillary_files;
+  $self->debug("Ancillary file publishing returned [$nf, $np, $ne]");
   $num_errors += $ne;
+
+  # Metadata
+  my ($nfa, $npa, $nea) = $self->_add_metadata;
+  $self->debug("Metadata operations returned [$nfa, $npa, $nea]");
+  $num_errors += $nea;
 
   $self->stop_watches;
   $select->remove($self->inotify->fileno);
@@ -539,17 +544,8 @@ sub _catchup {
   foreach my $format (qw[fast5 fastq]) {
     $self->info("Catching up any missed '$format' files ",
                 "under '$dir', recursively");
-    my @files;
 
-    my $regex = qr{[.]([^.]+$)}msx;
-    find(sub {
-           my ($f) = m{$regex}msx;
-           if ($f and $f eq $format) {
-             push @files, $File::Find::name
-           }
-         },
-         $dir);
-
+    my @files = $self->_find_local_files($dir, $format);
     $self->info('Catching up ', scalar @files, ' files');
 
     foreach my $file (@files) {
@@ -559,6 +555,75 @@ sub _catchup {
   }
 
   return;
+}
+
+sub _publish_ancillary_files {
+  my ($self) = @_;
+
+  my $publisher = WTSI::NPG::iRODS::Publisher->new
+    (checksum_cache_threshold => 1_000_000_000_000, # i.e. never cache
+     irods                    => $self->irods);
+
+  my @files = ($self->_list_manifest_files,
+               $self->_list_seq_summary_files,
+               $self->_list_seq_cfg_files);
+
+  my ($num_files, $num_processed, $num_errors) = (scalar @files, 0, 0);
+
+  my $gridion = hostname;
+  my $coll    = catdir($self->dest_collection, $gridion,
+                       $self->experiment_name, $self->device_id);
+
+  foreach my $file (@files) {
+    try {
+      my $filename = fileparse($file);
+      my $dest = catfile($coll, $filename);
+      $publisher->publish($file, $dest);
+      $num_processed++;
+    } catch {
+      $self->error($_);
+      $num_errors++;
+    };
+  }
+
+  return ($num_files, $num_processed, $num_errors);
+}
+
+sub _list_seq_summary_files {
+  my ($self) = @_;
+
+  return $self->_find_local_files($self->source_dir, 'txt');
+}
+
+sub _list_seq_cfg_files {
+  my ($self) = @_;
+
+  return $self->_find_local_files($self->source_dir, 'cfg');
+}
+
+sub _list_manifest_files {
+  my ($self) = @_;
+
+  return $self->_find_local_files($self->output_dir, 'txt');
+}
+
+sub _find_local_files {
+  my ($self, $dir, $format) = @_;
+
+  $self->info("Finding any '$format' files under '$dir', recursively");
+  my @files;
+
+  my $regex = qr{[.]([^.]+$)}msx;
+  find(sub {
+         my ($f) = m{$regex}msx;
+         if ($f and $f eq $format) {
+           push @files, $File::Find::name
+         }
+       },
+       $dir);
+  @files = sort @files;
+
+  return @files;
 }
 
 sub _identify_run_fast5 {
@@ -787,17 +852,11 @@ sample_id and device_id from the path of each Fastq file. Again, once
 the device_id is established, the publisher assumes that it applies to
 the entire run.
 
-All tar files will be written to 'dest_collection'. Metadata will be
-added to dest_collection:
+It will write all tar files to 'dest_collection' and add the following
+metadata to each:
 
   'experiment_name'   => GridION experiment name (aka sample_id)
   'device_id'         => GridIOn device_id
-  'dcterms:creator'   => URI
-  'dcterms:created'   => Timestamp
-  'dcterms:publisher' => URI
-
-Metadata will also be added to each tar file:
-
   'dcterms:created'   => Timestamp
   'md5'               => MD5
   'type'              => File suffix
@@ -823,6 +882,10 @@ clean-up phase where it will perform a search for all files under
 source_dir and attempt to publish every one. If they have already been
 published, the underlying TarPublisher will skip them because they
 will be present in its manifest.
+
+Finally, the publisher will add sequencing run ancillary files
+(sequencing_summary_n.txt and configuration.cfg) and publisher
+tar manifest files to the same iRODS collection.
 
 =head1 BUGS
 

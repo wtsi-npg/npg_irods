@@ -49,7 +49,7 @@ sub teardown_test : Test(teardown) {
   $irods->remove_collection($irods_tmp_coll);
 }
 
-sub publish_files_copy : Test(81) {
+sub publish_files_copy : Test(83) {
   my $expected_num_files = {fast5 => 7,
                             fastq => 1};
   my $expected_num_items = {fast5 => [6, 6, 6, 6, 6, 6, 4], # total 40
@@ -59,7 +59,7 @@ sub publish_files_copy : Test(81) {
                     $expected_num_files, $expected_num_items);
 }
 
-sub publish_files_move : Test(81) {
+sub publish_files_move : Test(83) {
   my $expected_num_files = {fast5 => 7,
                             fastq => 1};
   my $expected_num_items = {fast5 => [6, 6, 6, 6, 6, 6, 4], # total 40
@@ -69,7 +69,7 @@ sub publish_files_move : Test(81) {
                     $expected_num_files, $expected_num_items);
 }
 
-sub publish_files_f5_uncompress : Test(81) {
+sub publish_files_f5_uncompress : Test(83) {
   my $expected_num_files = {fast5 => 7,
                             fastq => 1};
   my $expected_num_items = {fast5 => [6, 6, 6, 6, 6, 6, 4], # total 40
@@ -81,7 +81,7 @@ sub publish_files_f5_uncompress : Test(81) {
     # h5repack fails with a 'file not found error', however, a
     # subsequent test for the file's presence using Perl's '-e' shows
     # it was there.
-    skip 'h5repack not required', 81, if not $ENV{TEST_WITH_H5REPACK};
+    skip 'h5repack not required', 83, if not $ENV{TEST_WITH_H5REPACK};
 
     _do_publish_files($irods_tmp_coll, 'copy',
                       $expected_num_files, $expected_num_items,
@@ -89,7 +89,7 @@ sub publish_files_f5_uncompress : Test(81) {
   }
 }
 
-sub publish_files_tar_bytes : Test(69) {
+sub publish_files_tar_bytes : Test(71) {
   my $expected_num_files = {fast5 => 4,
                             fastq => 1};
   my $expected_num_items = {fast5 => [23, 8, 7, 2], # total 40
@@ -156,20 +156,20 @@ sub _do_publish_files {
 
   sleep 5;
 
-  my @fastx_files;
+  my @data_files;
   foreach my $dir ("$device_dir/reads/0",
                    "$device_dir/reads/1",
                    $device_dir) {
     opendir my $dh, $dir or die "Failed to opendir '$dir': $!";
     my @files = sort map { catfile($dir, $_) }
-      grep { m{[.]fast}msx } readdir $dh;
+      grep { m{[.](cfg|fast5|fastq|txt)$}msx } readdir $dh;
     closedir $dh;
 
-    push @fastx_files, @files;
+    push @data_files, @files;
   }
 
-  # Simulate writing new fast5 and fastq files
-  foreach my $file (@fastx_files) {
+  # Simulate writing new fast5, fastq, cfg and txt files
+  foreach my $file (@data_files) {
     my $tmp_file = rel2abs(abs2rel($file, $device_dir), $basecalled_dir);
 
     if ($data_mode eq 'copy') {
@@ -208,15 +208,32 @@ sub _do_publish_files {
            "Manifest lists $num_tar_files tar files") or
              diag explain \%manifest;
 
+    # Check the ancillary files in iRODS
+    my $fn = sub {
+      my $obj = shift;
+      my ($f) = fileparse($obj->str);
+      return $f;
+    };
+
+    my @observed_ancillary = sort { $a cmp $b }
+      grep { m{[.](cfg|txt)$}msx }
+      map { $fn->($_) } @$objs;
+    is_deeply(\@observed_ancillary, ['2_GA10000_fast5_manifest.txt',
+                                     '2_GA10000_fastq_manifest.txt',
+                                     'configuration.cfg',
+                                     'sequencing_summary_0.txt',
+                                     'sequencing_summary_1.txt'])
+      or diag explain \@observed_ancillary;
+
     # Count the tar files created in iRODS
-    my @observed_objs = sort { $a->str cmp $b->str }
-      grep { $_->str =~ m{$format}msx } @$objs;
-    cmp_ok(scalar @observed_objs, '==', $num_tar_files,
+    my @observed_tar = sort { $a->str cmp $b->str }
+      grep { $_->str =~ m{$format\S+[.]\d+[.]tar$}msx } @$objs;
+    cmp_ok(scalar @observed_tar, '==', $num_tar_files,
            "Published $num_tar_files $format tar files")
-      or diag explain [ map { $_->str } @observed_objs];
+      or diag explain [ map { $_->str } @observed_tar];
 
     my $i = 0;
-    foreach my $obj (@observed_objs) {
+    foreach my $obj (@observed_tar) {
       my $path     = $obj->str;
       my $filename = fileparse($path);
       my $file     = $irods->get_object($path, catfile($tmp_dir, $filename));
