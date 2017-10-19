@@ -22,9 +22,10 @@ has 'uuid' =>
    builder  => '_build_uuid',
    documentation => 'UUID generated for the publication to iRODS');
 
+
 =head2 make_bnx_metadata
 
-  Arg [1]    : WTSI::NPG::OM::BioNano::ResultSet
+  Arg [1]    : WTSI::NPG::OM::BioNano::BnxFile
   Example    : @bnx_meta = $publisher->get_bnx_metadata();
   Description: Find metadata AVUs from the BNX file header, to be applied
                to a BioNano collection in iRODS.
@@ -42,7 +43,7 @@ sub make_bnx_metadata {
     return @avus;
 }
 
-=head2 make_collection_metadata
+=head2 make_publication_metadata
 
   Arg [1]    : WTSI::NPG::OM::BioNano::ResultSet. Required.
   Arg [2]    : Array[WTSI::DNAP::Warehouse::Schema::Result::StockResource]
@@ -54,7 +55,7 @@ sub make_bnx_metadata {
 
 =cut
 
-sub make_collection_metadata {
+sub make_publication_metadata {
     my ($self, $resultset, @stock_records) = @_;
     my @avus;
     if (! defined $resultset) {

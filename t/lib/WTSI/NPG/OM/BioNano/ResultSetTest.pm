@@ -8,7 +8,7 @@ use File::Temp qw[tempdir];
 
 use base qw[WTSI::NPG::HTS::Test]; # FIXME better path for shared base
 
-use Test::More tests => 12;
+use Test::More tests => 11;
 use Test::Exception;
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
@@ -38,25 +38,31 @@ sub make_fixture : Test(setup) {
         q[Failed rename command '], $cmd, q[']);
 }
 
-sub construction : Test(11) {
+sub construction : Test(10) {
 
     my $resultset = WTSI::NPG::OM::BioNano::ResultSet->new(
         directory => $test_run_path,
     );
+
     ok($resultset, "ResultSet created");
-    is(abs_path($resultset->data_directory),
-       abs_path($test_run_path.'/Detect Molecules'),
-       "Found expected data directory");
 
-    my $bnx_path = $resultset->bnx_path;
-    my $expected_bnx = $resultset->data_directory.'/Molecules.bnx';
-    is(abs_path($bnx_path), abs_path($expected_bnx),
-       "Found expected filtered molecules path");
+    my $data_directory = $test_run_path.'/Detect Molecules';
+    my $bnx_path = $resultset->filtered_bnx_path;
+    my $expected_bnx = $data_directory.'/Molecules.bnx';
+    is($bnx_path, $expected_bnx, "Found expected filtered molecules path");
 
-    my $raw_bnx_path = $resultset->raw_bnx_path;
-    my $expected_raw_bnx = $resultset->data_directory.'/RawMolecules.bnx';
-    is(abs_path($raw_bnx_path), abs_path($expected_raw_bnx),
-       "Found expected raw molecules path");
+    my @expected_bnx_paths = (
+        $data_directory.'/Molecules.bnx',
+        $data_directory.'/RawMolecules.bnx',
+        $data_directory.'/RawMolecules1.bnx',
+        $data_directory.'/RawMolecules2.bnx',
+        $data_directory.'/RawMolecules3.bnx',
+        $data_directory.'/RawMolecules4.bnx',
+    );
+    my @sorted_expected_paths = sort @expected_bnx_paths;
+    my @sorted_result_paths = sort @{$resultset->bnx_paths};
+    is_deeply(\@sorted_result_paths, \@sorted_expected_paths,
+              'Found expected BNX paths');
 
     my $bnx;
     lives_ok(sub { $bnx = $resultset->bnx_file(); },
@@ -65,8 +71,37 @@ sub construction : Test(11) {
     is($bnx->chip_id(), '20000,10000,1/1/2015,987654321',
        'Found expected chip ID from BNX file');
 
-    my $ancillary = $resultset->ancillary_files;
-    is(scalar @{$ancillary}, 6, "Found 6 ancillary files");
+    my @sorted_ancillary = sort @{$resultset->ancillary_file_paths};
+    my @expected_ancillary;
+    my @filenames = qw(Labels.lab
+                       Labels1.lab
+                       Labels2.lab
+                       Labels3.lab
+                       Labels4.lab
+                       Molecules.mol
+                       Molecules1.mol
+                       Molecules2.mol
+                       Molecules3.mol
+                       Molecules4.mol
+                       RunReport.txt
+                       Stitch.fov
+                       Stitch1.fov
+                       Stitch2.fov
+                       Stitch3.fov
+                       Stitch4.fov
+                       iovars.json
+                       iovars1.json
+                       iovars2.json
+                       iovars3.json
+                       iovars4.json
+                  );
+    foreach my $filename (@filenames) {
+        push @expected_ancillary, $data_directory.'/'.$filename;
+    }
+    push @expected_ancillary, $test_run_path.'/Metadata.xml';
+    # note that .tiff files do not appear in the ancillary file list
+    is_deeply(\@sorted_ancillary, \@expected_ancillary,
+              'Found expected ancillary files');
 
     is($resultset->stock, 'stock_barcode_01234',
        'Found expected stock barcode');

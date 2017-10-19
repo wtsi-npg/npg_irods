@@ -27,6 +27,7 @@ sub run {
     my $days_ago;
     my $debug;
     my $log4perl_config;
+    my $output_dir;
     my $collection;
     my $runfolder_path;
     my $search_dir;
@@ -40,6 +41,7 @@ sub run {
         'help'                            => sub {
             pod2usage(-verbose => 2, -exitval => 0) },
         'logconf=s'                       => \$log4perl_config,
+        'output-dir|output_dir=s'         => \$output_dir,
         'runfolder-path|runfolder_path=s' => \$runfolder_path,
         'search-dir|search_dir=s'         => \$search_dir,
         'verbose'                         => \$verbose
@@ -81,11 +83,16 @@ sub run {
                 $collection, q[']);
     my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
     foreach my $dir (@dirs) {
+        my %args = (
+            directory   => $dir,
+            mlwh_schema => $wh_schema,
+            irods       => $irods,
+        );
+        if (defined $output_dir) {
+            $args{'output_dir'} = $output_dir;
+        }
         try {
-          my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new
-            (directory => $dir,
-             mlwh_schema => $wh_schema,
-             irods     => $irods);
+            my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new(%args);
             my $dest_collection = $publisher->publish($collection);
             $num_published++;
             $log->info(q[Published BioNano run directory '], $dir,
@@ -118,31 +125,44 @@ npg_publish_bionano_run
 
 =head1 SYNOPSIS
 
-Options:
 
+Options:
   --days-ago
   --days_ago        The number of days ago that the publication window
                     ends. Optional, defaults to zero (the current day).
                     Has no effect if the --runfolder_path option is used.
+
   --days            The number of days in the publication window, ending
                     at the day given by the --days-ago argument. Any sample
                     data modified during this period will be considered
                     for publication. Optional, defaults to 7 days.
                     Has no effect if the --runfolder_path option is used.
+
   --collection      The data destination root collection in iRODS.
+
   --help            Display help.
+
   --logconf         A log4perl configuration file. Optional.
+
+  --output-dir
+  --output_dir      Directory for .tar.gz output. Optional; if not given,
+                    .tar.gz file will be written to a temporary directory
+                    and deleted on script exit.
+
   --runfolder-path
   --runfolder_path  The instrument runfolder path to load. Incompatible
                     with --search_dir. Optional. If neither this option
                     nor --search_dir is given, the default value of
                     --search_dir is used.
+
   --search-dir
-  --search_dir      The root directory to search for BioNano data. The
-                    --days_ago and --days options determine a time window
-                    for runfolders to be published. Incompatible with
-                    --runfolder_path. Optional, defaults to current working
-                    directory.
+  --search_dir      The root directory to search for BioNano data. Search
+                    depth will be a maximum of 2 levels below the given
+                    directory. The --days_ago and --days options determine
+                    a time window for runfolders to be published.
+                    Incompatible with --runfolder_path. Optional, defaults
+                    to current working directory.
+
   --verbose         Print messages while processing. Optional.
 
 =head1 DESCRIPTION
@@ -151,6 +171,31 @@ This script loads data and metadata for a unit BioNano runfolder into
 iRODS. The 'unit' runfolder contains results for a run with one sample on
 one flowcell. Typically, multiple unit runfolders are merged together for
 downstream analysis.
+Publication requirements for each runfolder are:
+
+=over
+
+=item * Must contain exactly one Molecules.bnx file, at any depth within the
+folder.
+
+=item * Must have a name of the form [stock_barcode]_[timestamp], for example
+sample_01234_2017-01-01_09_00.
+
+=item * The barcode may contain any non-whitespace characters, including
+underscores.
+
+=item * The timestamp must be in the format used by the BioNano instrument
+software, as in the above example.
+
+=back
+
+TIFF image files are omitted from publication; all other files will be
+included. Before publication, the runfolder is compressed in .tar.gz format.
+Publication destination is a hashed directory path based on the md5
+checksum of the Molecules.bnx file. If a file of the same name already
+exists at the destination path, publication is omitted.
+If the script encounters an incorrectly formatted runfolder or BNX file, it
+will report an error and move on to the next runfolder, if any.
 
 =head1 AUTHOR
 
@@ -158,7 +203,7 @@ Iain Bancarz <ib5@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2016, 2017 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

@@ -15,22 +15,22 @@ with 'WTSI::DNAP::Utilities::Loggable';
 
 our $VERSION = '';
 
-our $DATA_DIRECTORY_NAME = 'Detect Molecules';
-
 our $BNX_NAME_FILTERED = 'Molecules.bnx';
-our $BNX_NAME_RAW = 'RawMolecules.bnx';
-
-our @ANCILLARY_FILE_NAMES = qw[analysisLog.txt
-                               analysisResult.json
-                               iovars.json
-                               RunReport.txt
-                               Stitch.fov
-                               workset.json];
 
 has 'directory' =>
   (is       => 'ro',
    isa      => 'Str',
    required => 1);
+
+has 'ancillary_file_paths' =>
+  (is       => 'ro',
+   isa      => 'ArrayRef[Str]',
+   lazy     => 1,
+   builder  => '_build_ancillary_file_paths',
+   init_arg => undef,
+   documentation => 'Paths of ancillary files with information on the '.
+       'run. Excludes BNX files and TIFF image files.',
+);
 
 has 'bnx_file' =>
   (is       => 'ro',
@@ -38,26 +38,29 @@ has 'bnx_file' =>
    lazy     => 1,
    default  => sub {
        my ($self,) = @_;
-       return WTSI::NPG::OM::BioNano::BnxFile->new($self->bnx_path);
+       return WTSI::NPG::OM::BioNano::BnxFile->new($self->filtered_bnx_path);
    },
    init_arg => undef,
    documentation => 'Object representing the filtered (not raw) BNX file',
 );
 
-has 'data_directory' =>
+has 'bnx_paths' =>
   (is       => 'ro',
-   isa      => 'Str',
+   isa      => 'ArrayRef[Str]',
    lazy     => 1,
-   builder  => '_build_data_directory',
+   builder  => '_build_bnx_paths',
    init_arg => undef,
+   documentation => 'Paths of all BNX files in the directory',
 );
 
-has 'raw_bnx_path' =>
+has 'filtered_bnx_path' =>
   (is       => 'ro',
    isa      => 'Str',
    lazy     => 1,
-   builder  => '_build_raw_bnx_path',
+   builder  => '_build_filtered_bnx_path',
    init_arg => undef,
+   documentation => 'Path of the filtered BNX file. Exactly one '.
+       'filtered BNX file must be present, otherwise an error is raised',
 );
 
 has 'run_date' =>
@@ -67,23 +70,6 @@ has 'run_date' =>
    builder  => '_build_run_date',
    init_arg => undef,
    documentation => 'Date and time of run, parsed from the runfolder name',
-);
-
-has 'bnx_path' =>
-  (is       => 'ro',
-   isa      => 'Str',
-   lazy     => 1,
-   builder  => '_build_bnx_path',
-   init_arg => undef,
-);
-
-has 'ancillary_files' =>
-  (is       => 'ro',
-   isa      => 'ArrayRef[Str]',
-   lazy     => 1,
-   builder  => '_build_ancillary_files',
-   init_arg => undef,
-   documentation => 'Paths of ancillary files with information on the run',
 );
 
 has 'stock' =>
@@ -118,63 +104,47 @@ sub BUILD {
     return 1;
 }
 
-sub _build_ancillary_files {
+
+sub _build_ancillary_file_paths {
     my ($self) = @_;
-    my @ancillary_files;
     # exclude .bnx files from collection
-    my @files = WTSI::DNAP::Utilities::Collector->new(
+    my @ancillary_files = WTSI::DNAP::Utilities::Collector->new(
         root => $self->directory,
-    )->collect_files(sub {!($_[0] =~ m/[.]bnx$/msx)});
-    my %ancillary_file_names;
-    foreach my $name (@ANCILLARY_FILE_NAMES) {
-        $ancillary_file_names{$name} = 1;
-    }
-    foreach my $file (@files) {
-        if (!$ancillary_file_names{fileparse($file)}) {
-            $self->logwarn(q[Unexpected ancillary file name for '],
-                           $file, q[']);
-        }
-        push @ancillary_files, $file;
+    )->collect_files(sub {!($_[0] =~ m/[.](bnx|tiff)$/msx)});
+    foreach my $file (@ancillary_files) {
         $self->debug('Added ', $file, ' to list of ancillary files');
     }
     return \@ancillary_files;
 }
 
-sub _build_data_directory {
+sub _build_bnx_paths {
     my ($self) = @_;
-    my $data_directory = File::Spec->catfile($self->directory,
-                                             $DATA_DIRECTORY_NAME);
-    if (! -e $data_directory) {
-        $self->logconfess(q[BioNano data directory path '], $data_directory,
-                          q[' does not exist]);
+    my @files = WTSI::DNAP::Utilities::Collector->new(
+        root => $self->directory,
+    )->collect_files(sub {$_[0] =~ m/[.](bnx)$/msx});
+    foreach my $file (@files) {
+        $self->debug('Added ', $file, ' to list of BNX paths');
     }
-    if (! -d $data_directory) {
-        $self->logconfess(q[BioNano data directory path '], $data_directory,
-                          q[' is not a directory"]);
-    }
-    return $data_directory;
+    return \@files;
 }
 
-sub _build_bnx_path {
+sub _build_filtered_bnx_path {
     my ($self) = @_;
-    my $bnx_path = File::Spec->catfile($self->data_directory,
-                                             $BNX_NAME_FILTERED);
-    if (! -e $bnx_path) {
-        $self->logconfess(q[BioNano filtered bnx path '],
-                          $bnx_path, q[' does not exist]);
+    # consider BNX files, looking for exactly one with the name Molecules.bnx
+    my @bnx = grep {
+        fileparse($_) eq $BNX_NAME_FILTERED
+    } @{$self->bnx_paths};
+    if (scalar @bnx == 0) {
+        $self->logcroak('No filtered BNX file found in directory ',
+                        $self->directory);
+    } elsif (scalar @bnx > 1) {
+        my $files = join ', ', @bnx;
+        $self->logcroak('Found more than one filtered BNX file in directory ',
+                        $self->directory, ': ', $files);
     }
-    return $bnx_path;
-}
-
-sub _build_raw_bnx_path {
-    my ($self) = @_;
-    my $bnx_path = File::Spec->catfile($self->data_directory,
-                                             $BNX_NAME_RAW);
-    if (! -e $bnx_path) {
-        $self->logconfess(q[BioNano raw bnx path '],
-                          $bnx_path, q[' does not exist]);
-    }
-    return $bnx_path;
+    my $bnx = shift @bnx;
+    $self->debug("Found filtered BNX file $bnx");
+    return $bnx;
 }
 
 sub _build_run_date {
@@ -229,7 +199,7 @@ Iain Bancarz <ib5@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2016, 2017 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
@@ -243,10 +213,12 @@ GNU General Public License for more details.
 
 =head1 DESCRIPTION
 
-Class to represent a BioNano result set. The result set is a directory
-containing a data subdirectory, which in turn contains two BNX files,
-respectively filtered and unfiltered. The directory and subdirectory may
-also contain ancillary files with information on the run.
+Class to represent a BioNano result set, given a directory path.
 
+There must be exactly one Molecules.bnx file in the tree rooted at the
+given directory. The directory may also contain additional BNX files,
+and non-BNX ancillary files. TIFF image files are omitted from the
+ancillary file listing. Run timestamp and stock barcode are parsed from
+the directory name.
 
 =cut
