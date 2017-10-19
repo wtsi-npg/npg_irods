@@ -560,8 +560,11 @@ sub _catchup {
 sub _publish_ancillary_files {
   my ($self) = @_;
 
+  # This is a hack. At this time there is no flag to disable md5 cache
+  # files. However, we can limit their creation to files above a
+  # certain size and make that size unfeasibly large.
   my $publisher = WTSI::NPG::iRODS::Publisher->new
-    (checksum_cache_threshold => 1_000_000_000_000, # i.e. never cache
+    (checksum_cache_threshold => 1_000_000_000_000,
      irods                    => $self->irods);
 
   my @files = ($self->_list_manifest_files,
