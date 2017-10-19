@@ -11,6 +11,7 @@ bin/npg_publish_illumina_run.pl
 bin/npg_publish_minion_run.pl
 bin/npg_publish_pacbio_run.pl
 bin/npg_update_ebi_metadata.pl
+bin/npg_update_gridion_metadata.pl
 bin/npg_update_hts_metadata.pl
 bin/npg_update_pacbio_metadata.pl
 bin/samgen.pl
@@ -51,6 +52,7 @@ lib/WTSI/NPG/HTS/Illumina/XMLDataObject.pm
 lib/WTSI/NPG/HTS/LIMSFactory.pm
 lib/WTSI/NPG/HTS/Metadata.pm
 lib/WTSI/NPG/HTS/ONT/Annotator.pm
+lib/WTSI/NPG/HTS/ONT/GridIONMetaUpdater.pm
 lib/WTSI/NPG/HTS/ONT/GridIONRunMonitor.pm
 lib/WTSI/NPG/HTS/ONT/GridIONRunPublisher.pm
 lib/WTSI/NPG/HTS/ONT/MetaQuery.pm
@@ -172,6 +174,8 @@ t/data/datasub/valid/a.txt
 t/data/datasub/valid/b.txt
 t/data/datasub/valid/c.txt
 t/data/datasub/valid/d.txt
+t/data/gridion_meta_updater/GA10000_fast5_2017-10-18T161023.0.tar
+t/data/gridion_meta_updater/GA10000_fastq_2017-10-18T161024.0.tar
 t/data/header_parser/17550_1#1.txt
 t/data/illumina_meta_updater/7915_5#1.sam
 t/data/illumina_meta_updater/7915_5#1.test.json
@@ -15297,6 +15301,7 @@ t/fixtures/npgqc/CacheQuery.yml
 t/fixtures/npgqc/ClusterDensity.yml
 t/fixtures/npgqc/Fastqcheck.yml
 t/fixtures/npgqc/MqcOutcomeDict.yml
+t/gridion_meta_updater.t
 t/gridion_run_monitor.t
 t/gridion_run_publisher.t
 t/header_parser.t
@@ -15310,6 +15315,7 @@ t/lib/WTSI/NPG/HTS/Illumina/AncDataObjectTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/LogPublisherTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/RunPublisherTest.pm
+t/lib/WTSI/NPG/HTS/ONT/GridIONMetaUpdaterTest.pm
 t/lib/WTSI/NPG/HTS/ONT/GridIONRunMonitorTest.pm
 t/lib/WTSI/NPG/HTS/ONT/GridIONRunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/ONT/MinIONRunPublisherTest.pm

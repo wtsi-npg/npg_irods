@@ -1,12 +1,11 @@
 package WTSI::NPG::HTS::ONT::Annotator;
 
 use Moose::Role;
+
+use WTSI::NPG::HTS::Metadata;
 use WTSI::NPG::iRODS::Metadata;
 
 our $VERSION = '';
-
-our $GRIDION_EXPERIMENT_NAME = 'experiment_name';
-our $GRIDION_DEVICE_ID       = 'device_id';
 
 with qw[
          WTSI::NPG::iRODS::Annotator
@@ -32,9 +31,21 @@ sub make_primary_metadata {
     $self->logconfess('A defined device_id argument is required');
 
   my @avus;
-  return ($self->make_avu($GRIDION_EXPERIMENT_NAME, $experiment_name),
+  return ($self->make_avu($EXPERIMENT_NAME, $experiment_name),
           $self->make_avu($GRIDION_DEVICE_ID, $device_id));
 }
+
+
+=head2 make_secondary_metadata
+
+  Arg [n]      ONT flowcell records,
+               Array[WTSI::DNAP::Warehouse::Schema::Result::OseqFlowcell]
+
+  Example    : my @avus = $ann->make_secondary_metadata(@run_records);
+  Description: Return secondary AVU metadata for a run.
+  Returntype : Array[HashRef]
+
+=cut
 
 sub make_secondary_metadata {
   my ($self, @run_records) = @_;
@@ -111,7 +122,7 @@ WTSI::NPG::HTS::ONT::Annotator
 
 =head1 DESCRIPTION
 
-
+A role providing methods to calculate metadata for WTSI GridION runs.
 
 =head1 AUTHOR
 
