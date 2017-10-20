@@ -26,6 +26,7 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -63,6 +64,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -100,6 +102,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -137,6 +140,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -174,6 +178,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -211,6 +216,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -248,6 +254,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -285,6 +292,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -322,6 +330,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -359,6 +368,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -396,6 +406,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -433,6 +444,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -470,6 +482,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -507,6 +520,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -544,6 +558,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -581,6 +596,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -618,6 +634,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -655,6 +672,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -692,6 +710,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -729,6 +748,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -766,6 +786,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -803,6 +824,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -840,6 +862,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -877,6 +900,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -914,6 +938,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -951,6 +976,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -988,6 +1014,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1025,6 +1052,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1062,6 +1090,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1099,6 +1128,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1136,6 +1166,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1173,6 +1204,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1210,6 +1242,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1247,6 +1280,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1284,6 +1318,7 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1321,6 +1356,7 @@
   requested_insert_size_from: 400
   requested_insert_size_to: 600
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1358,6 +1394,7 @@
   requested_insert_size_from: 400
   requested_insert_size_to: 600
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1395,6 +1432,7 @@
   requested_insert_size_from: 400
   requested_insert_size_to: 600
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1432,6 +1470,7 @@
   requested_insert_size_from: 400
   requested_insert_size_to: 600
   reverse_read_length: 100
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1458,17 +1497,18 @@
   id_study_tmp: 177
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
   manual_qc: 1
   pipeline_id_lims: ~
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:14
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1495,17 +1535,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798968
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:14
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1532,17 +1573,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798980
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:14
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1569,17 +1611,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798992
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:14
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1606,17 +1649,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799004
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1643,17 +1687,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799016
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1680,17 +1725,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799028
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1717,17 +1763,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799040
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1754,17 +1801,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799052
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1791,17 +1839,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799018
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1828,17 +1877,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799030
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1865,17 +1915,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799042
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1902,17 +1953,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799054
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1939,17 +1991,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798971
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -1976,17 +2029,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798983
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2013,17 +2067,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798995
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2050,17 +2105,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799007
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2087,17 +2143,18 @@
   id_study_tmp: 177
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
   manual_qc: 1
   pipeline_id_lims: ~
   position: 2
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2124,17 +2181,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798969
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2161,17 +2219,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798981
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2198,17 +2257,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798993
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2235,17 +2295,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799005
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2272,17 +2333,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799017
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2309,17 +2371,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799029
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2346,17 +2409,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799041
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2383,17 +2447,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799053
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2420,17 +2485,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798970
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2457,17 +2523,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798982
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2494,17 +2561,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798994
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2531,17 +2599,18 @@
   id_study_tmp: 3722
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799006
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2568,17 +2637,18 @@
   id_study_tmp: 177
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
   manual_qc: 1
   pipeline_id_lims: ~
   position: 3
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2590,7 +2660,7 @@
   tag_set_name: 384plex_11mers
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849978
   entity_type: library_indexed
   external_release: 1
@@ -2605,17 +2675,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848484
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2627,7 +2698,7 @@
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849978
   entity_type: library_indexed
   external_release: 1
@@ -2642,17 +2713,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848496
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2664,7 +2736,7 @@
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849978
   entity_type: library_indexed
   external_release: 1
@@ -2679,17 +2751,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848508
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2701,7 +2774,7 @@
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849978
   entity_type: library_indexed
   external_release: 1
@@ -2716,17 +2789,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848520
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2738,7 +2812,7 @@
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849978
   entity_type: library_indexed
   external_release: 1
@@ -2753,17 +2827,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848532
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2775,7 +2850,7 @@
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849978
   entity_type: library_indexed
   external_release: 1
@@ -2790,17 +2865,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848544
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2812,7 +2888,7 @@
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849978
   entity_type: library_indexed
   external_release: 1
@@ -2827,17 +2903,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848556
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2849,7 +2926,7 @@
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849978
   entity_type: library_indexed
   external_release: 1
@@ -2864,17 +2941,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848568
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2901,17 +2979,18 @@
   id_study_tmp: 177
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
   manual_qc: 1
   pipeline_id_lims: ~
   position: 4
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2923,7 +3002,7 @@
   tag_set_name: 384plex_11mers
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849979
   entity_type: library_indexed
   external_release: 1
@@ -2938,17 +3017,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848484
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2960,7 +3040,7 @@
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849979
   entity_type: library_indexed
   external_release: 1
@@ -2975,17 +3055,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848496
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -2997,7 +3078,7 @@
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849979
   entity_type: library_indexed
   external_release: 1
@@ -3012,17 +3093,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848508
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3034,7 +3116,7 @@
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849979
   entity_type: library_indexed
   external_release: 1
@@ -3049,17 +3131,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848520
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3071,7 +3154,7 @@
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849979
   entity_type: library_indexed
   external_release: 1
@@ -3086,17 +3169,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848532
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3108,7 +3192,7 @@
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849979
   entity_type: library_indexed
   external_release: 1
@@ -3123,17 +3207,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848544
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3145,7 +3230,7 @@
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849979
   entity_type: library_indexed
   external_release: 1
@@ -3160,17 +3245,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848556
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3182,7 +3268,7 @@
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
 - bait_name: ~
-  cost_code: S0815
+  cost_code: S0946
   entity_id_lims: 14849979
   entity_type: library_indexed
   external_release: 1
@@ -3197,17 +3283,18 @@
   id_study_tmp: 3258
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848568
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
   priority: 0
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3234,17 +3321,18 @@
   id_study_tmp: 177
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
   manual_qc: 1
   pipeline_id_lims: ~
   position: 5
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3271,17 +3359,18 @@
   id_study_tmp: 3718
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14766963
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3308,17 +3397,18 @@
   id_study_tmp: 3718
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14766964
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3345,17 +3435,18 @@
   id_study_tmp: 3718
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14766965
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3382,17 +3473,18 @@
   id_study_tmp: 3718
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14766966
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:15
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3419,17 +3511,18 @@
   id_study_tmp: 3718
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14766967
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3456,17 +3549,18 @@
   id_study_tmp: 177
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
   manual_qc: 1
   pipeline_id_lims: ~
   position: 6
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3493,17 +3587,18 @@
   id_study_tmp: 3758
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801131
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3530,17 +3625,18 @@
   id_study_tmp: 3758
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801132
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3567,17 +3663,18 @@
   id_study_tmp: 3758
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801133
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3604,17 +3701,18 @@
   id_study_tmp: 3758
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801134
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3641,17 +3739,18 @@
   id_study_tmp: 3758
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801135
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3678,17 +3777,18 @@
   id_study_tmp: 3758
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801136
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3715,17 +3815,18 @@
   id_study_tmp: 3758
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801137
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3752,17 +3853,18 @@
   id_study_tmp: 3758
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801138
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3789,17 +3891,18 @@
   id_study_tmp: 3758
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801139
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3826,17 +3929,18 @@
   id_study_tmp: 3758
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801140
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3863,17 +3967,18 @@
   id_study_tmp: 3758
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801141
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3900,17 +4005,18 @@
   id_study_tmp: 3758
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801142
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3937,17 +4043,18 @@
   id_study_tmp: 177
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
   manual_qc: 1
   pipeline_id_lims: ~
   position: 7
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -3974,17 +4081,18 @@
   id_study_tmp: 2872
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727828
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4011,17 +4119,18 @@
   id_study_tmp: 2872
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727912
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4048,17 +4157,18 @@
   id_study_tmp: 2872
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727889
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4085,17 +4195,18 @@
   id_study_tmp: 2872
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727913
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4122,17 +4233,18 @@
   id_study_tmp: 2872
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727878
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4159,17 +4271,18 @@
   id_study_tmp: 2872
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727890
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4196,17 +4309,18 @@
   id_study_tmp: 177
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
   manual_qc: 1
   pipeline_id_lims: ~
   position: 8
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4233,17 +4347,18 @@
   id_study_tmp: 2872
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727840
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4270,17 +4385,18 @@
   id_study_tmp: 2872
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727876
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4307,17 +4423,18 @@
   id_study_tmp: 2872
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727829
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4344,17 +4461,18 @@
   id_study_tmp: 2872
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727901
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4381,17 +4499,18 @@
   id_study_tmp: 2872
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727842
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4418,17 +4537,18 @@
   id_study_tmp: 2872
   is_r_and_d: 0
   is_spiked: 1
-  last_updated: 2015-10-02 11:55:43
+  last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727902
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
   priority: 3
-  purpose: ~
-  recorded_at: 2015-10-02 15:30:16
+  purpose: standard
+  recorded_at: 2017-08-31 14:44:18
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4466,6 +4586,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4503,6 +4624,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4540,6 +4662,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4577,6 +4700,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4614,6 +4738,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4651,6 +4776,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4688,6 +4814,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4725,6 +4852,7 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4762,6 +4890,7 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4799,6 +4928,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4836,6 +4966,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4873,6 +5004,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4910,6 +5042,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4947,6 +5080,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -4984,6 +5118,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5021,6 +5156,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5058,6 +5194,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5095,6 +5232,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5132,6 +5270,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5169,6 +5308,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5206,6 +5346,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5243,6 +5384,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5280,6 +5422,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5317,6 +5460,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5354,6 +5498,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5391,6 +5536,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5428,6 +5574,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5465,6 +5612,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5502,6 +5650,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5539,6 +5688,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5576,6 +5726,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5613,6 +5764,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5650,6 +5802,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5687,6 +5840,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5724,6 +5878,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5761,6 +5916,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5798,6 +5954,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5835,6 +5992,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5872,6 +6030,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5909,6 +6068,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5946,6 +6106,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -5983,6 +6144,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6020,6 +6182,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6057,6 +6220,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6094,6 +6258,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6131,6 +6296,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6168,6 +6334,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6205,6 +6372,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6242,6 +6410,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6279,6 +6448,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6316,6 +6486,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6353,6 +6524,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6390,6 +6562,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6427,6 +6600,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6464,6 +6638,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6501,6 +6676,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6538,6 +6714,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6575,6 +6752,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6612,6 +6790,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6649,6 +6828,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6686,6 +6866,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6723,6 +6904,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6760,6 +6942,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~
@@ -6797,6 +6980,7 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
   tag2_set_id_lims: ~

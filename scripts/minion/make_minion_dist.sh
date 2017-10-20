@@ -6,7 +6,7 @@ set -x
 
 PREFIX=${PREFIX:=/usr/local/npg}
 
-MINION_USER=${USER:=minion}
+MINION_USER=${USER:=grid}
 
 IRODS_HOST=${IRODS_HOST:=localhost}
 IRODS_ZONE=${IRODS_ZONE:=tempZone}

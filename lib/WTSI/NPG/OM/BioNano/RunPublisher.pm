@@ -37,10 +37,8 @@ has 'directory' =>
 has 'irods' =>
   (is       => 'ro',
    isa      => 'WTSI::NPG::iRODS',
-   required => 1,
-   default  => sub {
-     return WTSI::NPG::iRODS->new;
-   });
+   required => 1
+);
 
 has 'resultset' =>
   (is       => 'ro',
@@ -96,36 +94,31 @@ sub publish {
     # publish data to iRODS, if not already present
     my $dirname = basename($self->resultset->directory);
     my $bionano_collection = catdir($leaf_collection, $dirname);
+    my $bionano_published_coll;
     if ($self->irods->list_collection($bionano_collection)) {
         $self->info(q[Skipping publication of BioNano data collection '],
                 $bionano_collection, q[': already exists]);
     } else {
         my $collection_meta = $self->make_collection_meta();
         my $publisher = WTSI::NPG::iRODS::Publisher->new(irods => $self->irods);
-        my $bionano_published_coll = $publisher->publish(
-            $self->resultset->directory,
-            $leaf_collection,
-            $collection_meta,
-            $timestamp,
-        );
-        if ($bionano_published_coll ne $bionano_collection) {
-            $self->logcroak(q[Expected BioNano publication destination '],
-                            $bionano_collection,
-                            q[' not equal to return value from Publisher '],
-                            $bionano_published_coll, q[']
-                        );
-        } else {
-            $self->debug(q[Published BioNano runfolder '],
-                         $self->resultset->directory,
-                         q[' to iRODS destination '],
-                         $bionano_collection, q[']
-                     );
-        }
+
+        $bionano_published_coll =
+          $publisher->publish($self->resultset->directory,
+                              $leaf_collection,
+                              $collection_meta,
+                              $timestamp)->str;
+
+        $self->debug(q[Published BioNano runfolder '],
+                     $self->resultset->directory,
+                     q[' to iRODS destination '],
+                     $bionano_collection, q[']);
+
         my $bnx_ipath = $self->_apply_bnx_file_metadata($bionano_collection);
         $self->debug(q[Applied metadata to BNX iRODS object '],
                      $bnx_ipath, q[']);
     }
-    return $bionano_collection;
+
+    return $bionano_published_coll;
 }
 
 

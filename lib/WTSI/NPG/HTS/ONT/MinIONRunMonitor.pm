@@ -25,9 +25,10 @@ with qw[
 our $VERSION = '';
 
 our $SELECT_TIMEOUT = 2;
+our $ISO8601_DAY    = '%Y-%m-%d';
 
 our $DEFAULT_PUBLISHER_LOG_TEMPLATE = << 'LOGCONF'
-log4perl.logger = ERROR, A1
+log4perl.logger = %s, A1
 
 log4perl.logger.WTSI.NPG.HTS.ONT = INFO, A1
 log4perl.logger.WTSI.NPG.HTS.TarPublisher = INFO, A1
@@ -88,10 +89,11 @@ sub start {
 
   $self->info(sprintf
               q[Started MinIONRunMonitor; staging path: '%s', ] .
-              q[tar capacity: %d files, tar timeout %d sec ] .
+              q[tar capacity: %d files or %d bytes, tar timeout %d sec ] .
               q[max processes: %d, session timeout %d sec],
-              $self->staging_path, $self->arch_capacity, $self->arch_timeout,
-              $self->max_processes, $self->session_timeout);
+              $self->staging_path, $self->arch_capacity, $self->arch_bytes,
+              $self->arch_timeout, $self->max_processes,
+              $self->session_timeout);
 
   my $pm = Parallel::ForkManager->new($self->max_processes);
 
@@ -141,28 +143,31 @@ sub start {
             next EVENT;
           }
 
+          my $log_level = Log::Log4perl->get_logger($self->meta->name)->level;
+
           my $pid = $pm->start($abs_path) and next EVENT;
 
           # Child process
           my $child_pid = $PID;
           $self->info("Started MinIONRunPublisher with PID $child_pid on ",
                       "'$abs_path'");
-          my $logconf = $self->_make_publisher_logconf($abs_path, $child_pid);
+          my $logconf = $self->_make_publisher_logconf($abs_path, $child_pid,
+                                                       $log_level);
           Log::Log4perl::init(\$logconf);
 
-          # Spread the data across collections
-          my $path_digest = Digest::MD5->new->add($abs_path)->hexdigest;
-          my @levels = $path_digest =~ m{\G(..)}gmsx;
-          my $coll = catdir($self->dest_collection, @levels[0..2]);
+          # Publish the data into today's collection
+          my $today_coll = DateTime->now->strftime($ISO8601_DAY);
+          my $coll = catdir($self->dest_collection, $today_coll);
           $self->info("Publishing to '$coll'");
 
           my $publisher = WTSI::NPG::HTS::ONT::MinIONRunPublisher->new
-            (arch_capacity   => $self->arch_capacity,
+            (arch_bytes      => $self->arch_bytes,
+             arch_capacity   => $self->arch_capacity,
              arch_timeout    => $self->arch_timeout,
              dest_collection => $coll,
+             f5_uncompress   => 0,
              runfolder_path  => $abs_path,
-             session_timeout => $self->session_timeout,
-             f5_uncompress   => 0);
+             session_timeout => $self->session_timeout);
 
           my ($nf, $ne) = $publisher->publish_files;
           my $exit_code = $ne == 0 ? 0 : 1;
@@ -253,13 +258,14 @@ sub _make_callback {
 };
 
 sub _make_publisher_logconf {
-  my ($self, $path, $pid) = @_;
+  my ($self, $path, $pid, $level) = @_;
 
   my $name = $self->meta->name;
   $name =~ s/::/_/gmsx;
   my $logfile = catfile($path, sprintf '%s.%d.log', $name, $pid);
 
-  return sprintf $DEFAULT_PUBLISHER_LOG_TEMPLATE, $logfile;
+  return sprintf $DEFAULT_PUBLISHER_LOG_TEMPLATE,
+    Log::Log4perl::Level::to_level($level), $logfile;
 }
 
 __PACKAGE__->meta->make_immutable;

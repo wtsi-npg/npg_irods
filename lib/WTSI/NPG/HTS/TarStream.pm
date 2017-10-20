@@ -2,6 +2,7 @@ package WTSI::NPG::HTS::TarStream;
 
 use namespace::autoclean;
 
+use DateTime;
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions qw[abs2rel];
@@ -10,16 +11,36 @@ use MooseX::StrictConstructor;
 
 our $VERSION = '';
 
-our $PUT_STREAM = 'npg_irods_putstream.sh';
+our $ISO8601_DATETIME = '%Y-%m-%dT%H%m%S';
+our $PUT_STREAM       = 'npg_irods_putstream.sh';
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
        ];
 
+has 'byte_count' =>
+  (isa           => 'Int',
+   is            => 'rw',
+   required      => 1,
+   default       => 0,
+   init_arg      => undef,
+   documentation => 'The total number of bytes published');
+
+has 'pid' =>
+  (isa           => 'Int',
+   is            => 'rw',
+   required      => 0,
+   predicate     => 'has_pid',
+   clearer       => 'clear_pid',
+   init_arg      => undef,
+   documentation => 'The child process ID');
+
 has 'tar' =>
   (isa           => 'FileHandle',
    is            => 'rw',
    required      => 0,
+   predicate     => 'has_tar',
+   clearer       => 'clear_tar',
    init_arg      => undef,
    documentation => 'The tar file handle for writing');
 
@@ -50,6 +71,16 @@ has 'remove_files' =>
    default       => 0,
    documentation => 'Enable GNU tar --remove-files option to remove the ' .
                     'original file once archived');
+
+has 'time_started' =>
+  (isa           => 'DateTime',
+   is            => 'ro',
+   required      => 1,
+   predicate     => 'has_time_started',
+   builder       => '_build_time_started',
+   lazy          => 1,
+   init_arg      => undef,
+   documentation => 'The time at which the tar stream was opened');
 
 sub BUILD {
   my ($self) = @_;
@@ -92,10 +123,15 @@ sub open_stream {
                 "$PUT_STREAM -t $suffix '$tar_path' >/dev/null";
   $self->info("Opening pipe to '$tar_cmd' in '$tar_cwd'");
 
-  open my $fh, q[|-], $tar_cmd
+  my $pid = open my $fh, q[|-], $tar_cmd
     or $self->logcroak("Failed to open pipe to '$tar_cmd': $ERRNO");
 
+  my $now_datetime = $self->time_started->strftime($ISO8601_DATETIME);
+  $self->info("Started tar process to '$tar_path' with PID ",
+              "$pid at $now_datetime");
+
   $self->tar($fh);
+  $self->pid($pid);
 
   return $self->tar;
 }
@@ -112,20 +148,25 @@ sub open_stream {
 sub close_stream {
   my ($self) = @_;
 
-  my $filename = $self->tar_file;
-  if (defined $self->tar) {
-    close $self->tar or
-      $self->logcroak("Failed to close '$filename': $ERRNO");
+  my $tar_path = $self->tar_file;
+  if ($self->has_tar) {
+    my $pid = $self->pid;
 
-    $self->debug("Closed '$filename'");
+    close $self->tar or
+      $self->logcroak("Failed close tar process to '$tar_path' with PID ",
+                      "$pid: $ERRNO");
+
+    $self->debug("Closed tar process to '$tar_path' with PID $pid");
   }
+  $self->clear_tar;
+  $self->clear_pid;
 
   return;
 }
 
 =head2 add_file
 
-  Arg [1]    : File path, Str.
+  Arg [1]    : Absolute file path, Str.
 
   Example    : my $path = $obj->add_file('/path/to/file');
   Description: Add a file to the current tar stream and return its
@@ -142,15 +183,26 @@ sub add_file {
 
   my $rel_path = abs2rel($path, $self->tar_cwd);
 
+  my $size     = -s $path;
   my $filename = $self->tar_file;
-  $self->debug("Adding '$rel_path' to '$filename'");
+  $self->debug("Adding '$rel_path' ($size bytes) to '$filename'");
 
   print {$self->tar} "$rel_path\n" or
     $self->logcroak("Failed write to filehandle of '$filename'");
 
   $self->tar_content->{$rel_path} = 1;
+  $self->byte_count($self->byte_count + $size);
 
   return $rel_path;
+}
+
+sub file_added {
+  my ($self, $path) = @_;
+
+  $self->_check_absolute($path);
+  my $rel_path = abs2rel($path, $self->tar_cwd);
+
+  return exists $self->tar_content->{$rel_path};
 }
 
 =head2 file_count
@@ -177,6 +229,12 @@ sub _check_absolute {
     $self->logconfess("An absolute path argument is required: '$path'");
 
   return;
+}
+
+sub _build_time_started {
+  my ($self) = @_;
+
+  return DateTime->now;
 }
 
 __PACKAGE__->meta->make_immutable;

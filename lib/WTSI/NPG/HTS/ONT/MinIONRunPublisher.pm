@@ -287,6 +287,10 @@ sub publish_files {
 after 'publish_files' => sub {
   my ($self) = @_;
 
+  my $run_coll = catdir($self->dest_collection, $self->run_id);
+  my $coll = WTSI::NPG::iRODS::Collection->new($self->irods, $run_coll);
+  my $path = $coll->str;
+
   my @metadata = $self->make_creation_metadata($self->affiliation_uri,
                                                DateTime->now,
                                                $self->accountee_uri);
@@ -295,10 +299,10 @@ after 'publish_files' => sub {
   if ($self->has_sample_id) {
     push @metadata, $self->make_avu($SAMPLE_NAME, $self->sample_id);
   }
-
-  my $coll = WTSI::NPG::iRODS::Collection->new($self->irods,
-                                               $self->dest_collection);
-  my $path = $coll->str;
+  else {
+    $self->warn(q[Failed to determine a sample_id in runfolder '],
+                $self->runfolder_path, "' for collection '$path'");
+  }
 
   my $num_errors = 0;
   foreach my $avu (@metadata) {
@@ -444,9 +448,9 @@ sub _make_callback {
 sub _identify_run_fast5 {
   my ($self, $path) = @_;
 
+  my $run_id;
+  my $sample_id;
   my $device_id = 'unknown_device_id';
-  my $run_id    = 'unknown_run_id';
-  my $sample_id = 'unknown_sample_id';
   my $version   = 'unknown_minknow_version';
 
   my $f5;
@@ -476,6 +480,10 @@ sub _identify_run_fast5 {
     }
     else {
       croak "Failed to read the tracking group from '$path'";
+    }
+
+    if (not $run_id) {
+      croak "Failed to read the run ID from '$path'";
     }
   } catch {
     $self->error("Failed to read from fast5 file '$path': $_");
@@ -525,7 +533,7 @@ sub _do_publish {
       copy($path, $tmp_path) or
         $self->logcroak("Failed to copy '$path' to '$tmp_path': ", $ERRNO);
 
-      if(-e $tmp_path) {
+      if (-e $tmp_path) {
         $self->debug("'$tmp_path' exists");
       }
       else {
@@ -668,16 +676,27 @@ sub _make_tar_publisher {
   my $manifest_path = catfile($self->runfolder_path,
                               sprintf '%s_%s_manifest.txt',
                               $self->run_id, $format);
-  my $tar_path      = catfile($self->dest_collection,
-                              sprintf '%s_%s_%s',
-                              $self->run_id, $self->session_name, $format);
+
+  my $run_coll = catdir($self->dest_collection, $self->run_id);
+  if ($self->irods->is_collection($run_coll)) {
+    $self->debug("Using existing run collection '$run_coll'");
+  }
+  else {
+    $self->debug("Creating new run collection '$run_coll'");
+    $self->irods->add_collection($run_coll);
+  }
+
+  my $tar_path = catfile($run_coll,
+                         sprintf '%s_%s_%s',
+                         $self->run_id, $self->session_name, $format);
   # Work in the tmpdir so that the tarred files have the same relative
   # path as if working in the runfolder.
-  my $tar_cwd       = $self->tmpdir->dirname;
+  my $tar_cwd  = $self->tmpdir->dirname;
 
   return WTSI::NPG::HTS::TarPublisher->new
     (manifest_path => $manifest_path,
      remove_files  => 1,
+     tar_bytes     => $self->arch_bytes,
      tar_capacity  => $self->arch_capacity,
      tar_cwd       => $tar_cwd,
      tar_path      => $tar_path);

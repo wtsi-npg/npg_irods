@@ -8,7 +8,7 @@
   paired_read: 1
   pf_bases: 33316770
   pf_cluster_count: 3470497
-  pf_cluster_density: 597588.400
+  pf_cluster_density: 597588.4
   position: 5
   q20_yield_kb_forward_read: 16190659
   q20_yield_kb_reverse_read: 15720937
@@ -18,9 +18,10 @@
   q40_yield_kb_reverse_read: 8053004
   qc_complete: 2012-05-16 15:33:09
   raw_cluster_count: 3709563
-  raw_cluster_density: 639470.600
+  raw_cluster_density: 639470.6
   run_complete: 2012-05-13 16:16:23
   run_pending: 2012-05-02 08:47:59
+  run_priority: 2
   tags_decode_cv: 71.43
   tags_decode_percent: 97.03
   unexpected_tags_percent: 0.01
@@ -46,9 +47,10 @@
   raw_cluster_density: 935699.625
   run_complete: 2015-02-05 17:36:52
   run_pending: 2015-02-04 11:39:20
-  tags_decode_cv: 2.80
+  run_priority: 1
+  tags_decode_cv: 2.8
   tags_decode_percent: 97.14
-  unexpected_tags_percent: 0.00
+  unexpected_tags_percent: 0
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -66,14 +68,15 @@
   q30_yield_kb_reverse_read: 18590685
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
-  qc_complete: 2015-10-05 14:50:53
+  qc_complete: 2016-11-29 18:38:20
   raw_cluster_count: 2932665
   raw_cluster_density: 1005772.438
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
+  run_priority: 4
   tags_decode_cv: 34.47
   tags_decode_percent: 99.37
-  unexpected_tags_percent: 0.00
+  unexpected_tags_percent: 0
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -91,14 +94,15 @@
   q30_yield_kb_reverse_read: 18230913
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
-  qc_complete: 2015-10-05 14:50:53
+  qc_complete: 2016-11-29 18:38:20
   raw_cluster_count: 2858530
   raw_cluster_density: 981122.188
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
+  run_priority: 4
   tags_decode_cv: 8.75
   tags_decode_percent: 99.31
-  unexpected_tags_percent: 0.00
+  unexpected_tags_percent: 0
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -116,14 +120,15 @@
   q30_yield_kb_reverse_read: 16048321
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
-  qc_complete: 2015-10-05 14:50:53
+  qc_complete: 2016-11-29 18:38:20
   raw_cluster_count: 2447773
   raw_cluster_density: 839135.156
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
+  run_priority: 4
   tags_decode_cv: 5.02
   tags_decode_percent: 99.34
-  unexpected_tags_percent: 0.00
+  unexpected_tags_percent: 0
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -133,7 +138,7 @@
   paired_read: 1
   pf_bases: 33859008
   pf_cluster_count: 2351320
-  pf_cluster_density: 787195.750
+  pf_cluster_density: 787195.75
   position: 4
   q20_yield_kb_forward_read: 16675567
   q20_yield_kb_reverse_read: 16455484
@@ -141,14 +146,15 @@
   q30_yield_kb_reverse_read: 16015316
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
-  qc_complete: 2015-10-05 14:50:53
+  qc_complete: 2016-11-29 18:38:20
   raw_cluster_count: 2451064
   raw_cluster_density: 841962.719
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
+  run_priority: 4
   tags_decode_cv: 5.03
   tags_decode_percent: 99.32
-  unexpected_tags_percent: 0.00
+  unexpected_tags_percent: 0
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -166,14 +172,15 @@
   q30_yield_kb_reverse_read: 17725927
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
-  qc_complete: 2015-10-05 14:50:53
+  qc_complete: 2016-11-29 18:38:20
   raw_cluster_count: 2764648
   raw_cluster_density: 950027.688
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
+  run_priority: 4
   tags_decode_cv: 11.19
   tags_decode_percent: 99.24
-  unexpected_tags_percent: 0.00
+  unexpected_tags_percent: 0
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -191,14 +198,15 @@
   q30_yield_kb_reverse_read: 13998657
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
-  qc_complete: 2015-10-05 14:50:53
+  qc_complete: 2016-11-29 18:38:20
   raw_cluster_count: 2098058
   raw_cluster_density: 719131.469
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
+  run_priority: 4
   tags_decode_cv: 5.57
   tags_decode_percent: 99.37
-  unexpected_tags_percent: 0.00
+  unexpected_tags_percent: 0
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -216,14 +224,15 @@
   q30_yield_kb_reverse_read: 8870236
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
-  qc_complete: 2015-10-05 14:50:53
+  qc_complete: 2016-11-29 18:38:20
   raw_cluster_count: 1331252
   raw_cluster_density: 454974.094
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
+  run_priority: 4
   tags_decode_cv: 29.03
   tags_decode_percent: 97.91
-  unexpected_tags_percent: 0.00
+  unexpected_tags_percent: 0
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
@@ -241,14 +250,15 @@
   q30_yield_kb_reverse_read: 18436977
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
-  qc_complete: 2015-10-05 14:50:53
+  qc_complete: 2016-11-29 18:38:20
   raw_cluster_count: 3022313
   raw_cluster_density: 1042369.531
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
+  run_priority: 4
   tags_decode_cv: 35.15
-  tags_decode_percent: 97.60
-  unexpected_tags_percent: 0.00
+  tags_decode_percent: 97.6
+  unexpected_tags_percent: 0
 - cancelled: 0
   cycles: 302
   flowcell_barcode: HHH55CCXX
@@ -268,9 +278,10 @@
   q40_yield_kb_reverse_read: 41486147
   qc_complete: 2016-01-04 10:11:25
   raw_cluster_count: ~
-  raw_cluster_density: 2355119.250
+  raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
+  run_priority: 4
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -283,7 +294,7 @@
   paired_read: 1
   pf_bases: ~
   pf_cluster_count: ~
-  pf_cluster_density: 1638961.250
+  pf_cluster_density: 1638961.25
   position: 2
   q20_yield_kb_forward_read: 63924174
   q20_yield_kb_reverse_read: 61095897
@@ -293,9 +304,10 @@
   q40_yield_kb_reverse_read: 41978794
   qc_complete: 2016-01-04 10:11:25
   raw_cluster_count: ~
-  raw_cluster_density: 2355119.250
+  raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
+  run_priority: 4
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -318,9 +330,10 @@
   q40_yield_kb_reverse_read: 44454411
   qc_complete: 2016-01-04 10:11:25
   raw_cluster_count: ~
-  raw_cluster_density: 2355119.250
+  raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
+  run_priority: 4
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -343,9 +356,10 @@
   q40_yield_kb_reverse_read: 43849161
   qc_complete: 2016-01-04 10:11:25
   raw_cluster_count: ~
-  raw_cluster_density: 2355119.250
+  raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
+  run_priority: 4
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -368,9 +382,10 @@
   q40_yield_kb_reverse_read: 42466036
   qc_complete: 2016-01-04 10:11:25
   raw_cluster_count: ~
-  raw_cluster_density: 2355119.250
+  raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
+  run_priority: 4
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -393,9 +408,10 @@
   q40_yield_kb_reverse_read: 45809326
   qc_complete: 2016-01-04 10:11:25
   raw_cluster_count: ~
-  raw_cluster_density: 2355119.250
+  raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
+  run_priority: 4
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -418,9 +434,10 @@
   q40_yield_kb_reverse_read: 44787479
   qc_complete: 2016-01-04 10:11:25
   raw_cluster_count: ~
-  raw_cluster_density: 2355119.250
+  raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
+  run_priority: 4
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -433,7 +450,7 @@
   paired_read: 1
   pf_bases: ~
   pf_cluster_count: ~
-  pf_cluster_density: 1728434.250
+  pf_cluster_density: 1728434.25
   position: 8
   q20_yield_kb_forward_read: 67440120
   q20_yield_kb_reverse_read: 64748037
@@ -443,9 +460,10 @@
   q40_yield_kb_reverse_read: 46041515
   qc_complete: 2016-01-04 10:11:25
   raw_cluster_count: ~
-  raw_cluster_density: 2355119.250
+  raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
+  run_priority: 4
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -471,6 +489,7 @@
   raw_cluster_density: 1366438.812
   run_complete: 2016-02-28 05:52:40
   run_pending: 2016-02-25 15:44:09
+  run_priority: 4
   tags_decode_cv: 164.68
   tags_decode_percent: 96.74
-  unexpected_tags_percent: 0.00
+  unexpected_tags_percent: 0

@@ -48,7 +48,9 @@ my $build = BuildONT->new
    test_files        => [
                          './t/compile_scripts.t',
                          './t/critic.t',
-                         './t/minion_run_publisher.t'
+                         './t/gridion_run_monitor.t',
+                         './t/gridion_run_publisher.t',
+                         './t/minion_run_publisher.t',
                         ]
   );
 
