@@ -1,21 +1,27 @@
+Release 2.4
+
+ - Added GridION publishing and primary metadata support.
+ - Requires perl-irods-wrap >= 3.*
+
 Release 2.3
 
- - Made tests requiring h5repack TODO until we work out why it fails intermittently
+ - Made tests requiring h5repack TODO until we work out why it fails
+   intermittently.
  - MinIONRunPublisher
-     use /tmp instead of /dev/shm
-     added boolean attributes to control compression
+     use /tmp instead of /dev/shm.
+     added boolean attributes to control compression.
  - Support streaming MinION data to iRODS;
-     this adds dependencies on tears, GNU tar and h5 tools (h5repack)
- - Update as well as add PacBio legacy meta data
- - Test against htslib 1.5, samtools 1.5
+     this adds dependencies on tears, GNU tar and h5 tools (h5repack).
+ - Update as well as add PacBio legacy meta data.
+ - Test against htslib 1.5, samtools 1.5.
 
 Release 2.2
 
  - PacBio
-    Sequel monitor to use new completedAt date
-    add warning for Sequel R&D run entry
-    archive Sequel adapters.fasta
-    restrict access for relevant PacBio files 
+    Sequel monitor to use new completedAt date.
+    add warning for Sequel R&D run entry.
+    archive Sequel adapters.fasta.
+    restrict access for relevant PacBio files.
 
 Release 2.1
 
