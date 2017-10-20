@@ -127,6 +127,7 @@ npg_publish_bionano_run
 
 
 Options:
+
   --days-ago
   --days_ago        The number of days ago that the publication window
                     ends. Optional, defaults to zero (the current day).
@@ -175,17 +176,17 @@ Publication requirements for each runfolder are:
 
 =over
 
-=item * Must contain exactly one Molecules.bnx file, at any depth within the
-folder.
+=item * Must contain exactly one file named Molecules.bnx, at any depth
+within the folder.
 
-=item * Must have a name of the form [stock_barcode]_[timestamp], for example
-sample_01234_2017-01-01_09_00.
+=item * Runfolder name must be of the form [stock_barcode]_[timestamp],
+for example sample_01234_2017-01-01_09_00.
 
-=item * The barcode may contain any non-whitespace characters, including
-underscores.
+=item * The stock barcode may contain any non-whitespace characters,
+including underscores.
 
 =item * The timestamp must be in the format used by the BioNano instrument
-software, as in the above example.
+software, as in the above example: YYYY-MM-DD_hh_mm.
 
 =back
 

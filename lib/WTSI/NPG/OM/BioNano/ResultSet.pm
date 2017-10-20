@@ -193,6 +193,25 @@ no Moose;
 
 __END__
 
+=head1 NAME
+
+WTSI::NPG::OM::BioNano::ResultSet
+
+=head1 SYNOPSIS
+
+  my $resultset = WTSI::NPG::OM::BioNano::ResultSet->new
+    (directory => $dir);
+
+=head1 DESCRIPTION
+
+Class to represent a BioNano result set, given a directory path.
+
+There must be exactly one Molecules.bnx file in the tree rooted at the
+given directory. The directory may also contain additional BNX files,
+and non-BNX ancillary files. TIFF image files are omitted from the
+ancillary file listing. Run timestamp and stock barcode are parsed from
+the directory name.
+
 =head1 AUTHOR
 
 Iain Bancarz <ib5@sanger.ac.uk>
@@ -211,14 +230,5 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-=head1 DESCRIPTION
-
-Class to represent a BioNano result set, given a directory path.
-
-There must be exactly one Molecules.bnx file in the tree rooted at the
-given directory. The directory may also contain additional BNX files,
-and non-BNX ancillary files. TIFF image files are omitted from the
-ancillary file listing. Run timestamp and stock barcode are parsed from
-the directory name.
 
 =cut

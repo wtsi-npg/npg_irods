@@ -47,9 +47,10 @@ sub make_bnx_metadata {
 
   Arg [1]    : WTSI::NPG::OM::BioNano::ResultSet. Required.
   Arg [2]    : Array[WTSI::DNAP::Warehouse::Schema::Result::StockResource]
-               ML warehouse Stock records
-  Example    : $coll_meta = $publisher->make_collection_metadata($rs, @stock);
-  Description: Generate metadata to be applied to a BioNano collection
+               ML warehouse Stock records. Optional; but raises a warning
+               if not given.
+  Example    : @pub_meta = $publisher->make_publication_metadata($rs, @stock);
+  Description: Generate all metadata to be applied to a BioNano publication
                in iRODS.
   Returntype : Array[HashRef] AVUs to be used as metadata
 
@@ -82,7 +83,7 @@ sub make_publication_metadata {
   Arg [1]    : WTSI::NPG::OM::BioNano::BnxFile. Required.
   Example    : @primary_meta = $publisher->make_primary_metadata($bnx);
   Description: Generate primary metadata AVUs, to be applied
-               to a BioNano collection in iRODS.
+               to a BioNano publication in iRODS.
   Returntype : Array[HashRef] AVUs to be used as metadata
 
 =cut
@@ -101,11 +102,11 @@ sub make_primary_metadata {
 
 =head2 make_sample_metadata
 
-  Arg [n]      Sample records,
+  Arg [1]      Sample records,
                Array[WTSI::DNAP::Warehouse::Schema::Result::Sample].
 
   Example    : my @avus = $ann->make_sample_metadata(@samples);
-  Description: Return HTS sample metadata AVUs.
+  Description: Return sample metadata AVUs, in the same format used for HTS.
   Returntype : Array[HashRef]
 
 =cut
@@ -170,7 +171,7 @@ sub make_secondary_metadata {
                Array[WTSI::DNAP::Warehouse::Schema::Result::Study].
 
   Example    : my @avus = $ann->make_study_metadata(@studies);
-  Description: Return HTS study metadata AVUs.
+  Description: Return study metadata AVUs, in the same format used for HTS.
   Returntype : Array[HashRef]
 
 =cut
@@ -235,8 +236,7 @@ WTSI::NPG::OM::BioNano::Annotator
 
 =head1 DESCRIPTION
 
-A role providing methods to generate metadata for WTSI Optical Mapping
-runs.
+A role providing methods to generate metadata for BioNano runs at WTSI.
 
 =head1 AUTHOR
 
@@ -244,7 +244,7 @@ Iain Bancarz <ib5@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2016, 2017 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
