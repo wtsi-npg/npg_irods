@@ -10,6 +10,7 @@ sudo apt-get install -qq odbc-postgresql
 sudo apt-get install libgd2-xpm-dev # For npg_tracking
 sudo apt-get install liblzma-dev # For npg_qc
 sudo apt-get install hdf5-tools libhdf5-serial-dev
+sudo apt-get install pigz # for BioNano run publication in npg_irods
 
 # iRODS
 wget -q https://github.com/wtsi-npg/disposable-irods/releases/download/${DISPOSABLE_IRODS_VERSION}/disposable-irods-${DISPOSABLE_IRODS_VERSION}.tar.gz -O /tmp/disposable-irods-${DISPOSABLE_IRODS_VERSION}.tar.gz

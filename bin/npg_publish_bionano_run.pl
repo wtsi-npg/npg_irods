@@ -5,19 +5,16 @@ use warnings;
 use FindBin qw[$Bin];
 use lib (-d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib");
 
-use Cwd qw(cwd abs_path);
-use DateTime;
 use Getopt::Long;
-use Log::Log4perl qw(:levels);
+use Log::Log4perl qw[:levels];
 use Pod::Usage;
 use Try::Tiny;
-use WTSI::DNAP::Utilities::Collector;
-use WTSI::DNAP::Utilities::ConfigureLogger qw(log_init);
+use WTSI::DNAP::Utilities::ConfigureLogger qw[log_init];
+use WTSI::DNAP::Warehouse::Schema;
+use WTSI::NPG::OM::BioNano::RunFinder;
 use WTSI::NPG::OM::BioNano::RunPublisher;
 
 our $VERSION = '';
-our $BIONANO_REGEX = qr{^\S+_\d{4}-\d{2}-\d{2}_\d{2}_\d{2}$}msx;
-our $DEFAULT_DAYS = 7;
 
 if (! caller ) {
     my $result = run();
@@ -30,6 +27,7 @@ sub run {
     my $days_ago;
     my $debug;
     my $log4perl_config;
+    my $output_dir;
     my $collection;
     my $runfolder_path;
     my $search_dir;
@@ -43,6 +41,7 @@ sub run {
         'help'                            => sub {
             pod2usage(-verbose => 2, -exitval => 0) },
         'logconf=s'                       => \$log4perl_config,
+        'output-dir|output_dir=s'         => \$output_dir,
         'runfolder-path|runfolder_path=s' => \$runfolder_path,
         'search-dir|search_dir=s'         => \$search_dir,
         'verbose'                         => \$verbose
@@ -57,8 +56,6 @@ sub run {
         pod2usage(-msg     => "A --collection argument is required\n",
                   -exitval => 2);
     }
-    $days           ||= $DEFAULT_DAYS;
-    $days_ago       ||= 0;
 
     my @log_levels;
     if ($debug) { push @log_levels, $DEBUG; }
@@ -74,28 +71,8 @@ sub run {
         $log->info(q[Publishing runfolder path '], $runfolder_path,
                    q[' to '], $collection, q[']);
     } else {
-        $search_dir ||= cwd();
-        $search_dir = abs_path($search_dir);
-        my $now = DateTime->now;
-        my $end;
-        if ($days_ago > 0) {
-            $end = DateTime->from_epoch
-                (epoch => $now->epoch)->subtract(days => $days_ago);
-        } else {
-            $end = $now;
-        }
-        my $begin = DateTime->from_epoch
-            (epoch => $end->epoch)->subtract(days => $days);
-        $log->info(q[Publishing from '], $search_dir, q[' to '],
-                   $collection, q[' BioNano results finished between ],
-                   $begin->iso8601, q[ and ], $end->iso8601);
-        my $collector = WTSI::DNAP::Utilities::Collector->new(
-            root  => $search_dir,
-            depth => 2,
-            regex => $BIONANO_REGEX,
-        );
-        @dirs = $collector->collect_dirs_modified_between($begin->epoch,
-                                                          $end->epoch);
+        my $finder = WTSI::NPG::OM::BioNano::RunFinder->new;
+        @dirs = $finder->find($search_dir, $days_ago, $days);
     }
 
     my $irods = WTSI::NPG::iRODS->new;
@@ -104,16 +81,24 @@ sub run {
     my $errors = 0;
     $log->debug(q[Ready to publish ], $total, q[ BioNano runfolder(s) to '],
                 $collection, q[']);
+    my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
     foreach my $dir (@dirs) {
+        my %args = (
+            directory   => $dir,
+            mlwh_schema => $wh_schema,
+            irods       => $irods,
+        );
+        if (defined $output_dir) {
+            $args{'output_dir'} = $output_dir;
+        }
         try {
-          my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new
-            (directory => $dir,
-             irods     => $irods);
+            my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new(%args);
             my $dest_collection = $publisher->publish($collection);
             $num_published++;
             $log->info(q[Published BioNano run directory '], $dir,
                        q[' to iRODS collection '], $dest_collection,
-                       q[': ], $num_published, q[ of ], $total);
+                       q[': ], $total, q[ runs attempted, ], $num_published,
+                       q[ successes, ], $errors, q[ errors]);
         } catch {
             $log->error("Error publishing '$dir': ", $_);
             $errors++;
@@ -140,31 +125,45 @@ npg_publish_bionano_run
 
 =head1 SYNOPSIS
 
+
 Options:
 
   --days-ago
   --days_ago        The number of days ago that the publication window
                     ends. Optional, defaults to zero (the current day).
                     Has no effect if the --runfolder_path option is used.
+
   --days            The number of days in the publication window, ending
                     at the day given by the --days-ago argument. Any sample
                     data modified during this period will be considered
                     for publication. Optional, defaults to 7 days.
                     Has no effect if the --runfolder_path option is used.
+
   --collection      The data destination root collection in iRODS.
+
   --help            Display help.
+
   --logconf         A log4perl configuration file. Optional.
+
+  --output-dir
+  --output_dir      Directory for .tar.gz output. Optional; if not given,
+                    .tar.gz file will be written to a temporary directory
+                    and deleted on script exit.
+
   --runfolder-path
   --runfolder_path  The instrument runfolder path to load. Incompatible
                     with --search_dir. Optional. If neither this option
                     nor --search_dir is given, the default value of
                     --search_dir is used.
+
   --search-dir
-  --search_dir      The root directory to search for BioNano data. The
-                    --days_ago and --days options determine a time window
-                    for runfolders to be published. Incompatible with
-                    --runfolder_path. Optional, defaults to current working
-                    directory.
+  --search_dir      The root directory to search for BioNano data. Search
+                    depth will be a maximum of 2 levels below the given
+                    directory. The --days_ago and --days options determine
+                    a time window for runfolders to be published.
+                    Incompatible with --runfolder_path. Optional, defaults
+                    to current working directory.
+
   --verbose         Print messages while processing. Optional.
 
 =head1 DESCRIPTION
@@ -173,6 +172,31 @@ This script loads data and metadata for a unit BioNano runfolder into
 iRODS. The 'unit' runfolder contains results for a run with one sample on
 one flowcell. Typically, multiple unit runfolders are merged together for
 downstream analysis.
+Publication requirements for each runfolder are:
+
+=over
+
+=item * Must contain exactly one file named Molecules.bnx, at any depth
+within the folder.
+
+=item * Runfolder name must be of the form [stock_barcode]_[timestamp],
+for example sample_01234_2017-01-01_09_00.
+
+=item * The stock barcode may contain any non-whitespace characters,
+including underscores.
+
+=item * The timestamp must be in the format used by the BioNano instrument
+software, as in the above example: YYYY-MM-DD_hh_mm.
+
+=back
+
+TIFF image files are omitted from publication; all other files will be
+included. Before publication, the runfolder is compressed in .tar.gz format.
+Publication destination is a hashed directory path based on the md5
+checksum of the Molecules.bnx file. If a file of the same name already
+exists at the destination path, publication is omitted.
+If the script encounters an incorrectly formatted runfolder or BNX file, it
+will report an error and move on to the next runfolder, if any.
 
 =head1 AUTHOR
 
@@ -180,7 +204,7 @@ Iain Bancarz <ib5@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2016, 2017 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
