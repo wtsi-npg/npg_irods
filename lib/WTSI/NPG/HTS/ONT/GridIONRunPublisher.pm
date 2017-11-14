@@ -23,6 +23,7 @@ use Sys::Hostname;
 use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Runnable;
+use WTSI::NPG::HTS::ONT::GridIONRun;
 use WTSI::NPG::HTS::ONT::TarDataObject;
 use WTSI::NPG::HTS::TarPublisher;
 use WTSI::NPG::iRODS::Collection;
@@ -39,6 +40,17 @@ with qw[
          WTSI::NPG::HTS::ONT::Annotator
          WTSI::NPG::HTS::ONT::Watcher
        ];
+
+# These methods are autodelegated to gridion_run
+our @HANDLED_RUN_METHODS = qw[device_id
+                              experiment_name
+                              gridion_name
+                              has_device_id
+                              has_experiment_name
+                              has_gridion_name
+                              has_output_dir
+                              output_dir
+                              source_dir];
 
 our $VERSION = '';
 
@@ -66,19 +78,12 @@ has 'dest_collection' =>
    required      => 1,
    documentation => 'The destination collection within iRODS to store data');
 
-has 'device_id' =>
-  (isa           => 'Str',
-   is            => 'rw',
-   required      => 0,
-   predicate     => 'has_device_id',
-   documentation => 'The GridION device identifier for this run');
-
-has 'experiment_name' =>
-  (isa           => 'Str',
-   is            => 'rw',
-   required      => 0,
-   predicate     => 'has_experiment_name',
-   documentation => 'The experiment name provided by LIMS');
+has 'gridion_run' =>
+  (isa           => 'WTSI::NPG::HTS::ONT::GridIONRun',
+   is            => 'ro',
+   required      => 1,
+   handles       => [@HANDLED_RUN_METHODS],
+   documentation => 'The GridION run');
 
 has 'f5_bzip2' =>
   (isa           => 'Bool',
@@ -138,20 +143,6 @@ has 'monitor' =>
                     'A caller may set this to false in order to stop ' .
                     'monitoring and wait for any child processes to finish');
 
-has 'output_dir' =>
-  (isa           => 'Str',
-   is            => 'ro',
-   required      => 1,
-   documentation => 'A directory path under which publisher logs and ' .
-                    'manifests will be written');
-
-has 'source_dir' =>
-  (isa           => 'Str',
-   is            => 'ro',
-   required      => 1,
-   documentation => 'A directory path under which sequencing result files ' .
-                    'are located');
-
 has 'tmpdir' =>
   (isa           => 'File::Temp::Dir',
    is            => 'rw',
@@ -161,6 +152,26 @@ has 'tmpdir' =>
    lazy          => 1,
    builder       => '_build_tmpdir',
    documentation => 'Fast temporary directory for file manipulation');
+
+
+around BUILDARGS => sub {
+  my ($orig, $class, @args) = @_;
+
+  if (not ref $args[0]) {
+    my %args = @args;
+
+    my $gridion_name = hostname;
+    my $run = WTSI::NPG::HTS::ONT::GridIONRun->new
+      (gridion_name => $gridion_name,
+       output_dir   => delete $args{output_dir},
+       source_dir   => delete $args{source_dir});
+
+    return $class->$orig(gridion_run => $run, %args);
+  }
+  else {
+    return $class->$orig(@args);
+  }
+};
 
 =head2 publish_files
 
@@ -293,8 +304,7 @@ sub publish_files {
 sub _list_published_tar_paths {
   my ($self) = @_;
 
-  my $gridion = hostname;
-  my $coll = catdir($self->dest_collection, $gridion,
+  my $coll = catdir($self->dest_collection, $self->gridion_name,
                     $self->experiment_name, $self->device_id);
   my ($obj_paths) = $self->irods->list_collection($coll);
 
@@ -463,7 +473,7 @@ sub _do_publish {
 
       if ($format =~ /fast5/msx) {
         if (not ($self->has_experiment_name and $self->has_device_id)) {
-          my ($device_id, $ename) = $self->_identify_run_fast5($path);
+          my ($device_id, $ename) = $self->_identify_run_f5($path);
           $self->experiment_name($ename);
           $self->device_id($device_id);
         }
@@ -488,7 +498,7 @@ sub _do_publish {
 
       if ($format =~ /fastq/msx) {
         if (not ($self->has_experiment_name and $self->has_device_id)) {
-          my ($device_id, $ename) = $self->_identify_run_fastq($path);
+          my ($device_id, $ename) = $self->_identify_run_fq($path);
           $self->experiment_name($ename);
           $self->device_id($device_id);
         }
@@ -541,17 +551,16 @@ sub _catchup {
   my ($self) = @_;
 
   my $dir = $self->source_dir;
-  foreach my $format (qw[fast5 fastq]) {
-    $self->info("Catching up any missed '$format' files ",
-                "under '$dir', recursively");
+  $self->info("Catching up any missed files under '$dir', recursively");
 
-    my @files = $self->_find_local_files($dir, $format);
-    $self->info('Catching up ', scalar @files, ' files');
+  my @f5_files = @{$self->gridion_run->list_f5_files};
+  $self->info('Catching up ', scalar @f5_files, ' fast5 files');
+  my @fq_files = @{$self->gridion_run->list_fq_files};
+  $self->info('Catching up ', scalar @fq_files, ' fastq files');
 
-    foreach my $file (@files) {
-      $self->debug("Catching up '$file'");
-      $self->_do_publish($file);
-    }
+  foreach my $file (@f5_files, @fq_files) {
+    $self->debug("Catching up '$file'");
+    $self->_do_publish($file);
   }
 
   return;
@@ -567,15 +576,14 @@ sub _publish_ancillary_files {
     (checksum_cache_threshold => 1_000_000_000_000,
      irods                    => $self->irods);
 
-  my @files = ($self->_list_manifest_files,
-               $self->_list_seq_summary_files,
-               $self->_list_seq_cfg_files);
+  my @files = (@{$self->gridion_run->list_manifest_files},
+               @{$self->gridion_run->list_seq_summary_files},
+               @{$self->gridion_run->list_seq_cfg_files});
 
   my ($num_files, $num_processed, $num_errors) = (scalar @files, 0, 0);
 
-  my $gridion = hostname;
-  my $coll    = catdir($self->dest_collection, $gridion,
-                       $self->experiment_name, $self->device_id);
+  my $coll = catdir($self->dest_collection, $self->gridion_name,
+                    $self->experiment_name, $self->device_id);
 
   foreach my $file (@files) {
     try {
@@ -592,44 +600,7 @@ sub _publish_ancillary_files {
   return ($num_files, $num_processed, $num_errors);
 }
 
-sub _list_seq_summary_files {
-  my ($self) = @_;
-
-  return $self->_find_local_files($self->source_dir, 'txt');
-}
-
-sub _list_seq_cfg_files {
-  my ($self) = @_;
-
-  return $self->_find_local_files($self->source_dir, 'cfg');
-}
-
-sub _list_manifest_files {
-  my ($self) = @_;
-
-  return $self->_find_local_files($self->output_dir, 'txt');
-}
-
-sub _find_local_files {
-  my ($self, $dir, $format) = @_;
-
-  $self->info("Finding any '$format' files under '$dir', recursively");
-  my @files;
-
-  my $regex = qr{[.]([^.]+$)}msx;
-  find(sub {
-         my ($f) = m{$regex}msx;
-         if ($f and $f eq $format) {
-           push @files, $File::Find::name
-         }
-       },
-       $dir);
-  @files = sort @files;
-
-  return @files;
-}
-
-sub _identify_run_fast5 {
+sub _identify_run_f5 {
   my ($self, $path) = @_;
 
   my $sample_id;
@@ -669,7 +640,7 @@ sub _identify_run_fast5 {
   return ($device_id, $sample_id);
 }
 
-sub _identify_run_fastq {
+sub _identify_run_fq {
   my ($self, $path) = @_;
 
   my ($device_id, $sample_id, @rest) = reverse splitdir($self->source_dir);
@@ -690,18 +661,6 @@ sub _identify_run_fastq {
   return ($device_id, $sample_id);
 }
 
-sub _manifest_file_path {
-  my ($self, $format) = @_;
-
-  # The manifest file has the same name across all sessions of
-  # publishing device's output. This means that repeated sessions will
-  # incrementally publish the results of the device, or do nothing if
-  # it is already completely published.
-  return catfile($self->output_dir,
-                 sprintf '%s_%s_%s_manifest.txt',
-                 $self->experiment_name, $self->device_id, $format);
-}
-
 sub _make_tar_publisher {
   my ($self, $format) = @_;
 
@@ -709,14 +668,13 @@ sub _make_tar_publisher {
   # publishing device's output. This means that repeated sessions will
   # incrementally publish the results of the device, or do nothing if
   # it is already completely published.
-  my $manifest_path = $self->_manifest_file_path($format);
+  my $manifest_path = $self->gridion_run->manifest_file_path($format);
 
   my $now          = DateTime->now;
   my $now_day      = $now->strftime($ISO8601_DATE);
   my $now_datetime = $now->strftime($ISO8601_DATETIME);
-  my $gridion      = hostname;
 
-  my $coll = catdir($self->dest_collection, $gridion,
+  my $coll = catdir($self->dest_collection, $self->gridion_name,
                     $self->experiment_name, $self->device_id);
   if ($self->irods->is_collection($coll)) {
     $self->debug("Using existing collection '$coll'");
