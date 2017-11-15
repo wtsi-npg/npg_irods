@@ -40,13 +40,15 @@ GetOptions('collection=s'            => \$collection,
 my $module;
 if ($sequel) {
   $module = 'WTSI::NPG::HTS::PacBio::Sequel::RunMonitor';
-} else {
+}
+else {
   $module = 'WTSI::NPG::HTS::PacBio::RunMonitor';
 }
 
-
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
+  Log::Log4perl->get_logger('main')->info
+      ("Using log config file '$log4perl_config'");
 }
 else {
   my $level = $debug ? $DEBUG : $verbose ? $INFO : $WARN;
@@ -55,10 +57,9 @@ else {
                             utf8   => 1});
 }
 
-if (not $local_path) {
+$local_path or
   pod2usage(-msg     => 'A local-path argument is required',
             -exitval => 2);
-}
 
 my $irods     = WTSI::NPG::iRODS->new;
 my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
@@ -86,7 +87,6 @@ else {
   $log->logcroak("Processed $num_files, published $num_published ",
                  "with $num_errors errors");
 }
-
 
 __END__
 

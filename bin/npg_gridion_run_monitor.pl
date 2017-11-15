@@ -47,6 +47,8 @@ GetOptions('collection=s'                      => \$collection,
 
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
+  Log::Log4perl->get_logger('main')->info
+      ("Using log config file '$log4perl_config'");
 }
 else {
   my $level = $debug ? $DEBUG : $verbose ? $INFO : $WARN;
@@ -55,16 +57,12 @@ else {
                             utf8   => 1});
 }
 
-my $log = Log::Log4perl->get_logger('main');
-if ($log4perl_config) {
-  $log->info("Using log config file '$log4perl_config'");
-}
-
 $collection or
-  $log->logcroak('A collection argument is required');
-
+  pod2usage(-msg     => 'A --collection argument is required',
+            -exitval => 2);
 $output_dir or
-  $log->logcroak('An output-dir argument is required');
+  pod2usage(-msg     => 'An --output-dir argument is required',
+            -exitval => 2);
 
 my $monitor = WTSI::NPG::HTS::ONT::GridIONRunMonitor->new
   (arch_capacity   => $arch_capacity,
@@ -82,6 +80,7 @@ local $SIG{TERM} = sub { $monitor->monitor(0) };
 my $num_errors = $monitor->start;
 my $exit_code  = $num_errors == 0 ? 0 : 4;
 
+my $log = Log::Log4perl->get_logger('main');
 my $i = 0;
 foreach my $dir (@{$monitor->watch_history}) {
   $log->info("Watch history [$i]: '$dir'");

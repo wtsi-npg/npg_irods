@@ -90,6 +90,8 @@ GetOptions('alignment!'                        => \$alignment,
 # Process CLI arguments
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
+  Log::Log4perl->get_logger('main')->info
+      ("Using log config file '$log4perl_config'");
 }
 else {
   if ($verbose and not $debug) {
@@ -103,9 +105,6 @@ else {
   }
 }
 
-my $log = Log::Log4perl->get_logger('main');
-$log->level($ALL);
-
 if (not $file_format) {
   $file_format = 'cram';
 }
@@ -116,6 +115,9 @@ if (not (defined $runfolder_path or defined $archive_path)) {
   pod2usage(-msg     => $msg,
             -exitval => 2);
 }
+
+my $log = Log::Log4perl->get_logger('main');
+$log->level($ALL);
 
 # Setup iRODS
 my $irods = WTSI::NPG::iRODS->new;

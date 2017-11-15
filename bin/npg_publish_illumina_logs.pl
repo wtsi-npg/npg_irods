@@ -35,6 +35,8 @@ GetOptions('collection=s'                      => \$collection,
 # Process CLI arguments
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
+  Log::Log4perl->get_logger('main')->info
+      ("Using log config file '$log4perl_config'");
 }
 else {
   my $level = $debug ? $DEBUG : $verbose ? $INFO : $WARN;
@@ -43,10 +45,9 @@ else {
                             utf8   => 1});
 }
 
-if (not defined $runfolder_path) {
+$runfolder_path or
   pod2usage(-msg     => 'A runfolder path argument is required',
             -exitval => 2);
-}
 
 my @init_args = (irods          => WTSI::NPG::iRODS->new,
                  runfolder_path => $runfolder_path);

@@ -39,18 +39,14 @@ GetOptions('debug'            => \$debug,
 
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
+  Log::Log4perl->get_logger('main')->info
+      ("Using log config file '$log4perl_config'");
 }
 else {
   my $level = $debug ? $DEBUG : $verbose ? $INFO : $WARN;
   Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
                             level  => $level,
                             utf8   => 1});
-}
-
-my $log = Log::Log4perl->get_logger('main');
-$log->level($ALL);
-if ($log4perl_config) {
-  $log->info("Using log config file '$log4perl_config'");
 }
 
 @experiment_name = uniq sort @experiment_name;
@@ -65,6 +61,9 @@ if ($dry_run) {
 else {
   $irods = WTSI::NPG::iRODS->new;
 }
+
+my $log = Log::Log4perl->get_logger('main');
+$log->level($ALL);
 
 # Find data objects
 my @data_objs;

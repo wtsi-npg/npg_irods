@@ -49,12 +49,12 @@ sub run {
     );
 
     if (defined $search_dir && defined $runfolder_path) {
-        my $msg = "Cannot supply both --search_dir and --runfolder_path\n";
+        my $msg = 'Cannot supply both --search_dir and --runfolder_path';
         pod2usage(-msg     => $msg,
                   -exitval => 2);
     }
     if (! defined $collection) {
-        pod2usage(-msg     => "A --collection argument is required\n",
+        pod2usage(-msg     => 'A --collection argument is required',
                   -exitval => 2);
     }
     $days           ||= $DEFAULT_DAYS;

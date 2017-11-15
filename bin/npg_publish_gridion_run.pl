@@ -44,6 +44,8 @@ GetOptions('collection=s'                      => \$collection,
 
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
+  Log::Log4perl->get_logger('main')->info
+      ("Using log config file '$log4perl_config'");
 }
 else {
   my $level = $debug ? $DEBUG : $verbose ? $INFO : $WARN;
@@ -52,18 +54,15 @@ else {
                             utf8   => 1});
 }
 
-my $log = Log::Log4perl->get_logger('main');
-if ($log4perl_config) {
-  $log->info("Using log config file '$log4perl_config'");
-}
-
 $collection or
-  $log->logcroak('A collection argument is required');
-
+  pod2usage(-msg     => 'A --collection argument is required',
+            -exitval => 2);
 $source_dir or
-  $log->logcroak('A source_dir argument is required');
+  pod2usage(-msg     => 'A --source-dir argument is required',
+            -exitval => 2);
 -d $source_dir or
-  $log->logcroak('Invalid source_dir argument: not a directory');
+  pod2usage(-msg     => 'Invalid --source-dir argument: not a directory',
+            -exitval => 2);
 
 $source_dir = rel2abs($source_dir);
 
@@ -73,7 +72,7 @@ my $publisher = WTSI::NPG::HTS::ONT::GridIONRunPublisher->new
    arch_timeout    => $arch_timeout,
    dest_collection => $collection,
    source_dir      => $source_dir,
-   session_timeout => 200)->publish_files;
+   session_timeout => $session_timeout)->publish_files;
 
 __END__
 

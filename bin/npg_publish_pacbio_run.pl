@@ -69,6 +69,8 @@ if ($sequel) {
 # Process CLI arguments
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
+  Log::Log4perl->get_logger('main')->info
+      ("Using log config file '$log4perl_config'");
 }
 else {
   my $level = $debug ? $DEBUG : $verbose ? $INFO : $WARN;
@@ -77,15 +79,12 @@ else {
                             utf8   => 1});
 }
 
+$runfolder_path or
+  pod2usage(-msg     => 'A --runfolder-path argument is required',
+            -exitval => 2);
+
 my $log = Log::Log4perl->get_logger('main');
 $log->level($ALL);
-
-if (not (defined $runfolder_path)) {
-  my $msg = 'A --runfolder-path argument is required';
-  pod2usage(-msg     => $msg,
-            -exitval => 2);
-}
-
 
 my $irods     = WTSI::NPG::iRODS->new;
 my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;

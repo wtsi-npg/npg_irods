@@ -58,6 +58,8 @@ GetOptions('begin-date|begin_date=s'   => \$begin_date,
 # Process CLI arguments
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
+  Log::Log4perl->get_logger('main')->info
+      ("Using log config file '$log4perl_config'");
 }
 else {
   if ($verbose and ($dry_run and not $debug)) {
@@ -75,12 +77,6 @@ else {
   }
 }
 
-my $log = Log::Log4perl->get_logger('main');
-$log->level($ALL);
-if ($log4perl_config) {
-  $log->info("Using log config file '$log4perl_config'");
-}
-
 $collection ||= $DEFAULT_COLLECTION;
 
 my $irods;
@@ -92,7 +88,6 @@ else {
 }
 
 my $subtrack = WTSI::NPG::DataSub::SubtrackClient->new;
-
 
 my @query_args;
 if (defined $begin_date) {
@@ -109,6 +104,9 @@ else {
 
 my @submitted_files = $subtrack->query_submitted_files(@query_args);
 
+
+my $log = Log::Log4perl->get_logger('main');
+$log->level($ALL);
 $log->info('Processing ', scalar @submitted_files, ' submitted files');
 
 # Update metadata

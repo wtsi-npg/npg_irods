@@ -75,6 +75,8 @@ GetOptions('debug'                     => \$debug,
 # Process CLI arguments
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
+  Log::Log4perl->get_logger('main')->info
+      ("Using log config file '$log4perl_config'");
 }
 else {
   if ($verbose and ($dry_run and not $debug)) {
@@ -90,12 +92,6 @@ else {
                               level  => $ERROR,
                               utf8   => 1})
   }
-}
-
-my $log = Log::Log4perl->get_logger('main');
-$log->level($ALL);
-if ($log4perl_config) {
-  $log->info("Using log config file '$log4perl_config'");
 }
 
 if ((defined $max_id_run and not defined $min_id_run) ||
@@ -129,6 +125,9 @@ if ($dry_run) {
 else {
   $irods = WTSI::NPG::iRODS->new;
 }
+
+my $log = Log::Log4perl->get_logger('main');
+$log->level($ALL);
 
 # Find data objects
 my @data_objs;

@@ -16,7 +16,9 @@ use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::DriRODS;
 use WTSI::NPG::HTS::PacBio::MetaUpdater;
 use WTSI::NPG::iRODS;
-use WTSI::NPG::iRODS::Metadata qw[$PACBIO_SOURCE $PACBIO_PRODUCTION $PACBIO_CELL_INDEX];
+use WTSI::NPG::iRODS::Metadata qw[$PACBIO_SOURCE
+                                  $PACBIO_PRODUCTION
+                                  $PACBIO_CELL_INDEX];
 
 our $VERSION = '';
 our $DEFAULT_ZONE = 'seq';
@@ -31,32 +33,28 @@ my $stdio;
 my $verbose;
 my $zone;
 
-GetOptions('debug'                     => \$debug,
-           'dry-run|dry_run!'          => \$dry_run,
-           'help'                      => sub { pod2usage(-verbose => 2,
-                                                          -exitval => 0) },
-           'logconf=s'                 => \$log4perl_config,
-           'verbose'                   => \$verbose,
-           'max_id_run|max-id-run=i'   => \$max_id_run,
-           'min_id_run|min-id-run=i'   => \$min_id_run,
-           'id_run|id-run=i'           => \@id_run,
-           'zone=s',                   => \$zone,
-           q[]                         => \$stdio);
+GetOptions('debug'                   => \$debug,
+           'dry-run|dry_run!'        => \$dry_run,
+           'help'                    => sub { pod2usage(-verbose => 2,
+                                                        -exitval => 0) },
+           'logconf=s'               => \$log4perl_config,
+           'verbose'                 => \$verbose,
+           'max_id_run|max-id-run=i' => \$max_id_run,
+           'min_id_run|min-id-run=i' => \$min_id_run,
+           'id_run|id-run=i'         => \@id_run,
+           'zone=s',                 => \$zone,
+           q[]                       => \$stdio);
 
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
+  Log::Log4perl->get_logger('main')->info
+      ("Using log config file '$log4perl_config'");
 }
 else {
   my $level = $debug ? $DEBUG : $verbose ? $INFO : $WARN;
   Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
                             level  => $level,
                             utf8   => 1});
-}
-
-my $log = Log::Log4perl->get_logger('main');
-$log->level($ALL);
-if ($log4perl_config) {
-  $log->info("Using log config file '$log4perl_config'");
 }
 
 if ((defined $max_id_run and not defined $min_id_run) ||
@@ -90,6 +88,9 @@ if ($dry_run) {
 else {
   $irods = WTSI::NPG::iRODS->new;
 }
+
+my $log = Log::Log4perl->get_logger('main');
+$log->level($ALL);
 
 # Find data objects
 my @data_objs;
