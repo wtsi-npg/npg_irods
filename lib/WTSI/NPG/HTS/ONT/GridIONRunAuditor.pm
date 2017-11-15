@@ -96,8 +96,9 @@ sub BUILD {
     $self->logconfess(sprintf q[Data directory '%s' is not a directory],
                       $self->source_dir);
 
-  my ($device_id, $ename, @rest) = reverse splitdir($self->source_dir);
-  $self->experiment_name($ename);
+  my ($device_id, $experiment_name, @rest) =
+    reverse splitdir($self->source_dir);
+  $self->experiment_name($experiment_name);
   $self->device_id($device_id);
 
   return;
@@ -189,11 +190,17 @@ sub read_manifest {
   return $manifest;
 }
 
+sub run_collection {
+  my ($self) = @_;
+
+  return catdir($self->dest_collection, $self->gridion_name,
+                $self->experiment_name, $self->device_id);
+}
+
 sub _check_ancillary_files {
   my ($self, $local_paths) = @_;
 
-  my $collection = catdir($self->dest_collection, $self->gridion_name,
-                          $self->experiment_name, $self->device_id);
+  my $collection = $self->run_collection;
 
   my ($num_files, $num_present) = (0, 0);
   my @missing;
@@ -351,6 +358,18 @@ WTSI::NPG::HTS::ONT::GridIONRunAuditor
 
 =head1 DESCRIPTION
 
+Checks that the files of a single GridION run (the results of a single
+flowcell) are in iRODS by comparing the contents of the local run
+directory with the contents of the iRODS collection into which the
+data were published.
+
+The following are checked:
+
+ - Local configuration.cfg files are in iRODS.
+ - Local sequencing_summary_n.txt files are in iRODS.
+ - Local tar manifest files are in iRODS.
+ - Local fastq files are mapped to tar files in iRODS by a tar manifest.
+ - Tar files described in tar manifests are in iRODS.
 
 =head1 AUTHOR
 

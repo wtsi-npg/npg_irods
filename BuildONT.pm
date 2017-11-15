@@ -31,6 +31,7 @@ our @ont_subset = (
                    'WTSI/NPG/HTS/TarPublisher.pm',
                    'WTSI/NPG/HTS/TarStream.pm',
                    'WTSI/NPG/HTS/Types.pm',
+                   'npg_audit_gridion_run.pl',
                    'npg_gridion_meta_updater.pl',
                    'npg_gridion_run_monitor.pl',
                    'npg_minion_run_monitor.pl',
