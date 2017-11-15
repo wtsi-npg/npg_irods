@@ -2,14 +2,17 @@ package WTSI::NPG::HTS::ONT::GridIONRunAuditor;
 
 use namespace::autoclean;
 
+use Carp;
 use Data::Dump qw[pp];
 use File::Basename;
 use File::Spec::Functions qw[abs2rel catdir catfile rel2abs splitdir];
 use Moose;
 use MooseX::StrictConstructor;
 use Sys::Hostname;
+use Try::Tiny;
 
 use WTSI::NPG::HTS::ONT::GridIONRun;
+use WTSI::NPG::HTS::Metadata;
 use WTSI::NPG::HTS::TarManifest;
 use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS;
@@ -68,6 +71,14 @@ has 'fq_manifests' =>
    builder       => '_build_fq_manifests',
    documentation => 'The manifests describing tar files sent to iRODS');
 
+has 'num_replicates' =>
+  (isa           => 'Int',
+   is            => 'ro',
+   required      => 1,
+   default       => 2,
+   documentation => 'The minimum number of valid replicates expected for a ' .
+                    'file in iRODS');
+
 around BUILDARGS => sub {
   my ($orig, $class, @args) = @_;
 
@@ -107,8 +118,7 @@ sub BUILD {
 sub check_all_files {
   my ($self) = @_;
 
-  my ($num_files, $num_present) = (0, 0);
-  my @missing;
+  my ($num_files, $num_present, $num_errors) = (0, 0, 0);
 
   foreach my $result ([$self->check_seq_cfg_files],
                       [$self->check_seq_summary_files],
@@ -117,15 +127,13 @@ sub check_all_files {
                       [$self->check_fq_tar_files],
                       [$self->check_f5_files],
                       [$self->check_fq_files]) {
-    my ($nf, $np, $m) = @{$result};
+    my ($nf, $np, $ne) = @{$result};
     $num_files   += $nf;
     $num_present += $np;
-    push @missing, @{$m};
+    $num_errors  += $ne;
   }
 
-  @missing = sort @missing;
-
-  return ($num_files, $num_present, \@missing);
+  return ($num_files, $num_present, $num_errors);
 }
 
 sub check_f5_tar_files {
@@ -200,76 +208,108 @@ sub run_collection {
 sub _check_ancillary_files {
   my ($self, $local_paths) = @_;
 
+  my ($num_files, $num_present, $num_errors) = (0, 0, 0);
   my $collection = $self->run_collection;
 
-  my ($num_files, $num_present) = (0, 0);
-  my @missing;
+ PATH: foreach my $path (@{$local_paths}) {
+    try {
+      $self->debug("Checking for '$path' in '$collection'");
+      $num_files++;
 
-  foreach my $path (@{$local_paths}) {
-    $self->debug("Checking for '$path' in '$collection'");
-    $num_files++;
+      my $filename = fileparse($path);
+      my $obj = WTSI::NPG::iRODS::DataObject->new(collection  => $collection,
+                                                  data_object => $filename,
+                                                  irods       => $self->irods);
+      if (not $obj->is_present) {
+        croak "'$path' missing from iRODS";
+      }
 
-    my $filename = fileparse($path);
-    my $obj = WTSI::NPG::iRODS::DataObject->new(collection  => $collection,
-                                                data_object => $filename,
-                                                irods       => $self->irods);
-    if ($obj->is_present) {
       $num_present++;
-      $self->debug("'$path' is present in iRODS")
-    }
-    else {
-      push @missing, $path;
-      $self->debug("'$path' missing from iRODS");
-    }
+      $self->info("'$path' is present in iRODS");
+
+      if ($obj->validate_checksum_metadata) {
+        $self->info("'$path' has valid checksum metadata in iRODS");
+      }
+      else {
+        croak "'$path' has invalid checksum metadata in iRODS";
+      }
+
+      my $num_replicates = scalar $obj->valid_replicates;
+      if ($num_replicates >= $self->num_replicates) {
+        $self->info("'$path' has $num_replicates valid replicates in iRODS");
+      }
+      else {
+        croak "'$path' has only $num_replicates valid replicates in iRODS";
+      }
+    } catch {
+      $self->error($_);
+      $num_errors++;
+    };
   }
 
-  @missing = sort @missing;
-
-  return ($num_files, $num_present, \@missing);
+  return ($num_files, $num_present, $num_errors);
 }
 
 sub _check_manifest_tar_files {
   my ($self, $manifest) = @_;
 
-  my ($num_files, $num_present) = (0, 0);
-  my @missing;
+  my ($num_files, $num_present, $num_errors) = (0, 0, 0);
 
   foreach my $path ($manifest->tar_files) {
-    $self->debug("Checking for '$path'");
-    $num_files++;
+    try {
+      $self->debug("Checking for '$path'");
+      $num_files++;
 
-    my $obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $path);
-    if ($obj->is_present) {
-      $num_present++;
-      $self->debug("'$path' is present in iRODS")
-    }
-    else {
-      push @missing, $path;
-      $self->debug("'$path' missing from iRODS");
-    }
+      my $obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $path);
+      if ($obj->is_present) {
+        $num_present++;
+        $self->info("'$path' is present in iRODS");
+      }
+      else {
+        croak "'$path' missing from iRODS";
+      }
+
+      my $experiment_name = $self->experiment_name;
+      if ($obj->find_in_metadata($EXPERIMENT_NAME, $experiment_name)) {
+        $self->info("'$path' has $EXPERIMENT_NAME metadata '$experiment_name'");
+      }
+      else {
+        $self->error("'$path' is missing $EXPERIMENT_NAME ",
+                     "metadata '$experiment_name'");
+        $num_errors++;
+      }
+
+      my $device_id  = $self->device_id;
+      if ($obj->find_in_metadata($GRIDION_DEVICE_ID, $device_id)) {
+        $self->info("'$path' has $GRIDION_DEVICE_ID metadata '$device_id'");
+      }
+      else {
+        $self->error("'$path' is missing $GRIDION_DEVICE_ID ",
+                     "metadata '$device_id'");
+        $num_errors++;
+      }
+    } catch {
+      $self->error($_);
+      $num_errors++;
+    };
   }
 
-  @missing = sort @missing;
-
-  return ($num_files, $num_present, \@missing);
+  return ($num_files, $num_present, $num_errors);
 }
 
 sub _check_tar_files {
   my ($self, $manifests) = @_;
 
-  my ($num_files, $num_present) = (0, 0);
-  my @missing;
+  my ($num_files, $num_present, $num_errors) = (0, 0, 0);
 
   foreach my $manifest (@{$manifests}) {
-    my ($nf, $np, $m)= $self->_check_manifest_tar_files($manifest);
+    my ($nf, $np, $ne)= $self->_check_manifest_tar_files($manifest);
     $num_files   += $nf;
     $num_present += $np;
-    push @missing, @{$m};
-  }
+    $num_errors  += $ne;
+  };
 
-  @missing = sort @missing;
-
-  return ($num_files, $num_present, \@missing);
+  return ($num_files, $num_present, $num_errors);
 }
 
 sub _check_tar_content {
@@ -278,42 +318,43 @@ sub _check_tar_content {
   my @manifest_paths = map { $_->manifest_path } @{$manifests};
   $self->debug('Checking content of manifests ', pp(\@manifest_paths));
 
-  my ($num_files, $num_present) = (0, 0);
-  my @missing;
+  my ($num_files, $num_present, $num_errors) = (0, 0, 0);
 
   foreach my $local_path (@{$local_paths}) {
-    $num_files++;
+    try {
+      $num_files++;
 
-    # tar files are created relative to the parent of the experiment
-    # directory, so experiment_name and device_id must be added to the
-    # path
-    my $item_path = catdir($self->experiment_name,
+      # tar files are created relative to the parent of the experiment
+      # directory, so experiment_name and device_id must be added to the
+      # path
+      my $item_path = catdir($self->experiment_name,
                            $self->device_id,
-                           abs2rel($local_path, $self->source_dir));
-    $item_path .= '.bz2';
+                             abs2rel($local_path, $self->source_dir));
+      $item_path .= '.bz2';
 
-    $self->debug("Checking for item '$item_path'");
+      $self->debug("Checking for item '$item_path'");
 
-    my $in;
-  MANIFEST: foreach my $manifest (@{$manifests}) {
-      if ($manifest->contains_item($item_path)) {
-        $in = $manifest;
-        last MANIFEST;
+      my $in;
+    MANIFEST: foreach my $manifest (@{$manifests}) {
+        if ($manifest->contains_item($item_path)) {
+          $in = $manifest;
+          last MANIFEST;
+        }
       }
-    }
 
-    if ($in) {
-      $num_present++;
-      $self->debug("$item_path present in ", $in->manifest_path);
-    }
-    else {
-      push @missing, $item_path;
-    }
+      if ($in) {
+        $num_present++;
+        $self->info("$item_path is present in manifest ", $in->manifest_path);
+      }
+      else {
+        croak "$item_path present is missing from the manifests";
+      }
+    } catch {
+      $num_errors++
+    };
   }
 
-  @missing = sort @missing;
-
-  return ($num_files, $num_present, \@missing);
+  return ($num_files, $num_present, $num_errors);
 }
 
 sub _build_irods {

@@ -63,6 +63,7 @@ sub audit_files : Test(42) {
   my $auditor = WTSI::NPG::HTS::ONT::GridIONRunAuditor->new
     (dest_collection => $irods_tmp_coll,
      gridion_name    => $gridion_name,
+     num_replicates  => 1,
      output_dir      => $tmp_output_dir,
      source_dir      => $tmp_run_dir);
 
@@ -71,46 +72,45 @@ sub audit_files : Test(42) {
   is($auditor->device_id, $device_id, "Device ID is '$device_id'");
 
   # Check that it reports the good case
-  my ($nfc, $npc, $mc) = $auditor->check_seq_cfg_files;
+  my ($nfc, $npc, $nec) = $auditor->check_seq_cfg_files;
   cmp_ok($nfc, '==', 1, "Reports correct number of source cfg files");
   cmp_ok($npc, '==', 1, "Reports correct number of published cfg files");
-  is_deeply($mc, [], "Reports no cfg files missing") or diag explain $mc;
+  cmp_ok($nec, '==', 0, "Reports no errors for cfg files");
 
-  my ($nfs, $nps, $ms) = $auditor->check_seq_summary_files;
+  my ($nfs, $nps, $nes) = $auditor->check_seq_summary_files;
   cmp_ok($nfs, '==', 2, "Reports correct number of source summary files");
   cmp_ok($nps, '==', 2, "Reports correct number of published summary files");
-  is_deeply($ms, [], "Reports no summary files missing") or diag explain $ms;
+  cmp_ok($nes, '==', 0, "Reports no errors for summary files");
 
-  my ($nfm, $npm, $mm) = $auditor->check_manifest_files;
+  my ($nfm, $npm, $nem) = $auditor->check_manifest_files;
   cmp_ok($nfm, '==', 2, "Reports correct number of source manifest files");
   cmp_ok($npm, '==', 2, "Reports correct number of published manifest files");
-  is_deeply($ms, [], "Reports no manifest files missing") or diag explain $mm;
+  cmp_ok($nem, '==', 0, "Reports no errors for manifest files");
 
-  my ($nf5t, $np5t, $m5t) = $auditor->check_f5_tar_files;
+  my ($nf5t, $np5t, $ne5t) = $auditor->check_f5_tar_files;
   cmp_ok($nf5t, '==', 7, "Reports correct number of f5 tar files");
   cmp_ok($np5t, '==', 7, "Reports correct number of published f5 tar files");
-  is_deeply($m5t, [], "Reports no f5 tar files missing") or diag explain $m5t;
+  cmp_ok($ne5t, '==', 0, "Reports no errors for f5 tar files");
 
-  my ($nfqt, $npqt, $mqt) = $auditor->check_fq_tar_files;
+  my ($nfqt, $npqt, $neqt) = $auditor->check_fq_tar_files;
   cmp_ok($nfqt, '==', 1, "Reports correct number of fq tar files");
   cmp_ok($npqt, '==', 1, "Reports correct number of published fq files");
-  is_deeply($mqt, [], "Reports no fq tar files missing") or diag explain $mqt;
+  cmp_ok($neqt, '==', 0, "Reports no errors for fq tar files");
 
-  my ($nf5, $np5, $m5) = $auditor->check_f5_files;
+  my ($nf5, $np5, $ne5) = $auditor->check_f5_files;
   cmp_ok($nf5, '==', 40, "Reports correct number of f5 files");
   cmp_ok($np5, '==', 40, "Reports correct number of published f5 files");
-  is_deeply($m5, [], "Reports no f5 files missing") or diag explain $m5;
+  cmp_ok($neqt, '==', 0, "Reports no errors for f5 files");
 
-  my ($nfq, $npq, $mq) = $auditor->check_fq_files;
+  my ($nfq, $npq, $neq) = $auditor->check_fq_files;
   cmp_ok($nfq, '==', 2, "Reports correct number of fq files");
   cmp_ok($npq, '==', 2, "Reports correct number of published fq files");
-  is_deeply($mq, [], "Reports no fq files missing") or diag explain $mq;
+  cmp_ok($neq, '==', 0, "Reports no errors for fq files");
 
-  my ($num_files, $num_present, $missing) = $auditor->check_all_files;
+  my ($num_files, $num_present, $num_errors) = $auditor->check_all_files;
   cmp_ok($num_files,   '==', 55, "Reports correct number of source files");
   cmp_ok($num_present, '==', 55, "Reports correct number of published files");
-  is_deeply($missing, [], "Reports missing files correctly")
-    or diag explain $missing;
+  cmp_ok($num_errors,  '==', 0, "Reports no errors for published files");
 
   # Check that it reports the bad cases: make some new primary files
   # that have not been published to simulate either a file being
@@ -128,50 +128,46 @@ sub audit_files : Test(42) {
   copy("$data_run_dir/reads/0/GXB01030_20170907__GA10000_mux_scan_2_92904_read_10_ch_256_strand.fast5",
        "$tmp_run_dir/reads/0/$extra_f5");
 
-  my ($nfc_delta, $npc_delta, $mc_delta) = $auditor->check_seq_cfg_files;
+  my ($nfc_delta, $npc_delta, $nec_delta) = $auditor->check_seq_cfg_files;
   cmp_ok($nfc_delta, '==', 2,
          "Reports correct number of source cfg files");
   cmp_ok($npc_delta, '==', 1,
          "Reports correct number of published cfg files");
-  is_deeply($mc_delta, ["$tmp_run_dir/$extra_cfg"],
-            "Reports cfg file missing") or diag explain $mc_delta;
+  cmp_ok($nec_delta, '==', 1,
+         "Reports correct number of cfg file errors");
 
-  my ($nfs_delta, $nps_delta, $ms_delta) = $auditor->check_seq_summary_files;
+  my ($nfs_delta, $nps_delta, $nes_delta) = $auditor->check_seq_summary_files;
   cmp_ok($nfs_delta, '==', 3,
          "Reports correct number of source summary files");
   cmp_ok($nps_delta, '==', 2,
          "Reports correct number of published summary files");
-  is_deeply($ms_delta, ["$tmp_run_dir/$extra_sum"],
-            "Reports summary file missing") or diag explain $ms_delta;
+  cmp_ok($nes_delta, '==', 1,
+         "Reports correct number of summary file errors");
 
- my ($nf5_delta, $np5_delta, $m5_delta) = $auditor->check_f5_files;
+  my ($nf5_delta, $np5_delta, $ne5_delta) = $auditor->check_f5_files;
   cmp_ok($nf5_delta, '==', 41,
          "Reports correct number of f5 files");
   cmp_ok($np5_delta, '==', 40,
          "Reports correct number of published f5 files");
-  is_deeply($m5_delta, ["$expt_name/$device_id/reads/0/$extra_f5.bz2"],
-            "Reports f5 file missing") or diag explain $m5_delta;
+  cmp_ok($ne5_delta, '==', 1,
+         "Reports correct number of summary file errors");
 
- my ($nfq_delta, $npq_delta, $mq_delta) = $auditor->check_fq_files;
+  my ($nfq_delta, $npq_delta, $neq_delta) = $auditor->check_fq_files;
   cmp_ok($nfq_delta, '==', 3,
          "Reports correct number of fq files");
   cmp_ok($npq_delta, '==', 2,
          "Reports correct number of published fq files");
-  is_deeply($mq_delta, ["$expt_name/$device_id/$extra_fq.bz2"],
-            "Reports fq file missing") or diag explain $mq_delta;
+  cmp_ok($neq_delta, '==', 1,
+         "Reports correct number of fq file errors");
 
-  my ($num_files_delta, $num_present_delta, $missing_delta) =
+  my ($num_files_delta, $num_present_delta, $num_errors_delta) =
     $auditor->check_all_files;
   cmp_ok($num_files_delta,   '==', 59,
          "Reports correct number of source files");
   cmp_ok($num_present_delta, '==', 55,
          "Reports correct number of published files");
-  is_deeply($missing_delta,
-            ["$tmp_run_dir/$extra_cfg",
-             "$tmp_run_dir/$extra_sum",
-             "$expt_name/$device_id/$extra_fq.bz2",
-             "$expt_name/$device_id/reads/0/$extra_f5.bz2"],
-            "Reports missing files correctly") or diag explain $missing_delta;
+  cmp_ok($num_errors_delta, '==', 4,
+         "Reports correct number of total file errors");
 }
 
 sub _do_publish_files {

@@ -42,21 +42,23 @@ my $collection;
 my $debug;
 my $gridion_name = hostname;
 my $log4perl_config;
+my $num_replicates = 1;
 my $output_dir;
 my $source_dir;
 my $verbose;
 
-GetOptions('collection=s'                => \$collection,
-           'debug'                       => \$debug,
-           'gridion-name|gridion_name=s' => \$gridion_name,
-           'help'                        => sub {
+GetOptions('collection=s'                  => \$collection,
+           'debug'                         => \$debug,
+           'gridion-name|gridion_name=s'   => \$gridion_name,
+           'help'                          => sub {
              pod2usage(-verbose => 2,
                        -exitval => 0)
            },
-           'logconf=s'                   => \$log4perl_config,
-           'output-dir|output_dir=s'     => \$output_dir,
-           'source-dir|source_dir=s'     => \$source_dir,
-           'verbose'                     => \$verbose);
+           'logconf=s'                     => \$log4perl_config,
+           'num-replicates|num_replicates' => \$num_replicates,
+           'output-dir|output_dir=s'       => \$output_dir,
+           'source-dir|source_dir=s'       => \$source_dir,
+           'verbose'                       => \$verbose);
 
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
@@ -71,16 +73,11 @@ else {
   Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
                             level  => $level,
                             utf8   => 1});
+  Log::Log4perl->get_logger('WTSI.NPG.iRODS')->level($OFF);
 }
 
 $collection or
   pod2usage(-msg     => 'A --collection argument is required',
-            -exitval => 2);
-$source_dir or
-  pod2usage(-msg     => 'A --source-dir argument is required',
-            -exitval => 2);
--d $source_dir or
-  pod2usage(-msg     => 'Invalid --source-dir argument: not a directory',
             -exitval => 2);
 $output_dir or
   pod2usage(-msg     => 'An --output-dir argument is required',
@@ -88,29 +85,36 @@ $output_dir or
 -d $output_dir or
   pod2usage(-msg     => 'Invalid --output-dir argument: not a directory',
             -exitval => 2);
+$source_dir or
+  pod2usage(-msg     => 'A --source-dir argument is required',
+            -exitval => 2);
+-d $source_dir or
+  pod2usage(-msg     => 'Invalid --source-dir argument: not a directory',
+            -exitval => 2);
 
 my $auditor = WTSI::NPG::HTS::ONT::GridIONRunAuditor->new
   (dest_collection => $collection,
    gridion_name    => $gridion_name,
+   num_replicates  => $num_replicates,
    output_dir      => $output_dir,
    source_dir      => $source_dir);
 
-my ($num_files, $num_published, $missing) = $auditor->check_all_files;
+my ($num_files, $num_published, $num_errors) = $auditor->check_all_files;
 
-my $msg = sprintf q[Published [ %d / %d ] from '%s' to '%s'],
-  $num_published, $num_files, $source_dir, $auditor->run_collection;
+my $msg = sprintf q[Checked %d local files, %d published from ] .
+                  q['%s' to '%s' with %d errors],
+  $num_files, $num_published, $source_dir, $auditor->run_collection,
+  $num_errors;
 
 my $log = Log::Log4perl->get_logger('main');
-my $exit_code = 0;
-if ($num_files == $num_published) {
+$log->level($ALL);
+
+if ($num_errors == 0) {
   $log->info($msg);
 }
 else {
-  $exit_code = 1;
-  $log->error("$msg. Missing: ", pp(@{$missing}));
+  $log->logcroak($msg);
 }
-
-exit $exit_code;
 
 __END__
 
@@ -121,17 +125,22 @@ npg_audit_gridion_run
 =head1 SYNOPSIS
 
 npg_audit_gridion_run --collection <path> [--debug]
-  [--gridion-name <name>] [--logconf <path>]  --output-dir <path>
-  --source-dir <path>  [--verbose]
+  [--gridion-name <name>] [--logconf <path>] [--num-replicates <n>]
+  --output-dir <path> --source-dir <path>  [--verbose]
 
  Options:
    --collection      The root collection in iRODS for GridION data. e.g.
                      '/seq/ont/gridion'.
    --debug           Enable debug level logging. Optional, defaults to
                      false.
-   --gridion-name    The name of the GridION host used to publish the
+   --gridion-name
+   --gridion_name    The name of the GridION host used to publish the
                      data. Optional, defaults to the current hostname.
-   --output-dir      The GridION publisher output directory containing
+   --num-replicates
+   --num_replicates  The minimum number of valid replicates expected in
+                     iRODS. Optional, defaults to 1.
+   --output-dir
+   --output_dir      The GridION publisher output directory containing
                      the tar manifests for the run e.g.
                      '/data/npg/5/GA10000'.
    --source-dir
