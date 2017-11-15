@@ -108,10 +108,12 @@ sub BUILD {
                       $self->source_dir);
 
   my ($device_id, $experiment_name, @rest) =
-    reverse splitdir($self->source_dir);
+    reverse grep { length } splitdir($self->source_dir);
   $self->experiment_name($experiment_name);
   $self->device_id($device_id);
 
+  $self->debug("Using experiment name '$experiment_name' and ",
+               "device ID '$device_id'");
   return;
 }
 
