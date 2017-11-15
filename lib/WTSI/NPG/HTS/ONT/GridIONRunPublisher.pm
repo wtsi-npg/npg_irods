@@ -23,10 +23,12 @@ use Sys::Hostname;
 use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Runnable;
+use WTSI::NPG::HTS::ONT::GridIONRun;
 use WTSI::NPG::HTS::ONT::TarDataObject;
 use WTSI::NPG::HTS::TarPublisher;
 use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::iRODS::Metadata;
+use WTSI::NPG::iRODS::Publisher;
 use WTSI::NPG::iRODS;
 
 with qw[
@@ -38,6 +40,17 @@ with qw[
          WTSI::NPG::HTS::ONT::Annotator
          WTSI::NPG::HTS::ONT::Watcher
        ];
+
+# These methods are autodelegated to gridion_run
+our @HANDLED_RUN_METHODS = qw[device_id
+                              experiment_name
+                              gridion_name
+                              has_device_id
+                              has_experiment_name
+                              has_gridion_name
+                              has_output_dir
+                              output_dir
+                              source_dir];
 
 our $VERSION = '';
 
@@ -59,26 +72,18 @@ our $FAST5_RUN_ID_ATTR      = 'run_id';
 our $FAST5_SAMPLE_ID_ATTR   = 'sample_id';
 our $FAST5_SOFTWARE_VERSION = 'version';
 
-
 has 'dest_collection' =>
   (isa           => 'Str',
    is            => 'ro',
    required      => 1,
    documentation => 'The destination collection within iRODS to store data');
 
-has 'device_id' =>
-  (isa           => 'Str',
-   is            => 'rw',
-   required      => 0,
-   predicate     => 'has_device_id',
-   documentation => 'The GridION device identifier for this run');
-
-has 'experiment_name' =>
-  (isa           => 'Str',
-   is            => 'rw',
-   required      => 0,
-   predicate     => 'has_experiment_name',
-   documentation => 'The experiment name provided by LIMS');
+has 'gridion_run' =>
+  (isa           => 'WTSI::NPG::HTS::ONT::GridIONRun',
+   is            => 'ro',
+   required      => 1,
+   handles       => [@HANDLED_RUN_METHODS],
+   documentation => 'The GridION run');
 
 has 'f5_bzip2' =>
   (isa           => 'Bool',
@@ -138,13 +143,6 @@ has 'monitor' =>
                     'A caller may set this to false in order to stop ' .
                     'monitoring and wait for any child processes to finish');
 
-has 'source_dir' =>
-  (isa           => 'Str',
-   is            => 'ro',
-   required      => 1,
-   documentation => 'A directory path under which sequencing result files ' .
-                    'are located');
-
 has 'tmpdir' =>
   (isa           => 'File::Temp::Dir',
    is            => 'rw',
@@ -154,6 +152,26 @@ has 'tmpdir' =>
    lazy          => 1,
    builder       => '_build_tmpdir',
    documentation => 'Fast temporary directory for file manipulation');
+
+
+around BUILDARGS => sub {
+  my ($orig, $class, @args) = @_;
+
+  if (not ref $args[0]) {
+    my %args = @args;
+
+    my $gridion_name = hostname;
+    my $run = WTSI::NPG::HTS::ONT::GridIONRun->new
+      (gridion_name => $gridion_name,
+       output_dir   => delete $args{output_dir},
+       source_dir   => delete $args{source_dir});
+
+    return $class->$orig(gridion_run => $run, %args);
+  }
+  else {
+    return $class->$orig(@args);
+  }
+};
 
 =head2 publish_files
 
@@ -169,10 +187,16 @@ has 'tmpdir' =>
 sub publish_files {
   my ($self) = @_;
 
+  -e $self->output_dir or
+    $self->logconfess(sprintf q[Output directory '%s' does not exist],
+                      $self->output_dir);
+  -d $self->output_dir or
+    $self->logconfess(sprintf q[Output directory '%s' is not a directory],
+                      $self->output_dir);
+
   -e $self->source_dir or
     $self->logconfess(sprintf q[Data directory '%s' does not exist],
                       $self->source_dir);
-
   -d $self->source_dir or
     $self->logconfess(sprintf q[Data directory '%s' is not a directory],
                       $self->source_dir);
@@ -187,10 +211,11 @@ sub publish_files {
   }
 
   $self->info(sprintf
-              q[Started GridIONPublisher; source dir: '%s',] .
+              q[Started GridIONPublisher with ] .
+              q[source dir: '%s', output dir: '%s', ] .
               q[tar capacity: %d files or %d bytes, tar timeout %d sec, ] .
               q[tar duration: %d, session timeout %d sec],
-              $self->source_dir,
+              $self->source_dir, $self->output_dir,
               $self->arch_capacity, $self->arch_bytes, $self->arch_timeout,
               $self->arch_duration, $self->session_timeout);
 
@@ -203,7 +228,6 @@ sub publish_files {
   my $continue       = 1;    # While true, continue loading
   my $num_errors     = 0;    # The number of errors this session
   my $session_closed = 0;
-
 
   try {
     while ($continue) {
@@ -251,10 +275,15 @@ sub publish_files {
     $num_errors++;
   };
 
-  # Add metadata here
-  my ($nf, $np, $ne) = $self->_add_metadata;
-  $self->debug("Metadata operations returned [$nf, $np, $ne]");
+  # Tar manifest, sequence_summary_n.txt and configuration.cfg files
+  my ($nf, $np, $ne)= $self->_publish_ancillary_files;
+  $self->debug("Ancillary file publishing returned [$nf, $np, $ne]");
   $num_errors += $ne;
+
+  # Metadata
+  my ($nfa, $npa, $nea) = $self->_add_metadata;
+  $self->debug("Metadata operations returned [$nfa, $npa, $nea]");
+  $num_errors += $nea;
 
   $self->stop_watches;
   $select->remove($self->inotify->fileno);
@@ -275,8 +304,7 @@ sub publish_files {
 sub _list_published_tar_paths {
   my ($self) = @_;
 
-  my $gridion = hostname;
-  my $coll = catdir($self->dest_collection, $gridion,
+  my $coll = catdir($self->dest_collection, $self->gridion_name,
                     $self->experiment_name, $self->device_id);
   my ($obj_paths) = $self->irods->list_collection($coll);
 
@@ -445,7 +473,7 @@ sub _do_publish {
 
       if ($format =~ /fast5/msx) {
         if (not ($self->has_experiment_name and $self->has_device_id)) {
-          my ($device_id, $ename) = $self->_identify_run_fast5($path);
+          my ($device_id, $ename) = $self->_identify_run_f5($path);
           $self->experiment_name($ename);
           $self->device_id($device_id);
         }
@@ -470,7 +498,7 @@ sub _do_publish {
 
       if ($format =~ /fastq/msx) {
         if (not ($self->has_experiment_name and $self->has_device_id)) {
-          my ($device_id, $ename) = $self->_identify_run_fastq($path);
+          my ($device_id, $ename) = $self->_identify_run_fq($path);
           $self->experiment_name($ename);
           $self->device_id($device_id);
         }
@@ -523,32 +551,56 @@ sub _catchup {
   my ($self) = @_;
 
   my $dir = $self->source_dir;
-  foreach my $format (qw[fast5 fastq]) {
-    $self->info("Catching up any missed '$format' files ",
-                "under '$dir', recursively");
-    my @files;
+  $self->info("Catching up any missed files under '$dir', recursively");
 
-    my $regex = qr{[.]([^.]+$)}msx;
-    find(sub {
-           my ($f) = m{$regex}msx;
-           if ($f and $f eq $format) {
-             push @files, $File::Find::name
-           }
-         },
-         $dir);
+  my @f5_files = @{$self->gridion_run->list_f5_files};
+  $self->info('Catching up ', scalar @f5_files, ' fast5 files');
+  my @fq_files = @{$self->gridion_run->list_fq_files};
+  $self->info('Catching up ', scalar @fq_files, ' fastq files');
 
-    $self->info('Catching up ', scalar @files, ' files');
-
-    foreach my $file (@files) {
-      $self->debug("Catching up '$file'");
-      $self->_do_publish($file);
-    }
+  foreach my $file (@f5_files, @fq_files) {
+    $self->debug("Catching up '$file'");
+    $self->_do_publish($file);
   }
 
   return;
 }
 
-sub _identify_run_fast5 {
+sub _publish_ancillary_files {
+  my ($self) = @_;
+
+  # This is a hack. At this time there is no flag to disable md5 cache
+  # files. However, we can limit their creation to files above a
+  # certain size and make that size unfeasibly large.
+  my $publisher = WTSI::NPG::iRODS::Publisher->new
+    (checksum_cache_threshold => 1_000_000_000_000,
+     irods                    => $self->irods);
+
+  my @files = (@{$self->gridion_run->list_manifest_files},
+               @{$self->gridion_run->list_seq_summary_files},
+               @{$self->gridion_run->list_seq_cfg_files});
+
+  my ($num_files, $num_processed, $num_errors) = (scalar @files, 0, 0);
+
+  my $coll = catdir($self->dest_collection, $self->gridion_name,
+                    $self->experiment_name, $self->device_id);
+
+  foreach my $file (@files) {
+    try {
+      my $filename = fileparse($file);
+      my $dest = catfile($coll, $filename);
+      $publisher->publish($file, $dest);
+      $num_processed++;
+    } catch {
+      $self->error($_);
+      $num_errors++;
+    };
+  }
+
+  return ($num_files, $num_processed, $num_errors);
+}
+
+sub _identify_run_f5 {
   my ($self, $path) = @_;
 
   my $sample_id;
@@ -588,7 +640,7 @@ sub _identify_run_fast5 {
   return ($device_id, $sample_id);
 }
 
-sub _identify_run_fastq {
+sub _identify_run_fq {
   my ($self, $path) = @_;
 
   my ($device_id, $sample_id, @rest) = reverse splitdir($self->source_dir);
@@ -609,18 +661,6 @@ sub _identify_run_fastq {
   return ($device_id, $sample_id);
 }
 
-sub _manifest_file_path {
-  my ($self, $format) = @_;
-
-  # The manifest file has the same name across all sessions of
-  # publishing device's output. This means that repeated sessions will
-  # incrementally publish the results of the device, or do nothing if
-  # it is already completely published.
-  return catfile($self->source_dir,
-                 sprintf '%s_%s_%s_manifest.txt',
-                 $self->experiment_name, $self->device_id, $format);
-}
-
 sub _make_tar_publisher {
   my ($self, $format) = @_;
 
@@ -628,14 +668,13 @@ sub _make_tar_publisher {
   # publishing device's output. This means that repeated sessions will
   # incrementally publish the results of the device, or do nothing if
   # it is already completely published.
-  my $manifest_path = $self->_manifest_file_path($format);
+  my $manifest_path = $self->gridion_run->manifest_file_path($format);
 
   my $now          = DateTime->now;
   my $now_day      = $now->strftime($ISO8601_DATE);
   my $now_datetime = $now->strftime($ISO8601_DATETIME);
-  my $gridion      = hostname;
 
-  my $coll = catdir($self->dest_collection, $gridion,
+  my $coll = catdir($self->dest_collection, $self->gridion_name,
                     $self->experiment_name, $self->device_id);
   if ($self->irods->is_collection($coll)) {
     $self->debug("Using existing collection '$coll'");
@@ -774,17 +813,11 @@ sample_id and device_id from the path of each Fastq file. Again, once
 the device_id is established, the publisher assumes that it applies to
 the entire run.
 
-All tar files will be written to 'dest_collection'. Metadata will be
-added to dest_collection:
+It will write all tar files to 'dest_collection' and add the following
+metadata to each:
 
   'experiment_name'   => GridION experiment name (aka sample_id)
   'device_id'         => GridIOn device_id
-  'dcterms:creator'   => URI
-  'dcterms:created'   => Timestamp
-  'dcterms:publisher' => URI
-
-Metadata will also be added to each tar file:
-
   'dcterms:created'   => Timestamp
   'md5'               => MD5
   'type'              => File suffix
@@ -810,6 +843,10 @@ clean-up phase where it will perform a search for all files under
 source_dir and attempt to publish every one. If they have already been
 published, the underlying TarPublisher will skip them because they
 will be present in its manifest.
+
+Finally, the publisher will add sequencing run ancillary files
+(sequencing_summary_n.txt and configuration.cfg) and publisher
+tar manifest files to the same iRODS collection.
 
 =head1 BUGS
 
