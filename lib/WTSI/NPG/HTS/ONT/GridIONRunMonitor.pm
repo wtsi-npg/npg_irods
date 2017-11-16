@@ -95,6 +95,13 @@ has 'source_dir' =>
    required      => 1,
    documentation => 'The directory in which GridION results appear');
 
+has 'tmpdir' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 0,
+   default       => '/tmp',
+   documentation => 'Temporary directory for use by publisher processes');
+
 sub start {
   my ($self) = @_;
 
@@ -184,7 +191,8 @@ sub start {
              f5_uncompress   => 0,
              output_dir      => $output_dir,
              source_dir      => $device_dir,
-             session_timeout => $self->session_timeout);
+             session_timeout => $self->session_timeout,
+             tmpdir          => $self->tmpdir);
 
           my ($nf, $np, $ne) = $publisher->publish_files;
           $self->debug("GridIONRunPublisher returned [$nf, $np, $ne]");
