@@ -55,36 +55,41 @@ sub start : Test(1) {
 }
 
 sub watch_history : Test(1) {
-  my $tmp_dir = File::Temp->newdir->dirname;
-  my @tmp_dirs = splitdir($tmp_dir);
-  make_path(catdir(@tmp_dirs, "expt1", "GA10000", "reads", "0"));
-  make_path(catdir(@tmp_dirs, "expt1", "GA10000", "reads", "1"));
-  make_path(catdir(@tmp_dirs, "expt2", "GA20000", "reads"));
 
-  my $monitor = WTSI::NPG::HTS::ONT::GridIONRunMonitor->new
-    (dest_collection => $irods_tmp_coll,
-     session_timeout => 20,
-     source_dir      => $tmp_dir);
+ SKIP: {
+    skip 'Forking causes duplicate test method calls', 1;
 
-  local $SIG{ALRM} = sub { $monitor->monitor(0) };
-  alarm 10;
+    my $tmp_dir = File::Temp->newdir->dirname;
+    my @tmp_dirs = splitdir($tmp_dir);
+    make_path(catdir(@tmp_dirs, "expt1", "GA10000", "reads", "0"));
+    make_path(catdir(@tmp_dirs, "expt1", "GA10000", "reads", "1"));
+    make_path(catdir(@tmp_dirs, "expt2", "GA20000", "reads"));
 
-  $monitor->start;
+    my $monitor = WTSI::NPG::HTS::ONT::GridIONRunMonitor->new
+      (dest_collection => $irods_tmp_coll,
+       session_timeout => 20,
+       source_dir      => $tmp_dir);
 
-  # Simulate adding further directories under an existing one. This
-  # should not cause the expt2 directory to be added to the watch
-  # history multiple times
-  foreach my $i (0 .. 9) {
-    make_path catdir(@tmp_dirs, "expt2", "GA20000", "reads", $i);
+    local $SIG{ALRM} = sub { $monitor->monitor(0) };
+    alarm 10;
+
+    $monitor->start;
+
+    # Simulate adding further directories under an existing one. This
+    # should not cause the expt2 directory to be added to the watch
+    # history multiple times
+    foreach my $i (0 .. 9) {
+      make_path catdir(@tmp_dirs, "expt2", "GA20000", "reads", $i);
+    }
+
+    my @expected = ($tmp_dir,
+                    "$tmp_dir/expt1",
+                    "$tmp_dir/expt2");
+    my $watch_history = $monitor->watch_history;
+    is_deeply($watch_history, \@expected,
+              'Watch history is correct for pre-existing directories') or
+                diag explain $watch_history;
   }
-
-  my @expected = ($tmp_dir,
-                  "$tmp_dir/expt1",
-                  "$tmp_dir/expt2");
-  my $watch_history = $monitor->watch_history;
-  is_deeply($watch_history, \@expected,
-            'Watch history is correct for pre-existing directories') or
-              diag explain $watch_history;
 }
 
 1;
