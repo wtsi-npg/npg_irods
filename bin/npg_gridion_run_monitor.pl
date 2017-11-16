@@ -75,7 +75,7 @@ my $monitor = WTSI::NPG::HTS::ONT::GridIONRunMonitor->new
    dest_collection => $collection,
    output_dir      => $output_dir,
    session_timeout => $session_timeout,
-   source_dir      => $staging_dir
+   source_dir      => $staging_dir,
    tmpdir          => $tmpdir);
 
 # Ensure a clean exit

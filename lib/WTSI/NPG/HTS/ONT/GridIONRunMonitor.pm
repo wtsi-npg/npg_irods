@@ -142,8 +142,8 @@ sub start {
 
   my $num_errors = 0;
 
-  try {
-    while ($self->monitor) {
+  while ($self->monitor) {
+    try {
       $self->debug('Continue ...');
       if ($select->can_read($SELECT_TIMEOUT)) {
         my $n = $self->inotify->poll;
@@ -214,11 +214,11 @@ sub start {
         # set up
         $self->_start_watch_expt_dirs($EVENTS);
       }
-    }
-  } catch {
-    $self->error($_);
-    $num_errors++;
-  };
+    } catch {
+      $self->error($_);
+      $num_errors++;
+    };
+  }
 
   $self->stop_watches;
   $select->remove($self->inotify->fileno);
