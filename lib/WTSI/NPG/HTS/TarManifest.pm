@@ -205,6 +205,8 @@ sub update_file {
   close $fh or $self->logcroak("Failed to close '$manifest_path': $ERRNO");
 
   @{$self->manifest_updates} = (); # Clear pending updates
+
+  return;
 }
 
 __PACKAGE__->meta->make_immutable;

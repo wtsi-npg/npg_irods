@@ -643,7 +643,8 @@ sub _identify_run_f5 {
 sub _identify_run_fq {
   my ($self, $path) = @_;
 
-  my ($device_id, $sample_id, @rest) = reverse splitdir($self->source_dir);
+  my ($device_id, $sample_id, @rest) =
+    reverse grep { length } splitdir($self->source_dir);
 
   try {
     open my $fh, '<', $path or croak "Failed to open '$path': $ERRNO";
