@@ -12,7 +12,6 @@ use File::Path qw[make_path];
 use File::Temp;
 use Log::Log4perl;
 use List::AllUtils qw[uniq];
-use Sys::Hostname;
 use Test::More;
 
 use base qw[WTSI::NPG::HTS::Test];
@@ -118,19 +117,19 @@ sub _do_publish_files {
   $arch_capacity ||= 6;
   $arch_bytes    ||= 10_000_000;
 
-  my $expt_name  = '2';
-  my $expt_dir   = "$data_path/$expt_name";
-  my $device_id  = "GA10000";
-  my $device_dir = "$expt_dir/$device_id";
+  my $expt_name    = '2';
+  my $device_id    = "GA10000";
+  my $data_run_dir = "$data_path/$expt_name/$device_id";
 
   # my $tmp_dir = File::Temp->newdir(DIR => '/tmp', CLEANUP => 0)->dirname;
-  my $tmp_dir        = File::Temp->newdir->dirname;
-  my $output_dir     = "$tmp_dir/output";
-  my $basecalled_dir = "$tmp_dir/basecalled";
-  make_path($output_dir);
-  make_path($basecalled_dir);
+  my $tmp_dir            = File::Temp->newdir->dirname;
+  my $tmp_output_dir     = "$tmp_dir/output";
+  my $tmp_basecalled_dir = "$tmp_dir/basecalled";
+  my $tmp_run_dir        = "$tmp_basecalled_dir/$expt_name/$device_id";
+  make_path($tmp_output_dir);
+  make_path($tmp_run_dir);
 
-  my @f5_tmp_dirs = ("$basecalled_dir/reads/0", "$basecalled_dir/reads/1");
+  my @f5_tmp_dirs = ("$tmp_run_dir/reads/0", "$tmp_run_dir/reads/1");
   foreach my $f5_tmp_dir (@f5_tmp_dirs) {
     make_path($f5_tmp_dir);
   }
@@ -144,10 +143,10 @@ sub _do_publish_files {
        arch_capacity   => $arch_capacity,
        arch_timeout    => 10,
        dest_collection => $dest_coll,
-       output_dir      => $output_dir,
+       f5_uncompress   => $f5_uncompress,
+       output_dir      => $tmp_output_dir,
        session_timeout => 30,
-       source_dir      => $basecalled_dir,
-       f5_uncompress   => $f5_uncompress);
+       source_dir      => $tmp_basecalled_dir);
 
     my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
@@ -157,9 +156,9 @@ sub _do_publish_files {
   sleep 5;
 
   my @data_files;
-  foreach my $dir ("$device_dir/reads/0",
-                   "$device_dir/reads/1",
-                   $device_dir) {
+  foreach my $dir ("$data_run_dir/reads/0",
+                   "$data_run_dir/reads/1",
+                   $data_run_dir) {
     opendir my $dh, $dir or die "Failed to opendir '$dir': $!";
     my @files = sort map { catfile($dir, $_) }
       grep { m{[.](cfg|fast5|fastq|txt)$}msx } readdir $dh;
@@ -170,7 +169,7 @@ sub _do_publish_files {
 
   # Simulate writing new fast5, fastq, cfg and txt files
   foreach my $file (@data_files) {
-    my $tmp_file = rel2abs(abs2rel($file, $device_dir), $basecalled_dir);
+    my $tmp_file = rel2abs(abs2rel($file, $data_run_dir), $tmp_run_dir);
 
     if ($data_mode eq 'copy') {
       copy($file, $tmp_file) or die "Failed to copy $file: $ERRNO";
@@ -196,7 +195,7 @@ sub _do_publish_files {
     # For this data format
     my $manifest_file = sprintf '%s_%s_%s_manifest.txt',
       $expt_name, $device_id, $format;
-    my $expected_manifest = catfile($output_dir, $manifest_file);
+    my $expected_manifest = catfile($tmp_output_dir, $manifest_file);
 
     # Check manifests exist
     ok(-e $expected_manifest, "Manifest file '$expected_manifest' exists");

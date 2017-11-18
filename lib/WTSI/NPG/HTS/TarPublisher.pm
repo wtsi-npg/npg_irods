@@ -7,6 +7,7 @@ use File::Spec::Functions qw[abs2rel];
 use Moose;
 use MooseX::StrictConstructor;
 
+use WTSI::NPG::HTS::TarManifest;
 use WTSI::NPG::HTS::TarStream;
 
 our $VERSION= '';
@@ -15,20 +16,20 @@ with qw[
          WTSI::DNAP::Utilities::Loggable
        ];
 
-has 'manifest_index' =>
-  (isa           => 'HashRef',
-   is            => 'ro',
-   required      => 1,
-   default       => sub { return {} },
-   init_arg      => undef,
-   documentation => 'Maps each file path input to publish_file to the tar ' .
-                    'file storing that file.');
-
-has 'manifest_path' =>
+has 'remove_files' =>
   (isa           => 'Str',
    is            => 'ro',
    required      => 1,
-   documentation => 'A manifest of published read files');
+   default       => 0,
+   documentation => 'Enable GNU tar --remove-files option to remove the ' .
+                    'original file once archived');
+
+has 'tar_manifest' =>
+  (isa           => 'WTSI::NPG::HTS::TarManifest',
+   is            => 'ro',
+   required      => 1,
+   documentation => 'Manifest to be updates after the tar publishing ' .
+                    'operation is complete');
 
 has 'tar_bytes' =>
   (isa           => 'Int',
@@ -77,21 +78,28 @@ has 'tar_stream' =>
    init_arg      => undef,
    documentation => 'The currently used stream to an open tar file');
 
-has 'remove_files' =>
-  (isa           => 'Str',
-   is            => 'ro',
-   required      => 1,
-   default       => 0,
-   documentation => 'Enable GNU tar --remove-files option to remove the ' .
-                    'original file once archived');
+around BUILDARGS => sub {
+  my ($orig, $class, @args) = @_;
 
+  if (not ref $args[0]) {
+    my %args = @args;
+
+    my $manifest = WTSI::NPG::HTS::TarManifest->new
+      (manifest_path => delete $args{manifest_path});
+
+    return $class->$orig(tar_manifest => $manifest, %args);
+  }
+  else {
+    return $class->$orig(@args);
+  }
+};
 
 sub BUILD {
   my ($self) = @_;
 
   # Read any manifest of published files left by a previous process
-  if (-e $self->manifest_path) {
-    $self->_read_manifest_file;
+  if ($self->tar_manifest->file_exists) {
+    $self->tar_manifest->read_file;
   }
 
   return;
@@ -176,7 +184,7 @@ sub file_published {
   my $ipath = abs2rel($path, $self->tar_cwd);
   my $published = 0;
 
-  if (exists $self->manifest_index->{$ipath} or
+  if ($self->tar_manifest->contains_item($ipath) or
       ($self->tar_in_progress and $self->tar_stream->file_added($path))) {
     $published = 1;
   }
@@ -232,88 +240,18 @@ sub close_stream {
   if ($self->tar_in_progress) {
     $self->tar_stream->close_stream;
     $self->tar_count($self->tar_count + 1);
-    $self->_update_manifest_index;
-    $self->_append_manifest_file;
+
+    my $tar_path   = $self->tar_stream->tar_file;
+    my $item_paths = $self->tar_stream->tar_content;
+
+    $self->tar_manifest->add_items($tar_path, [keys %{$item_paths}]);
+    $self->tar_manifest->update_file;
+
     $self->clear_tar_stream;
 
     my $tar_file = sprintf '%s.%d.tar', $self->tar_path, $self->tar_count;
     $self->info("Closed tar file '$tar_file'");
   }
-
-  return;
-}
-
-sub _update_manifest_index {
-  my ($self) = @_;
-
-  if (not $self->has_tar_stream) {
-    $self->logconfess('Internal error: attempted to update a manifest ',
-                      'of tar contents with no tar stream available');
-  }
-
-  my $index = $self->manifest_index;
-  my $tpath = $self->tar_stream->tar_file;
-  my $items = $self->tar_stream->tar_content;
-
-  foreach my $ipath (keys %{$items}) {
-    $self->debug("Adding to manifest index '$ipath' => '$tpath'");
-    $index->{$ipath} = $tpath;
-  }
-
-  return;
-}
-
-sub _read_manifest_file {
-  my ($self) = @_;
-
-  my $mpath = $self->manifest_path;
-  my $index = $self->manifest_index;
-
-  %{$index} = (); # Clear existing entries
-
-  if (-e $mpath) {
-    open my $fh, '<', $mpath or
-      $self->logcroak("Failed to open manifest '$mpath' ",
-                      "for reading: $ERRNO");
-
-    while (my $line = <$fh>) {
-      chomp $line;
-      my ($tpath, $ipath) = split /\t/msx, $line;
-      $self->debug("Read '$ipath' from existing manifest into index");
-      $index->{$ipath} = $tpath;
-    }
-
-    close $fh or $self->logcroak("Failed to close '$mpath': $ERRNO");
-  }
-
-  return;
-}
-
-# Append to manifest on disk all entries from the current tar stream's
-# tar file. Called after the tar stream is closed successfully.
-sub _append_manifest_file {
-  my ($self) = @_;
-
-  if (not $self->has_tar_stream) {
-    $self->logconfess('Internal error: attempted to write a manifest ',
-                      'of tar contents with no tar stream available');
-  }
-
-  my $mpath = $self->manifest_path;
-  my $tpath = $self->tar_stream->tar_file;
-  my $items = $self->tar_stream->tar_content;
-
-  open my $fh, '>>', $mpath
-    or $self->logcroak("Failed to open manifest '$mpath' ",
-                       "for appending: $ERRNO");
-
-  foreach my $ipath (sort keys %{$items}) {
-    $self->debug("Adding to manifest file '$ipath' => '$tpath'");
-    print $fh "$tpath\t$ipath\n" or
-      $self->logcroak("Failed to write to filehandle of '$mpath'");
-  }
-
-  close $fh or $self->logcroak("Failed to close '$mpath': $ERRNO");
 
   return;
 }
