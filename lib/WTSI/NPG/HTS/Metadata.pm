@@ -9,6 +9,8 @@ use Exporter qw[import];
 
 ## no critic (Modules::ProhibitAutomaticExportation)
 our @EXPORT = qw[
+                 $EXPERIMENT_NAME
+                 $GRIDION_DEVICE_ID
                  $LIBRARY_TYPE
                  $SEQCHKSUM
                  $HUMAN
@@ -22,8 +24,11 @@ our $VERSION = '';
 
 # Annotation
 
+our $EXPERIMENT_NAME   = 'experiment_name';
+our $GRIDION_DEVICE_ID = 'device_id';
+
 our $LIBRARY_TYPE = 'library_type';
-our $SEQCHKSUM = 'seqchksum';
+our $SEQCHKSUM    = 'seqchksum';
 
 # Sequence alignment filters
 
@@ -54,7 +59,7 @@ Iain Bancarz <ib5@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2016, 2017 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

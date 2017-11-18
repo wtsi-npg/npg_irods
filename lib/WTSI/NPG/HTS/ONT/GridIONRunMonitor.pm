@@ -5,6 +5,7 @@ use namespace::autoclean;
 use Carp;
 use Data::Dump q[pp];
 use English qw[-no_match_vars];
+use File::Path qw[make_path];
 use File::Spec::Functions qw[catdir catfile rel2abs splitdir];
 use IO::Select;
 use Linux::Inotify2;
@@ -169,6 +170,9 @@ sub start {
           Log::Log4perl::init(\$logconf);
 
           my ($expt_name, $device_id) = $self->_parse_device_dir($device_dir);
+          my $output_dir = catdir($self->output_dir, $expt_name, $device_id);
+          make_path($output_dir);
+
           my $publisher = WTSI::NPG::HTS::ONT::GridIONRunPublisher->new
             (arch_bytes      => $self->arch_bytes,
              arch_capacity   => $self->arch_capacity,
@@ -178,7 +182,7 @@ sub start {
              device_id       => $device_id,
              experiment_name => $expt_name,
              f5_uncompress   => 0,
-             output_dir      => $self->output_dir,
+             output_dir      => $output_dir,
              source_dir      => $device_dir,
              session_timeout => $self->session_timeout);
 
