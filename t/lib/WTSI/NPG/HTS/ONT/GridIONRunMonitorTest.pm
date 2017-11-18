@@ -60,6 +60,8 @@ sub start : Test(1) {
 }
 
 sub watch_history : Test(1) {
+ SKIP: {
+    skip 'Forking causes duplicate test method calls', 1;
   my $tmp_dir = File::Temp->newdir->dirname;
   my @tmp_dirs = splitdir($tmp_dir);
 
@@ -96,6 +98,7 @@ sub watch_history : Test(1) {
   is_deeply($watch_history, \@expected,
             'Watch history is correct for pre-existing directories') or
               diag explain $watch_history;
+  }
 }
 
 1;
