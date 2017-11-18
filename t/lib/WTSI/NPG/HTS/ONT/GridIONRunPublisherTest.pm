@@ -124,8 +124,13 @@ sub _do_publish_files {
   my $device_dir = "$expt_dir/$device_id";
 
   # my $tmp_dir = File::Temp->newdir(DIR => '/tmp', CLEANUP => 0)->dirname;
-  my $tmp_dir = File::Temp->newdir->dirname;
-  my @f5_tmp_dirs = ("$tmp_dir/reads/0", "$tmp_dir/reads/1");
+  my $tmp_dir        = File::Temp->newdir->dirname;
+  my $output_dir     = "$tmp_dir/output";
+  my $basecalled_dir = "$tmp_dir/basecalled";
+  make_path($output_dir);
+  make_path($basecalled_dir);
+
+  my @f5_tmp_dirs = ("$basecalled_dir/reads/0", "$basecalled_dir/reads/1");
   foreach my $f5_tmp_dir (@f5_tmp_dirs) {
     make_path($f5_tmp_dir);
   }
@@ -139,8 +144,9 @@ sub _do_publish_files {
        arch_capacity   => $arch_capacity,
        arch_timeout    => 10,
        dest_collection => $dest_coll,
+       output_dir      => $output_dir,
        session_timeout => 30,
-       source_dir      => $tmp_dir,
+       source_dir      => $basecalled_dir,
        f5_uncompress   => $f5_uncompress);
 
     my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
@@ -164,7 +170,7 @@ sub _do_publish_files {
 
   # Simulate writing new fast5 and fastq files
   foreach my $file (@fastx_files) {
-    my $tmp_file = rel2abs(abs2rel($file, $device_dir), $tmp_dir);
+    my $tmp_file = rel2abs(abs2rel($file, $device_dir), $basecalled_dir);
 
     if ($data_mode eq 'copy') {
       copy($file, $tmp_file) or die "Failed to copy $file: $ERRNO";
@@ -190,7 +196,7 @@ sub _do_publish_files {
     # For this data format
     my $manifest_file = sprintf '%s_%s_%s_manifest.txt',
       $expt_name, $device_id, $format;
-    my $expected_manifest = catfile($tmp_dir, $manifest_file);
+    my $expected_manifest = catfile($output_dir, $manifest_file);
 
     # Check manifests exist
     ok(-e $expected_manifest, "Manifest file '$expected_manifest' exists");

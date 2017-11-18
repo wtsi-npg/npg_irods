@@ -40,10 +40,15 @@ sub teardown_test : Test(teardown) {
 
 sub start : Test(1) {
   my $tmp_dir = File::Temp->newdir->dirname;
-  make_path $tmp_dir;
+  my @tmp_dirs = splitdir($tmp_dir);
+  make_path($tmp_dir);
+
+  my $output_dir = catdir(@tmp_dirs, 'output');
+  make_path($output_dir);
 
   my $monitor = WTSI::NPG::HTS::ONT::GridIONRunMonitor->new
     (dest_collection => $irods_tmp_coll,
+     output_dir      => $output_dir,
      session_timeout => 20,
      source_dir      => $tmp_dir);
 
@@ -57,14 +62,20 @@ sub start : Test(1) {
 sub watch_history : Test(1) {
   my $tmp_dir = File::Temp->newdir->dirname;
   my @tmp_dirs = splitdir($tmp_dir);
-  make_path(catdir(@tmp_dirs, "expt1", "GA10000", "reads", "0"));
-  make_path(catdir(@tmp_dirs, "expt1", "GA10000", "reads", "1"));
-  make_path(catdir(@tmp_dirs, "expt2", "GA20000", "reads"));
+
+  my $output_dir = catdir(@tmp_dirs, 'output');
+  make_path($output_dir);
+
+  my $basecalled_dir = catdir(@tmp_dirs, 'basecalled');
+  make_path("$basecalled_dir/expt1/GA10000/reads/0");
+  make_path("$basecalled_dir/expt1/GA10000/reads/1");
+  make_path("$basecalled_dir/expt2/GA20000/reads");
 
   my $monitor = WTSI::NPG::HTS::ONT::GridIONRunMonitor->new
     (dest_collection => $irods_tmp_coll,
+     output_dir      => $output_dir,
      session_timeout => 20,
-     source_dir      => $tmp_dir);
+     source_dir      => $basecalled_dir);
 
   local $SIG{ALRM} = sub { $monitor->monitor(0) };
   alarm 10;
@@ -75,12 +86,12 @@ sub watch_history : Test(1) {
   # should not cause the expt2 directory to be added to the watch
   # history multiple times
   foreach my $i (0 .. 9) {
-    make_path catdir(@tmp_dirs, "expt2", "GA20000", "reads", $i);
+    make_path("$basecalled_dir/expt2/GA20000/reads/$i");
   }
 
-  my @expected = ($tmp_dir,
-                  "$tmp_dir/expt1",
-                  "$tmp_dir/expt2");
+  my @expected = ($basecalled_dir,
+                  "$basecalled_dir/expt1",
+                  "$basecalled_dir/expt2");
   my $watch_history = $monitor->watch_history;
   is_deeply($watch_history, \@expected,
             'Watch history is correct for pre-existing directories') or
