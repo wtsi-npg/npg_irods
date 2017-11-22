@@ -68,7 +68,7 @@ sub BUILD {
   Example    : $obj->is_restricted_access
   Description: Return true if the file contains or may contain sensitive
                information and is not for unrestricted public access.
-               This true for bed and JSON files.
+               This true for bed, tab, quant.zip and JSON files.
   Returntype : Bool
 
 =cut
@@ -96,10 +96,9 @@ sub _build_is_restricted_access {
   my ($self) = @_;
 
   my $format = lc $self->file_format;
-
-  # The contents of BED and JSON formatted file are sensitive and
-  # are given restricted access
-  return ($format eq 'bed' or $format eq 'json');
+  # The contents of BED, TAB, ZIP and JSON formatted files is assumed to be
+  # sensitive and thus they are given restricted access
+  return ($format eq 'bed' or $format eq 'json' or $format eq 'tab' or $format eq 'zip');
 }
 
 __PACKAGE__->meta->make_immutable;

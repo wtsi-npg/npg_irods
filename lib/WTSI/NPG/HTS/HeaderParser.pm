@@ -20,6 +20,7 @@ our $PP = 'PP';
 # These regexes match the supported aligners from header PG records
 our $ALIGNER_BWA    = qr{^bwa(?!_sam)}msx;
 our $ALIGNER_TOPHAT = qr{^TopHat}msx;
+our $ALIGNER_STAR   = qr{^STAR}msx;
 
 # Regex for matching to reference sequence paths in HTS file header PG
 # records.
@@ -328,7 +329,7 @@ sub _find_aligner_record {
     my $cl = $self->get_unique_value($rec, $CL);
 
     if (defined $cl) {
-      if ($id =~ m{$ALIGNER_BWA|$ALIGNER_TOPHAT}msx) {
+      if ($id =~ m{$ALIGNER_BWA|$ALIGNER_TOPHAT|$ALIGNER_STAR}msx) {
         $self->debug("ID $id identified as an aligner in $rec");
         return 1;
       }
