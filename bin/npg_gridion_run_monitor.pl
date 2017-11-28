@@ -27,6 +27,7 @@ my $log4perl_config;
 my $output_dir;
 my $session_timeout = 60 * 20;
 my $staging_dir;
+my $tmpdir          = '/tmp';
 my $verbose;
 #use critic
 
@@ -43,6 +44,7 @@ GetOptions('collection=s'                      => \$collection,
            'tar_capacity|tar-capacity=i'       => \$arch_capacity,
            'tar-duration|tar_duration=i'       => \$arch_duration,
            'tar_timeout|tar-timeout=i'         => \$arch_timeout,
+           'tmpdir=s'                          => \$tmpdir,
            'verbose'                           => \$verbose);
 
 if ($log4perl_config) {
@@ -73,7 +75,8 @@ my $monitor = WTSI::NPG::HTS::ONT::GridIONRunMonitor->new
    dest_collection => $collection,
    output_dir      => $output_dir,
    session_timeout => $session_timeout,
-   source_dir      => $staging_dir);
+   source_dir      => $staging_dir,
+   tmpdir          => $tmpdir);
 
 # Ensure a clean exit
 local $SIG{INT}  = sub { $monitor->monitor(0) };
@@ -100,7 +103,7 @@ npg_gridion_run_monitor
 
 npg_gridion_run_monitor --collection <path> [--debug] [--logconf <path>]
   --output-dir <path> --staging-dir <path>
-  [--tar-capacity <n>] [--tar-timeout <n>] [--verbose]
+  [--tar-capacity <n>] [--tar-timeout <n>] [--tmpdir <path>] [--verbose]
 
  Options:
    --collection      The root iRODS collection in which to write data,
@@ -127,6 +130,9 @@ npg_gridion_run_monitor --collection <path> [--debug] [--logconf <path>]
    --tar_timeout     The number of seconds idle time after which a tar file
                      open for writing, will be closed. even if it has not
                      reached capacity. Optional, defaults to 60 * 5 seconds.
+   --tmpdir          The Unix TMPDIR where publishers will create their
+                     temporary working directories. Optional, defaults to
+                     /tmp.
    --verbose         Print messages while processing. Optional.
 
 =head1 DESCRIPTION

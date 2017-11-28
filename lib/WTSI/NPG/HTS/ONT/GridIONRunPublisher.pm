@@ -144,14 +144,21 @@ has 'monitor' =>
                     'monitoring and wait for any child processes to finish');
 
 has 'tmpdir' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 1,
+   default       => '/tmp',
+   documentation => 'Temporary directory where wdir will be created');
+
+has 'wdir' =>
   (isa           => 'File::Temp::Dir',
    is            => 'rw',
    required      => 0,
-   predicate     => 'has_tmpdir',
-   clearer       => 'clear_tmpdir',
+   predicate     => 'has_wdir',
+   clearer       => 'clear_wdir',
    lazy          => 1,
-   builder       => '_build_tmpdir',
-   documentation => 'Fast temporary directory for file manipulation');
+   builder       => '_build_wdir',
+   documentation => 'Working directory for tar file item manipulation');
 
 
 around BUILDARGS => sub {
@@ -296,7 +303,7 @@ sub publish_files {
     $num_files += $self->fq_publisher->tar_count;
   }
 
-  $self->clear_tmpdir;
+  $self->clear_wdir;
 
   return ($num_files, $num_files, $num_errors);
 }
@@ -457,7 +464,7 @@ sub _do_publish {
       my ($vol, $relative_path, $filename) =
         splitpath(abs2rel($path, $self->source_dir));
 
-      my $tmp_dir  = catdir($self->tmpdir, $relative_path);
+      my $tmp_dir  = catdir($self->wdir, $relative_path);
       my $tmp_path = catfile($tmp_dir, $filename);
 
       make_path($tmp_dir);
@@ -688,9 +695,9 @@ sub _make_tar_publisher {
   my $tar_path = catfile($coll,
                          sprintf '%s_%s_%s',
                          $self->device_id, $format, $now_datetime);
-  # Work in the tmpdir so that the tarred files have the same relative
+  # Work in the wdir so that the tarred files have the same relative
   # path as if working in the runfolder.
-  my $tar_cwd  = $self->tmpdir->dirname;
+  my $tar_cwd  = $self->wdir->dirname;
   $self->debug("Starting '$format' tar publisher with CWD '$tar_cwd'");
 
   return WTSI::NPG::HTS::TarPublisher->new
@@ -774,11 +781,11 @@ sub _build_irods {
   return WTSI::NPG::iRODS->new;
 }
 
-sub _build_tmpdir {
+sub _build_wdir {
   my ($self) = @_;
 
   return File::Temp->newdir('GridIONRunPublisher.' . $PID . '.XXXXXXXXX',
-                            DIR => '/tmp', CLEANUP => 1);
+                            DIR => $self->tmpdir, CLEANUP => 1);
 }
 
 __PACKAGE__->meta->make_immutable;

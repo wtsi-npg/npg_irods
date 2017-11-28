@@ -95,6 +95,13 @@ has 'source_dir' =>
    required      => 1,
    documentation => 'The directory in which GridION results appear');
 
+has 'tmpdir' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 0,
+   default       => '/tmp',
+   documentation => 'Temporary directory for use by publisher processes');
+
 sub start {
   my ($self) = @_;
 
@@ -135,8 +142,8 @@ sub start {
 
   my $num_errors = 0;
 
-  try {
-    while ($self->monitor) {
+  while ($self->monitor) {
+    try {
       $self->debug('Continue ...');
       if ($select->can_read($SELECT_TIMEOUT)) {
         my $n = $self->inotify->poll;
@@ -184,7 +191,8 @@ sub start {
              f5_uncompress   => 0,
              output_dir      => $output_dir,
              source_dir      => $device_dir,
-             session_timeout => $self->session_timeout);
+             session_timeout => $self->session_timeout,
+             tmpdir          => $self->tmpdir);
 
           my ($nf, $np, $ne) = $publisher->publish_files;
           $self->debug("GridIONRunPublisher returned [$nf, $np, $ne]");
@@ -206,11 +214,11 @@ sub start {
         # set up
         $self->_start_watch_expt_dirs($EVENTS);
       }
-    }
-  } catch {
-    $self->error($_);
-    $num_errors++;
-  };
+    } catch {
+      $self->error($_);
+      $num_errors++;
+    };
+  }
 
   $self->stop_watches;
   $select->remove($self->inotify->fileno);
