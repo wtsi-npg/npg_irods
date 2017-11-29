@@ -5,6 +5,7 @@ use namespace::autoclean;
 use Carp;
 use Data::Dump q[pp];
 use English qw[-no_match_vars];
+use File::Path qw[make_path];
 use File::Spec::Functions qw[catdir catfile rel2abs splitdir];
 use IO::Select;
 use Linux::Inotify2;
@@ -26,6 +27,7 @@ with qw[
 our $VERSION = '';
 
 our $SELECT_TIMEOUT   = 2;
+our $ISO8601_DATETIME = '%Y-%m-%dT%H%m%S';
 
 our $EVENTS = IN_MOVED_TO | IN_CREATE | IN_MOVED_FROM | IN_DELETE | IN_ATTRIB;
 
@@ -80,11 +82,25 @@ has 'monitor' =>
                     'A caller may set this to false in order to stop ' .
                     'monitoring and wait for any child processes to finish');
 
+has 'output_dir' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 1,
+   documentation => 'A directory path under which publisher logs and ' .
+                    'manifests will be written');
+
 has 'source_dir' =>
   (isa           => 'Str',
    is            => 'ro',
    required      => 1,
    documentation => 'The directory in which GridION results appear');
+
+has 'tmpdir' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 0,
+   default       => '/tmp',
+   documentation => 'Temporary directory for use by publisher processes');
 
 sub start {
   my ($self) = @_;
@@ -97,13 +113,15 @@ sub start {
   my %in_progress; # Map device directory path to PID
 
   $self->info(sprintf
-              q[Started GridIONRunMonitor; staging path: '%s', ] .
-              q[tar capacity: %d files, tar timeout %d sec, ] .
-              q[tar duration: %d, ] .
-              q[max processes: %d, session timeout %d sec],
-              $self->source_dir, $self->arch_capacity, $self->arch_timeout,
-              $self->arch_duration,
-              $self->max_processes, $self->session_timeout);
+              q[Started GridIONRunMonitor with ] .
+              q[staging path: '%s', output dir: '%s', ] .
+              q[tar capacity: %d files or %d bytes, tar timeout %d sec, ] .
+              q[tar duration: %d, session timeout %d sec, ] .
+              q[max processes: %d],
+              $self->source_dir, $self->output_dir,
+              $self->arch_capacity, $self->arch_bytes, $self->arch_timeout,
+              $self->arch_duration, $self->session_timeout,
+              $self->max_processes);
 
   my $pm = Parallel::ForkManager->new($self->max_processes);
 
@@ -124,8 +142,8 @@ sub start {
 
   my $num_errors = 0;
 
-  try {
-    while ($self->monitor) {
+  while ($self->monitor) {
+    try {
       $self->debug('Continue ...');
       if ($select->can_read($SELECT_TIMEOUT)) {
         my $n = $self->inotify->poll;
@@ -154,11 +172,14 @@ sub start {
           $self->info("Started GridIONRunPublisher with PID $child_pid on ",
                       "'$device_dir'");
           my $logconf =
-            $self->_make_publisher_logconf($device_dir, $child_pid,
+            $self->_make_publisher_logconf($self->output_dir, $child_pid,
                                            $log_level);
           Log::Log4perl::init(\$logconf);
 
           my ($expt_name, $device_id) = $self->_parse_device_dir($device_dir);
+          my $output_dir = catdir($self->output_dir, $expt_name, $device_id);
+          make_path($output_dir);
+
           my $publisher = WTSI::NPG::HTS::ONT::GridIONRunPublisher->new
             (arch_bytes      => $self->arch_bytes,
              arch_capacity   => $self->arch_capacity,
@@ -168,8 +189,10 @@ sub start {
              device_id       => $device_id,
              experiment_name => $expt_name,
              f5_uncompress   => 0,
+             output_dir      => $output_dir,
              source_dir      => $device_dir,
-             session_timeout => $self->session_timeout);
+             session_timeout => $self->session_timeout,
+             tmpdir          => $self->tmpdir);
 
           my ($nf, $np, $ne) = $publisher->publish_files;
           $self->debug("GridIONRunPublisher returned [$nf, $np, $ne]");
@@ -191,11 +214,11 @@ sub start {
         # set up
         $self->_start_watch_expt_dirs($EVENTS);
       }
-    }
-  } catch {
-    $self->error($_);
-    $num_errors++;
-  };
+    } catch {
+      $self->error($_);
+      $num_errors++;
+    };
+  }
 
   $self->stop_watches;
   $select->remove($self->inotify->fileno);
@@ -302,10 +325,13 @@ sub _make_callback {
 sub _make_publisher_logconf {
   my ($self, $path, $pid, $level) = @_;
 
-  my $name = 'WTSI::NPG::HTS::ONT::GridIONRunPublisher';
-  $name =~ s/::/_/gmsx;
-  my $logfile = catfile($path, sprintf '%s.%d.log', $name, $pid);
-  my $level_name = Log::Log4perl::Level::to_level($level);
+  my $name         = 'WTSI_NPG_HTS_ONT_GridIONRunPublisher';
+  my $now_datetime = DateTime->now->strftime($ISO8601_DATETIME);
+  my $logfile      = catfile($path, sprintf '%s.%s.%d.log',
+                             $name, $now_datetime, $pid);
+
+  my $level_name   = Log::Log4perl::Level::to_level($level);
+
   return sprintf $DEFAULT_PUBLISHER_LOG_TEMPLATE,
     $level_name, $level_name, $level_name, $logfile;
 }

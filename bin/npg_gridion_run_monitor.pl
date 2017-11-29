@@ -24,8 +24,10 @@ my $arch_timeout    = 60 * 5;
 my $collection;
 my $debug;
 my $log4perl_config;
+my $output_dir;
 my $session_timeout = 60 * 20;
 my $staging_dir;
+my $tmpdir          = '/tmp';
 my $verbose;
 #use critic
 
@@ -36,11 +38,13 @@ GetOptions('collection=s'                      => \$collection,
                        -exitval => 0)
            },
            'logconf=s'                         => \$log4perl_config,
+           'output-dir|output_dir=s'           => \$output_dir,
            'session-timeout|session_timeout=s' => \$session_timeout,
            'staging-dir|staging_dir=s'         => \$staging_dir,
            'tar_capacity|tar-capacity=i'       => \$arch_capacity,
            'tar-duration|tar_duration=i'       => \$arch_duration,
            'tar_timeout|tar-timeout=i'         => \$arch_timeout,
+           'tmpdir=s'                          => \$tmpdir,
            'verbose'                           => \$verbose);
 
 if ($log4perl_config) {
@@ -61,14 +65,18 @@ if ($log4perl_config) {
 $collection or
   $log->logcroak('A collection argument is required');
 
+$output_dir or
+  $log->logcroak('An output-dir argument is required');
 
 my $monitor = WTSI::NPG::HTS::ONT::GridIONRunMonitor->new
   (arch_capacity   => $arch_capacity,
    arch_duration   => $arch_duration,
    arch_timeout    => $arch_timeout,
    dest_collection => $collection,
+   output_dir      => $output_dir,
    session_timeout => $session_timeout,
-   source_dir      => $staging_dir);
+   source_dir      => $staging_dir,
+   tmpdir          => $tmpdir);
 
 # Ensure a clean exit
 local $SIG{INT}  = sub { $monitor->monitor(0) };
@@ -93,14 +101,19 @@ npg_gridion_run_monitor
 
 =head1 SYNOPSIS
 
-npg_gridion_run_monitor [--debug] [--logconf <path>] --staging-dir <path>
-  [--tar-capacity <n>] [--tar-timeout <n>] [--verbose]
+npg_gridion_run_monitor --collection <path> [--debug] [--logconf <path>]
+  --output-dir <path> --staging-dir <path>
+  [--tar-capacity <n>] [--tar-timeout <n>] [--tmpdir <path>] [--verbose]
 
  Options:
+   --collection      The root iRODS collection in which to write data,
    --debug           Enable debug level logging. Optional, defaults to
                      false.
    --help            Display help.
    --logconf         A log4perl configuration file. Optional.
+   --output-dir
+   --output_dir      A writable local directory where log files and
+                     file manifests will be written.
    --session-timeout
    --session_timeout The number of seconds idle time after which a multi-file
                      tar session will be closed. Optional, defaults to 60 * 20
@@ -117,11 +130,19 @@ npg_gridion_run_monitor [--debug] [--logconf <path>] --staging-dir <path>
    --tar_timeout     The number of seconds idle time after which a tar file
                      open for writing, will be closed. even if it has not
                      reached capacity. Optional, defaults to 60 * 5 seconds.
+   --tmpdir          The Unix TMPDIR where publishers will create their
+                     temporary working directories. Optional, defaults to
+                     /tmp.
    --verbose         Print messages while processing. Optional.
 
 =head1 DESCRIPTION
 
+Uses inotify to monitor a staging area for new GridION experiment
+result directories. Launches a
+WTSI::NPG::HTS::ONT::GridIONRunPublisher for each existing device
+directory and for any new device directory created.
 
+For full documentation see WTSI::NPG::HTS::ONT::GridIONRunMonitor.
 
 =head1 AUTHOR
 

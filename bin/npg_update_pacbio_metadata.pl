@@ -30,6 +30,7 @@ my $min_id_run;
 my $stdio;
 my $verbose;
 my $zone;
+my $file_type;
 
 GetOptions('debug'                     => \$debug,
            'dry-run|dry_run!'          => \$dry_run,
@@ -41,6 +42,7 @@ GetOptions('debug'                     => \$debug,
            'min_id_run|min-id-run=i'   => \$min_id_run,
            'id_run|id-run=i'           => \@id_run,
            'zone=s',                   => \$zone,
+           'file_type|file-type=s'     => \$file_type,
            q[]                         => \$stdio);
 
 if ($log4perl_config) {
@@ -107,13 +109,13 @@ if ($stdio) {
 # per-run queries
 if (@id_run) {
   foreach my $id_run (@id_run) {
-    # Find one run's annotated objects by query
-    push @data_objs, _find_data_objects($id_run);
+    # Find one run's annotated objects by query, optionally restricted by type
+    push @data_objs, _find_data_objects($file_type, $id_run);
   }
 }
 else {
-  # Find all runs' annotated objects by query
-  push @data_objs, _find_data_objects();
+  # Find all runs' annotated objects by query, optionally restricted by type
+  push @data_objs, _find_data_objects($file_type);
 }
 
 @data_objs = uniq sort @data_objs;
@@ -133,17 +135,17 @@ if (@data_objs) {
 $log->info("Updated metadata on $num_updated files");
 
 sub _find_data_objects {
-  my ($q_id_run) = @_;
+  my ($q_file_type, $q_id_run) = @_;
 
-  # Find one run's annotated objects by query
-  my @query = _make_run_query($q_id_run);
+  # Find one run's annotated objects by query, optionally restricted by type
+  my @query = _make_run_query($q_file_type, $q_id_run);
   $log->info('iRODS query: ', pp(\@query));
 
   return $irods->find_objects_by_meta("/$zone", @query);
 }
 
 sub _make_run_query {
-  my ($q_id_run) = @_;
+  my ($q_file_type, $q_id_run) = @_;
 
   my @query =
     ([$PACBIO_SOURCE => $PACBIO_PRODUCTION],
@@ -151,6 +153,9 @@ sub _make_run_query {
 
   if (defined $q_id_run) {
     push @query, ['run' => $q_id_run];
+  }
+  if (defined $q_file_type) {
+    push @query, ['type' => $q_file_type];
   }
 
   return @query;
@@ -166,7 +171,7 @@ npg_update_pacbio_metadata
 
 npg_update_pacbio_metadata [--dry-run] [--logconf file]
   --min-id-run id_run --max-id-run id_run | --id-run id_run
-  [--verbose] [--zone name]
+  [--file-type type] [--verbose] [--zone name]
 
  Options:
 
@@ -184,7 +189,9 @@ npg_update_pacbio_metadata [--dry-run] [--logconf file]
   --id_run      A specific run to update. May be given multiple times to
                 specify multiple runs. If used in conjunction with --min-run
                 and --max-run, the union of the two sets of runs will be
-                updated.
+                updated. Optional.
+  --file-type
+  --file_type   Restrict to one specific file type to update. Optional.
   --verbose     Print messages while processing. Optional.
   --zone        The iRODS zone in which to work. Optional, defaults to 'seq'.
   -             Read iRODS paths from STDIN instead of finding them by their
