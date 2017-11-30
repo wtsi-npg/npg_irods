@@ -115,6 +115,7 @@ sub publish_file_batch {
     WTSI::NPG::iRODS::Publisher->new
       (irods                  => $self->irods,
        require_checksum_cache => $self->require_checksum_cache);
+  $publisher->rmq_init();
 
   $self->read_state;
 
@@ -190,6 +191,7 @@ sub publish_file_batch {
                    "[$num_processed / $num_files]: ", pop @stack);
     };
   }
+  $publisher->rmq_disconnect();
 
   if ($num_errors > 0) {
     $self->error("Encountered errors on $num_errors / ",
@@ -197,7 +199,6 @@ sub publish_file_batch {
   }
 
   $self->write_state;
-
   return ($num_files, $num_processed, $num_errors);
 }
 ## use critic

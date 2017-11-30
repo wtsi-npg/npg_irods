@@ -122,6 +122,7 @@ sub publish {
         my $publisher = WTSI::NPG::iRODS::Publisher->new(
             irods => $self->irods,
         );
+        $publisher->rmq_init();
         my $tmp_archive_path = $self->_write_temporary_archive();
         $self->debug(q[Wrote .tar.gz archive to ], $tmp_archive_path);
         $bionano_published_obj =
@@ -133,6 +134,7 @@ sub publish {
                      $self->resultset->directory,
                      q[' to iRODS destination '],
                      $bionano_path, q[']);
+	$publisher->rmq_disconnect();
     }
 
     return $bionano_published_obj;

@@ -17,7 +17,6 @@ use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::HTS::Seqchksum;
 use WTSI::NPG::HTS::Types qw[AlnFormat];
 use WTSI::NPG::iRODS::Metadata;
-use WTSI::NPG::iRODS::Publisher;
 use WTSI::NPG::iRODS;
 
 with qw[

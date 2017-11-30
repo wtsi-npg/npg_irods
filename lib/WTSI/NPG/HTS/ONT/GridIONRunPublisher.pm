@@ -582,6 +582,7 @@ sub _publish_ancillary_files {
   my $publisher = WTSI::NPG::iRODS::Publisher->new
     (checksum_cache_threshold => 1_000_000_000_000,
      irods                    => $self->irods);
+  $publisher->rmq_init();
 
   my @files = (@{$self->gridion_run->list_manifest_files},
                @{$self->gridion_run->list_seq_summary_files},
@@ -604,6 +605,7 @@ sub _publish_ancillary_files {
     };
   }
 
+  $publisher->rmq_disconnect();
   return ($num_files, $num_processed, $num_errors);
 }
 

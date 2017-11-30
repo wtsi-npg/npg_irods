@@ -111,8 +111,10 @@ sub publish_logs {
   };
 
   my $publisher = WTSI::NPG::iRODS::Publisher->new(irods => $self->irods);
+  $publisher->rmq_init();
   my $dest = $publisher->publish($tarpath, catfile($self->dest_collection,
                                                    $self->tarfile))->str;
+  $publisher->rmq_disconnect();
   my $obj = WTSI::NPG::HTS::DataObject->new($self->irods, $dest);
 
   my @primary_avus = $self->make_avu($ID_RUN, $self->id_run);
@@ -122,7 +124,6 @@ sub publish_logs {
   if ($num_err > 0) {
     $self->logcroak("Failed to set primary metadata cleanly on '$dest'");
   }
-
   return $dest;
 }
 

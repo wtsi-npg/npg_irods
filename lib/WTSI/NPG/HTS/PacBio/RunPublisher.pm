@@ -15,7 +15,6 @@ use WTSI::NPG::HTS::BatchPublisher;
 use WTSI::NPG::HTS::PacBio::DataObjectFactory;
 use WTSI::NPG::HTS::PacBio::MetaXMLParser;
 use WTSI::NPG::iRODS::Metadata;
-use WTSI::NPG::iRODS::Publisher;
 use WTSI::NPG::iRODS;
 
 with qw[
