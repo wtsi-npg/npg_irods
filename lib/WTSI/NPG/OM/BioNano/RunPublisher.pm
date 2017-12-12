@@ -16,7 +16,6 @@ use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS::Metadata;
-use WTSI::NPG::iRODS::Publisher;
 use WTSI::NPG::OM::BioNano::ResultSet;
 
 # FIXME Move/refactor WTSI::NPG::HTS::Publisher to reflect use outside of
@@ -31,6 +30,7 @@ our $PIGZ_PROCESSES = 4;
 
 with qw[WTSI::DNAP::Utilities::Loggable
         WTSI::NPG::Accountable
+        WTSI::NPG::iRODS::PublisherFactory
         WTSI::NPG::OM::BioNano::Annotator];
 
 has 'directory' =>
@@ -119,7 +119,7 @@ sub publish {
             $self->resultset,
             @stock_records,
         );
-        my $publisher = WTSI::NPG::iRODS::Publisher->new(
+        my $publisher = $self->make_publisher(
             irods => $self->irods,
         );
         my $tmp_archive_path = $self->_write_temporary_archive();

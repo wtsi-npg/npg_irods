@@ -40,22 +40,28 @@ LOGCONF
 
 my $collection;
 my $debug;
+my $enable_rmq;
+my $exchange;
 my $force = 0;
 my $log4perl_config;
+my $routing_key_prefix;
 my $runfolder_path;
 my $verbose;
 my $sequel;
 
-GetOptions('collection=s'                    => \$collection,
-           'debug'                           => \$debug,
-           'force'                           => \$force,
-           'help'                            => sub {
+GetOptions('collection=s'                            => \$collection,
+           'debug'                                   => \$debug,
+           'enable-rmq|enable_rmq'                   => \$enable_rmq,
+           'exchange=s'                              => \$exchange,
+           'force'                                   => \$force,
+           'help'                                    => sub {
              pod2usage(-verbose => 2, -exitval => 0);
            },
-           'sequel'                          => \$sequel,
-           'logconf=s'                       => \$log4perl_config,
-           'runfolder-path|runfolder_path=s' => \$runfolder_path,
-           'verbose'                         => \$verbose);
+           'sequel'                                  => \$sequel,
+           'logconf=s'                               => \$log4perl_config,
+           'routing-key-prefix|routing_key_prefix=s' => \$routing_key_prefix,
+           'runfolder-path|runfolder_path=s'         => \$runfolder_path,
+           'verbose'                                 => \$verbose);
 
 
 
@@ -96,6 +102,15 @@ my @init_args = (force          => $force,
                  runfolder_path => $runfolder_path);
 if ($collection) {
   push @init_args, dest_collection => $collection;
+}
+if ($enable_rmq) {
+    push @init_args, enable_rmq => 1;
+    if (defined $exchange) {
+        push @init_args, exchange => $exchange;
+    }
+    if (defined $routing_key_prefix) {
+        push @init_args, routing_key_prefix => $routing_key_prefix;
+    }
 }
 
 my $publisher = $module->new(@init_args);

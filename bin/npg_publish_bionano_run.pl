@@ -23,28 +23,35 @@ if (! caller ) {
 }
 sub run {
 
+    my $collection;
     my $days;
     my $days_ago;
     my $debug;
+    my $enable_rmq;
+    my $exchange;
     my $log4perl_config;
     my $output_dir;
-    my $collection;
+    my $routing_key_prefix;
     my $runfolder_path;
     my $search_dir;
     my $verbose;
 
     GetOptions(
-        'days=i'                          => \$days,
-        'days-ago|days_ago=i'             => \$days_ago,
-        'debug'                           => \$debug,
-        'collection=s'                    => \$collection,
-        'help'                            => sub {
+        'collection=s'                            => \$collection,
+        'days=i'                                  => \$days,
+        'days-ago|days_ago=i'                     => \$days_ago,
+        'debug'                                   => \$debug,
+        'enable-rmq|enable_rmq'                   => \$enable_rmq,
+        'exchange=s'                              => \$exchange,
+
+        'help'                                    => sub {
             pod2usage(-verbose => 2, -exitval => 0) },
-        'logconf=s'                       => \$log4perl_config,
-        'output-dir|output_dir=s'         => \$output_dir,
-        'runfolder-path|runfolder_path=s' => \$runfolder_path,
-        'search-dir|search_dir=s'         => \$search_dir,
-        'verbose'                         => \$verbose
+        'logconf=s'                               => \$log4perl_config,
+        'output-dir|output_dir=s'                 => \$output_dir,
+        'runfolder-path|runfolder_path=s'         => \$runfolder_path,
+        'routing-key-prefix|routing_key_prefix=s' => \$routing_key_prefix,
+        'search-dir|search_dir=s'                 => \$search_dir,
+        'verbose'                                 => \$verbose
     );
 
     if (defined $search_dir && defined $runfolder_path) {
@@ -83,16 +90,26 @@ sub run {
                 $collection, q[']);
     my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
     foreach my $dir (@dirs) {
-        my %args = (
+        my @init_args = (
             directory   => $dir,
             mlwh_schema => $wh_schema,
             irods       => $irods,
         );
         if (defined $output_dir) {
-            $args{'output_dir'} = $output_dir;
+            push @init_args, output_dir => $output_dir;
+        }
+        if ($enable_rmq) {
+            push @init_args, enable_rmq => 1;
+            if (defined $exchange) {
+                push @init_args, exchange => $exchange;
+            }
+            if (defined $routing_key_prefix) {
+                push @init_args, routing_key_prefix => $routing_key_prefix;
+            }
         }
         try {
-            my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new(%args);
+            my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new(
+                @init_args);
             my $dest_collection = $publisher->publish($collection);
             $num_published++;
             $log->info(q[Published BioNano run directory '], $dir,
