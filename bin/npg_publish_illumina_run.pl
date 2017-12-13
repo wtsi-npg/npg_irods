@@ -285,11 +285,21 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
 
  Advanced options:
 
-  --driver-type
-  --driver_type Set the lims driver type to a custom value. The default
-                is driver type is 'ml_warehouse_fc_cache' (defined by
-                WTSI::NPG::HTS::LIMSFactory). Other st::spi::lims driver
-                types may be used e.g. 'samplesheet'.
+   --driver-type
+   --driver_type Set the lims driver type to a custom value. The default
+                 is driver type is 'ml_warehouse_fc_cache' (defined by
+                 WTSI::NPG::HTS::LIMSFactory). Other st::spi::lims driver
+                 types may be used e.g. 'samplesheet'.
+
+ RabbitMQ options:
+   --enable-rmq
+   --enable_rmq         Enable RabbitMQ messaging for file publication.
+   --exchange           Name of a RabbitMQ exchange.
+                        Optional; has no effect unless RabbitMQ is enabled.
+   --routing-key-prefix
+   --routing_key_prefix Prefix for a RabbitMQ routing key.
+                        Optional; has no effect unless RabbitMQ is enabled.
+
 
 =head1 DESCRIPTION
 

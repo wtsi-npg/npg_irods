@@ -106,28 +106,34 @@ npg_publish_gridion_run --collection <path> [--debug] [--logconf <path>]
   [--tar-timeout <n>] [--verbose]
 
  Options:
-   --collection      The destination collection in iRODS.
-   --debug           Enable debug level logging. Optional, defaults to
-                     false.
+   --collection         The destination collection in iRODS.
+   --debug              Enable debug level logging. Optional, defaults to
+                        false.
+   --enable-rmq
+   --enable_rmq         Enable RabbitMQ messaging for file publication.
+   --exchange           Name of a RabbitMQ exchange.
+                        Optional; has no effect unless RabbitMQ is enabled.
    --source-dir
-   --source_dir      The instrument device directory path to watch.
-   --help            Display help.
-   --logconf         A log4perl configuration file. Optional.
+   --source_dir         The instrument device directory path to watch.
+   --help               Display help.
+   --logconf            A log4perl configuration file. Optional.
    --session-timeout
-   --session_timeout The number of seconds idle time after which a multi-file
-                     tar session will be closed. Optional, defaults to 60 * 20
-                     seconds.
+   --session_timeout    The number of seconds idle time after which a
+                        multi-file tar session will be closed. Optional,
+                        defaults to 60 * 20 seconds.
    --tar-capacity
-   --tar_capacity    The number of read files to be archived per tar file.
-                     Optional, defaults to 10,000.
+   --tar_capacity       The number of read files to be archived per tar file.
+                        Optional, defaults to 10,000.
    --tar-duration
-   --tar_duration    The maximum number of seconds a tar file may be open for
-                     writing. Optional, defaults to 60 * 60 * 6 seconds.
+   --tar_duration       The maximum number of seconds a tar file may be
+                        open for writing. Optional, defaults to
+                        60 * 60 * 6 seconds.
    --tar-timeout
-   --tar_timeout     The number of seconds idle time after which a tar file
-                     open for writing, will be closed. even if it has not
-                     reached capacity. Optional, defaults to 60 * 5 seconds.
-   --verbose         Print messages while processing. Optional.
+   --tar_timeout        The number of seconds idle time, after which a tar
+                        file open for writing will be closed, even if it
+                        has not reached capacity. Optional, defaults to
+                        60 * 5 seconds.
+   --verbose            Print messages while processing. Optional.
 
 =head1 DESCRIPTION
 

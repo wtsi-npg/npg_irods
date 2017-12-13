@@ -149,19 +149,26 @@ npg_publish_pacbio_run --runfolder-path <path> [--collection <path>]
   [--force] [--debug] [--verbose] [--logconf <path>] [--sequel]
 
  Options:
-   --collection      The destination collection in iRODS. Optional,
-                     defaults to /seq/pacbio/.
-   --debug           Enable debug level logging. Optional, defaults to
-                     false.
-   --force           Force an attempt to re-publish files that have been
-                     published successfully.
-   --help            Display help.
+   --collection         The destination collection in iRODS. Optional,
+                        defaults to /seq/pacbio/.
+   --debug              Enable debug level logging. Optional, defaults to
+                        false.
+   --enable-rmq
+   --enable_rmq         Enable RabbitMQ messaging for file publication.
+   --exchange           Name of a RabbitMQ exchange.
+                        Optional; has no effect unless RabbitMQ is enabled.
+   --force              Force an attempt to re-publish files that have been
+                        published successfully.
+   --help               Display help.
+   --routing-key-prefix
+   --routing_key_prefix Prefix for a RabbitMQ routing key.
+                        Optional; has no effect unless RabbitMQ is enabled.
    --runfolder-path
-   --runfolder_path  The instrument runfolder path to load.
-   --logconf         A log4perl configuration file. Optional.
-   --verbose         Print messages while processing. Optional.
-   --sequel          If the run folder is output from a PacBio Sequel 
-                     system. Optional.
+   --runfolder_path     The instrument runfolder path to load.
+   --logconf            A log4perl configuration file. Optional.
+   --verbose            Print messages while processing. Optional.
+   --sequel             If the run folder is output from a PacBio Sequel
+                        system. Optional.
 
 =head1 DESCRIPTION
 

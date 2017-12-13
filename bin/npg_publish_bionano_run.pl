@@ -146,42 +146,45 @@ npg_publish_bionano_run
 Options:
 
   --days-ago
-  --days_ago        The number of days ago that the publication window
-                    ends. Optional, defaults to zero (the current day).
-                    Has no effect if the --runfolder_path option is used.
+  --days_ago           The number of days ago that the publication window
+                       ends. Optional, defaults to zero (the current day).
+                       Has no effect if the --runfolder_path option is used.
 
-  --days            The number of days in the publication window, ending
-                    at the day given by the --days-ago argument. Any sample
-                    data modified during this period will be considered
-                    for publication. Optional, defaults to 7 days.
-                    Has no effect if the --runfolder_path option is used.
+  --days               The number of days in the publication window, ending
+                       at the day given by the --days-ago argument. Any
+                       sample data modified during this period will be
+                       considered for publication. Optional, defaults to 7
+                       days. Has no effect if the --runfolder_path option
+                       is used.
+   --collection        The data destination root collection in iRODS.
+   --enable-rmq
+   --enable_rmq        Enable RabbitMQ messaging for file publication.
+   --exchange          Name of a RabbitMQ exchange.
+                       Optional; has no effect unless RabbitMQ is enabled.
+  --help               Display help.
 
-  --collection      The data destination root collection in iRODS.
-
-  --help            Display help.
-
-  --logconf         A log4perl configuration file. Optional.
-
+  --logconf            A log4perl configuration file. Optional.
   --output-dir
-  --output_dir      Directory for .tar.gz output. Optional; if not given,
-                    .tar.gz file will be written to a temporary directory
-                    and deleted on script exit.
+  --output_dir         Directory for .tar.gz output. Optional; if not given,
+                       .tar.gz file will be written to a temporary directory
+                       and deleted on script exit.
 
+  --routing-key-prefix
+  --routing_key_prefix Prefix for a RabbitMQ routing key.
+                       Optional; has no effect unless RabbitMQ is enabled.
   --runfolder-path
-  --runfolder_path  The instrument runfolder path to load. Incompatible
-                    with --search_dir. Optional. If neither this option
-                    nor --search_dir is given, the default value of
-                    --search_dir is used.
-
+  --runfolder_path     The instrument runfolder path to load. Incompatible
+                       with --search_dir. Optional. If neither this option
+                       nor --search_dir is given, the default value of
+                       --search_dir is used.
   --search-dir
-  --search_dir      The root directory to search for BioNano data. Search
-                    depth will be a maximum of 2 levels below the given
-                    directory. The --days_ago and --days options determine
-                    a time window for runfolders to be published.
-                    Incompatible with --runfolder_path. Optional, defaults
-                    to current working directory.
-
-  --verbose         Print messages while processing. Optional.
+  --search_dir         The root directory to search for BioNano data. Search
+                       depth will be a maximum of 2 levels below the given
+                       directory. The --days_ago and --days options determine
+                       a time window for runfolders to be published.
+                       Incompatible with --runfolder_path. Optional, defaults
+                       to current working directory.
+  --verbose            Print messages while processing. Optional.
 
 =head1 DESCRIPTION
 

@@ -94,15 +94,22 @@ npg_publish_illumina_logs --runfolder-path <path> [--collection <path>]
   [--id-run <id_run>] [--debug] [--verbose] [--logconf <path>]
 
  Options:
-   --collection      The destination collection in iRODS. Optional,
-                     defaults to /seq/<id_run>/log.
-   --debug           Enable debug level logging. Optional, defaults to
-                     false.
-   --help            Display help.
+   --collection         The destination collection in iRODS. Optional,
+                        defaults to /seq/<id_run>/log.
+   --debug              Enable debug level logging. Optional, defaults to
+                        false.
+   --enable-rmq
+   --enable_rmq         Enable RabbitMQ messaging for file publication.
+   --exchange           Name of a RabbitMQ exchange.
+                        Optional; has no effect unless RabbitMQ is enabled.
+   --help               Display help.
+   --routing-key-prefix
+   --routing_key_prefix Prefix for a RabbitMQ routing key.
+                        Optional; has no effect unless RabbitMQ is enabled.
    --runfolder-path
-   --runfolder_path  The instrument runfolder path to load.
-   --logconf         A log4perl configuration file. Optional.
-   --verbose         Print messages while processing. Optional.
+   --runfolder_path     The instrument runfolder path to load.
+   --logconf            A log4perl configuration file. Optional.
+   --verbose            Print messages while processing. Optional.
 
 =head1 DESCRIPTION
 
