@@ -11,12 +11,12 @@ use Try::Tiny;
 
 use WTSI::NPG::HTS::DataObject;
 use WTSI::NPG::iRODS::Metadata qw[$ID_RUN];
-use WTSI::NPG::iRODS::Publisher;
 use WTSI::NPG::iRODS;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::iRODS::Annotator
+         WTSI::NPG::iRODS::PublisherFactory
          npg_tracking::illumina::run::short_info
          npg_tracking::illumina::run::folder
        ];
@@ -110,7 +110,7 @@ sub publish_logs {
     $self->logcroak(pop @stack); # Use a shortened error message
   };
 
-  my $publisher = WTSI::NPG::iRODS::Publisher->new(irods => $self->irods);
+  my $publisher = $self->make_publisher(irods => $self->irods);
   my $dest = $publisher->publish($tarpath, catfile($self->dest_collection,
                                                    $self->tarfile))->str;
   my $obj = WTSI::NPG::HTS::DataObject->new($self->irods, $dest);

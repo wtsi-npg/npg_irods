@@ -48,6 +48,8 @@ my $archive_path;
 my $collection;
 my $debug;
 my $driver_type;
+my $enable_rmq;
+my $exchange;
 my $file_format;
 my $force = 0;
 my $id_run;
@@ -57,35 +59,39 @@ my $log4perl_config;
 my $max_errors = 0;
 my $qc = 1;
 my $restart_file;
+my $routing_key_prefix;
 my $runfolder_path;
 my $verbose;
 my $xml = 1;
 
 my @positions;
 
-GetOptions('alignment!'                        => \$alignment,
-           'alt-process|alt_process=s'         => \$alt_process,
-           'ancillary!'                        => \$ancillary,
-           'archive-path|archive_path=s'       => \$archive_path,
-           'collection=s'                      => \$collection,
-           'debug'                             => \$debug,
-           'driver-type|driver_type=s'         => \$driver_type,
-           'file-format|file_format=s'         => \$file_format,
-           'force'                             => \$force,
-           'help'                              => sub {
-             pod2usage(-verbose => 2, -exitval => 0);
+GetOptions('alignment!'                              => \$alignment,
+           'alt-process|alt_process=s'               => \$alt_process,
+           'ancillary!'                              => \$ancillary,
+           'archive-path|archive_path=s'             => \$archive_path,
+           'collection=s'                            => \$collection,
+           'debug'                                   => \$debug,
+           'enable-rmq|enable_rmq'                   => \$enable_rmq,
+           'exchange=s'                              => \$exchange,
+           'driver-type|driver_type=s'               => \$driver_type,
+           'file-format|file_format=s'               => \$file_format,
+           'force'                                   => \$force,
+           'help'                                    => sub {
+               pod2usage(-verbose => 2, -exitval => 0);
            },
-           'id_run|id-run=i'                   => \$id_run,
-           'index!'                            => \$index,
-           'interop!'                          => \$interop,
-           'logconf=s'                         => \$log4perl_config,
-           'max-errors|max_errors=i'           => \$max_errors,
-           'lanes|positions=i'                 => \@positions,
-           'qc!'                               => \$qc,
-           'restart-file|restart_file=s'       => \$restart_file,
-           'runfolder-path|runfolder_path=s'   => \$runfolder_path,
-           'verbose'                           => \$verbose,
-           'xml!'                              => \$xml);
+           'id_run|id-run=i'                         => \$id_run,
+           'index!'                                  => \$index,
+           'interop!'                                => \$interop,
+           'logconf=s'                               => \$log4perl_config,
+           'max-errors|max_errors=i'                 => \$max_errors,
+           'lanes|positions=i'                       => \@positions,
+           'qc!'                                     => \$qc,
+           'restart-file|restart_file=s'             => \$restart_file,
+           'routing-key-prefix|routing_key_prefix=s' => \$routing_key_prefix,
+           'runfolder-path|runfolder_path=s'         => \$runfolder_path,
+           'verbose'                                 => \$verbose,
+           'xml!'                                    => \$xml);
 
 # Process CLI arguments
 if ($log4perl_config) {
@@ -155,6 +161,15 @@ if ($restart_file) {
 }
 if ($max_errors) {
   push @pub_init_args, max_errors => $max_errors;
+}
+if ($enable_rmq) {
+    push @pub_init_args, enable_rmq => 1;
+    if (defined $exchange) {
+        push @pub_init_args, exchange => $exchange;
+    }
+    if (defined $routing_key_prefix) {
+        push @pub_init_args, routing_key_prefix => $routing_key_prefix;
+    }
 }
 
 my $publisher = WTSI::NPG::HTS::Illumina::RunPublisher->new(@pub_init_args);
@@ -270,11 +285,21 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
 
  Advanced options:
 
-  --driver-type
-  --driver_type Set the lims driver type to a custom value. The default
-                is driver type is 'ml_warehouse_fc_cache' (defined by
-                WTSI::NPG::HTS::LIMSFactory). Other st::spi::lims driver
-                types may be used e.g. 'samplesheet'.
+   --driver-type
+   --driver_type Set the lims driver type to a custom value. The default
+                 is driver type is 'ml_warehouse_fc_cache' (defined by
+                 WTSI::NPG::HTS::LIMSFactory). Other st::spi::lims driver
+                 types may be used e.g. 'samplesheet'.
+
+ RabbitMQ options:
+   --enable-rmq
+   --enable_rmq         Enable RabbitMQ messaging for file publication.
+   --exchange           Name of a RabbitMQ exchange.
+                        Optional; has no effect unless RabbitMQ is enabled.
+   --routing-key-prefix
+   --routing_key_prefix Prefix for a RabbitMQ routing key.
+                        Optional; has no effect unless RabbitMQ is enabled.
+
 
 =head1 DESCRIPTION
 

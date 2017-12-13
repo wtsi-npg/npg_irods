@@ -12,11 +12,11 @@ use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::DefaultDataObjectFactory;
-use WTSI::NPG::iRODS::Publisher;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::DNAP::Utilities::JSONCodec
+         WTSI::NPG::iRODS::PublisherFactory
        ];
 
 our $VERSION = '';
@@ -111,10 +111,9 @@ sub publish_file_batch {
 
   $extra_avus_callback ||= sub { return };
 
-  my $publisher =
-    WTSI::NPG::iRODS::Publisher->new
-      (irods                  => $self->irods,
-       require_checksum_cache => $self->require_checksum_cache);
+  my $publisher = $self->make_publisher(
+      irods                  => $self->irods,
+      require_checksum_cache => $self->require_checksum_cache);
 
   $self->read_state;
 

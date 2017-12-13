@@ -22,25 +22,31 @@ my $arch_duration   = 60 * 60 * 6;
 my $arch_timeout    = 60 * 5;
 my $collection;
 my $debug;
+my $enable_rmq;
+my $exchange;
 my $log4perl_config;
+my $routing_key_prefix;
 my $session_timeout = 60 * 20;
 my $source_dir;
 my $verbose;
 ##use critic
 
-GetOptions('collection=s'                      => \$collection,
-           'debug'                             => \$debug,
-           'help'                              => sub {
+GetOptions('collection=s'                            => \$collection,
+           'debug'                                   => \$debug,
+           'enable-rmq|enable_rmq'                   => \$enable_rmq,
+           'exchange=s'                              => \$exchange,
+           'help'                                    => sub {
              pod2usage(-verbose => 2,
                        -exitval => 0)
            },
-           'logconf=s'                         => \$log4perl_config,
-           'session-timeout|session_timeout=s' => \$session_timeout,
-           'source_dir|source-dir=s'           => \$source_dir,
-           'tar-capacity|tar_capacity=i'       => \$arch_capacity,
-           'tar-duration|tar_duration=i'       => \$arch_duration,
-           'tar-timeout|tar_timeout=i'         => \$arch_timeout,
-           'verbose'                           => \$verbose);
+           'logconf=s'                               => \$log4perl_config,
+           'session-timeout|session_timeout=s'       => \$session_timeout,
+           'source_dir|source-dir=s'                 => \$source_dir,
+           'routing-key-prefix|routing_key_prefix=s' => \$routing_key_prefix,
+           'tar-capacity|tar_capacity=i'             => \$arch_capacity,
+           'tar-duration|tar_duration=i'             => \$arch_duration,
+           'tar-timeout|tar_timeout=i'               => \$arch_timeout,
+           'verbose'                                 => \$verbose);
 
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
@@ -67,13 +73,25 @@ $source_dir or
 
 $source_dir = rel2abs($source_dir);
 
-my $publisher = WTSI::NPG::HTS::ONT::GridIONRunPublisher->new
-  (arch_capacity   => $arch_capacity,
-   arch_duration   => $arch_duration,
-   arch_timeout    => $arch_timeout,
-   dest_collection => $collection,
-   source_dir      => $source_dir,
-   session_timeout => 200)->publish_files;
+my @init_args = (arch_capacity   => $arch_capacity,
+                 arch_duration   => $arch_duration,
+                 arch_timeout    => $arch_timeout,
+                 dest_collection => $collection,
+                 source_dir      => $source_dir,
+                 session_timeout => 200);
+if ($enable_rmq) {
+    push @init_args, enable_rmq => 1;
+    if (defined $exchange) {
+        push @init_args, exchange => $exchange;
+    }
+    if (defined $routing_key_prefix) {
+        push @init_args, routing_key_prefix => $routing_key_prefix;
+    }
+}
+
+my $publisher = WTSI::NPG::HTS::ONT::GridIONRunPublisher->new(@init_args);
+$publisher->publish_files;
+
 
 __END__
 
@@ -88,28 +106,34 @@ npg_publish_gridion_run --collection <path> [--debug] [--logconf <path>]
   [--tar-timeout <n>] [--verbose]
 
  Options:
-   --collection      The destination collection in iRODS.
-   --debug           Enable debug level logging. Optional, defaults to
-                     false.
+   --collection         The destination collection in iRODS.
+   --debug              Enable debug level logging. Optional, defaults to
+                        false.
+   --enable-rmq
+   --enable_rmq         Enable RabbitMQ messaging for file publication.
+   --exchange           Name of a RabbitMQ exchange.
+                        Optional; has no effect unless RabbitMQ is enabled.
    --source-dir
-   --source_dir      The instrument device directory path to watch.
-   --help            Display help.
-   --logconf         A log4perl configuration file. Optional.
+   --source_dir         The instrument device directory path to watch.
+   --help               Display help.
+   --logconf            A log4perl configuration file. Optional.
    --session-timeout
-   --session_timeout The number of seconds idle time after which a multi-file
-                     tar session will be closed. Optional, defaults to 60 * 20
-                     seconds.
+   --session_timeout    The number of seconds idle time after which a
+                        multi-file tar session will be closed. Optional,
+                        defaults to 60 * 20 seconds.
    --tar-capacity
-   --tar_capacity    The number of read files to be archived per tar file.
-                     Optional, defaults to 10,000.
+   --tar_capacity       The number of read files to be archived per tar file.
+                        Optional, defaults to 10,000.
    --tar-duration
-   --tar_duration    The maximum number of seconds a tar file may be open for
-                     writing. Optional, defaults to 60 * 60 * 6 seconds.
+   --tar_duration       The maximum number of seconds a tar file may be
+                        open for writing. Optional, defaults to
+                        60 * 60 * 6 seconds.
    --tar-timeout
-   --tar_timeout     The number of seconds idle time after which a tar file
-                     open for writing, will be closed. even if it has not
-                     reached capacity. Optional, defaults to 60 * 5 seconds.
-   --verbose         Print messages while processing. Optional.
+   --tar_timeout        The number of seconds idle time, after which a tar
+                        file open for writing will be closed, even if it
+                        has not reached capacity. Optional, defaults to
+                        60 * 5 seconds.
+   --verbose            Print messages while processing. Optional.
 
 =head1 DESCRIPTION
 
