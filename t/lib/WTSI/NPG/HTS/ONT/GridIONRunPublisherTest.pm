@@ -148,7 +148,7 @@ sub _do_publish_files {
        f5_uncompress   => $f5_uncompress,
        output_dir      => $tmp_output_dir,
        session_timeout => 30,
-       source_dir      => $tmp_basecalled_dir);
+       source_dir      => $tmp_run_dir);
 
     my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 

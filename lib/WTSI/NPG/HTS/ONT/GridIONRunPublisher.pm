@@ -464,8 +464,25 @@ sub _do_publish {
   }
   else {
   CASE: {
+      # Ensure that experiment_name and device_id appear in the
+      # relative path in the temporary workspace and therefore also in
+      # the tar file by removing them from the base used to calculate
+      # the relative path.
+      my @dirs = splitdir($self->source_dir);
+      my $did  = pop @dirs; # device_id
+      my $exp  = pop @dirs; # experiment name
+      my $relative_to = catdir(@dirs);
+      $self->debug("Calculating temporary paths relative to '$relative_to' ",
+                   "experiment_name '$exp', device_id '$did'");
+
+      if (not @dirs) {
+        $self->logcroak('No source_dir root remains after trimming');
+      }
+
       my ($vol, $relative_path, $filename) =
-        splitpath(abs2rel($path, $self->source_dir));
+        splitpath(abs2rel($path, $relative_to));
+      $self->debug("Working on path '$path': relative path is ",
+                   "'$relative_path', file name is '$filename'");
 
       my $tmp_dir  = catdir($self->wdir, $relative_path);
       my $tmp_path = catfile($tmp_dir, $filename);
