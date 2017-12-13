@@ -168,10 +168,13 @@ around BUILDARGS => sub {
     my %args = @args;
 
     my $gridion_name = hostname;
+
     my $run = WTSI::NPG::HTS::ONT::GridIONRun->new
-      (gridion_name => $gridion_name,
-       output_dir   => delete $args{output_dir},
-       source_dir   => delete $args{source_dir});
+      (device_id       => delete $args{device_id},
+       experiment_name => delete $args{experiment_name},
+       gridion_name    => $gridion_name,
+       output_dir      => delete $args{output_dir},
+       source_dir      => delete $args{source_dir});
 
     return $class->$orig(gridion_run => $run, %args);
   }

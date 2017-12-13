@@ -143,6 +143,8 @@ sub _do_publish_files {
        arch_capacity   => $arch_capacity,
        arch_timeout    => 10,
        dest_collection => $dest_coll,
+       device_id       => $device_id,
+       experiment_name => $expt_name,
        f5_uncompress   => $f5_uncompress,
        output_dir      => $tmp_output_dir,
        session_timeout => 30,
