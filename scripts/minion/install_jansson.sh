@@ -20,8 +20,8 @@ cleanup() {
 }
 
 download_jansson_source() {
-    curl -sSL -O ${JANSSON_RELEASE_URL}/jansson/releases/jansson-${JANSSON_VERSION}.tar.gz
-    curl -sSL -O ${JANSSON_RELEASE_URL}/jansson/releases/jansson-${JANSSON_VERSION}.tar.gz.asc
+    curl -sSL ${JANSSON_RELEASE_URL}/jansson/releases/jansson-${JANSSON_VERSION}.tar.gz -o jansson-${JANSSON_VERSION}.tar.gz
+    curl -sSL ${JANSSON_RELEASE_URL}/jansson/releases/jansson-${JANSSON_VERSION}.tar.gz.asc -o jansson-${JANSSON_VERSION}.tar.gz.asc
 }
 
 verify_jansson_source() {

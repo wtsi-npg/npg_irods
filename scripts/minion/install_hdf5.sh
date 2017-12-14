@@ -10,8 +10,8 @@ TMPDIR=$PWD/
 TMP=$(mktemp -d ${TMPDIR:-/tmp/}$(basename -- "$0").XXXXXXXXXX)
 
 HDF5_RELEASE_URL=https://support.hdfgroup.org/ftp/HDF5/current18/src
-HDF5_VERSION="1.8.19"
-HDF5_SHA256="a4335849f19fae88c264fd0df046bc321a78c536b2548fc508627a790564dc38"
+HDF5_VERSION="1.8.20"
+HDF5_SHA256="6ed660ccd2bc45aa808ea72e08f33cc64009e9dd4e3a372b53438b210312e8d9"
 
 trap cleanup EXIT INT TERM
 
@@ -20,7 +20,7 @@ cleanup() {
 }
 
 download_hdf5_source() {
-    curl -sSL -O ${HDF5_RELEASE_URL}/hdf5-${HDF5_VERSION}.tar.gz
+    curl -sSL -o hdf5-${HDF5_VERSION}.tar.gz ${HDF5_RELEASE_URL}/hdf5-${HDF5_VERSION}.tar.gz
 }
 
 verify_hdf5_source() {
