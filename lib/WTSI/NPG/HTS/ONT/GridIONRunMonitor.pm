@@ -176,32 +176,37 @@ sub start {
                                            $log_level);
           Log::Log4perl::init(\$logconf);
 
-          my ($expt_name, $device_id) = $self->_parse_device_dir($device_dir);
-          my $output_dir = catdir($self->output_dir, $expt_name, $device_id);
-          make_path($output_dir);
+          try {
+            my ($expt_name, $device_id) = $self->_parse_device_dir($device_dir);
+            my $output_dir = catdir($self->output_dir, $expt_name, $device_id);
+            make_path($output_dir);
 
-          my $publisher = WTSI::NPG::HTS::ONT::GridIONRunPublisher->new
-            (arch_bytes      => $self->arch_bytes,
-             arch_capacity   => $self->arch_capacity,
-             arch_duration   => $self->arch_duration,
-             arch_timeout    => $self->arch_timeout,
-             dest_collection => $self->dest_collection,
-             device_id       => $device_id,
-             experiment_name => $expt_name,
-             f5_uncompress   => 0,
-             output_dir      => $output_dir,
-             source_dir      => $device_dir,
-             session_timeout => $self->session_timeout,
-             tmpdir          => $self->tmpdir);
+            my $publisher = WTSI::NPG::HTS::ONT::GridIONRunPublisher->new
+              (arch_bytes      => $self->arch_bytes,
+               arch_capacity   => $self->arch_capacity,
+               arch_duration   => $self->arch_duration,
+               arch_timeout    => $self->arch_timeout,
+               dest_collection => $self->dest_collection,
+               device_id       => $device_id,
+               experiment_name => $expt_name,
+               f5_uncompress   => 0,
+               output_dir      => $output_dir,
+               source_dir      => $device_dir,
+               session_timeout => $self->session_timeout,
+               tmpdir          => $self->tmpdir);
 
-          my ($nf, $np, $ne) = $publisher->publish_files;
-          $self->debug("GridIONRunPublisher returned [$nf, $np, $ne]");
+            my ($nf, $np, $ne) = $publisher->publish_files;
+            $self->debug("GridIONRunPublisher returned [$nf, $np, $ne]");
 
-          my $exit_code = $ne == 0 ? 0 : 1;
-          $self->info("Finished publishing $nf files from '$device_dir' ",
-                      "with $ne errors and exit code $exit_code");
+            my $exit_code = $ne == 0 ? 0 : 1;
+            $self->info("Finished publishing $nf files from '$device_dir' ",
+                        "with $ne errors and exit code $exit_code");
 
-          $pm->finish($exit_code);
+            $pm->finish($exit_code);
+          } catch {
+            $self->error($_);
+            $pm->finish(1);
+          };
         }
       }
       else {
