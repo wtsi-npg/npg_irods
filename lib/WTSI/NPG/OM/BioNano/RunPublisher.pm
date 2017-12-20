@@ -16,7 +16,7 @@ use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS::Metadata;
-use WTSI::NPG::iRODS::Publisher;
+use WTSI::NPG::iRODS::PublisherFactory;
 use WTSI::NPG::OM::BioNano::ResultSet;
 
 # FIXME Move/refactor WTSI::NPG::HTS::Publisher to reflect use outside of
@@ -31,6 +31,7 @@ our $PIGZ_PROCESSES = 4;
 
 with qw[WTSI::DNAP::Utilities::Loggable
         WTSI::NPG::Accountable
+        WTSI::NPG::iRODS::Reportable::ConfigurableForRabbitMQ
         WTSI::NPG::OM::BioNano::Annotator];
 
 has 'directory' =>
@@ -53,6 +54,14 @@ has 'irods' =>
    isa      => 'WTSI::NPG::iRODS',
    required => 1
 );
+
+has 'pub_factory' =>
+  (isa           => 'WTSI::NPG::iRODS::PublisherFactory',
+   is            => 'ro',
+   required      => 1,
+   lazy          => 1,
+   builder       => '_build_pub_factory',
+   documentation => 'A factory building iRODS Publisher objects');
 
 has 'resultset' =>
   (is       => 'ro',
@@ -119,9 +128,7 @@ sub publish {
             $self->resultset,
             @stock_records,
         );
-        my $publisher = WTSI::NPG::iRODS::Publisher->new(
-            irods => $self->irods,
-        );
+        my $publisher = $self->pub_factory->make_publisher();
         my $tmp_archive_path = $self->_write_temporary_archive();
         $self->debug(q[Wrote .tar.gz archive to ], $tmp_archive_path);
         $bionano_published_obj =
@@ -144,6 +151,17 @@ sub _build_resultset {
         directory => $self->directory
     );
     return $resultset;
+}
+
+sub _build_pub_factory {
+    my ($self) = @_;
+    return WTSI::NPG::iRODS::PublisherFactory->new(
+        irods                  => $self->irods,
+        channel                => $self->channel,
+        exchange               => $self->exchange,
+        routing_key_prefix     => $self->routing_key_prefix,
+        enable_rmq             => $self->enable_rmq,
+    );
 }
 
 sub _query_ml_warehouse {

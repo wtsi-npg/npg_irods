@@ -11,12 +11,13 @@ use Try::Tiny;
 
 use WTSI::NPG::HTS::DataObject;
 use WTSI::NPG::iRODS::Metadata qw[$ID_RUN];
-use WTSI::NPG::iRODS::Publisher;
+use WTSI::NPG::iRODS::PublisherFactory;
 use WTSI::NPG::iRODS;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::iRODS::Annotator
+         WTSI::NPG::iRODS::Reportable::ConfigurableForRabbitMQ
          npg_tracking::illumina::run::short_info
          npg_tracking::illumina::run::folder
        ];
@@ -46,6 +47,14 @@ has 'tarfile' =>
    lazy          => 1,
    builder       => '_build_tarfile',
    documentation => 'The name of the archive file to be created');
+
+has 'pub_factory' =>
+  (isa           => 'WTSI::NPG::iRODS::PublisherFactory',
+   is            => 'ro',
+   required      => 1,
+   lazy          => 1,
+   builder       => '_build_pub_factory',
+   documentation => 'A factory building iRODS Publisher objects');
 
 =head2 publish_logs
 
@@ -110,7 +119,7 @@ sub publish_logs {
     $self->logcroak(pop @stack); # Use a shortened error message
   };
 
-  my $publisher = WTSI::NPG::iRODS::Publisher->new(irods => $self->irods);
+  my $publisher = $self->pub_factory->make_publisher();
   my $dest = $publisher->publish($tarpath, catfile($self->dest_collection,
                                                    $self->tarfile))->str;
   my $obj = WTSI::NPG::HTS::DataObject->new($self->irods, $dest);
@@ -158,6 +167,17 @@ sub _build_run_folder {
   return _runfolder_name($self->runfolder_path);
 }
 
+sub _build_pub_factory {
+    my ($self) = @_;
+    return WTSI::NPG::iRODS::PublisherFactory->new(
+        irods                  => $self->irods,
+        channel                => $self->channel,
+        exchange               => $self->exchange,
+        routing_key_prefix     => $self->routing_key_prefix,
+        enable_rmq             => $self->enable_rmq,
+    );
+}
+
 sub _runfolder_name {
   my ($path) = @_;
 
@@ -186,10 +206,11 @@ metadata.
 
 Jennifer Liddle E<lt>js10@sanger.ac.ukE<gt>
 Keith James E<lt>kdj@sanger.ac.ukE<gt>
+Iain Bancarz E<lt>ib5@sanger.ac.ukE<gt>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016, 2017 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

@@ -23,28 +23,37 @@ if (! caller ) {
 }
 sub run {
 
+    my $channel;
+    my $collection;
     my $days;
     my $days_ago;
     my $debug;
+    my $enable_rmq;
+    my $exchange;
     my $log4perl_config;
     my $output_dir;
-    my $collection;
+    my $routing_key_prefix;
     my $runfolder_path;
     my $search_dir;
     my $verbose;
 
     GetOptions(
-        'days=i'                          => \$days,
-        'days-ago|days_ago=i'             => \$days_ago,
-        'debug'                           => \$debug,
-        'collection=s'                    => \$collection,
-        'help'                            => sub {
+        'channel=i'                               => \$channel,
+        'collection=s'                            => \$collection,
+        'days=i'                                  => \$days,
+        'days-ago|days_ago=i'                     => \$days_ago,
+        'debug'                                   => \$debug,
+        'enable-rmq|enable_rmq'                   => \$enable_rmq,
+        'exchange=s'                              => \$exchange,
+
+        'help'                                    => sub {
             pod2usage(-verbose => 2, -exitval => 0) },
-        'logconf=s'                       => \$log4perl_config,
-        'output-dir|output_dir=s'         => \$output_dir,
-        'runfolder-path|runfolder_path=s' => \$runfolder_path,
-        'search-dir|search_dir=s'         => \$search_dir,
-        'verbose'                         => \$verbose
+        'logconf=s'                               => \$log4perl_config,
+        'output-dir|output_dir=s'                 => \$output_dir,
+        'runfolder-path|runfolder_path=s'         => \$runfolder_path,
+        'routing-key-prefix|routing_key_prefix=s' => \$routing_key_prefix,
+        'search-dir|search_dir=s'                 => \$search_dir,
+        'verbose'                                 => \$verbose
     );
 
     if (defined $search_dir && defined $runfolder_path) {
@@ -83,16 +92,29 @@ sub run {
                 $collection, q[']);
     my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
     foreach my $dir (@dirs) {
-        my %args = (
+        my @init_args = (
             directory   => $dir,
             mlwh_schema => $wh_schema,
             irods       => $irods,
         );
         if (defined $output_dir) {
-            $args{'output_dir'} = $output_dir;
+            push @init_args, output_dir => $output_dir;
+        }
+        if ($enable_rmq) {
+            push @init_args, enable_rmq => 1;
+            if (defined $channel) {
+                push @init_args, channel => $channel;
+            }
+            if (defined $exchange) {
+                push @init_args, exchange => $exchange;
+            }
+            if (defined $routing_key_prefix) {
+                push @init_args, routing_key_prefix => $routing_key_prefix;
+            }
         }
         try {
-            my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new(%args);
+            my $publisher = WTSI::NPG::OM::BioNano::RunPublisher->new(
+                @init_args);
             my $dest_collection = $publisher->publish($collection);
             $num_published++;
             $log->info(q[Published BioNano run directory '], $dir,
@@ -128,43 +150,46 @@ npg_publish_bionano_run
 
 Options:
 
+  --channel            A RabbitMQ channel number.
+                       Optional; has no effect unless RabbitMQ is enabled.
   --days-ago
-  --days_ago        The number of days ago that the publication window
-                    ends. Optional, defaults to zero (the current day).
-                    Has no effect if the --runfolder_path option is used.
+  --days_ago           The number of days ago that the publication window
+                       ends. Optional, defaults to zero (the current day).
+                       Has no effect if the --runfolder_path option is used.
+  --days               The number of days in the publication window, ending
+                       at the day given by the --days-ago argument. Any
+                       sample data modified during this period will be
+                       considered for publication. Optional, defaults to 7
+                       days. Has no effect if the --runfolder_path option
+                       is used.
+  --collection         The data destination root collection in iRODS.
+  --enable-rmq
+  --enable_rmq         Enable RabbitMQ messaging for file publication.
+  --exchange           Name of a RabbitMQ exchange.
+                       Optional; has no effect unless RabbitMQ is enabled.
+  --help               Display help.
 
-  --days            The number of days in the publication window, ending
-                    at the day given by the --days-ago argument. Any sample
-                    data modified during this period will be considered
-                    for publication. Optional, defaults to 7 days.
-                    Has no effect if the --runfolder_path option is used.
-
-  --collection      The data destination root collection in iRODS.
-
-  --help            Display help.
-
-  --logconf         A log4perl configuration file. Optional.
-
+  --logconf            A log4perl configuration file. Optional.
   --output-dir
-  --output_dir      Directory for .tar.gz output. Optional; if not given,
-                    .tar.gz file will be written to a temporary directory
-                    and deleted on script exit.
-
+  --output_dir         Directory for .tar.gz output. Optional; if not given,
+                       .tar.gz file will be written to a temporary directory
+                       and deleted on script exit.
+  --routing-key-prefix
+  --routing_key_prefix Prefix for a RabbitMQ routing key.
+                       Optional; has no effect unless RabbitMQ is enabled.
   --runfolder-path
-  --runfolder_path  The instrument runfolder path to load. Incompatible
-                    with --search_dir. Optional. If neither this option
-                    nor --search_dir is given, the default value of
-                    --search_dir is used.
-
+  --runfolder_path     The instrument runfolder path to load. Incompatible
+                       with --search_dir. Optional. If neither this option
+                       nor --search_dir is given, the default value of
+                       --search_dir is used.
   --search-dir
-  --search_dir      The root directory to search for BioNano data. Search
-                    depth will be a maximum of 2 levels below the given
-                    directory. The --days_ago and --days options determine
-                    a time window for runfolders to be published.
-                    Incompatible with --runfolder_path. Optional, defaults
-                    to current working directory.
-
-  --verbose         Print messages while processing. Optional.
+  --search_dir         The root directory to search for BioNano data. Search
+                       depth will be a maximum of 2 levels below the given
+                       directory. The --days_ago and --days options determine
+                       a time window for runfolders to be published.
+                       Incompatible with --runfolder_path. Optional, defaults
+                       to current working directory.
+  --verbose            Print messages while processing. Optional.
 
 =head1 DESCRIPTION
 

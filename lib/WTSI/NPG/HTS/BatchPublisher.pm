@@ -12,11 +12,12 @@ use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::DefaultDataObjectFactory;
-use WTSI::NPG::iRODS::Publisher;
+use WTSI::NPG::iRODS::PublisherFactory;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::DNAP::Utilities::JSONCodec
+         WTSI::NPG::iRODS::Reportable::ConfigurableForRabbitMQ
        ];
 
 our $VERSION = '';
@@ -44,6 +45,14 @@ has 'obj_factory' =>
    lazy          => 1,
    builder       => '_build_obj_factory',
    documentation => 'A factory building data objects from files');
+
+has 'pub_factory' =>
+  (isa           => 'WTSI::NPG::iRODS::PublisherFactory',
+   is            => 'ro',
+   required      => 1,
+   lazy          => 1,
+   builder       => '_build_pub_factory',
+   documentation => 'A factory building iRODS Publisher objects');
 
 has 'max_errors' =>
   (isa           => 'Int',
@@ -111,10 +120,7 @@ sub publish_file_batch {
 
   $extra_avus_callback ||= sub { return };
 
-  my $publisher =
-    WTSI::NPG::iRODS::Publisher->new
-      (irods                  => $self->irods,
-       require_checksum_cache => $self->require_checksum_cache);
+  my $publisher = $self->pub_factory->make_publisher();
 
   $self->read_state;
 
@@ -256,6 +262,18 @@ sub _build_obj_factory {
   return WTSI::NPG::HTS::DefaultDataObjectFactory->new(irods => $self->irods)
 }
 
+sub _build_pub_factory {
+    my ($self) = @_;
+    return WTSI::NPG::iRODS::PublisherFactory->new(
+        irods                  => $self->irods,
+        require_checksum_cache => $self->require_checksum_cache,
+        channel                => $self->channel,
+        exchange               => $self->exchange,
+        routing_key_prefix     => $self->routing_key_prefix,
+        enable_rmq             => $self->enable_rmq,
+    );
+}
+
 sub _add_extra_metadata {
   my ($self, $obj, @avus) = @_;
 
@@ -306,7 +324,8 @@ metadata) unless the force attribute is set true.
 
 =head1 AUTHOR
 
-Keith James E<lt>kdj@sanger.ac.ukE<gt>
+Keith James E<lt>kdj@sanger.ac.ukE<gt>,
+Iain Bancarz E<lt>ib5@sanger.ac.ukE<gt>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
