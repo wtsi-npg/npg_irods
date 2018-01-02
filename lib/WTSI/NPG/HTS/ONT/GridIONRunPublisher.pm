@@ -236,6 +236,8 @@ sub publish_files {
   # The current loading session.
   my $session_active = time; # Session start
   my $continue       = 1;    # While true, continue loading
+  my $num_files      = 0;
+  my $num_processed  = 0;
   my $num_errors     = 0;    # The number of errors this session
   my $session_closed = 0;
 
@@ -288,7 +290,9 @@ sub publish_files {
   # Tar manifest, sequence_summary_n.txt and configuration.cfg files
   my ($nf, $np, $ne)= $self->_publish_ancillary_files;
   $self->debug("Ancillary file publishing returned [$nf, $np, $ne]");
-  $num_errors += $ne;
+  $num_files     += $nf;
+  $num_processed += $np;
+  $num_errors    += $ne;
 
   # Metadata
   my ($nfa, $npa, $nea) = $self->_add_metadata;
@@ -298,12 +302,13 @@ sub publish_files {
   $self->stop_watches;
   $select->remove($self->inotify->fileno);
 
-  my $num_files = 0;
   if ($self->has_f5_publisher) {
-    $num_files += $self->f5_publisher->tar_count;
+    $num_files     += $self->f5_publisher->tar_count;
+    $num_processed += $num_files;
   }
   if ($self->has_fq_publisher) {
-    $num_files += $self->fq_publisher->tar_count;
+    $num_files     += $self->fq_publisher->tar_count;
+    $num_processed += $num_files;
   }
 
   $self->clear_wdir;
