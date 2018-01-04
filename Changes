@@ -1,4 +1,8 @@
+
+ - Extended log publisher find command to inlude STAR aligner log files 
+
 Release 2.5
+
  - Refactored BioNano publication, with metadata from MLWH
  - Add file type option in PacBio meta updater
  - Added a configurable local output directory
