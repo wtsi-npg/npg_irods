@@ -92,7 +92,7 @@ sub publish_logs {
   my $find_p4 =
      q[find . -type f ] .
      q[-a \\( -path "*/tmp_[0-9]*" -a -prune \\) ] .
-     q[-a \\( -name "*.err" -o -name "*.log" -o -name "*.json" \\)];
+     q[-a \\( -name "*.err" -o -name "*.log" -o -name "*.json" -o -name "*_Log*out" \\)];
 
   # find links
   my $find_llist = q[find . -type l];
