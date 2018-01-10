@@ -34,6 +34,8 @@ lib/WTSI/NPG/HTS/AlFilter.pm
 lib/WTSI/NPG/HTS/ArchiveSession.pm
 lib/WTSI/NPG/HTS/AVUCollator.pm
 lib/WTSI/NPG/HTS/BatchPublisher.pm
+lib/WTSI/NPG/HTS/BatchPublisherFactory.pm
+lib/WTSI/NPG/HTS/BatchPublisherWithReporting.pm
 lib/WTSI/NPG/HTS/DataObject.pm
 lib/WTSI/NPG/HTS/DataObjectFactory.pm
 lib/WTSI/NPG/HTS/DefaultDataObjectFactory.pm
@@ -104,6 +106,7 @@ scripts/travis_install.sh
 scripts/travis_script.sh
 t/aln_data_object.t
 t/anc_data_object.t
+t/batch_publisher_factory.t
 t/bionano_bnx_file.t
 t/bionano_result_set.t
 t/bionano_run_finder.t
@@ -15356,6 +15359,7 @@ t/illumina_meta_updater.t
 t/lib/WTSI/DNAP/Utilities/ParamsTest.pm
 t/lib/WTSI/NPG/DataSub/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/DataSub/SubtrackClientTest.pm
+t/lib/WTSI/NPG/HTS/BatchPublisherFactoryTest.pm
 t/lib/WTSI/NPG/HTS/HeaderParserTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/AlnDataObjectTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/AncDataObjectTest.pm
@@ -15375,6 +15379,7 @@ t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/SeqchksumTest.pm
 t/lib/WTSI/NPG/HTS/Test.pm
+t/lib/WTSI/NPG/HTS/TestRabbitMQ.pm
 t/lib/WTSI/NPG/OM/BioNano/BnxFileTest.pm
 t/lib/WTSI/NPG/OM/BioNano/ResultSetTest.pm
 t/lib/WTSI/NPG/OM/BioNano/RunFinderTest.pm

@@ -22,7 +22,8 @@ has 'irods' =>
   (is            => 'ro',
    isa           => 'WTSI::NPG::iRODS',
    required      => 1,
-   default       => sub { return WTSI::NPG::iRODS->new },
+   lazy          => 1,
+   builder       => '_build_irods',
    documentation => 'The iRODS connection handle');
 
 has 'ancillary_formats' =>
@@ -114,6 +115,11 @@ my $interop_regex = qr{[.]bin$}msx;
 
     return $obj;
   }
+
+  sub _build_irods {
+    return WTSI::NPG::iRODS->new;
+  }
+
 }
 
 __PACKAGE__->meta->make_immutable;

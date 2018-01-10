@@ -11,7 +11,7 @@ use MooseX::StrictConstructor;
 use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
-use WTSI::NPG::HTS::BatchPublisher;
+use WTSI::NPG::HTS::BatchPublisherFactory;
 use WTSI::NPG::HTS::PacBio::DataObjectFactory;
 use WTSI::NPG::HTS::PacBio::MetaXMLParser;
 use WTSI::NPG::iRODS::Metadata;
@@ -530,16 +530,18 @@ sub _build_dest_collection  {
 sub _build_batch_publisher {
   my ($self) = @_;
 
-  return WTSI::NPG::HTS::BatchPublisher->new
+  my $factory = WTSI::NPG::HTS::BatchPublisherFactory->new
     (force                  => $self->force,
      irods                  => $self->irods,
      obj_factory            => $self->obj_factory,
-     state_file             => $self->restart_file,
+     restart_file           => $self->restart_file,
      enable_rmq             => $self->enable_rmq,
      channel                => $self->channel,
      exchange               => $self->exchange,
      routing_key_prefix     => $self->routing_key_prefix,
      require_checksum_cache => []); ## no md5s precreated for PacBio
+
+  return $factory->make_batch_publisher();
 }
 
 sub _build_restart_file {
@@ -627,10 +629,11 @@ collection, the following take place:
 
 Guoying Qi E<lt>gq1@sanger.ac.ukE<gt>
 Keith James E<lt>kdj@sanger.ac.ukE<gt>
+Iain Bancarz E<lt>ib5@sanger.ac.ukE<gt>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2011, 2016, 2017 Genome Research Limited. All Rights
+Copyright (C) 2011, 2016, 2017, 2018 Genome Research Limited. All Rights
 Reserved.
 
 This program is free software: you can redistribute it and/or modify
