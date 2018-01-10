@@ -7,6 +7,8 @@ Release 2.5
  - Add file type option in PacBio meta updater
  - Added a configurable local output directory
  - GridION: ancillary files and metadata; configurable TMPDIR
+ - Added Star's tab and Salmon's quant.zip to the list of file
+   formats with restricted access
 
 Release 2.4
 
