@@ -628,8 +628,10 @@ sub list_lane_ancillary_files {
   # We do not want to include 
   my $suffix_pattern    = sprintf '(%s)',
     join q[|], grep { $_ ne 'json' } $self->hts_ancillary_suffixes;
-  my $lane_file_pattern = sprintf '^%d_%s.*[.]%s$',
-    $self->id_run, $positions_pattern, $suffix_pattern;
+  my $compress_suffix_pattern    = sprintf '(%s)',
+    join q[|], $self->compress_suffixes;
+  my $lane_file_pattern = sprintf '^%d_%s.*[.]%s(?:[.]%s)?$',
+    $self->id_run, $positions_pattern, $suffix_pattern, $compress_suffix_pattern;
 
   my @file_list = $self->list_directory($self->archive_path,
                                         $lane_file_pattern);
@@ -647,8 +649,10 @@ sub list_plex_ancillary_files {
 
   my $suffix_pattern    = sprintf '(%s)',
     join q[|], grep { $_ ne 'json' } $self->hts_ancillary_suffixes;
-  my $plex_file_pattern = sprintf '^%d_%d.*[.]%s$',
-    $self->id_run, $pos, $suffix_pattern;
+  my $compress_suffix_pattern    = sprintf '(%s)',
+    join q[|], $self->compress_suffixes;
+  my $plex_file_pattern = sprintf '^%d_%d.*[.]%s(?:[.]%s)?$',
+    $self->id_run, $pos, $suffix_pattern, $compress_suffix_pattern;
 
   my @file_list = $self->list_directory($self->lane_archive_path($pos),
                                         $plex_file_pattern);
