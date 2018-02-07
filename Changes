@@ -1,5 +1,11 @@
 
- - Extended log publisher find command to inlude STAR aligner log files 
+
+Release 2.6
+
+ - extended log publisher find command to include STAR aligner log files
+ - add 'STAR' as a valid aligner to the header parser
+ - make file formats 'tab' and 'zip' have restricted access
+ - add compress suffixes to ancillary lane/plex file patterns
 
 Release 2.5
 
