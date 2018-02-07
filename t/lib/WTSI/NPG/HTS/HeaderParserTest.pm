@@ -100,12 +100,20 @@ sub pg_walk : Test(1) {
   is_deeply(\@observed, $expected) or diag explain \@observed;
 }
 
-sub alignment_reference : Test(1) {
+sub alignment_reference : Test(3) {
   my $header_path = "$data_path/17550_1#1.txt";
   my $parser = WTSI::NPG::HTS::HeaderParser->new;
 
   is($parser->alignment_reference(read_file($header_path)),
      '/lustre/scratch110/srpipe/references/Danio_rerio/zv9/all/bwa0_6/zv9_toplevel.fa');
+
+  $header_path = "$data_path/17550_3#1.txt";
+  is($parser->alignment_reference(read_file($header_path)),
+     '/lustre/scratch110/srpipe/references/Mus_musculus/GRCm38/all/bowtie2/Mus_musculus.GRCm38.68.dna.toplevel.fa');
+
+  $header_path = "$data_path/20625_8#99.txt";
+  is($parser->alignment_reference(read_file($header_path)),
+     '/lustre/scratch117/core/sciops_repository/references/Plasmodium_falciparum/PF3K_Dd2v1/all/star');
 }
 
 sub split_lines {
