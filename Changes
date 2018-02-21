@@ -1,3 +1,4 @@
+ - Added compression extentions to illumina ancillary file regular expression
  - Added tag hops files to illumina run publisher tests
 
 Release 2.6

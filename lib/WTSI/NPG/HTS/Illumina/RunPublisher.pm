@@ -1386,6 +1386,7 @@ sub _build_obj_factory {
 
   return WTSI::NPG::HTS::Illumina::DataObjectFactory->new
     (ancillary_formats => [$self->hts_ancillary_suffixes],
+     compress_formats => [$self->compress_suffixes],
      irods             => $self->irods);
 }
 
