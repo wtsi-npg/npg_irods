@@ -791,7 +791,7 @@ sub publish_lane_ancillary_files : Test(904) {
   }
 }
 
-sub publish_plex_ancillary_files : Test(2806) {
+sub publish_plex_ancillary_files : Test(2846) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -1695,7 +1695,8 @@ sub calc_plex_ancillary_files {
 
       foreach my $part (qw[.deletions.bed
                            .insertions.bed
-                           .junctions.bed]) {
+                           .junctions.bed
+                           _salmon.quant.zip]) {
         if ($lane_nuc_type->{$position} eq 'RNA' and
             $tag != 0                            and
             $tag != 888) {

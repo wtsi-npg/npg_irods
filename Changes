@@ -1,3 +1,4 @@
+ - Moved quant file tests to illumina run publisher tests
  - Added compression extentions to illumina ancillary file regular expression
  - Added tag hops files to illumina run publisher tests
 
