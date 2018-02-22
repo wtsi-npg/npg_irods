@@ -68,6 +68,22 @@ sub publish_files_move : Test(83) {
                     $expected_num_files, $expected_num_items);
 }
 
+sub publish_files_single_server : Test(83) {
+  my $expected_num_files = {fast5 => 7,
+                            fastq => 1};
+  my $expected_num_items = {fast5 => [6, 6, 6, 6, 6, 6, 4], # total 40
+                            fastq => [2]};
+  my $f5_uncompress = 0;
+  my $arch_capacity ||= 6;
+  my $arch_bytes    ||= 10_000_000;
+  my $single_server = 1;
+
+  _do_publish_files($irods_tmp_coll, 'copy',
+                    $expected_num_files, $expected_num_items,
+                    $f5_uncompress, $arch_capacity, $arch_bytes,
+                    $single_server);
+}
+
 sub publish_files_f5_uncompress : Test(83) {
   my $expected_num_files = {fast5 => 7,
                             fastq => 1};
@@ -106,7 +122,8 @@ sub publish_files_tar_bytes : Test(71) {
 sub _do_publish_files {
   my ($dest_coll, $data_mode,
       $expected_num_files, $expected_num_items,
-      $f5_uncompress, $arch_capacity, $arch_bytes) = @_;
+      $f5_uncompress, $arch_capacity, $arch_bytes,
+      $single_server) = @_;
 
   # File::Copy::copy uses open -> syswrite -> close, so we will get a
   # CLOSE event
@@ -148,6 +165,7 @@ sub _do_publish_files {
        f5_uncompress   => $f5_uncompress,
        output_dir      => $tmp_output_dir,
        session_timeout => 30,
+       single_server   => $single_server,
        source_dir      => $tmp_run_dir);
 
     my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
