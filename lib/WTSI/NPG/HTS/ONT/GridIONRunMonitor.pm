@@ -115,6 +115,15 @@ has 'quiet_interval' =>
                     'will not be considered for starting a new publisher. ' .
                     'Defaults tp 24 hours');
 
+has 'single_server' =>
+  (is            => 'ro',
+   isa           => 'Bool',
+   default       => 0,
+   documentation => 'If true, connect ony a single iRODS server by avoiding ' .
+                    'any direct connections to resource servers. This mode ' .
+                    'will be much slower to transfer large files, but does ' .
+                    'not require resource servers to be accessible');
+
 has 'source_dir' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -214,6 +223,9 @@ sub start {
           my $output_dir = catdir($self->output_dir, $expt_name, $device_id);
           make_path($output_dir);
 
+          my $irods = WTSI::NPG::iRODS->new
+            (single_server => $self->single_server);
+
           my $publisher = WTSI::NPG::HTS::ONT::GridIONRunPublisher->new
             (arch_bytes      => $self->arch_bytes,
              arch_capacity   => $self->arch_capacity,
@@ -223,6 +235,7 @@ sub start {
              device_id       => $device_id,
              experiment_name => $expt_name,
              f5_uncompress   => 0,
+             irods           => $irods,
              output_dir      => $output_dir,
              source_dir      => $device_dir,
              session_timeout => $self->session_timeout,
@@ -445,7 +458,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2017 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2017, 2018 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

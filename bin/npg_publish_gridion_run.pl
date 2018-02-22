@@ -24,6 +24,7 @@ my $collection;
 my $debug;
 my $log4perl_config;
 my $session_timeout = 60 * 20;
+my $single_server;
 my $source_dir;
 my $verbose;
 ##use critic
@@ -36,6 +37,7 @@ GetOptions('collection=s'                      => \$collection,
            },
            'logconf=s'                         => \$log4perl_config,
            'session-timeout|session_timeout=s' => \$session_timeout,
+           'single-server|single_server'       => \$single_server,
            'source_dir|source-dir=s'           => \$source_dir,
            'tar-capacity|tar_capacity=i'       => \$arch_capacity,
            'tar-duration|tar_duration=i'       => \$arch_duration,
@@ -72,6 +74,7 @@ my $publisher = WTSI::NPG::HTS::ONT::GridIONRunPublisher->new
    arch_duration   => $arch_duration,
    arch_timeout    => $arch_timeout,
    dest_collection => $collection,
+   single_server   => $single_server,
    source_dir      => $source_dir,
    session_timeout => 200)->publish_files;
 
@@ -84,7 +87,8 @@ npg_publish_gridion_run
 =head1 SYNOPSIS
 
 npg_publish_gridion_run --collection <path> [--debug] [--logconf <path>]
-  --source-dir <path> [--tar-capacity <n>] [--tar-duration <n>]
+  [--single-server] --source-dir <path>
+  [--tar-capacity <n>] [--tar-duration <n>]
   [--tar-timeout <n>] [--verbose]
 
  Options:
@@ -99,6 +103,8 @@ npg_publish_gridion_run --collection <path> [--debug] [--logconf <path>]
    --session_timeout The number of seconds idle time after which a multi-file
                      tar session will be closed. Optional, defaults to 60 * 20
                      seconds.
+   --single-server
+   --single_server   Connect to only one iRODS server.
    --tar-capacity
    --tar_capacity    The number of read files to be archived per tar file.
                      Optional, defaults to 10,000.
@@ -121,7 +127,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2017 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2017, 2018 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
