@@ -55,8 +55,8 @@ sub audit_files : Test(42) {
   my $tmp_basecalled_dir = "$tmp_dir/basecalled";
   my $tmp_run_dir        = "$tmp_basecalled_dir/$expt_name/$device_id";
 
-  _do_publish_files($data_run_dir, $tmp_run_dir, $tmp_basecalled_dir,
-                    $tmp_output_dir, $irods_tmp_coll);
+  _do_publish_files($expt_name, $device_id, $data_run_dir,
+                    $tmp_run_dir, $tmp_output_dir, $irods_tmp_coll);
 
   my $gridion_name = hostname;
 
@@ -171,7 +171,7 @@ sub audit_files : Test(42) {
 }
 
 sub _do_publish_files {
-  my ($data_run_dir, $tmp_run_dir, $tmp_basecalled_dir, $tmp_output_dir,
+  my ($expt_name, $device_id, $data_run_dir, $tmp_run_dir, $tmp_output_dir,
       $dest_coll) = @_;
 
   my $arch_capacity = 6;
@@ -195,10 +195,12 @@ sub _do_publish_files {
        arch_capacity   => $arch_capacity,
        arch_timeout    => 10,
        dest_collection => $dest_coll,
+       device_id       => $device_id,
+       experiment_name => $expt_name,
        f5_uncompress   => $f5_uncompress,
        output_dir      => $tmp_output_dir,
        session_timeout => 30,
-       source_dir      => $tmp_basecalled_dir);
+       source_dir      => $tmp_run_dir);
 
     my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
