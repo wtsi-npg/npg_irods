@@ -40,7 +40,7 @@ my $build = BuildONT->new
                          'Try::Tiny'                     => '>= 0.22',
                          'URI'                           => '>= 1.67',
                          'WTSI::DNAP::Utilities'         => 0,
-                         'WTSI::NPG::iRODS'              => '>= 2.8.0'
+                         'WTSI::NPG::iRODS'              => '>= 3.0.2'
                         },
    recommends        => {
                          'UUID' => '>= 0.24',
