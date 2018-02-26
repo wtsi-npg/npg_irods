@@ -190,7 +190,7 @@ my @tagged_paths   = ('/seq/17550/17550_3#1',
                       '/seq/17550/17550_3#1_yhuman',
                       '/seq/17550/17550_3#1_phix');
 
-sub id_run : Test(150) {
+sub id_run : Test(140) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -206,7 +206,7 @@ sub id_run : Test(150) {
   }
 }
 
-sub position : Test(150) {
+sub position : Test(140) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -222,7 +222,7 @@ sub position : Test(150) {
   }
 }
 
-sub tag_index : Test(150) {
+sub tag_index : Test(140) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -249,7 +249,7 @@ sub tag_index : Test(150) {
   }
 }
 
-sub alignment_filter : Test(150) {
+sub alignment_filter : Test(140) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -305,7 +305,7 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(108) {
   }
 }
 
-sub update_secondary_metadata_tag1_no_spike_human : Test(252) {
+sub update_secondary_metadata_tag1_no_spike_human : Test(246) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     group_prefix         => $group_prefix,
                                     group_filter         => $group_filter,
