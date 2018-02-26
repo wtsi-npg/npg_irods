@@ -110,7 +110,7 @@ my $interop_regex = qr{[.]bin$}msx;
         my $comp_pattern = join q[|], @{$self->compress_formats};
         $anc_regex = qr{[.]($anc_pattern)([.]($comp_pattern))?$}msx;
       }
-      
+
       if ($filename =~ m{$anc_regex}msxi) {
         $self->debug('Making WTSI::NPG::HTS::Illumina::AncDataObject from ',
                      "'$path' matching $anc_regex");
