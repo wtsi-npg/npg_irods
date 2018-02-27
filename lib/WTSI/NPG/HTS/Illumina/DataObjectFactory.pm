@@ -32,6 +32,13 @@ has 'ancillary_formats' =>
    predicate     => 'has_ancillary_formats',
    documentation => 'The ancillary file formats that have been published');
 
+has 'compress_formats' =>
+  (isa           => 'ArrayRef',
+   is            => 'ro',
+   required      => 0,
+   predicate     => 'has_compress_formats',
+   documentation => 'The compress file formats that have been published');
+
 my $align_regex   = qr{[.](bam|cram)$}msx;
 my $index_regex   = qr{[.](bai|crai)$}msx;
 
@@ -99,6 +106,10 @@ my $interop_regex = qr{[.]bin$}msx;
     elsif ($self->has_ancillary_formats) {
       my $anc_pattern = join q[|], @{$self->ancillary_formats};
       my $anc_regex = qr{[.]($anc_pattern)$}msx;
+      if ($self->has_compress_formats) {
+        my $comp_pattern = join q[|], @{$self->compress_formats};
+        $anc_regex = qr{[.]($anc_pattern)([.]($comp_pattern))?$}msx;
+      }
 
       if ($filename =~ m{$anc_regex}msxi) {
         $self->debug('Making WTSI::NPG::HTS::Illumina::AncDataObject from ',

@@ -743,7 +743,7 @@ sub publish_plex_index_files : Test(271) {
   }
 }
 
-sub publish_lane_ancillary_files : Test(864) {
+sub publish_lane_ancillary_files : Test(904) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
@@ -791,7 +791,7 @@ sub publish_lane_ancillary_files : Test(864) {
   }
 }
 
-sub publish_plex_ancillary_files : Test(2806) {
+sub publish_plex_ancillary_files : Test(2846) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -1613,6 +1613,8 @@ sub calc_lane_ancillary_files {
     my @lane_files;
     push @lane_files, sprintf '%s/%d_%d%s',
       $root_path, $id_run, $position, '.all.seqchksum';
+    push @lane_files, sprintf '%s/%d_%d%s',
+      $root_path, $id_run, $position, '.bam.tag_decode.metrics.hops';
 
     foreach my $part (@default_parts) {
       push @lane_files, sprintf '%s/%d_%d%s',
@@ -1693,7 +1695,8 @@ sub calc_plex_ancillary_files {
 
       foreach my $part (qw[.deletions.bed
                            .insertions.bed
-                           .junctions.bed]) {
+                           .junctions.bed
+                           _salmon.quant.zip]) {
         if ($lane_nuc_type->{$position} eq 'RNA' and
             $tag != 0                            and
             $tag != 888) {
