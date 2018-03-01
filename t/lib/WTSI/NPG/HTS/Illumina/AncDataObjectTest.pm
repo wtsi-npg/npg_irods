@@ -83,8 +83,7 @@ my $formats = {bamcheck  => [q[]],
                              '_quality_cycle_surv',
                              '_quality_error'],
                json      => ['.bam_flagstats'],
-               tab       => ['.junctions', '.readspergene'],
-               zip       => ['_salmon.quant']};
+               tab       => ['.junctions', '.readspergene']};
 
 my @tag0_files;
 my @tag1_files;
@@ -93,7 +92,7 @@ foreach my $format (sort keys %$formats) {
     if ($format eq 'bed') {
       push @tag1_files, sprintf '17550_3#1%s.%s',    $part, $format;
     }
-    elsif (($format eq 'tab') || ($format eq 'zip')) {
+    elsif ($format eq 'tab') {
       push @tag1_files, sprintf '17550_4#1%s.%s',    $part, $format;
     }
     else {
@@ -191,7 +190,7 @@ my @tagged_paths   = ('/seq/17550/17550_3#1',
                       '/seq/17550/17550_3#1_yhuman',
                       '/seq/17550/17550_3#1_phix');
 
-sub id_run : Test(150) {
+sub id_run : Test(140) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -207,7 +206,7 @@ sub id_run : Test(150) {
   }
 }
 
-sub position : Test(150) {
+sub position : Test(140) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -223,7 +222,7 @@ sub position : Test(150) {
   }
 }
 
-sub tag_index : Test(150) {
+sub tag_index : Test(140) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -250,7 +249,7 @@ sub tag_index : Test(150) {
   }
 }
 
-sub alignment_filter : Test(150) {
+sub alignment_filter : Test(140) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -306,7 +305,7 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(108) {
   }
 }
 
-sub update_secondary_metadata_tag1_no_spike_human : Test(252) {
+sub update_secondary_metadata_tag1_no_spike_human : Test(246) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     group_prefix         => $group_prefix,
                                     group_filter         => $group_filter,
@@ -317,13 +316,13 @@ sub update_secondary_metadata_tag1_no_spike_human : Test(252) {
   my $spiked_control = 0;
 
   foreach my $data_file (@tag1_files) {
-    my ($name, $path, $suffix) = fileparse($data_file, '.bed', '.json', '.tab', '.zip');
+    my ($name, $path, $suffix) = fileparse($data_file, '.bed', '.json', '.tab');
 
     my @expected_groups_before = ($public_group, 'ss_10', 'ss_100');
     my @expected_groups_after;
 
     my @expected_metadata;
-    if (any { $suffix eq $_ } (qw[.bed .json .tab .zip])) {
+    if (any { $suffix eq $_ } (qw[.bed .json .tab])) {
       push @expected_metadata, @$tag1_expected_meta;
       @expected_groups_after = ('ss_3291');
     }

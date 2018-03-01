@@ -173,7 +173,6 @@ t/data/anc_data_object/17550_4#1_phix_quality_cycle_caltable.txt
 t/data/anc_data_object/17550_4#1.seqchksum
 t/data/anc_data_object/17550_4#1_quality_error.txt
 t/data/anc_data_object/17550_4#1.junctions.tab
-t/data/anc_data_object/17550_4#1_salmon.quant.zip
 t/data/anc_data_object/17550_4#1_quality_cycle_surv.txt
 t/data/anc_data_object/17550_4#1.bam_flagstats.json
 t/data/anc_data_object/17550_4#1_F0xB00.stats
@@ -2991,6 +2990,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#1.sha512primesums512.seqchksum.md5
@@ -3049,6 +3050,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#2.sha512primesums512.seqchksum.md5
@@ -3107,6 +3110,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#3.sha512primesums512.seqchksum.md5
@@ -3165,6 +3170,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#4.sha512primesums512.seqchksum.md5
@@ -3223,6 +3230,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#5.sha512primesums512.seqchksum.md5
@@ -3281,6 +3290,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#6.sha512primesums512.seqchksum.md5
@@ -3339,6 +3350,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#7.sha512primesums512.seqchksum.md5
@@ -3397,6 +3410,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane3/17550_3#8.sha512primesums512.seqchksum.md5
@@ -3760,6 +3775,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#1.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#1.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#1.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#1_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#1_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#1.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#1.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#1.sha512primesums512.seqchksum.md5
@@ -3815,6 +3832,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#2.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#2.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#2.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#2_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#2_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#2.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#2.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#2.sha512primesums512.seqchksum.md5
@@ -3870,6 +3889,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#3.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#3.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#3.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#3_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#3_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#3.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#3.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#3.sha512primesums512.seqchksum.md5
@@ -3925,6 +3946,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#4.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#4.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#4.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#4_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#4_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#4.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#4.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#4.sha512primesums512.seqchksum.md5
@@ -3980,6 +4003,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#5.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#5.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#5.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#5_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#5_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#5.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#5.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#5.sha512primesums512.seqchksum.md5
@@ -4035,6 +4060,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#6.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#6.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#6.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#6_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#6_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#6.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#6.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#6.sha512primesums512.seqchksum.md5
@@ -4090,6 +4117,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#7.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#7.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#7.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#7_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#7_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#7.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#7.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#7.sha512primesums512.seqchksum.md5
@@ -4145,6 +4174,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#8.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#8.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#8.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#8_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#8_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#8.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#8.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/lane4/17550_4#8.sha512primesums512.seqchksum.md5
@@ -9440,6 +9471,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#1.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#1.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#1.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#1_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#1_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#1.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#1.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#1.sha512primesums512.seqchksum.md5
@@ -9498,6 +9531,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#2.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#2.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#2.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#2_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#2_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#2.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#2.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#2.sha512primesums512.seqchksum.md5
@@ -9556,6 +9591,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#3.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#3.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#3.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#3_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#3_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#3.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#3.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#3.sha512primesums512.seqchksum.md5
@@ -9614,6 +9651,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#4.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#4.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#4.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#4_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#4_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#4.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#4.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#4.sha512primesums512.seqchksum.md5
@@ -9672,6 +9711,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#5.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#5.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#5.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#5_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#5_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#5.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#5.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#5.sha512primesums512.seqchksum.md5
@@ -9730,6 +9771,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#6.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#6.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#6.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#6_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#6_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#6.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#6.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#6.sha512primesums512.seqchksum.md5
@@ -9788,6 +9831,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#7.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#7.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#7.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#7_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#7_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#7.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#7.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#7.sha512primesums512.seqchksum.md5
@@ -9846,6 +9891,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#8.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#8.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#8.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#8_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#8_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#8.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#8.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane3/17550_3#8.sha512primesums512.seqchksum.md5
@@ -10209,6 +10256,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#1.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#1.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#1.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#1_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#1_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#1.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#1.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#1.sha512primesums512.seqchksum.md5
@@ -10264,6 +10313,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#2.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#2.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#2.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#2_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#2_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#2.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#2.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#2.sha512primesums512.seqchksum.md5
@@ -10319,6 +10370,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#3.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#3.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#3.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#3_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#3_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#3.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#3.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#3.sha512primesums512.seqchksum.md5
@@ -10374,6 +10427,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#4.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#4.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#4.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#4_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#4_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#4.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#4.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#4.sha512primesums512.seqchksum.md5
@@ -10429,6 +10484,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#5.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#5.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#5.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#5_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#5_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#5.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#5.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#5.sha512primesums512.seqchksum.md5
@@ -10484,6 +10541,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#6.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#6.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#6.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#6_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#6_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#6.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#6.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#6.sha512primesums512.seqchksum.md5
@@ -10539,6 +10598,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#7.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#7.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#7.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#7_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#7_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#7.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#7.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#7.sha512primesums512.seqchksum.md5
@@ -10594,6 +10655,8 @@ t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archi
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#8.junctions.bed
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#8.junctions.bed.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#8.markdups_metrics.txt
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#8_salmon.quant.zip
+t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#8_salmon.quant.zip.md5
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#8.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#8.sha512primesums512.seqchksum
 t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX/Latest_Summary/archive/lane4/17550_4#8.sha512primesums512.seqchksum.md5
@@ -13524,6 +13587,22 @@ t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/18448_7.bam.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/18448_8.bam
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/18448_8.bam.md5
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1.bam.tag_decode.metrics.hops
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_1.bam.tag_decode.metrics.hops.md5
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.bam.tag_decode.metrics.hops
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.bam.tag_decode.metrics.hops.md5
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3.bam.tag_decode.metrics.hops
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3.bam.tag_decode.metrics.hops.md5
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4.bam.tag_decode.metrics.hops
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_4.bam.tag_decode.metrics.hops.md5
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5.bam.tag_decode.metrics.hops
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_5.bam.tag_decode.metrics.hops.md5
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6.bam.tag_decode.metrics.hops
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_6.bam.tag_decode.metrics.hops.md5
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7.bam.tag_decode.metrics.hops
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_7.bam.tag_decode.metrics.hops.md5
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8.bam.tag_decode.metrics.hops
+t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_8.bam.tag_decode.metrics.hops.md5
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/.npg_cache_10000/18448_1_1.fastq.10000
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/.npg_cache_10000/18448_1_2.fastq.10000
 t/data/run_publisher/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/.npg_cache_10000/18448_2_1.fastq.10000
