@@ -27,6 +27,7 @@ our @ont_subset = (
                    'WTSI/NPG/HTS/ONT/TarDataObject.pm',
                    'WTSI/NPG/HTS/ONT/Watcher.pm',
                    'WTSI/NPG/HTS/PathLister.pm',
+                   'WTSI/NPG/HTS/TarItem.pm',
                    'WTSI/NPG/HTS/TarManifest.pm',
                    'WTSI/NPG/HTS/TarPublisher.pm',
                    'WTSI/NPG/HTS/TarStream.pm',
