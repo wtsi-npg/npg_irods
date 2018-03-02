@@ -120,43 +120,38 @@ sub publish_file {
   my ($self, $path) = @_;
 
   my $tar_dest;
-  if ($self->file_published($path)) {
-    $self->debug("Skipping '$path'; already published");
+  my $tar_file = sprintf '%s.%d.tar', $self->tar_path, $self->tar_count;
+
+  if (not $self->has_tar_stream) {
+    $self->info(sprintf q[Opening '%s' with capacity %d from tar CWD '%s'],
+                $self->tar_path, $self->tar_capacity, $self->tar_cwd);
+
+    $self->tar_stream(WTSI::NPG::HTS::TarStream->new
+                      (tar_cwd      => $self->tar_cwd,
+                       tar_file     => $tar_file,
+                       remove_files => $self->remove_files));
+    $self->tar_stream->open_stream;
+  }
+
+  if ($self->tar_stream->byte_count >= $self->tar_bytes) {
+    $self->info(sprintf q['%s' reached capacity of %d bytes],
+                $self->tar_stream->tar_file, $self->tar_bytes);
+    $self->close_stream; # Pre-op check: file was not added
   }
   else {
-    my $tar_file = sprintf '%s.%d.tar', $self->tar_path, $self->tar_count;
+    $self->debug(sprintf q[Adding '%s' to '%s'], $path, $self->tar_path);
 
-    if (not $self->has_tar_stream) {
-      $self->info(sprintf q[Opening '%s' with capacity %d from tar CWD '%s'],
-                  $self->tar_path, $self->tar_capacity, $self->tar_cwd);
+    $self->tar_stream->add_file($path);
+    $tar_dest = $tar_file;
 
-      $self->tar_stream(WTSI::NPG::HTS::TarStream->new
-                        (tar_cwd      => $self->tar_cwd,
-                         tar_file     => $tar_file,
-                         remove_files => $self->remove_files));
-      $self->tar_stream->open_stream;
-    }
+    $self->debug(sprintf q[Capacity now at %d / %d files, %d / %d bytes],
+                 $self->tar_stream->file_count, $self->tar_capacity,
+                 $self->tar_stream->byte_count, $self->tar_bytes);
 
-    if ($self->tar_stream->byte_count >= $self->tar_bytes) {
-      $self->info(sprintf q['%s' reached capacity of %d bytes],
-                  $self->tar_stream->tar_file, $self->tar_bytes);
-      $self->close_stream; # Pre-op check: file was not added
-    }
-    else {
-      $self->debug(sprintf q[Adding '%s' to '%s'], $path, $self->tar_path);
-
-      $self->tar_stream->add_file($path);
-      $tar_dest = $tar_file;
-
-      $self->debug(sprintf q[Capacity now at %d / %d files, %d / %d bytes],
-                   $self->tar_stream->file_count, $self->tar_capacity,
-                   $self->tar_stream->byte_count, $self->tar_bytes);
-
-      if ($self->tar_stream->file_count >= $self->tar_capacity) {
-        $self->info(sprintf q['%s' reached capacity of %d files],
-                    $self->tar_stream->tar_file, $self->tar_capacity);
-        $self->close_stream; # Post-op check: file was added
-      }
+    if ($self->tar_stream->file_count >= $self->tar_capacity) {
+      $self->info(sprintf q['%s' reached capacity of %d files],
+                  $self->tar_stream->tar_file, $self->tar_capacity);
+      $self->close_stream; # Post-op check: file was added
     }
   }
 
@@ -192,6 +187,56 @@ sub file_published {
   $self->debug("File '$path' published? ", ($published ? 'yes': 'no'));
 
   return $published;
+}
+
+=head2 file_updated
+
+  Arg [1]    : Absolute file path, Str.
+
+  Example    : $obj->file_updated('/path/to/file');
+  Description: Return true if file has been published successfully more
+               than once, with different checksums i.e. 'publish_file'
+               has been called more than once and the file was changed
+               between calls.
+  Returntype : Bool
+
+=cut
+
+sub file_updated {
+  my ($self, $path) = @_;
+
+  defined $path or $self->logconfess('A defined path argument is required');
+  $path =~ m{^/}msx or
+    $self->logconfess("An absolute path argument is required: '$path'");
+
+  my $ipath = abs2rel($path, $self->tar_cwd);
+
+  my $updated = 0;
+  if ($self->tar_manifest->contains_item($ipath)) {
+    $self->debug("Manifest contains record of '$path' added previously");
+
+    my $prev_checksum = $self->tar_manifest->get_item($ipath)->checksum;
+    my $curr_checksum = $self->_calculate_checksum($path);
+    if ($curr_checksum ne $prev_checksum) {
+      $self->debug("File '$path' updated during publication ",
+                   "from '$prev_checksum' to '$curr_checksum'");
+      $updated = 1;
+    }
+    else {
+      $self->debug("Current checksum of '$path' '$curr_checksum' ",
+                   "matches previous checksum '$prev_checksum'");
+    }
+  }
+  elsif ($self->tar_in_progress and $self->tar_stream->file_updated($path)) {
+    $self->debug("Tar stream contains record of '$path' added previously");
+
+    my @checksums = $self->tar_stream->file_checksum_history($path);
+    $self->debug("Checksum history of '$path': [",
+                 join(q[, ], @checksums), ']');
+    $updated = 1;
+  }
+
+  return $updated;
 }
 
 =head2 tar_in_progress
@@ -240,11 +285,14 @@ sub close_stream {
   if ($self->tar_in_progress) {
     $self->tar_stream->close_stream;
     $self->tar_count($self->tar_count + 1);
+    my $tar_stream = $self->tar_stream;
+    my $tar_path   = $tar_stream->tar_file;
 
-    my $tar_path   = $self->tar_stream->tar_file;
-    my $item_paths = $self->tar_stream->tar_content;
-
-    $self->tar_manifest->add_items($tar_path, [keys %{$item_paths}]);
+    foreach my $file_path ($tar_stream->file_paths) {
+      my $checksum  = $tar_stream->file_checksum($file_path);
+      my $item_path = $tar_stream->item_path($file_path);
+      $self->tar_manifest->add_item($tar_path, $item_path, $checksum);
+    }
     $self->tar_manifest->update_file;
 
     $self->clear_tar_stream;
@@ -254,6 +302,21 @@ sub close_stream {
   }
 
   return;
+}
+
+sub _calculate_checksum {
+  my ($self, $path) = @_;
+
+  open my $in, '<', $path or
+    $self->logcroak("Failed to open '$path' for checksum calculation: $ERRNO");
+  binmode $in;
+
+  my $checksum = Digest::MD5->new->addfile($in)->hexdigest;
+
+  close $in or
+    $self->warn("Failed to close '$path': $ERRNO");
+
+  return $checksum;
 }
 
 __PACKAGE__->meta->make_immutable;
