@@ -14,6 +14,7 @@ our $VERSION= '';
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
+         WTSI::NPG::HTS::ChecksumCalculator
        ];
 
 has 'remove_files' =>
@@ -216,7 +217,7 @@ sub file_updated {
     $self->debug("Manifest contains record of '$path' added previously");
 
     my $prev_checksum = $self->tar_manifest->get_item($ipath)->checksum;
-    my $curr_checksum = $self->_calculate_checksum($path);
+    my $curr_checksum = $self->calculate_checksum($path);
     if ($curr_checksum ne $prev_checksum) {
       $self->debug("File '$path' updated during publication ",
                    "from '$prev_checksum' to '$curr_checksum'");
@@ -302,21 +303,6 @@ sub close_stream {
   }
 
   return;
-}
-
-sub _calculate_checksum {
-  my ($self, $path) = @_;
-
-  open my $in, '<', $path or
-    $self->logcroak("Failed to open '$path' for checksum calculation: $ERRNO");
-  binmode $in;
-
-  my $checksum = Digest::MD5->new->addfile($in)->hexdigest;
-
-  close $in or
-    $self->warn("Failed to close '$path': $ERRNO");
-
-  return $checksum;
 }
 
 __PACKAGE__->meta->make_immutable;
