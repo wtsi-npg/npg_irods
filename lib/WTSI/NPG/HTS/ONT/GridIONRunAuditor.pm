@@ -19,6 +19,7 @@ use WTSI::NPG::iRODS;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
+         WTSI::NPG::HTS::ChecksumCalculator
        ];
 
 our $VERSION = '';
@@ -213,35 +214,34 @@ sub _check_ancillary_files {
   my ($num_files, $num_present, $num_errors) = (0, 0, 0);
   my $collection = $self->run_collection;
 
- PATH: foreach my $path (@{$local_paths}) {
+ PATH: foreach my $local_path (@{$local_paths}) {
     try {
-      $self->debug("Checking for '$path' in '$collection'");
+      $self->debug("Checking for '$local_path' in '$collection'");
       $num_files++;
 
-      my $filename = fileparse($path);
+      my $filename = fileparse($local_path);
       my $obj = WTSI::NPG::iRODS::DataObject->new(collection  => $collection,
                                                   data_object => $filename,
                                                   irods       => $self->irods);
-      if (not $obj->is_present) {
-        croak "'$path' missing from iRODS";
-      }
+      my $obj_path = $obj->str;
 
-      $num_present++;
-      $self->info("'$path' is present in iRODS");
-
-      if ($obj->validate_checksum_metadata) {
-        $self->info("'$path' has valid checksum metadata in iRODS");
+      if ($obj->is_present) {
+        $num_present++;
+        $self->info("'$local_path' is present in iRODS at '$obj_path'");
       }
       else {
-        croak "'$path' has invalid checksum metadata in iRODS";
+        croak "'$local_path' missing from iRODS at '$obj_path']";
       }
+
+      $self->_check_checksum($local_path, $obj);
 
       my $num_replicates = scalar $obj->valid_replicates;
       if ($num_replicates >= $self->num_replicates) {
-        $self->info("'$path' has $num_replicates valid replicates in iRODS");
+        $self->info("'$obj_path' has $num_replicates ",
+                    'valid replicates in iRODS');
       }
       else {
-        croak "'$path' has only $num_replicates valid replicates in iRODS";
+        croak "'$obj_path' has only $num_replicates valid replicates in iRODS";
       }
     } catch {
       $self->error($_);
@@ -257,36 +257,40 @@ sub _check_manifest_tar_files {
 
   my ($num_files, $num_present, $num_errors) = (0, 0, 0);
 
-  foreach my $path ($manifest->tar_files) {
+  foreach my $tar_path ($manifest->tar_files) {
     try {
-      $self->debug("Checking for '$path'");
+      $self->debug("Checking for '$tar_path'");
       $num_files++;
 
-      my $obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $path);
+      my $obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $tar_path);
+      my $obj_path = $obj->str;
+
       if ($obj->is_present) {
         $num_present++;
-        $self->info("'$path' is present in iRODS");
+        $self->info("'$tar_path' is present in iRODS at '$obj_path'");
       }
       else {
-        croak "'$path' missing from iRODS";
+        croak "'$tar_path' missing from iRODS at '$obj_path'";
       }
 
       my $experiment_name = $self->experiment_name;
       if ($obj->find_in_metadata($EXPERIMENT_NAME, $experiment_name)) {
-        $self->info("'$path' has $EXPERIMENT_NAME metadata '$experiment_name'");
+        $self->info("'$obj_path' has $EXPERIMENT_NAME metadata ",
+                    "'$experiment_name'");
       }
       else {
-        $self->error("'$path' is missing $EXPERIMENT_NAME ",
+        $self->error("'$obj_path' is missing $EXPERIMENT_NAME ",
                      "metadata '$experiment_name'");
         $num_errors++;
       }
 
       my $device_id  = $self->device_id;
       if ($obj->find_in_metadata($GRIDION_DEVICE_ID, $device_id)) {
-        $self->info("'$path' has $GRIDION_DEVICE_ID metadata '$device_id'");
+        $self->info("'$obj_path' has $GRIDION_DEVICE_ID ",
+                    "metadata '$device_id'");
       }
       else {
-        $self->error("'$path' is missing $GRIDION_DEVICE_ID ",
+        $self->error("'$obj_path' is missing $GRIDION_DEVICE_ID ",
                      "metadata '$device_id'");
         $num_errors++;
       }
@@ -330,7 +334,7 @@ sub _check_tar_content {
       # directory, so experiment_name and device_id must be added to the
       # path
       my $item_path = catdir($self->experiment_name,
-                           $self->device_id,
+                             $self->device_id,
                              abs2rel($local_path, $self->source_dir));
       $item_path .= '.bz2';
 
@@ -357,6 +361,31 @@ sub _check_tar_content {
   }
 
   return ($num_files, $num_present, $num_errors);
+}
+
+sub _check_checksum {
+  my ($self, $local_path, $obj) = @_;
+
+  my $obj_path     = $obj->str;
+  my $obj_checksum = $obj->checksum;
+  if ($obj->validate_checksum_metadata) {
+    $self->info("'$obj_path' has valid checksum metadata in iRODS");
+  }
+  else {
+    croak "'$obj_path' has invalid checksum metadata in iRODS";
+  }
+
+  my $checksum = $self->calculate_checksum($local_path);
+  if ($obj_checksum eq $checksum) {
+    $self->info("Checksum '$checksum' of '$local_path' matches checksum of ",
+                "'$obj_path' in iRODS");
+  }
+  else {
+    croak "Checksum '$checksum' of '$local_path' does not match checksum of " .
+      "'$obj_path' '$obj_checksum' in iRODS";
+  }
+
+  return;
 }
 
 sub _build_irods {
