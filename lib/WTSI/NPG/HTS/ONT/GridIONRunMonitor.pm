@@ -7,8 +7,6 @@ use Data::Dump q[pp];
 use English qw[-no_match_vars];
 use File::Path qw[make_path];
 use File::Spec::Functions qw[catdir catfile rel2abs splitdir];
-use IO::Select;
-use Linux::Inotify2;
 use Moose;
 use MooseX::StrictConstructor;
 use Parallel::ForkManager;
@@ -21,15 +19,17 @@ with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::iRODS::Utilities
          WTSI::NPG::HTS::ArchiveSession
-         WTSI::NPG::HTS::ONT::Watcher
        ];
 
 our $VERSION = '';
 
-our $SELECT_TIMEOUT   = 2;
 our $ISO8601_DATETIME = '%Y-%m-%dT%H%m%S';
 
-our $EVENTS = IN_MOVED_TO | IN_CREATE | IN_MOVED_FROM | IN_DELETE | IN_ATTRIB;
+## no critic (ValuesAndExpressions::ProhibitMagicNumbers)
+our $SECONDS_PER_MINUTE = 60;
+our $MINUTES_PER_HOUR   = 60;
+our $HOURS_PER_DAY      = 24;
+## use critic
 
 # GridION device directory names match this pattern
 our $DEVICE_DIR_REGEX = qr{^GA\d+}msx;
@@ -58,13 +58,21 @@ has 'dest_collection' =>
    required      => 1,
    documentation => 'The destination collection within iRODS to store data');
 
-has 'device_dir_queue' =>
-  (isa           => 'ArrayRef',
+has 'devices_active' =>
+  (isa           => 'HashRef',
    is            => 'ro',
    required      => 1,
-   default       => sub { return [] },
-   init_arg      => undef,
-   documentation => 'A queue of device directories to be processed');
+   default       => sub { return {} },
+   documentation => 'A map of absolute device directory to publisher PID ' .
+                    'for active devices');
+
+has 'devices_complete' =>
+  (isa           => 'HashRef',
+   is            => 'ro',
+   required      => 1,
+   default       => sub { return {} },
+   documentation => 'A map of absolute device directory to publisher ' .
+                    'completion epoch time for completed device activity');
 
 has 'max_processes' =>
   (isa           => 'Int',
@@ -89,6 +97,24 @@ has 'output_dir' =>
    documentation => 'A directory path under which publisher logs and ' .
                     'manifests will be written');
 
+has 'poll_interval' =>
+  (isa           => 'Int',
+   is            => 'ro',
+   required      => 1,
+   default       => $SECONDS_PER_MINUTE,
+   documentation => 'The interval in seconds at which to poll the filesystem ' .
+                    'for device directories. Defaults to 60 seconds.');
+
+has 'quiet_interval' =>
+  (isa           => 'Int',
+   is            => 'ro',
+   required      => 1,
+   default       => $SECONDS_PER_MINUTE * $MINUTES_PER_HOUR * $HOURS_PER_DAY,
+   documentation => 'The interval in seconds after successful completion of ' .
+                    'a publisher process during which its device directory ' .
+                    'will not be considered for starting a new publisher. ' .
+                    'Defaults tp 24 hours');
+
 has 'source_dir' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -104,13 +130,6 @@ has 'tmpdir' =>
 
 sub start {
   my ($self) = @_;
-
-  my $select = IO::Select->new;
-  $select->add($self->inotify->fileno);
-  $self->_start_watch_source_dir($EVENTS);
-  $self->_start_watch_expt_dirs($EVENTS);
-
-  my %in_progress; # Map device directory path to PID
 
   $self->info(sprintf
               q[Started GridIONRunMonitor with ] .
@@ -129,53 +148,68 @@ sub start {
   $pm->run_on_start(sub {
                       my ($pid, $name) = @_;
                       $self->debug("Process $name (PID $pid) started");
-                      $in_progress{$name} = $pid;
+                      $self->devices_active->{$name} = $pid;
                     });
   $pm->run_on_finish(sub {
                        my ($pid, $exit_code, $name) = @_;
                        $self->debug("Process $name (PID $pid) completed " .
                                     "with exit code: $exit_code");
-                       delete $in_progress{$name};
+                       if ($exit_code == 0) {
+                         my $now = time;
+                         $self->devices_complete->{$name} = $now;
+                       }
+                       delete ${$self->devices_active}{$name};
                      });
 
-  $pm->run_on_wait(sub { $self->debug('Waiting for a child process...') }, 2);
+  $pm->run_on_wait(sub {
+                     $self->debug('ForkManager waiting for child process...');
+                   }, 2);
 
   my $num_errors = 0;
 
   while ($self->monitor) {
     try {
-      $self->debug('Continue ...');
-      if ($select->can_read($SELECT_TIMEOUT)) {
-        my $n = $self->inotify->poll;
-        $self->debug("$n events");
-      }
+      # Parent process
+      my @device_dirs = $self->_find_device_dirs;
+      $self->debug('Found device directories: ', pp\@device_dirs);
 
-      if (@{$self->device_dir_queue}) {
-        $self->debug(scalar @{$self->device_dir_queue},
-                     ' device dirs in queue');
+    DEVICE: foreach my $device_dir ($self->_find_device_dirs) {
+        # It's active, so we need do nothing
+        if (exists ${$self->devices_active}{$device_dir}) {
+          my $current_pid = $self->devices_active->{$device_dir};
+          $self->debug("'$device_dir' is already being monitored by process ",
+                       "with PID $current_pid");
+          next DEVICE;
+        }
 
-      EVENT: while (my $device_dir = shift @{$self->device_dir_queue}) {
-          # Parent process
-          my $current_pid = $in_progress{$device_dir};
-          if ($current_pid) {
-            $self->debug("$device_dir is already being monitored by process ",
-                         "with PID $current_pid");
-            next EVENT;
+        # If it's not active, this may be caused by a pause in data
+        # gathering (flow cells remain viable for days and may be
+        # re-started). If the flow cell has been active within the
+        # quiet time window, we do not restart it.
+        if (exists ${$self->devices_complete}{$device_dir}) {
+          my $now            = time;
+          my $completed_time = $self->devices_complete->{$device_dir};
+          my $elapsed        = $now - $completed_time;
+          if ($elapsed <= $self->quiet_interval) {
+            $self->debug("'$device_dir' was completed at $completed_time, ",
+                         "$elapsed seconds ago. Still in quiet interval.")
           }
+          next DEVICE;
+        }
 
-          my $log_level = Log::Log4perl->get_logger($self->meta->name)->level;
+        my $log_level = Log::Log4perl->get_logger($self->meta->name)->level;
+        my $pid = $pm->start($device_dir) and next DEVICE;
 
-          my $pid = $pm->start($device_dir) and next EVENT;
+        # Child process
+        my $child_pid = $PID;
+        $self->info("Started GridIONRunPublisher with PID $child_pid on ",
+                    "'$device_dir'");
+        my $logconf =
+          $self->_make_publisher_logconf($self->output_dir, $child_pid,
+                                         $log_level);
+        Log::Log4perl::init(\$logconf);
 
-          # Child process
-          my $child_pid = $PID;
-          $self->info("Started GridIONRunPublisher with PID $child_pid on ",
-                      "'$device_dir'");
-          my $logconf =
-            $self->_make_publisher_logconf($self->output_dir, $child_pid,
-                                           $log_level);
-          Log::Log4perl::init(\$logconf);
-
+        try {
           my ($expt_name, $device_id) = $self->_parse_device_dir($device_dir);
           my $output_dir = catdir($self->output_dir, $expt_name, $device_id);
           make_path($output_dir);
@@ -202,26 +236,23 @@ sub start {
                       "with $ne errors and exit code $exit_code");
 
           $pm->finish($exit_code);
-        }
+        } catch {
+          $self->error($_);
+          $pm->finish(1);
+        };
       }
-      else {
-        $self->debug("Select timeout ($SELECT_TIMEOUT sec) ...");
-        $self->debug('Running processes with PIDs ', pp($pm->running_procs));
-        $pm->reap_finished_children;
 
-        # Check for any other expt dirs that we missed so far e.g. any
-        # which appeared while watches were in the process of being
-        # set up
-        $self->_start_watch_expt_dirs($EVENTS);
-      }
+      $self->debug('ForkManager PIDs: ', pp($pm->running_procs));
+      $self->debug('In progress: ', pp($self->devices_active));
+      $self->debug('Completed: ', pp($self->devices_complete));
+      $pm->reap_finished_children;
+
+      sleep $self->poll_interval;
     } catch {
       $self->error($_);
       $num_errors++;
     };
-  }
-
-  $self->stop_watches;
-  $select->remove($self->inotify->fileno);
+  } # while monitor
 
   my @running = $pm->running_procs;
   $self->info('Waiting for ', scalar @running, ' running processes: ',
@@ -232,95 +263,24 @@ sub start {
   return $num_errors;
 }
 
-# Start watches on the top level data source directory
-sub _start_watch_source_dir {
-  my ($self, $inotify_events) = @_;
+sub _find_device_dirs {
+  my ($self) = @_;
+
+  my @device_dirs;
 
   my $spath = rel2abs($self->source_dir);
-  my $cb    = $self->_make_callback($inotify_events);
+  foreach my $dir ($self->_find_dirs($spath)) {
+    if ($self->_is_expt_dir($dir)) {
 
-  if (not $self->is_watched($spath)) {
-    $self->start_watch($spath, $inotify_events, $cb);
-  }
-
-  return;
-}
-
-# Start watches on any existing expt dirs
-sub _start_watch_expt_dirs {
-  my ($self, $inotify_events) = @_;
-
-  my $spath = rel2abs($self->source_dir);
-  my $cb    = $self->_make_callback($inotify_events);
-
-  my @expt_dirs = $self->_find_dirs($spath);
-  foreach my $expt_dir (@expt_dirs) {
-    if (not $self->is_watched($expt_dir)) {
-      $self->start_watch($expt_dir, $inotify_events, $cb);
-
-      # Queue any existing device dirs, only when starting to watch
-      my @device_dirs = $self->_find_dirs($expt_dir);
-      foreach my $device_dir (@device_dirs) {
-        push @{$self->device_dir_queue}, $device_dir;
+      foreach my $device_dir ($self->_find_dirs($dir)) {
+        $self->debug("Found device directory '$device_dir'");
+        push @device_dirs, $device_dir;
       }
     }
   }
 
-  return;
+  return @device_dirs;
 }
-
-# Return a callback to be fired each time an experiment directory is
-# added to the source_dir or a device directory is added to an
-# experiment directory. For the former, the callback adds itself as an
-# event handler and for the latter, the callback pushes the event's
-# directory path onto a queue to be handled by the main loop.
-sub _make_callback {
-  my ($self, $events) = @_;
-
-  my $device_dir_queue = $self->device_dir_queue;
-
-  return sub {
-    my $event = shift;
-
-    if ($event->IN_Q_OVERFLOW) {
-      $self->warn('Some events were lost!');
-    }
-
-    if ($event->IN_ISDIR) {
-      my $dir = $event->fullname;
-
-      if ($event->IN_CREATE or $event->IN_MOVED_TO or $event->IN_ATTRIB) {
-        if ($self->_is_expt_dir($dir)) {
-          # Path is an experiment directory; watch it for new device dirs
-          $self->debug("Event on experiment dir '$dir'");
-          my $cb = $self->_make_callback($events);
-          try {
-            $self->start_watch($dir, $events, $cb);
-          } catch {
-            $self->error($_);
-          };
-        }
-        elsif ($self->_is_device_dir($dir)) {
-          # Path is a device directory; add it to the queue, to be
-          # handled in the main loop
-          $self->debug("Event on device dir '$dir'");
-          $self->debug("Event IN_CREATE/IN_MOVED_TO/IN_ATTRIB on '$dir'");
-          push @{$device_dir_queue}, $dir;
-        }
-        else {
-          # Path is something else
-          $self->debug("Ignoring uninteresting directory '$dir'");
-        }
-      }
-
-      # Path was removed from the watched hierarchy
-      if ($event->IN_DELETE or $event->IN_MOVED_FROM) {
-        $self->debug("Event IN_DELETE/IN_MOVED_FROM on '$dir'");
-        $self->stop_watch($dir);
-      }
-    }
-  };
-};
 
 sub _make_publisher_logconf {
   my ($self, $path, $pid, $level) = @_;
@@ -360,7 +320,9 @@ sub _is_expt_dir {
   my $leaf   = pop @elts;
   my $parent = catdir(@elts);
 
-  return $parent eq $self->source_dir;
+  # Ignore the 'workspace' directory which the instrument happens to
+  # create in the source directory.
+  return $parent eq $self->source_dir && $leaf ne 'workspace';
 }
 
 # Return true if the path is a "device" directory
@@ -414,13 +376,17 @@ WTSI::NPG::HTS::ONT::GridIONRunMonitor
 
 =head1 DESCRIPTION
 
-Uses inotify to monitor a staging area for new GridION experiment
-result directories. Launches a
-WTSI::NPG::HTS::ONT::GridIONRunPublisher for each existing device
-directory and for any new device directory created. A
-GridIONRunMonitor does not monitor directories below a device
-directory; that responsibility is delegated to its child
+Polls a staging area for new GridION experiment result
+directories. Launches a WTSI::NPG::HTS::ONT::GridIONRunPublisher for
+each existing device directory and for any new device directory
+created. A GridIONRunMonitor does not monitor directories below a
+device directory; that responsibility is delegated to its child
 processes. Each child process is responsible for one device directory.
+
+The filesystem polling interval is set to 60 seconds by default. Once
+a publisher completes processing a device directory successfully, no
+attempt will be made to process it again for the duration of the quiet
+interval, which defaults to 24 hours.
 
 A GridIONRunMonitor will store data in iRODS beneath one collection:
 
@@ -455,7 +421,7 @@ secondary metadata on all files published and previously published.
 
 4. Future runs
 
-A publisher is started when a ne device directory is created. It will
+A publisher is started when a new device directory is created. It will
 first publish new files as it detects their creation. On exiting it
 will check that all files are published and exit after publishing any
 remainder. It will check and update secondary metadata on all files
