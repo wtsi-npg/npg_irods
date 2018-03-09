@@ -1,11 +1,10 @@
 package WTSI::NPG::HTS::ChecksumCalculator;
 
+use Carp;
 use English qw[-no_match_vars];
 use Moose::Role;
 
 our $VERSION = '';
-
-with qw[WTSI::DNAP::Utilities::Loggable];
 
 =head2 calculate_checksum
 
@@ -21,13 +20,12 @@ sub calculate_checksum {
   my ($self, $path) = @_;
 
   open my $in, '<', $path or
-    $self->logcroak("Failed to open '$path' for checksum calculation: $ERRNO");
+    croak("Failed to open '$path' for checksum calculation: $ERRNO");
   binmode $in;
 
   my $checksum = Digest::MD5->new->addfile($in)->hexdigest;
 
-  close $in or
-    $self->warn("Failed to close '$path': $ERRNO");
+  close $in or croak"Failed to close '$path': $ERRNO";
 
   return $checksum;
 }

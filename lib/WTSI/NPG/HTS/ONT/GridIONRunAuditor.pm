@@ -118,6 +118,18 @@ sub BUILD {
   return;
 }
 
+=head2 check_all_files
+
+  Arg [1]    : None
+
+  Example    : my ($num_files, $num_processed, $num_errors) =
+                 $obj->check_all_files
+  Description: Check GridION run directory against the run data stored in
+               iRODS.
+  Returntype : Array[Int]
+
+=cut
+
 sub check_all_files {
   my ($self) = @_;
 
@@ -257,7 +269,7 @@ sub _check_manifest_tar_files {
 
   my ($num_files, $num_present, $num_errors) = (0, 0, 0);
 
-  foreach my $tar_path ($manifest->tar_files) {
+  foreach my $tar_path ($manifest->tar_paths) {
     try {
       $self->debug("Checking for '$tar_path'");
       $num_files++;
