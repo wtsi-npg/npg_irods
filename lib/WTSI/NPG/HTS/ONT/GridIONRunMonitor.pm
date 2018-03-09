@@ -182,7 +182,7 @@ sub start {
       my @device_dirs = $self->_find_device_dirs;
       $self->debug('Found device directories: ', pp\@device_dirs);
 
-    DEVICE: foreach my $device_dir ($self->_find_device_dirs) {
+    DEVICE: foreach my $device_dir (@device_dirs) {
         # It's active, so we need do nothing
         if (exists ${$self->devices_active}{$device_dir}) {
           my $current_pid = $self->devices_active->{$device_dir};
