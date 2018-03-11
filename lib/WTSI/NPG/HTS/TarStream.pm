@@ -5,7 +5,7 @@ use namespace::autoclean;
 use DateTime;
 use English qw[-no_match_vars];
 use File::Basename;
-use File::Spec::Functions qw[abs2rel];
+use File::Spec::Functions qw[abs2rel rel2abs];
 use Moose;
 use MooseX::StrictConstructor;
 
@@ -16,6 +16,7 @@ our $PUT_STREAM       = 'npg_irods_putstream.sh';
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
+         WTSI::NPG::HTS::ChecksumCalculator
        ];
 
 has 'byte_count' =>
@@ -62,7 +63,10 @@ has 'tar_content' =>
    required      => 1,
    default       => sub { return {} },
    init_arg      => undef,
-   documentation => 'The file names added the current tar archive, by path');
+   documentation => 'The paths of files added the current tar archive ' .
+                    'mapped to an array of MD5 checksums. The array will ' .
+                    'contain 1 checksum for each time that a file was added ' .
+                    'with that name');
 
 has 'remove_files' =>
   (isa           => 'Str',
@@ -145,6 +149,7 @@ sub open_stream {
   Returntype : Undef
 
 =cut
+
 sub close_stream {
   my ($self) = @_;
 
@@ -168,7 +173,7 @@ sub close_stream {
 
   Arg [1]    : Absolute file path, Str.
 
-  Example    : my $path = $obj->add_file('/path/to/file');
+  Example    : my $item_path = $obj->add_file('/path/to/file');
   Description: Add a file to the current tar stream and return its
                path relative to the tar CWD (i.e. return its path
                within the archive).
@@ -177,32 +182,214 @@ sub close_stream {
 =cut
 
 sub add_file {
-  my ($self, $path) = @_;
+  my ($self, $file_path) = @_;
 
-  $self->_check_absolute($path);
+  $self->_check_absolute($file_path);
 
-  my $rel_path = abs2rel($path, $self->tar_cwd);
+  my $item_path = abs2rel($file_path, $self->tar_cwd);
 
-  my $size     = -s $path;
-  my $filename = $self->tar_file;
-  $self->debug("Adding '$rel_path' ($size bytes) to '$filename'");
+  my $size     = -s $file_path;
+  my $tar_file = $self->tar_file;
+  $self->debug("Adding '$item_path' ($size bytes) to '$tar_file'");
 
-  print {$self->tar} "$rel_path\n" or
-    $self->logcroak("Failed write to filehandle of '$filename'");
+  # Assumes that the file is not modified before it gets tarred
+  my $checksum = $self->calculate_checksum($file_path);
 
-  $self->tar_content->{$rel_path} = 1;
+  print {$self->tar} "$item_path\n" or
+    $self->logcroak("Failed write to filehandle of '$tar_file'");
+
+  $self->tar_content->{$item_path} ||= [];
+  push @{$self->tar_content->{$item_path}}, $checksum;
   $self->byte_count($self->byte_count + $size);
 
-  return $rel_path;
+  return $item_path;
 }
 
+=head2 file_added
+
+  Arg [1]    : Absolute file path, Str.
+
+  Example    : $obj->file_added('/path/to/file');
+  Description: Return true if the file has been added to the tar stream.
+  Returntype : Bool
+
+=cut
+
 sub file_added {
-  my ($self, $path) = @_;
+  my ($self, $file_path) = @_;
 
-  $self->_check_absolute($path);
-  my $rel_path = abs2rel($path, $self->tar_cwd);
+  $self->_check_absolute($file_path);
+  my $item_path = abs2rel($file_path, $self->tar_cwd);
 
-  return exists $self->tar_content->{$rel_path};
+  return exists $self->tar_content->{$item_path};
+}
+
+=head2 file_updated
+
+  Arg [1]    : Absolute file path, Str.
+
+  Example    : $obj->file_added('/path/to/file');
+  Description: Return true if the file has been added to the tar stream
+               more than once.
+  Returntype : Bool
+
+=cut
+
+sub file_updated {
+  my ($self, $file_path) = @_;
+
+  $self->_check_absolute($file_path);
+
+  return scalar $self->file_checksum_history($file_path) > 1;
+}
+
+=head2 file_checksum
+
+  Arg [1]    : Absolute file path, Str.
+
+  Example    : my $checksum = $obj->file_checksum('/path/to/file');
+  Description: Return the checksum calculated the last time the file
+               was added to the tar stream.
+  Returntype : Bool
+
+=cut
+
+sub file_checksum {
+  my ($self, $file_path) = @_;
+
+  $self->_check_absolute($file_path);
+
+  my $tar_file = $self->tar_file;
+  $self->file_added($file_path) or
+    $self->logcroak("File '$file_path' has not been added to '$tar_file'");
+
+  my $checksum;
+  if ($self->file_added($file_path)) {
+    my @checksums = $self->file_checksum_history($file_path);
+    $checksum = $checksums[-1];
+  }
+
+  return $checksum;
+}
+
+=head2 file_path
+
+  Arg [1]    : Relative item path, Str.
+
+  Example    : my $path = $obj->file_path('1.txt');
+  Description: Return the absolute path of the file corresponding to the
+               specififed tar item (wrt to the tar process CWD).
+  Returntype : Str
+
+=cut
+
+sub file_path {
+  my ($self, $item_path) = @_;
+
+  my $tar_file = $self->tar_file;
+  $self->item_added($item_path) or
+    $self->logcroak("File '$item_path' has not been added to '$tar_file'");
+
+  return rel2abs($item_path, $self->tar_cwd);
+}
+
+=head2 item_added
+
+  Arg [1]    : Relative item path, Str.
+
+  Example    : $obj->item_added('1.txt');
+  Description: Return true if specififed tar item has been added.
+  Returntype : Bool
+
+=cut
+
+sub item_added {
+  my ($self, $item_path) = @_;
+
+  return exists $self->tar_content->{$item_path};
+}
+
+=head2 item_path
+
+  Arg [1]    : Absolute file path, Str.
+
+  Example    : my $path = $obj->item_path('/path/to/file');
+  Description: Return the relative item path corresponding to the
+               specified file (wrt to the tar process CWD).
+  Returntype : Bool
+
+=cut
+
+sub item_path {
+  my ($self, $file_path) = @_;
+
+  my $tar_file = $self->tar_file;
+  $self->file_added($file_path) or
+    $self->logcroak("File '$file_path' has not been added to '$tar_file'");
+
+  return abs2rel($file_path, $self->tar_cwd);
+}
+
+=head2 file_checksum_history
+
+  Arg [1]    : Absolute file path, Str.
+
+  Example    : my @checksums = $obj->file_checksum_history('/path/to/file');
+  Description: Return the checksums calculated for every occasion the
+               file was added to the tar stream.
+  Returntype : Array[Str]
+
+=cut
+
+sub file_checksum_history {
+  my ($self, $file_path) = @_;
+
+  my $tar_file = $self->tar_file;
+  $self->file_added($file_path) or
+    $self->logcroak("File '$file_path' has not been added to '$tar_file'");
+
+  my $item_path = abs2rel($file_path, $self->tar_cwd);
+  return @{$self->tar_content->{$item_path}};
+}
+
+=head2 file_paths
+
+  Arg [1]    : None
+
+  Example    : my @paths = $obj->file_paths
+  Description: Return the absolute file path of all files added to the tar
+               stream (wrt to the tar process CWD).
+  Returntype : Bool
+
+=cut
+
+sub file_paths {
+  my ($self) = @_;
+
+  my $tar_cwd = $self->tar_cwd;
+  my @file_paths = map { rel2abs($_, $tar_cwd) } $self->item_paths;
+
+  return @file_paths;
+}
+
+=head2 item_paths
+
+  Arg [1]    : None
+
+  Example    : my @paths = $obj->item_paths
+  Description: Return the relative item paths of all items added to the tar
+               stream (wrt to the tar process CWD).
+  Returntype : Bool
+
+=cut
+
+sub item_paths {
+  my ($self) = @_;
+
+  my @item_paths = keys %{$self->tar_content};
+  @item_paths = sort @item_paths;
+
+  return @item_paths;
 }
 
 =head2 file_count
@@ -222,11 +409,12 @@ sub file_count {
 }
 
 sub _check_absolute {
-  my ($self, $path) = @_;
+  my ($self, $file_path) = @_;
 
-  defined $path or $self->logconfess('A defined path argument is required');
-  $path =~ m{^/}msx or
-    $self->logconfess("An absolute path argument is required: '$path'");
+  defined $file_path or
+    $self->logconfess('A defined file_path argument is required');
+  $file_path =~ m{^/}msx or
+    $self->logconfess("An absolute path argument is required: '$file_path'");
 
   return;
 }

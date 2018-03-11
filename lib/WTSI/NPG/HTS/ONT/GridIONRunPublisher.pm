@@ -143,6 +143,15 @@ has 'monitor' =>
                     'A caller may set this to false in order to stop ' .
                     'monitoring and wait for any child processes to finish');
 
+has 'single_server' =>
+  (is            => 'ro',
+   isa           => 'Bool',
+   default       => 0,
+   documentation => 'If true, connect ony a single iRODS server by avoiding ' .
+                    'any direct connections to resource servers. This mode ' .
+                    'will be much slower to transfer large files, but does ' .
+                    'not require resource servers to be accessible');
+
 has 'tmpdir' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -468,83 +477,104 @@ sub _do_publish {
     $self->debug("Ignoring '$path'");
   }
   else {
-  CASE: {
-      # Ensure that experiment_name and device_id appear in the
-      # relative path in the temporary workspace and therefore also in
-      # the tar file by removing them from the base used to calculate
-      # the relative path.
-      my @dirs = splitdir($self->source_dir);
-      my $did  = pop @dirs; # device_id
-      my $exp  = pop @dirs; # experiment name
-      my $relative_to = catdir(@dirs);
-      $self->debug("Calculating temporary paths relative to '$relative_to' ",
-                   "experiment_name '$exp', device_id '$did'");
+    # Ensure that experiment_name and device_id appear in the
+    # relative path in the temporary workspace and therefore also in
+    # the tar file by removing them from the base used to calculate
+    # the relative path.
+    my @dirs = splitdir($self->source_dir);
+    my $did  = pop @dirs; # device_id
+    my $exp  = pop @dirs; # experiment name
+    my $relative_to = catdir(@dirs);
+    $self->debug("Calculating temporary paths relative to '$relative_to' ",
+                 "experiment_name '$exp', device_id '$did'");
 
-      if (not @dirs) {
-        $self->logcroak('No source_dir root remains after trimming');
-      }
-
-      my ($vol, $relative_path, $filename) =
-        splitpath(abs2rel($path, $relative_to));
-      $self->debug("Working on path '$path': relative path is ",
-                   "'$relative_path', file name is '$filename'");
-
-      my $tmp_dir  = catdir($self->wdir, $relative_path);
-      my $tmp_path = catfile($tmp_dir, $filename);
-
-      make_path($tmp_dir);
-      copy($path, $tmp_path) or
-        $self->logcroak("Failed to copy '$path' to '$tmp_path': ", $ERRNO);
-
-      if (-e $tmp_path) {
-        $self->debug("'$tmp_path' exists");
-      }
-      else {
-        $self->logcroak("'$tmp_path' has disappeared!");
-      }
-
-      if ($format =~ /fast5/msx) {
-        if (not ($self->has_experiment_name and $self->has_device_id)) {
-          my ($device_id, $ename) = $self->_identify_run_f5($path);
-          $self->experiment_name($ename);
-          $self->device_id($device_id);
-        }
-        if (not ($self->f5_publisher->file_published($tmp_path) or
-                 $self->f5_publisher->file_published("$tmp_path.bz2"))) {
-
-          if ($self->f5_uncompress) {
-            $tmp_path = $self->_h5repack_filter($tmp_path);
-          }
-          if ($self->f5_bzip2) {
-            $tmp_path = $self->_bzip2_filter($tmp_path);
-          }
-
-          # Don't unlink the file yet because the tar will process it
-          # asynchronously. Use the 'remove_file' attribute on the tar
-          # stream to recover space.
-          $self->f5_publisher->publish_file($tmp_path);
-        }
-
-        last CASE;
-      }
-
-      if ($format =~ /fastq/msx) {
-        if (not ($self->has_experiment_name and $self->has_device_id)) {
-          my ($device_id, $ename) = $self->_identify_run_fq($path);
-          $self->experiment_name($ename);
-          $self->device_id($device_id);
-        }
-
-        if (not $self->fq_publisher->file_published("$tmp_path.bz2")) {
-          $tmp_path = $self->_bzip2_filter($tmp_path);
-
-          # Don't unlink the file yet
-          $self->fq_publisher->publish_file($tmp_path);
-        }
-
-        last CASE;
-      }
+    if (not @dirs) {
+      $self->logcroak('No source_dir root remains after trimming');
     }
+
+    my ($vol, $relative_path, $filename) =
+      splitpath(abs2rel($path, $relative_to));
+    $self->debug("Working on path '$path': relative path is ",
+                 "'$relative_path', file name is '$filename'");
+
+    my $tmp_dir  = catdir($self->wdir, $relative_path);
+    my $tmp_path = catfile($tmp_dir, $filename);
+
+    make_path($tmp_dir);
+    copy($path, $tmp_path) or
+      $self->logcroak("Failed to copy '$path' to '$tmp_path': ", $ERRNO);
+
+    if (-e $tmp_path) {
+      $self->debug("'$tmp_path' exists");
+    }
+    else {
+      $self->logcroak("'$tmp_path' has disappeared!");
+    }
+
+    if ($format =~ /fast5/msx) {
+      $self->_do_publish_f5($path, $tmp_path);
+    }
+    elsif ($format =~ /fastq/msx) {
+      $self->_do_publish_fq($path, $tmp_path);
+    }
+  }
+
+  return;
+}
+
+
+sub _do_publish_f5 {
+  my ($self, $path, $tmp_path) = @_;
+
+  if (not ($self->has_experiment_name and $self->has_device_id)) {
+    my ($device_id, $ename) = $self->_identify_run_f5($path);
+    $self->experiment_name($ename);
+    $self->device_id($device_id);
+  }
+
+  if (not ($self->f5_publisher->file_published($tmp_path) or
+           $self->f5_publisher->file_published("$tmp_path.bz2"))) {
+    if ($self->f5_uncompress) {
+      $tmp_path = $self->_h5repack_filter($tmp_path);
+    }
+    if ($self->f5_bzip2) {
+      $tmp_path = $self->_bzip2_filter($tmp_path);
+    }
+
+    # Not checking for f5_publisher->file_updated because we do
+    # not observe fats5 files being updated.
+
+    # Don't unlink the file yet because the tar will process it
+    # asynchronously. Use the 'remove_file' attribute on the tar
+    # stream to recover space.
+    $self->f5_publisher->publish_file($tmp_path);
+  }
+
+  return;
+}
+
+sub _do_publish_fq {
+  my ($self, $path, $tmp_path) = @_;
+
+  if (not ($self->has_experiment_name and $self->has_device_id)) {
+    my ($device_id, $ename) = $self->_identify_run_fq($path);
+    $self->experiment_name($ename);
+    $self->device_id($device_id);
+  }
+
+  if ($self->fq_publisher->file_published("$tmp_path.bz2")) {
+    $self->warn("'$path' published previously");
+    $tmp_path = $self->_bzip2_filter($tmp_path);
+
+    if ($self->fq_publisher->file_updated($tmp_path)) {
+      $self->warn("'$path' has been updated while publishing");
+      $self->fq_publisher->publish_file($tmp_path); # Don't unlink
+    }
+  }
+  else {
+    $self->debug("'$path' not published previously");
+    $tmp_path = $self->_bzip2_filter($tmp_path);
+    $self->fq_publisher->publish_file($tmp_path); # Don't unlink
   }
 
   return;
@@ -894,7 +924,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2017 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2017, 2018 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
