@@ -143,6 +143,15 @@ has 'monitor' =>
                     'A caller may set this to false in order to stop ' .
                     'monitoring and wait for any child processes to finish');
 
+has 'single_server' =>
+  (is            => 'ro',
+   isa           => 'Bool',
+   default       => 0,
+   documentation => 'If true, connect ony a single iRODS server by avoiding ' .
+                    'any direct connections to resource servers. This mode ' .
+                    'will be much slower to transfer large files, but does ' .
+                    'not require resource servers to be accessible');
+
 has 'tmpdir' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -894,7 +903,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2017 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2017, 2018 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

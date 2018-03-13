@@ -28,6 +28,7 @@ my $output_dir;
 my $poll_interval   = 60;
 my $quiet_interval  = 60 * 60 * 24;
 my $session_timeout = 60 * 20;
+my $single_server;
 my $staging_dir;
 my $tmpdir          = '/tmp';
 my $verbose;
@@ -44,6 +45,7 @@ GetOptions('collection=s'                      => \$collection,
            'poll-interval|poll_interval=i'     => \$poll_interval,
            'quiet-interval|quiet_interval=i'   => \$quiet_interval,
            'session-timeout|session_timeout=s' => \$session_timeout,
+           'single-server|single_server'       => \$single_server,
            'staging-dir|staging_dir=s'         => \$staging_dir,
            'tar_capacity|tar-capacity=i'       => \$arch_capacity,
            'tar-duration|tar_duration=i'       => \$arch_duration,
@@ -81,6 +83,7 @@ my $monitor = WTSI::NPG::HTS::ONT::GridIONRunMonitor->new
    poll_interval   => $poll_interval,
    quiet_interval  => $quiet_interval,
    session_timeout => $session_timeout,
+   single_server   => $single_server,
    source_dir      => $staging_dir,
    tmpdir          => $tmpdir);
 
@@ -106,8 +109,9 @@ npg_gridion_run_monitor
 
 npg_gridion_run_monitor --collection <path> [--debug] [--logconf <path>]
   --output-dir <path> [--poll-interval <n>] [--quiet-interval <n>]
-  --staging-dir <path> [--tar-capacity <n>] [--tar-timeout <n>]
- [--tmpdir <path>] [--verbose]
+  [--single-server] --staging-dir <path>
+  [--tar-capacity <n>] [--tar-timeout <n>]
+  [--tmpdir <path>] [--verbose]
 
  Options:
    --collection      The root iRODS collection in which to write data,
@@ -131,6 +135,8 @@ npg_gridion_run_monitor --collection <path> [--debug] [--logconf <path>]
    --session_timeout The number of seconds idle time after which a multi-file
                      tar session will be closed. Optional, defaults to 60 * 20
                      seconds.
+   --single-server
+   --single_server   Connect to only one iRODS server.
    --staging-dir
    --staging_dir     The data staging directory path to watch.
    --tar-capacity
@@ -163,7 +169,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2017 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2017, 2018 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
