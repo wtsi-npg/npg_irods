@@ -27,7 +27,7 @@ cleanup() {
 
 download_irods() {
     for pkg in "$IRODS_DEV" "$IRODS_ICOMMANDS"; do
-        curl -sSL -O "${RENCI_RELEASE_URL}/pub/irods/releases/${IRODS_VERSION}/${PLATFORM}/$pkg"
+        curl -sSL -o "$pkg" "${RENCI_RELEASE_URL}/pub/irods/releases/${IRODS_VERSION}/${PLATFORM}/$pkg"
     done
 }
 
