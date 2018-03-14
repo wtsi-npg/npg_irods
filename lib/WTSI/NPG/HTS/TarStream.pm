@@ -16,6 +16,7 @@ our $PUT_STREAM       = 'npg_irods_putstream.sh';
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
+         WTSI::NPG::HTS::ChecksumCalculator
        ];
 
 has 'byte_count' =>
@@ -192,7 +193,7 @@ sub add_file {
   $self->debug("Adding '$item_path' ($size bytes) to '$tar_file'");
 
   # Assumes that the file is not modified before it gets tarred
-  my $checksum = $self->_calculate_checksum($file_path);
+  my $checksum = $self->calculate_checksum($file_path);
 
   print {$self->tar} "$item_path\n" or
     $self->logcroak("Failed write to filehandle of '$tar_file'");
@@ -405,22 +406,6 @@ sub file_count {
   my ($self) = @_;
 
   return scalar keys %{$self->tar_content};
-}
-
-sub _calculate_checksum {
-  my ($self, $file_path) = @_;
-
-  open my $in, '<', $file_path or
-    $self->logcroak("Failed to open '$file_path' for checksum calculation: ",
-                    "$ERRNO");
-  binmode $in;
-
-  my $checksum = Digest::MD5->new->addfile($in)->hexdigest;
-
-  close $in or
-    $self->warn("Failed to close '$file_path': $ERRNO");
-
-  return $checksum;
 }
 
 sub _check_absolute {
