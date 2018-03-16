@@ -4,8 +4,11 @@ use namespace::autoclean;
 
 use Carp;
 use Data::Dump qw[pp];
+use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions qw[abs2rel catdir catfile rel2abs splitdir];
+use File::Temp;
+use IO::Compress::Bzip2 qw[bzip2 $Bzip2Error];
 use Moose;
 use MooseX::StrictConstructor;
 use Sys::Hostname;
@@ -168,7 +171,7 @@ sub check_f5_files {
 
   my $local_files = $self->gridion_run->list_f5_files;
 
-  return $self->_check_tar_content($self->f5_manifests, $local_files);
+  return $self->_check_manifest_entries($self->f5_manifests, $local_files);
 }
 
 sub check_fq_files {
@@ -176,7 +179,7 @@ sub check_fq_files {
 
   my $local_files = $self->gridion_run->list_fq_files;
 
-  return $self->_check_tar_content($self->fq_manifests, $local_files);
+  return $self->_check_manifest_entries($self->fq_manifests, $local_files);
 }
 
 sub check_manifest_files {
@@ -245,7 +248,7 @@ sub _check_ancillary_files {
         croak "'$local_path' missing from iRODS at '$obj_path']";
       }
 
-      $self->_check_checksum($local_path, $obj);
+      $self->_check_irods_checksum($local_path, $obj);
 
       my $num_replicates = scalar $obj->valid_replicates;
       if ($num_replicates >= $self->num_replicates) {
@@ -330,13 +333,17 @@ sub _check_tar_files {
   return ($num_files, $num_present, $num_errors);
 }
 
-sub _check_tar_content {
+sub _check_manifest_entries {
   my ($self, $manifests, $local_paths) = @_;
 
   my @manifest_paths = map { $_->manifest_path } @{$manifests};
   $self->debug('Checking content of manifests ', pp(\@manifest_paths));
 
   my ($num_files, $num_present, $num_errors) = (0, 0, 0);
+
+  my $tmpdir = File::Temp->newdir('GridIONRunAuditor.' . $PID . '.XXXXXXXXX',
+                                  DIR     => '/tmp',
+                                  CLEANUP => 1);
 
   foreach my $local_path (@{$local_paths}) {
     try {
@@ -348,34 +355,50 @@ sub _check_tar_content {
       my $item_path = catdir($self->experiment_name,
                              $self->device_id,
                              abs2rel($local_path, $self->source_dir));
-      $item_path .= '.bz2';
+      my $compressed_path = "$item_path.bz2";
+      $self->debug("Checking for item '$compressed_path'");
 
-      $self->debug("Checking for item '$item_path'");
+      my $compressed_tmp = catfile($tmpdir, 'tmp.bz2');
+      bzip2 $local_path => $compressed_tmp or croak
+        "Failed to compress '$item_path': $Bzip2Error";
+      my $file_checksum = $self->calculate_checksum($compressed_tmp);
+      unlink $compressed_tmp;
 
       my $in;
     MANIFEST: foreach my $manifest (@{$manifests}) {
-        if ($manifest->contains_item($item_path)) {
-          $in = $manifest;
-          last MANIFEST;
+        if ($manifest->contains_item($compressed_path)) {
+          my $mpath = $manifest->manifest_path;
+          my $item_checksum = $manifest->get_item($compressed_path)->checksum;
+          $self->debug("Checking manifest '$mpath' '$compressed_path' has ",
+                       "checksum '$item_checksum' and expected ",
+                       "checksum '$file_checksum'");
+
+          if ($item_checksum eq $file_checksum) {
+            $in = $manifest;
+            last MANIFEST;
+          }
         }
       }
 
       if ($in) {
         $num_present++;
-        $self->info("$item_path is present in manifest ", $in->manifest_path);
+        $self->info("$item_path with checksum '$file_checksum' ",
+                    'is present in manifest ', $in->manifest_path);
       }
       else {
-        croak "$item_path present is missing from the manifests";
+        croak "$item_path with checksum '$file_checksum' " .
+          'is missing from the manifests';
       }
     } catch {
-      $num_errors++
+      $num_errors++;
+      $self->error($_);
     };
   }
 
   return ($num_files, $num_present, $num_errors);
 }
 
-sub _check_checksum {
+sub _check_irods_checksum {
   my ($self, $local_path, $obj) = @_;
 
   my $obj_path     = $obj->str;
@@ -387,14 +410,14 @@ sub _check_checksum {
     croak "'$obj_path' has invalid checksum metadata in iRODS";
   }
 
-  my $checksum = $self->calculate_checksum($local_path);
-  if ($obj_checksum eq $checksum) {
-    $self->info("Checksum '$checksum' of '$local_path' matches checksum of ",
-                "'$obj_path' in iRODS");
+  my $file_checksum = $self->calculate_checksum($local_path);
+  if ($obj_checksum eq $file_checksum) {
+    $self->info("Checksum '$file_checksum' of '$local_path' matches ",
+                "checksum of '$obj_path' in iRODS");
   }
   else {
-    croak "Checksum '$checksum' of '$local_path' does not match checksum of " .
-      "'$obj_path' '$obj_checksum' in iRODS";
+    croak "Checksum '$file_checksum' of '$local_path' does not match " .
+      "checksum of '$obj_path' '$obj_checksum' in iRODS";
   }
 
   return;
