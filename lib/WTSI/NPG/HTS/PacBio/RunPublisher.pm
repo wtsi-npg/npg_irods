@@ -138,12 +138,12 @@ sub smrt_look_indices {
 
   my $name = $self->_check_smrt_name($smrt_name);
 
-  my $file_pattern = '_p\d+[.]metadata[.]xml$';
+  my $file_pattern = '_[pX]\d+[.]metadata[.]xml$';
   my @files = $self->list_directory($self->smrt_path($name), $file_pattern);
 
   my @look_indices;
   foreach my $file (@files) {
-    if ($file =~ m{_s(\d+)_p\d+[.]metadata[.]xml$}msx) {
+    if ($file =~ m{_s(\d+)_[pX]\d+[.]metadata[.]xml$}msx) {
       push @look_indices, $1;
     }
   }
@@ -208,7 +208,7 @@ sub list_basx_files {
     $look_pattern = sprintf '_s%s', $look_index;
   }
 
-  my $file_pattern = sprintf '%s_p\d+([.]\d+)?[.]ba[sx][.]h5$', $look_pattern;
+  my $file_pattern = sprintf '%s_[pX]\d+([.]\d+)?[.]ba[sx][.]h5$', $look_pattern;
 
   return [$self->list_directory($self->smrt_analysis_path($name),
                                 $file_pattern)];
@@ -235,7 +235,7 @@ sub list_sts_xml_files {
     $look_pattern = sprintf '_s%s', $look_index;
   }
 
-  my $file_pattern = sprintf '%s_p\d+[.]sts[.]xml$', $look_pattern;
+  my $file_pattern = sprintf '%s_[pX]\d+[.]sts[.]xml$', $look_pattern;
 
   return [$self->list_directory($self->smrt_analysis_path($name),
                                 $file_pattern)];
@@ -262,7 +262,7 @@ sub list_meta_xml_file {
     $look_pattern = sprintf '_s%s', $look_index;
   }
 
-  my $file_pattern = sprintf '%s_p\d+[.]metadata[.]xml$', $look_pattern;
+  my $file_pattern = sprintf '%s_[pX]\d+[.]metadata[.]xml$', $look_pattern;
 
   my @files = $self->list_directory($self->smrt_path($name), $file_pattern);
 
