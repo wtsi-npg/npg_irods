@@ -355,14 +355,10 @@ sub _check_manifest_entries {
       my $item_path = catdir($self->experiment_name,
                              $self->device_id,
                              abs2rel($local_path, $self->source_dir));
+      my $checksum = $self->calculate_checksum($local_path);
+
       my $compressed_path = "$item_path.bz2";
       $self->debug("Checking for item '$compressed_path'");
-
-      my $compressed_tmp = catfile($tmpdir, 'tmp.bz2');
-      bzip2 $local_path => $compressed_tmp or croak
-        "Failed to compress '$item_path': $Bzip2Error";
-      my $file_checksum = $self->calculate_checksum($compressed_tmp);
-      unlink $compressed_tmp;
 
       my $in;
     MANIFEST: foreach my $manifest (@{$manifests}) {
@@ -371,9 +367,9 @@ sub _check_manifest_entries {
           my $item_checksum = $manifest->get_item($compressed_path)->checksum;
           $self->debug("Checking manifest '$mpath' '$compressed_path' has ",
                        "checksum '$item_checksum' and expected ",
-                       "checksum '$file_checksum'");
+                       "checksum '$checksum'");
 
-          if ($item_checksum eq $file_checksum) {
+          if ($item_checksum eq $checksum) {
             $in = $manifest;
             last MANIFEST;
           }
@@ -382,11 +378,11 @@ sub _check_manifest_entries {
 
       if ($in) {
         $num_present++;
-        $self->info("$item_path with checksum '$file_checksum' ",
+        $self->info("$item_path with checksum '$checksum' ",
                     'is present in manifest ', $in->manifest_path);
       }
       else {
-        croak "$item_path with checksum '$file_checksum' " .
+        croak "$item_path with checksum '$checksum' " .
           'is missing from the manifests';
       }
     } catch {
@@ -410,13 +406,13 @@ sub _check_irods_checksum {
     croak "'$obj_path' has invalid checksum metadata in iRODS";
   }
 
-  my $file_checksum = $self->calculate_checksum($local_path);
-  if ($obj_checksum eq $file_checksum) {
-    $self->info("Checksum '$file_checksum' of '$local_path' matches ",
+  my $checksum = $self->calculate_checksum($local_path);
+  if ($obj_checksum eq $checksum) {
+    $self->info("Checksum '$checksum' of '$local_path' matches ",
                 "checksum of '$obj_path' in iRODS");
   }
   else {
-    croak "Checksum '$file_checksum' of '$local_path' does not match " .
+    croak "Checksum '$checksum' of '$local_path' does not match " .
       "checksum of '$obj_path' '$obj_checksum' in iRODS";
   }
 

@@ -11,6 +11,7 @@ use File::Copy;
 use File::Spec::Functions qw[abs2rel catfile rel2abs];
 use File::Path qw[make_path];
 use File::Temp;
+use IO::Uncompress::Bunzip2 qw[bunzip2 $Bunzip2Error];
 use Log::Log4perl;
 use List::AllUtils qw[uniq];
 use Test::More;
@@ -226,7 +227,7 @@ sub _do_publish_files {
     my $manifest = _read_manifest($expected_manifest);
     cmp_ok(scalar $manifest->tar_paths, '==', $num_tar_files,
            "Manifest lists $num_tar_files tar files") or
-             diag explain [$manifest->tar_files];
+             diag explain [$manifest->tar_paths];
 
     # Check the ancillary files in iRODS
     my $fn = sub {
@@ -295,8 +296,12 @@ sub _do_publish_files {
              $manifest_fail++;
 
         # Calculate the MD5 of each file contained in the tar file
-        my $tar_item_md5 = Digest::MD5->new->add($item_content)->hexdigest;
+        my $bunzipped_content;
+        bunzip2 \$item_content => \$bunzipped_content or
+          die "Failed to bunzip $item_name in $tar_file: $Bunzip2Error";
 
+        my $tar_item_md5 =
+          Digest::MD5->new->add($bunzipped_content)->hexdigest;
         is($man_item->checksum, $tar_item_md5,
            "Manifest describes checksum for '$item_name' as $tar_item_md5") or
              $manifest_fail++;

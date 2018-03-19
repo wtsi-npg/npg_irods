@@ -6,6 +6,7 @@ use Carp;
 use IO::Compress::Bzip2 qw[bzip2 $Bzip2Error];
 use Data::Dump qw[pp];
 use DateTime;
+use Digest::MD5;
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Copy;
@@ -37,6 +38,7 @@ with qw[
          WTSI::NPG::iRODS::Annotator
          WTSI::NPG::iRODS::Utilities
          WTSI::NPG::HTS::ArchiveSession
+         WTSI::NPG::HTS::ChecksumCalculator
          WTSI::NPG::HTS::ONT::Annotator
          WTSI::NPG::HTS::ONT::Watcher
        ];
@@ -537,17 +539,19 @@ sub _do_publish_f5 {
     if ($self->f5_uncompress) {
       $tmp_path = $self->_h5repack_filter($tmp_path);
     }
+
+    my $checksum = $self->calculate_checksum($tmp_path);
     if ($self->f5_bzip2) {
       $tmp_path = $self->_bzip2_filter($tmp_path);
     }
 
     # Not checking for f5_publisher->file_updated because we do
-    # not observe fats5 files being updated.
+    # not observe fast5 files being updated.
 
     # Don't unlink the file yet because the tar will process it
     # asynchronously. Use the 'remove_file' attribute on the tar
     # stream to recover space.
-    $self->f5_publisher->publish_file($tmp_path);
+    $self->f5_publisher->publish_file($tmp_path, $checksum);
   }
 
   return;
@@ -562,19 +566,20 @@ sub _do_publish_fq {
     $self->device_id($device_id);
   }
 
+  my $checksum = $self->calculate_checksum($tmp_path);
   if ($self->fq_publisher->file_published("$tmp_path.bz2")) {
     $self->warn("'$path' published previously");
     $tmp_path = $self->_bzip2_filter($tmp_path);
 
-    if ($self->fq_publisher->file_updated($tmp_path)) {
+    if ($self->fq_publisher->file_updated($tmp_path, $checksum)) {
       $self->warn("'$path' has been updated while publishing");
-      $self->fq_publisher->publish_file($tmp_path); # Don't unlink
+      $self->fq_publisher->publish_file($tmp_path, $checksum); # Don't unlink
     }
   }
   else {
     $self->debug("'$path' not published previously");
     $tmp_path = $self->_bzip2_filter($tmp_path);
-    $self->fq_publisher->publish_file($tmp_path); # Don't unlink
+    $self->fq_publisher->publish_file($tmp_path, $checksum); # Don't unlink
   }
 
   return;
