@@ -169,6 +169,51 @@ sub item_paths {
   return @item_paths;
 }
 
+sub contains_tar {
+  my ($self, $tar_path) = @_;
+
+  defined $tar_path or
+    $self->logconfess('A defined tar_path argument is required');
+  $tar_path eq q[] and
+    $self->logconfess('A non-empty tar_path argument is required');
+
+  my %tar_index = map { $_ => 1 } $self->tar_paths;
+
+  return exists $tar_index{$tar_path};
+}
+
+sub tar_paths {
+  my ($self) = @_;
+
+  my @tar_paths;
+  foreach my $item_path ($self->item_paths) {
+    my $item = $self->get_item($item_path);
+    push @tar_paths, $item->tar_path;
+  }
+  @tar_paths = uniq @tar_paths;
+  @tar_paths = sort @tar_paths;
+
+  return @tar_paths;
+}
+
+sub tar_items {
+  my ($self, $tar_path) = @_;
+
+  my $mpath = $self->manifest_path;
+  $self->contains_tar($tar_path) or
+    $self->logcroak("Manifest '$mpath' does not contain tar '$tar_path'");
+
+  my @items;
+
+  foreach my $item_path ($self->item_paths) {
+    push @items, @{$self->manifest_index->{$item_path}};
+  }
+  @items = grep { $_->tar_path eq $tar_path } @items;
+  @items = sort { $a->item_path cmp $b->item_path } @items;
+
+  return @items;
+}
+
 =head2 file_exists
 
   Arg [1]    : None
@@ -227,20 +272,6 @@ sub read_file {
   }
 
   return;
-}
-
-sub tar_files {
-  my ($self) = @_;
-
-  my @tar_files;
-  foreach my $item_path ($self->item_paths) {
-    my $item = $self->get_item($item_path);
-    push @tar_files, $item->tar_path;
-  }
-  @tar_files = uniq @tar_files;
-  @tar_files = sort @tar_files;
-
-  return @tar_files;
 }
 
 =head2 update_file

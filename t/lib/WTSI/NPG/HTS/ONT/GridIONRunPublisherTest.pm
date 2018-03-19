@@ -224,7 +224,7 @@ sub _do_publish_files {
     # Check they contain the correct number of entries
     my $num_tar_files = $expected_num_files->{$format};
     my $manifest = _read_manifest($expected_manifest);
-    cmp_ok(scalar $manifest->tar_files, '==', $num_tar_files,
+    cmp_ok(scalar $manifest->tar_paths, '==', $num_tar_files,
            "Manifest lists $num_tar_files tar files") or
              diag explain [$manifest->tar_files];
 
