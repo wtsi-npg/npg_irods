@@ -82,6 +82,24 @@ sub list_meta_xml_file : Test(1) {
      'Found meta XML file A01_1');
 }
 
+sub list_meta_xml_file_X : Test(1) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/superfoo/60180_1430";
+  my $dest_coll = $irods_tmp_coll;
+
+  my $pub = WTSI::NPG::HTS::PacBio::RunPublisher->new
+    (dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     runfolder_path  => $runfolder_path);
+
+  is($pub->list_meta_xml_file('A01_1'),
+     catfile("$runfolder_path/A01_1",
+             'm180302_192953_00127_c101227792550000001823293112071730_s1_X0.metadata.xml'),
+     'Found (X) meta XML file A01_1');
+}
+
 sub list_basx_files : Test(1) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -105,6 +123,31 @@ sub list_basx_files : Test(1) {
             'Found bas/x files A01_1');
 }
 
+
+sub list_basx_files_X : Test(1) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/superfoo/60180_1430";
+  my $dest_coll = $irods_tmp_coll;
+
+  my $pub = WTSI::NPG::HTS::PacBio::RunPublisher->new
+    (dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     runfolder_path  => $runfolder_path);
+
+  my @expected_paths =
+    map { catfile("$runfolder_path/A01_1/Analysis_Results", $_) }
+    ('m180302_192953_00127_c101227792550000001823293112071730_s1_X0.1.bax.h5',
+     'm180302_192953_00127_c101227792550000001823293112071730_s1_X0.2.bax.h5',
+     'm180302_192953_00127_c101227792550000001823293112071730_s1_X0.3.bax.h5',
+     'm180302_192953_00127_c101227792550000001823293112071730_s1_X0.bas.h5');
+
+  is_deeply($pub->list_basx_files('A01_1'), \@expected_paths,
+            'Found (X) bas/x files A01_1');
+}
+
+
 sub list_sts_xml_files : Test(1) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -123,6 +166,27 @@ sub list_sts_xml_files : Test(1) {
 
   is_deeply($pub->list_sts_xml_files('A01_1'), \@expected_paths,
             'Found sts XML files A01_1');
+}
+
+
+sub list_sts_xml_files_X : Test(1) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/superfoo/60180_1430";
+  my $dest_coll = $irods_tmp_coll;
+
+  my $pub = WTSI::NPG::HTS::PacBio::RunPublisher->new
+    (dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     runfolder_path  => $runfolder_path);
+
+  my @expected_paths =
+    map { catfile("$runfolder_path/A01_1/Analysis_Results", $_) }
+    ('m180302_192953_00127_c101227792550000001823293112071730_s1_X0.sts.xml');
+
+  is_deeply($pub->list_sts_xml_files('A01_1'), \@expected_paths,
+            'Found (X) sts XML files A01_1');
 }
 
 sub publish_files : Test(2) {
