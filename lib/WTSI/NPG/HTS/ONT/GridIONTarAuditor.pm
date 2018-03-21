@@ -9,6 +9,7 @@ use File::Basename;
 use File::Spec::Functions qw[catdir catfile rel2abs];
 use File::Path qw[make_path];
 use File::Temp;
+use IO::Uncompress::Bunzip2 qw[bunzip2 $Bunzip2Error];
 use Moose;
 use MooseX::StrictConstructor;
 use Try::Tiny;
@@ -208,16 +209,21 @@ sub _check_checksum {
   my $item_path     = $tar_item->item_path;
   my $abs_path      = rel2abs($item_path, $tar_cwd);
   my $item_checksum = $tar_item->checksum;
-  my $file_checksum = $self->calculate_checksum($abs_path);
 
-  defined $file_checksum or
+  my $bunzipped_content;
+  bunzip2 $abs_path => \$bunzipped_content or
+    croak "Failed to bunzip2 '$abs_path': $Bunzip2Error";
+
+  my $checksum = Digest::MD5->new->add($bunzipped_content)->hexdigest;
+
+  defined $checksum or
     croak "No checksum was obtained from the extracted file '$item_path'";
 
-  if ($file_checksum eq $item_checksum) {
+  if ($checksum eq $item_checksum) {
     $self->info("'$item_path' had the expected checksum '$item_checksum'");
   }
   else {
-    croak "'$item_path' has checksum '$file_checksum' where " .
+    croak "'$item_path' has checksum '$checksum' (uncompressed) where " .
       "'$item_checksum' was expected";
   }
 

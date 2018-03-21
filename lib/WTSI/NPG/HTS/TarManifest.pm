@@ -247,6 +247,8 @@ sub read_file {
   my $index         = $self->manifest_index;
   my $updates       = $self->manifest_updates;
 
+  $self->debug("Reading manifest '$manifest_path'");
+
   %{$index}   = (); # Clear existing entries
   @{$updates} = ();
 

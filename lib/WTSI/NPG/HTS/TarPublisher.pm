@@ -2,6 +2,7 @@ package WTSI::NPG::HTS::TarPublisher;
 
 use namespace::autoclean;
 
+use Data::Dump qw[pp];
 use English qw[-no_match_vars];
 use File::Spec::Functions qw[abs2rel];
 use Moose;
@@ -109,8 +110,9 @@ sub BUILD {
 =head2 publish_file
 
   Arg [1]    : Absolute file path, Str.
+  Arg [2]    : Pre-calculated file checksum, Str. Optional.
 
-  Example    : my $path = $obj->publish_file('/path/to/file');
+  Example    : my $path = $obj->publish_file('/path/to/file', $checksum);
   Description: Add a file to the current tar stream and return the
                path of the tar file to which it was added.
   Returntype : Str
@@ -118,7 +120,7 @@ sub BUILD {
 =cut
 
 sub publish_file {
-  my ($self, $path) = @_;
+  my ($self, $path, $checksum) = @_;
 
   my $tar_dest;
   my $tar_file = sprintf '%s.%d.tar', $self->tar_path, $self->tar_count;
@@ -142,7 +144,7 @@ sub publish_file {
   else {
     $self->debug(sprintf q[Adding '%s' to '%s'], $path, $self->tar_path);
 
-    $self->tar_stream->add_file($path);
+    $self->tar_stream->add_file($path, $checksum);
     $tar_dest = $tar_file;
 
     $self->debug(sprintf q[Capacity now at %d / %d files, %d / %d bytes],
@@ -193,6 +195,9 @@ sub file_published {
 =head2 file_updated
 
   Arg [1]    : Absolute file path, Str.
+  Arg [2]    : Pre-calculated current file checksum, Str. Optional. If not
+               provided, a current value will be calculated using the
+               calculate_checksum method.
 
   Example    : $obj->file_updated('/path/to/file');
   Description: Return true if file has been published successfully more
@@ -204,11 +209,13 @@ sub file_published {
 =cut
 
 sub file_updated {
-  my ($self, $path) = @_;
+  my ($self, $path, $checksum) = @_;
 
   defined $path or $self->logconfess('A defined path argument is required');
   $path =~ m{^/}msx or
     $self->logconfess("An absolute path argument is required: '$path'");
+
+  $checksum ||= $self->calculate_checksum($path);
 
   my $ipath = abs2rel($path, $self->tar_cwd);
 
@@ -217,14 +224,13 @@ sub file_updated {
     $self->debug("Manifest contains record of '$path' added previously");
 
     my $prev_checksum = $self->tar_manifest->get_item($ipath)->checksum;
-    my $curr_checksum = $self->calculate_checksum($path);
-    if ($curr_checksum ne $prev_checksum) {
+    if ($checksum ne $prev_checksum) {
       $self->debug("File '$path' updated during publication ",
-                   "from '$prev_checksum' to '$curr_checksum'");
+                   "from '$prev_checksum' to '$checksum'");
       $updated = 1;
     }
     else {
-      $self->debug("Current checksum of '$path' '$curr_checksum' ",
+      $self->debug("Current checksum of '$path' '$checksum' ",
                    "matches previous checksum '$prev_checksum'");
     }
   }
@@ -232,8 +238,7 @@ sub file_updated {
     $self->debug("Tar stream contains record of '$path' added previously");
 
     my @checksums = $self->tar_stream->file_checksum_history($path);
-    $self->debug("Checksum history of '$path': [",
-                 join(q[, ], @checksums), ']');
+    $self->debug("Checksum history of '$path': ", pp(\@checksums));
     $updated = 1;
   }
 
@@ -322,7 +327,7 @@ WTSI::NPG::HTS::TarPublisher
 Publishes files to iRODS, archiving them in sequentially numbered tar
 files on-the-fly. The capacity of each tar file is determined by
 setting the 'tar_capacity' attribute and when one tar file is full, it
-is closed automaticallyt and a new file opened. The number of tar
+is closed automatically and a new file opened. The number of tar
 files created during the lifetime of the TarPublisher may be found
 from the 'tar_count' attribute, which is automatically incremented
 when each tar file is closed successfully.

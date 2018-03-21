@@ -172,6 +172,9 @@ sub close_stream {
 =head2 add_file
 
   Arg [1]    : Absolute file path, Str.
+  Arg [2]    : File checksum to be recorded in the TarManifest, Str.
+               Optional. If this is not provided, an MD5 checksum will be
+               calculated.
 
   Example    : my $item_path = $obj->add_file('/path/to/file');
   Description: Add a file to the current tar stream and return its
@@ -182,18 +185,18 @@ sub close_stream {
 =cut
 
 sub add_file {
-  my ($self, $file_path) = @_;
+  my ($self, $file_path, $checksum) = @_;
 
   $self->_check_absolute($file_path);
+
+  $checksum ||= $self->calculate_checksum($file_path);
 
   my $item_path = abs2rel($file_path, $self->tar_cwd);
 
   my $size     = -s $file_path;
   my $tar_file = $self->tar_file;
-  $self->debug("Adding '$item_path' ($size bytes) to '$tar_file'");
-
-  # Assumes that the file is not modified before it gets tarred
-  my $checksum = $self->calculate_checksum($file_path);
+  $self->debug("Adding '$item_path' ($size bytes, checksum $checksum) ",
+               "to '$tar_file'");
 
   print {$self->tar} "$item_path\n" or
     $self->logcroak("Failed write to filehandle of '$tar_file'");
