@@ -74,6 +74,14 @@ our $FAST5_RUN_ID_ATTR      = 'run_id';
 our $FAST5_SAMPLE_ID_ATTR   = 'sample_id';
 our $FAST5_SOFTWARE_VERSION = 'version';
 
+has 'catchup' =>
+  (isa           => 'Bool',
+   is            => 'rw',
+   required      => 1,
+   default       => 0,
+   documentation => 'True if the publisher is catching up any unpublished ' .
+                    'files at the end of its processing');
+
 has 'dest_collection' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -476,7 +484,10 @@ sub _do_publish {
 
   my ($format) = $path =~ qr{[.]([^.]*)}msx;
   if ($format ne 'fast5' and $format ne 'fastq') {
-    $self->debug("Ignoring '$path'");
+    $self->debug("Ignoring '$path' because it is not fast5/fastq");
+  }
+  elsif ($format eq 'fastq' and not $self->catchup) {
+    $self->debug("Ignoring '$path' because it is fastq and not in catchup");
   }
   else {
     # Ensure that experiment_name and device_id appear in the
@@ -523,7 +534,6 @@ sub _do_publish {
 
   return;
 }
-
 
 sub _do_publish_f5 {
   my ($self, $path, $tmp_path) = @_;
@@ -620,15 +630,22 @@ sub _catchup {
   my $dir = $self->source_dir;
   $self->info("Catching up any missed files under '$dir', recursively");
 
-  my @f5_files = @{$self->gridion_run->list_f5_files};
-  $self->info('Catching up ', scalar @f5_files, ' fast5 files');
-  my @fq_files = @{$self->gridion_run->list_fq_files};
-  $self->info('Catching up ', scalar @fq_files, ' fastq files');
+  try {
+    $self->catchup(1);
 
-  foreach my $file (@f5_files, @fq_files) {
-    $self->debug("Catching up '$file'");
-    $self->_do_publish($file);
-  }
+    my @f5_files = @{$self->gridion_run->list_f5_files};
+    $self->info('Catching up ', scalar @f5_files, ' fast5 files');
+    my @fq_files = @{$self->gridion_run->list_fq_files};
+    $self->info('Catching up ', scalar @fq_files, ' fastq files');
+
+    foreach my $file (@f5_files, @fq_files) {
+      $self->debug("Catching up '$file'");
+      $self->_do_publish($file);
+    }
+    $self->info('Catchup done');
+  } finally {
+    $self->catchup(0);
+  };
 
   return;
 }
@@ -885,7 +902,7 @@ It will write all tar files to 'dest_collection' and add the following
 metadata to each:
 
   'experiment_name'   => GridION experiment name (aka sample_id)
-  'device_id'         => GridIOn device_id
+  'device_id'         => GridION device_id
   'dcterms:created'   => Timestamp
   'md5'               => MD5
   'type'              => File suffix
@@ -912,9 +929,16 @@ source_dir and attempt to publish every one. If they have already been
 published, the underlying TarPublisher will skip them because they
 will be present in its manifest.
 
+In a change from previous behaviour, all fastq files are now published
+in the clean-up. This is because the ONT basecaller now opens for
+writing and consequently closes, each fastq file many hundreds of
+times, sending and equal number of inotify events about the incomplete
+file. This is a workaround for that behaviour.
+
 Finally, the publisher will add sequencing run ancillary files
 (sequencing_summary_n.txt and configuration.cfg) and publisher
 tar manifest files to the same iRODS collection.
+
 
 =head1 BUGS
 
