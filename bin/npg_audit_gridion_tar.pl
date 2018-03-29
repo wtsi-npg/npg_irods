@@ -7,7 +7,9 @@ use FindBin qw[$Bin];
 use lib (-d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib");
 
 use Data::Dump qw[pp];
+use Getopt::Long;
 use Log::Log4perl qw[:levels];
+use Pod::Usage;
 
 use WTSI::NPG::HTS::ONT::GridIONTarAuditor;
 

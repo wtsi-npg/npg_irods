@@ -27,6 +27,10 @@ with qw[
 
 our $VERSION = '';
 
+## no critic (ValuesAndExpressions::ProhibitMagicNumbers)
+our $INFO_COUNT_INTERVAL = 10_000;
+## use critic
+
 # These methods are autodelegated to gridion_run
 our @HANDLED_RUN_METHODS = qw[device_id
                               experiment_name
@@ -325,6 +329,7 @@ sub _check_tar_files {
 
   foreach my $manifest (@{$manifests}) {
     my ($nf, $np, $ne)= $self->_check_manifest_tar_files($manifest);
+    $self->info("Checked [ $np / $nf ] files with $ne errors");
     $num_files   += $nf;
     $num_present += $np;
     $num_errors  += $ne;
@@ -344,45 +349,63 @@ sub _check_manifest_entries {
   my $tmpdir = File::Temp->newdir('GridIONRunAuditor.' . $PID . '.XXXXXXXXX',
                                   DIR     => '/tmp',
                                   CLEANUP => 1);
+  $num_files = scalar @{$local_paths};
 
+  my $i = 0;
   foreach my $local_path (@{$local_paths}) {
     try {
-      $num_files++;
+      $i++;
 
-      # tar files are created relative to the parent of the experiment
-      # directory, so experiment_name and device_id must be added to the
-      # path
-      my $item_path = catdir($self->experiment_name,
-                             $self->device_id,
-                             abs2rel($local_path, $self->source_dir));
+      # In earlier runs, tar files are created relative to the device
+      # directory containing the run output i.e. the directory
+      # containing the sequencing_summary_*.txt and fastq files.
+      #
+      # In later runs, tar files are created relative to the parent of
+      # the experiment directory, two levels up from the device
+      # directory. This change allows the experiment_name and
+      # device_id to be captured in the path of the tarred files.
+      #
+      # We need to check both options here.
+      my $short_item_path = abs2rel($local_path, $self->source_dir);
+      my $long_item_path  = catdir($self->experiment_name, $self->device_id,
+                                   $short_item_path);
       my $checksum = $self->calculate_checksum($local_path);
 
-      my $compressed_path = "$item_path.bz2";
-      $self->debug("Checking for item '$compressed_path'");
+      my $found_manifest;
+      my $found_path;
 
-      my $in;
     MANIFEST: foreach my $manifest (@{$manifests}) {
-        if ($manifest->contains_item($compressed_path)) {
-          my $mpath = $manifest->manifest_path;
-          my $item_checksum = $manifest->get_item($compressed_path)->checksum;
-          $self->debug("Checking manifest '$mpath' '$compressed_path' has ",
-                       "checksum '$item_checksum' and expected ",
-                       "checksum '$checksum'");
+        foreach my $item_path ($long_item_path, $short_item_path) {
+          my $compressed_path = "$item_path.bz2";
+          $self->debug("Checking for item '$compressed_path'");
 
-          if ($item_checksum eq $checksum) {
-            $in = $manifest;
-            last MANIFEST;
+          if ($manifest->contains_item($compressed_path)) {
+            my $mpath = $manifest->manifest_path;
+            my $item_checksum = $manifest->get_item($compressed_path)->checksum;
+            $self->debug("Checking manifest '$mpath' '$compressed_path' has ",
+                         "checksum '$item_checksum' and expected ",
+                         "checksum '$checksum'");
+
+            if ($item_checksum eq $checksum) {
+              $found_manifest = $manifest;
+              $found_path     = $item_path;
+              last MANIFEST;
+            }
           }
-        }
+        } # foreach long and short
+      } # foreach manifest
+
+      if ($i % $INFO_COUNT_INTERVAL == 0) {
+        $self->info("Checked [ $i / $num_files ] manifest entries");
       }
 
-      if ($in) {
+      if ($found_path) {
         $num_present++;
-        $self->info("$item_path with checksum '$checksum' ",
-                    'is present in manifest ', $in->manifest_path);
+        $self->debug("$found_path with checksum '$checksum' ",
+                     'is present in manifest ', $found_manifest->manifest_path);
       }
       else {
-        croak "$item_path with checksum '$checksum' " .
+        croak "$long_item_path with checksum '$checksum' " .
           'is missing from the manifests';
       }
     } catch {
@@ -390,6 +413,8 @@ sub _check_manifest_entries {
       $self->error($_);
     };
   }
+
+  $self->info("Checked [ $i / $num_files ] manifest entries");
 
   return ($num_files, $num_present, $num_errors);
 }
@@ -480,7 +505,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2017 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2017, 2018 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
