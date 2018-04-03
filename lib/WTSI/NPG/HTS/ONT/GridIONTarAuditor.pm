@@ -161,7 +161,7 @@ sub _check_tar_files {
     foreach my $tar_path ($manifest->tar_paths) {
 
       my ($nf, $np, $ne) = $self->_check_tar_contents($manifest, $tar_path);
-      $self->info("Checked $np / $nf files in '$tar_path' with $ne errors");
+      $self->info("Checked [ $np / $nf ] files in '$tar_path' with $ne errors");
       $num_files     += $nf;
       $num_processed += $np;
       $num_errors    += $ne;
