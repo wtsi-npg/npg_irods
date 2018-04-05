@@ -7,6 +7,7 @@ use MooseX::StrictConstructor;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::Illumina::AlnDataObject;
+use WTSI::NPG::HTS::Illumina::AgfDataObject;
 use WTSI::NPG::HTS::Illumina::AncDataObject;
 use WTSI::NPG::HTS::Illumina::InterOpDataObject;
 use WTSI::NPG::HTS::Illumina::XMLDataObject;
@@ -32,12 +33,63 @@ has 'ancillary_formats' =>
    predicate     => 'has_ancillary_formats',
    documentation => 'The ancillary file formats that have been published');
 
+
+has '_anc_regex' =>
+  (isa           => 'RegexpRef',
+   is            => 'ro',
+   required      => 0,
+   lazy          => 1,
+   builder       => '_build_anc_regex',
+   init_arg      => undef,
+   documentation => 'Regular expression for ancilliary files');
+
+sub _build_anc_regex{
+  my ($self) = @_;
+  my $anc_regex;
+  if($self->ancillary_formats){
+      my $anc_pattern = join q[|], @{$self->ancillary_formats};
+      $anc_regex = qr{[.]($anc_pattern)$}msx;
+      if ($self->has_compress_formats) {
+        my $comp_pattern = join q[|], @{$self->compress_formats};
+        $anc_regex = qr{[.]($anc_pattern)([.]($comp_pattern))?$}msx;
+      }
+  }
+  return $anc_regex;
+}
+
+has 'genotype_formats' =>
+  (isa           => 'ArrayRef',
+   is            => 'ro',
+   required      => 0,
+   predicate     => 'has_genotype_formats',
+   documentation => 'The genotype file formats that have been published');
+
+has '_agf_regex' =>
+  (isa           => 'RegexpRef',
+   is            => 'ro',
+   required      => 0,
+   lazy          => 1,
+   builder       => '_build_agf_regex',
+   init_arg      => undef,
+   documentation => 'Regular expression for genotype files');
+
+sub _build_agf_regex{
+  my ($self) = @_;
+  my $agf_regex;
+  if($self->genotype_formats){
+      my $agf_pattern = join q[|], @{$self->genotype_formats};
+      $agf_regex = qr{[.]($agf_pattern)$}msx;
+  }
+  return $agf_regex;
+}
+
 has 'compress_formats' =>
   (isa           => 'ArrayRef',
    is            => 'ro',
    required      => 0,
    predicate     => 'has_compress_formats',
    documentation => 'The compress file formats that have been published');
+
 
 my $align_regex   = qr{[.](bam|cram)$}msx;
 my $index_regex   = qr{[.](bai|crai)$}msx;
@@ -76,6 +128,9 @@ my $interop_regex = qr{[.]bin$}msx;
                      data_object => $filename,
                      irods       => $self->irods);
 
+    my $anc_regex = $self->_anc_regex;
+    my $agf_regex = $self->_agf_regex;
+
     ## no critic (ControlStructures::ProhibitCascadingIfElse)
     if ($filename =~ m{$align_regex}msxi) {
       $self->debug('Making WTSI::NPG::HTS::Illumina::AlnDataObject from ',
@@ -103,19 +158,15 @@ my $interop_regex = qr{[.]bin$}msx;
                    "'$path' matching $xml_regex");
       $obj = WTSI::NPG::HTS::Illumina::XMLDataObject->new(@init_args);
     }
-    elsif ($self->has_ancillary_formats) {
-      my $anc_pattern = join q[|], @{$self->ancillary_formats};
-      my $anc_regex = qr{[.]($anc_pattern)$}msx;
-      if ($self->has_compress_formats) {
-        my $comp_pattern = join q[|], @{$self->compress_formats};
-        $anc_regex = qr{[.]($anc_pattern)([.]($comp_pattern))?$}msx;
-      }
-
-      if ($filename =~ m{$anc_regex}msxi) {
-        $self->debug('Making WTSI::NPG::HTS::Illumina::AncDataObject from ',
-                     "'$path' matching $anc_regex");
-        $obj = WTSI::NPG::HTS::Illumina::AncDataObject->new(@init_args);
-      }
+    elsif ($anc_regex && $filename =~ m{$anc_regex}msxi) {
+      $self->debug('Making WTSI::NPG::HTS::Illumina::AncDataObject from ',
+                   "'$path' matching $anc_regex");
+      $obj = WTSI::NPG::HTS::Illumina::AncDataObject->new(@init_args);
+    }
+    elsif ($agf_regex && $filename =~ m{$agf_regex}msxi) {
+      $self->debug('Making WTSI::NPG::HTS::Illumina::AgfDataObject from ',
+                   "'$path' matching $agf_regex");
+      $obj = WTSI::NPG::HTS::Illumina::AgfDataObject->new(@init_args);
     }
     else {
       $self->debug("Not making any WTSI::NPG::HTS::DataObject for '$path'");
