@@ -482,7 +482,7 @@ sub _make_callback {
 sub _do_publish {
   my ($self, $path) = @_;
 
-  my ($format) = $path =~ qr{[.]([^.]*)}msx;
+  my ($format) = $path =~ qr{[.]([^.]*$)}msx;
   if ($format ne 'fast5' and $format ne 'fastq') {
     $self->debug("Ignoring '$path' because it is not fast5/fastq");
   }
