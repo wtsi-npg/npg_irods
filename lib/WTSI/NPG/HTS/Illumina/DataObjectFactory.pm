@@ -35,7 +35,7 @@ has 'ancillary_formats' =>
 
 
 has '_anc_regex' =>
-  (isa           => 'RegexpRef',
+  (isa           => 'RegexpRef | Undef',
    is            => 'ro',
    required      => 0,
    lazy          => 1,
@@ -46,10 +46,10 @@ has '_anc_regex' =>
 sub _build_anc_regex{
   my ($self) = @_;
   my $anc_regex;
-  if($self->ancillary_formats){
+  if($self->has_ancillary_formats && @{$self->ancillary_formats}){
       my $anc_pattern = join q[|], @{$self->ancillary_formats};
       $anc_regex = qr{[.]($anc_pattern)$}msx;
-      if ($self->has_compress_formats) {
+      if ($self->has_compress_formats && @{$self->compress_formats}) {
         my $comp_pattern = join q[|], @{$self->compress_formats};
         $anc_regex = qr{[.]($anc_pattern)([.]($comp_pattern))?$}msx;
       }
@@ -65,7 +65,7 @@ has 'genotype_formats' =>
    documentation => 'The genotype file formats that have been published');
 
 has '_agf_regex' =>
-  (isa           => 'RegexpRef',
+  (isa           => 'RegexpRef | Undef',
    is            => 'ro',
    required      => 0,
    lazy          => 1,
@@ -76,7 +76,7 @@ has '_agf_regex' =>
 sub _build_agf_regex{
   my ($self) = @_;
   my $agf_regex;
-  if($self->genotype_formats){
+  if($self->has_genotype_formats && @{$self->genotype_formats}){
       my $agf_pattern = join q[|], @{$self->genotype_formats};
       $agf_regex = qr{[.]($agf_pattern)$}msx;
   }
