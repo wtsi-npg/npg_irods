@@ -47,13 +47,15 @@ our $CRAM_INDEX_FORMAT = 'crai';
 # Cateories of file to be published
 our $ALIGNMENT_CATEGORY = 'alignment';
 our $ANCILLARY_CATEGORY = 'ancillary';
+our $GENOTYPE_CATEGORY  = 'genotype';
 our $INDEX_CATEGORY     = 'index';
 our $QC_CATEGORY        = 'qc';
 # XML and InterOp files do not have a category because they exist once
 # per run, while all the rest exist per lane and/or plex
 
 our @FILE_CATEGORIES = ($ALIGNMENT_CATEGORY, $ANCILLARY_CATEGORY,
-                        $INDEX_CATEGORY, $QC_CATEGORY);
+                        $INDEX_CATEGORY, $QC_CATEGORY,
+                        $GENOTYPE_CATEGORY);
 
 our $NUM_READS_JSON_PROPERTY = 'num_total_reads';
 
@@ -172,11 +174,13 @@ has '_json_cache' =>
 my @CACHING_LANE_METHOD_NAMES = qw[lane_alignment_files
                                    lane_index_files
                                    lane_qc_files
-                                   lane_ancillary_files];
+                                   lane_ancillary_files
+                                   lane_genotype_files];
 my @CACHING_PLEX_METHOD_NAMES = qw[plex_alignment_files
                                    plex_index_files
                                    plex_qc_files
-                                   plex_ancillary_files];
+                                   plex_ancillary_files
+                                   plex_genotype_files];
 
 foreach my $method_name (@CACHING_LANE_METHOD_NAMES,
                          @CACHING_PLEX_METHOD_NAMES) {
@@ -552,7 +556,7 @@ sub list_plex_index_files {
 
   Arg [1]    : None
 
-  Example    : $pub->list_qc_alignment_files;
+  Example    : $pub->list_lane_qc_files;
   Description: Return paths of all lane-level qc files for the run.
                Calling this method will access the file system. For
                cached access to the list, use the lane_qc_files
@@ -661,6 +665,63 @@ sub list_plex_ancillary_files {
   @file_list = grep { ! m{markdups_metrics}msx } @file_list;
 
   return \@file_list;
+}
+
+
+=head2 list_lane_genotype_files
+
+  Arg [1]    : None
+
+  Example    : $pub->list_lane_genotype_files;
+  Description: Return paths of all lane-level qc files for the run.
+               Calling this method will access the file system. For
+               cached access to the list, use the lane_qc_files
+               method.
+  Returntype : ArrayRef[Str]
+
+=cut
+
+sub list_lane_genotype_files {
+  my ($self, $position) = @_;
+
+  my $pos;
+  if (defined $position) {
+    $pos = $self->_check_position($position);
+  }
+
+  my $file_format       = sprintf '(%s)', join q[|], $self->hts_genotype_suffixes;
+  my $positions_pattern = $self->_positions_pattern($pos);
+  my $lane_file_pattern = sprintf '^%d_%s.*[.]%s$',
+    $self->id_run, $positions_pattern, $file_format;
+
+  return [$self->list_directory($self->archive_path,
+                                $lane_file_pattern)];
+}
+
+=head2 list_plex_genotype_files
+
+  Arg [1]    : Lane position, Int.
+
+  Example    : $pub->list_plex_genotype_files($position);
+  Description: Return paths of all plex-level genotype files for the
+               given lane. Calling this method will access the file
+               system. For cached access to the list, use the
+               plex_genotype_files method.
+  Returntype : ArrayRef[Str]
+
+=cut
+
+sub list_plex_genotype_files {
+  my ($self, $position) = @_;
+
+  my $pos = $self->_check_position($position);
+
+  my $file_format       = sprintf '(%s)', join q[|], $self->hts_genotype_suffixes;
+  my $plex_file_pattern = sprintf '^%d_%d.*[.]%s$',
+    $self->id_run, $position, $file_format;
+
+  return [$self->list_directory($self->lane_archive_path($pos),
+                                $plex_file_pattern)];
 }
 
 =head2 publish_files
@@ -1194,6 +1255,88 @@ sub publish_plex_qc_files {
                                             $with_spiked_control);
 }
 
+=head2 publish_genotype_files
+
+  Arg [1]    : None
+
+  Named args : positions            ArrayRef[Int]. Optional.
+               with_spiked_control  Bool. Optional
+
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_genotype_files
+  Description: Publish genotype files (lane- or plex-level) to
+               iRODS.  If the positions argument is supplied, only those
+               positions will be published.  The default is to publish all
+               positions.  Return the number of files,
+               the number published and the number of errors.
+  Returntype : Array[Int]
+
+=cut
+
+{
+  my $positional = 1;
+  my @named      = qw[positions with_spiked_control];
+  my $params = function_params($positional, @named);
+
+  sub publish_genotype_files {
+    my ($self) = $params->parse(@_);
+
+    my $positions = $params->positions || [$self->positions];
+
+    return $self->_publish_file_category($GENOTYPE_CATEGORY,
+                                         $positions,
+                                         $params->with_spiked_control);
+  }
+}
+
+=head2 publish_lane_genotye_files
+
+  Arg [1]    : Lane position, Int.
+  Arg [2]    : HTS data has spiked control, Bool. Optional.
+
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_lane_genotype_files(8)
+  Description: Publish lane-level QC files in the
+               specified lane to iRODS.  Return the number of files,
+               the number published and the number of errors.
+  Returntype : Array[Int]
+
+=cut
+
+sub publish_lane_genotype_files {
+  my ($self, $position, $with_spiked_control) = @_;
+
+  return $self->_publish_lane_genotype_files($position,
+                                            $self->lane_genotype_files($position),
+                                            $self->dest_collection,
+                                            $GENOTYPE_CATEGORY,
+                                            $with_spiked_control);
+}
+
+=head2 publish_plex_genotype_files
+
+  Arg [1]    : Lane position, Int.
+  Arg [2]    : HTS data has spiked control, Bool. Optional.
+
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_plex_genotype_files(8)
+  Description: Publish plex-level genotype files in the
+               specified lane to iRODS.  Return the number of files,
+               the number published and the number of errors.
+  Returntype : Array[Int]
+
+=cut
+
+sub publish_plex_genotype_files {
+  my ($self, $position, $with_spiked_control) = @_;
+
+  return $self->_publish_plex_genotype_files($position,
+                                             $self->plex_genotype_files($position),
+                                             $self->dest_collection,
+                                             $GENOTYPE_CATEGORY,
+                                             $with_spiked_control);
+}
+
 sub write_restart_file {
   my ($self) = @_;
 
@@ -1322,6 +1465,39 @@ sub _publish_plex_support_files {
   return $self->_publish_support_files($files, $dest_collection,
                                        $with_spiked_control);
 }
+
+sub _publish_lane_genotype_files {
+  my ($self, $position, $files, $dest_collection, $description,
+      $with_spiked_control) = @_;
+
+  my $pos = $self->_check_position($position);
+  my $id_run = $self->id_run;
+
+  if ($self->is_plexed($pos)) {
+    $self->logconfess("Attempted to publish position '$pos' lane-level ",
+                      "$description files in run '$id_run'; ",
+                      'the position is plexed');
+  }
+
+  return $self->_publish_genotype_files($files, $dest_collection,
+                                        $with_spiked_control);
+}
+
+sub _publish_plex_genotype_files {
+  my ($self, $position, $files, $dest_collection, $description,
+      $with_spiked_control) = @_;
+
+  my $pos = $self->_check_position($position);
+  my $id_run = $self->id_run;
+
+  if (not $self->is_plexed($pos)) {
+    $self->logconfess("Attempted to publish position '$pos' plex-level ",
+                      "$description files in run '$id_run'; ",
+                      'the position is not plexed');
+  }
+  return $self->_publish_genotype_files($files, $dest_collection,
+                                        $with_spiked_control);
+}
 ## use critic
 
 # Backend index, qc and ancillary file publisher
@@ -1336,6 +1512,24 @@ sub _publish_support_files {
   my $secondary_avus_callback = sub {
     # Argument is a WTSI::NPG::iRODS::DataObject
     $self->_make_support_secondary_meta(shift, $with_spiked_control);
+  };
+
+  return $self->batch_publisher->publish_file_batch
+    ($files, $dest_coll, $primary_avus_callback,
+     $secondary_avus_callback);
+}
+
+sub _publish_genotype_files {
+  my ($self, $files, $dest_coll, $with_spiked_control) = @_;
+
+  my $primary_avus_callback = sub {
+    # Argument is a WTSI::NPG::iRODS::DataObject
+    return $self->_make_genotype_primary_meta(shift);
+  };
+
+  my $secondary_avus_callback = sub {
+    # Argument is a WTSI::NPG::iRODS::DataObject
+    $self->_make_genotype_secondary_meta(shift, $with_spiked_control);
   };
 
   return $self->batch_publisher->publish_file_batch
@@ -1386,6 +1580,7 @@ sub _build_obj_factory {
 
   return WTSI::NPG::HTS::Illumina::DataObjectFactory->new
     (ancillary_formats => [$self->hts_ancillary_suffixes],
+     genotype_formats  => [$self->hts_genotype_suffixes],
      compress_formats => [$self->compress_suffixes],
      irods             => $self->irods);
 }
@@ -1583,6 +1778,46 @@ sub _make_support_secondary_meta {
   return @sec;
 }
 
+sub _make_genotype_primary_meta {
+  my ($self, $obj) = @_;
+
+  my @pri = ($self->make_avu($ID_RUN, $obj->id_run));
+  push @pri, ($self->make_avu($POSITION, $obj->position));
+  if (defined $obj->tag_index ){
+    push @pri, ($self->make_avu($TAG_INDEX, $obj->tag_index));
+  }
+  if (defined $self->alt_process) {
+    push @pri, $self->make_alt_metadata($self->alt_process);
+  }
+
+  if (defined $obj->tag_index && $obj->tag_index != 0){
+      my $lims = $self->lims_factory->make_lims($obj->id_run,
+                                                $obj->position,
+                                                $obj->tag_index);
+      push @pri, $self->make_gbs_metadata($lims);
+  }
+
+  $self->debug(q[Created primary metadata AVUs for '], $obj->str,
+               q[': ], pp(\@pri));
+
+  return @pri;
+}
+
+sub _make_genotype_secondary_meta {
+  my ($self, $obj, $with_spiked_control) = @_;
+
+  my @sec = $self->make_secondary_metadata
+    ($self->lims_factory, $obj->id_run, $obj->position,
+     tag_index           => $obj->tag_index,
+     with_spiked_control => $with_spiked_control);
+
+  $self->debug(q[Created secondary metadata AVUs for '], $obj->str,
+               q[': ], pp(\@sec));
+
+  return @sec;
+}
+
+
 __PACKAGE__->meta->make_immutable;
 
 no Moose;
@@ -1610,6 +1845,7 @@ Data files are divided into four categories:
  - alignment files; the sequencing reads in BAM or CRAM format.
  - alignment index files; indices in the relevant format
  - ancillary files; files containing information about the run
+ - genotype files; files with genotype calls from sequenced reads.
  - QC JSON files; JSON files containing information about the run
 
 A RunPublisher provides methods to list the complement of these

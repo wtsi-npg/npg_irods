@@ -474,6 +474,29 @@ sub make_plex_metadata {
   return $self->_make_single_value_metadata($lims, $method_attr);
 }
 
+
+
+=head2 make_gbs_metadata
+
+  Arg [1]    :  A LIMS handle, st::api::lims.
+
+  Example    : my @avus = $ann->make_gbs_metadata($lims);
+  Description: Return HTS plex metadata AVUs.
+  Returntype : Array[HashRef]
+
+=cut
+
+sub make_gbs_metadata {
+  my ($self, $lims) = @_;
+
+  defined $lims or $self->logconfess('A defined lims argument is required');
+
+  # Map of method name to attribute name under which the result will
+  # be stored.
+  my $method_attr = {gbs_plex_name => $GBS_PLEX_NAME};
+  return $self->_make_single_value_metadata($lims, $method_attr);
+}
+
 sub _make_single_value_metadata {
   my ($self, $lims, $method_attr) = @_;
   # The method_attr argument is a map of method name to attribute name
