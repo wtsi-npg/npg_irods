@@ -77,6 +77,8 @@ sudo ln -s /tmp/samtools-${SAMTOOLS_VERSION}/libbam.a /usr/local/lib/libbam.a #h
 # CPAN
 cpanm --quiet --notest Alien::Tidyp # For npg_tracking
 cpanm --quiet --notest Module::Build
+cpanm --quiet --notest LWP::Protocol::https
+cpanm --quiet --notest https://github.com/chapmanb/vcftools-cpan/archive/v0.953.tar.gz # for npg_qc
 
 # WTSI NPG Perl repo dependencies
 repos=""
