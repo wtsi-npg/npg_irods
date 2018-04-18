@@ -1,4 +1,24 @@
 
+Release 2.8
+ - switched to disposable-irods 1.3 (iRODS packages from Sanger S3,
+   replaced RENCI FTP site)
+ - added single-server option
+ - added support for data files to change during the tar process
+   and to detect and archive those changes
+ - individually check the checksum of files local to the gridionxi
+   where they are loaded and compare with the iRODS checksum
+ - updated the samtools and htslib versions to 1.7
+ - added tar file auditor
+ - use manifest checksums to confirm file contents
+ - support loading PacBio RSII files created using out of date reagents
+ - allow a user-supplied checksum to be used in TarPublisher and TarStream
+   (so GridIONRunPublisher can allow the checksum of uncompressed data to be used)
+ - publish fastq files during the catchup phase
+ - allow auditing of older GridION tar files which used a relative path for tarred files
+ - archiving changes for illumina sequencing genotype files
+ - fix for the regex used when choosing to ignore files
+ - minor fix to DataObjectFactory.pm
+
 Release 2.7
  - Moved quant file tests to illumina run publisher tests
  - Added compression extentions to illumina ancillary file regular expression
