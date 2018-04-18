@@ -50,6 +50,7 @@ my $debug;
 my $driver_type;
 my $file_format;
 my $force = 0;
+my $genotype = 1;
 my $id_run;
 my $index = 1;
 my $interop = 1;
@@ -72,6 +73,7 @@ GetOptions('alignment!'                        => \$alignment,
            'driver-type|driver_type=s'         => \$driver_type,
            'file-format|file_format=s'         => \$file_format,
            'force'                             => \$force,
+           'genotype!'                         => \$genotype,
            'help'                              => sub {
              pod2usage(-verbose => 2, -exitval => 0);
            },
@@ -190,6 +192,9 @@ if ($alignment) {
 if ($ancillary) {
   $inc_counts->($publisher->publish_ancillary_files(positions => \@positions));
 }
+if ($genotype) {
+  $inc_counts->($publisher->publish_genotype_files(positions => \@positions));
+}
 if ($index) {
   $inc_counts->($publisher->publish_index_files(positions => \@positions));
 }
@@ -240,6 +245,7 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
                      defaults to CRAM format.
    --force           Force an attempt to re-publish files that have been
                      published successfully.
+   --genotype        Load genotype call files. Optional, defaults to true.
    --help            Display help.
    --id-run
    --id_run          Specify the run number. Optional, defaults to the
@@ -281,11 +287,12 @@ npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
 This script loads data and metadata for a single Illumina sequencing
 run into iRODS.
 
-Data files are divided into six categories:
+Data files are divided into seven categories:
 
  - alignment files; the sequencing reads in BAM or CRAM format.
  - alignment index files; indices in the relevant format.
  - ancillary files; files containing information about the run.
+ - genotype files; files containing genotypes from sequencing data.
  - QC JSON files; JSON files containing information about the run.
  - XML files; XML files describing the entire run.
  - InterOp files; binary files containing diagnostic data for the
@@ -310,13 +317,14 @@ collection, the following take place:
    synchronise with the metadata supplied by st::api::lims, even if no
    files have been modified
 
-The default behaviour of the script is to publish all six categories
-of file (alignment, ancillary, index, interop, qc and xml), for all
-available lane positions. This may be restricted by using one or more
-of the command line flags --no-alignment, --no-index, --no-interop,
---no-ancillary, --no-qc and --no-xml, each of which instructs the script
-to exclude that type of file. e.g. "--no-alignment --no-index" will
-cause alignment and index files to be excluded.
+The default behaviour of the script is to publish all seven categories
+of file (alignment, ancillary, genotype, index, interop, qc and xml), 
+for all available lane positions. This may be restricted by using one 
+or more of the command line flags --no-alignment, --no-genotype,
+--no-index, --no-interop, --no-ancillary, --no-qc and --no-xml, each
+of which instructs the script to exclude that type of file. 
+e.g. "--no-alignment --no-index" will cause alignment and index files
+to be excluded.
 
 One or more "--position <position>" arguments may be supplied to
 restrict operations specific lanes. e.g. "--position 1 --position 8"

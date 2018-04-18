@@ -25,7 +25,10 @@ my $collection;
 my $debug;
 my $log4perl_config;
 my $output_dir;
+my $poll_interval   = 60;
+my $quiet_interval  = 60 * 60 * 24;
 my $session_timeout = 60 * 20;
+my $single_server;
 my $staging_dir;
 my $tmpdir          = '/tmp';
 my $verbose;
@@ -39,7 +42,10 @@ GetOptions('collection=s'                      => \$collection,
            },
            'logconf=s'                         => \$log4perl_config,
            'output-dir|output_dir=s'           => \$output_dir,
+           'poll-interval|poll_interval=i'     => \$poll_interval,
+           'quiet-interval|quiet_interval=i'   => \$quiet_interval,
            'session-timeout|session_timeout=s' => \$session_timeout,
+           'single-server|single_server'       => \$single_server,
            'staging-dir|staging_dir=s'         => \$staging_dir,
            'tar_capacity|tar-capacity=i'       => \$arch_capacity,
            'tar-duration|tar_duration=i'       => \$arch_duration,
@@ -74,7 +80,10 @@ my $monitor = WTSI::NPG::HTS::ONT::GridIONRunMonitor->new
    arch_timeout    => $arch_timeout,
    dest_collection => $collection,
    output_dir      => $output_dir,
+   poll_interval   => $poll_interval,
+   quiet_interval  => $quiet_interval,
    session_timeout => $session_timeout,
+   single_server   => $single_server,
    source_dir      => $staging_dir,
    tmpdir          => $tmpdir);
 
@@ -85,11 +94,8 @@ local $SIG{TERM} = sub { $monitor->monitor(0) };
 my $num_errors = $monitor->start;
 my $exit_code  = $num_errors == 0 ? 0 : 4;
 
-my $i = 0;
-foreach my $dir (@{$monitor->watch_history}) {
-  $log->info("Watch history [$i]: '$dir'");
-  $i++;
-}
+$log->info('In progress: ', pp($monitor->devices_active));
+$log->info('Completed: ', pp($monitor->devices_complete));
 
 exit $exit_code;
 
@@ -102,8 +108,10 @@ npg_gridion_run_monitor
 =head1 SYNOPSIS
 
 npg_gridion_run_monitor --collection <path> [--debug] [--logconf <path>]
-  --output-dir <path> --staging-dir <path>
-  [--tar-capacity <n>] [--tar-timeout <n>] [--tmpdir <path>] [--verbose]
+  --output-dir <path> [--poll-interval <n>] [--quiet-interval <n>]
+  [--single-server] --staging-dir <path>
+  [--tar-capacity <n>] [--tar-timeout <n>]
+  [--tmpdir <path>] [--verbose]
 
  Options:
    --collection      The root iRODS collection in which to write data,
@@ -114,10 +122,21 @@ npg_gridion_run_monitor --collection <path> [--debug] [--logconf <path>]
    --output-dir
    --output_dir      A writable local directory where log files and
                      file manifests will be written.
+   --poll-interval
+   --poll_interval   The number of seconds between polls to the filesystem
+                     to check for new experiment and device directories.
+                     Optional, defauls to 60 seconds.
+   --quiet-interval
+   --quiet_interval  The number of seconds after a publisher has successfully
+                     completed during which time it will not be restarted
+                     if its device directory remains in the staging directory.
+                     Optional, defaults to 60 * 60 * 24 seconds.
    --session-timeout
    --session_timeout The number of seconds idle time after which a multi-file
                      tar session will be closed. Optional, defaults to 60 * 20
                      seconds.
+   --single-server
+   --single_server   Connect to only one iRODS server.
    --staging-dir
    --staging_dir     The data staging directory path to watch.
    --tar-capacity
@@ -137,10 +156,10 @@ npg_gridion_run_monitor --collection <path> [--debug] [--logconf <path>]
 
 =head1 DESCRIPTION
 
-Uses inotify to monitor a staging area for new GridION experiment
-result directories. Launches a
-WTSI::NPG::HTS::ONT::GridIONRunPublisher for each existing device
-directory and for any new device directory created.
+Polls a staging area for new GridION experiment result
+directories. Launches a WTSI::NPG::HTS::ONT::GridIONRunPublisher for
+each existing device directory and for any new device directory
+created.
 
 For full documentation see WTSI::NPG::HTS::ONT::GridIONRunMonitor.
 
@@ -150,7 +169,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2017 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2017, 2018 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

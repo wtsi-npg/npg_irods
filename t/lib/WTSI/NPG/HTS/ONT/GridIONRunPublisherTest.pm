@@ -4,12 +4,14 @@ use strict;
 use warnings;
 
 use Archive::Tar;
+use Digest::MD5;
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Copy;
 use File::Spec::Functions qw[abs2rel catfile rel2abs];
 use File::Path qw[make_path];
 use File::Temp;
+use IO::Uncompress::Bunzip2 qw[bunzip2 $Bunzip2Error];
 use Log::Log4perl;
 use List::AllUtils qw[uniq];
 use Test::More;
@@ -48,7 +50,7 @@ sub teardown_test : Test(teardown) {
   $irods->remove_collection($irods_tmp_coll);
 }
 
-sub publish_files_copy : Test(83) {
+sub publish_files_copy : Test(125) {
   my $expected_num_files = {fast5 => 7,
                             fastq => 1};
   my $expected_num_items = {fast5 => [6, 6, 6, 6, 6, 6, 4], # total 40
@@ -58,7 +60,7 @@ sub publish_files_copy : Test(83) {
                     $expected_num_files, $expected_num_items);
 }
 
-sub publish_files_move : Test(83) {
+sub publish_files_move : Test(125) {
   my $expected_num_files = {fast5 => 7,
                             fastq => 1};
   my $expected_num_items = {fast5 => [6, 6, 6, 6, 6, 6, 4], # total 40
@@ -68,7 +70,23 @@ sub publish_files_move : Test(83) {
                     $expected_num_files, $expected_num_items);
 }
 
-sub publish_files_f5_uncompress : Test(83) {
+sub publish_files_single_server : Test(125) {
+  my $expected_num_files = {fast5 => 7,
+                            fastq => 1};
+  my $expected_num_items = {fast5 => [6, 6, 6, 6, 6, 6, 4], # total 40
+                            fastq => [2]};
+  my $f5_uncompress = 0;
+  my $arch_capacity ||= 6;
+  my $arch_bytes    ||= 10_000_000;
+  my $single_server = 1;
+
+  _do_publish_files($irods_tmp_coll, 'copy',
+                    $expected_num_files, $expected_num_items,
+                    $f5_uncompress, $arch_capacity, $arch_bytes,
+                    $single_server);
+}
+
+sub publish_files_f5_uncompress : Test(125) {
   my $expected_num_files = {fast5 => 7,
                             fastq => 1};
   my $expected_num_items = {fast5 => [6, 6, 6, 6, 6, 6, 4], # total 40
@@ -80,7 +98,7 @@ sub publish_files_f5_uncompress : Test(83) {
     # h5repack fails with a 'file not found error', however, a
     # subsequent test for the file's presence using Perl's '-e' shows
     # it was there.
-    skip 'h5repack not required', 83, if not $ENV{TEST_WITH_H5REPACK};
+    skip 'h5repack not required', 125, if not $ENV{TEST_WITH_H5REPACK};
 
     _do_publish_files($irods_tmp_coll, 'copy',
                       $expected_num_files, $expected_num_items,
@@ -88,7 +106,7 @@ sub publish_files_f5_uncompress : Test(83) {
   }
 }
 
-sub publish_files_tar_bytes : Test(71) {
+sub publish_files_tar_bytes : Test(113) {
   my $expected_num_files = {fast5 => 4,
                             fastq => 1};
   my $expected_num_items = {fast5 => [23, 8, 7, 2], # total 40
@@ -106,7 +124,8 @@ sub publish_files_tar_bytes : Test(71) {
 sub _do_publish_files {
   my ($dest_coll, $data_mode,
       $expected_num_files, $expected_num_items,
-      $f5_uncompress, $arch_capacity, $arch_bytes) = @_;
+      $f5_uncompress, $arch_capacity, $arch_bytes,
+      $single_server) = @_;
 
   # File::Copy::copy uses open -> syswrite -> close, so we will get a
   # CLOSE event
@@ -143,10 +162,13 @@ sub _do_publish_files {
        arch_capacity   => $arch_capacity,
        arch_timeout    => 10,
        dest_collection => $dest_coll,
+       device_id       => $device_id,
+       experiment_name => $expt_name,
        f5_uncompress   => $f5_uncompress,
        output_dir      => $tmp_output_dir,
        session_timeout => 30,
-       source_dir      => $tmp_basecalled_dir);
+       single_server   => $single_server,
+       source_dir      => $tmp_run_dir);
 
     my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
@@ -202,10 +224,10 @@ sub _do_publish_files {
 
     # Check they contain the correct number of entries
     my $num_tar_files = $expected_num_files->{$format};
-    my %manifest = _read_manifest($expected_manifest);
-    cmp_ok(scalar uniq(values %manifest), '==', $num_tar_files,
+    my $manifest = _read_manifest($expected_manifest);
+    cmp_ok(scalar $manifest->tar_paths, '==', $num_tar_files,
            "Manifest lists $num_tar_files tar files") or
-             diag explain \%manifest;
+             diag explain [$manifest->tar_paths];
 
     # Check the ancillary files in iRODS
     my $fn = sub {
@@ -233,39 +255,60 @@ sub _do_publish_files {
 
     my $i = 0;
     foreach my $obj (@observed_tar) {
-      my $path     = $obj->str;
-      my $filename = fileparse($path);
-      my $file     = $irods->get_object($path, catfile($tmp_dir, $filename));
+      my $tar_path = $obj->str;
+      my $filename = fileparse($tar_path);
 
+      # Get the tar file from iRODS
+      my $tar_file = $irods->get_object($tar_path,
+                                        catfile($tmp_dir, $filename));
       # Check the MD5 metadata
       my @avu = $obj->find_in_metadata($FILE_MD5);
       cmp_ok(scalar @avu, '==', 1,
-             "Single MD5 attribute present on '$path'") or diag explain \@avu;
-
+             "Single MD5 attribute present on '$tar_path'") or
+               diag explain \@avu;
+      my $md5      = $irods->md5sum($tar_file);
       my $md5_meta = $avu[0]->{value};
-      my $md5      = $irods->md5sum($file);
-      is($md5_meta, $md5, "MD5 metadata and file checksum concur for '$path'")
-        or diag explain [$md5_meta, $md5];
+
+      is($md5_meta, $md5,
+         "MD5 metadata and file checksum concur for '$tar_path'") or
+           diag explain [$md5_meta, $md5];
 
       # Check that the tar file contains the right number of items
       my $arch = Archive::Tar->new;
-      $arch->read($file);
-      my @items = $arch->list_files;
+      $arch->read($tar_file);
+      my @tar_items = $arch->get_files;
 
       my $expected_num_items = $expected_num_items->{$format}[$i];
-      cmp_ok(scalar @items, '==', $expected_num_items,
-             "Expected expected number of items present in '$path'");
+      cmp_ok(scalar @tar_items, '==', $expected_num_items,
+             "Expected expected number of items present in '$tar_path'");
 
-      # Check that the manifest describe the tar file contents
+      # Check that the manifest describes each item of the tar file contents
       my $manifest_fail = 0;
-      foreach my $item (@items) {
-        my $tar = $manifest{$item};
-        is($path, $tar, "Manifest describes tar file for '$item'") or
-          $manifest_fail++;
+      foreach my $tar_item (@tar_items) {
+        my $item_name    = $tar_item->name;
+        my $item_content = $tar_item->get_content;
+
+        # Extract the item's record from the manifest
+        my $man_item     = $manifest->get_item($item_name);
+
+        is($man_item->tar_path, $tar_path,
+           "Manifest describes tar file for '$item_name' as $tar_path") or
+             $manifest_fail++;
+
+        # Calculate the MD5 of each file contained in the tar file
+        my $bunzipped_content;
+        bunzip2 \$item_content => \$bunzipped_content or
+          die "Failed to bunzip $item_name in $tar_file: $Bunzip2Error";
+
+        my $tar_item_md5 =
+          Digest::MD5->new->add($bunzipped_content)->hexdigest;
+        is($man_item->checksum, $tar_item_md5,
+           "Manifest describes checksum for '$item_name' as $tar_item_md5") or
+             $manifest_fail++;
       }
 
       if ($manifest_fail) {
-        diag explain \%manifest;
+        diag explain $manifest;
       }
 
       my $expected_meta =
@@ -277,7 +320,7 @@ sub _do_publish_files {
         @{$obj->metadata};
 
       is_deeply(\@filtered_meta, $expected_meta,
-                "Expected metadata present on '$path'")
+                "Expected metadata present on '$tar_path'")
         or diag explain \@filtered_meta;
 
       $i++;
@@ -288,17 +331,10 @@ sub _do_publish_files {
 sub _read_manifest {
   my ($path) = @_;
 
-  my %manifest;
-  open my $fh, '<', $path or die "Failed to open manifest '$path': $ERRNO";
-  while (my $line = <$fh>) {
-    chomp $line;
+  my $manifest = WTSI::NPG::HTS::TarManifest->new(manifest_path => $path);
+  $manifest->read_file;
 
-    my ($tar_path, $item_path) = split /\t/msx, $line;
-    $manifest{$item_path} = $tar_path;
-  }
-  close $fh or die "Failed to close '$path': $ERRNO";
-
-  return %manifest;
+  return $manifest;
 }
 
 sub _move {

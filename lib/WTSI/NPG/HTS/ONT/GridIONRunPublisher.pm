@@ -6,6 +6,7 @@ use Carp;
 use IO::Compress::Bzip2 qw[bzip2 $Bzip2Error];
 use Data::Dump qw[pp];
 use DateTime;
+use Digest::MD5;
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Copy;
@@ -37,6 +38,7 @@ with qw[
          WTSI::NPG::iRODS::Annotator
          WTSI::NPG::iRODS::Utilities
          WTSI::NPG::HTS::ArchiveSession
+         WTSI::NPG::HTS::ChecksumCalculator
          WTSI::NPG::HTS::ONT::Annotator
          WTSI::NPG::HTS::ONT::Watcher
        ];
@@ -71,6 +73,14 @@ our $FAST5_DEVICE_ID_ATTR   = 'device_id';
 our $FAST5_RUN_ID_ATTR      = 'run_id';
 our $FAST5_SAMPLE_ID_ATTR   = 'sample_id';
 our $FAST5_SOFTWARE_VERSION = 'version';
+
+has 'catchup' =>
+  (isa           => 'Bool',
+   is            => 'rw',
+   required      => 1,
+   default       => 0,
+   documentation => 'True if the publisher is catching up any unpublished ' .
+                    'files at the end of its processing');
 
 has 'dest_collection' =>
   (isa           => 'Str',
@@ -143,6 +153,15 @@ has 'monitor' =>
                     'A caller may set this to false in order to stop ' .
                     'monitoring and wait for any child processes to finish');
 
+has 'single_server' =>
+  (is            => 'ro',
+   isa           => 'Bool',
+   default       => 0,
+   documentation => 'If true, connect ony a single iRODS server by avoiding ' .
+                    'any direct connections to resource servers. This mode ' .
+                    'will be much slower to transfer large files, but does ' .
+                    'not require resource servers to be accessible');
+
 has 'tmpdir' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -168,10 +187,13 @@ around BUILDARGS => sub {
     my %args = @args;
 
     my $gridion_name = hostname;
+
     my $run = WTSI::NPG::HTS::ONT::GridIONRun->new
-      (gridion_name => $gridion_name,
-       output_dir   => delete $args{output_dir},
-       source_dir   => delete $args{source_dir});
+      (device_id       => delete $args{device_id},
+       experiment_name => delete $args{experiment_name},
+       gridion_name    => $gridion_name,
+       output_dir      => delete $args{output_dir},
+       source_dir      => delete $args{source_dir});
 
     return $class->$orig(gridion_run => $run, %args);
   }
@@ -233,6 +255,8 @@ sub publish_files {
   # The current loading session.
   my $session_active = time; # Session start
   my $continue       = 1;    # While true, continue loading
+  my $num_files      = 0;
+  my $num_processed  = 0;
   my $num_errors     = 0;    # The number of errors this session
   my $session_closed = 0;
 
@@ -285,7 +309,9 @@ sub publish_files {
   # Tar manifest, sequence_summary_n.txt and configuration.cfg files
   my ($nf, $np, $ne)= $self->_publish_ancillary_files;
   $self->debug("Ancillary file publishing returned [$nf, $np, $ne]");
-  $num_errors += $ne;
+  $num_files     += $nf;
+  $num_processed += $np;
+  $num_errors    += $ne;
 
   # Metadata
   my ($nfa, $npa, $nea) = $self->_add_metadata;
@@ -295,12 +321,13 @@ sub publish_files {
   $self->stop_watches;
   $select->remove($self->inotify->fileno);
 
-  my $num_files = 0;
   if ($self->has_f5_publisher) {
-    $num_files += $self->f5_publisher->tar_count;
+    $num_files     += $self->f5_publisher->tar_count;
+    $num_processed += $num_files;
   }
   if ($self->has_fq_publisher) {
-    $num_files += $self->fq_publisher->tar_count;
+    $num_files     += $self->fq_publisher->tar_count;
+    $num_processed += $num_files;
   }
 
   $self->clear_wdir;
@@ -455,71 +482,114 @@ sub _make_callback {
 sub _do_publish {
   my ($self, $path) = @_;
 
-  my ($format) = $path =~ qr{[.]([^.]*)}msx;
+  my ($format) = $path =~ qr{[.]([^.]*$)}msx;
   if ($format ne 'fast5' and $format ne 'fastq') {
-    $self->debug("Ignoring '$path'");
+    $self->debug("Ignoring '$path' because it is not fast5/fastq");
+  }
+  elsif ($format eq 'fastq' and not $self->catchup) {
+    $self->debug("Ignoring '$path' because it is fastq and not in catchup");
   }
   else {
-  CASE: {
-      my ($vol, $relative_path, $filename) =
-        splitpath(abs2rel($path, $self->source_dir));
+    # Ensure that experiment_name and device_id appear in the
+    # relative path in the temporary workspace and therefore also in
+    # the tar file by removing them from the base used to calculate
+    # the relative path.
+    my @dirs = splitdir($self->source_dir);
+    my $did  = pop @dirs; # device_id
+    my $exp  = pop @dirs; # experiment name
+    my $relative_to = catdir(@dirs);
+    $self->debug("Calculating temporary paths relative to '$relative_to' ",
+                 "experiment_name '$exp', device_id '$did'");
 
-      my $tmp_dir  = catdir($self->wdir, $relative_path);
-      my $tmp_path = catfile($tmp_dir, $filename);
-
-      make_path($tmp_dir);
-      copy($path, $tmp_path) or
-        $self->logcroak("Failed to copy '$path' to '$tmp_path': ", $ERRNO);
-
-      if (-e $tmp_path) {
-        $self->debug("'$tmp_path' exists");
-      }
-      else {
-        $self->logcroak("'$tmp_path' has disappeared!");
-      }
-
-      if ($format =~ /fast5/msx) {
-        if (not ($self->has_experiment_name and $self->has_device_id)) {
-          my ($device_id, $ename) = $self->_identify_run_f5($path);
-          $self->experiment_name($ename);
-          $self->device_id($device_id);
-        }
-        if (not ($self->f5_publisher->file_published($tmp_path) or
-                 $self->f5_publisher->file_published("$tmp_path.bz2"))) {
-
-          if ($self->f5_uncompress) {
-            $tmp_path = $self->_h5repack_filter($tmp_path);
-          }
-          if ($self->f5_bzip2) {
-            $tmp_path = $self->_bzip2_filter($tmp_path);
-          }
-
-          # Don't unlink the file yet because the tar will process it
-          # asynchronously. Use the 'remove_file' attribute on the tar
-          # stream to recover space.
-          $self->f5_publisher->publish_file($tmp_path);
-        }
-
-        last CASE;
-      }
-
-      if ($format =~ /fastq/msx) {
-        if (not ($self->has_experiment_name and $self->has_device_id)) {
-          my ($device_id, $ename) = $self->_identify_run_fq($path);
-          $self->experiment_name($ename);
-          $self->device_id($device_id);
-        }
-
-        if (not $self->fq_publisher->file_published("$tmp_path.bz2")) {
-          $tmp_path = $self->_bzip2_filter($tmp_path);
-
-          # Don't unlink the file yet
-          $self->fq_publisher->publish_file($tmp_path);
-        }
-
-        last CASE;
-      }
+    if (not @dirs) {
+      $self->logcroak('No source_dir root remains after trimming');
     }
+
+    my ($vol, $relative_path, $filename) =
+      splitpath(abs2rel($path, $relative_to));
+    $self->debug("Working on path '$path': relative path is ",
+                 "'$relative_path', file name is '$filename'");
+
+    my $tmp_dir  = catdir($self->wdir, $relative_path);
+    my $tmp_path = catfile($tmp_dir, $filename);
+
+    make_path($tmp_dir);
+    copy($path, $tmp_path) or
+      $self->logcroak("Failed to copy '$path' to '$tmp_path': ", $ERRNO);
+
+    if (-e $tmp_path) {
+      $self->debug("'$tmp_path' exists");
+    }
+    else {
+      $self->logcroak("'$tmp_path' has disappeared!");
+    }
+
+    if ($format =~ /fast5/msx) {
+      $self->_do_publish_f5($path, $tmp_path);
+    }
+    elsif ($format =~ /fastq/msx) {
+      $self->_do_publish_fq($path, $tmp_path);
+    }
+  }
+
+  return;
+}
+
+sub _do_publish_f5 {
+  my ($self, $path, $tmp_path) = @_;
+
+  if (not ($self->has_experiment_name and $self->has_device_id)) {
+    my ($device_id, $ename) = $self->_identify_run_f5($path);
+    $self->experiment_name($ename);
+    $self->device_id($device_id);
+  }
+
+  if (not ($self->f5_publisher->file_published($tmp_path) or
+           $self->f5_publisher->file_published("$tmp_path.bz2"))) {
+    if ($self->f5_uncompress) {
+      $tmp_path = $self->_h5repack_filter($tmp_path);
+    }
+
+    my $checksum = $self->calculate_checksum($tmp_path);
+    if ($self->f5_bzip2) {
+      $tmp_path = $self->_bzip2_filter($tmp_path);
+    }
+
+    # Not checking for f5_publisher->file_updated because we do
+    # not observe fast5 files being updated.
+
+    # Don't unlink the file yet because the tar will process it
+    # asynchronously. Use the 'remove_file' attribute on the tar
+    # stream to recover space.
+    $self->f5_publisher->publish_file($tmp_path, $checksum);
+  }
+
+  return;
+}
+
+sub _do_publish_fq {
+  my ($self, $path, $tmp_path) = @_;
+
+  if (not ($self->has_experiment_name and $self->has_device_id)) {
+    my ($device_id, $ename) = $self->_identify_run_fq($path);
+    $self->experiment_name($ename);
+    $self->device_id($device_id);
+  }
+
+  my $checksum = $self->calculate_checksum($tmp_path);
+  if ($self->fq_publisher->file_published("$tmp_path.bz2")) {
+    $self->warn("'$path' published previously");
+    $tmp_path = $self->_bzip2_filter($tmp_path);
+
+    if ($self->fq_publisher->file_updated($tmp_path, $checksum)) {
+      $self->warn("'$path' has been updated while publishing");
+      $self->fq_publisher->publish_file($tmp_path, $checksum); # Don't unlink
+    }
+  }
+  else {
+    $self->debug("'$path' not published previously");
+    $tmp_path = $self->_bzip2_filter($tmp_path);
+    $self->fq_publisher->publish_file($tmp_path, $checksum); # Don't unlink
   }
 
   return;
@@ -560,15 +630,22 @@ sub _catchup {
   my $dir = $self->source_dir;
   $self->info("Catching up any missed files under '$dir', recursively");
 
-  my @f5_files = @{$self->gridion_run->list_f5_files};
-  $self->info('Catching up ', scalar @f5_files, ' fast5 files');
-  my @fq_files = @{$self->gridion_run->list_fq_files};
-  $self->info('Catching up ', scalar @fq_files, ' fastq files');
+  try {
+    $self->catchup(1);
 
-  foreach my $file (@f5_files, @fq_files) {
-    $self->debug("Catching up '$file'");
-    $self->_do_publish($file);
-  }
+    my @f5_files = @{$self->gridion_run->list_f5_files};
+    $self->info('Catching up ', scalar @f5_files, ' fast5 files');
+    my @fq_files = @{$self->gridion_run->list_fq_files};
+    $self->info('Catching up ', scalar @fq_files, ' fastq files');
+
+    foreach my $file (@f5_files, @fq_files) {
+      $self->debug("Catching up '$file'");
+      $self->_do_publish($file);
+    }
+    $self->info('Catchup done');
+  } finally {
+    $self->catchup(0);
+  };
 
   return;
 }
@@ -825,7 +902,7 @@ It will write all tar files to 'dest_collection' and add the following
 metadata to each:
 
   'experiment_name'   => GridION experiment name (aka sample_id)
-  'device_id'         => GridIOn device_id
+  'device_id'         => GridION device_id
   'dcterms:created'   => Timestamp
   'md5'               => MD5
   'type'              => File suffix
@@ -852,9 +929,16 @@ source_dir and attempt to publish every one. If they have already been
 published, the underlying TarPublisher will skip them because they
 will be present in its manifest.
 
+In a change from previous behaviour, all fastq files are now published
+in the clean-up. This is because the ONT basecaller now opens for
+writing and consequently closes, each fastq file many hundreds of
+times, sending and equal number of inotify events about the incomplete
+file. This is a workaround for that behaviour.
+
 Finally, the publisher will add sequencing run ancillary files
 (sequencing_summary_n.txt and configuration.cfg) and publisher
 tar manifest files to the same iRODS collection.
+
 
 =head1 BUGS
 
@@ -869,7 +953,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2017 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2017, 2018 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

@@ -2,6 +2,7 @@ package WTSI::NPG::HTS::TarPublisher;
 
 use namespace::autoclean;
 
+use Data::Dump qw[pp];
 use English qw[-no_match_vars];
 use File::Spec::Functions qw[abs2rel];
 use Moose;
@@ -14,6 +15,7 @@ our $VERSION= '';
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
+         WTSI::NPG::HTS::ChecksumCalculator
        ];
 
 has 'remove_files' =>
@@ -108,8 +110,9 @@ sub BUILD {
 =head2 publish_file
 
   Arg [1]    : Absolute file path, Str.
+  Arg [2]    : Pre-calculated file checksum, Str. Optional.
 
-  Example    : my $path = $obj->publish_file('/path/to/file');
+  Example    : my $path = $obj->publish_file('/path/to/file', $checksum);
   Description: Add a file to the current tar stream and return the
                path of the tar file to which it was added.
   Returntype : Str
@@ -117,46 +120,41 @@ sub BUILD {
 =cut
 
 sub publish_file {
-  my ($self, $path) = @_;
+  my ($self, $path, $checksum) = @_;
 
   my $tar_dest;
-  if ($self->file_published($path)) {
-    $self->debug("Skipping '$path'; already published");
+  my $tar_file = sprintf '%s.%d.tar', $self->tar_path, $self->tar_count;
+
+  if (not $self->has_tar_stream) {
+    $self->info(sprintf q[Opening '%s' with capacity %d from tar CWD '%s'],
+                $self->tar_path, $self->tar_capacity, $self->tar_cwd);
+
+    $self->tar_stream(WTSI::NPG::HTS::TarStream->new
+                      (tar_cwd      => $self->tar_cwd,
+                       tar_file     => $tar_file,
+                       remove_files => $self->remove_files));
+    $self->tar_stream->open_stream;
+  }
+
+  if ($self->tar_stream->byte_count >= $self->tar_bytes) {
+    $self->info(sprintf q['%s' reached capacity of %d bytes],
+                $self->tar_stream->tar_file, $self->tar_bytes);
+    $self->close_stream; # Pre-op check: file was not added
   }
   else {
-    my $tar_file = sprintf '%s.%d.tar', $self->tar_path, $self->tar_count;
+    $self->debug(sprintf q[Adding '%s' to '%s'], $path, $self->tar_path);
 
-    if (not $self->has_tar_stream) {
-      $self->info(sprintf q[Opening '%s' with capacity %d from tar CWD '%s'],
-                  $self->tar_path, $self->tar_capacity, $self->tar_cwd);
+    $self->tar_stream->add_file($path, $checksum);
+    $tar_dest = $tar_file;
 
-      $self->tar_stream(WTSI::NPG::HTS::TarStream->new
-                        (tar_cwd      => $self->tar_cwd,
-                         tar_file     => $tar_file,
-                         remove_files => $self->remove_files));
-      $self->tar_stream->open_stream;
-    }
+    $self->debug(sprintf q[Capacity now at %d / %d files, %d / %d bytes],
+                 $self->tar_stream->file_count, $self->tar_capacity,
+                 $self->tar_stream->byte_count, $self->tar_bytes);
 
-    if ($self->tar_stream->byte_count >= $self->tar_bytes) {
-      $self->info(sprintf q['%s' reached capacity of %d bytes],
-                  $self->tar_stream->tar_file, $self->tar_bytes);
-      $self->close_stream; # Pre-op check: file was not added
-    }
-    else {
-      $self->debug(sprintf q[Adding '%s' to '%s'], $path, $self->tar_path);
-
-      $self->tar_stream->add_file($path);
-      $tar_dest = $tar_file;
-
-      $self->debug(sprintf q[Capacity now at %d / %d files, %d / %d bytes],
-                   $self->tar_stream->file_count, $self->tar_capacity,
-                   $self->tar_stream->byte_count, $self->tar_bytes);
-
-      if ($self->tar_stream->file_count >= $self->tar_capacity) {
-        $self->info(sprintf q['%s' reached capacity of %d files],
-                    $self->tar_stream->tar_file, $self->tar_capacity);
-        $self->close_stream; # Post-op check: file was added
-      }
+    if ($self->tar_stream->file_count >= $self->tar_capacity) {
+      $self->info(sprintf q['%s' reached capacity of %d files],
+                  $self->tar_stream->tar_file, $self->tar_capacity);
+      $self->close_stream; # Post-op check: file was added
     }
   }
 
@@ -192,6 +190,59 @@ sub file_published {
   $self->debug("File '$path' published? ", ($published ? 'yes': 'no'));
 
   return $published;
+}
+
+=head2 file_updated
+
+  Arg [1]    : Absolute file path, Str.
+  Arg [2]    : Pre-calculated current file checksum, Str. Optional. If not
+               provided, a current value will be calculated using the
+               calculate_checksum method.
+
+  Example    : $obj->file_updated('/path/to/file');
+  Description: Return true if file has been published successfully more
+               than once, with different checksums i.e. 'publish_file'
+               has been called more than once and the file was changed
+               between calls.
+  Returntype : Bool
+
+=cut
+
+sub file_updated {
+  my ($self, $path, $checksum) = @_;
+
+  defined $path or $self->logconfess('A defined path argument is required');
+  $path =~ m{^/}msx or
+    $self->logconfess("An absolute path argument is required: '$path'");
+
+  $checksum ||= $self->calculate_checksum($path);
+
+  my $ipath = abs2rel($path, $self->tar_cwd);
+
+  my $updated = 0;
+  if ($self->tar_manifest->contains_item($ipath)) {
+    $self->debug("Manifest contains record of '$path' added previously");
+
+    my $prev_checksum = $self->tar_manifest->get_item($ipath)->checksum;
+    if ($checksum ne $prev_checksum) {
+      $self->debug("File '$path' updated during publication ",
+                   "from '$prev_checksum' to '$checksum'");
+      $updated = 1;
+    }
+    else {
+      $self->debug("Current checksum of '$path' '$checksum' ",
+                   "matches previous checksum '$prev_checksum'");
+    }
+  }
+  elsif ($self->tar_in_progress and $self->tar_stream->file_updated($path)) {
+    $self->debug("Tar stream contains record of '$path' added previously");
+
+    my @checksums = $self->tar_stream->file_checksum_history($path);
+    $self->debug("Checksum history of '$path': ", pp(\@checksums));
+    $updated = 1;
+  }
+
+  return $updated;
 }
 
 =head2 tar_in_progress
@@ -240,11 +291,14 @@ sub close_stream {
   if ($self->tar_in_progress) {
     $self->tar_stream->close_stream;
     $self->tar_count($self->tar_count + 1);
+    my $tar_stream = $self->tar_stream;
+    my $tar_path   = $tar_stream->tar_file;
 
-    my $tar_path   = $self->tar_stream->tar_file;
-    my $item_paths = $self->tar_stream->tar_content;
-
-    $self->tar_manifest->add_items($tar_path, [keys %{$item_paths}]);
+    foreach my $file_path ($tar_stream->file_paths) {
+      my $checksum  = $tar_stream->file_checksum($file_path);
+      my $item_path = $tar_stream->item_path($file_path);
+      $self->tar_manifest->add_item($tar_path, $item_path, $checksum);
+    }
     $self->tar_manifest->update_file;
 
     $self->clear_tar_stream;
@@ -273,7 +327,7 @@ WTSI::NPG::HTS::TarPublisher
 Publishes files to iRODS, archiving them in sequentially numbered tar
 files on-the-fly. The capacity of each tar file is determined by
 setting the 'tar_capacity' attribute and when one tar file is full, it
-is closed automaticallyt and a new file opened. The number of tar
+is closed automatically and a new file opened. The number of tar
 files created during the lifetime of the TarPublisher may be found
 from the 'tar_count' attribute, which is automatically incremented
 when each tar file is closed successfully.

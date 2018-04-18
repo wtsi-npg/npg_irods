@@ -67,7 +67,7 @@ jq '.' <<EOF > "$PREFIX/etc/irods_environment.json"
     "irods_host": "$IRODS_HOST",
     "irods_port": 1247,
     "irods_user_name": "$IRODS_USER",
-    "irods_home": "$IRODS_HOME",
+    "irods_home": "$IRODS_ROOT",
     "irods_zone_name": "$IRODS_ZONE",
     "irods_default_resource": "$IRODS_DEFAULT_RESC",
     "irods_authentication_scheme": "native",

@@ -4,8 +4,11 @@ use namespace::autoclean;
 
 use Carp;
 use Data::Dump qw[pp];
+use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions qw[abs2rel catdir catfile rel2abs splitdir];
+use File::Temp;
+use IO::Compress::Bzip2 qw[bzip2 $Bzip2Error];
 use Moose;
 use MooseX::StrictConstructor;
 use Sys::Hostname;
@@ -19,9 +22,14 @@ use WTSI::NPG::iRODS;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
+         WTSI::NPG::HTS::ChecksumCalculator
        ];
 
 our $VERSION = '';
+
+## no critic (ValuesAndExpressions::ProhibitMagicNumbers)
+our $INFO_COUNT_INTERVAL = 10_000;
+## use critic
 
 # These methods are autodelegated to gridion_run
 our @HANDLED_RUN_METHODS = qw[device_id
@@ -117,6 +125,18 @@ sub BUILD {
   return;
 }
 
+=head2 check_all_files
+
+  Arg [1]    : None
+
+  Example    : my ($num_files, $num_processed, $num_errors) =
+                 $obj->check_all_files
+  Description: Check GridION run directory against the run data stored in
+               iRODS.
+  Returntype : Array[Int]
+
+=cut
+
 sub check_all_files {
   my ($self) = @_;
 
@@ -155,7 +175,7 @@ sub check_f5_files {
 
   my $local_files = $self->gridion_run->list_f5_files;
 
-  return $self->_check_tar_content($self->f5_manifests, $local_files);
+  return $self->_check_manifest_entries($self->f5_manifests, $local_files);
 }
 
 sub check_fq_files {
@@ -163,7 +183,7 @@ sub check_fq_files {
 
   my $local_files = $self->gridion_run->list_fq_files;
 
-  return $self->_check_tar_content($self->fq_manifests, $local_files);
+  return $self->_check_manifest_entries($self->fq_manifests, $local_files);
 }
 
 sub check_manifest_files {
@@ -213,35 +233,34 @@ sub _check_ancillary_files {
   my ($num_files, $num_present, $num_errors) = (0, 0, 0);
   my $collection = $self->run_collection;
 
- PATH: foreach my $path (@{$local_paths}) {
+ PATH: foreach my $local_path (@{$local_paths}) {
     try {
-      $self->debug("Checking for '$path' in '$collection'");
+      $self->debug("Checking for '$local_path' in '$collection'");
       $num_files++;
 
-      my $filename = fileparse($path);
+      my $filename = fileparse($local_path);
       my $obj = WTSI::NPG::iRODS::DataObject->new(collection  => $collection,
                                                   data_object => $filename,
                                                   irods       => $self->irods);
-      if (not $obj->is_present) {
-        croak "'$path' missing from iRODS";
-      }
+      my $obj_path = $obj->str;
 
-      $num_present++;
-      $self->info("'$path' is present in iRODS");
-
-      if ($obj->validate_checksum_metadata) {
-        $self->info("'$path' has valid checksum metadata in iRODS");
+      if ($obj->is_present) {
+        $num_present++;
+        $self->info("'$local_path' is present in iRODS at '$obj_path'");
       }
       else {
-        croak "'$path' has invalid checksum metadata in iRODS";
+        croak "'$local_path' missing from iRODS at '$obj_path']";
       }
+
+      $self->_check_irods_checksum($local_path, $obj);
 
       my $num_replicates = scalar $obj->valid_replicates;
       if ($num_replicates >= $self->num_replicates) {
-        $self->info("'$path' has $num_replicates valid replicates in iRODS");
+        $self->info("'$obj_path' has $num_replicates ",
+                    'valid replicates in iRODS');
       }
       else {
-        croak "'$path' has only $num_replicates valid replicates in iRODS";
+        croak "'$obj_path' has only $num_replicates valid replicates in iRODS";
       }
     } catch {
       $self->error($_);
@@ -257,36 +276,40 @@ sub _check_manifest_tar_files {
 
   my ($num_files, $num_present, $num_errors) = (0, 0, 0);
 
-  foreach my $path ($manifest->tar_files) {
+  foreach my $tar_path ($manifest->tar_paths) {
     try {
-      $self->debug("Checking for '$path'");
+      $self->debug("Checking for '$tar_path'");
       $num_files++;
 
-      my $obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $path);
+      my $obj = WTSI::NPG::iRODS::DataObject->new($self->irods, $tar_path);
+      my $obj_path = $obj->str;
+
       if ($obj->is_present) {
         $num_present++;
-        $self->info("'$path' is present in iRODS");
+        $self->info("'$tar_path' is present in iRODS at '$obj_path'");
       }
       else {
-        croak "'$path' missing from iRODS";
+        croak "'$tar_path' missing from iRODS at '$obj_path'";
       }
 
       my $experiment_name = $self->experiment_name;
       if ($obj->find_in_metadata($EXPERIMENT_NAME, $experiment_name)) {
-        $self->info("'$path' has $EXPERIMENT_NAME metadata '$experiment_name'");
+        $self->info("'$obj_path' has $EXPERIMENT_NAME metadata ",
+                    "'$experiment_name'");
       }
       else {
-        $self->error("'$path' is missing $EXPERIMENT_NAME ",
+        $self->error("'$obj_path' is missing $EXPERIMENT_NAME ",
                      "metadata '$experiment_name'");
         $num_errors++;
       }
 
       my $device_id  = $self->device_id;
       if ($obj->find_in_metadata($GRIDION_DEVICE_ID, $device_id)) {
-        $self->info("'$path' has $GRIDION_DEVICE_ID metadata '$device_id'");
+        $self->info("'$obj_path' has $GRIDION_DEVICE_ID ",
+                    "metadata '$device_id'");
       }
       else {
-        $self->error("'$path' is missing $GRIDION_DEVICE_ID ",
+        $self->error("'$obj_path' is missing $GRIDION_DEVICE_ID ",
                      "metadata '$device_id'");
         $num_errors++;
       }
@@ -306,6 +329,7 @@ sub _check_tar_files {
 
   foreach my $manifest (@{$manifests}) {
     my ($nf, $np, $ne)= $self->_check_manifest_tar_files($manifest);
+    $self->info("Checked [ $np / $nf ] files with $ne errors");
     $num_files   += $nf;
     $num_present += $np;
     $num_errors  += $ne;
@@ -314,7 +338,7 @@ sub _check_tar_files {
   return ($num_files, $num_present, $num_errors);
 }
 
-sub _check_tar_content {
+sub _check_manifest_entries {
   my ($self, $manifests, $local_paths) = @_;
 
   my @manifest_paths = map { $_->manifest_path } @{$manifests};
@@ -322,41 +346,102 @@ sub _check_tar_content {
 
   my ($num_files, $num_present, $num_errors) = (0, 0, 0);
 
+  my $tmpdir = File::Temp->newdir('GridIONRunAuditor.' . $PID . '.XXXXXXXXX',
+                                  DIR     => '/tmp',
+                                  CLEANUP => 1);
+  $num_files = scalar @{$local_paths};
+
+  my $i = 0;
   foreach my $local_path (@{$local_paths}) {
     try {
-      $num_files++;
+      $i++;
 
-      # tar files are created relative to the parent of the experiment
-      # directory, so experiment_name and device_id must be added to the
-      # path
-      my $item_path = catdir($self->experiment_name,
-                           $self->device_id,
-                             abs2rel($local_path, $self->source_dir));
-      $item_path .= '.bz2';
+      # In earlier runs, tar files are created relative to the device
+      # directory containing the run output i.e. the directory
+      # containing the sequencing_summary_*.txt and fastq files.
+      #
+      # In later runs, tar files are created relative to the parent of
+      # the experiment directory, two levels up from the device
+      # directory. This change allows the experiment_name and
+      # device_id to be captured in the path of the tarred files.
+      #
+      # We need to check both options here.
+      my $short_item_path = abs2rel($local_path, $self->source_dir);
+      my $long_item_path  = catdir($self->experiment_name, $self->device_id,
+                                   $short_item_path);
+      my $checksum = $self->calculate_checksum($local_path);
 
-      $self->debug("Checking for item '$item_path'");
+      my $found_manifest;
+      my $found_path;
 
-      my $in;
     MANIFEST: foreach my $manifest (@{$manifests}) {
-        if ($manifest->contains_item($item_path)) {
-          $in = $manifest;
-          last MANIFEST;
-        }
+        foreach my $item_path ($long_item_path, $short_item_path) {
+          my $compressed_path = "$item_path.bz2";
+          $self->debug("Checking for item '$compressed_path'");
+
+          if ($manifest->contains_item($compressed_path)) {
+            my $mpath = $manifest->manifest_path;
+            my $item_checksum = $manifest->get_item($compressed_path)->checksum;
+            $self->debug("Checking manifest '$mpath' '$compressed_path' has ",
+                         "checksum '$item_checksum' and expected ",
+                         "checksum '$checksum'");
+
+            if ($item_checksum eq $checksum) {
+              $found_manifest = $manifest;
+              $found_path     = $item_path;
+              last MANIFEST;
+            }
+          }
+        } # foreach long and short
+      } # foreach manifest
+
+      if ($i % $INFO_COUNT_INTERVAL == 0) {
+        $self->info("Checked [ $i / $num_files ] manifest entries");
       }
 
-      if ($in) {
+      if ($found_path) {
         $num_present++;
-        $self->info("$item_path is present in manifest ", $in->manifest_path);
+        $self->debug("$found_path with checksum '$checksum' ",
+                     'is present in manifest ', $found_manifest->manifest_path);
       }
       else {
-        croak "$item_path present is missing from the manifests";
+        croak "$long_item_path with checksum '$checksum' " .
+          'is missing from the manifests';
       }
     } catch {
-      $num_errors++
+      $num_errors++;
+      $self->error($_);
     };
   }
 
+  $self->info("Checked [ $i / $num_files ] manifest entries");
+
   return ($num_files, $num_present, $num_errors);
+}
+
+sub _check_irods_checksum {
+  my ($self, $local_path, $obj) = @_;
+
+  my $obj_path     = $obj->str;
+  my $obj_checksum = $obj->checksum;
+  if ($obj->validate_checksum_metadata) {
+    $self->info("'$obj_path' has valid checksum metadata in iRODS");
+  }
+  else {
+    croak "'$obj_path' has invalid checksum metadata in iRODS";
+  }
+
+  my $checksum = $self->calculate_checksum($local_path);
+  if ($obj_checksum eq $checksum) {
+    $self->info("Checksum '$checksum' of '$local_path' matches ",
+                "checksum of '$obj_path' in iRODS");
+  }
+  else {
+    croak "Checksum '$checksum' of '$local_path' does not match " .
+      "checksum of '$obj_path' '$obj_checksum' in iRODS";
+  }
+
+  return;
 }
 
 sub _build_irods {
@@ -420,7 +505,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2017 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2017, 2018 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

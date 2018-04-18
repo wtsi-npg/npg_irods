@@ -13,11 +13,10 @@ env:
     - PGVERSION="9.3"
     - JANSSON_VERSION="2.9"
     - BATON_VERSION="1.1.0"
-    - SAMTOOLS_VERSION="1.5"
-    - HTSLIB_VERSION="1.5"
+    - SAMTOOLS_VERSION="1.7"
+    - HTSLIB_VERSION="1.7"
     - TEARS_VERSION="1.2.3"
-    - DISPOSABLE_IRODS_VERSION="1.2"
-    - RENCI_FTP_URL=ftp://ftp.renci.org
+    - DISPOSABLE_IRODS_VERSION="1.3"
     - WTSI_NPG_GITHUB_URL=https://github.com/wtsi-npg
 
   matrix:

@@ -100,6 +100,7 @@ sub _build_obj_factory {
 
   return WTSI::NPG::HTS::Illumina::DataObjectFactory->new
     (ancillary_formats => [$self->hts_ancillary_suffixes],
+     genotype_formats  => [$self->hts_genotype_suffixes],
      irods             => $self->irods);
 }
 
