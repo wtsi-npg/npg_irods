@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pbds:SubreadSet xmlns:pbbase="http://pacificbiosciences.com/PacBioBaseDataModel.xsd" xmlns:pbdm="http://pacificbiosciences.com/PacBioDataModel.xsd" xmlns:pbds="http://pacificbiosciences.com/PacBioDatasets.xsd" xmlns:pbrk="http://pacificbiosciences.com/PacBioReagentKit.xsd" xmlns:pbsample="http://pacificbiosciences.com/PacBioSampleInfo.xsd" xmlns:pbpn="http://pacificbiosciences.com/PacBioPartNumbers.xsd" xmlns:pbmeta="http://pacificbiosciences.com/PacBioCollectionMetadata.xsd" Name="DN505769FNCTCPool4-Cell2" Tags="subreadset" Version="4.0.1" CreatedAt="2018-04-20T12:55:54.155Z" UniqueId="07d85801-6a09-4728-982c-e3c048f95bd8" MetaType="PacBio.DataSet.SubreadSet" TimeStampedName="54097-SubreadSetCollection-2018-17-20T13:17:44.202Z">
+   <pbbase:ExternalResources>
+      <pbbase:ExternalResource Name="subreads bam" Description="Points to the subreads bam file." ResourceId="/nfs/sf24/pacbio/r54097_20180420_131744/2_B01/m54097_180420_213439.subreads.bam" Version="4.0.1" UniqueId="836d0486-3cb7-4280-8bc6-2d138e662990" MetaType="PacBio.SubreadFile.SubreadBamFile" TimeStampedName="pacbio_subreadfile_subreadbamfile-180421_125655680">
+         <pbbase:FileIndices>
+            <pbbase:FileIndex ResourceId="/nfs/sf24/pacbio/r54097_20180420_131744/2_B01/m54097_180420_213439.subreads.bam.pbi" Version="4.0.1" UniqueId="b3460d27-c299-43ff-925d-7a77020f491b" MetaType="PacBio.Index.PacBioIndex" TimeStampedName="pacbio_index_pacbioindex-180421_125655680"/>
+         </pbbase:FileIndices>
+         <pbbase:ExternalResources>
+            <pbbase:ExternalResource Name="scraps bam" Description="Points to the scraps bam file." ResourceId="/nfs/sf24/pacbio/r54097_20180420_131744/2_B01/m54097_180420_213439.scraps.bam" Version="4.0.1" UniqueId="ac344ec1-f213-4aad-85ff-e7105e91f36c" MetaType="PacBio.SubreadFile.ScrapsBamFile" TimeStampedName="pacbio_subreadfile_scrapsbamfile-180421_125655685">
+               <pbbase:FileIndices>
+                  <pbbase:FileIndex ResourceId="/nfs/sf24/pacbio/r54097_20180420_131744/2_B01/m54097_180420_213439.scraps.bam.pbi" Version="4.0.1" UniqueId="91f0b18d-e07e-4082-959e-4d2ad2a70432" MetaType="PacBio.Index.PacBioIndex" TimeStampedName="pacbio_index_pacbioindex-180421_125655685"/>
+               </pbbase:FileIndices>
+            </pbbase:ExternalResource>
+            <pbbase:ExternalResource Name="Adapters FASTA" Description="Points to the adapters.fasta file." ResourceId="/nfs/sf24/pacbio/r54097_20180420_131744/2_B01/m54097_180420_213439.adapters.fasta" Version="4.0.1" UniqueId="a351c3d9-056c-4675-92a6-1f837f25e6a6" MetaType="PacBio.SubreadFile.AdapterFastaFile" TimeStampedName="pacbio_subreadfile_adapterfastafile-180421_125655685"/>
+            <pbbase:ExternalResource Name="Chipstats XML" Description="Points to the summary sts.xml file." ResourceId="/nfs/sf24/pacbio/r54097_20180420_131744/2_B01/m54097_180420_213439.sts.xml" Version="4.0.1" UniqueId="9f1e2096-9e55-40c2-a5f5-d253ac00339a" MetaType="PacBio.SubreadFile.ChipStatsFile" TimeStampedName="pacbio_subreadfile_chipstatsfile-180421_125655685"/>
+         </pbbase:ExternalResources>
+      </pbbase:ExternalResource>
+   </pbbase:ExternalResources>
+   <pbds:DataSetMetadata>
+      <pbds:TotalLength>812896527</pbds:TotalLength>
+      <pbds:NumRecords>2036237</pbds:NumRecords>
+      <pbmeta:Collections>
+         <pbmeta:CollectionMetadata CreatedAt="2018-04-20T12:55:54.155Z" ModifiedAt="0001-01-01T00:00:00" UniqueId="07d85801-6a09-4728-982c-e3c048f95bd8" MetaType="CollectionMetadata" TimeStampedName="54097-CollectionMetadata-2018-17-20T13:17:44.202Z" Context="m54097_180420_213439" Status="Ready" InstrumentId="54097" InstrumentName="SQ54097">
+            <pbmeta:InstCtrlVer>5.1.0.24551</pbmeta:InstCtrlVer>
+            <pbmeta:SigProcVer>5.1.0.26367</pbmeta:SigProcVer>
+            <pbmeta:RunDetails>
+               <pbmeta:TimeStampedName>r54097_20180420_131744</pbmeta:TimeStampedName>
+               <pbmeta:Name>61123</pbmeta:Name>
+               <pbmeta:CreatedBy>chc</pbmeta:CreatedBy>
+               <pbmeta:WhenCreated>2018-04-20T12:55:54.155Z</pbmeta:WhenCreated>
+               <pbmeta:StartedBy>unknown</pbmeta:StartedBy>
+               <pbmeta:WhenStarted>0001-01-01T00:00:00</pbmeta:WhenStarted>
+            </pbmeta:RunDetails>
+            <pbmeta:WellSample Name="DN505769FNCTCPool4" Description="8pM" CreatedAt="2018-04-20T12:55:54.155Z" ModifiedAt="0001-01-01T00:00:00">
+               <pbmeta:WellName>B01</pbmeta:WellName>
+               <pbmeta:Concentration>0.0</pbmeta:Concentration>
+               <pbmeta:InsertSize>10000</pbmeta:InsertSize>
+               <pbmeta:SampleReuseEnabled>false</pbmeta:SampleReuseEnabled>
+               <pbmeta:StageHotstartEnabled>false</pbmeta:StageHotstartEnabled>
+               <pbmeta:SizeSelectionEnabled>false</pbmeta:SizeSelectionEnabled>
+               <pbmeta:UseCount>0</pbmeta:UseCount>
+               <pbmeta:DNAControlComplex>Sequel® DNA Internal Control 2.1</pbmeta:DNAControlComplex>
+               <pbsample:BioSamples>
+                  <pbsample:BioSample Name="lbc1--lbc1">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc1--lbc1"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc2--lbc2">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc2--lbc2"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc3--lbc3">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc3--lbc3"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc4--lbc4">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc4--lbc4"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN505769F-H7">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc5--lbc5"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc6--lbc6">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc6--lbc6"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc7--lbc7">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc7--lbc7"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc8--lbc8">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc8--lbc8"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc9--lbc9">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc9--lbc9"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc10--lbc10">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc10--lbc10"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc11--lbc11">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc11--lbc11"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN505769F-A8">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc12--lbc12"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc13--lbc13">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc13--lbc13"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc14--lbc14">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc14--lbc14"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc15--lbc15">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc15--lbc15"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN505769F-H10">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc16--lbc16"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc17--lbc17">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc17--lbc17"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc18--lbc18">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc18--lbc18"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc19--lbc19">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc19--lbc19"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc20--lbc20">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc20--lbc20"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc21--lbc21">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc21--lbc21"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc22--lbc22">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc22--lbc22"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc23--lbc23">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc23--lbc23"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc24--lbc24">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc24--lbc24"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN505768E-B1">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc25--lbc25"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc26--lbc26">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc26--lbc26"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc27--lbc27">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc27--lbc27"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc28--lbc28">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc28--lbc28"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc29--lbc29">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc29--lbc29"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc30--lbc30">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc30--lbc30"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc31--lbc31">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc31--lbc31"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN505768E-C1">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc32--lbc32"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc33--lbc33">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc33--lbc33"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc34--lbc34">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc34--lbc34"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN505768E-H1">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc35--lbc35"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc36--lbc36">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc36--lbc36"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc37--lbc37">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc37--lbc37"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc38--lbc38">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc38--lbc38"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN505768E-B3">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc39--lbc39"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc40--lbc40">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc40--lbc40"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc41--lbc41">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc41--lbc41"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN505770V-B3">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc42--lbc42"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc43--lbc43">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc43--lbc43"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc44--lbc44">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc44--lbc44"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc45--lbc45">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc45--lbc45"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc46--lbc46">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc46--lbc46"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc47--lbc47">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc47--lbc47"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc48--lbc48">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc48--lbc48"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc49--lbc49">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc49--lbc49"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc50--lbc50">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc50--lbc50"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN505770V-G2">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc51--lbc51"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc52--lbc52">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc52--lbc52"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN505770V-H4">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc53--lbc53"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc54--lbc54">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc54--lbc54"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc55--lbc55">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc55--lbc55"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc56--lbc56">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc56--lbc56"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc57--lbc57">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc57--lbc57"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN505770V-F3">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc58--lbc58"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc59--lbc59">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc59--lbc59"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc60--lbc60">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc60--lbc60"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc61--lbc61">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc61--lbc61"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc62--lbc62">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc62--lbc62"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc63--lbc63">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc63--lbc63"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc64--lbc64">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc64--lbc64"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc65--lbc65">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc65--lbc65"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc66--lbc66">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc66--lbc66"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc67--lbc67">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc67--lbc67"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc68--lbc68">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc68--lbc68"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc69--lbc69">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc69--lbc69"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc70--lbc70">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc70--lbc70"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc71--lbc71">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc71--lbc71"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc72--lbc72">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc72--lbc72"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc73--lbc73">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc73--lbc73"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc74--lbc74">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc74--lbc74"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc75--lbc75">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc75--lbc75"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc76--lbc76">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc76--lbc76"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc77--lbc77">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc77--lbc77"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN505770V-A7">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc78--lbc78"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc79--lbc79">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc79--lbc79"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc80--lbc80">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc80--lbc80"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc81--lbc81">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc81--lbc81"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc82--lbc82">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc82--lbc82"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc83--lbc83">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc83--lbc83"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc84--lbc84">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc84--lbc84"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc85--lbc85">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc85--lbc85"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc86--lbc86">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc86--lbc86"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN505770V-G5">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc87--lbc87"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc88--lbc88">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc88--lbc88"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc89--lbc89">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc89--lbc89"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc90--lbc90">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc90--lbc90"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN518129T-E3">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc91--lbc91"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN518129T-F3">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc92--lbc92"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc93--lbc93">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc93--lbc93"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc94--lbc94">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc94--lbc94"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="lbc95--lbc95">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc95--lbc95"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+                  <pbsample:BioSample Name="DN518129T-A4">
+                     <pbsample:DNABarcodes>
+                        <pbsample:DNABarcode Name="lbc96--lbc96"/>
+                     </pbsample:DNABarcodes>
+                  </pbsample:BioSample>
+               </pbsample:BioSamples>
+            </pbmeta:WellSample>
+            <pbmeta:Automation Name="Workflow_Diffusion.py">
+               <pbbase:AutomationParameters>
+                  <pbbase:AutomationParameter Name="ReuseCell" CreatedAt="2018-04-20T12:55:54.155Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Boolean" SimpleValue="False"/>
+                  <pbbase:AutomationParameter Name="MovieLength" CreatedAt="2018-04-20T12:55:54.155Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Double" SimpleValue="600"/>
+                  <pbbase:AutomationParameter Name="ImmobilizationTime" CreatedAt="2018-04-20T12:55:54.155Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Double" SimpleValue="120"/>
+                  <pbbase:AutomationParameter Name="ReuseSample" CreatedAt="2018-04-20T12:55:54.155Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="String" SimpleValue="False"/>
+                  <pbbase:AutomationParameter Name="ExtensionTime" CreatedAt="2018-04-20T12:55:54.155Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Double" SimpleValue="120"/>
+                  <pbbase:AutomationParameter Name="ExtendFirst" CreatedAt="2018-04-20T12:55:54.155Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Boolean" SimpleValue="True"/>
+                  <pbbase:AutomationParameter Name="GentleWash" ValueDataType="Boolean" SimpleValue="True"/>
+                  <pbbase:AutomationParameter Name="CellNFCIndex" ValueDataType="Int32" SimpleValue="1"/>
+                  <pbbase:AutomationParameter Name="ExtraIMWashes" ValueDataType="Int32" SimpleValue="2"/>
+                  <pbbase:AutomationParameter Name="CollectionNumber" ValueDataType="Int32" SimpleValue="1"/>
+                  <pbbase:AutomationParameter Name="UseStageHotStart" ValueDataType="Boolean" SimpleValue="False"/>
+                  <pbbase:AutomationParameter Name="InsertSize" ValueDataType="Int32" SimpleValue="10000"/>
+                  <pbbase:AutomationParameter Name="HasN2Switch" ValueDataType="Boolean" SimpleValue="False"/>
+                  <pbbase:AutomationParameter Name="TipSearchMaxDuration" ValueDataType="Int32" SimpleValue="576"/>
+                  <pbbase:AutomationParameter Name="SNRCut" ValueDataType="Double" SimpleValue="3.75"/>
+               </pbbase:AutomationParameters>
+               <pbbase:Defaults xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+            </pbmeta:Automation>
+            <pbmeta:CollectionNumber>1</pbmeta:CollectionNumber>
+            <pbmeta:CellIndex>1</pbmeta:CellIndex>
+            <pbmeta:SetNumber>0</pbmeta:SetNumber>
+            <pbmeta:CellPac Name="SMRT® Cell 1M v2 (4/Pack)" Description="The Sequel SMRT Cell 1M (4/Pack) are nanofabricated consumables each patterned with 1,000,000 wells called zero-mode waveguides (ZMWs). They are packaged together in a streamlined 4 SMRT Cell format (4/tray). One SMRT Cell is utilized in each sequencing reaction, and experiments can be run in single or in batch mode, giving your projects a greater level of flexibility." Version="2.0" PartNumber="101-008-000" LotNumber="322542" Barcode="BA177543" ExpirationDate="2018-07-20">
+               <pbbase:Defaults xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+            </pbmeta:CellPac>
+            <pbmeta:ControlKit Name="Sequel® DNA Internal Control 2.1" Description="The Sequel DNA Internal Control 2.1 contains a fixed template of 2 kb length bound to Sequel Binding Kit 1.0 for use as an internal sequencing control. Reagent quantities provide spike-in controls for a minimum of 24 samples." Tags="Control Kit, CCK" Version="2.0" PartNumber="101-366-000" LotNumber="Lxxxxx" Barcode="Lxxxxx101366000123199" ExpirationDate="2099-12-31">
+               <pbbase:Defaults xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+               <pbbase:CustomSequence>>left_adapter\nTAGAGAGAGAAAAGGAGGAGGAGGCAACAACAACAACTCTCTCTA\n>right_adapter\nTAGAGAGAGAAAAGGAGGAGGAGGCAACAACAACAACTCTCTCTA\n>custom_sequence\nTGTCTAGGTCATCTCAACGTAGCTTTGACATATAACTTATCTAAAGTAATCCCTGCACACCTGTATGCATTATGCTTGCTATACACGCGGACACAGGCATATCATTTATTTTTTGCCATGTCCATTAATTGTTCAATAATTTTACTCACGGTATTTAATTTGATGTTGTGTTATATAGAATTGGAATTAAACTTATAAGGATGCTTAGACGTTGCATTATAAAAGTTTATGTACTAAGTATTTAAGACATTGGCATATGATTATAGCTTGACATTATTAAAAATTAATTAATTAAATCTCACACAATACTTATTCAAGACATTTTTACTAAGATAACCAAAGGAATGCGAACAAAATAATACTTAAAATATAAGACTTAGAAGTAATATGATCCAATAGTTACATATAGTACACTAAGTTCCTAAATTATATAACTTTAAAACAAAGTTACGAAATTTGGAAATAATTTTATTTAATCATATTTTCATAATAATGAAATACTGTTTATTTCAGTGGCGAAAAGAGATAATACGATTTTATAGTGATAGAATATCCTTGAAATATCTAAAGATAAAATTAGAAACTTTCTCTTTTCGCTGTAAAGCTATATGACTTAAAAATAACTTATACGCAAAGTATATTGCAGTGGAAACCCAAGAGTATAGTAGCCATGTAATCTCGGGTTCGAAACTACACGCCGCGCACGTAGTCAGATGGTCTGAAACTTGTCTGGGGCTGTTTGTTGACGGATGGAGACTTCACTAAGTGGCGTCAGGCGATGCGCACACACGGGACTCAATCCCGTAGCATGTTATGTGTCGTTCGAAACTCGTGCGTTCGAGATTTACGCCACATTGCCGGCTGGTCCAAGGACGTTATCTACCAGATGATACGGTCCAATTCGTAAGTTTGACTCACATAGTCGCGAACCGCGGAGCTGGAGAACAATAATTACCGGATGATTAGTTGACCATACGCACTATCATGCTCCGTGACTCAGTTTCCGCCATGGAGTTCTCACAGCCCCGTGTGTACCATAACTGCAGTAAGTAAGGACCTTGTTCGGAGGCCGACTCGTATTTCATATGATCTTAGTCTCGCCACCTTATCGCACGAATTGGGGGTGTCTTTTAGCCGACTCCGGCACGATCCGCCGGGAAGTTACTCGACCAGTTGCGGGACGCCCTAGTATGTTCGTATTACGTTCGATGCGTAAGCACCCCAGAGATTTTTGGCGGACGTTTCGGTAAATCATAGTAGAACCGGAGCGGTAAAGCTATTGATAACACGCAGGGACGAGCCAGTCGTCTAAGCTCCTCAGGGGTACCGTTCGCCGGACTACAGCCTGTCCCCGGCGGCCGCAACTGGGCTGCGATCCAGCCCCCGCTCCAAAAGGATGACTCGACCTTGCGCCTCGCGTACTCTGCTCTCGAGCTGTCTCCGTGGGCAATGCCGGCTCACGCTGTGGGGAACCCTGGACGCCCGGGCCGAGCCGACGTGGCCCCGCCCAGGCCTTTTCGTCGATCGCAGCTATGTACCCTGTGCTGGCCAGCGCTACTGCGCCGGCCATTAGCGGTGCGCTCTCGACTCGGCCCCAACGTAGACGGCGTCGCTGGCCGGATTCAAAGAAGTGAGCTACTACCATCGCGTGACGCCCTGCGGGCCTGAGTAACCGTGCACGAAGGACACCCCGTTCGTGGCGGGGGTTGCCTCCGCGACGGTCGCCAACGTTGGGGGTCGGTGCATTCAGGCGACGAGGGACCGCTGGTTTCCGGAGAGCGGCCTGTGCTCACACAGGTGCGGTCCATGGGGCCTGTGGATCCGGTTCTCCCACGCGTAGCGCCGGCGTTAGCATGGACGCTAAATAAGTATACGCCGGCAAAGGGAGTGTAGGCCGGCCCGAGGGCAATCGCGGTTACCGGGGTGGGGGAGCTCCCCGCACCAGCCTTGATGTGGTGTGCGAGCG</pbbase:CustomSequence>
+            </pbmeta:ControlKit>
+            <pbmeta:TemplatePrepKit Name="SMRTbell® Template Prep Kit 1.0" Description="The SMRTbell® Template Prep Kit contains reagent supplies to perform SMRTbell library preparations of primer-annealed SMRTbell libraries for insert sizes ranging from 500 bp to over 20 kb." Tags="Template Prep Kit, TPK" Version="1.0" PartNumber="100-259-100" LotNumber="011828" Barcode="011828100259100073118" ExpirationDate="2018-07-31" MinInsertSize="500" MaxInsertSize="20000">
+               <pbbase:Defaults xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+               <pbbase:LeftAdaptorSequence>ATCTCTCTCAACAACAACAACGGAGGAGGAGGAAAAGAGAGAGAT</pbbase:LeftAdaptorSequence>
+               <pbbase:LeftPrimerSequence>aacggaggaggagga</pbbase:LeftPrimerSequence>
+               <pbbase:RightAdaptorSequence>ATCTCTCTCAACAACAACAACGGAGGAGGAGGAAAAGAGAGAGAT</pbbase:RightAdaptorSequence>
+               <pbbase:RightPrimerSequence>aacggaggaggagga</pbbase:RightPrimerSequence>
+            </pbmeta:TemplatePrepKit>
+            <pbmeta:BindingKit Name="Sequel® Binding Kit 2.1" Description="The Sequel Binding Kit 2.1 contains reagent supplies to bind prepared DNA template libraries to the Sequel Polymerase 1.0 in preparation for sequencing on the Sequel System. The result is a DNA polymerase/template complex. Sequel Binding Kit 2.1 should be used only with Sequel Sequencing Kit 2.0 or 2.1. Reagent quantities support 24 binding reactions." Tags="Binding Kit, BDK" Version="2.1" PartNumber="101-365-900" LotNumber="011987" Barcode="011987101365900111418" ExpirationDate="2018-11-14">
+               <pbbase:Defaults xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+            </pbmeta:BindingKit>
+            <pbmeta:SequencingKitPlate Name="Sequel® Sequencing Plate 2.1" Description="The DNA Sequencing Kit contains a sequencing reagent plate with chemistry for single molecule real-time sequencing on the PacBio Sequel®. Reagent quantities support 8 sequencing reactions to be used in conjunction with SMRT® Cell 4Pac(s).  (8 Cells max/Each Row supplies reagents for 1 Sequel SMRT Cell)" Tags="Sequencing Kit, SQK" Version="2.1" PartNumber="101-309-500" LotNumber="011880" Barcode="011880101309500110618" ExpirationDate="2018-11-06">
+               <pbbase:Defaults xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+               <pbrk:ReagentTubes Name="Sequel® OS Enzyme" PartNumber="100-619-700" LotNumber="310482" Barcode="310482100619700121219" ExpirationDate="2019-12-12">
+                  <pbbase:Defaults xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+               </pbrk:ReagentTubes>
+               <pbrk:ReagentTubes Name="Sequel® SMRT®Cell Oil" PartNumber="100-619-600" LotNumber="011898" Barcode="011898100619600033122" ExpirationDate="2022-03-31">
+                  <pbbase:Defaults xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+               </pbrk:ReagentTubes>
+            </pbmeta:SequencingKitPlate>
+            <pbmeta:Primary>
+               <pbmeta:AutomationName>SequelAlpha</pbmeta:AutomationName>
+               <pbmeta:ConfigFileName>SqlPoC_SubCrf_2C2A-t2.xml</pbmeta:ConfigFileName>
+               <pbmeta:SequencingCondition>DefaultPrimarySequencingCondition</pbmeta:SequencingCondition>
+               <pbmeta:OutputOptions>
+                  <pbmeta:ResultsFolder>r54097_20180420_131744/2_B01/</pbmeta:ResultsFolder>
+                  <pbmeta:CollectionPathUri>/pbi/collections/r54097_20180420_131744/2_B01/</pbmeta:CollectionPathUri>
+                  <pbmeta:CopyFiles>
+                     <pbmeta:CollectionFileCopy>Fasta</pbmeta:CollectionFileCopy>
+                     <pbmeta:CollectionFileCopy>Bam</pbmeta:CollectionFileCopy>
+                  </pbmeta:CopyFiles>
+                  <pbmeta:Readout>Bases_Without_QVs</pbmeta:Readout>
+                  <pbmeta:MetricsVerbosity>Minimal</pbmeta:MetricsVerbosity>
+                  <pbmeta:TransferResource>
+                     <pbmeta:Id>new-resource</pbmeta:Id>
+                     <pbmeta:TransferScheme>RSYNC</pbmeta:TransferScheme>
+                     <pbmeta:Name>Sanger Sequel</pbmeta:Name>
+                     <pbmeta:Description>Sequel transfer settings</pbmeta:Description>
+                     <pbmeta:DestPath>/pbi/collections</pbmeta:DestPath>
+                  </pbmeta:TransferResource>
+               </pbmeta:OutputOptions>
+            </pbmeta:Primary>
+            <pbmeta:Secondary>
+               <pbmeta:AutomationName>DefaultSecondaryAutomationName</pbmeta:AutomationName>
+               <pbmeta:AutomationParameters>
+                  <pbmeta:AutomationParameter Name="Reference" CreatedAt="0001-01-01T00:00:00" ModifiedAt="0001-01-01T00:00:00" ValueDataType="String" SimpleValue="DefaultSecondaryAnalysisReferenceName"/>
+               </pbmeta:AutomationParameters>
+               <pbmeta:CellCountInJob>0</pbmeta:CellCountInJob>
+            </pbmeta:Secondary>
+            <pbmeta:UserDefinedFields>
+               <pbbase:DataEntities Name=" LIMS_IMPORT " ValueDataType="String" SimpleValue="DefaultUserDefinedFieldLIMS"/>
+            </pbmeta:UserDefinedFields>
+            <pbmeta:ComponentVersions>
+               <pbmeta:VersionInfo Name="ics" Version="5.1.0.24551"/>
+               <pbmeta:VersionInfo Name="iui" Version="5.1.0.24551"/>
+               <pbmeta:VersionInfo Name="chemistry" Version="5.1.0.24551"/>
+               <pbmeta:VersionInfo Name="pa" Version="5.1.0.26367"/>
+               <pbmeta:VersionInfo Name="paws" Version="5.1.0.26367"/>
+               <pbmeta:VersionInfo Name="ppa" Version="5.1.0.26367"/>
+               <pbmeta:VersionInfo Name="realtime" Version="5.1.0.26367"/>
+               <pbmeta:VersionInfo Name="transfer" Version="5.1.0.26367"/>
+               <pbmeta:VersionInfo Name="smrtview" Version="5.1.0.25847"/>
+               <pbmeta:VersionInfo Name="smrtinub" Version="5.1.0.25847"/>
+               <pbmeta:VersionInfo Name="smrtlink-analysisservices-gui" Version="5.1.0.26411"/>
+               <pbmeta:VersionInfo Name="smrtimisc" Version="5.1.0.26412"/>
+               <pbmeta:VersionInfo Name="smrtlink" Version="5.1.0.26412"/>
+               <pbmeta:VersionInfo Name="smrttools" Version="5.1.0.26366"/>
+            </pbmeta:ComponentVersions>
+         </pbmeta:CollectionMetadata>
+      </pbmeta:Collections>
+   </pbds:DataSetMetadata>
+</pbds:SubreadSet>

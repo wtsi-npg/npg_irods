@@ -8,6 +8,8 @@ use Moose;
 use MooseX::StrictConstructor;
 use URI;
 use URI::Split qw(uri_join);
+use Readonly;
+use JSON;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
@@ -16,6 +18,8 @@ with qw[
 
 our $VERSION  = '';
 our $PROTOCOL = 'http';
+
+our $SUCCESS_STATE  = q[SUCCESSFUL];
 
 
 has 'api_uri' =>
@@ -42,6 +46,28 @@ sub _build_runs_api_uri {
 }
 
 
+has 'jobs_api_uri' =>
+  (isa           => 'URI',
+   is            => 'ro',
+   lazy_build    => 1,
+   documentation => 'PacBio API URI to return a jobs list');
+
+sub _build_jobs_api_uri {
+  my ($self) = @_;
+
+  my $path   = join q[/], q[secondary-analysis/job-manager/jobs], $self->job_type;
+  my $uri    = uri_join($PROTOCOL, $self->api_uri, $path);
+  return URI->new($uri);
+}
+
+has 'job_type' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 1,
+   default       => 'pbsmrtpipe',
+   documentation => 'The job type');
+
+
 has 'default_interval' =>
   (isa           => 'Int',
    is            => 'ro',
@@ -49,12 +75,33 @@ has 'default_interval' =>
    default       => 14,
    documentation => 'The default number of days activity to report');
 
+has 'begin_date' =>
+  (isa           => 'DateTime',
+   is            => 'ro',
+   lazy          => 1,
+   builder       => q[_build_begin_date],
+   documentation => 'The default begin date');
+
+sub _build_begin_date {
+    my ($self) = shift;
+    return DateTime->from_epoch(epoch => $self->end_date->epoch)->subtract
+           (days => $self->default_interval);
+}
+
+has 'end_date' =>
+  (isa           => 'DateTime',
+   is            => 'ro',
+   lazy          => 1,
+   builder       => q[_build_end_date],
+   documentation => 'The default end date');
+
+sub _build_end_date {
+    my ($self) = shift;
+    return DateTime->now;
+}
 
 
 =head2 query_runs
-
-  Arg [1]    : Start date. Optional.
-  Arg [2]    : End date. Optional.
 
   Example    : my $runs = $client->query_runs
   Description: Return runs. Optionally restrict to runs completed within
@@ -67,14 +114,67 @@ has 'default_interval' =>
 =cut
 
 sub query_runs {
-  my ($self, $begin_date, $end_date) = @_;
+  my ($self) = @_;
 
-  my $end   = $end_date   ? $end_date   : DateTime->now;
-  my $begin = $begin_date ? $begin_date :
-    DateTime->from_epoch(epoch => $end->epoch)->subtract
-    (days => $self->default_interval);
+  my $end   = $self->end_date;
+  my $begin = $self->begin_date;
 
-  my $query = $self->runs_api_uri->clone;
+  my ($content) = $self->_get_content($self->runs_api_uri->clone);
+
+  my @runs;
+  if (ref $content eq 'ARRAY') {
+      foreach my $run (@{$content}) {
+          if($run->{completedAt}                      &&
+             ($run->{completedAt} gt $begin->iso8601) &&
+             ($run->{completedAt} lt $end->iso8601)){
+              push @runs, $run;
+          }
+      }
+  }
+
+  return [@runs];
+}
+
+=head2 query_analysis_jobs
+
+  Arg [1]    : Pipeline id. Optional.
+
+  Example    : my $jobs = $client->query_analysis_jobs($job_type)
+  Description: Query for successful analysis jobs within a specific
+               time frame in 
+  Returntype : ArrayRef[HashRef]
+
+=cut
+
+sub query_analysis_jobs {
+  my($self, $pipeline_id) = @_;
+
+  my $end   = $self->end_date;
+  my $begin = $self->begin_date;
+
+  my ($content) = $self->_get_content($self->jobs_api_uri->clone);
+
+  my @jobs;
+  if(ref $content eq 'ARRAY') {
+      foreach my $job (@{$content}) {
+          if($job->{createdAt}                      &&
+             ($job->{createdAt} gt $begin->iso8601) &&
+             ($job->{createdAt} lt $end->iso8601)   &&
+             $job->{state}                          &&
+             ($job->{state} eq $SUCCESS_STATE)      &&
+             $job->{jsonSettings}                   &&
+             $self->_check_pid($job->{jsonSettings},$pipeline_id)
+             ){
+              push @jobs, $job;
+          }
+      }
+  }
+  return [@jobs];
+}
+
+
+sub _get_content{
+  my($self, $query) = @_;
 
   $self->debug("Getting query URI '$query'");
   my $ua = LWP::UserAgent->new;
@@ -90,20 +190,24 @@ sub query_runs {
   else {
     $self->logcroak("Failed to get results from URI '$query': ",$msg);
   }
-
-  my @runs;
-  if (ref $content eq 'ARRAY') {
-      foreach my $run (@{$content}) {
-          if($run->{completedAt}                      &&
-             ($run->{completedAt} gt $begin->iso8601) &&
-             ($run->{completedAt} lt $end->iso8601)){
-              push @runs, $run;
-          }
-      }
-  }
-
-  return [@runs];
+  return $content;
 }
+
+sub _check_pid {
+    my($self,$json_settings,$pipeline_id) = @_;
+
+    my $usejob = 1;
+    my $settings = decode_json($json_settings);
+
+    if($settings->{pipelineId}                   &&
+       $pipeline_id                              &&
+       ($settings->{pipelineId} ne $pipeline_id)
+       ){
+        $usejob = 0;
+    }
+    return $usejob;
+}
+
 
 __PACKAGE__->meta->make_immutable;
 

@@ -22,6 +22,7 @@ has 'mlwh_schema' =>
 
   Arg [1]    : PacBio run ID, Str.
   Arg [2]    : PacBio plate well, zero-padded form, Str. E.g. 'A01'.
+  Arg [3]    : Tag identifier, Optional.
 
   Example    : @run_records - $obj->find_runs($id, 'A01');
   Description: Returns run records for a PabcBio run. Pre-fetches related
@@ -31,7 +32,7 @@ has 'mlwh_schema' =>
 =cut
 
 sub find_pacbio_runs {
-  my ($self, $run_id, $well) = @_;
+  my ($self, $run_id, $well, $tag_id) = @_;
 
   defined $run_id or
     $self->logconfess('A defined run_id argument is required');
@@ -49,10 +50,16 @@ sub find_pacbio_runs {
   }
 
   my $well_label = "$row$col";
+
+  my $query      = {id_pac_bio_run_lims => $run_id,
+                    well_label          => $well_label};
+
+  if (defined $tag_id){
+      $query->{tag_identifier} = $tag_id;
+  }
+
   my @run_records = $self->mlwh_schema->resultset('PacBioRun')->search
-    ({id_pac_bio_run_lims => $run_id,
-      well_label          => $well_label},
-     {prefetch            => ['sample', 'study']});
+    ($query,  {prefetch => ['sample', 'study']});
 
   my $num_records = scalar @run_records;
   $self->debug("Found $num_records records for PacBio ",

@@ -120,8 +120,8 @@ sub publish_xml_files {
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_sequence_files
-  Description: Publish sequence and index files for a SMRT cell to iRODS.
-               Return the number of files, the number published and the number
+  Description: Publish sequence files for a SMRT cell to iRODS. Return
+               the number of files, the number published and the number
                of errors.
   Returntype : Array[Int]
 

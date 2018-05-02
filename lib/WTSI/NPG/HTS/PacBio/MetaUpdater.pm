@@ -8,7 +8,7 @@ use Try::Tiny;
 
 use WTSI::NPG::HTS::PacBio::DataObjectFactory;
 use WTSI::NPG::iRODS;
-use WTSI::NPG::iRODS::Metadata qw[$PACBIO_RUN $PACBIO_WELL];
+use WTSI::NPG::iRODS::Metadata;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
@@ -66,8 +66,14 @@ sub update_secondary_metadata {
     my $id_run = $obj->get_avu($PACBIO_RUN)->{value};
     my $well   = $obj->get_avu($PACBIO_WELL)->{value};
 
+    my $tag_id;
+    if($obj->find_in_metadata($TAG_INDEX) &&
+       !$obj->find_in_metadata($PACBIO_MULTIPLEX)){
+        $tag_id = $obj->get_avu($TAG_INDEX)->{value};
+    }
+
     try {
-      my @run_records = $self->find_pacbio_runs($id_run, $well);
+      my @run_records = $self->find_pacbio_runs($id_run, $well, $tag_id);
       my @secondary_avus = $self->make_secondary_metadata(@run_records);
       $obj->update_secondary_metadata(@secondary_avus);
 

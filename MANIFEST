@@ -6,6 +6,7 @@ bin/npg_gridion_run_monitor.pl
 bin/npg_irods_getstream.sh
 bin/npg_irods_putstream.sh
 bin/npg_minion_run_monitor.pl
+bin/npg_pacbio_analysis_monitor.pl
 bin/npg_pacbio_runmonitor.pl
 bin/npg_publish_bionano_run.pl
 bin/npg_publish_gridion_run.pl
@@ -78,6 +79,8 @@ lib/WTSI/NPG/HTS/PacBio/MonitorBase.pm
 lib/WTSI/NPG/HTS/PacBio/RunMonitor.pm
 lib/WTSI/NPG/HTS/PacBio/RunPublisher.pm
 lib/WTSI/NPG/HTS/PacBio/SeqDataObject.pm
+lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisMonitor.pm
+lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisPublisher.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/APIClient.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/MetaXMLParser.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunMonitor.pm
@@ -427,6 +430,13 @@ t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreads.
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreads.bam.pbi
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreadset.xml
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.transferdone
+t/data/pacbio/sequel_analysis/001612/entry-points/07d85801-6a09-4728-982c-e3c048f95bd8.subreadset.xml
+t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lbc12--lbc12.bam
+t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lbc12--lbc12.bam.pbi
+t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lbc12--lbc12.subreadset.xml
+t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lbc5--lbc5.bam
+t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lbc5--lbc5.bam.pbi
+t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lbc5--lbc5.subreadset.xml
 t/data/pacbio/superfoo/24862_627/A01_1/Analysis_Results/m131209_183112_00127_c100579142550000001823092301191430_s1_p0.1.bax.h5
 t/data/pacbio/superfoo/24862_627/A01_1/Analysis_Results/m131209_183112_00127_c100579142550000001823092301191430_s1_p0.1.log
 t/data/pacbio/superfoo/24862_627/A01_1/Analysis_Results/m131209_183112_00127_c100579142550000001823092301191430_s1_p0.2.bax.h5
@@ -15531,6 +15541,8 @@ t/lib/WTSI/NPG/HTS/PacBio/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/RunMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/RunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/SeqDataObjectTest.pm
+t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisMonitorTest.pm
+t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/SeqchksumTest.pm
@@ -15547,6 +15559,8 @@ t/pacbio_meta_updater.t
 t/pacbio_run_monitor.t
 t/pacbio_run_publisher.t
 t/pacbio_seq_data_object.t
+t/pacbio_sequel_analysis_monitor.t
+t/pacbio_sequel_analysis_publisher.t
 t/pacbio_sequel_run_monitor.t
 t/pacbio_sequel_run_publisher.t
 t/params.t
