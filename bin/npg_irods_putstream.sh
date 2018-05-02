@@ -147,7 +147,7 @@ $IMKDIR -p "$COLLECTION"
 # Send this script's STDIN (the data to be sent to iRODS) to md5sum
 # and to tears
 tee >($MD5SUM - | awk '{print $1}' > "$MD5_FILE" ) </dev/stdin |\
-    $TEARS "$IRODS_PATH" && $ICHKSUM -f "$IRODS_PATH" >/dev/null 2>&1
+    $TEARS -w "$IRODS_PATH" && $ICHKSUM -f "$IRODS_PATH" >/dev/null 2>&1
 
 # Add minimal metadata
 if [ -e "$MD5_FILE" ];
