@@ -24,6 +24,9 @@ our $METADATA_SET    = 'subreadset';
 # Location of source metadata file
 our $ENTRY_DIR       = 'entry-points';
 
+# Well directory pattern
+our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
+
 
 has 'analysis_path' =>
   (isa           => 'Str',
@@ -189,10 +192,24 @@ override 'run_name'  => sub {
 
 override 'smrt_names'  => sub {
   my ($self)  = @_;
+
+  ($self->_metadata->has_results_folder &&
+      $self->_metadata->ts_run_name) or
+      $self->logconfess('Error ts or results folder missing');
+
   my $rfolder = $self->_metadata->results_folder;
   my $ts_name = $self->_metadata->ts_run_name;
+
+  $rfolder =~ /$ts_name/smx or
+     $self->logconfess('Error ts name missing from results folder ',$rfolder);
+
   $rfolder    =~ s/$ts_name//smx;
   $rfolder    =~ s/\///gsmx;
+
+  $rfolder =~ /$WELL_DIRECTORY_PATTERN/smx or
+     $self->logconfess('Error derived folder name ', $rfolder,
+     'does not match expected pattern');
+
   return [$rfolder];
 };
 
@@ -211,7 +228,7 @@ sub _build_metadata{
 
   my @metafiles = $self->list_directory($entry_dir,$METADATA_FORMAT .q[$]);
   if(@metafiles != 1){
-    $self->logcroak("Expected only 1 $METADATA_FORMAT file in $entry_dir");
+    $self->logcroak("Expect one $METADATA_FORMAT file in $entry_dir");
   }
   return  WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file
                  ($metafiles[0],$METADATA_PREFIX);
