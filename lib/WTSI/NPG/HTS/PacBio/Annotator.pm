@@ -11,7 +11,6 @@ with qw[
        ];
 
 
-
 =head2 make_primary_metadata
 
   Arg [1]      PacBio run metadata, WTSI::NPG::HTS::PacBio::Metadata.
@@ -186,7 +185,9 @@ sub make_legacy_metadata {
 sub make_tag_metadata {
   my ($self, @run_records) = @_;
 
-  my $method_attr = {tag_sequence => $TAG_SEQUENCE};
+  my $method_attr = {tag_sequence   => $TAG_SEQUENCE,
+                     tag_identifier => $TAG_INDEX};
+
   return $self->_make_multi_value_metadata(\@run_records, $method_attr);
 }
 

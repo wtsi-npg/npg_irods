@@ -18,6 +18,13 @@ has 'run_name' =>
    required      => 1,
    documentation => 'The PacBio XML run name');
 
+has 'ts_run_name' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 0,
+   predicate     => 'has_ts_run_name',
+   documentation => 'The timestamp run name');
+
 has 'sample_name' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -61,6 +68,15 @@ has 'run_uuid' =>
    required      => 0,
    predicate     => 'has_run_uuid',
    documentation => 'The WTSI LIMS PacBio run UUID');
+
+has 'results_folder' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 0,
+   predicate     => 'has_results_folder',
+   documentation => 'The results folder');
+
+
 
 
 around BUILDARGS => sub {
