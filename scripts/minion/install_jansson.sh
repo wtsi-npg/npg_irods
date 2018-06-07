@@ -11,7 +11,7 @@ TMP=$(mktemp -d ${TMPDIR:-/tmp/}$(basename -- "$0").XXXXXXXXXX)
 
 JANSSON_RELEASE_URL=http://www.digip.org
 JANSSON_RELEASE_KEY_ID="D058434C"
-JANSSON_VERSION="2.9"
+JANSSON_VERSION="2.10"
 
 trap cleanup EXIT INT TERM
 

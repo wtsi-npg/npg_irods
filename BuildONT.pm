@@ -27,7 +27,7 @@ our @ont_subset = (
                    'WTSI/NPG/HTS/ONT/MinIONRunPublisher.pm',
                    'WTSI/NPG/HTS/ONT/TarDataObject.pm',
                    'WTSI/NPG/HTS/ONT/Watcher.pm',
-                   'WTSI/NPG/HTS/ChecksumCalculator',
+                   'WTSI/NPG/HTS/ChecksumCalculator.pm',
                    'WTSI/NPG/HTS/PathLister.pm',
                    'WTSI/NPG/HTS/TarItem.pm',
                    'WTSI/NPG/HTS/TarManifest.pm',

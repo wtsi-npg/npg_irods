@@ -40,6 +40,7 @@ LOGCONF
 my $collection;
 my $debug;
 my $log4perl_config;
+my $tmpdir = '/tmp';
 my $verbose;
 
 GetOptions('collection=s' => \$collection,
@@ -47,6 +48,7 @@ GetOptions('collection=s' => \$collection,
            'help'         => sub { pod2usage(-verbose => 2,
                                              -exitval => 0) },
            'logconf=s'    => \$log4perl_config,
+           'tmpdir=s'     => \$tmpdir,
            'verbose'      => \$verbose);
 
 if ($log4perl_config) {
@@ -69,13 +71,14 @@ $collection or
   pod2usage(-msg     => 'A --collection argument is required',
             -exitval => 2);
 
-my $auditor = WTSI::NPG::HTS::ONT::GridIONRunAuditor->new
-  (dest_collection => $collection);
+my $auditor = WTSI::NPG::HTS::ONT::GridIONTarAuditor->new
+  (dest_collection => $collection,
+   tmpdir          => $tmpdir);
 
 my ($num_files, $num_published, $num_errors) = $auditor->check_all_files;
 
-my $msg = sprintf q[Checked %d file published to '%s' with %d errors],
-  $num_files, $num_published, $auditor->run_collection, $num_errors;
+my $msg = sprintf q[Checked %d files published to '%s' with %d errors],
+  $num_files, $auditor->dest_collection, $num_errors;
 
 my $log = Log::Log4perl->get_logger('main');
 $log->level($ALL);
@@ -105,6 +108,9 @@ npg_audit_gridion_tar --collection <path> [--debug]
                      false.
    --help            Display help.
    --logconf         A log4perl configuration file. Optional.
+   --tmpdir          Set the temporary directory where tar files from
+                     iRODS are expanded - may require a lot of space.
+                     Optional, defaults to /tmp.
    --verbose         Print messages while processing. Optional.
 
 =head1 DESCRIPTION

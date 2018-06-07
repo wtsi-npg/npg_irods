@@ -156,13 +156,13 @@ sub start {
   # Use callbacks to track running processes
   $pm->run_on_start(sub {
                       my ($pid, $name) = @_;
-                      $self->debug("Process $name (PID $pid) started");
+                      $self->info("Process $name (PID $pid) started");
                       $self->devices_active->{$name} = $pid;
                     });
   $pm->run_on_finish(sub {
                        my ($pid, $exit_code, $name) = @_;
-                       $self->debug("Process $name (PID $pid) completed " .
-                                    "with exit code: $exit_code");
+                       $self->info("Process $name (PID $pid) completed " .
+                                   "with exit code: $exit_code");
                        if ($exit_code == 0) {
                          my $now = time;
                          $self->devices_complete->{$name} = $now;
@@ -202,6 +202,12 @@ sub start {
           if ($elapsed <= $self->quiet_interval) {
             $self->debug("'$device_dir' was completed at $completed_time, ",
                          "$elapsed seconds ago. Still in quiet interval.")
+          }
+          else {
+            $self->info("'$device_dir' was completed at $completed_time, ",
+                        "$elapsed seconds ago. Quiet interval is passed. ",
+                        'Removing from completed jobs to allow re-try');
+            delete ${$self->devices_complete}{$device_dir};
           }
           next DEVICE;
         }
@@ -256,8 +262,8 @@ sub start {
       }
 
       $self->debug('ForkManager PIDs: ', pp($pm->running_procs));
-      $self->debug('In progress: ', pp($self->devices_active));
-      $self->debug('Completed: ', pp($self->devices_complete));
+      $self->info('In progress: ', pp($self->devices_active));
+      $self->info('Completed: ', pp($self->devices_complete));
       $pm->reap_finished_children;
 
       sleep $self->poll_interval;
