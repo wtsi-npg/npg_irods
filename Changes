@@ -1,3 +1,8 @@
+Release 2.9
+ - Archive output from PacBio auto deplexing jobs.
+ - Use tears -d to ensure the default iRODS server is used (avoids
+   a HEIRARCHY_ERROR when using getHostForGet cross-zone).
+ - Imporvements and bug fixes for publishing from the GridION.
 
 Release 2.8.1
  - use tears 1.2.4 (-w flag now required for write to iRODS)
