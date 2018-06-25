@@ -179,6 +179,15 @@ has 'wdir' =>
    builder       => '_build_wdir',
    documentation => 'Working directory for tar file item manipulation');
 
+has 'extra_tar_context' =>
+  (isa           => 'Bool',
+   is            => 'ro',
+   required      => 1,
+   default       => 1,
+   documentation => 'Include the experiment name and device ID components of ' .
+                    'file paths within the tar file. Default is yes. All ' .
+                    'new data should do this. Earlier data did not.');
+
 
 around BUILDARGS => sub {
   my ($orig, $class, @args) = @_;
@@ -186,7 +195,8 @@ around BUILDARGS => sub {
   if (not ref $args[0]) {
     my %args = @args;
 
-    my $gridion_name = hostname;
+    my $gridion_name = delete $args{gridion_name};
+    $gridion_name ||= hostname;
 
     my $run = WTSI::NPG::HTS::ONT::GridIONRun->new
       (device_id       => delete $args{device_id},
@@ -495,15 +505,20 @@ sub _do_publish {
     # the tar file by removing them from the base used to calculate
     # the relative path.
     my @dirs = splitdir($self->source_dir);
-    my $did  = pop @dirs; # device_id
-    my $exp  = pop @dirs; # experiment name
-    my $relative_to = catdir(@dirs);
-    $self->debug("Calculating temporary paths relative to '$relative_to' ",
-                 "experiment_name '$exp', device_id '$did'");
 
-    if (not @dirs) {
-      $self->logcroak('No source_dir root remains after trimming');
+    if ($self->extra_tar_context) {
+      my $did  = pop @dirs; # device_id
+      my $exp  = pop @dirs; # experiment name
+      if (not @dirs) {
+        $self->logcroak('No source_dir root remains after trimming');
+      }
+
+      $self->debug('Including in tar file experiment_name ',
+                   "'$exp' and device_id '$did'");
     }
+
+    my $relative_to = catdir(@dirs);
+    $self->debug("Calculating temporary paths relative to '$relative_to'");
 
     my ($vol, $relative_path, $filename) =
       splitpath(abs2rel($path, $relative_to));
@@ -544,8 +559,13 @@ sub _do_publish_f5 {
     $self->device_id($device_id);
   }
 
-  if (not ($self->f5_publisher->file_published($tmp_path) or
-           $self->f5_publisher->file_published("$tmp_path.bz2"))) {
+  if ($self->f5_publisher->file_published($tmp_path) or
+      $self->f5_publisher->file_published("$tmp_path.bz2")) {
+    # It's already published, so we did nothing. Unlink the temp copy
+    # immediately to save space
+    unlink $tmp_path;
+  }
+  else {
     if ($self->f5_uncompress) {
       $tmp_path = $self->_h5repack_filter($tmp_path);
     }
@@ -584,6 +604,11 @@ sub _do_publish_fq {
     if ($self->fq_publisher->file_updated($tmp_path, $checksum)) {
       $self->warn("'$path' has been updated while publishing");
       $self->fq_publisher->publish_file($tmp_path, $checksum); # Don't unlink
+    }
+    else {
+      # The file was published before and hadn't been updated, so we
+      # did nothing. Unlink the temp copy immediately to save space.
+      unlink $tmp_path;
     }
   }
   else {

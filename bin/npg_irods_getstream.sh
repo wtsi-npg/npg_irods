@@ -90,7 +90,7 @@ MD5_FILE="$TMPD/$DATA_OBJECT.md5"
 IRODS_MD5=$($ICHKSUM "$IRODS_PATH" | awk "/$DATA_OBJECT/ { print \$2 }")
 
 # Send the data from iRODS to md5sum and to STDOUT
-$TEARS -r "$IRODS_PATH" | tee >($MD5SUM - | awk '{print $1}' > "$MD5_FILE")
+$TEARS -d -r "$IRODS_PATH" | tee >($MD5SUM - | awk '{print $1}' > "$MD5_FILE")
 
 LOCAL_MD5=$(<$MD5_FILE)
 if [ "$LOCAL_MD5" != "$IRODS_MD5" ]; then

@@ -6783,3 +6783,67 @@
   supplier_name: ~
   taxon_id: 28450
   uuid_sample_lims: a8b5d34e-c628-11df-8e7f-00144f2062b0
+- accession_number: ERS2016166
+  cohort: ~
+  common_name: Mycoplasma spumans
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2017-11-07 10:19:14
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY7184666
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3402539
+  id_sample_tmp: 3354850
+  last_updated: 2017-11-22 11:34:25
+  mother: ~
+  name: 3012STDY7184666
+  organism: ~
+  phenotype: ~
+  public_name: NCTC10169
+  recorded_at: 2017-11-22 11:34:25
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
+  taxon_id: 92406
+  uuid_sample_lims: 1ac1a4fa-c3a5-11e7-bf6c-3c4a9275d6c8
+- accession_number: ERS2016167
+  cohort: ~
+  common_name: Mycoplasma canadense
+  consent_withdrawn: 0
+  control: ~
+  country_of_origin: ~
+  created: 2017-11-07 10:19:14
+  deleted_at: ~
+  description: ~
+  donor_id: 3012STDY7184667
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 3402540
+  id_sample_tmp: 3354853
+  last_updated: 2017-11-22 11:34:27
+  mother: ~
+  name: 3012STDY7184667
+  organism: ~
+  phenotype: ~
+  public_name: NCTC10152
+  recorded_at: 2015-09-03 15:11:04
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: Hold
+  sanger_sample_id: ~
+  strain: ~
+  supplier_name: ~
+  taxon_id: 29554
+  uuid_sample_lims: 1acc1354-c3a5-11e7-bf6c-3c4a9275d6c8

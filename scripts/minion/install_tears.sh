@@ -11,8 +11,8 @@ TMP=$(mktemp -d ${TMPDIR:-/tmp/}$(basename -- "$0").XXXXXXXXXX)
 
 GITHUB_URL=${GITHUB_URL:-https://github.com}
 GITHUB_USER="whitwham"
-TEARS_VERSION="1.2.3"
-TEARS_SHA256="80fe8c0619f4d18b7fec5b7bb261b7cc51805c6141deeb0364695dbf2aaa2c33"
+TEARS_VERSION="1.2.4"
+TEARS_SHA256="8ac8f20c4984f287dce7a308c82ce1c4cfe2fdc7d12985d206cf48bc6479f92a"
 
 trap cleanup EXIT INT TERM
 
