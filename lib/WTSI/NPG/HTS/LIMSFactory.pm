@@ -82,6 +82,35 @@ sub tag_indices {
   return @tag_indices;
 }
 
+=head2 make_merged_lims
+
+  Arg [1]    : rpt_list
+  Example    : my $lims = $factory->make_merged_lims($rpt_list)
+  Description: Return an st::api::lims for the specified rpt_list
+  Returntype : st::api::lims
+
+=cut
+
+sub make_merged_lims {
+  my($self, $rpt_list) = @_;
+
+  defined $rpt_list or
+    $self->logconfess('A defined rpt_list argument is required');
+
+  $self->debug('Making a lims using driver_type ', $self->driver_type);
+
+  my $lims;
+  if ($self->has_mlwh_schema) {
+    $lims = st::api::lims->new(driver_type => $self->driver_type,
+                               mlwh_schema => $self->mlwh_schema,
+                               rpt_list    => $rpt_list);
+  }
+  else {
+      $self->logconfess('mlwh_schema is required');
+  }
+  return $lims;
+}
+
 =head2 make_lims
 
   Arg [1]      Run identifier, Int.
