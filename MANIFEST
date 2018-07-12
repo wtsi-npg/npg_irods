@@ -16,6 +16,7 @@ bin/npg_publish_minion_run.pl
 bin/npg_publish_pacbio_run.pl
 bin/npg_update_ebi_metadata.pl
 bin/npg_update_gridion_metadata.pl
+bin/npg_update_hts_merged_metadata.pl
 bin/npg_update_hts_metadata.pl
 bin/npg_update_pacbio_metadata.pl
 bin/samgen.pl
@@ -54,6 +55,10 @@ lib/WTSI/NPG/HTS/Illumina/MetaUpdater.pm
 lib/WTSI/NPG/HTS/Illumina/RunComponent.pm
 lib/WTSI/NPG/HTS/Illumina/RunPublisher.pm
 lib/WTSI/NPG/HTS/Illumina/XMLDataObject.pm
+lib/WTSI/NPG/HTS/Illumina/Merged/AlnDataObject.pm
+lib/WTSI/NPG/HTS/Illumina/Merged/Annotator.pm
+lib/WTSI/NPG/HTS/Illumina/Merged/DataObjectFactory.pm
+lib/WTSI/NPG/HTS/Illumina/Merged/MetaUpdater.pm
 lib/WTSI/NPG/HTS/LIMSFactory.pm
 lib/WTSI/NPG/HTS/Metadata.pm
 lib/WTSI/NPG/HTS/ONT/Annotator.pm
