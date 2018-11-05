@@ -53,7 +53,7 @@ sub setup_test : Test(setup) {
                                     strict_baton_version => 0);
 
   $irods_tmp_coll =
-    $irods->add_collection("AnalysisPublisherTest.$pid.$test_counter");
+    $irods->add_collection("PacBioSequelAnalysisPublisherTest.$pid.$test_counter");
   $test_counter++;
 }
 
@@ -83,25 +83,25 @@ sub list_files : Test(3) {
 
   my @expected_paths1 =
     map { catfile($runfolder_path, $_) }
-    ('lima_output.lbc12--lbc12.bam','lima_output.lbc5--lbc5.bam');
+    ('lima_output.lbc12--lbc12.bam', 'lima_output.lbc5--lbc5.bam');
 
   is_deeply($pub->list_files('bam$'), \@expected_paths1,
      'Found sequence files for 001612');
 
   my @expected_paths2 =
     map { catfile($runfolder_path, $_) }
-    ('lima_output.lbc12--lbc12.bam.pbi','lima_output.lbc5--lbc5.bam.pbi');
+    ('lima_output.lbc12--lbc12.bam.pbi', 'lima_output.lbc5--lbc5.bam.pbi');
 
   is_deeply($pub->list_files('pbi$'), \@expected_paths2,
      'Found sequence index files for 001612');
 
   my @expected_paths3 =
     map { catfile($runfolder_path, $_) }
-    ('lima_output.lbc12--lbc12.subreadset.xml','lima_output.lbc5--lbc5.subreadset.xml');
+    ('lima_output.lbc12--lbc12.subreadset.xml',
+     'lima_output.lbc5--lbc5.subreadset.xml');
 
   is_deeply($pub->list_files('subreadset.xml$'), \@expected_paths3,
      'Found sequence index files for 001612');
-
 }
 
 sub publish_files : Test(2) {
@@ -145,7 +145,8 @@ sub publish_xml_files : Test(14) {
 
   my @expected_paths =
     map { catfile("$dest_coll/2_B01", $_) }
-    ('lima_output.lbc12--lbc12.subreadset.xml','lima_output.lbc5--lbc5.subreadset.xml');
+    ('lima_output.lbc12--lbc12.subreadset.xml',
+     'lima_output.lbc5--lbc5.subreadset.xml');
 
   my ($num_files, $num_processed, $num_errors) =
     $pub->publish_non_sequence_files('subreadset.xml$');
@@ -182,7 +183,7 @@ sub publish_sequence_files : Test(38) {
     ('lima_output.lbc12--lbc12.bam','lima_output.lbc5--lbc5.bam');
 
   my ($num_files, $num_processed, $num_errors) =
-    $pub->publish_sequence_files();
+    $pub->publish_sequence_files;
   cmp_ok($num_files,     '==', scalar @expected_paths);
   cmp_ok($num_processed, '==', scalar @expected_paths);
   cmp_ok($num_errors,    '==', 0);
@@ -219,7 +220,7 @@ sub publish_index_files : Test(14) {
     map { catfile("$dest_coll/2_B01", $_) }
     ('lima_output.lbc12--lbc12.bam.pbi','lima_output.lbc5--lbc5.bam.pbi');
 
-  my ($num_files, $num_processed, $num_errors) = 
+  my ($num_files, $num_processed, $num_errors) =
      $pub->publish_non_sequence_files('pbi$');
   cmp_ok($num_files,     '==', scalar @expected_paths);
   cmp_ok($num_processed, '==', scalar @expected_paths);
@@ -290,7 +291,7 @@ sub check_secondary_metadata {
   foreach my $path (@paths) {
     my $obj = WTSI::NPG::HTS::DataObject->new($irods, $path);
     my $file_name = fileparse($obj->str);
- 
+
     # study_name is legacy metadata
     foreach my $attr ($STUDY_ID, $STUDY_NAME, $STUDY_ACCESSION_NUMBER,
                       $PACBIO_STUDY_NAME, $TAG_INDEX, $TAG_SEQUENCE) {

@@ -35,23 +35,25 @@ my $sequence_regex = qr{[.](h5|bam)$}msx;
 =cut
 
 sub make_data_object {
-  my ($self, $path) = @_;
+  my ($self, $remote_path) = @_;
 
-  defined $path or $self->logconfess('A defined path argument is required');
-  $path or $self->logconfess('A non-empty path argument is required');
+  defined $remote_path or
+    $self->logconfess('A defined remote_path argument is required');
+  length $remote_path or
+    $self->logconfess('A non-empty remote_path argument is required');
 
-  my ($filename, $collection) = fileparse($path);
+  my ($objname, $collection, $ignore) = fileparse($remote_path);
 
   my $obj;
-  if ($filename =~ m{$sequence_regex}mxsi) {
+  if ($objname =~ m{$sequence_regex}mxsi) {
     $obj =
       WTSI::NPG::HTS::PacBio::SeqDataObject->new(collection  => $collection,
-                                                 data_object => $filename,
+                                                 data_object => $objname,
                                                  irods       => $self->irods);
   }
   else {
     $obj = WTSI::NPG::HTS::DataObject->new(collection  => $collection,
-                                           data_object => $filename,
+                                           data_object => $objname,
                                            irods       => $self->irods);
   }
 

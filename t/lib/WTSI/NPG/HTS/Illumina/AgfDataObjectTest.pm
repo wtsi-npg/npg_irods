@@ -79,15 +79,11 @@ my @groups_added;
 # Enable group tests
 my $group_tests_enabled = 0;
 
-my $formats = {geno      => [q[]],
-               vcf       => [q[]]};
+my $run17550_lane8      = '17550_8';
+my $run17550_lane8_tag1 = '17550_8#1';
 
-my @tag1_files;
-foreach my $format (sort keys %$formats) {
-  foreach my $part (@{$formats->{$format}}) {
-      push @tag1_files, sprintf '17550_8#1%s.%s',    $part, $format;
-  }
-}
+my %file_composition = ('17550_8'   => [17550, 8, undef],
+                        '17550_8#1' => [17550, 8, 1]);
 
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
@@ -130,15 +126,32 @@ sub setup_test : Test(setup) {
 
   $irods->put_collection($data_path, $irods_tmp_coll);
 
-  foreach my $data_file (@tag1_files) {
-    my $path = "$irods_tmp_coll/agf_data_object/$data_file";
+  foreach my $format (qw[vcf geno]) {
+    my $full_path =
+      "$irods_tmp_coll/agf_data_object/$run17550_lane8_tag1.$format";
+
+    my @initargs = _build_initargs(\%file_composition, $run17550_lane8_tag1);
+    my $obj = WTSI::NPG::HTS::Illumina::AgfDataObject->new
+      ($irods, $full_path, @initargs);
+
+    my @avus;
+    push @avus, TestAnnotator->new->make_composition_metadata
+      ($obj->composition);
+
+    foreach my $avu (@avus) {
+      my $attribute = $avu->{attribute};
+      my $value     = $avu->{value};
+      my $units     = $avu->{units};
+      $obj->supersede_avus($attribute, $value, $units);
+    }
+
     if ($group_tests_enabled) {
       # Add some test group permissions
       $irods->set_object_permissions($WTSI::NPG::iRODS::READ_PERMISSION,
-                                     $public_group, $path);
+                                     $public_group, $full_path);
       foreach my $group (map { $group_prefix . $_ } (10, 100)) {
         $irods->set_object_permissions
-          ($WTSI::NPG::iRODS::READ_PERMISSION, $group, $path);
+          ($WTSI::NPG::iRODS::READ_PERMISSION, $group, $full_path);
       }
     }
   }
@@ -162,80 +175,18 @@ sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::Illumina::AgfDataObject');
 }
 
-my @untagged_paths = ('/seq/17550/17550_8');
-my @tagged_paths   = ('/seq/17550/17550_8#1');
-
-
-sub id_run : Test(4) {
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-
-  foreach my $format (sort keys %{$formats}) {
-    foreach my $path (@untagged_paths, @tagged_paths) {
-      my $full_path = $path . ".$format";
-      cmp_ok(WTSI::NPG::HTS::Illumina::AgfDataObject->new
-             ($irods, $full_path)->id_run,
-             '==', 17550, "$full_path id_run is correct");
-    }
-  }
-}
-
-
-sub position : Test(4) {
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-
-  foreach my $format (sort keys %{$formats}) {
-    foreach my $path (@tagged_paths, @untagged_paths) {
-      foreach my $part (@{$formats->{$format}}) {
-        my $full_path = $path . $part . ".$format";
-        cmp_ok(WTSI::NPG::HTS::Illumina::AgfDataObject->new
-               ($irods, $full_path)->position,
-               '==', 8, "$full_path position is correct");
-      }
-    }
-  }
-}
-
-
-sub tag_index : Test(4) {
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-
-  foreach my $format (sort keys %{$formats}) {
-    foreach my $path (@tagged_paths) {
-      foreach my $part (@{$formats->{$format}}) {
-        my $full_path = $path . $part . ".$format";
-        cmp_ok(WTSI::NPG::HTS::Illumina::AgfDataObject->new
-               ($irods, $full_path)->tag_index,
-               '==', 1, "$full_path tag_index is correct");
-      }
-    }
-  }
-
-  foreach my $format (sort keys %{$formats}) {
-    foreach my $path (@untagged_paths) {
-      foreach my $part (@{$formats->{$format}}) {
-        my $full_path = $path . $part . ".$format";
-        is(WTSI::NPG::HTS::Illumina::AgfDataObject->new
-           ($irods, $full_path)->tag_index, undef,
-           "$full_path tag_index 'undef' is correct");
-      }
-    }
-  }
-}
-
-
 sub is_restricted_access : Test(4) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   # Without any study metadata information
-  foreach my $format (sort keys %{$formats}) {
-    foreach my $path (@tagged_paths, @untagged_paths) {
-      my $full_path = "$path.$format";
+  foreach my $format (qw[geno vcf]) {
+    foreach my $path (sort keys %file_composition) {
+      my $full_path = "/seq/17550/$path.$format";
+      my @initargs = _build_initargs(\%file_composition, $path);
+
       my $obj = WTSI::NPG::HTS::Illumina::AgfDataObject->new
-        ($irods, $full_path);
+        ($irods, $full_path, @initargs);
       ok($obj->is_restricted_access, "$full_path is restricted_access");
     }
   }
@@ -248,30 +199,33 @@ sub update_secondary_metadata_tag1_no_spike_human : Test(12) {
                                     strict_baton_version => 0);
 
   my $spiked_control = 0;
-
-  foreach my $data_file (@tag1_files) {
-    my ($name, $path, $suffix) = fileparse($data_file, '.geno', '.vcf');
+  foreach my $format (qw[geno vcf]) {
+    my $data_file = "$run17550_lane8_tag1.$format";
 
     my @expected_groups_before = ($public_group, 'ss_10', 'ss_100');
     my @expected_groups_after  = ('ss_2905');
 
-    my $expected_metadata =       
-           [{attribute => $LIBRARY_ID,               value => '14727840'},
-            {attribute => $LIBRARY_TYPE,             value => 'ChIP-Seq Auto'},
-            {attribute => $QC_STATE,                 value => '1'},
-            {attribute => $SAMPLE_NAME,              value => '2905STDY6178180'},
-            {attribute => $SAMPLE_ACCESSION_NUMBER,  value => 'ERS811018'},
-            {attribute => $SAMPLE_COMMON_NAME,       value => 'Mus musculus'},
-            {attribute => $SAMPLE_DONOR_ID,          value => '2905STDY6178180'},
-            {attribute => $SAMPLE_ID,                value => '2376982'},
-            {attribute => $SAMPLE_PUBLIC_NAME,       value => 'UTX_IP_UTX_GTX_A'},
-            {attribute => $SAMPLE_SUPPLIER_NAME,     value => 'UTX_IP_UTX_GTX_A'},
-            {attribute => $STUDY_NAME,
-             value     => 'Analysis of the chromatin state of mouse stem and progenitor cell compartment'},
-            {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP004563'},
-            {attribute => $STUDY_ID,                 value => '2905'},
-            {attribute => $STUDY_TITLE,
-             value     => 'Analysis of the chromatin state of mouse stem and progenitor cell compartment      '. $utf8_extra},];
+    my $expected_metadata =
+      [{attribute => $COMPONENT,
+        value     => '{"id_run":17550,"position":8,"tag_index":1}'},
+       {attribute => $COMPOSITION,
+        value     => '{"components":[{"id_run":17550,"position":8,"tag_index":1}]}'},
+       {attribute => $LIBRARY_ID,               value => '14727840'},
+       {attribute => $LIBRARY_TYPE,             value => 'ChIP-Seq Auto'},
+       {attribute => $QC_STATE,                 value => '1'},
+       {attribute => $SAMPLE_NAME,              value => '2905STDY6178180'},
+       {attribute => $SAMPLE_ACCESSION_NUMBER,  value => 'ERS811018'},
+       {attribute => $SAMPLE_COMMON_NAME,       value => 'Mus musculus'},
+       {attribute => $SAMPLE_DONOR_ID,          value => '2905STDY6178180'},
+       {attribute => $SAMPLE_ID,                value => '2376982'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => 'UTX_IP_UTX_GTX_A'},
+       {attribute => $SAMPLE_SUPPLIER_NAME,     value => 'UTX_IP_UTX_GTX_A'},
+       {attribute => $STUDY_NAME,
+        value     => 'Analysis of the chromatin state of mouse stem and progenitor cell compartment'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP004563'},
+       {attribute => $STUDY_ID,                 value => '2905'},
+       {attribute => $STUDY_TITLE,
+        value     => 'Analysis of the chromatin state of mouse stem and progenitor cell compartment      '. $utf8_extra},];
 
     test_metadata_update($irods, $lims_factory,
                          "$irods_tmp_coll/agf_data_object",
@@ -300,20 +254,15 @@ sub test_metadata_update {
      irods       => $irods);
   my $tag = $obj->tag_index;
 
-  my $lims = $lims_factory->make_lims($obj->id_run, 
-                                      $obj->position,
-                                      $obj->tag_index);
-
-  my @secondary_avus = TestAnnotator->new->make_secondary_metadata
-    ($lims_factory, $obj->id_run, $obj->position,
-     tag_index           => $obj->tag_index,
+  my @secondary_avus = TestAnnotator->new->make_pri_data_sec_metadata
+    ($obj->composition, $lims_factory,
      with_spiked_control => $spiked);
 
   my @groups_before = $obj->get_groups;
 
   my %secondary_attrs = map { $_->{attribute} => 1 } @secondary_avus;
   my $expected_num_attrs = scalar keys %secondary_attrs;
-  
+
   my ($num_attributes, $num_processed, $num_errors) =
     $obj->update_secondary_metadata(@secondary_avus);
   cmp_ok($num_attributes, '==', $expected_num_attrs,
@@ -346,6 +295,18 @@ sub test_metadata_update {
                 'Groups after update') or diag explain \@groups_after;
     }
   } # SKIP groups_added
+}
+
+sub _build_initargs {
+  my ($test_paths, $key_path) = @_;
+
+  my ($id_run, $position, $tag_index, $subset) = @{$test_paths->{$key_path}};
+  my @initargs  = (id_run    => $id_run,
+                   position  => $position,
+                   tag_index => $tag_index);
+  push @initargs, subset => $subset if defined $subset;
+
+  return @initargs;
 }
 
 1;

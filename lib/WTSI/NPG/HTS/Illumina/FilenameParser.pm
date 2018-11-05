@@ -48,7 +48,7 @@ sub parse_file_name {
                          (\#(\d+))?        # Tag index
                          (_$splits)?       # Alignment filter
                          (\S+)?            # Ancillary
-                         [.][^.]+$         # File format
+                         [.]([^.]+)$         # File format
                      }mxs;
 
   my $tag_index    = $tag_index2;

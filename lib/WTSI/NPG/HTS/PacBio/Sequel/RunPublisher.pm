@@ -145,8 +145,9 @@ sub publish_sequence_files {
   # R & D runs have no records in the ML warehouse
   my $is_r_and_d = @run_records ? 0 : 1;
 
-  if($is_r_and_d){
-      $self->warn($metadata->run_name, " : publishing '$smrt_name' as R and D data");
+  if ($is_r_and_d) {
+    $self->warn($metadata->run_name,
+                ": publishing '$smrt_name' as R and D data");
   }
 
   my @primary_avus   = $self->make_primary_metadata($metadata, $is_r_and_d);
@@ -221,9 +222,6 @@ sub publish_adapter_files {
   return ($num_files, $num_processed, $num_errors);
 }
 
-
-
-
 =head2 list_sequence_files
 
   Arg [1]    : SMRT cell name, Str.
@@ -243,7 +241,8 @@ sub list_sequence_files {
   my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $SEQUENCE_TYPES .q{[.]}.
         $SEQUENCE_FILE_FORMAT .q{$};
 
-  return [$self->list_directory($self->smrt_path($name), $file_pattern)];
+  return [$self->list_directory($self->smrt_path($name),
+                                filter => $file_pattern)];
 }
 
 =head2 list_index_files
@@ -265,10 +264,9 @@ sub list_index_files {
   my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $SEQUENCE_TYPES. q{[.]}.
         $SEQUENCE_FILE_FORMAT .q{[.]}. $SEQUENCE_INDEX_FORMAT .q{$};
 
-  return [$self->list_directory($self->smrt_path($name), $file_pattern)];
+  return [$self->list_directory($self->smrt_path($name),
+                                filter => $file_pattern)];
 }
-
-
 
 =head2 list_xml_files
 
@@ -295,7 +293,8 @@ sub list_xml_files {
 
   my $file_pattern = $FILE_PREFIX_PATTERN .'[.]'. '(' . $type .')[.]xml$';
 
-  my @files = $self->list_directory($self->smrt_path($name), $file_pattern);
+  my @files = $self->list_directory($self->smrt_path($name),
+                                    filter => $file_pattern);
 
   my $num_files = scalar @files;
   if ($num_files != $expect) {
@@ -325,9 +324,9 @@ sub list_adapter_files {
 
   my $file_pattern = $FILE_PREFIX_PATTERN .'[.]adapters[.]fasta$';
 
-  return [$self->list_directory($self->smrt_path($name), $file_pattern)];
+  return [$self->list_directory($self->smrt_path($name),
+                                filter => $file_pattern)];
 }
-
 
 __PACKAGE__->meta->make_immutable;
 
