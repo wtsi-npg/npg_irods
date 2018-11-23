@@ -64,7 +64,7 @@ sub setup_test : Test(setup) {
 sub teardown_test : Test(teardown) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  $irods->remove_collection($irods_tmp_coll);
+  #$irods->remove_collection($irods_tmp_coll);
 }
 
 # Run-level data files
@@ -211,7 +211,7 @@ sub publish_qc_files : Test(117) {
 }
 
 # Lane-level, primary and secondary data, from ML warehouse
-sub publish_lane_pri_data_mlwh : Test(18) {
+sub publish_lane_pri_data_mlwh : Test(19) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -303,7 +303,7 @@ sub publish_lane_sec_data_mlwh : Test(217) {
 }
 
 # Lane-level, primary and secondary data, from samplesheet
-sub publish_lane_pri_data_samplesheet : Test(18) {
+sub publish_lane_pri_data_samplesheet : Test(19) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -405,7 +405,7 @@ sub publish_lane_sec_data_samplesheet : Test(217) {
 }
 
 # Plex-level, primary and secondary data, from ML warehouse
-sub publish_plex_pri_data_mlwh : Test(18) {
+sub publish_plex_pri_data_mlwh : Test(19) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20150914-100512/no_cal/archive';
@@ -492,7 +492,7 @@ sub publish_plex_sec_data_mlwh : Test(162) {
 }
 
 # Plex-level, primary and secondary data, from samplesheet
-sub publish_plex_pri_data_samplesheet : Test(18) {
+sub publish_plex_pri_data_samplesheet : Test(19) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20150914-100512/no_cal/archive';
