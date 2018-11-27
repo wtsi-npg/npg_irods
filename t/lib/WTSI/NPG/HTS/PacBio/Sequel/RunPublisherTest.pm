@@ -53,7 +53,7 @@ sub setup_test : Test(setup) {
                                     strict_baton_version => 0);
 
   $irods_tmp_coll =
-    $irods->add_collection("RunPublisherTest.$pid.$test_counter");
+    $irods->add_collection("PacBioSequelRunPublisherTest.$pid.$test_counter");
   $test_counter++;
 }
 

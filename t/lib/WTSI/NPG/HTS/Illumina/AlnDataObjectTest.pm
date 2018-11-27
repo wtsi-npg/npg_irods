@@ -56,6 +56,19 @@ my $run7915_lane5_tag1 = '7915_5#1';
 my $run15440_lane1_tag0  = '15440_1#0';
 my $run15440_lane1_tag81 = '15440_1#81';
 
+my %file_composition =
+  ('7915_5#0'           => [7915,  5,  0,      undef],
+   '7915_5#1'           => [7915,  5,  1,      undef],
+   '15440_1#0'          => [15440, 1,  0,      undef],
+   '15440_1#81'         => [15440, 1, 81,      undef],
+
+   '17550_3#1'          => [17550, 3,  1,      undef],
+   '17550_3#1_human'    => [17550, 3,  1,    'human'],
+   '17550_3#1_nonhuman' => [17550, 3,  1, 'nonhuman'],
+   '17550_3#1_xahuman'  => [17550, 3,  1,  'xahuman'],
+   '17550_3#1_yhuman'   => [17550, 3,  1,   'yhuman'],
+   '17550_3#1_phix'     => [17550, 3,  1,     'phix']);
+
 my $invalid = "1000_1#1";
 
 my $reference_file = 'test_ref.fa';
@@ -150,32 +163,36 @@ sub setup_test : Test(setup) {
                           '-o', "irods:$irods_tmp_coll/$data_file.bam",
                                 "$data_path/$data_file.sam"],
            executable => 'samtools_irods')->run;
+      my @initargs = _build_initargs(\%file_composition, $data_file);
 
-        foreach my $format (qw[bam cram]) {
-          my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
-            ($irods, "$irods_tmp_coll/$data_file.$format");
+      foreach my $format (qw[bam cram]) {
+        my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+          (collection  => $irods_tmp_coll,
+           data_object => "$data_file.$format",
+           irods       => $irods,
+           @initargs);
 
-          my $num_reads = 10000;
+        my $num_reads = 10000;
 
-          my @avus;
-          push @avus, TestAnnotator->new->make_primary_metadata
-            ($obj->id_run, $obj->position, $num_reads,
-             tag_index      => $obj->tag_index,
-             is_paired_read => 1,
-             is_aligned     => $obj->is_aligned,
-             reference      => $obj->reference);
+        my @avus;
+        push @avus, TestAnnotator->new->make_primary_metadata
+          ($obj->composition,
+           is_paired_read => 1,
+           is_aligned     => $obj->is_aligned,
+           num_reads      => $num_reads,
+           reference      => $obj->reference);
 
-          foreach my $avu (@avus) {
-            my $attribute = $avu->{attribute};
-            my $value     = $avu->{value};
-            my $units     = $avu->{units};
-            $obj->supersede_avus($attribute, $value, $units);
-          }
+        foreach my $avu (@avus) {
+          my $attribute = $avu->{attribute};
+          my $value     = $avu->{value};
+          my $units     = $avu->{units};
+          $obj->supersede_avus($attribute, $value, $units);
+        }
 
-          # Add some test group permissions
-          if ($group_tests_enabled) {
-            $obj->set_permissions($WTSI::NPG::iRODS::READ_PERMISSION,
-                                  $public_group);
+        # Add some test group permissions
+        if ($group_tests_enabled) {
+          $obj->set_permissions($WTSI::NPG::iRODS::READ_PERMISSION,
+                                $public_group);
 
           foreach my $group (map { $group_prefix . $_ } (10, 100)) {
             $obj->set_permissions($WTSI::NPG::iRODS::READ_PERMISSION,
@@ -205,135 +222,120 @@ sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::Illumina::AlnDataObject');
 }
 
-my @tagged_paths   = ('/seq/17550/17550_3#1',
-                      '/seq/17550/17550_3#1_human',
-                      '/seq/17550/17550_3#1_nonhuman',
-                      '/seq/17550/17550_3#1_xahuman',
-                      '/seq/17550/17550_3#1_yhuman',
-                      '/seq/17550/17550_3#1_phix');
-my @untagged_paths = ('/seq/17550/17550_3',
-                      '/seq/17550/17550_3_human',
-                      '/seq/17550/17550_3_nonhuman',
-                      '/seq/17550/17550_3_xahuman',
-                      '/seq/17550/17550_3_yhuman',
-                      '/seq/17550/17550_3_phix');
-
-sub id_run : Test(24) {
+sub id_run : Test(12) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   foreach my $format (qw[bam cram]) {
-    foreach my $path (@tagged_paths, @untagged_paths) {
-      my $full_path = $path . ".$format";
+    foreach my $path (sort grep { /17550/ } keys %file_composition) {
+      my $full_path = "/seq/17550/$path.$format";
+      my @initargs = _build_initargs(\%file_composition, $path);
+
       cmp_ok(WTSI::NPG::HTS::Illumina::AlnDataObject->new
-             ($irods, $full_path)->id_run,
+             ($irods, $full_path, @initargs)->id_run,
              '==', 17550, "$full_path id_run is correct");
     }
   }
 }
 
-sub position : Test(24) {
+sub position : Test(12) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   foreach my $format (qw[bam cram]) {
-    foreach my $path (@tagged_paths, @untagged_paths) {
-      my $full_path = "$path.$format";
+    foreach my $path (sort grep { /17550/ } keys %file_composition) {
+      my $full_path = "/seq/17550/$path.$format";
+      my @initargs = _build_initargs(\%file_composition, $path);
+
       cmp_ok(WTSI::NPG::HTS::Illumina::AlnDataObject->new
-             ($irods, $full_path)->position,
+             ($irods, $full_path, @initargs)->position,
              '==', 3, "$full_path position is correct");
     }
   }
 }
 
-sub contains_nonconsented_human : Test(24) {
+sub contains_nonconsented_human : Test(12) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   foreach my $format (qw[bam cram]) {
-    foreach my $path (@tagged_paths, @untagged_paths) {
-      my $full_path = "$path.$format";
-      my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
-        ($irods, $full_path);
-      my $af = $obj->alignment_filter;
+    foreach my $path (sort grep { /17550/ } keys %file_composition) {
+      my $full_path = "/seq/17550/$path.$format";
+      my @initargs = _build_initargs(\%file_composition, $path);
 
-      if (not $af) {
+      my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+        ($irods, $full_path, @initargs);
+
+      my $ss = $obj->subset;
+      if (not $ss) {
         ok(!$obj->contains_nonconsented_human,
            "$full_path is not nonconsented human");
       }
-      elsif ($af eq 'nonhuman' or
-             $af eq 'yhuman'   or
-             $af eq 'phix') {
+      elsif ($ss eq 'nonhuman' or
+             $ss eq 'yhuman'   or
+             $ss eq 'phix') {
         ok(!$obj->contains_nonconsented_human,
-           "$full_path is not nonconsented human ($af)");
+           "$full_path is not nonconsented human ($ss)");
       }
-      elsif ($af eq 'human' or
-             $af eq 'xahuman') {
+      elsif ($ss eq 'human' or
+             $ss eq 'xahuman') {
         ok($obj->contains_nonconsented_human,
-           "$full_path is nonconsented human ($af)");
+           "$full_path is nonconsented human ($ss)");
       }
       else {
-        fail "Unexpected alignment_filter '$af'";
+        fail "Unexpected alignment_filter '$ss'";
       }
     }
   }
 }
 
-sub is_restricted_access : Test(24) {
+sub is_restricted_access : Test(12) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   # Without any study metadata information
   foreach my $format (qw[bam cram]) {
-    foreach my $path (@tagged_paths, @untagged_paths) {
-      my $full_path = "$path.$format";
-      my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
-        ($irods, $full_path);
-      my $af = $obj->alignment_filter;
+    foreach my $path (sort grep { /17550/ } keys %file_composition) {
+      my $full_path = "/seq/17550/$path.$format";
+      my @initargs = _build_initargs(\%file_composition, $path);
 
+      my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+        ($irods, $full_path, @initargs);
       ok($obj->is_restricted_access, "$full_path is restricted_access");
     }
   }
 }
 
-sub tag_index : Test(24) {
+sub tag_index : Test(12) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   foreach my $format (qw[bam cram]) {
-    foreach my $path (@tagged_paths) {
-      my $full_path = "$path.$format";
-      cmp_ok(WTSI::NPG::HTS::Illumina::AlnDataObject->new
-             ($irods, $full_path)->tag_index,
-             '==', 1, "$full_path tag_index is correct");
-    }
-  }
+    foreach my $path (sort grep { /17550/ } keys %file_composition) {
+      my $full_path = "/seq/17550/$path.$format";
+      my @initargs = _build_initargs(\%file_composition, $path);
 
-  foreach my $format (qw[bam cram]) {
-    foreach my $path (@untagged_paths) {
-      my $full_path = "$path.$format";
-      isnt(defined WTSI::NPG::HTS::Illumina::AlnDataObject->new
-           ($irods, $full_path)->tag_index,
-           "$full_path tag_index is correct");
+      cmp_ok(WTSI::NPG::HTS::Illumina::AlnDataObject->new
+             ($irods, $full_path, @initargs)->tag_index,
+             '==', 1, "$full_path tag_index is correct");
     }
   }
 }
 
-sub alignment_filter : Test(24) {
+sub subset : Test(12) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   foreach my $format (qw[bam cram]) {
-    foreach my $path (@tagged_paths, @untagged_paths) {
-      my $full_path = "$path.$format";
-      # FIXME -- use controlled vocbulary
+    foreach my $path (sort grep { /17550/ } keys %file_composition) {
+      my $full_path = "/seq/17550/$path.$format";
+      my @initargs = _build_initargs(\%file_composition, $path);
+
       my ($expected) = $path =~ m{_((human|nonhuman|xahuman|yhuman|phix))};
+      my $subset = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+        ($irods, $full_path, @initargs)->subset;
 
-      my $alignment_filter = WTSI::NPG::HTS::Illumina::AlnDataObject->new
-        ($irods, $full_path)->alignment_filter;
-
-      is($alignment_filter, $expected,
-         "$full_path alignment_filter is correct");
+      is($subset, $expected, "$full_path subset is correct");
     }
   }
 }
@@ -346,17 +348,19 @@ sub header : Test(9) {
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                       strict_baton_version => 0);
+    my $pkg = 'npg_tracking::glossary::composition::component::illumina';
 
-    foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
-      foreach my $format (qw[bam cram]) {
+    foreach my $format (qw[bam cram]) {
+      foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
         my $file_name = "$data_file.$format";
+        my @initargs = _build_initargs(\%file_composition, $data_file);
+
         my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
           (collection  => $irods_tmp_coll,
            data_object => $file_name,
            file_format => $format,
-           id_run      => 1,
            irods       => $irods,
-           position    => 1);
+           @initargs);
 
         # 2 * 2 * 1 tests
         ok($obj->header, "$format header can be read");
@@ -375,10 +379,11 @@ sub header : Test(9) {
     my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
       (collection  => $irods_tmp_coll,
        data_object => "$invalid.cram",
-       file_format => 'cram',
        id_run      => 1000,
-       irods       => $irods,
-       position    => 1);
+       position    => 1,
+       tag_index   => 0,
+       file_format => 'cram',
+       irods       => $irods);
 
     dies_ok { $obj->header }
       'Expected failure reading header of invalid cram file';
@@ -394,16 +399,17 @@ sub is_aligned : Test(4) {
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                       strict_baton_version => 0);
 
-    foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
-      foreach my $format (qw[bam cram]) {
+    foreach my $format (qw[bam cram]) {
+      foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
         my $file_name = "$data_file.$format";
+        my @initargs = _build_initargs(\%file_composition, $data_file);
+
         my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
           (collection  => $irods_tmp_coll,
            data_object => $file_name,
            file_format => $format,
-           id_run      => 1,
            irods       => $irods,
-           position    => 1);
+           @initargs);
 
         # 2 * 2 * 1 tests
         ok($obj->is_aligned, "$format data are aligned");
@@ -421,16 +427,17 @@ sub reference : Test(4) {
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                       strict_baton_version => 0);
 
-    foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
-      foreach my $format (qw[bam cram]) {
+    foreach my $format (qw[bam cram]) {
+      foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1) {
         my $file_name = "$data_file.$format";
+        my @initargs = _build_initargs(\%file_composition, $data_file);
+
         my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
           (collection  => $irods_tmp_coll,
            data_object => $file_name,
            file_format => $format,
-           id_run      => 1,
            irods       => $irods,
-           position    => 1);
+           @initargs);
 
         # 2 * 2 * 1 tests
         is($obj->reference($ref_filter), "$data_path/test_ref.fa",
@@ -453,6 +460,10 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(12) {
 
     my $tag0_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $COMPONENT,                value =>
+        '{"id_run":7915,"position":5,"tag_index":0}'},
+       {attribute => $COMPOSITION,              value =>
+        '{"components":[{"id_run":7915,"position":5,"tag_index":0}]}'},
        {attribute => $ID_RUN,                   value => '7915'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '5'},
@@ -637,10 +648,13 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(12) {
 
     my $spiked_control = 0;
 
+    my @initargs = _build_initargs(\%file_composition, $run7915_lane5_tag0);
+
     foreach my $format (qw[bam cram]) {
       # 2 * 4 tests
       test_metadata_update($irods, $lims_factory, $irods_tmp_coll,
                            {data_file              => $run7915_lane5_tag0,
+                            initargs               => \@initargs,
                             format                 => $format,
                             spiked_control         => $spiked_control,
                             expected_metadata      => $tag0_expected_meta,
@@ -665,6 +679,10 @@ sub update_secondary_metadata_tag0_spike_bact : Test(12) {
 
     my $tag0_expected_meta =
       [{attribute => $ALIGNMENT,               value => '1'},
+       {attribute => $COMPONENT,                value =>
+        '{"id_run":7915,"position":5,"tag_index":0}'},
+       {attribute => $COMPOSITION,              value =>
+        '{"components":[{"id_run":7915,"position":5,"tag_index":0}]}'},
        {attribute => $ID_RUN,                  value => '7915'},
        {attribute => $IS_PAIRED_READ,          value => '1'},
        {attribute => $POSITION,                value => '5'},
@@ -885,6 +903,10 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(12) {
 
     my $tag1_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $COMPONENT,                value =>
+        '{"id_run":7915,"position":5,"tag_index":1}'},
+       {attribute => $COMPOSITION,              value =>
+        '{"components":[{"id_run":7915,"position":5,"tag_index":1}]}'},
        {attribute => $ID_RUN,                   value => '7915'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '5'},
@@ -937,6 +959,10 @@ sub update_secondary_metadata_tag1_spike_bact : Test(12) {
 
     my $tag1_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $COMPONENT,                value =>
+        '{"id_run":7915,"position":5,"tag_index":1}'},
+       {attribute => $COMPOSITION,              value =>
+        '{"components":[{"id_run":7915,"position":5,"tag_index":1}]}'},
        {attribute => $ID_RUN,                   value => '7915'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '5'},
@@ -989,6 +1015,10 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(12) {
 
     my $tag0_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $COMPONENT,                value =>
+        '{"id_run":15440,"position":1,"tag_index":0}'},
+       {attribute => $COMPOSITION,              value =>
+        '{"components":[{"id_run":15440,"position":1,"tag_index":0}]}'},
        {attribute => $ID_RUN,                   value => '15440'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '1'},
@@ -1059,6 +1089,10 @@ sub update_secondary_metadata_tag0_spike_human : Test(12) {
 
     my $tag0_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $COMPONENT,                value =>
+        '{"id_run":15440,"position":1,"tag_index":0}'},
+       {attribute => $COMPOSITION,              value =>
+        '{"components":[{"id_run":15440,"position":1,"tag_index":0}]}'},
        {attribute => $ID_RUN,                   value => '15440'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '1'},
@@ -1136,6 +1170,10 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(12) {
 
     my $tag81_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $COMPONENT,                value =>
+        '{"id_run":15440,"position":1,"tag_index":81}'},
+       {attribute => $COMPOSITION,              value =>
+        '{"components":[{"id_run":15440,"position":1,"tag_index":81}]}'},
        {attribute => $ID_RUN,                   value => '15440'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '1'},
@@ -1188,6 +1226,10 @@ sub update_secondary_metadata_tag81_spike_human : Test(12) {
 
     my $tag81_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $COMPONENT,                value =>
+        '{"id_run":15440,"position":1,"tag_index":81}'},
+       {attribute => $COMPOSITION,              value =>
+        '{"components":[{"id_run":15440,"position":1,"tag_index":81}]}'},
        {attribute => $ID_RUN,                   value => '15440'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '1'},
@@ -1233,6 +1275,7 @@ sub test_metadata_update {
   ref $args eq 'HASH' or croak "The arguments must be a HashRef";
 
   my $data_file      = $args->{data_file};
+  my $initargs       = $args->{initargs};
   my $format         = $args->{format};
   my $spiked         = $args->{spiked_control};
   my $exp_metadata   = $args->{expected_metadata};
@@ -1243,12 +1286,12 @@ sub test_metadata_update {
   my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
     (collection  => $working_coll,
      data_object => $file_name,
-     irods       => $irods);
+     irods       => $irods,
+     @{$initargs});
   my $tag = $obj->tag_index;
 
   my @secondary_avus = TestAnnotator->new->make_secondary_metadata
-    ($lims_factory, $obj->id_run, $obj->position,
-     tag_index           => $obj->tag_index,
+    ($obj->composition, $lims_factory,
      with_spiked_control => $spiked);
 
   my @groups_before = $obj->get_groups;
@@ -1284,6 +1327,19 @@ sub test_metadata_update {
                 'Groups after update') or diag explain \@groups_after;
     }
   } # SKIP groups_added
+}
+
+sub _build_initargs {
+  my ($file_composition, $key_path) = @_;
+
+  my ($id_run, $position, $tag_index, $subset) =
+    @{$file_composition->{$key_path}};
+  my @initargs  = (id_run    => $id_run,
+                   position  => $position,
+                   tag_index => $tag_index);
+  push @initargs, subset => $subset if defined $subset;
+
+  return @initargs;
 }
 
 1;

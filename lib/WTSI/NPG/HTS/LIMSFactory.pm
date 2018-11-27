@@ -27,60 +27,54 @@ has 'driver_type' =>
    documentation => 'The ML warehouse driver type used when obtaining ' .
                     'secondary metadata');
 
-has '_lims_cache' =>
-  (is       => 'rw',
-   isa      => 'HashRef',
-   required => 1,
-   default  => sub { return {} });
+# =head2 positions
 
-=head2 positions
+#   Arg [1]      Run identifier, Int.
 
-  Arg [1]      Run identifier, Int.
+#   Example    : my @positions = $factory->positions(17750)
+#   Description: Return the valid lane positions of a run, sorted in
+#                ascending order.
+#   Returntype : Array[Int]
 
-  Example    : my @positions = $factory->positions(17750)
-  Description: Return the valid lane positions of a run, sorted in
-               ascending order.
-  Returntype : Array[Int]
+# =cut
 
-=cut
+# sub positions {
+#   my ($self, $id_run) = @_;
 
-sub positions {
-  my ($self, $id_run) = @_;
+#   defined $id_run or
+#     $self->logconfess('A defined id_run argument is required');
 
-  defined $id_run or
-    $self->logconfess('A defined id_run argument is required');
+#   my $run = $self->make_lims($id_run);
+#   my @positions = sort map {$_->position} $run->children;
 
-  my $run = $self->make_lims($id_run);
-  my @positions = sort map {$_->position} $run->children;
+#   return @positions;
+# }
 
-  return @positions;
-}
+# =head2 tag_indices
 
-=head2 tag_indices
+#   Arg [1]      Run identifier, Int.
+#   Arg [2]      Lane position, Int.
 
-  Arg [1]      Run identifier, Int.
-  Arg [2]      Lane position, Int.
+#   Example    : my @tag_indices = $factory->tag_indices(17750, 1)
+#   Description: Return the valid tag indices of a lane, sorted in
+#                ascending order.
+#   Returntype : Array[Int]
 
-  Example    : my @tag_indices = $factory->tag_indices(17750, 1)
-  Description: Return the valid tag indices of a lane, sorted in
-               ascending order.
-  Returntype : Array[Int]
+# =cut
 
-=cut
+# sub tag_indices {
+#   my ($self, $id_run, $position) = @_;
 
-sub tag_indices {
-  my ($self, $id_run, $position) = @_;
+#   defined $id_run or
+#     $self->logconfess('A defined id_run argument is required');
+#   defined $position or
+#     $self->logconfess('A defined position argument is required');
 
-  defined $id_run or
-    $self->logconfess('A defined id_run argument is required');
-  defined $position or
-    $self->logconfess('A defined position argument is required');
+#   my $lane = $self->make_lims($id_run, $position);
+#   my @tag_indices = sort map {$_->tag_index} $lane->children;
 
-  my $lane = $self->make_lims($id_run, $position);
-  my @tag_indices = sort map {$_->tag_index} $lane->children;
-
-  return @tag_indices;
-}
+#   return @tag_indices;
+# }
 
 =head2 make_lims
 
@@ -96,67 +90,24 @@ sub tag_indices {
 =cut
 
 sub make_lims {
-  my ($self, $id_run, $position, $tag_index) = @_;
+  my ($self, $composition) = @_;
 
-  defined $id_run or
-    $self->logconfess('A defined id_run argument is required');
+  $composition or $self->logconfess('A composition argument is required');
 
   $self->debug('Making a lims using driver_type ', $self->driver_type);
 
-  if (not exists $self->_lims_cache->{$id_run}) {
-    my $run;
-
-    if ($self->has_mlwh_schema) {
-      $run = st::api::lims->new(driver_type => $self->driver_type,
-                                mlwh_schema => $self->mlwh_schema,
-                                id_run      => $id_run);
-    }
-    else {
-      $run = st::api::lims->new(driver_type => $self->driver_type,
-                                id_run      => $id_run);
-    }
-
-    if ($run->can('mlwh_schema')) {
-      if ($self->has_mlwh_schema) {
-        # Sanity check that the handle used by the st::api::lims is
-        # the same as any handle we have cached
-        my $mlwh1 = $run->mlwh_schema;
-        my $mlwh2 = $self->mlwh_schema;
-        if (defined $mlwh1 and ref $mlwh1 and
-            defined $mlwh2 and ref $mlwh2 and
-            refaddr($mlwh1) != refaddr($mlwh2)) {
-          $self->logconfess('The WTSI::DNAP::Warehouse::Schema cached by ',
-                            'WTSI::NPG::HTS::LIMSFactory is not the same ',
-                            "as that in the st::api::lims for run $id_run");
-        }
-      }
-      else {
-        # If the st::api::lims provided a database handle itself and the
-        # factory has not, cache the handle.
-        $self->mlwh_schema($run->mlwh_schema);
-      }
-    }
-
-    $self->_lims_cache->{$id_run} = $run;
+  my @init_args = (driver_type => $self->driver_type,
+                   rpt_list    => $composition->freeze2rpt);
+  if ($self->has_mlwh_schema) {
+    push @init_args, mlwh_schema => $self->mlwh_schema;
   }
 
-  my $lims = $self->_lims_cache->{$id_run};
-  defined $lims or
-      $self->logconfess("Failed to create st::api::lims for run $id_run");
+  my $lims = st::api::lims->new(@init_args);
 
-  $self->debug("Driver st::api::lims for run $id_run is ", $lims->driver);
-
-  if (defined $position) {
-    ($lims) = grep { $_->position == $position } $lims->children;
-    defined $lims or
-      $self->logconfess("Failed to create st::api::lims for run $id_run ",
-                        "lane $position");
-  }
-  if ($tag_index) {
-    ($lims) = grep { $_->tag_index == $tag_index } $lims->children;
-    defined $lims or
-      $self->logconfess("Failed to create st::api::lims for run $id_run ",
-                        "lane $position tag_index $tag_index");
+  # If the st::api::lims provided a database handle itself and the
+  # factory has not, cache the handle.
+  if (not $self->has_mlwh_schema and $lims->can('mlwh_schema')) {
+    $self->mlwh_schema($lims->mlwh_schema);
   }
 
   return $lims;
