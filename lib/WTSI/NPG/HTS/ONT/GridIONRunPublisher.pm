@@ -62,9 +62,7 @@ our $ISO8601_DATE          = '%Y-%m-%d';
 our $ISO8601_DATETIME      = '%Y-%m-%dT%H%m%S';
 our $H5REPACK              = 'h5repack';
 
-## no critic (ValuesAndExpressions::ProhibitMagicNumbers)
 our $FILE_COMPLETE_RETRIES = 3;
-## use critic
 our $FILE_COMPLETE_BACKOFF = 2;
 
 our $FAST5_GLOBAL_GROUP     = 'UniqueGlobalKey';

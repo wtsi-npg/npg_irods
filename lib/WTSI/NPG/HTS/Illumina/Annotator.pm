@@ -7,6 +7,8 @@ use WTSI::NPG::HTS::Metadata;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::DNAP::Utilities::Params qw[function_params];
 
+use npg_tracking::glossary::composition;
+
 our $VERSION = '';
 
 with qw[
@@ -15,9 +17,8 @@ with qw[
 
 =head2 make_primary_metadata
 
-  Arg [1]    : Run identifier, Int.
-  Arg [2]    : Lane position, Int.
-  Arg [3]    : Total number of reads (non-secondary/supplementary), Int.
+  Arg [1]    : Biomaterial composition, npg_tracking::glossary::composition.
+  Arg [2]    : Total number of reads (non-secondary/supplementary), Int.
 
   Named args : tag_index        Tag index, Int. Optional.
                is_paired_read   Run is paired, Bool. Optional.
@@ -25,7 +26,7 @@ with qw[
                reference        Reference file path, Str. Optional.
                alt_process      Alternative process name, Str. Optional.
                alignment_filter Alignment filter name, Str. Optional.
-               seqchksum        Seqchksum digest, Str. Optional.
+               seqchksum        Seqchksum digestgg112, Str. Optional.
 
   Example    : my @avus = $ann->make_primary_metadata
                    ($id_run, $position, $num_reads,
@@ -41,35 +42,37 @@ with qw[
 =cut
 
 {
-  my $positional = 4;
-  my @named      = qw[tag_index is_paired_read is_aligned
-                      reference alt_process alignment_filter
-                      seqchksum];
+  my $positional = 2;
+  my @named      = qw[alt_process is_paired_read is_aligned
+                      num_reads reference seqchksum];
   my $params = function_params($positional, @named);
 
   sub make_primary_metadata {
-    my ($self, $id_run, $position, $num_reads) = $params->parse(@_);
+    my ($self, $composition) = $params->parse(@_);
 
-    defined $id_run or
-      $self->logconfess('A defined id_run argument is required');
-    defined $position or
-      $self->logconfess('A defined position argument is required');
-    defined $num_reads or
-      $self->logconfess('A defined num_reads argument is required');
+    $composition or $self->logconfess('A composition argument is required');
 
     my @avus;
-    push @avus, $self->make_run_metadata
-      ($id_run, $position, $num_reads,
-       is_paired_read => $params->is_paired_read,
-       tag_index      => $params->tag_index);
+    my $num_reads = $params->num_reads ? $params->num_reads : 0;
 
-    push @avus, $self->make_target_metadata($params->tag_index,
-                                            $params->alignment_filter,
-                                            $params->alt_process);
+    if (defined $params->num_reads) {
+      push @avus, $self->make_avu($TOTAL_READS, $num_reads);
+    }
 
-    push @avus, $self->make_alignment_metadata
-      ($num_reads, $params->reference, $params->is_aligned,
-       alignment_filter => $params->alignment_filter);
+    push @avus, $self->make_composition_metadata($composition);
+
+    foreach my $component ($composition->components_list) {
+      push @avus, $self->make_run_metadata($component);
+      push @avus, $self->make_target_metadata
+        ($component, $params->alt_process);
+
+      push @avus, $self->make_alignment_metadata
+        ($component, $num_reads, $params->reference,
+         $params->is_aligned);
+    }
+
+    push @avus, $self->make_avu($IS_PAIRED_READ,
+                                 $params->is_paired_read ? 1 : 0);
 
     if ($params->alt_process) {
       push @avus, $self->make_alt_metadata($params->alt_process);
@@ -79,13 +82,32 @@ with qw[
       push @avus, $self->make_seqchksum_metadata($params->seqchksum);
     }
 
-    my $hts_element = sprintf 'run: %s, pos: %s, tag_index: %s',
-      $id_run, $position,
-      (defined $params->tag_index ? $params->tag_index : 'NA');
-    $self->debug("Created primary metadata for $hts_element: ", pp(\@avus));
-
     return @avus;
   }
+}
+
+sub make_composition_metadata {
+  my ($self, $composition) = @_;
+
+  $composition or $self->logconfess('A composition argument is required');
+  ref $composition or
+    $self->logconfess('The composition argument must be a reference');
+
+  my @avus;
+  push @avus, $self->make_avu($COMPOSITION, $composition->freeze);
+  foreach my $component ($composition->components_list) {
+    push @avus, $self->make_component_metadata($component);
+  }
+
+  return @avus;
+}
+
+sub make_component_metadata {
+  my ($self, $component) = @_;
+
+  $component or $self->logconfess('A component argument is required');
+
+  return ($self->make_avu($COMPONENT, $component->freeze));
 }
 
 =head2 make_run_metadata
@@ -108,36 +130,23 @@ with qw[
 
 =cut
 
-{
-  my $positional = 4;
-  my @named      = qw[is_paired_read tag_index];
-  my $params = function_params($positional, @named);
+sub make_run_metadata {
+  my ($self, $component) = @_;
 
-  sub make_run_metadata {
-    my ($self, $id_run, $position, $num_reads) = $params->parse(@_);
+  $component or $self->logconfess('A component argument is required');
 
-    defined $id_run or
-      $self->logconfess('A defined id_run argument is required');
-    defined $position or
-      $self->logconfess('A defined position argument is required');
-    defined $num_reads or
-      $self->logconfess('A defined num_reads argument is required');
-
-    defined $params->is_paired_read or
-      $self->logconfess('A defined is_paired_read argument is required');
-
-    my @avus = ($self->make_avu($ID_RUN,   $id_run),
-                $self->make_avu($POSITION, $position));
-
-    push @avus, $self->make_avu($TOTAL_READS, $num_reads);
-    push @avus, $self->make_avu($IS_PAIRED_READ, $params->is_paired_read);
-
-    if (defined $params->tag_index) {
-      push @avus, $self->make_avu($TAG_INDEX, $params->tag_index);
-    }
-
-    return @avus;
+  my @avus;
+  if ($component->has_id_run) {
+    push @avus, $self->make_avu($ID_RUN, $component->id_run),
   }
+  if ($component->has_position) {
+    push @avus, $self->make_avu($POSITION, $component->position);
+  }
+  if ($component->has_tag_index) {
+    push @avus, $self->make_avu($TAG_INDEX, $component->tag_index);
+  }
+
+  return @avus;
 }
 
 =head2 make_alignment_metadata
@@ -157,39 +166,32 @@ with qw[
 
 =cut
 
-{
-  my $positional = 4;
-  my @named      = qw[alignment_filter];
-  my $params = function_params($positional, @named);
+sub make_alignment_metadata {
+  my ($self, $component, $num_reads, $reference, $is_aligned) = @_;
 
-  sub make_alignment_metadata {
-    my ($self, $num_reads, $reference, $is_aligned) = $params->parse(@_);
+  # If there are no reads, yet the data have passed through an
+  # aligner, it has been "aligned" i.e. has undergone an alignment
+  # process without producing a result. However, this flag indicates
+  # whether an alignment result has been obtained.
+  $num_reads ||= 0;
+  my $alignment = ($is_aligned and $num_reads > 0) ? 1 : 0;
+  my @avus = ($self->make_avu($ALIGNMENT, $alignment));
 
-    # If there are no reads, yet the data have passed through an
-    # aligner, it has been "aligned" i.e. has undergone an alignment
-    # process without producing a result. However, this flag indicates
-    # whether an alignment result has been obtained.
-    $num_reads ||= 0;
-    my $alignment = ($is_aligned and $num_reads > 0) ? 1 : 0;
-    my @avus = ($self->make_avu($ALIGNMENT, $alignment));
-
-    # A reference may be obtained from BAM/CRAM header in cases where
-    # the data are not aligned e.g. where the data were aligned to
-    # that reference some point in the past and have since been
-    # post-processed.
-    #
-    # Therefore the reference metadata are only added when the
-    # is_aligned argument is true.
-    if ($is_aligned and $reference) {
-      push @avus, $self->make_avu($REFERENCE, $reference);
-    }
-    if (defined $params->alignment_filter) {
-      push @avus, $self->make_avu($ALIGNMENT_FILTER,
-                                  $params->alignment_filter);
-    }
-
-    return @avus;
+  # A reference may be obtained from BAM/CRAM header in cases where
+  # the data are not aligned e.g. where the data were aligned to
+  # that reference some point in the past and have since been
+  # post-processed.
+  #
+  # Therefore the reference metadata are only added when the
+  # is_aligned argument is true.
+  if ($is_aligned and $reference) {
+    push @avus, $self->make_avu($REFERENCE, $reference);
   }
+  if ($component->has_subset) {
+    push @avus, $self->make_avu($ALIGNMENT_FILTER, $component->subset);
+  }
+
+  return @avus;
 }
 
 =head2 make_target_metadata
@@ -205,11 +207,11 @@ with qw[
 =cut
 
 sub make_target_metadata {
-  my ($self, $tag_index, $alignment_filter, $alt_process) = @_;
+  my ($self, $component, $alt_process) = @_;
 
   my $target = 1;
-  if ((defined $tag_index and $tag_index == 0) or
-      ($alignment_filter and $alignment_filter ne $YHUMAN)) {
+  if (($component->has_tag_index and $component->tag_index == 0) or
+      ($component->has_subset and $component->subset ne $YHUMAN)) {
     $target = 0;
   }
   elsif ($alt_process) {
@@ -281,40 +283,58 @@ sub make_seqchksum_metadata {
 =cut
 
 {
-  my $positional = 4;
-  my @named      = qw[tag_index with_spiked_control];
+  my $positional = 3;
+  my @named      = qw[with_spiked_control];
   my $params = function_params($positional, @named);
 
   sub make_secondary_metadata {
-    my ($self, $factory, $id_run, $position) = $params->parse(@_);
+    my ($self, $composition, $factory) = $params->parse(@_);
 
+    $composition or $self->logconfess('A composition argument is required');
     defined $factory or
       $self->logconfess('A defined factory argument is required');
-    defined $id_run or
-      $self->logconfess('A defined id_run argument is required');
-    defined $position or
-      $self->logconfess('A defined position argument is required');
 
-    my $lims = $factory->make_lims($id_run, $position, $params->tag_index);
+    my $lims = $factory->make_lims($composition);
 
     my @avus;
     push @avus, $self->make_plex_metadata($lims);
     push @avus, $self->make_consent_metadata($lims);
     push @avus, $self->make_study_metadata
       ($lims, $params->with_spiked_control);
+    push @avus, $self->make_study_id_metadata
+      ($lims, $params->with_spiked_control);
     push @avus, $self->make_sample_metadata
       ($lims, $params->with_spiked_control);
     push @avus, $self->make_library_metadata
       ($lims, $params->with_spiked_control);
 
-    my $hts_element = sprintf 'run: %s, pos: %s, tag_index: %s',
-      $id_run, $position,
-      (defined $params->tag_index ? $params->tag_index : 'NA');
-    $self->debug("Created metadata for $hts_element: ", pp(\@avus));
+    my $rpt = $composition->freeze2rpt;
+    $self->debug("Created metadata for '$rpt': ", pp(\@avus));
 
     return @avus;
   }
 }
+
+# {
+#   my $positional = 3;
+#   my @named      = qw[with_spiked_control];
+#   my $params = function_params($positional, @named);
+
+#   sub make_sec_data_sec_metadata {
+#     my ($self, $composition, $factory) = $params->parse(@_);
+
+#     $composition or $self->logconfess('A composition argument is required');
+#     defined $factory or
+#       $self->logconfess('A defined factory argument is required');
+
+#     my $lims = $factory->make_lims($composition);
+
+#     my @avus = $self->make_study_id_metadata
+#       ($lims, $params->with_spiked_control);
+
+#     return @avus;
+#   }
+# }
 
 =head2 make_study_metadata
 
@@ -452,7 +472,6 @@ sub make_library_metadata {
                                            $with_spiked_control);
 }
 
-
 =head2 make_plex_metadata
 
   Arg [1]    :  A LIMS handle, st::api::lims.
@@ -473,8 +492,6 @@ sub make_plex_metadata {
   my $method_attr = {qc_state => $QC_STATE};
   return $self->_make_single_value_metadata($lims, $method_attr);
 }
-
-
 
 =head2 make_gbs_metadata
 
@@ -559,8 +576,8 @@ Keith James <kdj@sanger.ac.uk>, Iain Bancarz <ib5@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016, 2017 Genome Research Limited. All Rights
-Reserved.
+Copyright (C) 2015, 2016, 2017, 2018 Genome Research Limited. All
+Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

@@ -39,9 +39,7 @@ our $SELECT_TIMEOUT        = 2;
 our $ISO8601_BASIC         = '%Y-%m-%dT%H%m%S';
 our $H5REPACK              = 'h5repack';
 
-## no critic (ValuesAndExpressions::ProhibitMagicNumbers)
 our $FILE_COMPLETE_RETRIES = 3;
-## use critic
 our $FILE_COMPLETE_BACKOFF = 2;
 
 our $FAST5_GLOBAL_GROUP     = 'UniqueGlobalKey';
