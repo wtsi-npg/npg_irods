@@ -67,6 +67,16 @@ has 'compress_formats' =>
   Description: Return a new data object for a path. If the factory cannot
                construct a suitable object for the given path, it may
                return undef.
+
+               If the factory's composition attribute is set, it will
+               use that value when constructing data objects requiring
+               a composition.
+
+               If the attribute is not set, constructing data objects
+               requiring a composition must be able to source one by
+               another means, typically by inspecting their own
+               iRODS metadata for the relevant values.
+
   Returntype : WTSI::NPG::HTS::DataObject or undef
 
 =cut

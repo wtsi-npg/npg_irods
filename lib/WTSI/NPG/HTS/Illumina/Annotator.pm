@@ -42,80 +42,44 @@ with qw[
 =cut
 
 {
-  my $positional = 3;
-  my @named      = qw[is_paired_read is_aligned reference alt_process
-                      seqchksum];
+  my $positional = 2;
+  my @named      = qw[alt_process is_paired_read is_aligned
+                      num_reads reference seqchksum];
   my $params = function_params($positional, @named);
 
-  sub make_pri_data_pri_metadata {
-    my ($self, $composition, $num_reads) = $params->parse(@_);
+  sub make_primary_metadata {
+    my ($self, $composition) = $params->parse(@_);
 
     $composition or $self->logconfess('A composition argument is required');
-    defined $num_reads or
-      $self->logconfess('A defined num_reads argument is required');
 
     my @avus;
+    my $num_reads = $params->num_reads ? $params->num_reads : 0;
+
+    if (defined $params->num_reads) {
+      push @avus, $self->make_avu($TOTAL_READS, $num_reads);
+    }
+
     push @avus, $self->make_composition_metadata($composition);
 
     foreach my $component ($composition->components_list) {
       push @avus, $self->make_run_metadata($component);
       push @avus, $self->make_target_metadata
         ($component, $params->alt_process);
+
       push @avus, $self->make_alignment_metadata
-        ($component, $num_reads, $params->reference, $params->is_aligned);
+        ($component, $num_reads, $params->reference,
+         $params->is_aligned);
     }
 
-    push @avus, $self->make_avu($TOTAL_READS, $num_reads);
-    push @avus, $self->make_avu($IS_PAIRED_READ, $params->is_paired_read);
+    push @avus, $self->make_avu($IS_PAIRED_READ,
+                                 $params->is_paired_read ? 1 : 0);
 
     if ($params->alt_process) {
       push @avus, $self->make_alt_metadata($params->alt_process);
     }
+
     if ($params->seqchksum) {
       push @avus, $self->make_seqchksum_metadata($params->seqchksum);
-    }
-
-    return @avus;
-  }
-}
-
-{
-  my $positional = 2;
-  my @named      = qw[alt_process];
-  my $params = function_params($positional, @named);
-
-  sub make_sec_data_pri_metadata {
-    my ($self, $composition) = $params->parse(@_);
-
-    my @avus;
-    foreach my $component ($composition->components_list) {
-      if ($component->has_id_run) {
-        push @avus, $self->make_avu($ID_RUN, $component->id_run);
-      }
-    }
-
-    if ($params->alt_process) {
-      push @avus, $self->make_alt_metadata($params->alt_process);
-    }
-
-    return @avus;
-  }
-}
-
-{
-  my $positional = 1;
-  my @named      = qw[alt_process id_run];
-  my $params = function_params($positional, @named);
-
-  sub make_run_data_pri_metadata {
-    my ($self) = $params->parse(@_);
-
-    my @avus;
-    if (defined $params->id_run) {
-      push @avus, $self->make_avu($ID_RUN, $params->id_run);
-    }
-    if ($params->alt_process) {
-      push @avus, $self->make_alt_metadata($params->alt_process);
     }
 
     return @avus;
@@ -126,6 +90,8 @@ sub make_composition_metadata {
   my ($self, $composition) = @_;
 
   $composition or $self->logconfess('A composition argument is required');
+  ref $composition or
+    $self->logconfess('The composition argument must be a reference');
 
   my @avus;
   push @avus, $self->make_avu($COMPOSITION, $composition->freeze);
@@ -321,7 +287,7 @@ sub make_seqchksum_metadata {
   my @named      = qw[with_spiked_control];
   my $params = function_params($positional, @named);
 
-  sub make_pri_data_sec_metadata {
+  sub make_secondary_metadata {
     my ($self, $composition, $factory) = $params->parse(@_);
 
     $composition or $self->logconfess('A composition argument is required');
@@ -335,6 +301,8 @@ sub make_seqchksum_metadata {
     push @avus, $self->make_consent_metadata($lims);
     push @avus, $self->make_study_metadata
       ($lims, $params->with_spiked_control);
+    push @avus, $self->make_study_id_metadata
+      ($lims, $params->with_spiked_control);
     push @avus, $self->make_sample_metadata
       ($lims, $params->with_spiked_control);
     push @avus, $self->make_library_metadata
@@ -347,26 +315,26 @@ sub make_seqchksum_metadata {
   }
 }
 
-{
-  my $positional = 3;
-  my @named      = qw[with_spiked_control];
-  my $params = function_params($positional, @named);
+# {
+#   my $positional = 3;
+#   my @named      = qw[with_spiked_control];
+#   my $params = function_params($positional, @named);
 
-  sub make_sec_data_sec_metadata {
-    my ($self, $composition, $factory) = $params->parse(@_);
+#   sub make_sec_data_sec_metadata {
+#     my ($self, $composition, $factory) = $params->parse(@_);
 
-    $composition or $self->logconfess('A composition argument is required');
-    defined $factory or
-      $self->logconfess('A defined factory argument is required');
+#     $composition or $self->logconfess('A composition argument is required');
+#     defined $factory or
+#       $self->logconfess('A defined factory argument is required');
 
-    my $lims = $factory->make_lims($composition);
+#     my $lims = $factory->make_lims($composition);
 
-    my @avus = $self->make_study_id_metadata
-      ($lims, $params->with_spiked_control);
+#     my @avus = $self->make_study_id_metadata
+#       ($lims, $params->with_spiked_control);
 
-    return @avus;
-  }
-}
+#     return @avus;
+#   }
+# }
 
 =head2 make_study_metadata
 
@@ -503,7 +471,6 @@ sub make_library_metadata {
   return $self->_make_multi_value_metadata($lims, $method_attr,
                                            $with_spiked_control);
 }
-
 
 =head2 make_plex_metadata
 

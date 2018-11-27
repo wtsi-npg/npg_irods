@@ -14,8 +14,10 @@ use Try::Tiny;
 use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::BatchPublisher;
 use WTSI::NPG::HTS::Illumina::DataObjectFactory;
+use WTSI::NPG::HTS::Illumina::ResultSet;
 use WTSI::NPG::HTS::Seqchksum;
 use WTSI::NPG::HTS::Types qw[AlnFormat];
+use WTSI::NPG::iRODS::Metadata;
 
 use npg_tracking::glossary::composition;
 use npg_tracking::glossary::moniker;
@@ -23,6 +25,7 @@ use npg_tracking::glossary::moniker;
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::HTS::Illumina::Annotator
+         WTSI::NPG::HTS::Illumina::CompositionFileParser
          WTSI::NPG::HTS::RunPublisher
        ];
 
@@ -30,44 +33,6 @@ our $VERSION = '';
 
 our $DEFAULT_ROOT_COLL    = '/seq';
 our $DEFAULT_QC_COLL      = 'qc';
-
-our %ILLUMINA_PART_PATTERNS =
-  (interop_regex   => sub {
-     return q[[.]bin$];
-   },
-   xml_regex       => sub {
-     return q[(RunInfo|runParameters).xml$];
-   },
-   alignment_regex => sub {
-     my $name = shift;
-     return sprintf q[%s[.](bam|cram)$], "\Q$name\E";
-   },
-   index_regex     => sub {
-     my $name = shift;
-     return sprintf q[%s[.](bai|crai|pbi)$],"\Q$name\E";
-   },
-   genotype_regex  => sub {
-     my $name = shift;
-     return sprintf q[%s[.](bcf|vcf)$], "\Q$name\E";
-   },
-   ancillary_regex => sub {
-     my $name = shift;
-     return sprintf q[%s([.]|_).*(%s)$], "\Q$name\E",
-       join q[|],
-       'F0x[A-Z0-9]{3}.stats',
-       'bam_stats',
-       'flagstat',
-       'json',
-       'orig.seqchksum',
-       'seqchksum',
-       'sha512primesums512.seqchksum',
-       'stats',
-       'txt';
-   },
-   qc_regex        => sub {
-     my $name = shift;
-     return sprintf q[qc\/%s([.]|_).*[.]json$], "\Q$name\E";
-   });
 
 our $NUM_READS_JSON_PROPERTY = 'num_total_reads';
 
@@ -101,11 +66,11 @@ has 'file_format' =>
    default       => 'cram',
    documentation => 'The format of the file to be published');
 
-has 'candidate_files' =>
+has 'run_files' =>
   (isa           => 'ArrayRef[Str]',
    is            => 'ro',
    required      => 1,
-   builder       => '_build_candidate_files',
+   builder       => '_build_run_files',
    lazy          => 1,
    documentation => 'All of the files in the dataset, some or all of which ' .
                     'will be published');
@@ -131,6 +96,14 @@ has 'max_errors' =>
    documentation => 'The maximum number of errors permitted before ' .
                     'the remainder of a publishing process is aborted');
 
+has 'result_set' =>
+  (isa           => 'WTSI::NPG::HTS::Illumina::ResultSet',
+   is            => 'ro',
+   required      => 1,
+   builder       => '_build_result_set',
+   lazy          => 1,
+   documentation => 'The set of results files in the run');
+
 =head2 publish_collection
 
   Arg [1]    : None
@@ -155,155 +128,6 @@ sub publish_collection {
   $self->debug("Publish collection is '$coll'");
 
   return $coll;
-}
-
-=head2 composition_files
-
-  Arg [1]    : None
-
-  Example    : $pub->composition_files
-  Description: Return a sorted array of composition JSON files detected
-               under the source directory, recursively.
-  Returntype : Array
-
-=cut
-
-sub composition_files {
-  my ($self) = @_;
-
-  return grep { m{[_]composition[.]json$}msx } @{$self->candidate_files};
-}
-
-=head2 interop_files
-
-  Arg [1]    : None
-
-  Example    : $pub->interop_files
-  Description: Return a sorted array of InterOp files detected
-               under the source directory, recursively.
-  Returntype : Array
-
-=cut
-
-sub interop_files {
-  my ($self) = @_;
-
-  my $regex = $self->_make_filter_regex('interop_regex');
-  $self->debug("interop_regex: '$regex'");
-  my $interop_subdir = 'InterOp';
-
-  return grep { m{$interop_subdir}msx and m{$regex}msx }
-    @{$self->candidate_files};
-}
-
-=head2 xml_files
-
-  Arg [1]    : None
-
-  Example    : $pub->xml_files
-  Description: Return a sorted array of XML files detected
-               under the source directory, recursively.
-  Returntype : Array
-
-=cut
-
-sub xml_files {
-  my ($self) = @_;
-  my $regex = $self->_make_filter_regex('xml_regex');
-  $self->debug("xml_regex: '$regex'");
-
-  return grep { m{$regex}msx } @{$self->candidate_files};
-}
-
-=head2 alignment_files
-
-  Arg [1]    : Product name, Str.
-
-  Example    : $pub->alignment_files
-  Description: Return a sorted array of alignment files, either
-               BAM or CRAM, detected under the source directory,
-               recursively.
-  Returntype : Array
-
-=cut
-
-sub alignment_files {
-  my ($self, $name) = @_;
-
-  my $regex = $self->_make_filter_regex('alignment_regex', $name);
-  $self->debug("alignment_regex for $name: '$regex'");
-  my $format = $self->file_format;
-
-  return grep { m{$regex}msx and m{[.]$format$}msx }
-    @{$self->candidate_files};
-}
-
-=head2 index_files
-
-  Arg [1]    : Product name, Str.
-
-  Example    : $pub->index_files
-  Description: Return a sorted array of index files, detected
-               under the source directory, recursively.
-  Returntype : Array
-
-=cut
-
-sub index_files {
-  my ($self, $name) = @_;
-
-  return $self->_filter_files('index_regex', $name);
-}
-
-=head2 ancillary_files
-
-  Arg [1]    : Product name, Str.
-
-  Example    : $pub->ancillary_files
-  Description: Return a sorted array of ancillary files, detected
-               under the source directory, recursively.
-  Returntype : Array
-
-=cut
-
-sub ancillary_files {
-  my ($self, $name) = @_;
-
-  return $self->_filter_files('ancillary_regex', $name);
-}
-
-=head2 genotype_files
-
-  Arg [1]    : Product name, Str.
-
-  Example    : $pub->genotype_files
-  Description: Return a sorted array of genotype files, detected
-               under the source directory, recursively.
-  Returntype : Array
-
-=cut
-
-sub genotype_files {
-  my ($self, $name) = @_;
-
-  return $self->_filter_files('genotype_regex', $name);
-}
-
-=head2 genotype_files
-
-  Arg [1]    : Product name, Str.
-
-  Example    : $pub->qc_files
-  Description: Return a sorted array of QC files, detected
-               under the source directory, recursively.
-  Returntype : Array
-
-=cut
-
-sub qc_files {
-  my ($self, $name) = @_;
-
-  return $self->_filter_files('qc_regex', $name);
 }
 
 =head2 publish_files
@@ -353,7 +177,7 @@ sub qc_files {
     $call->(sub { $self->publish_interop_files });
 
     # Publish any "product-level" data found under the source directory
-    my @cfiles = $self->composition_files;
+    my @cfiles = $self->result_set->composition_files;
     $self->debug('Found Illumina composition files: ', pp(\@cfiles));
 
     my $spk = $params->with_spiked_control;
@@ -384,11 +208,18 @@ sub publish_interop_files {
   my ($self) = @_;
 
   my $primary_avus = sub {
-    return $self->make_run_data_pri_metadata(alt_process => $self->alt_process,
-                                             id_run      => $self->id_run);
+    my @avus;
+    push @avus, $self->make_avu($ID_RUN, $self->id_run);
+    #push @avus, $self->make_avu($TARGET, 0);
+
+    #if ($self->alt_process) {
+    #  push @avus, $self->make_avu($ALT_PROCESS, $self->alt_process);
+    #}
+
+    return @avus;
   };
 
-  my @files = $self->interop_files;
+  my @files = $self->result_set->interop_files;
   $self->debug('Publishing interop files: ', pp(\@files));
 
   return $self->_publish_run_level_data(\@files, $self->dest_collection,
@@ -410,11 +241,18 @@ sub publish_xml_files {
   my ($self) = @_;
 
   my $primary_avus = sub {
-    return $self->make_run_data_pri_metadata(alt_process => $self->alt_process,
-                                             id_run      => $self->id_run);
+    my @avus;
+    push @avus, $self->make_avu($ID_RUN, $self->id_run);
+    #push @avus, $self->make_avu($TARGET, 0);
+
+    #if ($self->alt_process) {
+    #  push @avus, $self->make_avu($ALT_PROCESS, $self->alt_process);
+    #}
+
+    return @avus;
   };
 
-  my @files = $self->xml_files;
+  my @files = $self->result_set->xml_files;
   $self->debug('Publishing XML files: ', pp(\@files));
 
   return $self->_publish_run_level_data(\@files, $self->dest_collection,
@@ -439,30 +277,33 @@ sub publish_alignment_files {
   my ($self, $composition_file, $with_spiked_control) = @_;
 
   my ($name, $directory, $suffix) =
-    $self->_parse_composition_filename($composition_file);
+    $self->parse_composition_filename($composition_file);
 
   my $num_reads        = $self->_find_num_reads($name);
   my $seqchksum_digest = $self->_find_seqchksum_digest($name);
 
   my $primary_avus = sub {
     my ($obj) = @_;
-    return $self->make_pri_data_pri_metadata
-      ($obj->composition, $num_reads,
-       is_paired_read   => $obj->is_paired_read,
-       is_aligned       => $obj->is_aligned,
-       reference        => $obj->reference,
+    return $self->make_primary_metadata
+      ($obj->composition,
        alt_process      => $self->alt_process,
+       is_aligned       => $obj->is_aligned,
+       is_paired_read   => $obj->is_paired_read,
+       num_reads        => $num_reads,
+       reference        => $obj->reference,
        seqchksum        => $seqchksum_digest);
   };
 
   my $secondary_avus = sub {
     my ($obj) = @_;
-    return $self->make_pri_data_sec_metadata
+    return $self->make_secondary_metadata
       ($obj->composition, $self->lims_factory,
        with_spiked_control => $with_spiked_control);
   };
 
-  my @files = $self->alignment_files($name);
+  my $format = $self->file_format;
+  my @files = grep { m{[.]$format$}msx }
+    $self->result_set->alignment_files($name);
   $self->debug("Publishing alignment files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
@@ -490,7 +331,7 @@ sub publish_index_files {
   my ($self, $composition_file, $with_spiked_control) = @_;
 
   my ($name, $directory, $suffix) =
-    $self->_parse_composition_filename($composition_file);
+    $self->parse_composition_filename($composition_file);
 
   my $num_reads = $self->_find_num_reads($name);
   if ($num_reads == 0) {
@@ -500,18 +341,18 @@ sub publish_index_files {
 
   my $primary_avus = sub {
     my ($obj) = @_;
-    return $self->make_sec_data_pri_metadata
+    return $self->make_primary_metadata
       ($obj->composition, alt_process => $self->alt_process);
   };
 
   my $secondary_avus = sub {
     my ($obj) = @_;
-    return $self->make_sec_data_sec_metadata
+    return $self->make_secondary_metadata
       ($obj->composition, $self->lims_factory,
        with_spiked_control => $with_spiked_control);
   };
 
-  my @files = $self->index_files($name);
+  my @files = $self->result_set->index_files($name);
   $self->debug("Publishing index files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
@@ -539,22 +380,22 @@ sub publish_ancillary_files {
   my ($self, $composition_file, $with_spiked_control) = @_;
 
   my ($name, $directory, $suffix) =
-    $self->_parse_composition_filename($composition_file);
+    $self->parse_composition_filename($composition_file);
 
   my $primary_avus = sub {
     my ($obj) = @_;
-    return $self->make_sec_data_pri_metadata
+    return $self->make_primary_metadata
       ($obj->composition, alt_process => $self->alt_process);
   };
 
   my $secondary_avus = sub {
     my ($obj) = @_;
-    return $self->make_sec_data_sec_metadata
+    return $self->make_secondary_metadata
       ($obj->composition, $self->lims_factory,
        with_spiked_control => $with_spiked_control);
   };
 
-  my @files = $self->ancillary_files($name);
+  my @files = $self->result_set->ancillary_files($name);
   $self->debug("Publishing ancillary files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
@@ -582,22 +423,22 @@ sub publish_genotype_files {
   my ($self, $composition_file, $with_spiked_control) = @_;
 
   my ($name, $directory, $suffix) =
-    $self->_parse_composition_filename($composition_file);
+    $self->parse_composition_filename($composition_file);
 
   my $primary_avus = sub {
     my ($obj) = @_;
-    return $self->make_sec_data_pri_metadata
+    return $self->make_primary_metadata
       ($obj->composition, alt_process => $self->alt_process);
   };
 
   my $secondary_avus = sub {
     my ($obj) = @_;
-    return $self->make_sec_data_sec_metadata
+    return $self->make_secondary_metadata
       ($obj->composition, $self->lims_factory,
        with_spiked_control => $with_spiked_control);
   };
 
-  my @files = $self->genotype_files($name);
+  my @files = $self->result_set->genotype_files($name);
   $self->debug("Publishing genotype files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
@@ -625,22 +466,22 @@ sub publish_qc_files {
   my ($self, $composition_file, $with_spiked_control) = @_;
 
   my ($name, $directory, $suffix) =
-    $self->_parse_composition_filename($composition_file);
+    $self->parse_composition_filename($composition_file);
 
   my $primary_avus = sub {
     my ($obj) = @_;
-    return $self->make_sec_data_pri_metadata
+    return $self->make_primary_metadata
       ($obj->composition, alt_process => $self->alt_process);
   };
 
   my $secondary_avus = sub {
     my ($obj) = @_;
-    $self->make_sec_data_sec_metadata
+    $self->make_secondary_metadata
       ($obj->composition, $self->lims_factory,
        with_spiked_control => $with_spiked_control);
   };
 
-  my @files = $self->qc_files($name);
+  my @files = $self->result_set->qc_files($name);
   $self->debug("Publishing QC files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
@@ -650,27 +491,6 @@ sub publish_qc_files {
                                             $primary_avus, $secondary_avus);
 }
 
-# Extract the "product name"
-sub _parse_composition_filename {
-  my ($self, $composition_file) = @_;
-
-  $composition_file or
-    $self->logconfess('A non-empty composition_file argument is required');
-
-  return fileparse($composition_file, '.composition.json');
-}
-
-# Filter the candidiate files by a named regex
-sub _filter_files {
-  my ($self, $category, $name) = @_;
-
-  my $regex = $self->_make_filter_regex($category, $name);
-  $self->debug("$category filter regex for $name: '$regex'");
-
-  return grep { m{$regex}msx } @{$self->candidate_files};
-}
-
-# Publish run-level things like XML and InterOp files
 sub _publish_run_level_data {
   my ($self, $data_files, $collection,
       $primary_avus_callback, $secondary_avus_callback) = @_;
@@ -699,7 +519,7 @@ sub _publish_product_level_data {
     $self->logconfess('A non-empty composition_file argument is required');
   $secondary_avus_callback ||= sub { return () };
 
-  my $composition = $self->_read_composition_file($composition_file);
+  my $composition = $self->read_composition_file($composition_file);
 
   my $obj_factory = WTSI::NPG::HTS::Illumina::DataObjectFactory->new
     (composition       => $composition,
@@ -728,18 +548,6 @@ sub _make_batch_publisher {
   return WTSI::NPG::HTS::BatchPublisher->new(@init_args);
 }
 
-sub _make_filter_regex {
-  my ($self, $category, $name) = @_;
-
-  exists $ILLUMINA_PART_PATTERNS{$category} or
-    $self->logconfess("Invalid file category '$category'. Expected one of : ",
-                      pp([sort keys %ILLUMINA_PART_PATTERNS]));
-
-  my $regex = $ILLUMINA_PART_PATTERNS{$category}->($name);
-
-  return qr{$regex}msx;
-}
-
 sub _find_num_reads {
   my ($self, $name) = @_;
 
@@ -747,7 +555,7 @@ sub _find_num_reads {
     ($name, ext => 'bam_flagstats.json');
 
   my $path = $self->_match_single_file(qr{\Q/$file\E$}msx,
-                                       $self->candidate_files);
+                                       $self->run_files);
 
   $self->debug("Finding num_reads for '$name' in '$path'");
 
@@ -775,7 +583,7 @@ sub _find_seqchksum_digest {
     ($name, ext => 'seqchksum');
 
   my $path = $self->_match_single_file(qr{\Q/$file\E$}msx,
-                                       $self->candidate_files);
+                                       $self->run_files);
 
   $self->debug("Finding seqchksum for '$name' in '$path'");
 
@@ -806,7 +614,7 @@ sub _build_restart_file {
   return catfile($self->source_directory, 'published.json');
 }
 
-sub _build_candidate_files {
+sub _build_run_files {
   my ($self) = @_;
 
   my $dir = $self->source_directory;
@@ -815,6 +623,13 @@ sub _build_candidate_files {
   my @files = grep { -f } $self->list_directory($dir, recurse => 1);
 
   return \@files;
+}
+
+sub _build_result_set {
+  my ($self) = @_;
+
+  return WTSI::NPG::HTS::Illumina::ResultSet->new
+    (result_files => $self->run_files)
 }
 
 sub _match_single_file {
@@ -829,19 +644,6 @@ sub _match_single_file {
   }
 
   return shift @files;
-}
-
-sub _read_composition_file {
-  my ($self, $file_path) = @_;
-
-  my $json = read_file($file_path, binmode => ':utf8');
-  if (not $json) {
-    $self->logcroak("Invalid composition file '$file_path': file is empty");
-  }
-
-  return npg_tracking::glossary::composition->thaw
-    ($json, component_class =>
-     'npg_tracking::glossary::composition::component::illumina');
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -866,9 +668,9 @@ sequencing data from the instrument run folder to a collection in
 iRODS for one or more data products, each of which is identified by a
 JSON "composition" file describing the sample(s) within.
 
-Files releated to an individual product are referred to in the API
-by their product "name", which is the same as the string used as a
-prefix when naming composition JSON files. i.e.
+Files releated to a product are referred to in the API by their
+product "name", which is the same as the string used as a prefix when
+naming composition JSON files. i.e.
 
  <name>.composition.json
 
@@ -905,7 +707,6 @@ collection, the following take place:
  - the RunPublisher will proceed to make metadata and permissions
    changes to synchronise with the metadata supplied by st::api::lims,
    even if no files have been modified.
-
 
 Caveats:
 

@@ -7,11 +7,13 @@ use MooseX::StrictConstructor;
 use Try::Tiny;
 
 use WTSI::NPG::HTS::Illumina::DataObjectFactory;
+use WTSI::NPG::HTS::Illumina::ResultSet;
 use WTSI::NPG::iRODS;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::HTS::Illumina::Annotator
+         WTSI::NPG::HTS::Illumina::CompositionFileParser
        ];
 
 our $VERSION = '';
@@ -22,13 +24,6 @@ has 'irods' =>
    required      => 1,
    documentation => 'An iRODS handle to run searches and perform updates');
 
-has 'obj_factory' =>
-  (is            => 'ro',
-   isa           => 'WTSI::NPG::HTS::DataObjectFactory',
-   required      => 1,
-   builder       => '_build_obj_factory',
-   documentation => 'A factory building data objects from files');
-
 has 'lims_factory' =>
   (is            => 'ro',
    isa           => 'WTSI::NPG::HTS::LIMSFactory',
@@ -37,13 +32,30 @@ has 'lims_factory' =>
 
 =head2 update_secondary_metadata
 
-  Arg [1]    : iRODS data objects to update, ArrayRef.
+  Arg [1]    : Composition file data objects to, whose corresponding data
+               are to be updated, ArrayRef.
   Arg [2]    : HTS data has spiked control, Bool. Optional.
 
-  Example    : $updater->update_secondary_metadata(['/path/to/file.cram']);
+  Example    : $updater->update_secondary_metadata
+                 (['/path/to/<name>.composition.json']);
   Description: Update all secondary (LIMS-supplied) metadata and set data
-               access permissions on the given files in iRODS. Return the
-               number of files updated without error.
+               access permissions on data files corresponding the given
+               composition files, in iRODS. Return the number of files
+               updated without error.
+
+               To correspond to a composition file, a data file must be
+               directly or indirectly within (a subcollection of) the
+               composition file and match the "name" prefix of the
+               composition file.
+
+               E.g. All of
+
+               /seq/12345/<name>.composition.json
+               /seq/12345/<name>.cram
+               /seq/12345/qc/<name>.genotype.json
+
+              correspond to <name>.composition.json
+
   Returntype : Int
 
 =cut
@@ -57,51 +69,72 @@ sub update_secondary_metadata {
     $self->logconfess('The paths argument must be an array reference');
 
   my $num_paths = scalar @{$paths};
-  $self->info("Updating metadata on $num_paths files");
+  $self->info("Updating metadata for files related to $num_paths ",
+              'composition files');
 
   my $num_processed = 0;
   my $num_errors    = 0;
-  foreach my $path (@{$paths}) {
-    $self->info("Updating metadata on '$path' [$num_processed / $num_paths]");
+  foreach my $composition_file (@{$paths}) {
+    $self->info('Updating metadata for files related to ',
+                "'$composition_file' [$num_processed / $num_paths]");
 
-    my $obj = $self->obj_factory->make_data_object($path);
-    if ($obj and defined $obj->id_run) {
-      try {
-        my @secondary_avus = $self->make_secondary_metadata
-          ($self->lims_factory, $obj->id_run, $obj->position,
-           tag_index           => $obj->tag_index,
-           with_spiked_control => $with_spiked_control);
-        $obj->update_secondary_metadata(@secondary_avus);
+    try {
+      my ($name, $collection, $suffix) =
+        $self->parse_composition_filename($composition_file);
+      my $composition =
+        $self->make_composition($self->irods->read_object($composition_file));
 
-        $self->info("Updated metadata on '$path' ",
-                    "[$num_processed / $num_paths]");
-      } catch {
-        $num_errors++;
-        $self->error("Failed to update metadata on '$path' ",
-                     "[$num_processed / $num_paths]: ", $_);
-      };
-    }
+      my $obj_factory = WTSI::NPG::HTS::Illumina::DataObjectFactory->new
+        (ancillary_formats => [$self->hts_ancillary_suffixes],
+         composition       => $composition,
+         genotype_formats  => [$self->hts_genotype_suffixes],
+         irods             => $self->irods);
 
-    $num_processed++;
+      my ($objs, $colls) =
+        $self->irods->list_collection($collection, 'RECURSE');
+      my $result_set =
+        WTSI::NPG::HTS::Illumina::ResultSet->new(result_files => $objs);
+
+      my $num_objs = scalar @{$objs};
+      $self->info("Updating metadata on $num_objs data objects");
+
+      foreach my $obj_path (@{$objs}) {
+        $self->info("Updating metadata on '$obj_path'");
+        my $obj = $obj_factory->make_data_object($obj_path);
+
+        if ($obj and defined $obj->id_run) {
+          try {
+            my @secondary_avus = $self->make_secondary_metadata
+              ($composition, $self->lims_factory,
+               with_spiked_control => $with_spiked_control);
+            $obj->update_secondary_metadata(@secondary_avus);
+
+            $self->info("Updated metadata on '$obj_path'");
+          } catch {
+            $num_errors++;
+            $self->error("Failed to update metadata on '$obj_path': ", $_);
+          };
+        }
+
+        $num_processed++;
+      }
+    } catch {
+      $num_errors++;
+      $self->error("Failed to update metadata for '$composition_file' ",
+                   "[$num_processed / $num_paths]: ", $_);
+    };
   }
 
-  $self->info("Updated metadata on $num_processed / $num_paths files");
+  $self->info('Updated metadata for files related to ',
+              " $num_processed / $num_paths files");
 
   if ($num_errors > 0) {
-    $self->error("Failed to update cleanly metadata on $num_paths files. ",
-                 "$num_errors errors were recorded. See logs for details.")
+    $self->error('Failed to update cleanly metadata on files related to ',
+                 "$num_paths composition files. $num_errors errors ",
+                 'were recorded.');
   }
 
   return $num_processed - $num_errors;
-}
-
-sub _build_obj_factory {
-  my ($self) = @_;
-
-  return WTSI::NPG::HTS::Illumina::DataObjectFactory->new
-    (ancillary_formats => [$self->hts_ancillary_suffixes],
-     genotype_formats  => [$self->hts_genotype_suffixes],
-     irods             => $self->irods);
 }
 
 __PACKAGE__->meta->make_immutable;

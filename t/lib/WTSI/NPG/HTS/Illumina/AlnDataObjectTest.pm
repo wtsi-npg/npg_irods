@@ -175,10 +175,11 @@ sub setup_test : Test(setup) {
         my $num_reads = 10000;
 
         my @avus;
-        push @avus, TestAnnotator->new->make_pri_data_pri_metadata
-          ($obj->composition, $num_reads,
+        push @avus, TestAnnotator->new->make_primary_metadata
+          ($obj->composition,
            is_paired_read => 1,
            is_aligned     => $obj->is_aligned,
+           num_reads      => $num_reads,
            reference      => $obj->reference);
 
         foreach my $avu (@avus) {
@@ -1289,7 +1290,7 @@ sub test_metadata_update {
      @{$initargs});
   my $tag = $obj->tag_index;
 
-  my @secondary_avus = TestAnnotator->new->make_pri_data_sec_metadata
+  my @secondary_avus = TestAnnotator->new->make_secondary_metadata
     ($obj->composition, $lims_factory,
      with_spiked_control => $spiked);
 

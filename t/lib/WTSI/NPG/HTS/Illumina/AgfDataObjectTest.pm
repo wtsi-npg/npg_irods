@@ -254,7 +254,7 @@ sub test_metadata_update {
      irods       => $irods);
   my $tag = $obj->tag_index;
 
-  my @secondary_avus = TestAnnotator->new->make_pri_data_sec_metadata
+  my @secondary_avus = TestAnnotator->new->make_secondary_metadata
     ($obj->composition, $lims_factory,
      with_spiked_control => $spiked);
 

@@ -64,7 +64,7 @@ sub setup_test : Test(setup) {
 sub teardown_test : Test(teardown) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  #$irods->remove_collection($irods_tmp_coll);
+  $irods->remove_collection($irods_tmp_coll);
 }
 
 # Run-level data files
@@ -108,7 +108,8 @@ sub publish_interop_files : Test(45) {
 
   foreach my $path (@absolute_paths) {
     my $obj = WTSI::NPG::HTS::Illumina::InterOpDataObject->new($irods, $path);
-    cmp_ok($obj->get_avu($ID_RUN)->{value}, '==', $id_run,
+    is_deeply($obj->get_avu($ID_RUN), { attribute => $ID_RUN,
+                                        value     => $id_run },
            "$path id_run metadata present");
   }
 }
@@ -147,8 +148,9 @@ sub publish_xml_files : Test(15) {
 
   foreach my $path (@absolute_paths) {
     my $obj = WTSI::NPG::HTS::Illumina::XMLDataObject->new($irods, $path);
-    cmp_ok($obj->get_avu($ID_RUN)->{value}, '==', $id_run,
-           "$path id_run metadata present");
+    is_deeply($obj->get_avu($ID_RUN), { attribute => $ID_RUN,
+                                        value     => $id_run },
+              "$path id_run metadata present");
   }
 }
 
