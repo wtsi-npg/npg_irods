@@ -122,7 +122,7 @@ sub publish_file_batch {
   my $num_processed = 0;
   my $num_errors    = 0;
 
-  $self->debug("Publishing a batch of $num_files files");
+  $self->debug("Publishing a batch of $num_files files: ", pp($files));
 
  FILE: foreach my $file (@{$files}) {
     my $dest = q[];
@@ -158,7 +158,7 @@ sub publish_file_batch {
       }
 
       $self->debug("Publishing '$file' to '$remote_path'");
-      $dest = $publisher->publish($file, $remote_path);
+      $dest = $publisher->publish($file, $remote_path)->str;
 
       my @primary_avus = $primary_avus_callback->($obj);
       my ($num_pattr, $num_pproc, $num_perr) =
