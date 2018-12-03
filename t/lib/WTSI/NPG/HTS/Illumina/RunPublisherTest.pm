@@ -154,7 +154,7 @@ sub publish_xml_files : Test(15) {
   }
 }
 
-sub publish_qc_files : Test(117) {
+sub publish_qc_files : Test(93) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
@@ -180,7 +180,7 @@ sub publish_qc_files : Test(117) {
   my ($num_files, $num_processed, $num_errors) =
     $pub->publish_qc_files($composition_file);
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
-  cmp_ok($num_processed, '==', 19, 'Published 19 QC files');
+  cmp_ok($num_processed, '==', 15, 'Published 19 QC files');
 
   my @observed = observed_data_objects($irods, "$dest_coll/qc", '[.]json$');
   my @expected = ('18448_2.adapter.json',
@@ -197,11 +197,7 @@ sub publish_qc_files : Test(117) {
                   '18448_2.spatial_filter.json',
                   '18448_2.verify_bam_id.json',
                   '18448_2_F0x900.samtools_stats.json',
-                  '18448_2_F0xB00.samtools_stats.json',
-                  '18448_2_phix.bam_flagstats.json',
-                  '18448_2_phix.sequence_summary.json',
-                  '18448_2_phix_F0x900.samtools_stats.json',
-                  '18448_2_phix_F0xB00.samtools_stats.json');
+                  '18448_2_F0xB00.samtools_stats.json');
   is_deeply(\@observed, \@expected, 'Published correctly named QC files') or
     diag explain \@observed;
 
@@ -239,7 +235,7 @@ sub publish_lane_pri_data_mlwh : Test(19) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_lane_sec_data_mlwh : Test(67) {
+sub publish_lane_sec_data_mlwh : Test(72) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -258,6 +254,7 @@ sub publish_lane_sec_data_mlwh : Test(67) {
                   '18448_2.bai',
                   '18448_2.bam_stats',
                   '18448_2.composition.json',
+                  '18448_2.cram.crai',
                   '18448_2.flagstat',
                   '18448_2.markdups_metrics.txt',
                   '18448_2.seqchksum',
@@ -307,7 +304,7 @@ sub publish_lane_pri_data_samplesheet : Test(19) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_lane_sec_data_samplesheet : Test(67) {
+sub publish_lane_sec_data_samplesheet : Test(72) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -331,6 +328,7 @@ sub publish_lane_sec_data_samplesheet : Test(67) {
                   '18448_2.bai',
                   '18448_2.bam_stats',
                   '18448_2.composition.json',
+                  '18448_2.cram.crai',
                   '18448_2.flagstat',
                   '18448_2.markdups_metrics.txt',
                   '18448_2.seqchksum',
@@ -395,6 +393,7 @@ sub publish_plex_sec_data_mlwh : Test(57) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my @observed = observed_data_objects($irods, $dest_coll);
+  # No index files expected because the CRAM file contains no reads
   my @expected = ('17550_1#1.bam_stats',
                   '17550_1#1.composition.json',
                   '17550_1#1.flagstat',
@@ -469,6 +468,7 @@ sub publish_plex_sec_data_samplesheet : Test(57) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my @observed = observed_data_objects($irods, $dest_coll);
+  # No index files expected because the CRAM file contains no reads
   my @expected = ('17550_1#1.bam_stats',
                   '17550_1#1.composition.json',
                   '17550_1#1.flagstat',
@@ -531,7 +531,7 @@ sub publish_merged_pri_data_samplesheet : Test(17) {
     "metadata_cache_26291/samplesheet_26291.csv";
 
   my $lims_factory =
-    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+    WTSI::NPG::HTS::LIMSFactory->new(driver_type => 'samplesheet');
 
   my $dest_coll =
     check_publish_merged_pri_data($runfolder_path, $archive_path,
@@ -551,6 +551,90 @@ sub publish_merged_pri_data_samplesheet : Test(17) {
 
   my $obj = $pkg->new($irods, "$dest_coll/26291#1.cram");
   check_merge_primary_metadata($obj);
+}
+
+sub publish_merged_sec_data_mlwh : Test(72) {
+  my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20180805-013153/no_cal/archive';
+  my $id_run         = 26291;
+  my $plex           = 1;
+
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
+  my $dest_coll =
+    check_publish_merged_sec_data($runfolder_path, $archive_path,
+                                  $id_run, $plex, $lims_factory);
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  deep_observed_vs_expected([observed_data_objects($irods, $dest_coll)],
+                            ['26291#1.bai',
+                             '26291#1.bam_stats',
+                             '26291#1.bcfstats',
+                             '26291#1.composition.json',
+                             '26291#1.cram.crai',
+                             '26291#1.flagstat',
+                             '26291#1.markdups_metrics.txt',
+                             '26291#1.orig.seqchksum',
+                             '26291#1.seqchksum',
+                             '26291#1.sha512primesums512.seqchksum',
+                             '26291#1.spatial_filter.stats',
+                             '26291#1_F0x900.stats',
+                             '26291#1_F0xB00.stats',
+                             '26291#1_F0xF04_target.stats'],
+                            'Expected data object found');
+
+  my @observed = observed_data_objects($irods, $dest_coll);
+  my @absolute_paths = map { "$dest_coll/$_" } @observed;
+  my $pkg = 'WTSI::NPG::HTS::Illumina::AncDataObject';
+  check_common_metadata($irods, $pkg, @absolute_paths);
+}
+
+sub publish_merged_sec_data_samplesheet : Test(72) {
+  my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20180805-013153/no_cal/archive';
+  my $id_run         = 26291;
+  my $plex           = 1;
+
+  local $ENV{NPG_CACHED_SAMPLESHEET_FILE} =
+    "$runfolder_path/Data/Intensities/BAM_basecalls_20180805-013153/" .
+    "metadata_cache_26291/samplesheet_26291.csv";
+
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(driver_type => 'samplesheet');
+
+  my $dest_coll =
+    check_publish_merged_sec_data($runfolder_path, $archive_path,
+                                  $id_run, $plex, $lims_factory);
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  deep_observed_vs_expected([observed_data_objects($irods, $dest_coll)],
+                            ['26291#1.bai',
+                             '26291#1.bam_stats',
+                             '26291#1.bcfstats',
+                             '26291#1.composition.json',
+                             '26291#1.cram.crai',
+                             '26291#1.flagstat',
+                             '26291#1.markdups_metrics.txt',
+                             '26291#1.orig.seqchksum',
+                             '26291#1.seqchksum',
+                             '26291#1.sha512primesums512.seqchksum',
+                             '26291#1.spatial_filter.stats',
+                             '26291#1_F0x900.stats',
+                             '26291#1_F0xB00.stats',
+                             '26291#1_F0xF04_target.stats'],
+                            'Expected data object found');
+
+  my @observed = observed_data_objects($irods, $dest_coll);
+  my @absolute_paths = map { "$dest_coll/$_" } @observed;
+  my $pkg = 'WTSI::NPG::HTS::Illumina::AncDataObject';
+  check_common_metadata($irods, $pkg, @absolute_paths);
 }
 
 sub publish_plex_pri_data_alt_process : Test(5) {
@@ -647,6 +731,18 @@ sub check_publish_merged_pri_data {
     $archive_path, $plex, $name;
 
   return check_publish_pri_data($runfolder_path, $archive_path, $lims_factory,
+                                $composition_file, $coll);
+}
+
+sub check_publish_merged_sec_data {
+  my ($runfolder_path, $archive_path, $id_run, $plex, $lims_factory) = @_;
+
+  my $coll = 'publish_merged_sec_data';
+  my $name = sprintf q[%s#%s], $id_run, $plex;
+  my $composition_file = sprintf q[%s/plex%s/%s.composition.json],
+    $archive_path, $plex, $name;
+
+  return check_publish_sec_data($runfolder_path, $archive_path, $lims_factory,
                                 $composition_file, $coll);
 }
 
