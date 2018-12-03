@@ -491,6 +491,13 @@ sub publish_qc_files {
                                             $primary_avus, $secondary_avus);
 }
 
+sub write_restart_file {
+  my ($self) = @_;
+
+  $self->batch_publisher->write_state;
+  return;
+}
+
 sub _publish_run_level_data {
   my ($self, $data_files, $collection,
       $primary_avus_callback, $secondary_avus_callback) = @_;
@@ -504,6 +511,9 @@ sub _publish_run_level_data {
      irods             => $self->irods);
 
   my $batch_publisher = $self->_make_batch_publisher($obj_factory);
+  $self->debug("Publishing run level collection: $collection: ",
+               pp($data_files));
+
   return $batch_publisher->publish_file_batch
     ($data_files, $collection, $primary_avus_callback,
      $secondary_avus_callback);
@@ -529,6 +539,10 @@ sub _publish_product_level_data {
      irods             => $self->irods);
 
   my $batch_publisher = $self->_make_batch_publisher($obj_factory);
+  $self->debug("Publishing product level collection: $collection, ",
+               'composition: ', $composition->freeze2rpt,
+               ' :', pp($data_files));
+
   return $batch_publisher->publish_file_batch
     ($data_files, $collection, $primary_avus_callback,
      $secondary_avus_callback);
