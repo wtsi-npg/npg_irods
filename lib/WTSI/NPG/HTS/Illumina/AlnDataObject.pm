@@ -1,6 +1,7 @@
 package WTSI::NPG::HTS::Illumina::AlnDataObject;
 
 use namespace::autoclean;
+use Carp;
 use Data::Dump qw[pp];
 use Encode qw[decode];
 use English qw[-no_match_vars];
@@ -308,21 +309,56 @@ sub _get_reads {
 
   my @reads;
   try {
-    my $get_reads = WTSI::DNAP::Utilities::Runnable->new
-      (arguments  => [qw[view], "irods:$path"],
-       executable => $samtools);
-    my $head_reads = WTSI::DNAP::Utilities::Runnable->new
-      (arguments  => ['-n', $num_records],
-       executable => '/usr/bin/head');
+    local $SIG{PIPE} = sub {
+      # Without this handler, the child process some times gets
+      # SIGPIPE and sometimes exits with an error. With this handler,
+      # the child process always gets SIGPIPE.
+    };
 
-    @reads = $get_reads->pipe($head_reads)->split_stdout;
+    open my $fh, q[-|], "$samtools view irods:$path" or
+      croak "Failed to open pipe from samtools: $ERRNO";
+
+    my $n = 0;
+    while ($n < $num_records) {
+      my $line = <$fh>;
+      if ($line) {
+        push @reads, $line;
+      }
+      $n++;
+    }
+
+    my $retval = close $fh;
+
+    ## no critic (ValuesAndExpressions::ProhibitMagicNumbers)
+    my $status = $CHILD_ERROR;
+    my $signal = $status & 127;
+    my $error  = $status >> 8;
+
+    if ($signal) {
+      if ($signal != 13) {
+        # 13 == SIGPIPE
+        croak "Error reading from samtools, signal: $signal";
+      }
+    }
+    elsif ($error) {
+      croak "Error reading from samtools, error: $error";
+    }
+    ## use critic
   } catch {
-    # No logger is set on samtools directly to avoid noisy stack
-    # traces when a file can't be read.
-
-    my @stack = split /\n/msx;   # Chop up the stack trace
-    $self->logcroak("Failed to get reads from '$path': ", pop @stack);
+    $self->logcroak("Failed to get reads from '$path': $_");
   };
+
+  my $num_read = scalar @reads;
+  $self->debug("Read $num_read reads from '$path'");
+
+  if ($self->has_num_reads) {
+    my $num_reads = $self->num_reads;
+    if ($num_reads > 0 and $num_read == 0) {
+      $self->logcroak("Failed to get reads from '$path' ",
+                      'with samtools, when it is recorded ',
+                      "as containing $num_reads reads");
+    }
+  }
 
   return @reads;
 }
