@@ -239,7 +239,7 @@ sub publish_lane_pri_data_mlwh : Test(19) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_lane_sec_data_mlwh : Test(217) {
+sub publish_lane_sec_data_mlwh : Test(67) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -254,46 +254,16 @@ sub publish_lane_sec_data_mlwh : Test(217) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my @observed = observed_data_objects($irods, $dest_coll);
-  my @expected = ('18448_2.adapter.json',
-                  '18448_2.alignment_filter_metrics.json',
-                  '18448_2.all.seqchksum',
+  my @expected = ('18448_2.all.seqchksum',
                   '18448_2.bai',
-                  '18448_2.bam_flagstats.json',
                   '18448_2.bam_stats',
                   '18448_2.composition.json',
                   '18448_2.flagstat',
-                  '18448_2.gc_bias.json',
-                  '18448_2.gc_fraction.json',
-                  '18448_2.genotype.json',
-                  '18448_2.insert_size.json',
                   '18448_2.markdups_metrics.txt',
-                  '18448_2.qX_yield.json',
-                  '18448_2.ref_match.json',
                   '18448_2.seqchksum',
-                  '18448_2.sequence_error.json',
-                  '18448_2.sequence_summary.json',
                   '18448_2.sha512primesums512.seqchksum',
-                  '18448_2.spatial_filter.json',
-                  '18448_2.verify_bam_id.json',
-                  '18448_2_F0x900.samtools_stats.json',
                   '18448_2_F0x900.stats',
-                  '18448_2_F0xB00.samtools_stats.json',
                   '18448_2_F0xB00.stats',
-                  '18448_2_phix.bam_flagstats.json',
-                  '18448_2_phix.bam_stats',
-                  '18448_2_phix.composition.json',
-                  '18448_2_phix.flagstat',
-                  '18448_2_phix.markdups_metrics.txt',
-                  '18448_2_phix.seqchksum',
-                  '18448_2_phix.sequence_summary.json',
-                  '18448_2_phix.sha512primesums512.seqchksum',
-                  '18448_2_phix_F0x900.samtools_stats.json',
-                  '18448_2_phix_F0x900.stats',
-                  '18448_2_phix_F0xB00.samtools_stats.json',
-                  '18448_2_phix_F0xB00.stats',
-                  '18448_2_phix_quality_cycle_caltable.txt',
-                  '18448_2_phix_quality_cycle_surv.txt',
-                  '18448_2_phix_quality_error.txt',
                   '18448_2_quality_cycle_caltable.txt',
                   '18448_2_quality_cycle_surv.txt',
                   '18448_2_quality_error.txt');
@@ -337,7 +307,7 @@ sub publish_lane_pri_data_samplesheet : Test(19) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_lane_sec_data_samplesheet : Test(217) {
+sub publish_lane_sec_data_samplesheet : Test(67) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -355,47 +325,18 @@ sub publish_lane_sec_data_samplesheet : Test(217) {
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
+
   my @observed = observed_data_objects($irods, $dest_coll);
-  my @expected = ('18448_2.adapter.json',
-                  '18448_2.alignment_filter_metrics.json',
-                  '18448_2.all.seqchksum',
+  my @expected = ('18448_2.all.seqchksum',
                   '18448_2.bai',
-                  '18448_2.bam_flagstats.json',
                   '18448_2.bam_stats',
                   '18448_2.composition.json',
                   '18448_2.flagstat',
-                  '18448_2.gc_bias.json',
-                  '18448_2.gc_fraction.json',
-                  '18448_2.genotype.json',
-                  '18448_2.insert_size.json',
                   '18448_2.markdups_metrics.txt',
-                  '18448_2.qX_yield.json',
-                  '18448_2.ref_match.json',
                   '18448_2.seqchksum',
-                  '18448_2.sequence_error.json',
-                  '18448_2.sequence_summary.json',
                   '18448_2.sha512primesums512.seqchksum',
-                  '18448_2.spatial_filter.json',
-                  '18448_2.verify_bam_id.json',
-                  '18448_2_F0x900.samtools_stats.json',
                   '18448_2_F0x900.stats',
-                  '18448_2_F0xB00.samtools_stats.json',
                   '18448_2_F0xB00.stats',
-                  '18448_2_phix.bam_flagstats.json',
-                  '18448_2_phix.bam_stats',
-                  '18448_2_phix.composition.json',
-                  '18448_2_phix.flagstat',
-                  '18448_2_phix.markdups_metrics.txt',
-                  '18448_2_phix.seqchksum',
-                  '18448_2_phix.sequence_summary.json',
-                  '18448_2_phix.sha512primesums512.seqchksum',
-                  '18448_2_phix_F0x900.samtools_stats.json',
-                  '18448_2_phix_F0x900.stats',
-                  '18448_2_phix_F0xB00.samtools_stats.json',
-                  '18448_2_phix_F0xB00.stats',
-                  '18448_2_phix_quality_cycle_caltable.txt',
-                  '18448_2_phix_quality_cycle_surv.txt',
-                  '18448_2_phix_quality_error.txt',
                   '18448_2_quality_cycle_caltable.txt',
                   '18448_2_quality_cycle_surv.txt',
                   '18448_2_quality_error.txt');
@@ -436,7 +377,7 @@ sub publish_plex_pri_data_mlwh : Test(19) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_plex_sec_data_mlwh : Test(162) {
+sub publish_plex_sec_data_mlwh : Test(57) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20150914-100512/no_cal/archive';
@@ -454,35 +395,14 @@ sub publish_plex_sec_data_mlwh : Test(162) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my @observed = observed_data_objects($irods, $dest_coll);
-  my @expected = ('17550_1#1.adapter.json',
-                  '17550_1#1.alignment_filter_metrics.json',
-                  '17550_1#1.bam_flagstats.json',
-                  '17550_1#1.bam_stats',
+  my @expected = ('17550_1#1.bam_stats',
                   '17550_1#1.composition.json',
                   '17550_1#1.flagstat',
-                  '17550_1#1.gc_bias.json',
-                  '17550_1#1.gc_fraction.json',
-                  '17550_1#1.insert_size.json',
                   '17550_1#1.markdups_metrics.txt',
-                  '17550_1#1.qX_yield.json',
-                  '17550_1#1.ref_match.json',
                   '17550_1#1.seqchksum',
-                  '17550_1#1.sequence_error.json',
                   '17550_1#1.sha512primesums512.seqchksum',
                   '17550_1#1_F0x900.stats',
                   '17550_1#1_F0xB00.stats',
-                  '17550_1#1_phix.bam_flagstats.json',
-                  '17550_1#1_phix.bam_stats',
-                  '17550_1#1_phix.composition.json',
-                  '17550_1#1_phix.flagstat',
-                  '17550_1#1_phix.markdups_metrics.txt',
-                  '17550_1#1_phix.seqchksum',
-                  '17550_1#1_phix.sha512primesums512.seqchksum',
-                  '17550_1#1_phix_F0x900.stats',
-                  '17550_1#1_phix_F0xB00.stats',
-                  '17550_1#1_phix_quality_cycle_caltable.txt',
-                  '17550_1#1_phix_quality_cycle_surv.txt',
-                  '17550_1#1_phix_quality_error.txt',
                   '17550_1#1_quality_cycle_caltable.txt',
                   '17550_1#1_quality_cycle_surv.txt',
                   '17550_1#1_quality_error.txt');
@@ -527,7 +447,7 @@ sub publish_plex_pri_data_samplesheet : Test(19) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_plex_sec_data_samplesheet : Test(162) {
+sub publish_plex_sec_data_samplesheet : Test(57) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20150914-100512/no_cal/archive';
@@ -549,35 +469,14 @@ sub publish_plex_sec_data_samplesheet : Test(162) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my @observed = observed_data_objects($irods, $dest_coll);
-  my @expected = ('17550_1#1.adapter.json',
-                  '17550_1#1.alignment_filter_metrics.json',
-                  '17550_1#1.bam_flagstats.json',
-                  '17550_1#1.bam_stats',
+  my @expected = ('17550_1#1.bam_stats',
                   '17550_1#1.composition.json',
                   '17550_1#1.flagstat',
-                  '17550_1#1.gc_bias.json',
-                  '17550_1#1.gc_fraction.json',
-                  '17550_1#1.insert_size.json',
                   '17550_1#1.markdups_metrics.txt',
-                  '17550_1#1.qX_yield.json',
-                  '17550_1#1.ref_match.json',
                   '17550_1#1.seqchksum',
-                  '17550_1#1.sequence_error.json',
                   '17550_1#1.sha512primesums512.seqchksum',
                   '17550_1#1_F0x900.stats',
                   '17550_1#1_F0xB00.stats',
-                  '17550_1#1_phix.bam_flagstats.json',
-                  '17550_1#1_phix.bam_stats',
-                  '17550_1#1_phix.composition.json',
-                  '17550_1#1_phix.flagstat',
-                  '17550_1#1_phix.markdups_metrics.txt',
-                  '17550_1#1_phix.seqchksum',
-                  '17550_1#1_phix.sha512primesums512.seqchksum',
-                  '17550_1#1_phix_F0x900.stats',
-                  '17550_1#1_phix_F0xB00.stats',
-                  '17550_1#1_phix_quality_cycle_caltable.txt',
-                  '17550_1#1_phix_quality_cycle_surv.txt',
-                  '17550_1#1_phix_quality_error.txt',
                   '17550_1#1_quality_cycle_caltable.txt',
                   '17550_1#1_quality_cycle_surv.txt',
                   '17550_1#1_quality_error.txt');

@@ -43,17 +43,22 @@ our %ILLUMINA_PART_PATTERNS =
    },
    ancillary_regex => sub {
      my $name = shift;
-     return sprintf q[%s([.]|_).*(%s)$], "\Q$name\E",
+     return sprintf q[(?<!qc)\/%s(_F0x[A-Z0-9]{3})?(%s)$], "\Q$name\E",
        join q[|],
-       'F0x[A-Z0-9]{3}.stats',
-       'bam_stats',
-       'flagstat',
-       'json',
-       'orig.seqchksum',
-       'seqchksum',
-       'sha512primesums512.seqchksum',
-       'stats',
-       'txt';
+       '[.]all[.]seqchksum',
+       '[.]bam_stats',
+       '[.]bcfstats',
+       '[.]flagstat',
+       '[.]composition[.]json',
+       '[.]markdups_metrics[.]txt',
+       '[.]orig[.]seqchksum',
+       '_quality_cycle_caltable[.]txt',
+       '_quality_cycle_surv[.]txt',
+       '_quality_error[.]txt',
+       '[.]seqchksum',
+       '[.]sha512primesums512[.]seqchksum',
+       '[.]stats',
+       '[.]txt';
    },
    qc_regex        => sub {
      my $name = shift;
@@ -73,7 +78,7 @@ our %ILLUMINA_PART_PATTERNS =
 sub composition_files {
   my ($self) = @_;
 
-  return grep { m{[_]composition[.]json$}msx } @{$self->result_files};
+  return grep { m{[.]composition[.]json$}msx } @{$self->result_files};
 }
 
 =head2 interop_files
