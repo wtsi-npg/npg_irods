@@ -35,7 +35,7 @@ our %ILLUMINA_PART_PATTERNS =
    },
    index_regex     => sub {
      my $name = shift;
-     return sprintf q[%s[.](bai|crai|pbi)$],"\Q$name\E";
+     return sprintf q[%s[.](bai|cram[.]crai|pbi)$], "\Q$name\E";
    },
    genotype_regex  => sub {
      my $name = shift;
@@ -52,17 +52,36 @@ our %ILLUMINA_PART_PATTERNS =
        '[.]composition[.]json',
        '[.]markdups_metrics[.]txt',
        '[.]orig[.]seqchksum',
-       '_quality_cycle_caltable[.]txt',
-       '_quality_cycle_surv[.]txt',
-       '_quality_error[.]txt',
+       '_quality_cycle_caltable[.]txt',   # non-conforming file name
+       '_quality_cycle_surv[.]txt',       # non-conforming file name
+       '_quality_error[.]txt',            # non-conforming file name
        '[.]seqchksum',
        '[.]sha512primesums512[.]seqchksum',
+       '[.]spatial_filter[.]stats',
+       '_target[.]stats',                 # non-conforming file name
        '[.]stats',
        '[.]txt';
    },
    qc_regex        => sub {
      my $name = shift;
-     return sprintf q[qc\/%s([.]|_).*[.]json$], "\Q$name\E";
+     return sprintf q[qc\/%s(_F0x[A-Z0-9]{3})?(%s)$], "\Q$name\E",
+       join q[|],
+       '[.]adapter[.]json',
+       '[.]alignment_filter_metrics[.]json',
+       '[.]bam_flagstats[.]json',
+       '[.]gc_bias[.]json',
+       '[.]gc_fraction[.]json',
+       '[.]gc_fraction[.]json',
+       '[.]genotype[.]json',
+       '[.]insert_size[.]json',
+       '[.]qX_yield[.]json',
+       '[.]ref_match[.]json',
+       '[.]samtools_stats[.]json',
+       '[.]sequence_error[.]json',
+       '[.]sequence_summary[.]json',
+       '[.]spatial_filter[.]json',
+       '[.]verify_bam_id[.]json',
+       '_target[.]samtools_stats[.]json'; # non-conforming file name
    });
 
 =head2 composition_files
