@@ -672,6 +672,50 @@ sub publish_plex_pri_data_alt_process : Test(5) {
   check_alt_process_metadata($irods, $pkg, $alt_process, @absolute_paths);
 }
 
+sub publish_xml_files_alt_process : Test(15) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $id_run         = 18448;
+  my $dest_coll      = "$irods_tmp_coll/publish_xml_files";
+
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+  my $alt_process = 'an_alternative_process';
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (alt_process      => $alt_process,
+     id_run           => $id_run,
+     dest_collection  => $dest_coll,
+     irods            => $irods,
+     lims_factory     => $lims_factory,
+     restart_file     => catfile($tmpdir->dirname, 'published.json'),
+     source_directory => $runfolder_path);
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_xml_files;
+  cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
+  cmp_ok($num_processed, '==', 2, 'Published 2 XML files');
+
+  my @observed = observed_data_objects($irods,
+                                       "$dest_coll/$alt_process", '[.]xml$');
+  my @expected = ('RunInfo.xml', 'runParameters.xml');
+  is_deeply(\@observed, \@expected, 'Published correctly named XML files') or
+    diag explain \@observed;
+
+  my @absolute_paths = map { "$dest_coll/$alt_process/$_" } @observed;
+
+  my $pkg = 'WTSI::NPG::HTS::Illumina::XMLDataObject';
+  check_common_metadata($irods, $pkg, @absolute_paths);
+
+  foreach my $path (@absolute_paths) {
+    my $obj = WTSI::NPG::HTS::Illumina::XMLDataObject->new($irods, $path);
+    is_deeply($obj->get_avu($ID_RUN), { attribute => $ID_RUN,
+                                        value     => $id_run },
+              "$path id_run metadata present");
+  }
+}
+
 # From here onwards are test support methods
 
 sub check_publish_lane_pri_data {

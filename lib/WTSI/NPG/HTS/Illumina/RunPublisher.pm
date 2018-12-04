@@ -208,22 +208,15 @@ sub publish_interop_files {
   my ($self) = @_;
 
   my $primary_avus = sub {
-    my @avus;
-    push @avus, $self->make_avu($ID_RUN, $self->id_run);
-    #push @avus, $self->make_avu($TARGET, 0);
-
-    #if ($self->alt_process) {
-    #  push @avus, $self->make_avu($ALT_PROCESS, $self->alt_process);
-    #}
-
-    return @avus;
+    return ($self->make_avu($ID_RUN, $self->id_run));
   };
 
   my @files = $self->result_set->interop_files;
   $self->debug('Publishing interop files: ', pp(\@files));
 
-  return $self->_publish_run_level_data(\@files, $self->dest_collection,
-                                        $primary_avus);
+  # Configure archiving to a custom sub-collection here
+  my $collection = $self->publish_collection;
+  return $self->_publish_run_level_data(\@files, $collection, $primary_avus);
 }
 
 =head2 publish_xml_files
@@ -241,22 +234,15 @@ sub publish_xml_files {
   my ($self) = @_;
 
   my $primary_avus = sub {
-    my @avus;
-    push @avus, $self->make_avu($ID_RUN, $self->id_run);
-    #push @avus, $self->make_avu($TARGET, 0);
-
-    #if ($self->alt_process) {
-    #  push @avus, $self->make_avu($ALT_PROCESS, $self->alt_process);
-    #}
-
-    return @avus;
+    return ($self->make_avu($ID_RUN, $self->id_run));
   };
 
   my @files = $self->result_set->xml_files;
   $self->debug('Publishing XML files: ', pp(\@files));
 
-  return $self->_publish_run_level_data(\@files, $self->dest_collection,
-                                        $primary_avus);
+  # Configure archiving to a custom sub-collection here
+  my $collection = $self->publish_collection;
+  return $self->_publish_run_level_data(\@files, $collection, $primary_avus);
 }
 
 =head2 publish_alignment_files
