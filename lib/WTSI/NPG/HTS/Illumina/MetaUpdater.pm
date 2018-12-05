@@ -76,8 +76,8 @@ sub update_secondary_metadata {
   my $num_processed = 0;
   my $num_errors    = 0;
   foreach my $composition_file (@{$paths}) {
-    $self->info('Updating metadata for files related to ',
-                "'$composition_file' [$num_processed / $num_paths]");
+    $self->info("Updating metadata for files related to '$composition_file'");
+    my $num_objs = 0;
 
     try {
       my ($name, $collection, $suffix) =
@@ -110,7 +110,7 @@ sub update_secondary_metadata {
       $self->debug('Updating QC files: ', pp(\@qc));
 
       my @objs = (@aln, @anc, @gen, @qc);
-      my $num_objs = scalar @objs;
+      $num_objs = scalar @objs;
       $self->info("Updating metadata on a total of $num_objs data objects");
 
       foreach my $obj_path (@objs) {
@@ -136,7 +136,7 @@ sub update_secondary_metadata {
     } catch {
       $num_errors++;
       $self->error("Failed to update metadata for '$composition_file' ",
-                   "[$num_processed / $num_paths]: ", $_);
+                   "[$num_processed / $num_objs]: ", $_);
     };
   }
 
