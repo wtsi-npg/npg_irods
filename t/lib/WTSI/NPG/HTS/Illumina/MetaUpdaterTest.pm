@@ -84,8 +84,10 @@ sub setup_test : Test(setup) {
          executable => 'samtools_irods')->run;
   }
 
-  $irods->add_object("$data_path/$data_file.test.json", $irods_tmp_coll);
-  $irods->add_object("$data_path/$data_file.test.txt", $irods_tmp_coll);
+  $irods->add_collection("$irods_tmp_coll/qc");
+  $irods->add_object("$data_path/qc/$data_file.genotype.json",
+                     "$irods_tmp_coll/qc");
+  $irods->add_object("$data_path/$data_file.seqchksum", $irods_tmp_coll);
   $irods->add_object("$data_path/$data_file.composition.json", $irods_tmp_coll);
 }
 
@@ -153,30 +155,24 @@ sub update_secondary_metadata : Test(5) {
     }
   } # SKIP samtools
 
-  # # Ancillary files
-  # my @composition_files = ("$data_path/$data_file.composition.json");
-
-  # cmp_ok($updater->update_secondary_metadata(\@paths_to_update),
-  #        '==', scalar @paths_to_update,
-  #        'All iRODS ancillary paths processed without errors');
 
   # Restricted
-  my $json_obj = WTSI::NPG::HTS::Illumina::AncDataObject->new
-    (collection  => $irods_tmp_coll,
-     data_object => "$data_file.test.json",
+  my $qc_obj = WTSI::NPG::HTS::Illumina::AncDataObject->new
+    (collection  => "$irods_tmp_coll/qc",
+     data_object => "$data_file.genotype.json",
      irods       => $irods);
-  is_deeply($json_obj->metadata, [{attribute => $STUDY_ID, value => '619'}],
+  is_deeply($qc_obj->metadata, [{attribute => $STUDY_ID, value => '619'}],
             "Secondary metadata updated correctly ($STUDY_ID) JSON") or
-              diag explain $json_obj->metadata;
+              diag explain $qc_obj->metadata;
 
   # Unrestricted
-  my $txt_obj = WTSI::NPG::HTS::Illumina::AncDataObject->new
+  my $anc_obj = WTSI::NPG::HTS::Illumina::AncDataObject->new
     (collection  => $irods_tmp_coll,
-     data_object => "$data_file.test.txt",
+     data_object => "$data_file.seqchksum",
      irods       => $irods);
-  is_deeply($txt_obj->metadata, [],
-            'Secondary metadata updated correctly txt') or
-              diag explain $txt_obj->metadata;
+  is_deeply($anc_obj->metadata, [],
+            'Secondary metadata updated correctly QC') or
+              diag explain $anc_obj->metadata;
 }
 
 1;
