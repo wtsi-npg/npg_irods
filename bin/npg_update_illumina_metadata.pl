@@ -19,6 +19,38 @@ use WTSI::NPG::iRODS;
 our $VERSION = '';
 our $DEFAULT_COLLECTION = '/seq';
 
+sub _read_composition_paths_stdin {
+  my ($log, $stdio) = @_;
+
+  my @composition_paths;
+  if ($stdio) {
+    binmode \*STDIN, 'encoding(UTF-8)';
+
+    while (my $line = <>) {
+      chomp $line;
+      push @composition_paths, $line;
+    }
+
+    $log->info('Read ', scalar @composition_paths,
+               ' iRODS composition file paths from STDIN');
+  }
+
+  return @composition_paths;
+}
+
+sub _find_composition_paths_irods {
+  my ($irods, $collection, $id_run) = @_;
+
+  my @composition_paths;
+  my $recurse = 1;
+  foreach my $id (@{$id_run}) {
+    my ($objs, $colls) = $irods->list_collection("$collection/$id", $recurse);
+    push @composition_paths, grep { m{[.]composition[.]json$}msx } @{$objs};
+  }
+
+  return @composition_paths;
+}
+
 my $verbose_config = << 'LOGCONF'
 log4perl.logger = ERROR, A1
 
@@ -99,7 +131,7 @@ my $irods = $dry_run      ?
 
 my $logger = Log::Log4perl->get_logger('main');
 
-my @composition_paths = _read_composition_paths_stdin($logger);
+my @composition_paths = _read_composition_paths_stdin($logger, $stdio);
 
 $collection ||= $DEFAULT_COLLECTION;
 
@@ -129,49 +161,18 @@ if (@composition_paths) {
 
 $logger->info("Updated metadata on $num_updated files");
 
-sub _read_composition_paths_stdin {
-  my ($log) = @_;
-
-  my @composition_paths;
-  if ($stdio) {
-    binmode \*STDIN, 'encoding(UTF-8)';
-
-    while (my $line = <>) {
-      chomp $line;
-      push @composition_paths, $line;
-    }
-
-    $log->info('Read ', scalar @composition_paths,
-               ' iRODS composition file paths from STDIN');
-  }
-
-  return @composition_paths;
-}
-
-sub _find_composition_paths_irods {
-  my ($irods, $collection, $id_run) = @_;
-
-  my @composition_paths;
-  my $recurse = 1;
-  foreach my $id (@{$id_run}) {
-    my ($objs, $colls) = $irods->list_collection("$collection/$id", $recurse);
-    push @composition_paths, grep { m{[.]composition[.]json$}msx } @{$objs};
-  }
-
-  return @composition_paths;
-}
 
 
 __END__
 
 =head1 NAME
 
-npg_update_hts_metadata
+npg_update_illumina_metadata
 
 =head1 SYNOPSIS
 
-npg_update_hts_metadata [--dry-run] [--lane position] [--logconf file]
-  --min-id-run id_run --max-id-run id_run | --id-run id_run [--tag-index i]
+npg_update_hts_metadata [--dry-run] [--logconf file]
+  --min-id-run id_run --max-id-run id_run | --id-run id_run
   [--verbose] [--zone name]
 
  Options:
@@ -203,23 +204,16 @@ npg_update_hts_metadata [--dry-run] [--lane position] [--logconf file]
 =head1 DESCRIPTION
 
 This script updates secondary metadata (i.e. LIMS-derived metadata,
-not primary experimental metadata) on CRAM and BAM files in iRODS. The
-files may be specified by run (optionally restricted further by lane
-and tag index) in which case either a specific run or run range must
-be given. Alternatively a list of iRODS paths may be piped to
-STDIN.
+not primary experimental metadata) on sequencing result files in
+iRODS. The files may be specified by run, in which case either a
+specific run or run range must be given, alternatively a list of iRODS
+paths may be piped to STDIN.
 
 This script will update metadata on all the files that constitute a
-run, including ancillary files, JSON files and bed files. Some of
+run, including ancillary files, JSON files and genotype files. Some of
 these files do not have sufficient metadata to identify them as
 belonging to a specific run, using metadata alone. This script uses
-the following procedure to find a run's files:
-
- 1. A metadata query is run to idenify all the BAM and/or CRAM files
-    in the run.
-
- 2. The collection(s) in which the files from step 1. are located, are
-    search recursively for additional files.
+an Illumina::ResultSet to determine which files to update.
 
 In dry run mode, the proposed metadata changes will be written as INFO
 notices to the log.
