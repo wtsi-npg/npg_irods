@@ -73,6 +73,7 @@ sub update_secondary_metadata {
   $self->info("Updating metadata for files related to $num_paths ",
               'composition files');
 
+  my $num_files     = 0;
   my $num_processed = 0;
   my $num_errors    = 0;
   foreach my $composition_file (@{$paths}) {
@@ -111,7 +112,10 @@ sub update_secondary_metadata {
 
       my @objs = (@aln, @anc, @gen, @qc);
       $num_objs = scalar @objs;
-      $self->info("Updating metadata on a total of $num_objs data objects");
+      $num_files += $num_objs;
+
+      $self->info("Updating metadata on a total of $num_objs files ",
+                  "related to '$composition_file'");
 
       foreach my $obj_path (@objs) {
         $self->info("Updating metadata on '$obj_path'");
@@ -135,17 +139,15 @@ sub update_secondary_metadata {
       }
     } catch {
       $num_errors++;
-      $self->error("Failed to update metadata for '$composition_file' ",
-                   "[$num_processed / $num_objs]: ", $_);
+      $self->error('Failed to update metadata on all files related to ',
+                   "'$composition_file': ", $_);
     };
+
+    $self->info("Updated metadata for $num_processed / $num_files files");
   }
 
-  $self->info('Updated metadata for files related to ',
-              " $num_processed / $num_paths files");
-
   if ($num_errors > 0) {
-    $self->error('Failed to update cleanly metadata on files related to ',
-                 "$num_paths composition files. $num_errors errors ",
+    $self->error("Failed to update metadata cleanly. $num_errors errors ",
                  'were recorded.');
   }
 
