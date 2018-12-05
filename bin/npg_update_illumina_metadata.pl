@@ -2,31 +2,22 @@
 
 use strict;
 use warnings;
-use File::Basename;
 use FindBin qw[$Bin];
 use lib (-d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib");
 
-use Data::Dump qw[pp];
 use Getopt::Long;
 use List::AllUtils qw[uniq];
-use Log::Log4perl;
 use Log::Log4perl::Level;
 use Pod::Usage;
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::DriRODS;
-use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::HTS::Illumina::MetaUpdater;
-use WTSI::NPG::iRODS::Metadata qw[
-                                   $FILE_TYPE
-                                   $ID_RUN
-                                   $POSITION
-                                   $TAG_INDEX
-                                 ];
+use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::iRODS;
 
 our $VERSION = '';
-our $DEFAULT_ZONE = 'seq';
+our $DEFAULT_COLLECTION = '/seq';
 
 my $verbose_config = << 'LOGCONF'
 log4perl.logger = ERROR, A1
@@ -44,58 +35,41 @@ log4perl.oneMessagePerAppender = 1
 LOGCONF
 ;
 
+my $collection;
 my $debug;
 my $driver_type;
 my $dry_run = 1;
 my @id_run;
-my $lane;
 my $log4perl_config;
 my $max_id_run;
 my $min_id_run;
 my $stdio;
-my $tag_index;
 my $verbose;
-my $zone;
 
-GetOptions('debug'                     => \$debug,
+GetOptions('collection=s'              => \$collection,
+           'debug'                     => \$debug,
            'driver-type|driver_type=s' => \$driver_type,
            'dry-run|dry_run!'          => \$dry_run,
            'help'                      => sub { pod2usage(-verbose => 2,
                                                           -exitval => 0) },
-           'lane|position=i'           => \$lane,
            'logconf=s'                 => \$log4perl_config,
            'max_id_run|max-id-run=i'   => \$max_id_run,
            'min_id_run|min-id-run=i'   => \$min_id_run,
            'id_run|id-run=i'           => \@id_run,
-           'tag-index|tag_index=i'     => \$tag_index,
            'verbose'                   => \$verbose,
-           'zone=s',                   => \$zone,
            q[]                         => \$stdio);
 
-# Process CLI arguments
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
 }
 else {
-  if ($verbose and ($dry_run and not $debug)) {
-    Log::Log4perl::init(\$verbose_config);
-  }
-  elsif ($debug) {
-    Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
-                              level  => $DEBUG,
-                              utf8   => 1})
-  }
-  else {
-    Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
-                              level  => $ERROR,
-                              utf8   => 1})
-  }
-}
+  my $level = $debug ? $DEBUG : $verbose ? $INFO : $WARN;
+  Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
+                            level  => $level,
+                            utf8   => 1});
 
-my $log = Log::Log4perl->get_logger('main');
-$log->level($ALL);
-if ($log4perl_config) {
-  $log->info("Using log config file '$log4perl_config'");
+  # Muffle the iRODS logger
+  Log::Log4perl->get_logger('WTSI.NPG.iRODS')->level($OFF);
 }
 
 if ((defined $max_id_run and not defined $min_id_run) ||
@@ -119,119 +93,74 @@ if (defined $max_id_run and defined $min_id_run) {
 
 @id_run = uniq sort @id_run;
 
-$zone ||= $DEFAULT_ZONE;
+my $irods = $dry_run      ?
+  WTSI::NPG::DriRODS->new :
+  WTSI::NPG::iRODS->new;
 
-# Setup iRODS
-my $irods;
-if ($dry_run) {
-  $irods = WTSI::NPG::DriRODS->new;
-}
-else {
-  $irods = WTSI::NPG::iRODS->new;
-}
+my $logger = Log::Log4perl->get_logger('main');
 
-# Find data objects
-my @data_objs;
-if ($stdio) {
-  binmode \*STDIN, 'encoding(UTF-8)';
+my @composition_paths = _read_composition_paths_stdin($logger);
 
-  $log->info('Reading iRODS paths from STDIN');
-  while (my $line = <>) {
-    chomp $line;
-    push @data_objs, $line;
-  }
-}
+$collection ||= $DEFAULT_COLLECTION;
 
-# Range queries in iRODS are so slow that we have to do lots of
-# per-run queries
-foreach my $id_run (@id_run) {
-  my @run_objs;
+push @composition_paths,
+  _find_composition_paths_irods($irods, $collection, \@id_run);
+@composition_paths = uniq sort @composition_paths;
 
-  # Find the annotated objects by query
-  my @query = _make_run_query($id_run, $lane, $tag_index);
-  $log->info('iRODS query: ', pp(\@query));
-  push @run_objs, $irods->find_objects_by_meta("/$zone", @query);
+$logger->info('Processing ', scalar @composition_paths, ' composition paths');
 
-  # Find other objects by listing collections and filtering
-  my @collections = _parse_run_collections(@run_objs);
-  $log->info(pp(\@collections));
-
-  my $filter_pattern = "^$id_run";
-  if (defined $lane) {
-    $filter_pattern .= qq[_$lane];
-  }
-  if (defined $tag_index) {
-    $filter_pattern .= qq[#$tag_index];
-  }
-
-  my $recurse = 1;
-  foreach my $collection (@collections) {
-    my ($objs, $colls) = $irods->list_collection($collection, $recurse);
-
-    foreach my $obj (@{$objs}) {
-      my $objname = fileparse($obj);
-      ## no critic (RegularExpressions::RequireExtendedFormatting)
-      if ($objname =~ m{$filter_pattern}ms) {
-        push @run_objs, $obj;
-      }
-      ## use critic
-    }
-  }
-
-  push @data_objs, @run_objs;
-}
-
-@data_objs = uniq sort @data_objs;
-$log->info('Processing ', scalar @data_objs, ' data objects');
-
-# Update metadata
 my $num_updated = 0;
 
-if (@data_objs) {
+if (@composition_paths) {
   my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
 
   my @init_args = (mlwh_schema => $wh_schema);
   if ($driver_type) {
-    $log->info("Overriding default driver type with '$driver_type'");
+    $logger->info("Overriding default driver type with '$driver_type'");
     push @init_args, 'driver_type' => $driver_type;
   }
   my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(@init_args);
 
   $num_updated = WTSI::NPG::HTS::Illumina::MetaUpdater->new
     (irods        => $irods,
-     lims_factory => $lims_factory)->update_secondary_metadata(\@data_objs);
+     lims_factory => $lims_factory)->update_secondary_metadata
+       (\@composition_paths);
 }
 
-$log->info("Updated metadata on $num_updated files");
+$logger->info("Updated metadata on $num_updated files");
 
-sub _make_run_query {
-  my ($q_id_run, $q_position, $q_tag_index) = @_;
+sub _read_composition_paths_stdin {
+  my ($log) = @_;
 
-  my @query = ([$FILE_TYPE => '%am', 'like']);
-  if (defined $q_id_run) {
-    push @query, [$ID_RUN => $q_id_run];
-  }
-  if ($q_position) {
-    push @query, [$POSITION => $q_position];
-  }
-  if (defined $q_tag_index) {
-    push @query, [$TAG_INDEX => $q_tag_index];
+  my @composition_paths;
+  if ($stdio) {
+    binmode \*STDIN, 'encoding(UTF-8)';
+
+    while (my $line = <>) {
+      chomp $line;
+      push @composition_paths, $line;
+    }
+
+    $log->info('Read ', scalar @composition_paths,
+               ' iRODS composition file paths from STDIN');
   }
 
-  return @query;
+  return @composition_paths;
 }
 
-sub _parse_run_collections {
-  my (@paths) = @_;
+sub _find_composition_paths_irods {
+  my ($irods, $collection, $id_run) = @_;
 
-  my @collections;
-  foreach my $path (@paths) {
-    my ($objname, $collection, $suffix) = fileparse($path);
-    push @collections, $collection;
+  my @composition_paths;
+  my $recurse = 1;
+  foreach my $id (@{$id_run}) {
+    my ($objs, $colls) = $irods->list_collection("$collection/$id", $recurse);
+    push @composition_paths, grep { m{[.]composition[.]json$}msx } @{$objs};
   }
 
-  return uniq @collections;
+  return @composition_paths;
 }
+
 
 __END__
 
@@ -252,8 +181,6 @@ npg_update_hts_metadata [--dry-run] [--lane position] [--logconf file]
   --dry_run     Enable dry-run mode. Propose metadata changes, but do not
                 perform them. Optional, defaults to true.
   --help        Display help.
-  --position
-  --lane        The sequencing lane/position to update. Optional.
   --logconf     A log4perl configuration file. Optional.
   --max-id-run
   --max_id_run  The upper limit of a run number range to update. Optional.
@@ -264,10 +191,7 @@ npg_update_hts_metadata [--dry-run] [--lane position] [--logconf file]
                 specify multiple runs. If used in conjunction with --min-run
                 and --max-run, the union of the two sets of runs will be
                 updated.
-  --tag-index
-  --tag_index   A tag index within a run to update. Optional.
   --verbose     Print messages while processing. Optional.
-  --zone        The iRODS zone in which to work. Optional, defaults to 'seq'.
   -             Read iRODS paths from STDIN instead of finding them by their
                 run, lane and tag index.
 
@@ -306,7 +230,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2018 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

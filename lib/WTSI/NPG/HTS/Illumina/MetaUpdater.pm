@@ -1,6 +1,7 @@
 package WTSI::NPG::HTS::Illumina::MetaUpdater;
 
 use namespace::autoclean;
+use Data::Dump qw[pp];
 use File::Basename;
 use Moose;
 use MooseX::StrictConstructor;
@@ -92,13 +93,27 @@ sub update_secondary_metadata {
 
       my ($objs, $colls) =
         $self->irods->list_collection($collection, 'RECURSE');
+
       my $result_set =
         WTSI::NPG::HTS::Illumina::ResultSet->new(result_files => $objs);
 
-      my $num_objs = scalar @{$objs};
-      $self->info("Updating metadata on $num_objs data objects");
+      my @aln = $result_set->alignment_files($name);
+      $self->debug('Updating alignment files: ', pp(\@aln));
 
-      foreach my $obj_path (@{$objs}) {
+      my @anc = $result_set->ancillary_files($name);
+      $self->debug('Updating ancillary files: ', pp(\@anc));
+
+      my @gen = $result_set->genotype_files($name);
+      $self->debug('Updating genotype files: ', pp(\@gen));
+
+      my @qc  = $result_set->qc_files($name);
+      $self->debug('Updating QC files: ', pp(\@qc));
+
+      my @objs = (@aln, @anc, @gen, @qc);
+      my $num_objs = scalar @objs;
+      $self->info("Updating metadata on a total of $num_objs data objects");
+
+      foreach my $obj_path (@objs) {
         $self->info("Updating metadata on '$obj_path'");
         my $obj = $obj_factory->make_data_object($obj_path);
 
