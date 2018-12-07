@@ -716,6 +716,69 @@ sub publish_xml_files_alt_process : Test(15) {
   }
 }
 
+sub publish_include_exclude : Test(4) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $id_run         = 18448;
+
+  my $dest_coll      = "$irods_tmp_coll/publish_include";
+
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (id_run           => $id_run,
+     dest_collection  => $dest_coll,
+     irods            => $irods,
+     lims_factory     => $lims_factory,
+     restart_file     => catfile($tmpdir->dirname, 'published.json'),
+     source_directory => $runfolder_path,
+     include          => ['\/18448_2'],
+     exclude          => ['phix']);
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+  cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
+  cmp_ok($num_processed, '==', 30, 'Published 14 files');
+
+  my @observed = observed_data_objects($irods, $dest_coll);
+  my @expected = ('18448_2.all.seqchksum',
+                  '18448_2.bai',
+                  '18448_2.bam_stats',
+                  '18448_2.composition.json',
+                  '18448_2.cram',
+                  '18448_2.cram.crai',
+                  '18448_2.flagstat',
+                  '18448_2.markdups_metrics.txt',
+                  '18448_2.seqchksum',
+                  '18448_2.sha512primesums512.seqchksum',
+                  '18448_2_F0x900.stats',
+                  '18448_2_F0xB00.stats',
+                  '18448_2_quality_cycle_caltable.txt',
+                  '18448_2_quality_cycle_surv.txt',
+                  '18448_2_quality_error.txt');
+  is_deeply(\@observed, \@expected) or diag explain \@observed;
+
+  @observed = observed_data_objects($irods, "$dest_coll/qc");
+  @expected = ('18448_2.adapter.json',
+               '18448_2.alignment_filter_metrics.json',
+               '18448_2.bam_flagstats.json',
+               '18448_2.gc_bias.json',
+               '18448_2.gc_fraction.json',
+               '18448_2.genotype.json',
+               '18448_2.insert_size.json',
+               '18448_2.qX_yield.json',
+               '18448_2.ref_match.json',
+               '18448_2.sequence_error.json',
+               '18448_2.sequence_summary.json',
+               '18448_2.spatial_filter.json',
+               '18448_2.verify_bam_id.json',
+               '18448_2_F0x900.samtools_stats.json',
+               '18448_2_F0xB00.samtools_stats.json');
+  is_deeply(\@observed, \@expected) or diag explain \@observed;
+}
+
 # From here onwards are test support methods
 
 sub check_publish_lane_pri_data {

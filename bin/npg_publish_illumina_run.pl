@@ -53,16 +53,21 @@ my $restart_file;
 my $source_directory;
 my $verbose;
 
+my @include;
+my @exclude;
+
 GetOptions('alt-process|alt_process=s'           => \$alt_process,
            'collection=s'                        => \$dest_collection,
            'debug'                               => \$debug,
            'driver-type|driver_type=s'           => \$driver_type,
+           'exclude=s'                           => \@exclude,
            'file-format|file_format=s'           => \$file_format,
            'force'                               => \$force,
            'help'                                => sub {
              pod2usage(-verbose => 2, -exitval => 0);
            },
            'id_run|id-run=i'                     => \$id_run,
+           'include=s'                           => \@include,
            'logconf=s'                           => \$log4perl_config,
            'max-errors|max_errors=i'             => \$max_errors,
            'restart-file|restart_file=s'         => \$restart_file,
@@ -109,8 +114,10 @@ if ($driver_type) {
 
 my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(@fac_init_args);
 
-my @pub_init_args = (file_format      => $file_format,
+my @pub_init_args = (exclude          => \@exclude,
+                     file_format      => $file_format,
                      force            => $force,
+                     include          => \@include,
                      irods            => $irods,
                      lims_factory     => $lims_factory,
                      source_directory => $source_directory);
@@ -175,6 +182,11 @@ npg_publish_illumina_run --source-directory <path> [--collection <path>]
                       defaults to /seq/<id_run>/.
    --debug            Enable debug level logging. Optional, defaults to
                       false.
+   --exclude          Specifiy one or more regexes to ignore paths under
+                      the target collection. Matching paths will be not be
+                      published. If more than one regex is supplied, they
+                      are all applied. Exclude regexes are applied after
+                      any include regexes (see below).
    --file-format
    --file_format      Load alignment files of this format. Optional,
                       defaults to CRAM format.
@@ -186,6 +198,12 @@ npg_publish_illumina_run --source-directory <path> [--collection <path>]
                       value detected from the runfolder. This option is
                       useful for runs where the value cannot be detected
                       automatically.
+   --include          Specifiy one or more regexes to select paths under
+                      the target collection. Only matching paths will be
+                      published, all others will be ignored. If more than
+                      one regex is supplied, the matches for all of them
+                      are aggregated.
+
    --max-errors       The maximum number of errors permitted before aborting.
                       Optional, defaults to unlimited.
    --restart-file

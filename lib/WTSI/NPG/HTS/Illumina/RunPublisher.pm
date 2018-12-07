@@ -75,6 +75,24 @@ has 'run_files' =>
    documentation => 'All of the files in the dataset, some or all of which ' .
                     'will be published');
 
+has 'exclude' =>
+  (isa           => 'ArrayRef[Str]',
+   is            => 'ro',
+   required      => 1,
+   default       => sub { return [] },
+   documentation => 'An array of regexes applied to exclude paths from ' .
+                    'publishing. These are applied after any includes. ' .
+                    'If supplied, any matching paths will be ignored');
+
+has 'include' =>
+  (isa           => 'ArrayRef[Str]',
+   is            => 'ro',
+   required      => 1,
+   default       => sub { return [] },
+   documentation => 'An array of regexes applied to include paths for ' .
+                    'publishing. These are applied before any excludes. ' .
+                    'If supplied, only matching paths will be published');
+
 has 'alt_process' =>
   (isa           => 'Maybe[Str]',
    is            => 'ro',
@@ -160,8 +178,14 @@ sub publish_collection {
       try {
         my ($nf, $np, $ne) = $fn->();
 
-        if ($ne > 0 and $name) {
-          $self->error("Encountered $ne errors publishing $nf files for $name");
+        if ($ne > 0) {
+          if ($name) {
+            $self->error("Encountered $ne errors publishing $nf ",
+                         "files for $name");
+          }
+          else {
+            $self->error("Encountered $ne errors publishing $nf files");
+          }
         }
 
         $num_files     += $nf;
@@ -169,6 +193,7 @@ sub publish_collection {
         $num_errors    += $ne;
       } catch {
         $num_errors++;
+        $self->error("Unexpected error in publish_files: $_");
       };
     };
 
@@ -633,7 +658,26 @@ sub _build_run_files {
 
   my @files = grep { -f } $self->list_directory($dir, recurse => 1);
 
-  return \@files;
+  my @included;
+
+  my @include_filters = @{$self->include};
+  if (@include_filters) {
+    foreach my $filter (@{$self->include}) {
+      my @tmp = grep { m{$filter}msx } @files;
+      $self->debug("Include filter $filter matched: ", pp(\@tmp));
+      push @included, @tmp;
+    }
+  }
+  else {
+    @included = @files;
+  }
+
+  foreach my $filter (@{$self->exclude}) {
+    @included = grep { ! m{$filter}msx } @included;
+    $self->debug("Exclude filter $filter retained: ", pp(\@included));
+  }
+
+  return \@included;
 }
 
 sub _build_result_set {
