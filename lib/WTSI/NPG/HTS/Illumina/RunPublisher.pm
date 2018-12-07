@@ -89,10 +89,10 @@ has 'force' =>
    documentation => 'Force re-publication of files that have been published');
 
 has 'max_errors' =>
-  (isa       => 'Int',
-   is        => 'ro',
-   required  => 0,
-   predicate => 'has_max_errors',
+  (isa           => 'Int',
+   is            => 'ro',
+   required      => 0,
+   predicate     => 'has_max_errors',
    documentation => 'The maximum number of errors permitted before ' .
                     'the remainder of a publishing process is aborted');
 
@@ -208,7 +208,11 @@ sub publish_interop_files {
   my ($self) = @_;
 
   my $primary_avus = sub {
-    return ($self->make_avu($ID_RUN, $self->id_run));
+    my @avus;
+    if ($self->has_id_run) {
+      push @avus, $self->make_avu($ID_RUN, $self->id_run);
+    }
+    return @avus;
   };
 
   my @files = $self->result_set->interop_files;
@@ -234,7 +238,11 @@ sub publish_xml_files {
   my ($self) = @_;
 
   my $primary_avus = sub {
-    return ($self->make_avu($ID_RUN, $self->id_run));
+    my @avus;
+    if ($self->has_id_run) {
+      push @avus, $self->make_avu($ID_RUN, $self->id_run);
+    }
+    return @avus;
   };
 
   my @files = $self->result_set->xml_files;
@@ -603,7 +611,10 @@ sub _find_seqchksum_digest {
 sub _build_dest_collection  {
   my ($self) = @_;
 
-  my @colls = ($DEFAULT_ROOT_COLL, $self->id_run);
+  my @colls = ($DEFAULT_ROOT_COLL);
+  if ($self->has_id_run) {
+    push @colls, $self->id_run;
+  }
 
   return catdir(@colls);
 }
