@@ -50,8 +50,9 @@ my $db_dir = File::Temp->newdir;
 my $wh_schema;
 my $lims_factory;
 
-my $run7915_lane5_tag0 = '7915_5#0';
-my $run7915_lane5_tag1 = '7915_5#1';
+my $run7915_lane5_tag0       = '7915_5#0';
+my $run7915_lane5_tag1       = '7915_5#1';
+my $run7915_lane5_tag1_human = '7915_5#1_human';
 
 my $run15440_lane1_tag0  = '15440_1#0';
 my $run15440_lane1_tag81 = '15440_1#81';
@@ -137,6 +138,7 @@ sub setup_test : Test(setup) {
 
   if ($samtools_available) {
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1,
+                           $run7915_lane5_tag1_human,
                            $run15440_lane1_tag0, $run15440_lane1_tag81) {
       WTSI::DNAP::Utilities::Runnable->new
           (arguments  => ['view', '-C',
@@ -335,6 +337,56 @@ sub alignment_filter : Test(24) {
       is($alignment_filter, $expected,
          "$full_path alignment_filter is correct");
     }
+  }
+}
+
+sub nonconsented_human_access_revoked : Test(6) {
+ SKIP: {
+    if (not $samtools_available) {
+      skip 'samtools_irods executable not on the PATH', 1;
+    }
+
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                      group_prefix         => $group_prefix,
+                                      group_filter         => $group_filter,
+                                      strict_baton_version => 0);
+
+    my $tag1_expected_meta =
+      [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => $ID_RUN,                   value => '7915'},
+       {attribute => $IS_PAIRED_READ,           value => '1'},
+       {attribute => $POSITION,                 value => '5'},
+       {attribute => $LIBRARY_ID,               value => '4957423'},
+       {attribute => $LIBRARY_TYPE,             value => 'No PCR'},
+       {attribute => $QC_STATE,                 value => '1'},
+       {attribute => $SAMPLE_NAME,              value => '619s040'},
+       {attribute => $SAMPLE_ACCESSION_NUMBER,  value => 'ERS012323'},
+       {attribute => $SAMPLE_COMMON_NAME,
+        value     => 'Burkholderia pseudomallei'},
+       {attribute => $SAMPLE_ID,                value => '230889'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value => '153.0'},
+       {attribute => $STUDY_NAME,
+        value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP000251'},
+       {attribute => $STUDY_ID,                 value => '619'},
+       {attribute => $STUDY_TITLE,
+        value     => 'Burkholderia pseudomallei diversity' . $utf8_extra},
+       {attribute => $TAG_INDEX,                value => '1'},
+       {attribute => $TARGET,                   value => '1'},
+       {attribute => $TOTAL_READS,              value => '10000'}];
+
+    my $spiked_control = 1;
+
+    test_metadata_update($irods, $lims_factory, $irods_tmp_coll,
+                         {data_file              => $run7915_lane5_tag1_human,
+                          format                 => 'cram',
+                          spiked_control         => $spiked_control,
+                          expected_metadata      => $tag1_expected_meta,
+                          expected_groups_before => [$public_group,
+                                                     'ss_10',
+                                                     'ss_100'],
+                          expected_groups_after  => [] # all access removed
+                         });
   }
 }
 
