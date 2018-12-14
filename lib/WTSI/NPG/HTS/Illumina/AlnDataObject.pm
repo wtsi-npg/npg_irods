@@ -205,6 +205,11 @@ sub contains_nonconsented_human {
 override 'update_group_permissions' => sub {
   my ($self, $strict_groups) = @_;
 
+  # super must be called explicitly in order to fire the before/after
+  # methods on update_group_permissions (these are defined in the
+  # superclass)
+  super();
+
   if ($self->contains_nonconsented_human) {
     my $path = $self->str;
 
@@ -229,12 +234,9 @@ override 'update_group_permissions' => sub {
       $self->logcroak("Failed to remove $num_errors / $num_groups group ",
                       "permissions from '$path': ", pp(\@failed_groups));
     }
+  }
 
-    return $self;
-  }
-  else {
-    return super();
-  }
+  return $self;
 };
 
 sub _build_is_restricted_access {

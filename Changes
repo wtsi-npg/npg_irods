@@ -1,3 +1,9 @@
+Release 2.9.1
+ - Illumina::AlnDataObject
+     Call super() in update_group_permissions to trigger inherited
+     before and after methods which manage setting the 'public' data
+     access group.
+
 Release 2.9
  - Archive output from PacBio auto deplexing jobs.
  - Use tears -d to ensure the default iRODS server is used (avoids
