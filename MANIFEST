@@ -16,7 +16,7 @@ bin/npg_publish_minion_run.pl
 bin/npg_publish_pacbio_run.pl
 bin/npg_update_ebi_metadata.pl
 bin/npg_update_gridion_metadata.pl
-bin/npg_update_hts_metadata.pl
+bin/npg_update_illumina_metadata.pl
 bin/npg_update_pacbio_metadata.pl
 bin/samgen.pl
 Build.PL
@@ -51,12 +51,10 @@ lib/WTSI/NPG/HTS/Illumina/AncDataObject.pm
 lib/WTSI/NPG/HTS/Illumina/Annotator.pm
 lib/WTSI/NPG/HTS/Illumina/DataObject.pm
 lib/WTSI/NPG/HTS/Illumina/DataObjectFactory.pm
-lib/WTSI/NPG/HTS/Illumina/FilenameParser.pm
 lib/WTSI/NPG/HTS/Illumina/IndexDataObject.pm
 lib/WTSI/NPG/HTS/Illumina/InterOpDataObject.pm
 lib/WTSI/NPG/HTS/Illumina/LogPublisher.pm
 lib/WTSI/NPG/HTS/Illumina/MetaUpdater.pm
-lib/WTSI/NPG/HTS/Illumina/RunComponent.pm
 lib/WTSI/NPG/HTS/Illumina/RunPublisher.pm
 lib/WTSI/NPG/HTS/Illumina/XMLDataObject.pm
 lib/WTSI/NPG/HTS/LIMSFactory.pm
@@ -105,7 +103,6 @@ lib/WTSI/NPG/OM/BioNano/RunFinder.pm
 lib/WTSI/NPG/OM/BioNano/RunPublisher.pm
 LICENSE
 MANIFEST			This list of files
-META.yml
 README
 scripts/minion/gridion-run-monitor.service
 scripts/minion/install_baton.sh
@@ -15644,8 +15641,6 @@ t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_base
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/26291#1_phix.sha512primesums512.seqchksum
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/26291#1_phix_F0x900.stats
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/26291#1_phix_F0xB00.stats
-t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/bsfopp_26291#1_phix.tmp_algn_frag_000008
-t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/bsfopt_26291#1.tmp_algn_frag_000008
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/qc/26291#1.adapter.json
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/qc/26291#1.alignment_filter_metrics.json
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/qc/26291#1.bam_flagstats.json
@@ -16291,8 +16286,6 @@ t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_base
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/RunInfo.xml
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/RunParameters.xml
 t/data/illumina_meta_updater/7915_5#1.sam
-t/data/illumina_meta_updater/7915_5#1.test.json
-t/data/illumina_meta_updater/7915_5#1.test.txt
 t/data/illumina_meta_updater/test_ref.fa
 t/data/illumina_meta_updater/test_ref.fa.fai
 t/data/log_publisher/100818_IL32_10371/Latest_Summary/archive/log/seq_alignment_17427_20150918-142715.4036.230634.out
