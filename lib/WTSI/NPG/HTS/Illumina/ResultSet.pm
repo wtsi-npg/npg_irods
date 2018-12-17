@@ -27,7 +27,7 @@ our %ILLUMINA_PART_PATTERNS =
      return q[[.]bin$];
    },
    xml_regex       => sub {
-     return q[(RunInfo|runParameters).xml$];
+     return q[(RunInfo|[rR]unParameters).xml$];
    },
    alignment_regex => sub {
      my $name = shift;

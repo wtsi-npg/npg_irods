@@ -6,7 +6,7 @@ use warnings;
 use Carp;
 use English qw[-no_match_vars];
 use File::Basename;
-use File::Spec::Functions qw[catfile splitdir];
+use File::Spec::Functions qw[catfile catdir splitdir];
 use File::Temp;
 use Log::Log4perl;
 use Test::More;
@@ -114,7 +114,7 @@ sub publish_interop_files : Test(45) {
   }
 }
 
-sub publish_xml_files : Test(15) {
+sub publish_xml_files : Test(18) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
@@ -152,6 +152,32 @@ sub publish_xml_files : Test(15) {
                                         value     => $id_run },
               "$path id_run metadata present");
   }
+
+  my $source_dir = catdir($db_dir, '18448_runfolder');
+  mkdir $source_dir;
+  open my $fh, '>', catfile($source_dir, 'RunParameters.xml')
+    or die 'Failed to create a test file';
+  print $fh '<runparams>some info</runparams>'
+    or die 'Failed to write to a test file';
+  close $fh;
+
+  $dest_coll = "$irods_tmp_coll/publish_xml_files2";
+
+  $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (id_run           => $id_run,
+     dest_collection  => $dest_coll,
+     irods            => $irods,
+     lims_factory     => $lims_factory,
+     restart_file     => catfile($tmpdir->dirname, 'published2.json'),
+     source_directory => $source_dir); 
+  ($num_files, $num_processed, $num_errors) = $pub->publish_xml_files;
+  cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
+  cmp_ok($num_processed, '==', 1, 'Published 1 XML file');
+
+  @observed = observed_data_objects($irods, $dest_coll, '[.]xml$');
+  @expected = ('RunParameters.xml');
+  is_deeply(\@observed, \@expected, 'Published correctly named XML files') or
+    diag explain \@observed;  
 }
 
 sub publish_qc_files : Test(93) {
