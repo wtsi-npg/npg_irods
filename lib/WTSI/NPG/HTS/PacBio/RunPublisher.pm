@@ -117,7 +117,7 @@ sub smrt_names {
 
   my $dir_pattern = $self->directory_pattern;
   my @dirs = grep { -d } $self->list_directory($self->runfolder_path,
-                                               $dir_pattern);
+                                               filter => $dir_pattern);
   my @names = sort map { first { $_ ne q[] } reverse splitdir($_) } @dirs;
 
   return @names;
@@ -139,7 +139,8 @@ sub smrt_look_indices {
   my $name = $self->_check_smrt_name($smrt_name);
 
   my $file_pattern = '_[pX]\d+[.]metadata[.]xml$';
-  my @files = $self->list_directory($self->smrt_path($name), $file_pattern);
+  my @files = $self->list_directory($self->smrt_path($name),
+                                    filter => $file_pattern);
 
   my @look_indices;
   foreach my $file (@files) {
@@ -208,10 +209,11 @@ sub list_basx_files {
     $look_pattern = sprintf '_s%s', $look_index;
   }
 
-  my $file_pattern = sprintf '%s_[pX]\d+([.]\d+)?[.]ba[sx][.]h5$', $look_pattern;
+  my $file_pattern =
+    sprintf '%s_[pX]\d+([.]\d+)?[.]ba[sx][.]h5$', $look_pattern;
 
   return [$self->list_directory($self->smrt_analysis_path($name),
-                                $file_pattern)];
+                                filter => $file_pattern)];
 }
 
 =head2 list_sts_xml_files
@@ -238,7 +240,7 @@ sub list_sts_xml_files {
   my $file_pattern = sprintf '%s_[pX]\d+[.]sts[.]xml$', $look_pattern;
 
   return [$self->list_directory($self->smrt_analysis_path($name),
-                                $file_pattern)];
+                                filter => $file_pattern)];
 }
 
 =head2 list_meta_xml_file
@@ -264,7 +266,8 @@ sub list_meta_xml_file {
 
   my $file_pattern = sprintf '%s_[pX]\d+[.]metadata[.]xml$', $look_pattern;
 
-  my @files = $self->list_directory($self->smrt_path($name), $file_pattern);
+  my @files = $self->list_directory($self->smrt_path($name),
+                                    filter => $file_pattern);
 
   my $num_files = scalar @files;
   if ($num_files == 0) {

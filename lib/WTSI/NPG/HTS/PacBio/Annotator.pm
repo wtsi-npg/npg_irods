@@ -10,7 +10,6 @@ with qw[
          WTSI::NPG::iRODS::Annotator
        ];
 
-
 =head2 make_primary_metadata
 
   Arg [1]      PacBio run metadata, WTSI::NPG::HTS::PacBio::Metadata.
@@ -38,7 +37,8 @@ sub make_primary_metadata {
   push @avus, $self->make_avu($PACBIO_WELL,              $metadata->well_name);
   push @avus, $self->make_avu($PACBIO_SAMPLE_LOAD_NAME,  $metadata->sample_name);
 
-  if ($metadata->has_set_number){ #Deprecated field, used in early version of RS
+  # Deprecated field, used in early version of RS
+  if ($metadata->has_set_number){
     push @avus, $self->make_avu($PACBIO_SET_NUMBER, $metadata->set_number);
   }
 
@@ -78,7 +78,6 @@ sub make_secondary_metadata {
 
     # May be removed in future if legacy data no longer required
     push @avus, $self->make_legacy_metadata(@run_records);
-
   }
 
   return @avus;

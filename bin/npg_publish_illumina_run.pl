@@ -40,54 +40,39 @@ log4perl.oneMessagePerAppender = 1
 LOGCONF
 ;
 
-# The default values cause all file types to be published
-my $alignment = 1;
 my $alt_process;
-my $ancillary = 1;
-my $archive_path;
-my $collection;
+my $dest_collection;
 my $debug;
 my $driver_type;
 my $file_format;
 my $force = 0;
-my $genotype = 1;
 my $id_run;
-my $index = 1;
-my $interop = 1;
 my $log4perl_config;
 my $max_errors = 0;
-my $qc = 1;
 my $restart_file;
-my $runfolder_path;
+my $source_directory;
 my $verbose;
-my $xml = 1;
 
-my @positions;
+my @include;
+my @exclude;
 
-GetOptions('alignment!'                        => \$alignment,
-           'alt-process|alt_process=s'         => \$alt_process,
-           'ancillary!'                        => \$ancillary,
-           'archive-path|archive_path=s'       => \$archive_path,
-           'collection=s'                      => \$collection,
-           'debug'                             => \$debug,
-           'driver-type|driver_type=s'         => \$driver_type,
-           'file-format|file_format=s'         => \$file_format,
-           'force'                             => \$force,
-           'genotype!'                         => \$genotype,
-           'help'                              => sub {
+GetOptions('alt-process|alt_process=s'           => \$alt_process,
+           'collection=s'                        => \$dest_collection,
+           'debug'                               => \$debug,
+           'driver-type|driver_type=s'           => \$driver_type,
+           'exclude=s'                           => \@exclude,
+           'file-format|file_format=s'           => \$file_format,
+           'force'                               => \$force,
+           'help'                                => sub {
              pod2usage(-verbose => 2, -exitval => 0);
            },
-           'id_run|id-run=i'                   => \$id_run,
-           'index!'                            => \$index,
-           'interop!'                          => \$interop,
-           'logconf=s'                         => \$log4perl_config,
-           'max-errors|max_errors=i'           => \$max_errors,
-           'lanes|positions=i'                 => \@positions,
-           'qc!'                               => \$qc,
-           'restart-file|restart_file=s'       => \$restart_file,
-           'runfolder-path|runfolder_path=s'   => \$runfolder_path,
-           'verbose'                           => \$verbose,
-           'xml!'                              => \$xml);
+           'id_run|id-run=i'                     => \$id_run,
+           'include=s'                           => \@include,
+           'logconf=s'                           => \$log4perl_config,
+           'max-errors|max_errors=i'             => \$max_errors,
+           'restart-file|restart_file=s'         => \$restart_file,
+           'source-directory|source_directory=s' => \$source_directory,
+           'verbose'                             => \$verbose);
 
 # Process CLI arguments
 if ($log4perl_config) {
@@ -113,13 +98,12 @@ if (not $file_format) {
 }
 $file_format = lc $file_format;
 
-if (not (defined $runfolder_path or defined $archive_path)) {
-  my $msg = 'A --runfolder-path or --archive-path argument is required';
+if (not defined $source_directory) {
+  my $msg = 'A --source-directory argument is required';
   pod2usage(-msg     => $msg,
             -exitval => 2);
 }
 
-# Setup iRODS
 my $irods = WTSI::NPG::iRODS->new;
 
 my @fac_init_args = ();
@@ -130,22 +114,18 @@ if ($driver_type) {
 
 my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(@fac_init_args);
 
-my @pub_init_args = (file_format  => $file_format,
-                     force        => $force,
-                     irods        => $irods,
-                     lims_factory => $lims_factory);
-
-if (defined $archive_path) {
-  push @pub_init_args, archive_path => $archive_path;
-}
-if (defined $runfolder_path) {
-  push @pub_init_args, runfolder_path => $runfolder_path;
-}
+my @pub_init_args = (exclude          => \@exclude,
+                     file_format      => $file_format,
+                     force            => $force,
+                     include          => \@include,
+                     irods            => $irods,
+                     lims_factory     => $lims_factory,
+                     source_directory => $source_directory);
 if ($id_run) {
   push @pub_init_args, id_run => $id_run;
 }
-if ($collection) {
-  push @pub_init_args, dest_collection => $collection;
+if ($dest_collection) {
+  push @pub_init_args, dest_collection => $dest_collection;
 }
 if ($alt_process) {
   push @pub_init_args, alt_process => $alt_process;
@@ -172,41 +152,7 @@ sub handler {
   exit 1;
 }
 
-my ($num_files, $num_published, $num_errors) = (0, 0, 0);
-my $inc_counts = sub {
-  my ($nf, $np, $ne) = @_;
-
-  $num_files     += $nf;
-  $num_published += $np;
-  $num_errors    += $ne;
-};
-
-# Default to all available positions
-if (not @positions) {
-  @positions = $publisher->positions;
-}
-
-if ($alignment) {
-  $inc_counts->($publisher->publish_alignment_files(positions => \@positions));
-}
-if ($ancillary) {
-  $inc_counts->($publisher->publish_ancillary_files(positions => \@positions));
-}
-if ($genotype) {
-  $inc_counts->($publisher->publish_genotype_files(positions => \@positions));
-}
-if ($index) {
-  $inc_counts->($publisher->publish_index_files(positions => \@positions));
-}
-if ($interop) {
-  $inc_counts->($publisher->publish_interop_files);
-}
-if ($qc) {
-  $inc_counts->($publisher->publish_qc_files(positions => \@positions));
-}
-if ($xml) {
-  $inc_counts->($publisher->publish_xml_files);
-}
+my ($num_files, $num_published, $num_errors) = $publisher->publish_files;
 
 if ($num_errors == 0) {
   $log->info("Processed $num_files, published $num_published ",
@@ -225,54 +171,51 @@ npg_publish_illumina_run
 
 =head1 SYNOPSIS
 
-npg_publish_illumina_run --runfolder-path <path> [--collection <path>]
-  [--file-format <format>] [--force] [--position <n>]*
-  [--alignment] [--index] [--ancillary] [--qc] [--max-errors <n>]
+npg_publish_illumina_run --source-directory <path> [--collection <path>]
+  [--file-format <format>] [--force] [--max-errors <n>]
   [--debug] [--verbose] [--logconf <path>]
 
  Options:
-   --alignment       Load alignment files. Optional, defaults to true.
    --alt-process
-   --alt_process     Alternative process used. Optional.
-   --ancillary       Load ancillary (any file other than alignment, index
-                     or JSON). Optional, defaults to true.
-   --collection      The destination collection in iRODS. Optional,
-                     defaults to /seq/<id_run>/.
-   --debug           Enable debug level logging. Optional, defaults to
-                     false.
+   --alt_process      Alternative process used. Optional.
+   --collection       The destination collection in iRODS. Optional,
+                      defaults to /seq/<id_run>/.
+   --debug            Enable debug level logging. Optional, defaults to
+                      false.
+   --exclude          Specifiy one or more regexes to ignore paths under
+                      the target collection. Matching paths will be not be
+                      published. If more than one regex is supplied, they
+                      are all applied. Exclude regexes are applied after
+                      any include regexes (see below).
    --file-format
-   --file_format     Load alignment files of this format. Optional,
-                     defaults to CRAM format.
-   --force           Force an attempt to re-publish files that have been
-                     published successfully.
-   --genotype        Load genotype call files. Optional, defaults to true.
-   --help            Display help.
+   --file_format      Load alignment files of this format. Optional,
+                      defaults to CRAM format.
+   --force            Force an attempt to re-publish files that have been
+                      published successfully.
+   --help             Display help.
    --id-run
-   --id_run          Specify the run number. Optional, defaults to the
-                     value detected from the runfolder. This option is
-                     useful for runs where the value cannot be detected
-                     automatically.
-   --index           Load alignment index files. Optional, defaults to
-                     true.
-   --interop         Load InterOp files. Optional, defaults to true.
-   --lanes
-   --positions       A sequencing lane/position to load. This option may
-                     be supplied multiple times to load multiple lanes.
-                     Optional, defaults to loading all available lanes.
-   --max-errors      The maximum number of errors permitted before aborting.
-                     Optional, defaults to unlimited.
-   --qc              Load QC JSON files. Optional, defaults to true.
+   --id_run           Specify the run number. Optional, defaults to the
+                      value detected from the runfolder. This option is
+                      useful for runs where the value cannot be detected
+                      automatically.
+   --include          Specifiy one or more regexes to select paths under
+                      the target collection. Only matching paths will be
+                      published, all others will be ignored. If more than
+                      one regex is supplied, the matches for all of them
+                      are aggregated.
+
+   --max-errors       The maximum number of errors permitted before aborting.
+                      Optional, defaults to unlimited.
    --restart-file
-   --restart_file    A file path where a record of successfully published
-                     files will be recorded in JSON format on exit. If the
-                     jobs is restarted, no attempt will be made to publish
-                     or even check these files in iRODS. Optional. The
-                     default restart file is "<archive dir>/published.json".
-   --runfolder-path
-   --runfolder_path  The instrument runfolder path to load.
-   --logconf         A log4perl configuration file. Optional.
-   --verbose         Print messages while processing. Optional.
-   --xml             Load XML files. Optional, defaults to true.
+   --restart_file     A file path where a record of successfully published
+                      files will be recorded in JSON format on exit. If the
+                      jobs is restarted, no attempt will be made to publish
+                      or even check these files in iRODS. Optional. The
+                      default restart file is "<archive dir>/published.json".
+   --source-directory
+   --source_directory The instrument runfolder path to load.
+   --logconf          A log4perl configuration file. Optional.
+   --verbose          Print messages while processing. Optional.
 
  Advanced options:
 
@@ -317,18 +260,9 @@ collection, the following take place:
    synchronise with the metadata supplied by st::api::lims, even if no
    files have been modified
 
-The default behaviour of the script is to publish all seven categories
-of file (alignment, ancillary, genotype, index, interop, qc and xml), 
-for all available lane positions. This may be restricted by using one 
-or more of the command line flags --no-alignment, --no-genotype,
---no-index, --no-interop, --no-ancillary, --no-qc and --no-xml, each
-of which instructs the script to exclude that type of file. 
-e.g. "--no-alignment --no-index" will cause alignment and index files
-to be excluded.
-
-One or more "--position <position>" arguments may be supplied to
-restrict operations specific lanes. e.g. "--position 1 --position 8"
-will publish from lane positions 1 and 8 only.
+The behaviour of the script is to publish all seven categories of file
+(alignment, ancillary, genotype, index, interop, qc and xml), for all
+available lane positions.
 
 If an alternative process has been used, it may be supplied as a
 string using the "--alt-process <name>" argument. This affects the
@@ -345,7 +279,8 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2016, 2017 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2016, 2017, 2018 Genome Research Limited. All Rights
+Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

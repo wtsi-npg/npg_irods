@@ -112,6 +112,33 @@ sub records : Test(2) {
   is_deeply($observed2, $expected) or diag explain $observed2;
 }
 
+sub all_records : Test(1) {
+  my $seqchksum_path = "$data_path/17550_1#1.seqchksum";
+  my $seqchksum = WTSI::NPG::HTS::Seqchksum->new(file_name => $seqchksum_path);
+
+  my $expected = [{
+                   'b_seq'                      => '323e8897',
+                   'b_seq_qual'                 => '73464b1c',
+                   'b_seq_tags(BC,FI,QT,RT,TC)' => '68baabcc',
+                   'count'                      => 71488156,
+                   'group'                      => 'all',
+                   'name_b_seq'                 => '84f885e',
+                   'set'                        => 'all'
+                  },
+                  {
+                   'b_seq'                      => '6bf47dc5',
+                   'b_seq_qual'                 => '4058c127',
+                   'b_seq_tags(BC,FI,QT,RT,TC)' => '118c5f4e',
+                   'count'                      => '71483150',
+                   'group'                      => 'all',
+                   'name_b_seq'                 => '6b010bfb',
+                   'set'                        => 'pass'
+                  }];
+  my @observed = $seqchksum->all_records;
+  is_deeply(\@observed, $expected, 'expected all records')
+    or diag explain \@observed;
+}
+
 sub read_groups : Test(1) {
   my $seqchksum_path = "$data_path/17550_1#1.seqchksum";
   my $seqchksum = WTSI::NPG::HTS::Seqchksum->new(file_name => $seqchksum_path);
@@ -154,7 +181,7 @@ sub read_group_records : Test(2) {
   } 'read_group_records fails on invalid read group';
 }
 
-sub digest : Test(2) {
+sub digest : Test(3) {
   my $seqchksum_path = "$data_path/17550_1#1.seqchksum";
   my $seqchksum = WTSI::NPG::HTS::Seqchksum->new(file_name => $seqchksum_path);
 
@@ -162,6 +189,11 @@ sub digest : Test(2) {
   is($digest, '323e8897=084f885e=73464b1c=68baabcc=' .
               '6bf47dc5=6b010bfb=4058c127=118c5f4e', 'expected digest')
     or diag explain $digest;
+
+  my $all_digest = $seqchksum->digest($seqchksum->all_group);
+  is($all_digest, '323e8897=084f885e=73464b1c=68baabcc=' .
+                  '6bf47dc5=6b010bfb=4058c127=118c5f4e', 'expected all digest')
+    or diag explain $all_digest;
 
   dies_ok {
     $seqchksum->digest('no_such_group');

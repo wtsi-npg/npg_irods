@@ -5,6 +5,8 @@ use File::Basename;
 use Moose;
 use MooseX::StrictConstructor;
 
+use WTSI::NPG::HTS::DataObject;
+
 our $VERSION = '';
 
 with qw[
@@ -21,15 +23,17 @@ has 'irods' =>
    documentation => 'The iRODS connection handle');
 
 sub make_data_object {
-  my ($self, $path) = @_;
+  my ($self, $remote_path) = @_;
 
-  defined $path or $self->logconfess('A defined path argument is required');
-  $path or $self->logconfess('A non-empty path argument is required');
+  defined $remote_path or
+    $self->logconfess('A defined remote_path argument is required');
+  $remote_path or
+    $self->logconfess('A non-empty remote_path argument is required');
 
-  my ($filename, $collection, $suffix) = fileparse($path);
+  my ($objname, $collection, $suffix) = fileparse($remote_path);
 
   return WTSI::NPG::HTS::DataObject->new(collection  => $collection,
-                                         data_object => $filename,
+                                         data_object => $objname,
                                          irods       => $self->irods);
 }
 
@@ -42,7 +46,6 @@ __PACKAGE__->meta->make_immutable;
 no Moose;
 
 1;
-
 
 __END__
 
@@ -61,7 +64,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2017 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2017, 2018 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

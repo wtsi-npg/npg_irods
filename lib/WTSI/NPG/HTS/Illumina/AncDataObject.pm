@@ -11,13 +11,7 @@ use WTSI::NPG::iRODS::Metadata;
 
 our $VERSION = '';
 
-extends 'WTSI::NPG::HTS::DataObject';
-
-with qw[
-         WTSI::NPG::HTS::AlFilter
-         WTSI::NPG::HTS::Illumina::RunComponent
-         WTSI::NPG::HTS::Illumina::FilenameParser
-       ];
+extends 'WTSI::NPG::HTS::Illumina::DataObject';
 
 has '+is_restricted_access' =>
   (is => 'ro');
@@ -27,27 +21,6 @@ has '+primary_metadata' =>
 
 sub BUILD {
   my ($self) = @_;
-
-  my ($id_run, $position, $tag_index, $alignment_filter, $file_format) =
-    $self->parse_file_name($self->str);
-
-  if (not defined $self->id_run) {
-    defined $id_run or
-      $self->logconfess('Failed to parse id_run from path ', $self->str);
-    $self->set_id_run($id_run);
-  }
-  if (not defined $self->position) {
-    defined $position or
-      $self->logconfess('Failed to parse position from path ', $self->str);
-    $self->set_position($position);
-  }
-  if (defined $tag_index and not defined $self->tag_index) {
-    $self->set_tag_index($tag_index);
-  }
-
-  if (not defined $self->alignment_filter) {
-    $self->set_alignment_filter($alignment_filter);
-  }
 
   # Modifying read-only attribute
   push @{$self->primary_metadata}, $ALT_PROCESS;
@@ -98,7 +71,10 @@ sub _build_is_restricted_access {
   my $format = lc $self->file_format;
   # The contents of BED, TAB, ZIP and JSON formatted files is assumed to be
   # sensitive and thus they are given restricted access
-  return ($format eq 'bed' or $format eq 'json' or $format eq 'tab' or $format eq 'zip');
+  return ($format eq 'bed'  or
+          $format eq 'json' or
+          $format eq 'tab'  or
+          $format eq 'zip');
 }
 
 __PACKAGE__->meta->make_immutable;

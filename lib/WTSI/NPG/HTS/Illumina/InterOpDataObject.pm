@@ -10,8 +10,6 @@ our $VERSION = '';
 
 extends 'WTSI::NPG::HTS::DataObject';
 
-with 'WTSI::NPG::HTS::Illumina::RunComponent';
-
 has '+is_restricted_access' =>
   (is => 'ro');
 

@@ -1,6 +1,7 @@
 package WTSI::NPG::HTS::Illumina::AlnDataObject;
 
 use namespace::autoclean;
+use Carp;
 use Data::Dump qw[pp];
 use Encode qw[decode];
 use English qw[-no_match_vars];
@@ -21,25 +22,40 @@ our $DEFAULT_SAMTOOLS_EXECUTABLE = 'samtools_irods';
 # SAM SQ header tag
 our $SQ = 'SQ';
 
-extends 'WTSI::NPG::HTS::DataObject';
-
-with qw[
-         WTSI::NPG::HTS::AlFilter
-         WTSI::NPG::HTS::Illumina::RunComponent
-         WTSI::NPG::HTS::Illumina::FilenameParser
-       ];
+extends 'WTSI::NPG::HTS::Illumina::DataObject';
 
 ## no critic (ErrorHandling::RequireCheckingReturnValueOfEval)
 eval { with qw[npg_common::roles::software_location] };
 ## critic
 
 has 'header' =>
-  (is            => 'rw',
+  (is            => 'ro',
    isa           => 'ArrayRef[Str]',
+   required      => 1,
+   builder       => '_build_header',
+   lazy          => 1,
    init_arg      => undef,
-   predicate     => 'has_header',
-   clearer       => 'clear_header',
    documentation => 'The HTS file header (or excerpts of it)');
+
+has 'is_paired_read' =>
+  (is            => 'ro',
+   isa           => 'Bool',
+   required      => 1,
+   builder       => '_build_is_paired_read',
+   lazy          => 1,
+   init_arg      => undef,
+   documentation => 'True if the HTS file contains paired read data');
+
+has 'num_reads' =>
+  (is            => 'ro',
+   isa           => 'Int',
+   required      => 0,
+   predicate     => 'has_num_reads',
+   documentation => 'The number of aligned reads');
+
+has '+composition' =>
+  (builder       => '_build_composition',
+   lazy          => 1);
 
 has '+file_format' =>
   (isa           => AlnFormat);
@@ -50,37 +66,8 @@ has '+is_restricted_access' =>
 has '+primary_metadata' =>
   (is            => 'ro');
 
-my $header_parser;
-
 sub BUILD {
   my ($self) = @_;
-
-  # Parsing the file name could be delayed because the parsed values
-  # are not required for all operations
-
-  # WTSI::NPG::HTS::FilenameParser
-  my ($id_run, $position, $tag_index, $alignment_filter, $file_format) =
-    $self->parse_file_name($self->str);
-
-  if (not defined $self->id_run) {
-    defined $id_run or
-      $self->logconfess('Failed to parse id_run from path ', $self->str);
-    $self->set_id_run($id_run);
-  }
-  if (not defined $self->position) {
-    defined $position or
-      $self->logconfess('Failed to parse position from path ', $self->str);
-    $self->set_position($position);
-  }
-  if (defined $tag_index and not defined $self->tag_index) {
-    $self->set_tag_index($tag_index);
-  }
-
-  if (not defined $self->alignment_filter) {
-    $self->set_alignment_filter($alignment_filter);
-  }
-
-  $header_parser = WTSI::NPG::HTS::HeaderParser->new;
 
   # Modifying read-only attribute
   push @{$self->primary_metadata},
@@ -88,6 +75,8 @@ sub BUILD {
     $ALIGNMENT_FILTER,
     $ALT_PROCESS,
     $ALT_TARGET,
+    $COMPONENT,
+    $COMPOSITION,
     $ID_RUN,
     $IS_PAIRED_READ,
     $POSITION,
@@ -99,18 +88,6 @@ sub BUILD {
 
   return;
 }
-
-# Lazily load header from iRODS
-around 'header' => sub {
-  my ($orig, $self) = @_;
-
-  if (not $self->has_header) {
-    my $header = $self->_read_header;
-    $self->$orig($header);
-  }
-
-  return $self->$orig;
-};
 
 =head2 is_aligned
 
@@ -126,7 +103,9 @@ sub is_aligned {
   my ($self) = @_;
 
   my $is_aligned = 0;
-  my @sq = $header_parser->get_records($self->header, $SQ);
+  my $parser = WTSI::NPG::HTS::HeaderParser->new;
+
+  my @sq = $parser->get_records($self->header, $SQ);
   if (@sq) {
     $self->debug($self->str, ' has SQ record: ', $sq[0]);
     $is_aligned = 1;
@@ -167,7 +146,8 @@ sub reference {
 
   my $reference;
   if ($self->is_aligned) {
-    $reference = $header_parser->alignment_reference($self->header, $filter);
+    my $parser = WTSI::NPG::HTS::HeaderParser->new;
+    $reference = $parser->alignment_reference($self->header, $filter);
   }
 
   return $reference;
@@ -180,7 +160,7 @@ sub reference {
   Example    : $obj->contains_nonconsented_human
   Description: Return true if the file contains human data not having
                explicit consent. This is indicated by alignment results
-               returned by the alignment_filter method.
+               returned by the subset method.
 
   Returntype : Bool
 
@@ -189,14 +169,14 @@ sub reference {
 sub contains_nonconsented_human {
   my ($self) = @_;
 
-  my $af = $self->alignment_filter;
-  my $contains_nonconsented_human;
-  if ($af and ($af eq $HUMAN or $af eq $XAHUMAN)) {
-    $contains_nonconsented_human = 1;
-    $self->debug("$af indicates nonconsented human");
-  }
-  else {
-    $contains_nonconsented_human = 0;
+  my $contains_nonconsented_human =
+    any { $_->has_subset and ($_->subset eq $HUMAN or
+                              $_->subset eq $XAHUMAN)
+        } $self->composition->components_list;
+
+  if ($contains_nonconsented_human) {
+    $self->debug('subset indicates onconsented human sequence in ',
+                 $self->str);
   }
 
   return $contains_nonconsented_human;
@@ -239,30 +219,41 @@ override 'update_group_permissions' => sub {
   return $self;
 };
 
+sub _build_composition {
+  my ($self) = @_;
+
+  my $path = $self->str;
+  if (not $self->is_present) {
+    $self->logconfess('Failed to build the composition attribute from the ',
+                      "iRODS metadata of '$path' because the data object is ",
+                      'not currently (or yet) stored in iRODS');
+  }
+  if (not $self->find_in_metadata($COMPOSITION)) {
+    $self->logconfess('Failed to build the composition attribute from the ',
+                      "iRODS metadata of '$path' because the data object in ",
+                      "iRODS does not have a '$COMPOSITION' AVU");
+  }
+
+  my $json = $self->get_avu($COMPOSITION)->{value};
+
+  my $pkg = 'npg_tracking::glossary::composition::component::illumina';
+  return npg_tracking::glossary::composition->thaw
+    ($json, component_class => $pkg);
+}
+
 sub _build_is_restricted_access {
   my ($self) = @_;
 
   return 1;
 }
 
-sub _read_header {
+sub _build_header {
   my ($self) = @_;
 
-  my $samtools;
-  if ($self->can('samtools_irods_cmd')) {
-    $self->debug('Using npg_common::roles::software_location to find ',
-                 'samtools_irods: ', $self->samtools_irods_cmd);
-    $samtools = $self->samtools_irods_cmd;
-  }
-  else {
-    $self->debug('Using the default samtools executable on PATH: ',
-                 $DEFAULT_SAMTOOLS_EXECUTABLE);
-    $samtools = $DEFAULT_SAMTOOLS_EXECUTABLE;
-  }
+  my $samtools = $self->_find_samtools;
+  my $path     = $self->str;
 
   my @header;
-  my $path = $self->str;
-
   try {
     my $run = WTSI::DNAP::Utilities::Runnable->new
       (arguments  => [qw[view -H], "irods:$path"],
@@ -287,6 +278,107 @@ sub _read_header {
   };
 
   return \@header;
+}
+
+sub _build_is_paired_read {
+  my ($self) = @_;
+
+  my $read_count = 1024;
+  my @reads = $self->_get_reads($read_count);
+
+  my $is_paired_read = 0;
+  foreach my $read (@reads) {
+    my ($qname, $flag, $rname, $pos) = split /\t/msx, $read;
+
+    if (vec $flag, 0, 1) { # 0x1 == read paired
+      $is_paired_read = 1;
+      last;
+    }
+  }
+
+  return $is_paired_read;
+}
+
+sub _get_reads {
+  my ($self, $num_records) = @_;
+
+  $num_records ||= 1024;
+
+  my $samtools = $self->_find_samtools;
+  my $path     = $self->str;
+
+  my @reads;
+  try {
+    local $SIG{PIPE} = sub {
+      # Without this handler, the child process some times gets
+      # SIGPIPE and sometimes exits with an error. With this handler,
+      # the child process always gets SIGPIPE.
+    };
+
+    open my $fh, q[-|], "$samtools view irods:$path" or
+      croak "Failed to open pipe from samtools: $ERRNO";
+
+    my $n = 0;
+    while ($n < $num_records) {
+      my $line = <$fh>;
+      if ($line) {
+        push @reads, $line;
+      }
+      $n++;
+    }
+
+    my $retval = close $fh;
+
+    ## no critic (ValuesAndExpressions::ProhibitMagicNumbers)
+    my $status = $CHILD_ERROR;
+    my $signal = $status & 127;
+    my $error  = $status >> 8;
+
+    if ($signal) {
+      if ($signal != 13) {
+        # 13 == SIGPIPE
+        croak "Error reading from samtools, signal: $signal";
+      }
+    }
+    elsif ($error) {
+      croak "Error reading from samtools, error: $error";
+    }
+    ## use critic
+  } catch {
+    $self->logcroak("Failed to get reads from '$path': $_");
+  };
+
+  my $num_read = scalar @reads;
+  $self->debug("Read $num_read reads from '$path'");
+
+  if ($self->has_num_reads) {
+    my $num_reads = $self->num_reads;
+    if ($num_reads > 0 and $num_read == 0) {
+      $self->logcroak("Failed to get reads from '$path' ",
+                      'with samtools, when it is recorded ',
+                      "as containing $num_reads reads");
+    }
+  }
+
+  return @reads;
+}
+
+sub _find_samtools {
+  my ($self) = @_;
+
+  my $samtools;
+  if ($self->can('samtools_irods_cmd')) {
+    $self->debug('Using npg_common::roles::software_location to find ',
+                 'samtools_irods: ', $self->samtools_irods_cmd);
+    $samtools = $self->samtools_irods_cmd;
+  }
+  else {
+    $self->debug('Using the default samtools executable on PATH: ',
+                 $DEFAULT_SAMTOOLS_EXECUTABLE);
+    $samtools = $DEFAULT_SAMTOOLS_EXECUTABLE;
+  }
+
+  return $samtools;
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -320,7 +412,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016, 2017 Genome Research Limited. All Rights
+Copyright (C) 2015, 2016, 2017, 2018 Genome Research Limited. All Rights
 Reserved.
 
 This program is free software: you can redistribute it and/or modify
