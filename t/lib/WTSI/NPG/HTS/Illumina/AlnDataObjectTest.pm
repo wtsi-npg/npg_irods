@@ -60,6 +60,7 @@ my $run15440_lane1_tag81 = '15440_1#81';
 my %file_composition =
   ('7915_5#0'           => [7915,  5,  0,      undef],
    '7915_5#1'           => [7915,  5,  1,      undef],
+   '7915_5#1_human'     => [7915,  5,  1,     'human'],
    '15440_1#0'          => [15440, 1,  0,      undef],
    '15440_1#81'         => [15440, 1, 81,      undef],
 
@@ -355,6 +356,11 @@ sub nonconsented_human_access_revoked : Test(6) {
 
     my $tag1_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
+       {attribute => 'alignment_filter',        value => 'human'},
+       {attribute => $COMPONENT,                value =>
+        '{"id_run":7915,"position":5,"subset":"human","tag_index":1}'},
+       {attribute => $COMPOSITION,              value =>
+        '{"components":[{"id_run":7915,"position":5,"subset":"human","tag_index":1}]}'},
        {attribute => $ID_RUN,                   value => '7915'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '5'},
@@ -374,7 +380,7 @@ sub nonconsented_human_access_revoked : Test(6) {
        {attribute => $STUDY_TITLE,
         value     => 'Burkholderia pseudomallei diversity' . $utf8_extra},
        {attribute => $TAG_INDEX,                value => '1'},
-       {attribute => $TARGET,                   value => '1'},
+       {attribute => $TARGET,                   value => '0'},
        {attribute => $TOTAL_READS,              value => '10000'}];
 
     my $spiked_control = 1;
