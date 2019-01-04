@@ -3,7 +3,7 @@ package WTSI::NPG::HTS::DataObject;
 use namespace::autoclean;
 use Data::Dump qw[pp];
 use File::Basename;
-use List::AllUtils qw[any all];
+use List::AllUtils qw[any all uniq];
 use Moose;
 use MooseX::StrictConstructor;
 use Try::Tiny;
@@ -12,7 +12,17 @@ our $VERSION = '';
 
 extends 'WTSI::NPG::iRODS::DataObject';
 
-with 'WTSI::NPG::HTS::AVUCollator';
+with qw[
+         WTSI::NPG::HTS::AVUCollator
+       ];
+
+has 'basename' =>
+  (isa           => 'Str',
+   is            => 'rw',
+   required      => 1,
+   builder       => '_build_basename',
+   lazy          => 1,
+   documentation => 'The base name of the file');
 
 has 'file_format' =>
   (isa           => 'Str',
@@ -172,11 +182,28 @@ after 'update_group_permissions' => sub {
   }
 };
 
+sub _build_basename {
+  my ($self) = @_;
+
+  my $path = $self->str;
+  my $filename = fileparse($path);
+  my ($basename) = $filename =~ m{^([^.]+)}msx; # All before first dot
+
+  if ($basename) {
+    $self->debug("Parsed file basename '$basename' from '$path'");
+  }
+  else {
+    $self->error("Failed to parse a file basename from '$path'");
+  }
+
+  return $basename;
+}
+
 sub _build_file_format {
   my ($self) = @_;
 
   my $path = $self->str;
-  my ($file_format) = $path =~ m{[.]([^.]+)$}msx;
+  my ($file_format) = $path =~ m{[.]([^.]+)$}msx; # All after last dot
 
   if ($file_format) {
     $self->debug("Parsed file format suffix '$file_format' from '$path'");
@@ -200,7 +227,8 @@ sub _is_valid_metadata {
 
   defined $avu or $self->logconfess('A defined avu argument is required');
   ref $avu eq 'HASH' or
-    $self->logconfess('The avu argument must be a HashRef');
+    $self->logconfess('The avu argument must be a HashRef. Instead it was ',
+                      pp($avu));
 
   my $attr = $avu->{attribute};
   defined $attr or

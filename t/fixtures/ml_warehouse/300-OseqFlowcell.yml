@@ -8,9 +8,9 @@
   id_study_tmp: 4840
   instrument_name: clive
   instrument_slot: 1
-  last_updated: 2017-09-14 12:12:58
+  last_updated: 2018-06-05 14:19:09
   pipeline_id_lims: Rapid
-  recorded_at: 2017-09-14 12:12:59
+  recorded_at: 2018-06-05 14:19:10
   requested_data_type: basecalls and raw data
 - deleted_at: ~
   experiment_name: 3
@@ -21,9 +21,9 @@
   id_study_tmp: 4840
   instrument_name: clive
   instrument_slot: 2
-  last_updated: 2017-09-14 12:12:58
+  last_updated: 2018-06-05 14:19:09
   pipeline_id_lims: Rapid
-  recorded_at: 2017-09-14 12:12:59
+  recorded_at: 2018-06-05 14:19:10
   requested_data_type: basecalls and raw data
 - deleted_at: ~
   experiment_name: 4
@@ -34,9 +34,9 @@
   id_study_tmp: 4559
   instrument_name: clive
   instrument_slot: 1
-  last_updated: 2017-09-18 11:06:08
+  last_updated: 2018-06-05 14:19:09
   pipeline_id_lims: Rapid
-  recorded_at: 2017-09-18 11:06:08
+  recorded_at: 2018-06-05 14:19:10
   requested_data_type: basecalls and raw data
 - deleted_at: ~
   experiment_name: 4
@@ -47,9 +47,9 @@
   id_study_tmp: 4559
   instrument_name: clive
   instrument_slot: 2
-  last_updated: 2017-09-18 11:06:08
+  last_updated: 2018-06-05 14:19:09
   pipeline_id_lims: Rapid
-  recorded_at: 2017-09-18 11:06:08
+  recorded_at: 2018-06-05 14:19:10
   requested_data_type: basecalls and raw data
 - deleted_at: ~
   experiment_name: 4
@@ -60,9 +60,9 @@
   id_study_tmp: 4559
   instrument_name: clive
   instrument_slot: 3
-  last_updated: 2017-09-18 11:06:08
+  last_updated: 2018-06-05 14:19:09
   pipeline_id_lims: Rapid
-  recorded_at: 2017-09-18 11:06:08
+  recorded_at: 2018-06-05 14:19:10
   requested_data_type: basecalls and raw data
 - deleted_at: ~
   experiment_name: 4
@@ -73,9 +73,9 @@
   id_study_tmp: 4559
   instrument_name: clive
   instrument_slot: 4
-  last_updated: 2017-09-18 11:06:08
+  last_updated: 2018-06-05 14:19:09
   pipeline_id_lims: Rapid
-  recorded_at: 2017-09-18 11:06:08
+  recorded_at: 2018-06-05 14:19:10
   requested_data_type: basecalls and raw data
 - deleted_at: ~
   experiment_name: 4
@@ -86,9 +86,9 @@
   id_study_tmp: 4559
   instrument_name: clive
   instrument_slot: 5
-  last_updated: 2017-09-18 11:06:08
+  last_updated: 2018-06-05 14:19:09
   pipeline_id_lims: Rapid
-  recorded_at: 2017-09-18 11:06:08
+  recorded_at: 2018-06-05 14:19:10
   requested_data_type: basecalls and raw data
 - deleted_at: ~
   experiment_name: 5
@@ -99,9 +99,9 @@
   id_study_tmp: 4559
   instrument_name: clive
   instrument_slot: 1
-  last_updated: 2017-09-21 15:12:02
+  last_updated: 2018-06-05 14:19:09
   pipeline_id_lims: Ligation
-  recorded_at: 2017-09-21 15:12:02
+  recorded_at: 2018-06-05 14:19:10
   requested_data_type: basecalls and raw data
 - deleted_at: ~
   experiment_name: 6
@@ -112,7 +112,7 @@
   id_study_tmp: 4559
   instrument_name: clive
   instrument_slot: 2
-  last_updated: 2017-09-21 15:12:34
+  last_updated: 2018-06-05 14:19:09
   pipeline_id_lims: Ligation
-  recorded_at: 2017-09-21 15:12:34
+  recorded_at: 2018-06-05 14:19:10
   requested_data_type: basecalls and raw data

@@ -76,8 +76,9 @@ sub BUILD {
   Arg [1]    : None.
 
   Example    : my @groups = $seqcksum->read_groups
-  Description: Return an array of read groups (column 0 values,
-               omitting rows 0-4), lexically sorted.
+  Description: Return an array of read groups (column 0 values),
+               excluding the "all" pseudo-group (rows 0-4),
+               lexically sorted.
   Returntype : Array[Str]
 
 =cut
@@ -93,14 +94,53 @@ sub read_groups {
   return @read_groups;
 }
 
-=head2 read_groups
+=head2 all_group
+
+  Arg [1]    : None.
+
+  Example    : my $name = $seqcksum->all_group
+  Description: Return the name of the "all" pseudo-group which
+               represents the combined seqchksum of all the read
+               groups present.
+  Returntype : Str
+
+=cut
+
+sub all_group {
+  return $GROUP_ALL;
+}
+
+=head2 all_records
+
+  Arg [1]    : None.
+
+  Example    : my $name = $seqcksum->all_records
+  Description: Return an array of all records for the "all" pseudo-group
+               (rows 0-4).
+  Returntype : Array[Str]
+
+=cut
+
+sub all_records {
+  my ($self) = @_;
+
+  my @records = grep { $_->{$GROUP} eq $GROUP_ALL } @{$self->records};
+
+  @records or
+    $self->logconfess('Failed to find records for all read groups');
+
+  return @records;
+}
+
+=head2 read_group_records
 
   Arg [1]    : Read group, Str.
 
   Example    : my @records = $seqcksum->read_group_records($read_group);
   Description: Return an array of seqchksum records for the specified
-               read group. The records are sorted lexically by their 'set'
-               keys. Raise an error on an invalid read group.
+               read group, excluding the "all" pseudo-group. The records
+               are sorted lexically by their 'set' keys. Raise an error
+               on an invalid read group.
   Returntype : Array[HashRef]
 
 =cut
@@ -131,7 +171,9 @@ sub read_group_records {
                Comparision of digests is sufficient to identify data
                that are semantically equivalent with respect to the
                values measured by the seqchksum. Raise an error on
-               an invalid read group.
+               an invalid read group. Also accept the "all"
+               pseudo-group and return the combined seqchksum of all
+               read groups present.
   Returntype : Str
 
 =cut
@@ -139,7 +181,19 @@ sub read_group_records {
 sub digest {
   my ($self, $read_group) = @_;
 
-  my @read_group_records = $self->read_group_records($read_group);
+  my @records;
+  if ($read_group eq $GROUP_ALL) {
+    @records = ($self->all_records);
+  }
+  else {
+    @records = $self->read_group_records($read_group);
+  }
+
+  return $self->_make_digest(@records);
+}
+
+sub _make_digest {
+  my ($self, @read_group_records) = @_;
 
   # Defines order of checksums in digest
   my @digest_keys = ($B_SEQ, $NAME_B_SEQ, $B_SEQ_QUAL, $B_SEQ_TAGS);

@@ -1,7 +1,10 @@
 package WTSI::NPG::HTS::PathLister;
 
 use Data::Dump qw[pp];
+use File::Find;
 use Moose::Role;
+
+use WTSI::DNAP::Utilities::Params qw[function_params];
 
 our $VERSION = '';
 
@@ -17,47 +20,74 @@ with qw[
   Example    : my @entries = $obj->list_directory('/tmp', '^foo');
   Description: Return entries in a directory, optionally filtered to match
                match a regex. The regex is applied to the directory entry
-               without a leading path. Return entries with directories
+               with its leading path. Return entries with directories
                sorted first.
   Returntype : Array
 
 =cut
 
-sub list_directory {
-  my ($self, $path, $filter_pattern) = @_;
+{
+   my $positional = 2;
+   my @named      = qw[recurse filter];
+   my $params = function_params($positional, @named);
 
-  my @entries;
+   sub list_directory {
+     my ($self, $path) = $params->parse(@_);
 
-  if (-e $path) {
-    if (-d $path) {
-      $self->debug("Finding items in '$path' matching pattern ",
-                   "'$filter_pattern'");
-      opendir my $dh, $path or $self->logcroak("Failed to opendir '$path': $!");
-      my @dirents = map { "$path/$_" }
-                   grep { m{$filter_pattern}msx } readdir $dh;
-      closedir $dh;
+     my @entries;
+     my @dirs;
+     my @files;
 
-      my @dirs  = sort grep { -d } @dirents;
-      my @files = sort grep { -f } @dirents;
+     if (-e $path) {
+       if (-d $path) {
+         if ($params->recurse) {
+           find(sub {
+                  if (-d) {
+                    push @dirs, $File::Find::dir
+                  }
+                  if (-f) {
+                    push @files, $File::Find::name
+                  }
+                },
+                $path);
+         }
+         else {
+           opendir my $dh, $path or
+             $self->logcroak("Failed to opendir '$path': $!");
+           my @dirents = map { "$path/$_" }
+                        grep { $_ ne q[.] and $_ ne q[..] } readdir $dh;
+           closedir $dh;
 
-      $self->debug("Found directories in '$path' matching pattern ",
-                   "'$filter_pattern': ", pp(\@dirs));
-      $self->debug("Found files in '$path' matching pattern ",
-                   "'$filter_pattern': ", pp(\@files));
+           push @dirs,  grep { -d } @dirents;
+           push @files, grep { -f } @dirents;
+         }
 
-      push @entries, @dirs, @files;
-    }
-    else {
-      $self->error("Path '$path' is not a directory; ",
-                   'unable to scan it for contents');
-    }
-  }
-  else {
-    $self->info("Path '$path' does not exist locally; ignoring");
-  }
+         @dirs  = sort @dirs;
+         @files = sort @files;
+         $self->debug("Found directories in '$path': ", pp(\@dirs));
+         $self->debug("Found files in '$path': ",       pp(\@files));
 
-  return @entries;
+         push @entries, @dirs, @files;
+
+         if (defined $params->filter) {
+           my $regex = $params->filter;
+           @entries = grep { m{$regex}msx } @entries;
+           $self->debug('Filtered result: ', pp(\@entries));
+         }
+       }
+       else {
+         $self->error("Path '$path' is not a directory; ",
+                      'unable to scan it for contents');
+       }
+     }
+     else {
+       $self->info("Path '$path' does not exist locally; ignoring");
+     }
+
+     return @entries;
+   }
 }
+
 
 no Moose::Role;
 
@@ -78,7 +108,7 @@ Keith James E<lt>kdj@sanger.ac.ukE<gt>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2016, 2018 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

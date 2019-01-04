@@ -58,7 +58,7 @@ sub publish_logs : Test(4) {
   # Test inferring of the id_run by using the fake runfolder used to
   # test the RunPublisher
   my $runfolder_path2 =
-    "t/data/run_publisher/sequence/150910_HS40_17550_A_C75BCANXX";
+    "t/data/illumina/sequence/150910_HS40_17550_A_C75BCANXX";
   my $pub2 = WTSI::NPG::HTS::Illumina::LogPublisher->new
     (irods           => $irods,
      runfolder_path  => $runfolder_path2,

@@ -1,6 +1,7 @@
 package WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
 
 use namespace::autoclean;
+use Data::Dump qw[pp];
 use English qw[-no_match_vars];
 use File::Spec::Functions qw[catdir];
 use Moose;
@@ -16,7 +17,7 @@ our $VERSION = '';
 our $SEQUENCE_FILE_FORMAT  = 'bam';
 our $SEQUENCE_INDEX_FORMAT = 'pbi';
 
-# Metadata related 
+# Metadata relatedist
 our $METADATA_FORMAT = 'xml';
 our $METADATA_PREFIX = 'pbmeta:';
 our $METADATA_SET    = 'subreadset';
@@ -47,21 +48,19 @@ has 'analysis_path' =>
 =cut
 
 override 'publish_files' => sub {
-  my($self) = shift;
+  my ($self) = @_;
 
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
-  my $seq_files = $self->list_files($SEQUENCE_FILE_FORMAT .q[$]);
+  my $seq_files = $self->list_files($SEQUENCE_FILE_FORMAT . q[$]);
 
   if (defined $seq_files->[0] && @{$self->smrt_names} == 1) {
 
-    my ($nfb, $npb, $neb) = $self->publish_sequence_files();
-
+    my ($nfb, $npb, $neb) = $self->publish_sequence_files;
     my ($nfp, $npp, $nep) = $self->publish_non_sequence_files
         ($SEQUENCE_INDEX_FORMAT);
-
     my ($nfx, $npx, $nex) = $self->publish_non_sequence_files
-        ($METADATA_SET .q[.]. $METADATA_FORMAT);
+        ($METADATA_SET . q[.] . $METADATA_FORMAT);
 
     $num_files     += ($nfx + $nfb + $nfp);
     $num_processed += ($npx + $npb + $npp);
@@ -80,13 +79,12 @@ override 'publish_files' => sub {
   return ($num_files, $num_processed, $num_errors);
 };
 
-
 =head2 publish_sequence_files
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_sequence_files
-  Description: Publish sequence files to iRODS. Return the number of files, 
-               the number published and the number of errors. R&D data 
+  Description: Publish sequence files to iRODS. Return the number of files,
+               the number published and the number of errors. R&D data
                not supported - only files with databased information.
   Returntype : Array[Int]
 
@@ -95,35 +93,38 @@ override 'publish_files' => sub {
 sub publish_sequence_files {
   my ($self) = @_;
 
-  my $files  = $self->list_files($SEQUENCE_FILE_FORMAT .q[$]);
+  my $files = $self->list_files($SEQUENCE_FILE_FORMAT . q[$]);
 
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
   foreach my $file ( @{$files} ){
+    my $tag_id = $self->_get_tag_from_fname($file);
 
-      my $tag_id = $self->_get_tag_from_fname($file);
+    my @tag_records = $self->find_pacbio_runs
+      ($self->_metadata->run_name, $self->_metadata->well_name, $tag_id);
 
-      my @tag_records = $self->find_pacbio_runs
-             ($self->_metadata->run_name, $self->_metadata->well_name, $tag_id);
+    ## enter as if not deplexed if a tag is not expected
+    my @records =
+      (@tag_records == 1) ?
+             @tag_records :
+             $self->find_pacbio_runs($self->_metadata->run_name,
+                                     $self->_metadata->well_name);
 
-      ## enter as if not deplexed if a tag is not expected 
-      my @records = ( @tag_records == 1 ) ? @tag_records : $self->find_pacbio_runs
-          ($self->_metadata->run_name, $self->_metadata->well_name);
+    if (@records >= 1) {
+      my @primary_avus   = $self->make_primary_metadata($self->_metadata);
+      my @secondary_avus = $self->make_secondary_metadata(@records);
 
-      if( @records >= 1 ){
-          my @primary_avus   = $self->make_primary_metadata($self->_metadata);
-          my @secondary_avus = $self->make_secondary_metadata(@records);
+      my ($a_files, $a_processed, $a_errors) =
+        $self->_publish_files([$file], $self->_dest_path,
+                              \@primary_avus, \@secondary_avus);
 
-          my ($a_files, $a_processed, $a_errors) =
-              $self->_publish_files([$file], $self->_dest_path,
-                                    \@primary_avus, \@secondary_avus);
-
-          $num_files     += $a_files;
-          $num_processed += $a_processed;
-          $num_errors    += $a_errors;
-      }else{
-          $self->info("Skipping publishing $file as no records found");
-      }
+      $num_files     += $a_files;
+      $num_processed += $a_processed;
+      $num_errors    += $a_errors;
+    }
+    else {
+      $self->info("Skipping publishing $file as no records found");
+    }
   }
   $self->info("Published $num_processed / $num_files sequence files ",
               'for SMRT cell ', $self->_metadata->well_name, ' run ',
@@ -131,7 +132,6 @@ sub publish_sequence_files {
 
   return ($num_files, $num_processed, $num_errors);
 }
-
 
 =head2 publish_non_sequence_files
 
@@ -147,12 +147,12 @@ sub publish_sequence_files {
 =cut
 
 sub publish_non_sequence_files {
-  my ($self,$format) = @_;
+  my ($self, $format) = @_;
 
   defined $format or
     $self->logconfess('A defined file format argument is required');
 
-  my $files = $self->list_files($format .q[$]);
+  my $files = $self->list_files($format . q[$]);
 
   my ($num_files, $num_processed, $num_errors) =
     $self->_publish_files($files, $self->_dest_path);
@@ -169,7 +169,7 @@ sub publish_non_sequence_files {
 
   Arg [1]    : File type. Required.
 
-  Example    : $pub->list_files()
+  Example    : $pub->list_files($type)
   Description: Return paths of all sequence files for the given analysis.
                Calling this method will access the file system.
   Returntype : ArrayRef[Str]
@@ -177,12 +177,12 @@ sub publish_non_sequence_files {
 =cut
 
 sub list_files {
-  my ($self,$type) = @_;
+  my ($self, $type) = @_;
 
   defined $type or
     $self->logconfess('A defined file type argument is required');
 
-  return [$self->list_directory($self->runfolder_path,$type)];
+  return [$self->list_directory($self->runfolder_path, filter => $type)];
 }
 
 override 'run_name'  => sub {
@@ -201,10 +201,10 @@ override 'smrt_names'  => sub {
   my $ts_name = $self->_metadata->ts_run_name;
 
   $rfolder =~ /$ts_name/smx or
-     $self->logconfess('Error ts name missing from results folder ',$rfolder);
+     $self->logconfess('Error ts name missing from results folder ', $rfolder);
 
-  $rfolder    =~ s/$ts_name//smx;
-  $rfolder    =~ s/\///gsmx;
+  $rfolder =~ s/$ts_name//smx;
+  $rfolder =~ s/\///gsmx;
 
   $rfolder =~ /$WELL_DIRECTORY_PATTERN/smx or
      $self->logconfess('Error derived folder name ', $rfolder,
@@ -226,19 +226,20 @@ sub _build_metadata{
 
   my $entry_dir = catdir($self->analysis_path, $ENTRY_DIR);
 
-  my @metafiles = $self->list_directory($entry_dir,$METADATA_FORMAT .q[$]);
-  if(@metafiles != 1){
+  my @metafiles = $self->list_directory($entry_dir,
+                                        filter => $METADATA_FORMAT . q[$]);
+  if (@metafiles != 1) {
     $self->logcroak("Expect one $METADATA_FORMAT file in $entry_dir");
   }
   return  WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file
-                 ($metafiles[0],$METADATA_PREFIX);
+                 ($metafiles[0], $METADATA_PREFIX);
 }
 
 sub _get_tag_from_fname {
-  my($self,$file) = @_;
+  my ($self, $file) = @_;
   my $tag_id;
-  if($file =~ /bc(\d+).*bc(\d+)/smx){
-    my($bc1,$bc2) = ($1,$2);
+  if ($file =~ /bc(\d+).*bc(\d+)/smx){
+    my ($bc1, $bc2) = ($1, $2);
     $tag_id = ($bc1 == $bc2) ? $bc1 : undef;
   }
   defined $tag_id or $self->logcroak("No tag found for $file");
@@ -254,7 +255,6 @@ sub _dest_path{
 
   return catdir($self->dest_collection, $self->smrt_names->[0]);
 }
-
 
 __PACKAGE__->meta->make_immutable;
 

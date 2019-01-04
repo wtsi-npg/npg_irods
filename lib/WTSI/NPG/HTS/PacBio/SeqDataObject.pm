@@ -9,10 +9,8 @@ our $VERSION = '';
 
 extends 'WTSI::NPG::HTS::DataObject';
 
-
 has '+is_restricted_access' =>
   (is            => 'ro');
-
 
 sub _build_is_restricted_access {
   my ($self) = @_;
@@ -24,8 +22,6 @@ sub _build_is_restricted_access {
 
   return $is_restricted;
 }
-
-
 
 __PACKAGE__->meta->make_immutable;
 
