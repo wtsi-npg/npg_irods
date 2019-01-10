@@ -371,7 +371,17 @@ sub publish_index_files {
        with_spiked_control => $with_spiked_control);
   };
 
-  my @files = $self->result_set->index_files($name);
+  my $format        = $self->file_format;
+  my %index_formats = (bam  => 'bai',
+                       cram => 'crai');
+  my $index_format = $index_formats{$format};
+  if (not $index_format) {
+    $self->logconfess('No index format is known for alignment format ',
+                      "'$format'");
+  }
+
+  my @files = grep { m{[.]$index_format$}msx }
+    $self->result_set->index_files($name);
   $self->debug("Publishing index files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here

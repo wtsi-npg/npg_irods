@@ -169,7 +169,7 @@ sub publish_xml_files : Test(18) {
      irods            => $irods,
      lims_factory     => $lims_factory,
      restart_file     => catfile($tmpdir->dirname, 'published2.json'),
-     source_directory => $source_dir); 
+     source_directory => $source_dir);
   ($num_files, $num_processed, $num_errors) = $pub->publish_xml_files;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', 1, 'Published 1 XML file');
@@ -177,7 +177,7 @@ sub publish_xml_files : Test(18) {
   @observed = observed_data_objects($irods, $dest_coll, '[.]xml$');
   @expected = ('RunParameters.xml');
   is_deeply(\@observed, \@expected, 'Published correctly named XML files') or
-    diag explain \@observed;  
+    diag explain \@observed;
 }
 
 sub publish_qc_files : Test(93) {
@@ -261,7 +261,7 @@ sub publish_lane_pri_data_mlwh : Test(19) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_lane_sec_data_mlwh : Test(72) {
+sub publish_lane_sec_data_mlwh : Test(67) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -277,7 +277,6 @@ sub publish_lane_sec_data_mlwh : Test(72) {
                                     strict_baton_version => 0);
   my @observed = observed_data_objects($irods, $dest_coll);
   my @expected = ('18448_2.all.seqchksum',
-                  '18448_2.bai',
                   '18448_2.bam_stats',
                   '18448_2.composition.json',
                   '18448_2.cram.crai',
@@ -330,7 +329,7 @@ sub publish_lane_pri_data_samplesheet : Test(19) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_lane_sec_data_samplesheet : Test(72) {
+sub publish_lane_sec_data_samplesheet : Test(67) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -351,7 +350,6 @@ sub publish_lane_sec_data_samplesheet : Test(72) {
 
   my @observed = observed_data_objects($irods, $dest_coll);
   my @expected = ('18448_2.all.seqchksum',
-                  '18448_2.bai',
                   '18448_2.bam_stats',
                   '18448_2.composition.json',
                   '18448_2.cram.crai',
@@ -579,7 +577,7 @@ sub publish_merged_pri_data_samplesheet : Test(17) {
   check_merge_primary_metadata($obj);
 }
 
-sub publish_merged_sec_data_mlwh : Test(72) {
+sub publish_merged_sec_data_mlwh : Test(67) {
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -597,8 +595,7 @@ sub publish_merged_sec_data_mlwh : Test(72) {
                                     strict_baton_version => 0);
 
   deep_observed_vs_expected([observed_data_objects($irods, $dest_coll)],
-                            ['26291#1.bai',
-                             '26291#1.bam_stats',
+                            ['26291#1.bam_stats',
                              '26291#1.bcfstats',
                              '26291#1.composition.json',
                              '26291#1.cram.crai',
@@ -619,7 +616,7 @@ sub publish_merged_sec_data_mlwh : Test(72) {
   check_common_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_merged_sec_data_samplesheet : Test(72) {
+sub publish_merged_sec_data_samplesheet : Test(67) {
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -641,8 +638,7 @@ sub publish_merged_sec_data_samplesheet : Test(72) {
                                     strict_baton_version => 0);
 
   deep_observed_vs_expected([observed_data_objects($irods, $dest_coll)],
-                            ['26291#1.bai',
-                             '26291#1.bam_stats',
+                            ['26291#1.bam_stats',
                              '26291#1.bcfstats',
                              '26291#1.composition.json',
                              '26291#1.cram.crai',
@@ -766,11 +762,10 @@ sub publish_include_exclude : Test(4) {
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
-  cmp_ok($num_processed, '==', 30, 'Published 14 files');
+  cmp_ok($num_processed, '==', 29, 'Published 29 files');
 
   my @observed = observed_data_objects($irods, $dest_coll);
   my @expected = ('18448_2.all.seqchksum',
-                  '18448_2.bai',
                   '18448_2.bam_stats',
                   '18448_2.composition.json',
                   '18448_2.cram',
