@@ -1,3 +1,7 @@
+Release 2.9.2
+ - register RunParameters.xml file for Illumina run publishing
+ - when publishing cram files, only publish crai (not bai)
+
 Release 2.9.1
  - Illumina::AlnDataObject
      Call super() in update_group_permissions to trigger inherited
