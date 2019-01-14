@@ -10,8 +10,6 @@ our $VERSION = '';
 
 extends 'WTSI::NPG::HTS::DataObject';
 
-with 'WTSI::NPG::HTS::Illumina::RunComponent';
-
 has '+is_restricted_access' =>
   (is => 'ro');
 
@@ -56,7 +54,7 @@ WTSI::NPG::HTS::Illumina::XMLDataObject
 
 =head1 DESCRIPTION
 
-Represents XML (RunInfo.xml and runparameters.xml) files in
+Represents XML (RunInfo.xml and [r|R]unParameters.xml) files in
 iRODS. This class overrides some base class behaviour to introduce:
 
  Custom primary metadata restrictions.

@@ -122,6 +122,8 @@ sub publish_file_batch {
   my $num_processed = 0;
   my $num_errors    = 0;
 
+  $self->debug("Publishing a batch of $num_files files: ", pp($files));
+
  FILE: foreach my $file (@{$files}) {
     my $dest = q[];
 
@@ -131,31 +133,32 @@ sub publish_file_batch {
       last FILE;
     }
 
+    $self->debug("Publishing '$file', a member of a batch of $num_files");
+
     if (exists $self->state->{$file}) {
       if ($self->state->{$file} == 1) {
         if ($self->force) {
           $self->info("Forcing re-publication of local file '$file'");
         }
         else {
-          $self->info("Skipping local file '$file' already published");
+          $self->info("Skipping local file '$file'; already published");
           next FILE;
         }
       }
-    }
-    else {
-      $self->debug("Added new file '$file'");
     }
 
     try {
       $num_processed++;
       my ($filename, $directories, $suffix) = fileparse($file);
-      my $path = catfile($dest_coll, $filename);
-      my $obj = $self->obj_factory->make_data_object($path);
+      my $remote_path = catfile($dest_coll, $filename);
+
+      my $obj = $self->obj_factory->make_data_object($remote_path);
       if (not $obj) {
-        $self->logconfess("Failed to parse and make an object from '$path'");
+        $self->logconfess("Failed to make an object from '$remote_path'");
       }
 
-      $dest = $publisher->publish($file, $obj->str)->str;
+      $self->debug("Publishing '$file' to '$remote_path'");
+      $dest = $publisher->publish($file, $remote_path)->str;
 
       my @primary_avus = $primary_avus_callback->($obj);
       my ($num_pattr, $num_pproc, $num_perr) =
@@ -181,13 +184,11 @@ sub publish_file_batch {
       }
 
       $self->state->{$file} = 1; # Mark as published
-
       $self->info("Published '$dest' [$num_processed / $num_files]");
     } catch {
       $num_errors++;
-      my @stack = split /\n/msx;  # Chop up the stack trace
       $self->error("Failed to publish '$file' to '$dest' cleanly ",
-                   "[$num_processed / $num_files]: ", pop @stack);
+                   "[$num_processed / $num_files]: ", $_);
     };
   }
 
@@ -310,7 +311,7 @@ Keith James E<lt>kdj@sanger.ac.ukE<gt>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2017 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2017, 2018 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

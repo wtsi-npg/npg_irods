@@ -22,6 +22,8 @@
   run_complete: 2012-05-13 16:16:23
   run_pending: 2012-05-02 08:47:59
   run_priority: 2
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: 71.43
   tags_decode_percent: 97.03
   unexpected_tags_percent: 0.01
@@ -48,6 +50,8 @@
   run_complete: 2015-02-05 17:36:52
   run_pending: 2015-02-04 11:39:20
   run_priority: 1
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: 2.8
   tags_decode_percent: 97.14
   unexpected_tags_percent: 0
@@ -74,6 +78,8 @@
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: 34.47
   tags_decode_percent: 99.37
   unexpected_tags_percent: 0
@@ -100,6 +106,8 @@
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: 8.75
   tags_decode_percent: 99.31
   unexpected_tags_percent: 0
@@ -126,6 +134,8 @@
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: 5.02
   tags_decode_percent: 99.34
   unexpected_tags_percent: 0
@@ -152,6 +162,8 @@
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: 5.03
   tags_decode_percent: 99.32
   unexpected_tags_percent: 0
@@ -178,6 +190,8 @@
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: 11.19
   tags_decode_percent: 99.24
   unexpected_tags_percent: 0
@@ -204,6 +218,8 @@
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: 5.57
   tags_decode_percent: 99.37
   unexpected_tags_percent: 0
@@ -230,6 +246,8 @@
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: 29.03
   tags_decode_percent: 97.91
   unexpected_tags_percent: 0
@@ -256,6 +274,8 @@
   run_complete: 2015-09-14 06:22:53
   run_pending: 2015-09-10 09:50:41
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: 35.15
   tags_decode_percent: 97.6
   unexpected_tags_percent: 0
@@ -282,6 +302,8 @@
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -308,6 +330,8 @@
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -334,6 +358,8 @@
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -360,6 +386,8 @@
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -386,6 +414,8 @@
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -412,6 +442,8 @@
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -438,6 +470,8 @@
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -464,6 +498,8 @@
   run_complete: 2015-12-14 08:07:13
   run_pending: 2015-12-11 11:38:14
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
@@ -490,6 +526,64 @@
   run_complete: 2016-02-28 05:52:40
   run_pending: 2016-02-25 15:44:09
   run_priority: 4
+  tag_hops_percent: ~
+  tag_hops_power: ~
   tags_decode_cv: 164.68
   tags_decode_percent: 96.74
   unexpected_tags_percent: 0
+- cancelled: 0
+  cycles: 318
+  flowcell_barcode: H3FCMDRXX
+  id_run: 26291
+  instrument_model: NovaSeq
+  instrument_name: NV10
+  paired_read: 1
+  pf_bases: ~
+  pf_cluster_count: ~
+  pf_cluster_density: 2314708.691
+  position: 1
+  q20_yield_kb_forward_read: 146609727
+  q20_yield_kb_reverse_read: 141947297
+  q30_yield_kb_forward_read: 139979894
+  q30_yield_kb_reverse_read: 131560909
+  q40_yield_kb_forward_read: 0
+  q40_yield_kb_reverse_read: 0
+  qc_complete: 2018-07-30 09:35:04
+  raw_cluster_count: ~
+  raw_cluster_density: 2961263.957
+  run_complete: 2018-07-12 11:27:17
+  run_pending: 2018-07-10 12:16:30
+  run_priority: 1
+  tag_hops_percent: 1.43192
+  tag_hops_power: 1
+  tags_decode_cv: 15.14
+  tags_decode_percent: 93.77
+  unexpected_tags_percent: 0.01
+- cancelled: 0
+  cycles: 318
+  flowcell_barcode: H3FCMDRXX
+  id_run: 26291
+  instrument_model: NovaSeq
+  instrument_name: NV10
+  paired_read: 1
+  pf_bases: ~
+  pf_cluster_count: ~
+  pf_cluster_density: 2299991.399
+  position: 2
+  q20_yield_kb_forward_read: 145178174
+  q20_yield_kb_reverse_read: 140534258
+  q30_yield_kb_forward_read: 138151012
+  q30_yield_kb_reverse_read: 129758468
+  q40_yield_kb_forward_read: 0
+  q40_yield_kb_reverse_read: 0
+  qc_complete: 2018-07-30 09:35:04
+  raw_cluster_count: ~
+  raw_cluster_density: 2961263.957
+  run_complete: 2018-07-12 11:27:17
+  run_pending: 2018-07-10 12:16:30
+  run_priority: 1
+  tag_hops_percent: 1.38877
+  tag_hops_power: 1
+  tags_decode_cv: 15.03
+  tags_decode_percent: 93.61
+  unexpected_tags_percent: 0.01

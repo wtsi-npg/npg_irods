@@ -9,13 +9,7 @@ use WTSI::NPG::iRODS::Metadata;
 
 our $VERSION = '';
 
-extends 'WTSI::NPG::HTS::DataObject';
-
-with qw[
-         WTSI::NPG::HTS::AlFilter
-         WTSI::NPG::HTS::Illumina::RunComponent
-         WTSI::NPG::HTS::Illumina::FilenameParser
-       ];
+extends 'WTSI::NPG::HTS::Illumina::DataObject';
 
 has '+is_restricted_access' =>
   (is => 'ro');
@@ -23,44 +17,27 @@ has '+is_restricted_access' =>
 has '+primary_metadata' =>
   (is => 'ro');
 
-
 sub BUILD {
   my ($self) = @_;
 
-  my ($id_run, $position, $tag_index, $alignment_filter, $file_format) =
-    $self->parse_file_name($self->str);
-
-  if (not defined $self->id_run) {
-    defined $id_run or
-      $self->logconfess('Failed to parse id_run from path ', $self->str);
-    $self->set_id_run($id_run);
-  }
-  if (not defined $self->position) {
-    defined $position or
-      $self->logconfess('Failed to parse position from path ', $self->str);
-    $self->set_position($position);
-  }
-  if (defined $tag_index and not defined $self->tag_index) {
-    $self->set_tag_index($tag_index);
-  }
-
-  if (not defined $self->alignment_filter) {
-    $self->set_alignment_filter($alignment_filter);
-  }
-
   # Modifying read-only attributes
-  push @{$self->primary_metadata},$ID_RUN,$POSITION,$TAG_INDEX,$ALT_PROCESS,$GBS_PLEX_NAME;
+  push @{$self->primary_metadata},
+    $ALT_PROCESS,
+    $COMPONENT,
+    $COMPOSITION,
+    $GBS_PLEX_NAME,
+    $ID_RUN,
+    $POSITION,
+    $TAG_INDEX;
 
   return;
 }
-
 
 sub _build_is_restricted_access {
   my ($self) = @_;
 
   return 1;
 }
-
 
 __PACKAGE__->meta->make_immutable;
 

@@ -20,6 +20,7 @@
   manual_qc: 1
   pipeline_id_lims: ~
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -58,6 +59,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -96,6 +98,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -134,6 +137,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -172,6 +176,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -210,6 +215,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -248,6 +254,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -286,6 +293,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -324,6 +332,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -362,6 +371,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -400,6 +410,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -438,6 +449,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -476,6 +488,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -514,6 +527,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -552,6 +566,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -590,6 +605,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -628,6 +644,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -666,6 +683,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -704,6 +722,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -742,6 +761,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -780,6 +800,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -818,6 +839,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -856,6 +878,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -894,6 +917,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -932,6 +956,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -970,6 +995,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -1008,6 +1034,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -1046,6 +1073,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -1084,6 +1112,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -1122,6 +1151,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -1160,6 +1190,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -1198,6 +1229,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -1236,6 +1268,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -1274,6 +1307,7 @@
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2016-02-09 09:55:41
@@ -1312,6 +1346,7 @@
   manual_qc: 1
   pipeline_id_lims: ~
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: ~
   recorded_at: 2015-05-07 15:03:58
@@ -1350,6 +1385,7 @@
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: ~
   recorded_at: 2015-05-07 15:03:58
@@ -1388,6 +1424,7 @@
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: ~
   recorded_at: 2015-05-07 15:03:58
@@ -1426,6 +1463,7 @@
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: ~
   recorded_at: 2015-05-07 15:03:58
@@ -1464,6 +1502,7 @@
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: ~
   recorded_at: 2015-05-07 15:03:58
@@ -1502,6 +1541,7 @@
   manual_qc: 1
   pipeline_id_lims: ~
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -1540,6 +1580,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -1578,6 +1619,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -1616,6 +1658,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -1654,6 +1697,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -1692,6 +1736,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -1730,6 +1775,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -1768,6 +1814,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -1806,6 +1853,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -1844,6 +1892,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -1882,6 +1931,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -1920,6 +1970,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -1958,6 +2009,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -1996,6 +2048,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2034,6 +2087,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2072,6 +2126,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2110,6 +2165,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2148,6 +2204,7 @@
   manual_qc: 1
   pipeline_id_lims: ~
   position: 2
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2186,6 +2243,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2224,6 +2282,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2262,6 +2321,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2300,6 +2360,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2338,6 +2399,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2376,6 +2438,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2414,6 +2477,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2452,6 +2516,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2490,6 +2555,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2528,6 +2594,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2566,6 +2633,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2604,6 +2672,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2642,6 +2711,7 @@
   manual_qc: 1
   pipeline_id_lims: ~
   position: 3
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2680,6 +2750,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2718,6 +2789,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2756,6 +2828,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2794,6 +2867,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2832,6 +2906,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2870,6 +2945,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2908,6 +2984,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2946,6 +3023,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -2984,6 +3062,7 @@
   manual_qc: 1
   pipeline_id_lims: ~
   position: 4
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3022,6 +3101,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3060,6 +3140,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3098,6 +3179,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3136,6 +3218,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3174,6 +3257,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3212,6 +3296,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3250,6 +3335,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3288,6 +3374,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
+  primer_panel: ~
   priority: 0
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3326,6 +3413,7 @@
   manual_qc: 1
   pipeline_id_lims: ~
   position: 5
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3364,6 +3452,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3402,6 +3491,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3440,6 +3530,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3478,6 +3569,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3516,6 +3608,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3554,6 +3647,7 @@
   manual_qc: 1
   pipeline_id_lims: ~
   position: 6
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3592,6 +3686,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3630,6 +3725,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3668,6 +3764,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3706,6 +3803,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3744,6 +3842,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3782,6 +3881,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3820,6 +3920,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3858,6 +3959,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3896,6 +3998,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3934,6 +4037,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -3972,6 +4076,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4010,6 +4115,7 @@
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4048,6 +4154,7 @@
   manual_qc: 1
   pipeline_id_lims: ~
   position: 7
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4086,6 +4193,7 @@
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4124,6 +4232,7 @@
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4162,6 +4271,7 @@
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4200,6 +4310,7 @@
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4238,6 +4349,7 @@
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4276,6 +4388,7 @@
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4314,6 +4427,7 @@
   manual_qc: 1
   pipeline_id_lims: ~
   position: 8
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4352,6 +4466,7 @@
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4390,6 +4505,7 @@
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4428,6 +4544,7 @@
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4466,6 +4583,7 @@
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4504,6 +4622,7 @@
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4542,6 +4661,7 @@
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2017-08-31 14:44:18
@@ -4580,6 +4700,7 @@
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-01-04 22:02:02
@@ -4618,6 +4739,7 @@
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 2
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-01-04 22:02:02
@@ -4656,6 +4778,7 @@
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 3
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-01-04 22:02:02
@@ -4694,6 +4817,7 @@
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 4
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-01-04 22:02:02
@@ -4732,6 +4856,7 @@
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 5
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-01-04 22:02:02
@@ -4770,6 +4895,7 @@
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 6
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-01-04 22:02:02
@@ -4808,6 +4934,7 @@
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 7
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-01-04 22:02:02
@@ -4846,6 +4973,7 @@
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 8
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-01-04 22:02:02
@@ -4884,6 +5012,7 @@
   manual_qc: 1
   pipeline_id_lims: ~
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -4922,6 +5051,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -4960,6 +5090,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -4998,6 +5129,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5036,6 +5168,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5074,6 +5207,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5112,6 +5246,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5150,6 +5285,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5188,6 +5324,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5226,6 +5363,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5264,6 +5402,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5302,6 +5441,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5340,6 +5480,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5378,6 +5519,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5416,6 +5558,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5454,6 +5597,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5492,6 +5636,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5530,6 +5675,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5568,6 +5714,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:05
@@ -5606,6 +5753,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -5644,6 +5792,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -5682,6 +5831,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -5720,6 +5870,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -5758,6 +5909,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -5796,6 +5948,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -5834,6 +5987,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -5872,6 +6026,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -5910,6 +6065,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -5948,6 +6104,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -5986,6 +6143,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6024,6 +6182,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6062,6 +6221,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6100,6 +6260,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6138,6 +6299,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6176,6 +6338,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6214,6 +6377,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6252,6 +6416,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6290,6 +6455,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6328,6 +6494,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6366,6 +6533,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6404,6 +6572,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6442,6 +6611,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6480,6 +6650,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6518,6 +6689,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6556,6 +6728,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6594,6 +6767,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6632,6 +6806,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6670,6 +6845,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6708,6 +6884,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6746,6 +6923,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6784,6 +6962,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6822,6 +7001,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6860,6 +7040,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6898,6 +7079,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6936,6 +7118,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6974,6 +7157,7 @@
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-03-07 22:03:06
@@ -6990,4 +7174,1018 @@
   tag_sequence: TGTGAAGA
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: ~
+  entity_id_lims: 22706626
+  entity_type: library_indexed_spike
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6074218
+  id_library_lims: NT1337384J
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 1237247
+  id_study_tmp: 177
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 21210572
+  manual_qc: ~
+  pipeline_id_lims: ~
+  position: 1
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: ~
+  requested_insert_size_to: ~
+  reverse_read_length: 150
+  suboptimal: ~
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: ~
+  tag_index: 888
+  tag_sequence: ACAACGCAATC
+  tag_set_id_lims: 42
+  tag_set_name: 384plex_11mers
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706626
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187661
+  id_library_lims: NT1444191B
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736451
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705458
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 1
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 108
+  tag_index: 5
+  tag_sequence: TAAGTACC
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706626
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187662
+  id_library_lims: NT1444192C
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736452
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705459
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 1
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 120
+  tag_index: 6
+  tag_sequence: ACCTTAGA
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706626
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187663
+  id_library_lims: NT1444193D
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736454
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705460
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 1
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 132
+  tag_index: 7
+  tag_sequence: GTCTGTGC
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706626
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187664
+  id_library_lims: NT1444194E
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736453
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705461
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 1
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 144
+  tag_index: 8
+  tag_sequence: GGCAGGAG
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706626
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187665
+  id_library_lims: NT1444187F
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736448
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705454
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 1
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 155
+  tag_index: 1
+  tag_sequence: AAGGATAA
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706626
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187666
+  id_library_lims: NT1444195F
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736456
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705462
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 1
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 156
+  tag_index: 9
+  tag_sequence: GGCGAGGA
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706626
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187667
+  id_library_lims: NT1444188G
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736447
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705455
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 1
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 167
+  tag_index: 2
+  tag_sequence: TGCAGTCG
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706626
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187668
+  id_library_lims: NT1444196G
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736455
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705463
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 1
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 168
+  tag_index: 10
+  tag_sequence: TGCCGTAA
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706626
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187669
+  id_library_lims: NT1444189H
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736449
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705456
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 1
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 179
+  tag_index: 3
+  tag_sequence: AAGGTAGG
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706626
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187670
+  id_library_lims: NT1444197H
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736457
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705464
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 1
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 180
+  tag_index: 11
+  tag_sequence: TGGTATGG
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706626
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187671
+  id_library_lims: NT1444190A
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736450
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705457
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 1
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 191
+  tag_index: 4
+  tag_sequence: ACAGGCAG
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706626
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187672
+  id_library_lims: NT1444198I
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736458
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705465
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 1
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 192
+  tag_index: 12
+  tag_sequence: TTGCCATC
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: ~
+  entity_id_lims: 22706627
+  entity_type: library_indexed_spike
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6074231
+  id_library_lims: NT1337384J
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 1237247
+  id_study_tmp: 177
+  is_r_and_d: 0
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 21210572
+  manual_qc: ~
+  pipeline_id_lims: ~
+  position: 2
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: ~
+  requested_insert_size_to: ~
+  reverse_read_length: 150
+  suboptimal: ~
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: ~
+  tag_index: 888
+  tag_sequence: ACAACGCAATC
+  tag_set_id_lims: 42
+  tag_set_name: 384plex_11mers
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706627
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187673
+  id_library_lims: NT1444191B
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736451
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705458
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 2
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 108
+  tag_index: 5
+  tag_sequence: TAAGTACC
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706627
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187674
+  id_library_lims: NT1444192C
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736452
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705459
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 2
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 120
+  tag_index: 6
+  tag_sequence: ACCTTAGA
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706627
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187675
+  id_library_lims: NT1444193D
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736454
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705460
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 2
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 132
+  tag_index: 7
+  tag_sequence: GTCTGTGC
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706627
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187676
+  id_library_lims: NT1444194E
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736453
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705461
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 2
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 144
+  tag_index: 8
+  tag_sequence: GGCAGGAG
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706627
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187677
+  id_library_lims: NT1444187F
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736448
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705454
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 2
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 155
+  tag_index: 1
+  tag_sequence: AAGGATAA
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706627
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187678
+  id_library_lims: NT1444195F
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736456
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705462
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 2
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 156
+  tag_index: 9
+  tag_sequence: GGCGAGGA
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706627
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187679
+  id_library_lims: NT1444188G
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736447
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705455
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 2
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 167
+  tag_index: 2
+  tag_sequence: TGCAGTCG
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706627
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187680
+  id_library_lims: NT1444196G
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736455
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705463
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 2
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 168
+  tag_index: 10
+  tag_sequence: TGCCGTAA
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706627
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187681
+  id_library_lims: NT1444189H
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736449
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705456
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 2
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 179
+  tag_index: 3
+  tag_sequence: AAGGTAGG
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706627
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187682
+  id_library_lims: NT1444197H
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736457
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705464
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 2
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 180
+  tag_index: 11
+  tag_sequence: TGGTATGG
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706627
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187683
+  id_library_lims: NT1444190A
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736450
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705457
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 2
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 191
+  tag_index: 4
+  tag_sequence: ACAGGCAG
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
+  team: Illumina-HTP
+- bait_name: ~
+  cost_code: S0910
+  entity_id_lims: 22706627
+  entity_type: library_indexed
+  external_release: ~
+  flowcell_barcode: H3FCMDRXX
+  forward_read_length: 150
+  id_flowcell_lims: 62636
+  id_iseq_flowcell_tmp: 6187684
+  id_library_lims: NT1444198I
+  id_lims: SQSCP
+  id_pool_lims: NT1444199J
+  id_sample_tmp: 3736458
+  id_study_tmp: 5147
+  is_r_and_d: 1
+  is_spiked: 1
+  last_updated: 2018-08-24 14:36:38
+  legacy_library_id: 22705465
+  manual_qc: ~
+  pipeline_id_lims: HiSeqX PCR free
+  position: 2
+  primer_panel: ~
+  priority: 0
+  purpose: standard
+  recorded_at: 2018-08-24 14:37:44
+  requested_insert_size_from: 10
+  requested_insert_size_to: 1200
+  reverse_read_length: 150
+  suboptimal: 0
+  tag2_identifier: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag_identifier: 192
+  tag_index: 12
+  tag_sequence: TTGCCATC
+  tag_set_id_lims: 154
+  tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
