@@ -6,7 +6,7 @@ use warnings;
 use Carp;
 use English qw[-no_match_vars];
 use File::Basename;
-use File::Spec::Functions qw[catfile catdir splitdir];
+use File::Spec::Functions qw[abs2rel catfile catdir splitdir];
 use File::Temp;
 use Log::Log4perl;
 use Test::More;
@@ -71,6 +71,8 @@ sub teardown_test : Test(teardown) {
 sub publish_interop_files : Test(45) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
+
+  # HiSeq
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $id_run         = 18448;
   my $dest_coll      = "$irods_tmp_coll/publish_interop_files";
@@ -90,14 +92,70 @@ sub publish_interop_files : Test(45) {
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', 7, 'Published 7 InterOp files');
 
-  my @observed= observed_data_objects($irods, $dest_coll, '[.]bin$');
-  my @expected = qw[ControlMetricsOut.bin
-                    CorrectedIntMetricsOut.bin
-                    ErrorMetricsOut.bin
-                    ExtractionMetricsOut.bin
-                    ImageMetricsOut.bin
-                    QMetricsOut.bin
-                    TileMetricsOut.bin];
+  my @observed = observed_data_objects($irods, "$dest_coll/InterOp",
+                                       $dest_coll, '[.]bin$');
+  my @expected = qw[InterOp/ControlMetricsOut.bin
+                    InterOp/CorrectedIntMetricsOut.bin
+                    InterOp/ErrorMetricsOut.bin
+                    InterOp/ExtractionMetricsOut.bin
+                    InterOp/ImageMetricsOut.bin
+                    InterOp/QMetricsOut.bin
+                    InterOp/TileMetricsOut.bin];
+  deep_observed_vs_expected(\@observed, \@expected,
+                            "Published correctly named InterOp files");
+
+  my @absolute_paths = map { "$dest_coll/$_" } @observed;
+
+  my $pkg = 'WTSI::NPG::HTS::Illumina::InterOpDataObject';
+  check_common_metadata($irods, $pkg, @absolute_paths);
+
+  foreach my $path (@absolute_paths) {
+    my $obj = WTSI::NPG::HTS::Illumina::InterOpDataObject->new($irods, $path);
+    is_deeply($obj->get_avu($ID_RUN), { attribute => $ID_RUN,
+                                        value     => $id_run },
+           "$path id_run metadata present");
+  }
+}
+
+sub publish_interop_files_deep : Test(87) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  # NovaSeq
+  my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
+  my $id_run         = 26291;
+  my $dest_coll      = "$irods_tmp_coll/publish_interop_files";
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (id_run           => $id_run,
+     dest_collection  => $dest_coll,
+     irods            => $irods,
+     lims_factory     => $lims_factory,
+     restart_file     => catfile($tmpdir->dirname, 'published.json'),
+     source_directory => $runfolder_path);
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_interop_files;
+  cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
+  cmp_ok($num_processed, '==', 14, 'Published 14 InterOp files');
+
+  my @observed = observed_data_objects($irods, "$dest_coll/InterOp",
+                                       $dest_coll, '[.]bin$');
+  my @expected = qw[InterOp/C1.1/ControlMetricsOut.bin
+                    InterOp/C1.1/CorrectedIntMetricsOut.bin
+                    InterOp/C1.1/ErrorMetricsOut.bin
+                    InterOp/C1.1/ExtractionMetricsOut.bin
+                    InterOp/C1.1/ImageMetricsOut.bin
+                    InterOp/C1.1/QMetricsOut.bin
+                    InterOp/C1.1/TileMetricsOut.bin
+                    InterOp/C2.1/ControlMetricsOut.bin
+                    InterOp/C2.1/CorrectedIntMetricsOut.bin
+                    InterOp/C2.1/ErrorMetricsOut.bin
+                    InterOp/C2.1/ExtractionMetricsOut.bin
+                    InterOp/C2.1/ImageMetricsOut.bin
+                    InterOp/C2.1/QMetricsOut.bin
+                    InterOp/C2.1/TileMetricsOut.bin];
   deep_observed_vs_expected(\@observed, \@expected,
                             "Published correctly named InterOp files");
 
@@ -136,7 +194,8 @@ sub publish_xml_files : Test(18) {
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', 2, 'Published 2 XML files');
 
-  my @observed = observed_data_objects($irods, $dest_coll, '[.]xml$');
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll,
+                                       '[.]xml$');
   my @expected = ('RunInfo.xml', 'runParameters.xml');
   is_deeply(\@observed, \@expected, 'Published correctly named XML files') or
     diag explain \@observed;
@@ -174,7 +233,8 @@ sub publish_xml_files : Test(18) {
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', 1, 'Published 1 XML file');
 
-  @observed = observed_data_objects($irods, $dest_coll, '[.]xml$');
+  @observed = observed_data_objects($irods, $dest_coll, $dest_coll,
+                                    '[.]xml$');
   @expected = ('RunParameters.xml');
   is_deeply(\@observed, \@expected, 'Published correctly named XML files') or
     diag explain \@observed;
@@ -208,26 +268,27 @@ sub publish_qc_files : Test(93) {
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', 15, 'Published 19 QC files');
 
-  my @observed = observed_data_objects($irods, "$dest_coll/qc", '[.]json$');
-  my @expected = ('18448_2.adapter.json',
-                  '18448_2.alignment_filter_metrics.json',
-                  '18448_2.bam_flagstats.json',
-                  '18448_2.gc_bias.json',
-                  '18448_2.gc_fraction.json',
-                  '18448_2.genotype.json',
-                  '18448_2.insert_size.json',
-                  '18448_2.qX_yield.json',
-                  '18448_2.ref_match.json',
-                  '18448_2.sequence_error.json',
-                  '18448_2.sequence_summary.json',
-                  '18448_2.spatial_filter.json',
-                  '18448_2.verify_bam_id.json',
-                  '18448_2_F0x900.samtools_stats.json',
-                  '18448_2_F0xB00.samtools_stats.json');
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll,
+                                       '[.]json$');
+  my @expected = ('qc/18448_2.adapter.json',
+                  'qc/18448_2.alignment_filter_metrics.json',
+                  'qc/18448_2.bam_flagstats.json',
+                  'qc/18448_2.gc_bias.json',
+                  'qc/18448_2.gc_fraction.json',
+                  'qc/18448_2.genotype.json',
+                  'qc/18448_2.insert_size.json',
+                  'qc/18448_2.qX_yield.json',
+                  'qc/18448_2.ref_match.json',
+                  'qc/18448_2.sequence_error.json',
+                  'qc/18448_2.sequence_summary.json',
+                  'qc/18448_2.spatial_filter.json',
+                  'qc/18448_2.verify_bam_id.json',
+                  'qc/18448_2_F0x900.samtools_stats.json',
+                  'qc/18448_2_F0xB00.samtools_stats.json');
   is_deeply(\@observed, \@expected, 'Published correctly named QC files') or
     diag explain \@observed;
 
-  my @absolute_paths = map { "$dest_coll/qc/$_" } @observed;
+  my @absolute_paths = map { "$dest_coll/$_" } @observed;
 
   my $pkg = 'WTSI::NPG::HTS::Illumina::AncDataObject';
   check_common_metadata($irods, $pkg, @absolute_paths);
@@ -248,7 +309,7 @@ sub publish_lane_pri_data_mlwh : Test(19) {
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my @observed = observed_data_objects($irods, $dest_coll);
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
   my @expected = ('18448_2.cram');
   is_deeply(\@observed, \@expected) or diag explain \@observed;
 
@@ -275,7 +336,7 @@ sub publish_lane_sec_data_mlwh : Test(67) {
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my @observed = observed_data_objects($irods, $dest_coll);
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
   my @expected = ('18448_2.all.seqchksum',
                   '18448_2.bam_stats',
                   '18448_2.composition.json',
@@ -315,7 +376,7 @@ sub publish_lane_pri_data_samplesheet : Test(19) {
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my @observed = observed_data_objects($irods, $dest_coll);
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
   my @expected = ('18448_2.cram');
 
   is_deeply(\@observed, \@expected) or diag explain \@observed;
@@ -348,7 +409,7 @@ sub publish_lane_sec_data_samplesheet : Test(67) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  my @observed = observed_data_objects($irods, $dest_coll);
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
   my @expected = ('18448_2.all.seqchksum',
                   '18448_2.bam_stats',
                   '18448_2.composition.json',
@@ -387,8 +448,8 @@ sub publish_plex_pri_data_mlwh : Test(19) {
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my @observed = observed_data_objects($irods, $dest_coll);
-  my @expected = ('17550_1#1.cram');
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
+  my @expected = ("lane$lane/17550_1#1.cram");
   is_deeply(\@observed, \@expected) or diag explain \@observed;
 
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
@@ -416,19 +477,19 @@ sub publish_plex_sec_data_mlwh : Test(57) {
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my @observed = observed_data_objects($irods, $dest_coll);
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
   # No index files expected because the CRAM file contains no reads
-  my @expected = ('17550_1#1.bam_stats',
-                  '17550_1#1.composition.json',
-                  '17550_1#1.flagstat',
-                  '17550_1#1.markdups_metrics.txt',
-                  '17550_1#1.seqchksum',
-                  '17550_1#1.sha512primesums512.seqchksum',
-                  '17550_1#1_F0x900.stats',
-                  '17550_1#1_F0xB00.stats',
-                  '17550_1#1_quality_cycle_caltable.txt',
-                  '17550_1#1_quality_cycle_surv.txt',
-                  '17550_1#1_quality_error.txt');
+  my @expected = ("lane$lane/17550_1#1.bam_stats",
+                  "lane$lane/17550_1#1.composition.json",
+                  "lane$lane/17550_1#1.flagstat",
+                  "lane$lane/17550_1#1.markdups_metrics.txt",
+                  "lane$lane/17550_1#1.seqchksum",
+                  "lane$lane/17550_1#1.sha512primesums512.seqchksum",
+                  "lane$lane/17550_1#1_F0x900.stats",
+                  "lane$lane/17550_1#1_F0xB00.stats",
+                  "lane$lane/17550_1#1_quality_cycle_caltable.txt",
+                  "lane$lane/17550_1#1_quality_cycle_surv.txt",
+                  "lane$lane/17550_1#1_quality_error.txt");
   is_deeply(\@observed, \@expected) or diag explain \@observed;
 
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
@@ -458,8 +519,9 @@ sub publish_plex_pri_data_samplesheet : Test(19) {
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my @observed = observed_data_objects($irods, $dest_coll);
-  my @expected = ('17550_1#1.cram');
+  my @observed = observed_data_objects($irods, "$dest_coll/lane$lane",
+                                       $dest_coll);
+  my @expected = ("lane$lane/17550_1#1.cram");
   is_deeply(\@observed, \@expected) or diag explain \@observed;
 
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
@@ -491,19 +553,19 @@ sub publish_plex_sec_data_samplesheet : Test(57) {
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my @observed = observed_data_objects($irods, $dest_coll);
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
   # No index files expected because the CRAM file contains no reads
-  my @expected = ('17550_1#1.bam_stats',
-                  '17550_1#1.composition.json',
-                  '17550_1#1.flagstat',
-                  '17550_1#1.markdups_metrics.txt',
-                  '17550_1#1.seqchksum',
-                  '17550_1#1.sha512primesums512.seqchksum',
-                  '17550_1#1_F0x900.stats',
-                  '17550_1#1_F0xB00.stats',
-                  '17550_1#1_quality_cycle_caltable.txt',
-                  '17550_1#1_quality_cycle_surv.txt',
-                  '17550_1#1_quality_error.txt');
+  my @expected = ("lane$lane/17550_1#1.bam_stats",
+                  "lane$lane/17550_1#1.composition.json",
+                  "lane$lane/17550_1#1.flagstat",
+                  "lane$lane/17550_1#1.markdups_metrics.txt",
+                  "lane$lane/17550_1#1.seqchksum",
+                  "lane$lane/17550_1#1.sha512primesums512.seqchksum",
+                  "lane$lane/17550_1#1_F0x900.stats",
+                  "lane$lane/17550_1#1_F0xB00.stats",
+                  "lane$lane/17550_1#1_quality_cycle_caltable.txt",
+                  "lane$lane/17550_1#1_quality_cycle_surv.txt",
+                  "lane$lane/17550_1#1_quality_error.txt");
   is_deeply(\@observed, \@expected) or diag explain \@observed;
 
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
@@ -529,16 +591,18 @@ sub publish_merged_pri_data_mlwh : Test(17) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  deep_observed_vs_expected([observed_data_objects($irods, $dest_coll)],
-                            ['26291#1.cram'],
+  deep_observed_vs_expected([observed_data_objects($irods, $dest_coll,
+                                                   $dest_coll)],
+                            ["plex$plex/26291#1.cram"],
                             'Expected data object found');
 
-  my @observed = observed_data_objects($irods, $dest_coll);
+  my @observed = observed_data_objects($irods, "$dest_coll/plex$plex",
+                                       $dest_coll);
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
   my $pkg = 'WTSI::NPG::HTS::Illumina::AlnDataObject';
   check_common_metadata($irods, $pkg, @absolute_paths);
 
-  my $obj = $pkg->new($irods, "$dest_coll/26291#1.cram");
+  my $obj = $pkg->new($irods, "$dest_coll/plex$plex/26291#1.cram");
   check_merge_primary_metadata($obj);
 }
 
@@ -564,16 +628,18 @@ sub publish_merged_pri_data_samplesheet : Test(17) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  deep_observed_vs_expected([observed_data_objects($irods, $dest_coll)],
-                            ['26291#1.cram'],
+  deep_observed_vs_expected([observed_data_objects($irods, $dest_coll,
+                                                   $dest_coll)],
+                            ["plex$plex/26291#1.cram"],
                             'Expected data object found');
 
-  my @observed = observed_data_objects($irods, $dest_coll);
+  my @observed = observed_data_objects($irods, "$dest_coll/plex$plex",
+                                       $dest_coll);
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
   my $pkg = 'WTSI::NPG::HTS::Illumina::AlnDataObject';
   check_common_metadata($irods, $pkg, @absolute_paths);
 
-  my $obj = $pkg->new($irods, "$dest_coll/26291#1.cram");
+  my $obj = $pkg->new($irods, "$dest_coll/plex$plex/26291#1.cram");
   check_merge_primary_metadata($obj);
 }
 
@@ -594,23 +660,26 @@ sub publish_merged_sec_data_mlwh : Test(67) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  deep_observed_vs_expected([observed_data_objects($irods, $dest_coll)],
-                            ['26291#1.bam_stats',
-                             '26291#1.bcfstats',
-                             '26291#1.composition.json',
-                             '26291#1.cram.crai',
-                             '26291#1.flagstat',
-                             '26291#1.markdups_metrics.txt',
-                             '26291#1.orig.seqchksum',
-                             '26291#1.seqchksum',
-                             '26291#1.sha512primesums512.seqchksum',
-                             '26291#1.spatial_filter.stats',
-                             '26291#1_F0x900.stats',
-                             '26291#1_F0xB00.stats',
-                             '26291#1_F0xF04_target.stats'],
+  deep_observed_vs_expected([observed_data_objects($irods,
+                                                   "$dest_coll/plex$plex",
+                                                   $dest_coll)],
+                            ["plex$plex/26291#1.bam_stats",
+                             "plex$plex/26291#1.bcfstats",
+                             "plex$plex/26291#1.composition.json",
+                             "plex$plex/26291#1.cram.crai",
+                             "plex$plex/26291#1.flagstat",
+                             "plex$plex/26291#1.markdups_metrics.txt",
+                             "plex$plex/26291#1.orig.seqchksum",
+                             "plex$plex/26291#1.seqchksum",
+                             "plex$plex/26291#1.sha512primesums512.seqchksum",
+                             "plex$plex/26291#1.spatial_filter.stats",
+                             "plex$plex/26291#1_F0x900.stats",
+                             "plex$plex/26291#1_F0xB00.stats",
+                             "plex$plex/26291#1_F0xF04_target.stats"],
                             'Expected data object found');
 
-  my @observed = observed_data_objects($irods, $dest_coll);
+  my @observed = observed_data_objects($irods, "$dest_coll/plex$plex",
+                                       $dest_coll);
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
   my $pkg = 'WTSI::NPG::HTS::Illumina::AncDataObject';
   check_common_metadata($irods, $pkg, @absolute_paths);
@@ -637,23 +706,26 @@ sub publish_merged_sec_data_samplesheet : Test(67) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
-  deep_observed_vs_expected([observed_data_objects($irods, $dest_coll)],
-                            ['26291#1.bam_stats',
-                             '26291#1.bcfstats',
-                             '26291#1.composition.json',
-                             '26291#1.cram.crai',
-                             '26291#1.flagstat',
-                             '26291#1.markdups_metrics.txt',
-                             '26291#1.orig.seqchksum',
-                             '26291#1.seqchksum',
-                             '26291#1.sha512primesums512.seqchksum',
-                             '26291#1.spatial_filter.stats',
-                             '26291#1_F0x900.stats',
-                             '26291#1_F0xB00.stats',
-                             '26291#1_F0xF04_target.stats'],
+  deep_observed_vs_expected([observed_data_objects($irods,
+                                                   "$dest_coll/plex$plex",
+                                                   $dest_coll)],
+                            ["plex$plex/26291#1.bam_stats",
+                             "plex$plex/26291#1.bcfstats",
+                             "plex$plex/26291#1.composition.json",
+                             "plex$plex/26291#1.cram.crai",
+                             "plex$plex/26291#1.flagstat",
+                             "plex$plex/26291#1.markdups_metrics.txt",
+                             "plex$plex/26291#1.orig.seqchksum",
+                             "plex$plex/26291#1.seqchksum",
+                             "plex$plex/26291#1.sha512primesums512.seqchksum",
+                             "plex$plex/26291#1.spatial_filter.stats",
+                             "plex$plex/26291#1_F0x900.stats",
+                             "plex$plex/26291#1_F0xB00.stats",
+                             "plex$plex/26291#1_F0xF04_target.stats"],
                             'Expected data object found');
 
-  my @observed = observed_data_objects($irods, $dest_coll);
+  my @observed = observed_data_objects($irods, "$dest_coll/plex$plex",
+                                       $dest_coll);
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
   my $pkg = 'WTSI::NPG::HTS::Illumina::AncDataObject';
   check_common_metadata($irods, $pkg, @absolute_paths);
@@ -687,7 +759,8 @@ sub publish_plex_pri_data_alt_process : Test(5) {
   is($path[-1], $alt_process, 'Expected leaf collection present')
     or diag explain $dest_coll;
 
-  my @observed = observed_data_objects($irods, $dest_coll);
+  my @observed = observed_data_objects($irods, "$dest_coll/lane$lane",
+                                       $dest_coll);
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
 
   my $pkg = 'WTSI::NPG::HTS::Illumina::AlnDataObject';
@@ -719,13 +792,14 @@ sub publish_xml_files_alt_process : Test(15) {
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', 2, 'Published 2 XML files');
 
-  my @observed = observed_data_objects($irods,
-                                       "$dest_coll/$alt_process", '[.]xml$');
-  my @expected = ('RunInfo.xml', 'runParameters.xml');
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll,
+                                       '[.]xml$');
+  my @expected = ("$alt_process/RunInfo.xml",
+                  "$alt_process/runParameters.xml");
   is_deeply(\@observed, \@expected, 'Published correctly named XML files') or
     diag explain \@observed;
 
-  my @absolute_paths = map { "$dest_coll/$alt_process/$_" } @observed;
+  my @absolute_paths = map { "$dest_coll/$_" } @observed;
 
   my $pkg = 'WTSI::NPG::HTS::Illumina::XMLDataObject';
   check_common_metadata($irods, $pkg, @absolute_paths);
@@ -738,12 +812,13 @@ sub publish_xml_files_alt_process : Test(15) {
   }
 }
 
-sub publish_include_exclude : Test(4) {
+sub publish_include_exclude : Test(3) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20151214-085833/no_cal/archive';
   my $id_run         = 18448;
-
   my $dest_coll      = "$irods_tmp_coll/publish_include";
 
   my $lims_factory =
@@ -756,7 +831,7 @@ sub publish_include_exclude : Test(4) {
      irods            => $irods,
      lims_factory     => $lims_factory,
      restart_file     => catfile($tmpdir->dirname, 'published.json'),
-     source_directory => $runfolder_path,
+     source_directory => $archive_path,
      include          => ['\/18448_2'],
      exclude          => ['phix']);
 
@@ -764,7 +839,7 @@ sub publish_include_exclude : Test(4) {
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', 29, 'Published 29 files');
 
-  my @observed = observed_data_objects($irods, $dest_coll);
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
   my @expected = ('18448_2.all.seqchksum',
                   '18448_2.bam_stats',
                   '18448_2.composition.json',
@@ -778,25 +853,22 @@ sub publish_include_exclude : Test(4) {
                   '18448_2_F0xB00.stats',
                   '18448_2_quality_cycle_caltable.txt',
                   '18448_2_quality_cycle_surv.txt',
-                  '18448_2_quality_error.txt');
-  is_deeply(\@observed, \@expected) or diag explain \@observed;
-
-  @observed = observed_data_objects($irods, "$dest_coll/qc");
-  @expected = ('18448_2.adapter.json',
-               '18448_2.alignment_filter_metrics.json',
-               '18448_2.bam_flagstats.json',
-               '18448_2.gc_bias.json',
-               '18448_2.gc_fraction.json',
-               '18448_2.genotype.json',
-               '18448_2.insert_size.json',
-               '18448_2.qX_yield.json',
-               '18448_2.ref_match.json',
-               '18448_2.sequence_error.json',
-               '18448_2.sequence_summary.json',
-               '18448_2.spatial_filter.json',
-               '18448_2.verify_bam_id.json',
-               '18448_2_F0x900.samtools_stats.json',
-               '18448_2_F0xB00.samtools_stats.json');
+                  '18448_2_quality_error.txt',
+                  'qc/18448_2.adapter.json',
+                  'qc/18448_2.alignment_filter_metrics.json',
+                  'qc/18448_2.bam_flagstats.json',
+                  'qc/18448_2.gc_bias.json',
+                  'qc/18448_2.gc_fraction.json',
+                  'qc/18448_2.genotype.json',
+                  'qc/18448_2.insert_size.json',
+                  'qc/18448_2.qX_yield.json',
+                  'qc/18448_2.ref_match.json',
+                  'qc/18448_2.sequence_error.json',
+                  'qc/18448_2.sequence_summary.json',
+                  'qc/18448_2.spatial_filter.json',
+                  'qc/18448_2.verify_bam_id.json',
+                  'qc/18448_2_F0x900.samtools_stats.json',
+                  'qc/18448_2_F0xB00.samtools_stats.json');
   is_deeply(\@observed, \@expected) or diag explain \@observed;
 }
 
@@ -1110,17 +1182,15 @@ sub expected_data_objects {
 }
 
 sub observed_data_objects {
-  my ($irods, $dest_collection, $regex) = @_;
+  my ($irods, $dest_collection, $root_collection, $regex) = @_;
 
-  my ($observed_paths) = $irods->list_collection($dest_collection);
+  my ($observed_paths) = $irods->list_collection($root_collection, 'RECURSE');
   my @observed_paths = @{$observed_paths};
   if ($regex) {
     @observed_paths = grep { m{$regex}msx } @observed_paths;
   }
   @observed_paths = sort @observed_paths;
-
-  my $basename = sub { my $f = fileparse($_); return $f };
-  @observed_paths = map { $basename->($_) } @observed_paths;
+  @observed_paths = map { abs2rel($_, $root_collection) } @observed_paths;
 
   return @observed_paths;
 }
