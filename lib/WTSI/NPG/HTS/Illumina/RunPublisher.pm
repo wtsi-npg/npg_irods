@@ -328,7 +328,7 @@ sub publish_alignment_files {
                                                    $secondary_avus);
 }
 
-=head2 publish_alignment_files
+=head2 publish_index_files
 
   Arg [1]    : composition file, Str.
   Arg [2]    : with_spiked_control, Bool. Optional.
@@ -614,10 +614,10 @@ sub _publish_product_level {
 }
 ## use critic
 
-# Return a destination collection for a file. The relative path of the
-# file relative to the source directory is used to determine the
-# relative path of the data object in iRODS to the given publish
-# target collection.
+# Return a destination collection for a file. The path of the file
+# relative to the source directory is used to determine the path of
+# the data object in iRODS relative to the specified target
+# collection.
 sub _dest_coll {
   my ($self, $path) = @_;
 
