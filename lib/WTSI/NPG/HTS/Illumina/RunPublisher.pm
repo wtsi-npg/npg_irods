@@ -15,6 +15,7 @@ use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::BatchPublisher;
 use WTSI::NPG::HTS::Illumina::DataObjectFactory;
 use WTSI::NPG::HTS::Illumina::ResultSet;
+use WTSI::NPG::HTS::PublishState;
 use WTSI::NPG::HTS::Seqchksum;
 use WTSI::NPG::HTS::Types qw[AlnFormat];
 use WTSI::NPG::iRODS::Metadata;
@@ -46,6 +47,14 @@ has 'lims_factory' =>
    isa           => 'WTSI::NPG::HTS::LIMSFactory',
    required      => 1,
    documentation => 'A factory providing st:api::lims objects');
+
+has 'publish_state' =>
+  (isa           => 'WTSI::NPG::HTS::PublishState',
+   is            => 'ro',
+   required      => 1,
+   default       => sub { return WTSI::NPG::HTS::PublishState->new },
+   lazy          => 1,
+   documentation => 'State of all files published, across all batches');
 
 has 'restart_file' =>
   (isa           => 'Str',
@@ -519,7 +528,7 @@ sub publish_qc_files {
 sub write_restart_file {
   my ($self) = @_;
 
-  $self->batch_publisher->write_state;
+  $self->publish_state->write_state($self->restart_file);
   return;
 }
 
@@ -558,8 +567,13 @@ sub _publish_run_level {
   my $batch_publisher = $self->_make_batch_publisher($obj_factory);
   $self->debug("Publishing run level collection: $collection: ", pp($files));
 
-  return $batch_publisher->publish_file_batch
-    ($files, $collection, $primary_avus_callback, $secondary_avus_callback);
+  my ($num_files, $num_processed, $num_errors) =
+    $batch_publisher->publish_file_batch($files, $collection,
+                                         $primary_avus_callback,
+                                         $secondary_avus_callback);
+  $self->publish_state->merge_state($batch_publisher->publish_state);
+
+  return ($num_files, $num_processed, $num_errors);
 }
 
 # Collate files into batches, one batch per destination collection
@@ -608,9 +622,13 @@ sub _publish_product_level {
   $self->debug("Publishing product level collection: $collection, ",
                'composition: ', $composition->freeze2rpt,
                ' :', pp($files));
+  my ($num_files, $num_processed, $num_errors) =
+    $batch_publisher->publish_file_batch($files, $collection,
+                                         $primary_avus_callback,
+                                         $secondary_avus_callback);
+  $self->publish_state->merge_state($batch_publisher->publish_state);
 
-  return $batch_publisher->publish_file_batch
-    ($files, $collection, $primary_avus_callback, $secondary_avus_callback);
+  return ($num_files, $num_processed, $num_errors);
 }
 ## use critic
 
@@ -647,7 +665,7 @@ sub _make_batch_publisher {
   my @init_args = (obj_factory => $obj_factory,
                    force       => $self->force,
                    irods       => $self->irods,
-                   state_file  => $self->restart_file);
+                   state_file  => $self->restart_file); # !!!!!!
   if ($self->has_max_errors) {
     push @init_args, max_errors  => $self->max_errors;
   }
@@ -722,6 +740,12 @@ sub _build_restart_file {
   my ($self) = @_;
 
   return catfile($self->source_directory, 'published.json');
+}
+
+sub _build_publish_state {
+  my ($self) = @_;
+
+  return WTSI::NPG::HTS::PublishState->new;
 }
 
 sub _build_run_files {

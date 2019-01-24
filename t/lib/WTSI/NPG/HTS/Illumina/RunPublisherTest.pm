@@ -296,7 +296,7 @@ sub publish_qc_files : Test(93) {
 }
 
 # Lane-level, primary and secondary data, from ML warehouse
-sub publish_lane_pri_data_mlwh : Test(19) {
+sub publish_lane_pri_data_mlwh : Test(21) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -322,7 +322,7 @@ sub publish_lane_pri_data_mlwh : Test(19) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_lane_sec_data_mlwh : Test(67) {
+sub publish_lane_sec_data_mlwh : Test(69) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -358,7 +358,7 @@ sub publish_lane_sec_data_mlwh : Test(67) {
 }
 
 # Lane-level, primary and secondary data, from samplesheet
-sub publish_lane_pri_data_samplesheet : Test(19) {
+sub publish_lane_pri_data_samplesheet : Test(21) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -390,7 +390,7 @@ sub publish_lane_pri_data_samplesheet : Test(19) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_lane_sec_data_samplesheet : Test(67) {
+sub publish_lane_sec_data_samplesheet : Test(69) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -431,7 +431,7 @@ sub publish_lane_sec_data_samplesheet : Test(67) {
 }
 
 # Plex-level, primary and secondary data, from ML warehouse
-sub publish_plex_pri_data_mlwh : Test(19) {
+sub publish_plex_pri_data_mlwh : Test(21) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20150914-100512/no_cal/archive';
@@ -460,7 +460,7 @@ sub publish_plex_pri_data_mlwh : Test(19) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_plex_sec_data_mlwh : Test(57) {
+sub publish_plex_sec_data_mlwh : Test(59) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20150914-100512/no_cal/archive';
@@ -498,7 +498,7 @@ sub publish_plex_sec_data_mlwh : Test(57) {
 }
 
 # Plex-level, primary and secondary data, from samplesheet
-sub publish_plex_pri_data_samplesheet : Test(19) {
+sub publish_plex_pri_data_samplesheet : Test(21) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20150914-100512/no_cal/archive';
@@ -532,7 +532,7 @@ sub publish_plex_pri_data_samplesheet : Test(19) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_plex_sec_data_samplesheet : Test(57) {
+sub publish_plex_sec_data_samplesheet : Test(59) {
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20150914-100512/no_cal/archive';
@@ -574,7 +574,7 @@ sub publish_plex_sec_data_samplesheet : Test(57) {
 }
 
 # Merged NovaSeq data, from ML warehouse
-sub publish_merged_pri_data_mlwh : Test(17) {
+sub publish_merged_pri_data_mlwh : Test(19) {
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -607,7 +607,7 @@ sub publish_merged_pri_data_mlwh : Test(17) {
 }
 
 # Merged NovaSeq data, from samplesheet
-sub publish_merged_pri_data_samplesheet : Test(17) {
+sub publish_merged_pri_data_samplesheet : Test(19) {
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -643,7 +643,7 @@ sub publish_merged_pri_data_samplesheet : Test(17) {
   check_merge_primary_metadata($obj);
 }
 
-sub publish_merged_sec_data_mlwh : Test(67) {
+sub publish_merged_sec_data_mlwh : Test(69) {
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -685,7 +685,7 @@ sub publish_merged_sec_data_mlwh : Test(67) {
   check_common_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_merged_sec_data_samplesheet : Test(67) {
+sub publish_merged_sec_data_samplesheet : Test(69) {
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -731,7 +731,7 @@ sub publish_merged_sec_data_samplesheet : Test(67) {
   check_common_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_plex_pri_data_alt_process : Test(5) {
+sub publish_plex_pri_data_alt_process : Test(7) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -872,7 +872,47 @@ sub publish_include_exclude : Test(3) {
   is_deeply(\@observed, \@expected) or diag explain \@observed;
 }
 
-# From here onwards are test support methods
+sub publish_archive_path_mlwh : Test(4) {
+  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20151214-085833/no_cal/archive';
+  my $id_run         = 18448;
+
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
+  my $dest_coll = "$irods_tmp_coll/publish_entire_mlwh";
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (id_run           => $id_run,
+     dest_collection  => $dest_coll,
+     irods            => $irods,
+     lims_factory     => $lims_factory,
+     restart_file     => catfile($tmpdir->dirname, 'published.json'),
+     source_directory => $runfolder_path);
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+
+  my $num_expected = 376;
+  cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
+  cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
+
+  my $restart_file = $pub->restart_file;
+  $pub->write_restart_file;
+  ok(-e $restart_file, "Restart file $restart_file exists");
+
+  my $restart_state = WTSI::NPG::HTS::PublishState->new;
+  $restart_state->read_state($restart_file);
+  cmp_ok($restart_state->num_published, '==', $num_files,
+         "Restart file recorded $num_files files published") or
+           diag explain $restart_state->state;
+}
+
+# From here onwards are test support functions
 
 sub check_publish_lane_pri_data {
   my ($runfolder_path, $archive_path, $id_run, $lane, $lims_factory) = @_;
@@ -977,6 +1017,15 @@ sub check_publish_pri_data {
 
   cmp_ok($num_errors, '==', 0, 'No errors on publishing');
 
+  my $restart_file = $pub->restart_file;
+  $pub->write_restart_file;
+  ok(-e $restart_file, "Restart file $restart_file exists");
+
+  my $restart_state = WTSI::NPG::HTS::PublishState->new;
+  $restart_state->read_state($restart_file);
+  cmp_ok($restart_state->num_published, '==', $num_files,
+         "Restart file recorded $num_files files published");
+
   return $publish_coll;
 }
 
@@ -1007,6 +1056,15 @@ sub check_publish_sec_data {
   $num_errors    = $ne0 + $ne1 + $ne2;
 
   cmp_ok($num_errors, '==', 0, 'No errors on publishing');
+
+  my $restart_file = $pub->restart_file;
+  $pub->write_restart_file;
+  ok(-e $restart_file, "Restart file $restart_file exists");
+
+  my $restart_state = WTSI::NPG::HTS::PublishState->new;
+  $restart_state->read_state($restart_file);
+  cmp_ok($restart_state->num_published, '==', $num_files,
+         "Restart file recorded $num_files files published");
 
   return $dest_coll;
 }
