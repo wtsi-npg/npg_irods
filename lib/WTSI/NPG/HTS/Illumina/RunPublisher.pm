@@ -664,8 +664,7 @@ sub _make_batch_publisher {
   my ($self, $obj_factory) = @_;
   my @init_args = (obj_factory => $obj_factory,
                    force       => $self->force,
-                   irods       => $self->irods,
-                   state_file  => $self->restart_file); # !!!!!!
+                   irods       => $self->irods);
   if ($self->has_max_errors) {
     push @init_args, max_errors  => $self->max_errors;
   }
