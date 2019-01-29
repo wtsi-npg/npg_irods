@@ -205,6 +205,8 @@ sub publish_collection {
       };
     };
 
+    $self->read_restart_file;
+
     # Publish any "run-level" data found under the source directory
     $call->(sub { $self->publish_xml_files });
     $call->(sub { $self->publish_interop_files });
@@ -535,6 +537,13 @@ sub publish_qc_files {
                                                    $secondary_avus);
 }
 
+sub read_restart_file {
+  my ($self) = @_;
+
+  $self->publish_state->read_state($self->restart_file);
+  return;
+}
+
 sub write_restart_file {
   my ($self) = @_;
 
@@ -581,8 +590,6 @@ sub _publish_run_level {
     $batch_publisher->publish_file_batch($files, $collection,
                                          $primary_avus_callback,
                                          $secondary_avus_callback);
-  $self->publish_state->merge_state($batch_publisher->publish_state);
-
   return ($num_files, $num_processed, $num_errors);
 }
 
@@ -632,12 +639,11 @@ sub _publish_product_level {
   $self->debug("Publishing product level collection: $collection, ",
                'composition: ', $composition->freeze2rpt,
                ' :', pp($files));
+
   my ($num_files, $num_processed, $num_errors) =
     $batch_publisher->publish_file_batch($files, $collection,
                                          $primary_avus_callback,
                                          $secondary_avus_callback);
-  $self->publish_state->merge_state($batch_publisher->publish_state);
-
   return ($num_files, $num_processed, $num_errors);
 }
 ## use critic
@@ -672,9 +678,11 @@ sub _collate_by_dest_coll {
 
 sub _make_batch_publisher {
   my ($self, $obj_factory) = @_;
-  my @init_args = (obj_factory => $obj_factory,
-                   force       => $self->force,
-                   irods       => $self->irods);
+  my @init_args = (
+                   force         => $self->force,
+                   irods         => $self->irods,
+                   obj_factory   => $obj_factory,
+                   publish_state => $self->publish_state);
   if ($self->has_max_errors) {
     push @init_args, max_errors  => $self->max_errors;
   }

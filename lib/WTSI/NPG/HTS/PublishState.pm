@@ -136,6 +136,8 @@ sub read_state {
 
   defined $file or $self->logconfess('A defined file argument is required');
 
+  $self->debug("Reading from state file '$file'");
+
   local $INPUT_RECORD_SEPARATOR = undef;
   if (-e $file) {
     open my $fh, '<', $file or
@@ -145,8 +147,8 @@ sub read_state {
 
     try {
       my $state = $self->decode($octets);
-      $self->debug("Read from state file '$file': ", pp($state));
       $self->state($state);
+      $self->debug("Read from state file '$file': ", pp($self->state));
     } catch {
       $self->logcroak('Failed to a parse JSON value from ',
                       "state file '$file': ", $_);

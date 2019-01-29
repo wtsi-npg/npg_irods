@@ -872,7 +872,7 @@ sub publish_include_exclude : Test(3) {
   is_deeply(\@observed, \@expected) or diag explain \@observed;
 }
 
-sub publish_archive_path_mlwh : Test(4) {
+sub publish_archive_path_mlwh : Test(6) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -909,6 +909,18 @@ sub publish_archive_path_mlwh : Test(4) {
   cmp_ok($restart_state->num_published, '==', $num_files,
          "Restart file recorded $num_files files published") or
            diag explain $restart_state->state;
+
+  my $repub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (id_run           => $id_run,
+     dest_collection  => $dest_coll,
+     irods            => $irods,
+     lims_factory     => $lims_factory,
+     restart_file     => catfile($tmpdir->dirname, 'published.json'),
+     source_directory => $runfolder_path);
+
+  my ($repub_files, $repub_processed, $repub_errors) = $repub->publish_files;
+  cmp_ok($repub_errors,    '==', 0, 'No errors on re-publishing');
+  cmp_ok($repub_processed, '==', 0, "Re-published no files");
 }
 
 # From here onwards are test support functions

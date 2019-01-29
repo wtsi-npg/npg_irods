@@ -315,6 +315,8 @@ sub list_meta_xml_file {
 
     my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
+    $self->read_restart_file;
+
     foreach my $smrt_name (@{$smrt_names}) {
 
       # There are no longer >1 look indices on runs. This code is to
@@ -486,6 +488,14 @@ sub publish_sts_xml_files {
 
   return ($num_files, $num_processed, $num_errors);
 }
+
+sub read_restart_file {
+  my ($self) = @_;
+
+  $self->batch_publisher->read_state;
+  return;
+}
+
 
 sub write_restart_file {
   my ($self) = @_;

@@ -30,7 +30,7 @@ has 'publish_state' =>
   (isa           => 'WTSI::NPG::HTS::PublishState',
    is            => 'ro',
    required      => 1,
-   default       => sub { WTSI::NPG::HTS::PublishState->new },
+   builder       => '_build_publish_state',
    lazy          => 1,
    documentation => 'A map of file path to a boolean value, which ' .
                     'is set true if the file was published');
@@ -211,6 +211,12 @@ sub write_state {
     $self->logconfess('Failed to write state to file: no state file defined');
 
   return $self->publish_state->write_state($self->state_file);
+}
+
+sub _build_publish_state {
+  my ($self) = @_;
+
+  return WTSI::NPG::HTS::PublishState->new;
 }
 
 sub _build_obj_factory {
