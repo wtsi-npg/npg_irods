@@ -3,7 +3,6 @@ package WTSI::NPG::HTS::BatchPublisher;
 use namespace::autoclean;
 
 use Data::Dump qw[pp];
-use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions qw[catfile];
 use Moose;
@@ -12,11 +11,11 @@ use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::DefaultDataObjectFactory;
+use WTSI::NPG::HTS::PublishState;
 use WTSI::NPG::iRODS::Publisher;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
-         WTSI::DNAP::Utilities::JSONCodec
        ];
 
 our $VERSION = '';
@@ -27,15 +26,14 @@ has 'irods' =>
    required      => 1,
    documentation => 'An iRODS handle to run searches and perform updates');
 
-has 'state' =>
-  (isa           => 'HashRef',
-   is            => 'rw',
+has 'publish_state' =>
+  (isa           => 'WTSI::NPG::HTS::PublishState',
+   is            => 'ro',
    required      => 1,
-   default       => sub { return {} },
-   init_arg      => undef,
-   documentation => 'State of all files published, across all batches. The ' .
-                    'keys are local file paths and values are 1 if the ' .
-                    'file has been published or 0 if it has not');
+   builder       => '_build_publish_state',
+   lazy          => 1,
+   documentation => 'A map of file path to a boolean value, which ' .
+                    'is set true if the file was published');
 
 has 'obj_factory' =>
   (does          => 'WTSI::NPG::HTS::DataObjectFactory',
@@ -56,7 +54,8 @@ has 'max_errors' =>
 has 'state_file' =>
   (isa           => 'Str',
    is            => 'rw',
-   required      => 1,
+   required      => 0,
+   predicate     => 'has_state_file',
    documentation => 'JSON state file containing an array of all local file ' .
                     'paths that have been published');
 
@@ -116,8 +115,6 @@ sub publish_file_batch {
       (irods                  => $self->irods,
        require_checksum_cache => $self->require_checksum_cache);
 
-  $self->read_state;
-
   my $num_files     = scalar @{$files};
   my $num_processed = 0;
   my $num_errors    = 0;
@@ -125,7 +122,7 @@ sub publish_file_batch {
   $self->debug("Publishing a batch of $num_files files: ", pp($files));
 
  FILE: foreach my $file (@{$files}) {
-    my $dest = q[];
+    my $remote_path = q[];
 
     if ($self->has_max_errors and $num_errors >= $self->max_errors) {
       $self->error("The number of errors $num_errors reached the maximum ",
@@ -135,22 +132,20 @@ sub publish_file_batch {
 
     $self->debug("Publishing '$file', a member of a batch of $num_files");
 
-    if (exists $self->state->{$file}) {
-      if ($self->state->{$file} == 1) {
-        if ($self->force) {
-          $self->info("Forcing re-publication of local file '$file'");
-        }
-        else {
-          $self->info("Skipping local file '$file'; already published");
-          next FILE;
-        }
+    if ($self->publish_state->is_published($file)) {
+      if ($self->force) {
+        $self->info("Forcing re-publication of local file '$file'");
+      }
+      else {
+        $self->info("Skipping local file '$file'; already published");
+        next FILE;
       }
     }
 
     try {
       $num_processed++;
       my ($filename, $directories, $suffix) = fileparse($file);
-      my $remote_path = catfile($dest_coll, $filename);
+      $remote_path = catfile($dest_coll, $filename);
 
       my $obj = $self->obj_factory->make_data_object($remote_path);
       if (not $obj) {
@@ -158,7 +153,7 @@ sub publish_file_batch {
       }
 
       $self->debug("Publishing '$file' to '$remote_path'");
-      $dest = $publisher->publish($file, $remote_path)->str;
+      my $dest = $publisher->publish($file, $remote_path)->str;
 
       my @primary_avus = $primary_avus_callback->($obj);
       my ($num_pattr, $num_pproc, $num_perr) =
@@ -183,11 +178,11 @@ sub publish_file_batch {
         $self->logcroak("Failed to set extra metadata cleanly on '$dest'");
       }
 
-      $self->state->{$file} = 1; # Mark as published
+      $self->publish_state->set_published($file);
       $self->info("Published '$dest' [$num_processed / $num_files]");
     } catch {
       $num_errors++;
-      $self->error("Failed to publish '$file' to '$dest' cleanly ",
+      $self->error("Failed to publish '$file' to '$remote_path' cleanly ",
                    "[$num_processed / $num_files]: ", $_);
     };
   }
@@ -197,58 +192,31 @@ sub publish_file_batch {
                  "$num_processed files processed");
   }
 
-  $self->write_state;
-
   return ($num_files, $num_processed, $num_errors);
 }
-## use critic
 
 sub read_state {
   my ($self) = @_;
 
-  my $file = $self->state_file;
+  $self->has_state_file or
+    $self->logconfess('Failed to read state from file: no state file defined');
 
-  local $INPUT_RECORD_SEPARATOR = undef;
-  if (-e $file) {
-    open my $fh, '<', $file or
-      $self->logcroak("Failed to open '$file' for reading: ", $ERRNO);
-    my $octets = <$fh>;
-    close $fh or $self->warn("Failed to close '$file'");
-
-    try {
-      my $state = $self->decode($octets);
-      $self->debug("Read from state file '$file': ", pp($state));
-      $self->state($state);
-    } catch {
-      $self->logcroak('Failed to a parse JSON value from ',
-                      "state file '$file': ", $_);
-    };
-  }
-
-  return $self->state;
+  return $self->publish_state->read_state($self->state_file);
 }
 
 sub write_state {
   my ($self) = @_;
 
-  my $file = $self->state_file;
-  $self->debug("Writing to state file '$file':", pp($self->state));
+  $self->has_state_file or
+    $self->logconfess('Failed to write state to file: no state file defined');
 
-  my $octets;
-  try {
-    $octets = $self->encode($self->state);
-  } catch {
-    $self->logcroak('Failed to a encode JSON value to ',
-                    "state file '$file': ", $_);
-  };
+  return $self->publish_state->write_state($self->state_file);
+}
 
-  open my $fh, '>', $file or
-    $self->logcroak("Failed to open '$file' for writing: ", $ERRNO);
-  print $fh $octets or
-    $self->logcroak("Failed to write to '$file': ", $ERRNO);
-  close $fh or $self->warn("Failed to close '$file'");
+sub _build_publish_state {
+  my ($self) = @_;
 
-  return $file;
+  return WTSI::NPG::HTS::PublishState->new;
 }
 
 sub _build_obj_factory {

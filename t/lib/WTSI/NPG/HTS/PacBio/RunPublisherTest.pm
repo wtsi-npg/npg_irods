@@ -189,7 +189,7 @@ sub list_sts_xml_files_X : Test(1) {
             'Found (X) sts XML files A01_1');
 }
 
-sub publish_files : Test(2) {
+sub publish_files : Test(6) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/superfoo/45137_1095";
@@ -208,6 +208,26 @@ sub publish_files : Test(2) {
 
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
+
+  my $restart_file = $pub->restart_file;
+  ok(-e $restart_file, "Restart file $restart_file was written by publisher");
+
+  my $restart_state = WTSI::NPG::HTS::PublishState->new;
+  $restart_state->read_state($restart_file);
+  cmp_ok($restart_state->num_published, '==', $num_files,
+         "Restart file recorded $num_files files published") or
+           diag explain $restart_state->state;
+
+  my $repub = WTSI::NPG::HTS::PacBio::RunPublisher->new
+    (dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
+     runfolder_path  => $runfolder_path);
+
+  my ($repub_files, $repub_processed, $repub_errors) = $repub->publish_files;
+  cmp_ok($repub_errors,    '==', 0, 'No errors on re-publishing');
+  cmp_ok($repub_processed, '==', 0, "Re-published no files");
 }
 
 sub publish_meta_xml_files : Test(9) {
