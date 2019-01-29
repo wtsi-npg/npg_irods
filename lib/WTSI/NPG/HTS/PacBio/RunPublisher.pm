@@ -295,7 +295,9 @@ sub list_meta_xml_file {
   Description: Publish all files to iRODS. If the smart_names argument is
                supplied, only those SMRT cells will be published. The default
                is to publish all SMRT cells. Return the number of files,
-               the number published and the number of errors.
+               the number published and the number of errors. This method
+               writes a restart file on exit, unlike the publish methods for
+               specific file types.
   Returntype : Array[Int]
 
 =cut
@@ -351,6 +353,8 @@ sub list_meta_xml_file {
                    "$num_processed files processed");
     }
 
+    $self->write_restart_file;
+
     return ($num_files, $num_processed, $num_errors);
   }
 }
@@ -367,7 +371,7 @@ sub list_meta_xml_file {
                  $pub->publish_meta_xml_file
   Description: Publish metadata XML file for a SMRT cell to iRODS. Return
                the number of files, the number published and the number
-               of errors.
+               of errors. Does not write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -399,7 +403,7 @@ sub publish_meta_xml_file {
                  $pub->publish_basx_files
   Description: Publish bas and bax files for a SMRT cell to iRODS. Return
                the number of files, the number published and the number
-               of errors.
+               of errors. Does not write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -463,7 +467,7 @@ sub publish_basx_files {
                  $pub->publish_sts_xml_files
   Description: Publish sts XML files for a SMRT cell to iRODS. Return
                the number of files, the number published and the number
-               of errors.
+               of errors. Does not write a restart file.
   Returntype : Array[Int]
 
 =cut

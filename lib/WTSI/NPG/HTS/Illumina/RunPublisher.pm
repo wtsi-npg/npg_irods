@@ -165,7 +165,8 @@ sub publish_collection {
                  $pub->publish_files
   Description: Publish all files for all detected composition files to iRODS.
                Return the number of files, the number published and the
-               number of errors.
+               number of errors. This method writes a restart file on exit,
+               unlike the publish methods for specific file types.
   Returntype : Array[Int]
 
 =cut
@@ -221,6 +222,8 @@ sub publish_collection {
       $call->(sub { $self->publish_qc_files($cfile, $spk)        }, $cfile);
     }
 
+    $self->write_restart_file;
+
     return ($num_files, $num_processed, $num_errors);
   }
 }
@@ -231,7 +234,8 @@ sub publish_collection {
 
   Example    : $pub->publish_interop_files
   Description: Publish run-level InterOp files to iRODS. Return the number of
-               files, the number published and the number of errors.
+               files, the number published and the number of errors. Does not
+               write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -260,7 +264,8 @@ sub publish_interop_files {
 
   Example    : $pub->publish_xml_files
   Description: Publish run-level XML files to iRODS. Return the number of
-               files, the number published and the number of errors.
+               files, the number published and the number of errors. Does not
+               write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -292,7 +297,8 @@ sub publish_xml_files {
                  $pub->publish_alignment_files
   Description: Publish alignment files corresponding to the given
                composition file to iRODS. Return the number of files,
-               the number published and the number of errors.
+               the number published and the number of errors. Does not
+               write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -346,7 +352,8 @@ sub publish_alignment_files {
                  $pub->publish_index_files
   Description: Publish alignment index files corresponding to the given
                composition file to iRODS. Return the number of files,
-               the number published and the number of errors.
+               the number published and the number of errors. Does not
+               write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -405,7 +412,8 @@ sub publish_index_files {
                  $pub->publish_index_files
   Description: Publish ancillary files corresponding to the given
                composition file to iRODS. Return the number of files,
-               the number published and the number of errors.
+               the number published and the number of errors. Does not
+               write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -448,7 +456,8 @@ sub publish_ancillary_files {
                  $pub->publish_genotype_files
   Description: Publish genotype files corresponding to the given
                composition file to iRODS. Return the number of files,
-               the number published and the number of errors.
+               the number published and the number of errors. Does not
+               write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -491,7 +500,8 @@ sub publish_genotype_files {
                  $pub->publish_qc_files
   Description: Publish QC files corresponding to the given
                composition file to iRODS. Return the number of files,
-               the number published and the number of errors.
+               the number published and the number of errors. Does not
+               write a restart file.
   Returntype : Array[Int]
 
 =cut

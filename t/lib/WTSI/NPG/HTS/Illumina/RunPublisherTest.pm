@@ -902,8 +902,7 @@ sub publish_archive_path_mlwh : Test(4) {
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
 
   my $restart_file = $pub->restart_file;
-  $pub->write_restart_file;
-  ok(-e $restart_file, "Restart file $restart_file exists");
+  ok(-e $restart_file, "Restart file $restart_file was written by publisher");
 
   my $restart_state = WTSI::NPG::HTS::PublishState->new;
   $restart_state->read_state($restart_file);
