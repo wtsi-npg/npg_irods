@@ -1,6 +1,14 @@
+Release 2.10.0
+
+ - Make the RunPublisher include paths relative to the source
+   directory. This generalises the behaviour for QC files to other
+   file types.
+ - Bug fix: restored correct creation and consumption of restart
+   files.
+
 Release 2.9.2
- - register RunParameters.xml file for Illumina run publishing
- - when publishing cram files, only publish crai (not bai)
+ - Register RunParameters.xml file for Illumina run publishing
+ - When publishing cram files, only publish crai (not bai)
 
 Release 2.9.1
  - Illumina::AlnDataObject
@@ -12,30 +20,30 @@ Release 2.9
  - Archive output from PacBio auto deplexing jobs.
  - Use tears -d to ensure the default iRODS server is used (avoids
    a HEIRARCHY_ERROR when using getHostForGet cross-zone).
- - Imporvements and bug fixes for publishing from the GridION.
+ - Improvements and bug fixes for publishing from the GridION.
 
 Release 2.8.1
- - use tears 1.2.4 (-w flag now required for write to iRODS)
+ - Use tears 1.2.4 (-w flag now required for write to iRODS)
 
 Release 2.8
- - switched to disposable-irods 1.3 (iRODS packages from Sanger S3,
+ - Switched to disposable-irods 1.3 (iRODS packages from Sanger S3,
    replaced RENCI FTP site)
- - added single-server option
- - added support for data files to change during the tar process
+ - Added single-server option
+ - Added support for data files to change during the tar process
    and to detect and archive those changes
- - individually check the checksum of files local to the gridionxi
+ - Individually check the checksum of files local to the gridionxi
    where they are loaded and compare with the iRODS checksum
- - updated the samtools and htslib versions to 1.7
- - added tar file auditor
- - use manifest checksums to confirm file contents
- - support loading PacBio RSII files created using out of date reagents
- - allow a user-supplied checksum to be used in TarPublisher and TarStream
+ - Updated the samtools and htslib versions to 1.7
+ - Added tar file auditor
+ - Use manifest checksums to confirm file contents
+ - Support loading PacBio RSII files created using out of date reagents
+ - Allow a user-supplied checksum to be used in TarPublisher and TarStream
    (so GridIONRunPublisher can allow the checksum of uncompressed data to be used)
- - publish fastq files during the catchup phase
- - allow auditing of older GridION tar files which used a relative path for tarred files
- - archiving changes for illumina sequencing genotype files
- - fix for the regex used when choosing to ignore files
- - minor fix to DataObjectFactory.pm
+ - Publish fastq files during the catchup phase
+ - Allow auditing of older GridION tar files which used a relative path for tarred files
+ - Archiving changes for illumina sequencing genotype files
+ - Fix for the regex used when choosing to ignore files
+ - Minor fix to DataObjectFactory.pm
 
 Release 2.7
  - Moved quant file tests to illumina run publisher tests
@@ -44,10 +52,10 @@ Release 2.7
 
 Release 2.6
 
- - extended log publisher find command to include STAR aligner log files
- - add 'STAR' as a valid aligner to the header parser
- - make file formats 'tab' and 'zip' have restricted access
- - add compress suffixes to ancillary lane/plex file patterns
+ - Extended log publisher find command to include STAR aligner log files
+ - Add 'STAR' as a valid aligner to the header parser
+ - Make file formats 'tab' and 'zip' have restricted access
+ - Add compress suffixes to ancillary lane/plex file patterns
 
 Release 2.5
 
@@ -79,9 +87,9 @@ Release 2.2
 
  - PacBio
     Sequel monitor to use new completedAt date.
-    add warning for Sequel R&D run entry.
-    archive Sequel adapters.fasta.
-    restrict access for relevant PacBio files.
+    Add warning for Sequel R&D run entry.
+    Archive Sequel adapters.fasta.
+    Restrict access for relevant PacBio files.
 
 Release 2.1
 
