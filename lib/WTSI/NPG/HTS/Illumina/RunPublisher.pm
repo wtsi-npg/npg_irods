@@ -15,6 +15,7 @@ use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::BatchPublisher;
 use WTSI::NPG::HTS::Illumina::DataObjectFactory;
 use WTSI::NPG::HTS::Illumina::ResultSet;
+use WTSI::NPG::HTS::PublishState;
 use WTSI::NPG::HTS::Seqchksum;
 use WTSI::NPG::HTS::Types qw[AlnFormat];
 use WTSI::NPG::iRODS::Metadata;
@@ -31,9 +32,7 @@ with qw[
 
 our $VERSION = '';
 
-our $DEFAULT_ROOT_COLL    = '/seq';
-our $DEFAULT_QC_COLL      = 'qc';
-
+our $DEFAULT_ROOT_COLL       = '/seq';
 our $NUM_READS_JSON_PROPERTY = 'num_total_reads';
 
 has 'id_run' =>
@@ -48,6 +47,14 @@ has 'lims_factory' =>
    isa           => 'WTSI::NPG::HTS::LIMSFactory',
    required      => 1,
    documentation => 'A factory providing st:api::lims objects');
+
+has 'publish_state' =>
+  (isa           => 'WTSI::NPG::HTS::PublishState',
+   is            => 'ro',
+   required      => 1,
+   default       => sub { return WTSI::NPG::HTS::PublishState->new },
+   lazy          => 1,
+   documentation => 'State of all files published, across all batches');
 
 has 'restart_file' =>
   (isa           => 'Str',
@@ -158,7 +165,8 @@ sub publish_collection {
                  $pub->publish_files
   Description: Publish all files for all detected composition files to iRODS.
                Return the number of files, the number published and the
-               number of errors.
+               number of errors. This method writes a restart file on exit,
+               unlike the publish methods for specific file types.
   Returntype : Array[Int]
 
 =cut
@@ -197,6 +205,8 @@ sub publish_collection {
       };
     };
 
+    $self->read_restart_file;
+
     # Publish any "run-level" data found under the source directory
     $call->(sub { $self->publish_xml_files });
     $call->(sub { $self->publish_interop_files });
@@ -214,6 +224,8 @@ sub publish_collection {
       $call->(sub { $self->publish_qc_files($cfile, $spk)        }, $cfile);
     }
 
+    $self->write_restart_file;
+
     return ($num_files, $num_processed, $num_errors);
   }
 }
@@ -224,7 +236,8 @@ sub publish_collection {
 
   Example    : $pub->publish_interop_files
   Description: Publish run-level InterOp files to iRODS. Return the number of
-               files, the number published and the number of errors.
+               files, the number published and the number of errors. Does not
+               write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -244,8 +257,7 @@ sub publish_interop_files {
   $self->debug('Publishing interop files: ', pp(\@files));
 
   # Configure archiving to a custom sub-collection here
-  my $collection = $self->publish_collection;
-  return $self->_publish_run_level_data(\@files, $collection, $primary_avus);
+  return $self->_collate_and_publish_run_level(\@files, $primary_avus);
 }
 
 =head2 publish_xml_files
@@ -254,7 +266,8 @@ sub publish_interop_files {
 
   Example    : $pub->publish_xml_files
   Description: Publish run-level XML files to iRODS. Return the number of
-               files, the number published and the number of errors.
+               files, the number published and the number of errors. Does not
+               write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -274,8 +287,7 @@ sub publish_xml_files {
   $self->debug('Publishing XML files: ', pp(\@files));
 
   # Configure archiving to a custom sub-collection here
-  my $collection = $self->publish_collection;
-  return $self->_publish_run_level_data(\@files, $collection, $primary_avus);
+  return $self->_collate_and_publish_run_level(\@files, $primary_avus);
 }
 
 =head2 publish_alignment_files
@@ -287,7 +299,8 @@ sub publish_xml_files {
                  $pub->publish_alignment_files
   Description: Publish alignment files corresponding to the given
                composition file to iRODS. Return the number of files,
-               the number published and the number of errors.
+               the number published and the number of errors. Does not
+               write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -326,13 +339,13 @@ sub publish_alignment_files {
   $self->debug("Publishing alignment files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
-  my $collection = $self->publish_collection;
-  return $self->_publish_product_level_data(\@files, $collection,
-                                            $composition_file,
-                                            $primary_avus, $secondary_avus);
+  return $self->_collate_and_publish_product_level(\@files,
+                                                   $composition_file,
+                                                   $primary_avus,
+                                                   $secondary_avus);
 }
 
-=head2 publish_alignment_files
+=head2 publish_index_files
 
   Arg [1]    : composition file, Str.
   Arg [2]    : with_spiked_control, Bool. Optional.
@@ -341,7 +354,8 @@ sub publish_alignment_files {
                  $pub->publish_index_files
   Description: Publish alignment index files corresponding to the given
                composition file to iRODS. Return the number of files,
-               the number published and the number of errors.
+               the number published and the number of errors. Does not
+               write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -385,10 +399,10 @@ sub publish_index_files {
   $self->debug("Publishing index files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
-  my $collection = $self->publish_collection;
-  return $self->_publish_product_level_data(\@files, $collection,
-                                            $composition_file,
-                                            $primary_avus, $secondary_avus);
+  return $self->_collate_and_publish_product_level(\@files,
+                                                   $composition_file,
+                                                   $primary_avus,
+                                                   $secondary_avus);
 }
 
 =head2 publish_ancillary_files
@@ -400,7 +414,8 @@ sub publish_index_files {
                  $pub->publish_index_files
   Description: Publish ancillary files corresponding to the given
                composition file to iRODS. Return the number of files,
-               the number published and the number of errors.
+               the number published and the number of errors. Does not
+               write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -428,10 +443,10 @@ sub publish_ancillary_files {
   $self->debug("Publishing ancillary files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
-  my $collection = $self->publish_collection;
-  return $self->_publish_product_level_data(\@files, $collection,
-                                            $composition_file,
-                                            $primary_avus, $secondary_avus);
+  return $self->_collate_and_publish_product_level(\@files,
+                                                   $composition_file,
+                                                   $primary_avus,
+                                                   $secondary_avus);
 }
 
 =head2 publish_genotype_files
@@ -443,7 +458,8 @@ sub publish_ancillary_files {
                  $pub->publish_genotype_files
   Description: Publish genotype files corresponding to the given
                composition file to iRODS. Return the number of files,
-               the number published and the number of errors.
+               the number published and the number of errors. Does not
+               write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -471,10 +487,10 @@ sub publish_genotype_files {
   $self->debug("Publishing genotype files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
-  my $collection = $self->publish_collection;
-  return $self->_publish_product_level_data(\@files, $collection,
-                                            $composition_file,
-                                            $primary_avus, $secondary_avus);
+  return $self->_collate_and_publish_product_level(\@files,
+                                                   $composition_file,
+                                                   $primary_avus,
+                                                   $secondary_avus);
 }
 
 =head2 publish_qc_files
@@ -486,7 +502,8 @@ sub publish_genotype_files {
                  $pub->publish_qc_files
   Description: Publish QC files corresponding to the given
                composition file to iRODS. Return the number of files,
-               the number published and the number of errors.
+               the number published and the number of errors. Does not
+               write a restart file.
   Returntype : Array[Int]
 
 =cut
@@ -514,21 +531,48 @@ sub publish_qc_files {
   $self->debug("Publishing QC files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
-  my $collection = catdir($self->publish_collection, $DEFAULT_QC_COLL);
-  return $self->_publish_product_level_data(\@files, $collection,
-                                            $composition_file,
-                                            $primary_avus, $secondary_avus);
+  return $self->_collate_and_publish_product_level(\@files,
+                                                   $composition_file,
+                                                   $primary_avus,
+                                                   $secondary_avus);
+}
+
+sub read_restart_file {
+  my ($self) = @_;
+
+  $self->publish_state->read_state($self->restart_file);
+  return;
 }
 
 sub write_restart_file {
   my ($self) = @_;
 
-  $self->batch_publisher->write_state;
+  $self->publish_state->write_state($self->restart_file);
   return;
 }
 
-sub _publish_run_level_data {
-  my ($self, $data_files, $collection,
+# Collate files into batches, one batch per destination collection
+sub _collate_and_publish_run_level {
+  my ($self, $files, $primary_avus_callback) = @_;
+
+  my $collated_by_dest = $self->_collate_by_dest_coll($files);
+
+  my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
+  foreach my $dest_coll (sort keys %{$collated_by_dest}) {
+    $self->_maybe_create_collection($dest_coll);
+    my ($nf, $np, $ne) =
+      $self->_publish_run_level($collated_by_dest->{$dest_coll},
+                                $dest_coll, $primary_avus_callback);
+    $num_files     += $nf;
+    $num_processed += $np;
+    $num_errors    += $ne;
+  }
+
+  return ($num_files, $num_processed, $num_errors);
+}
+
+sub _publish_run_level {
+  my ($self, $files, $collection,
       $primary_avus_callback, $secondary_avus_callback) = @_;
 
   $secondary_avus_callback ||= sub { return () };
@@ -540,18 +584,42 @@ sub _publish_run_level_data {
      irods             => $self->irods);
 
   my $batch_publisher = $self->_make_batch_publisher($obj_factory);
-  $self->debug("Publishing run level collection: $collection: ",
-               pp($data_files));
+  $self->debug("Publishing run level collection: $collection: ", pp($files));
 
-  return $batch_publisher->publish_file_batch
-    ($data_files, $collection, $primary_avus_callback,
-     $secondary_avus_callback);
+  my ($num_files, $num_processed, $num_errors) =
+    $batch_publisher->publish_file_batch($files, $collection,
+                                         $primary_avus_callback,
+                                         $secondary_avus_callback);
+  return ($num_files, $num_processed, $num_errors);
+}
+
+# Collate files into batches, one batch per destination collection
+sub _collate_and_publish_product_level {
+  my ($self, $files, $composition_file, $primary_avus_callback,
+      $secondary_avus_callback) = @_;
+
+  my $collated_by_dest = $self->_collate_by_dest_coll($files);
+
+  my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
+  foreach my $dest_coll (sort keys %{$collated_by_dest}) {
+    $self->_maybe_create_collection($dest_coll);
+    my ($nf, $np, $ne) =
+      $self->_publish_product_level($collated_by_dest->{$dest_coll},
+                                    $dest_coll, $composition_file,
+                                    $primary_avus_callback,
+                                    $secondary_avus_callback);
+    $num_files     += $nf;
+    $num_processed += $np;
+    $num_errors    += $ne;
+  }
+
+  return ($num_files, $num_processed, $num_errors);
 }
 
 # Publish product level things like alignments and QC
 ## no critic (Subroutines::ProhibitManyArgs)
-sub _publish_product_level_data {
-  my ($self, $data_files, $collection, $composition_file,
+sub _publish_product_level {
+  my ($self, $files, $collection, $composition_file,
       $primary_avus_callback, $secondary_avus_callback) = @_;
 
   $composition_file or
@@ -570,20 +638,51 @@ sub _publish_product_level_data {
   my $batch_publisher = $self->_make_batch_publisher($obj_factory);
   $self->debug("Publishing product level collection: $collection, ",
                'composition: ', $composition->freeze2rpt,
-               ' :', pp($data_files));
+               ' :', pp($files));
 
-  return $batch_publisher->publish_file_batch
-    ($data_files, $collection, $primary_avus_callback,
-     $secondary_avus_callback);
+  my ($num_files, $num_processed, $num_errors) =
+    $batch_publisher->publish_file_batch($files, $collection,
+                                         $primary_avus_callback,
+                                         $secondary_avus_callback);
+  return ($num_files, $num_processed, $num_errors);
 }
 ## use critic
 
+# Return a destination collection for a file. The path of the file
+# relative to the source directory is used to determine the path of
+# the data object in iRODS relative to the specified target
+# collection.
+sub _dest_coll {
+  my ($self, $path) = @_;
+
+  my $local_rel  = abs2rel($path, $self->source_directory);
+  my $remote_abs = catfile($self->publish_collection, $local_rel);
+  my ($obj_name, $dest_coll) = fileparse($remote_abs);
+  $self->debug("Destination collection of '$path' is '$dest_coll'");
+
+  return $dest_coll;
+}
+
+sub _collate_by_dest_coll {
+  my ($self, $files) = @_;
+
+  my %collated_by_dest;
+  foreach my $file (@{$files}) {
+    my $dest_coll = $self->_dest_coll($file);
+    $collated_by_dest{$dest_coll} ||= [];
+    push @{$collated_by_dest{$dest_coll}}, $file;
+  }
+
+  return \%collated_by_dest;
+}
+
 sub _make_batch_publisher {
   my ($self, $obj_factory) = @_;
-  my @init_args = (obj_factory => $obj_factory,
-                   force       => $self->force,
-                   irods       => $self->irods,
-                   state_file  => $self->restart_file);
+  my @init_args = (
+                   force         => $self->force,
+                   irods         => $self->irods,
+                   obj_factory   => $obj_factory,
+                   publish_state => $self->publish_state);
   if ($self->has_max_errors) {
     push @init_args, max_errors  => $self->max_errors;
   }
@@ -660,6 +759,12 @@ sub _build_restart_file {
   return catfile($self->source_directory, 'published.json');
 }
 
+sub _build_publish_state {
+  my ($self) = @_;
+
+  return WTSI::NPG::HTS::PublishState->new;
+}
+
 sub _build_run_files {
   my ($self) = @_;
 
@@ -711,6 +816,15 @@ sub _match_single_file {
   return shift @files;
 }
 
+sub _maybe_create_collection {
+  my ($self, $coll) = @_;
+  if (not $self->irods->is_collection($coll)) {
+    $self->irods->add_collection($coll);
+  }
+
+  return $coll;
+}
+
 __PACKAGE__->meta->make_immutable;
 
 no Moose;
@@ -752,7 +866,10 @@ Data files are divided into categories:
  - QC JSON files; JSON files containing information about the run.
 
 A RunPublisher provides methods to list the files in these categories
-and to copy ("publish") them.
+and to copy ("publish") them. File publishing is recursive below the
+source directory. The relative path of a file under source directory
+on the local filesystem is used to create the same relative path in
+iRODS, beneath the destination collection.
 
 As part of the copying process, metadata are added to, or updated on,
 the files in iRODS. Following the metadata update, access permissions
@@ -785,8 +902,8 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016, 2017, 2018 Genome Research Limited. All Rights
-Reserved.
+Copyright (C) 2015, 2016, 2017, 2018, 2019 Genome Research
+Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
