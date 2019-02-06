@@ -2,6 +2,7 @@ package WTSI::NPG::HTS::Illumina::Annotator;
 
 use Data::Dump qw[pp];
 use Moose::Role;
+use List::MoreUtils qw[uniq];
 
 use WTSI::NPG::HTS::Metadata;
 use WTSI::NPG::iRODS::Metadata;
@@ -60,9 +61,8 @@ with qw[
     }
 
     push @avus, $self->make_composition_metadata($composition);
-
+    push @avus, $self->make_run_metadata($composition);
     foreach my $component ($composition->components_list) {
-      push @avus, $self->make_run_metadata($component);
       push @avus, $self->make_target_metadata
         ($component, $params->alt_process);
 
@@ -112,18 +112,9 @@ sub make_component_metadata {
 
 =head2 make_run_metadata
 
-  Arg [1]      Run identifier, Int.
-  Arg [2]      Lane position, Int.
-  Arg [3]      Number of (non-secondardy/supplementary) reads present, Int.
-               Optional.
+  Arg [1]      composition, npg_tracking::glossary::composition
 
-  Named args:  is_paired_read  Run is paired, Bool. Required.
-               tag_index       Tag index, Int.
-
-  Example    : my @avus = $ann->make_run_metadata
-                   ($id_run, $position, $num_reads,
-                    is_paired_read => 1,
-                    tag_index      => $tag_index);
+  Example    : my @avus = $ann->make_run_metadata ($composition);
 
   Description: Return HTS run metadata AVUs.
   Returntype : Array[HashRef]
@@ -131,19 +122,32 @@ sub make_component_metadata {
 =cut
 
 sub make_run_metadata {
-  my ($self, $component) = @_;
+  my ($self, $composition) = @_;
 
-  $component or $self->logconfess('A component argument is required');
+  $composition or $self->logconfess('A composition argument is required');
+
+  my @id_runs   = ();
+  my @positions = ();
+  my @tis       = ();
+  my $uti = -1;
+  foreach my $c ($composition->components_list) {
+    push @id_runs, $c->id_run;
+    push @positions, $c->position;
+    push @tis, defined $c->tag_index ? $c->tag_index : $uti;
+  }
+  @id_runs   = uniq @id_runs;
+  @positions = uniq @positions;
+  @tis       = uniq @tis;
 
   my @avus;
-  if ($component->has_id_run) {
-    push @avus, $self->make_avu($ID_RUN, $component->id_run),
+  if (scalar @id_runs == 1) {
+    push @avus, $self->make_avu($ID_RUN, $id_runs[0]),
   }
-  if ($component->has_position) {
-    push @avus, $self->make_avu($POSITION, $component->position);
+  if (scalar @positions == 1) {
+    push @avus, $self->make_avu($POSITION, $positions[0]);
   }
-  if ($component->has_tag_index) {
-    push @avus, $self->make_avu($TAG_INDEX, $component->tag_index);
+  if ((scalar @tis == 1) && ($tis[0] != $uti)) {
+    push @avus, $self->make_avu($TAG_INDEX, $tis[0]);
   }
 
   return @avus;
@@ -576,8 +580,8 @@ Keith James <kdj@sanger.ac.uk>, Iain Bancarz <ib5@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016, 2017, 2018 Genome Research Limited. All
-Rights Reserved.
+Copyright (C) 2015, 2016, 2017, 2018, 2019 Genome Research Limited.
+All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
