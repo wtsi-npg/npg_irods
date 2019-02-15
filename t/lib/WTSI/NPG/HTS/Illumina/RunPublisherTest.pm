@@ -1139,11 +1139,8 @@ sub check_merge_primary_metadata {
 
   deep_observed_vs_expected
     ([$obj->find_in_metadata($POSITION)],
-     [{attribute => $POSITION,
-       value     => 1},
-      {attribute => $POSITION,
-       value     => 2}],
-     'Expected lane AVUs present');
+     [],
+     'Lane AVUs are not present - components belong to different lanes');
 
   foreach my $attr ($ALIGNMENT, $TOTAL_READS, $IS_PAIRED_READ,
                     $SEQCHKSUM, $TARGET) {
