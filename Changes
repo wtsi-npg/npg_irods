@@ -1,3 +1,16 @@
+Release 2.11.0
+
+ - Only add run-, lane- or plex-level metadata (id_run=x, lane=y,
+   tag_index=z) on merged data when all the constituents are from the
+   same run, lane or plex. E.g.
+
+   run 1000, lane 1; run 1000, lane 2 gives id_run=1000
+
+   run 1000, lane 1; run 1001, lane 1 gives lane=1
+   
+   run 1000, lane 1, plex 2; run 1000, lane 2, plex 2;
+   run 1000, lane 3, plex 2 gives id_run=1000, tag_index=2
+
 Release 2.10.0
 
  - Make the RunPublisher include paths relative to the source
