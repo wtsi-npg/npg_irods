@@ -22,6 +22,7 @@ use WTSI::NPG::HTS::Illumina::AgfDataObject;
 use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
+use npg_tracking::glossary::composition;
 
 {
   package TestDB;
@@ -205,11 +206,13 @@ sub update_secondary_metadata_tag1_no_spike_human : Test(12) {
     my @expected_groups_before = ($public_group, 'ss_10', 'ss_100');
     my @expected_groups_after  = ('ss_2905');
 
+    my $c_json = '{"components":[{"id_run":17550,"position":8,"tag_index":1}]}';
     my $expected_metadata =
       [{attribute => $COMPONENT,
         value     => '{"id_run":17550,"position":8,"tag_index":1}'},
-       {attribute => $COMPOSITION,
-        value     => '{"components":[{"id_run":17550,"position":8,"tag_index":1}]}'},
+       {attribute => $COMPOSITION,              value     => $c_json},
+       {attribute => $ID_PRODUCT,
+        value => _composition_json2product_id($c_json)},
        {attribute => $LIBRARY_ID,               value => '14727840'},
        {attribute => $LIBRARY_TYPE,             value => 'ChIP-Seq Auto'},
        {attribute => $QC_STATE,                 value => '1'},
@@ -307,6 +310,13 @@ sub _build_initargs {
   push @initargs, subset => $subset if defined $subset;
 
   return @initargs;
+}
+
+sub _composition_json2product_id {
+  my $c_json = shift;
+  my $c_class = 'npg_tracking::glossary::composition::component::illumina';
+  return npg_tracking::glossary::composition->thaw(
+    $c_json, component_class => $c_class)->digest;
 }
 
 1;

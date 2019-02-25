@@ -77,6 +77,7 @@ sub BUILD {
     $ALT_TARGET,
     $COMPONENT,
     $COMPOSITION,
+    $ID_PRODUCT,
     $ID_RUN,
     $IS_PAIRED_READ,
     $POSITION,
