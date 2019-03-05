@@ -109,6 +109,11 @@ encounters. The factory will also cache any
 WTSI::DNAP::Warehouse::Schema created by the st::api::lims objects to
 enable them to share the same underlying database connection.
 
+N.B. The st::api::lims objects are constructed per-rpt list; no
+account is taken of subset and these object are unsuitable for doing
+queries on data which vary by subset.
+
+
 =head1 AUTHOR
 
 Keith James <kdj@sanger.ac.uk>
