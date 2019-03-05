@@ -95,6 +95,7 @@ sub make_composition_metadata {
 
   my @avus;
   push @avus, $self->make_avu($COMPOSITION, $composition->freeze);
+  push @avus, $self->make_avu($ID_PRODUCT, $composition->digest);
   foreach my $component ($composition->components_list) {
     push @avus, $self->make_component_metadata($component);
   }

@@ -25,6 +25,7 @@ sub BUILD {
     $ALT_PROCESS,
     $COMPONENT,
     $COMPOSITION,
+    $ID_PRODUCT,
     $GBS_PLEX_NAME,
     $ID_RUN,
     $POSITION,
