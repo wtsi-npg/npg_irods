@@ -9,6 +9,7 @@ use Getopt::Long;
 use List::AllUtils qw[uniq];
 use Log::Log4perl::Level;
 use Pod::Usage;
+use Readonly;
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::DriRODS;
@@ -17,7 +18,9 @@ use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::iRODS;
 
 our $VERSION = '';
-our $DEFAULT_COLLECTION = '/seq';
+
+Readonly::Scalar my $DEFAULT_COLLECTION => '/seq';
+Readonly::Scalar my $THOUSAND           => 1000;
 
 sub _read_composition_paths_stdin {
   my ($log, $stdio) = @_;
@@ -39,13 +42,26 @@ sub _read_composition_paths_stdin {
 }
 
 sub _find_composition_paths_irods {
-  my ($irods, $collection, $id_run) = @_;
+  my ($logger, $irods, $collections, $id_run) = @_;
 
   my @composition_paths;
   my $recurse = 1;
   foreach my $id (@{$id_run}) {
-    my ($objs, $colls) = $irods->list_collection("$collection/$id", $recurse);
-    push @composition_paths, grep { m{[.]composition[.]json$}msx } @{$objs};
+    my $d = int($id / $THOUSAND);
+    ##no critic (CodeLayout::ProhibitParensWithBuiltins)
+    my @found = grep { $irods->is_collection($_) }
+                map  {join(q[/], $_, $id) => join(q[/], $_, $d, $id)}
+                @{$collections};
+    ##use critic
+    if (!@found) {
+      $logger->info("Collection not found for run $id");
+    } elsif (scalar @found > 1) {
+      $logger->error(
+        "Multiple collections found for run $id: " . join q[, ], @found);
+    } else {
+      my ($objs, $colls) = $irods->list_collection($found[0], $recurse);
+      push @composition_paths, grep { m{[.]composition[.]json$}msx } @{$objs};
+    }
   }
 
   return @composition_paths;
@@ -67,7 +83,7 @@ log4perl.oneMessagePerAppender = 1
 LOGCONF
 ;
 
-my $collection;
+my $collections;
 my $debug;
 my $driver_type;
 my $dry_run = 1;
@@ -78,7 +94,7 @@ my $min_id_run;
 my $stdio;
 my $verbose;
 
-GetOptions('collection=s'              => \$collection,
+GetOptions('collection=s@'             => \$collections,
            'debug'                     => \$debug,
            'driver-type|driver_type=s' => \$driver_type,
            'dry-run|dry_run!'          => \$dry_run,
@@ -133,10 +149,10 @@ my $logger = Log::Log4perl->get_logger('main');
 
 my @composition_paths = _read_composition_paths_stdin($logger, $stdio);
 
-$collection ||= $DEFAULT_COLLECTION;
+$collections ||= [$DEFAULT_COLLECTION];
 
 push @composition_paths,
-  _find_composition_paths_irods($irods, $collection, \@id_run);
+  _find_composition_paths_irods($logger, $irods, $collections, \@id_run);
 @composition_paths = uniq sort @composition_paths;
 
 $logger->info('Processing ', scalar @composition_paths, ' composition paths');
@@ -161,7 +177,7 @@ if (@composition_paths) {
 
 $logger->info("Updated metadata on $num_updated files");
 
-
+exit 0;
 
 __END__
 
@@ -171,9 +187,9 @@ npg_update_illumina_metadata
 
 =head1 SYNOPSIS
 
-npg_update_hts_metadata [--dry-run] [--logconf file]
+npg_update_illumina_metadata [--dry-run] [--logconf file]
   --min-id-run id_run --max-id-run id_run | --id-run id_run
-  [--verbose] [--zone name]
+  [--collection] [--verbose] [--zone name]
 
  Options:
 
@@ -192,6 +208,8 @@ npg_update_hts_metadata [--dry-run] [--logconf file]
                 specify multiple runs. If used in conjunction with --min-run
                 and --max-run, the union of the two sets of runs will be
                 updated.
+  --collection  A list of iRODS paths where the run collection might be found.
+                Optional.
   --verbose     Print messages while processing. Optional.
   -             Read iRODS paths from STDIN instead of finding them by their
                 run, lane and tag index.
@@ -224,7 +242,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2018 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2018, 2019 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
