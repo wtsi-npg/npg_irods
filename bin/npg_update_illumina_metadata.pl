@@ -105,7 +105,7 @@ log4perl.oneMessagePerAppender = 1
 LOGCONF
 ;
 
-my $collections;
+my $collections = [];
 my $debug;
 my $driver_type;
 my $dry_run = 1;
@@ -115,7 +115,7 @@ my $max_id_run;
 my $min_id_run;
 my $stdio;
 my $verbose;
-my $zone = 'seq';
+my $zone = $DEFAULT_ZONE;
 
 GetOptions('collection=s@'             => \$collections,
            'debug'                     => \$debug,
