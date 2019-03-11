@@ -86,6 +86,7 @@ lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisMonitor.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisPublisher.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/APIClient.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/MetaXMLParser.pm
+lib/WTSI/NPG/HTS/PacBio/Sequel/MonitorBase.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunMonitor.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunPublisher.pm
 lib/WTSI/NPG/HTS/PathLister.pm
