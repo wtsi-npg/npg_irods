@@ -77,8 +77,8 @@ sub _find_composition_paths_irods {
 
   $logger->debug('Running ', $query);
   my $iquest = WTSI::DNAP::Utilities::Runnable->new
-    (executable => 'iquest', '-z', $zone,
-     arguments  => ['--no-page', q[%s/%s], $query])->run;
+    (executable => 'iquest',
+     arguments  => ['-z', $zone, '--no-page', q[%s/%s], $query])->run;
 
   my @paths = $iquest->split_stdout;
 
