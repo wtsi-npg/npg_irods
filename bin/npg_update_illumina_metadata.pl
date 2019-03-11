@@ -49,8 +49,7 @@ sub _filter_composition_paths_irods {
 
   foreach my $collection (@{$collections}) {
     $logger->debug('Working on collection ', $collection);
-    my @paths =
-      _find_composition_paths_irods($logger, $zone, $collection, $id_run);
+    my @paths = _find_composition_paths_irods($logger, $zone, $collection);
 
     my @filter;
     foreach my $id (@{$id_run}) {
@@ -60,7 +59,8 @@ sub _filter_composition_paths_irods {
 
     my $pattern = sprintf q[^(%s)], join q[|], @filter;
     $logger->debug('Filtering with ', $pattern);
-    push @filtered, grep { m{$pattern}msx } @paths;
+    my $re = qr{$pattern};
+    push @filtered, grep { m{$re}msx } @paths;
   }
 
   $logger->debug('Found paths: ', pp(\@filtered));
