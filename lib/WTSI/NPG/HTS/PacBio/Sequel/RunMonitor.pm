@@ -8,23 +8,15 @@ use Moose;
 use MooseX::StrictConstructor;
 use Try::Tiny;
 
-use WTSI::NPG::HTS::PacBio::Sequel::APIClient;
 use WTSI::NPG::HTS::PacBio::Sequel::RunPublisher;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::HTS::PacBio::MonitorBase
+         WTSI::NPG::HTS::PacBio::Sequel::MonitorBase
        ];
 
 our $VERSION = '';
-
-has 'api_client' =>
-  (isa           => 'WTSI::NPG::HTS::PacBio::Sequel::APIClient',
-   is            => 'ro',
-   required      => 1,
-   default       => sub { return WTSI::NPG::HTS::PacBio::Sequel::APIClient->new },
-   documentation => 'A PacBio Sequel API client used to fetch runs');
-
 
 =head2 publish_completed_runs
 
