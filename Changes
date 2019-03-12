@@ -1,3 +1,13 @@
+Release 2.12.0
+
+ - WTSI::NPG::HTS::LIMSFactory - for performance, cache st::api::lims
+   objects.
+ - Add id_product metadata attribute to primary metadata, compute the
+   attribute's value as a digest of composition JSON string.
+ - Metadata updater for Illumina sequencing data - search for a run
+   collection in multiple locations.
+   
+
 Release 2.11.0
 
  - Only add run-, lane- or plex-level metadata (id_run=x, lane=y,
