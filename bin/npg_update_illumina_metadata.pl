@@ -9,6 +9,7 @@ use Data::Dump qw[pp];
 use Getopt::Long;
 use List::AllUtils qw[uniq];
 use Log::Log4perl::Level;
+use POSIX;
 use Pod::Usage;
 use Readonly;
 
@@ -76,6 +77,7 @@ sub _find_composition_paths_irods {
                       q[and DATA_NAME like '%%.composition.json'], $collection;
 
   $logger->debug('Running ', $query);
+  my $start_time = time;
   my $iquest = WTSI::DNAP::Utilities::Runnable->new
     (executable => 'iquest',
      arguments  => ['-z', $zone, '--no-page', q[%s/%s], $query])->run;
@@ -83,7 +85,11 @@ sub _find_composition_paths_irods {
   my @paths = $iquest->split_stdout;
 
   my $num_paths = scalar @paths;
-  $logger->debug("Found $num_paths composition files");
+  my $duration  = time - $start_time;
+  my $num_min = floor($duration / 60);
+  my $num_sec = $duration % 60;
+  $logger->info("Found $num_paths composition files in $num_min min ",
+                "$num_sec sec");
 
   return @paths;
 }
