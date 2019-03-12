@@ -23,6 +23,7 @@ our $VERSION = '';
 
 Readonly::Scalar my $DEFAULT_ZONE => 'seq';
 Readonly::Scalar my $THOUSAND     => 1000;
+Readonly::Scalar my $SEC_PER_MIN  => 60;
 
 sub _read_composition_paths_stdin {
   my ($log, $stdio) = @_;
@@ -60,7 +61,7 @@ sub _filter_composition_paths_irods {
 
     my $pattern = sprintf q[^(%s)], join q[|], @filter;
     $logger->debug('Filtering with ', $pattern);
-    my $re = qr{$pattern};
+    my $re = qr{$pattern}msx;
     push @filtered, grep { m{$re}msx } @paths;
   }
 
@@ -86,8 +87,8 @@ sub _find_composition_paths_irods {
 
   my $num_paths = scalar @paths;
   my $duration  = time - $start_time;
-  my $num_min = floor($duration / 60);
-  my $num_sec = $duration % 60;
+  my $num_min = floor($duration / $SEC_PER_MIN);
+  my $num_sec = $duration % $SEC_PER_MIN;
   $logger->info("Found $num_paths composition files in $num_min min ",
                 "$num_sec sec");
 
