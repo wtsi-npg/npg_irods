@@ -6,7 +6,7 @@ Release 2.12.0
    attribute's value as a digest of composition JSON string.
  - Metadata updater for Illumina sequencing data - search for a run
    collection in multiple locations.
-   
+ - Support for minor Pacbio API changes  
 
 Release 2.11.0
 
