@@ -28,7 +28,8 @@ my $build = Build->new
     'Test::MockObject::Extends'     => 0,
     'Test::More'                    => '>= 0.98',
     'Test::Exception'               => '>= 0.32',
-    'Test::Perl::Critic'            => '>= 1.02'
+    'Test::Perl::Critic'            => '>= 1.02',
+    'npg_tracking::glossary::composition' => 0,
    },
    requires =>
    {

@@ -19,6 +19,7 @@ use WTSI::NPG::HTS::PacBio::Sequel::RunMonitor;
 
 our $VERSION = '';
 
+my $api_uri;
 my $collection;
 my $debug;
 my $local_path;
@@ -34,6 +35,7 @@ GetOptions('collection=s'            => \$collection,
            'sequel'                  => \$sequel,
            'logconf=s'               => \$log4perl_config,
            'local-path|local_path=s' => \$local_path,
+           'api-uri|api_uri=s'       => \$api_uri,
            'verbose'                 => \$verbose);
 
 
@@ -60,6 +62,11 @@ if (not $local_path) {
             -exitval => 2);
 }
 
+if ($api_uri && ! $sequel){
+  pod2usage(-msg     => 'Specifying urls is only supported for Sequels',
+            -exitval => 2);
+}
+
 my $irods     = WTSI::NPG::iRODS->new;
 my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
 
@@ -68,6 +75,9 @@ my @init_args = (irods              => $irods,
                  mlwh_schema        => $wh_schema);
 if ($collection) {
   push @init_args, dest_collection => $collection;
+}
+if($api_uri) {
+  push @init_args, api_uri => $api_uri;
 }
 
 my $monitor = $module->new(@init_args);
@@ -98,7 +108,7 @@ npg_pacbio_runmonitor
 
 npg_pacbio_runmonitor --local-path </path/to/staging/area
   [--collection <path>] [--debug] [--logconf <path>]
-  [--verbose] [--sequel]
+  [--verbose] [--sequel] [--api-uri]
 
  Options:
    --collection      The destination collection in iRODS. Optional,
@@ -113,6 +123,8 @@ npg_pacbio_runmonitor --local-path </path/to/staging/area
    --verbose         Print messages while processing. Optional.
    --sequel          If the target monitor is for the Sequel system. 
                      Optional.
+   --api-uri
+   --api_uri         Specify the server host and port. Optional.
 
 
 =head1 DESCRIPTION
@@ -126,7 +138,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2016, 2019 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
