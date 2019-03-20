@@ -73,13 +73,6 @@ has 'dest_collection' =>
    builder       => '_build_dest_collection',
    documentation => 'The destination collection within iRODS to store data');
 
-has 'force' =>
-  (isa           => 'Bool',
-   is            => 'ro',
-   required      => 0,
-   default       => 0,
-   documentation => 'Force re-publication of files that have been published');
-
 has 'irods' =>
    (isa           => 'WTSI::NPG::iRODS',
     is            => 'ro',
@@ -238,8 +231,7 @@ sub _build_batch_publisher {
   my ($self) = @_;
 
   return WTSI::NPG::HTS::BatchPublisher->new
-    (force                  => $self->force,
-     irods                  => $self->irods,
+    (irods                  => $self->irods,
      obj_factory            => $self->obj_factory,
      require_checksum_cache => []); # no md5s pre-created for Saphyr
 }

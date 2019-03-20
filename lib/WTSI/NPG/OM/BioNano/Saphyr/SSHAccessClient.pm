@@ -101,6 +101,7 @@ sub get_bnx_file {
 
   my $remote_path = catfile($self->data_directory, $job_id,
                             'RawMolecules.bnx.gz');
+  $self->info("Fetching $remote_path from server");
 
   my $rsync_source = sprintf '%s@%s:%s',
     $self->user, $self->host, $remote_path;
@@ -245,8 +246,7 @@ SQL
   my $end_str   = $end_date->strftime('%F %T');
 
   my $query = sprintf $sql, $begin_str, $end_str;
-  $self->debug('Executing query with arguments ',
-               "begin_date: '$begin_str', end_date: '$end_str'");
+  $self->info("Finding jobs between '$begin_str' and '$end_str'");
 
   my $host_address = sprintf '%s@%s', $self->user, $self->host;
 
@@ -265,6 +265,8 @@ SQL
     push @job_results,
       WTSI::NPG::OM::BioNano::Saphyr::JobResult->new($record);
   }
+
+  $self->info(sprintf q[Found %d jobs], scalar @job_results);
 
   return @job_results;
 }
