@@ -48,8 +48,9 @@ has 'max_errors' =>
    is            => 'ro',
    required      => 0,
    predicate     => 'has_max_errors',
-   documentation => 'The maximum number of errors permitted before ' .
-                    'the remainder of a publishing process is aborted');
+   documentation => 'The maximum number of errors permitted per call to ' .
+                    'publish_file_batch before the remainder of its ' .
+                    'operation is aborted');
 
 has 'state_file' =>
   (isa           => 'Str',
@@ -79,7 +80,8 @@ has 'require_checksum_cache' =>
   Arg [1]    : File batch, ArrayRef[Str].
   Arg [2]    : Destination collection, Str.
   Arg [3]    : Callback returning primary AVUs for a data object. CodeRef.
-  Arg [4]    : Callback returning secondary AVUs for a data object.CodeRef.
+  Arg [4]    : Callback returning secondary AVUs for a data object. CodeRef.
+               Optional.
   Arg [5]    : Callback returning extra AVUs for a data object. CodeRef,
                Optional.
 
@@ -108,7 +110,13 @@ sub publish_file_batch {
   defined $dest_coll or
     $self->logconfess('A defined dest_coll argument is required');
 
-  $extra_avus_callback ||= sub { return };
+  defined $primary_avus_callback or
+    $self->logconfess('A defined primary_avus_callback is required');
+  ref $primary_avus_callback eq 'CODE' or
+    $self->logconfess('The primary_avus_callback must be a CodeRef');
+
+  $secondary_avus_callback ||= sub { return () };
+  $extra_avus_callback     ||= sub { return () };
 
   my $publisher =
     WTSI::NPG::iRODS::Publisher->new

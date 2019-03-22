@@ -13,6 +13,9 @@ use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::BatchPublisher;
+
+use WTSI::NPG::HTS::TreePublisher;
+
 use WTSI::NPG::HTS::Illumina::DataObjectFactory;
 use WTSI::NPG::HTS::Illumina::ResultSet;
 use WTSI::NPG::HTS::PublishState;
@@ -52,7 +55,7 @@ has 'publish_state' =>
   (isa           => 'WTSI::NPG::HTS::PublishState',
    is            => 'ro',
    required      => 1,
-   default       => sub { return WTSI::NPG::HTS::PublishState->new },
+   builder       => '_build_publish_state',
    lazy          => 1,
    documentation => 'State of all files published, across all batches');
 
@@ -121,6 +124,13 @@ has 'max_errors' =>
    documentation => 'The maximum number of errors permitted before ' .
                     'the remainder of a publishing process is aborted');
 
+has 'num_errors' =>
+  (isa           => 'Int',
+   is            => 'rw',
+   required      => 1,
+   default       => 0,
+   documentation => 'The number of errors encountered by the publisher');
+
 has 'result_set' =>
   (isa           => 'WTSI::NPG::HTS::Illumina::ResultSet',
    is            => 'ro',
@@ -179,10 +189,15 @@ sub publish_collection {
   sub publish_files {
     my ($self) = $params->parse(@_);
 
-    my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
+    my ($num_files, $num_processed, $num_errors) = (0, 0, $self->num_errors);
 
     my $call = sub {
       my ($fn, $name) = @_;
+
+      if ($self->has_max_errors and $num_errors >= $self->max_errors) {
+        return ($num_files, 0, 0);
+      }
+
       try {
         my ($nf, $np, $ne) = $fn->();
 
@@ -203,6 +218,8 @@ sub publish_collection {
         $num_errors++;
         $self->error("Unexpected error in publish_files: $_");
       };
+
+      $self->num_errors($num_errors);
     };
 
     $self->read_restart_file;
@@ -229,6 +246,7 @@ sub publish_collection {
     return ($num_files, $num_processed, $num_errors);
   }
 }
+
 
 =head2 publish_interop_files
 
@@ -257,7 +275,7 @@ sub publish_interop_files {
   $self->debug('Publishing interop files: ', pp(\@files));
 
   # Configure archiving to a custom sub-collection here
-  return $self->_collate_and_publish_run_level(\@files, $primary_avus);
+  return $self->_tree_publish_run_level(\@files, $primary_avus);
 }
 
 =head2 publish_xml_files
@@ -287,7 +305,7 @@ sub publish_xml_files {
   $self->debug('Publishing XML files: ', pp(\@files));
 
   # Configure archiving to a custom sub-collection here
-  return $self->_collate_and_publish_run_level(\@files, $primary_avus);
+  return $self->_tree_publish_run_level(\@files, $primary_avus);
 }
 
 =head2 publish_alignment_files
@@ -339,10 +357,10 @@ sub publish_alignment_files {
   $self->debug("Publishing alignment files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
-  return $self->_collate_and_publish_product_level(\@files,
-                                                   $composition_file,
-                                                   $primary_avus,
-                                                   $secondary_avus);
+  return $self->_tree_publish_product_level(\@files,
+                                            $composition_file,
+                                            $primary_avus,
+                                            $secondary_avus);
 }
 
 =head2 publish_index_files
@@ -399,10 +417,10 @@ sub publish_index_files {
   $self->debug("Publishing index files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
-  return $self->_collate_and_publish_product_level(\@files,
-                                                   $composition_file,
-                                                   $primary_avus,
-                                                   $secondary_avus);
+  return $self->_tree_publish_product_level(\@files,
+                                            $composition_file,
+                                            $primary_avus,
+                                            $secondary_avus);
 }
 
 =head2 publish_ancillary_files
@@ -443,10 +461,10 @@ sub publish_ancillary_files {
   $self->debug("Publishing ancillary files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
-  return $self->_collate_and_publish_product_level(\@files,
-                                                   $composition_file,
-                                                   $primary_avus,
-                                                   $secondary_avus);
+  return $self->_tree_publish_product_level(\@files,
+                                            $composition_file,
+                                            $primary_avus,
+                                            $secondary_avus);
 }
 
 =head2 publish_genotype_files
@@ -487,10 +505,10 @@ sub publish_genotype_files {
   $self->debug("Publishing genotype files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
-  return $self->_collate_and_publish_product_level(\@files,
-                                                   $composition_file,
-                                                   $primary_avus,
-                                                   $secondary_avus);
+  return $self->_tree_publish_product_level(\@files,
+                                            $composition_file,
+                                            $primary_avus,
+                                            $secondary_avus);
 }
 
 =head2 publish_qc_files
@@ -531,10 +549,10 @@ sub publish_qc_files {
   $self->debug("Publishing QC files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
-  return $self->_collate_and_publish_product_level(\@files,
-                                                   $composition_file,
-                                                   $primary_avus,
-                                                   $secondary_avus);
+  return $self->_tree_publish_product_level(\@files,
+                                            $composition_file,
+                                            $primary_avus,
+                                            $secondary_avus);
 }
 
 sub read_restart_file {
@@ -551,31 +569,8 @@ sub write_restart_file {
   return;
 }
 
-# Collate files into batches, one batch per destination collection
-sub _collate_and_publish_run_level {
+sub _tree_publish_run_level {
   my ($self, $files, $primary_avus_callback) = @_;
-
-  my $collated_by_dest = $self->_collate_by_dest_coll($files);
-
-  my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
-  foreach my $dest_coll (sort keys %{$collated_by_dest}) {
-    $self->_maybe_create_collection($dest_coll);
-    my ($nf, $np, $ne) =
-      $self->_publish_run_level($collated_by_dest->{$dest_coll},
-                                $dest_coll, $primary_avus_callback);
-    $num_files     += $nf;
-    $num_processed += $np;
-    $num_errors    += $ne;
-  }
-
-  return ($num_files, $num_processed, $num_errors);
-}
-
-sub _publish_run_level {
-  my ($self, $files, $collection,
-      $primary_avus_callback, $secondary_avus_callback) = @_;
-
-  $secondary_avus_callback ||= sub { return () };
 
   my $obj_factory = WTSI::NPG::HTS::Illumina::DataObjectFactory->new
     (ancillary_formats => [$self->hts_ancillary_suffixes],
@@ -583,44 +578,14 @@ sub _publish_run_level {
      compress_formats  => [$self->compress_suffixes],
      irods             => $self->irods);
 
-  my $batch_publisher = $self->_make_batch_publisher($obj_factory);
-  $self->debug("Publishing run level collection: $collection: ", pp($files));
-
-  my ($num_files, $num_processed, $num_errors) =
-    $batch_publisher->publish_file_batch($files, $collection,
-                                         $primary_avus_callback,
-                                         $secondary_avus_callback);
-  return ($num_files, $num_processed, $num_errors);
+  my $tree_publisher = $self->_make_tree_publisher;
+  return $tree_publisher->publish_tree($files, $obj_factory,
+                                       $primary_avus_callback);
 }
 
-# Collate files into batches, one batch per destination collection
-sub _collate_and_publish_product_level {
+sub _tree_publish_product_level {
   my ($self, $files, $composition_file, $primary_avus_callback,
       $secondary_avus_callback) = @_;
-
-  my $collated_by_dest = $self->_collate_by_dest_coll($files);
-
-  my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
-  foreach my $dest_coll (sort keys %{$collated_by_dest}) {
-    $self->_maybe_create_collection($dest_coll);
-    my ($nf, $np, $ne) =
-      $self->_publish_product_level($collated_by_dest->{$dest_coll},
-                                    $dest_coll, $composition_file,
-                                    $primary_avus_callback,
-                                    $secondary_avus_callback);
-    $num_files     += $nf;
-    $num_processed += $np;
-    $num_errors    += $ne;
-  }
-
-  return ($num_files, $num_processed, $num_errors);
-}
-
-# Publish product level things like alignments and QC
-## no critic (Subroutines::ProhibitManyArgs)
-sub _publish_product_level {
-  my ($self, $files, $collection, $composition_file,
-      $primary_avus_callback, $secondary_avus_callback) = @_;
 
   $composition_file or
     $self->logconfess('A non-empty composition_file argument is required');
@@ -635,59 +600,33 @@ sub _publish_product_level {
      compress_formats  => [$self->compress_suffixes],
      irods             => $self->irods);
 
-  my $batch_publisher = $self->_make_batch_publisher($obj_factory);
-  $self->debug("Publishing product level collection: $collection, ",
-               'composition: ', $composition->freeze2rpt,
-               ' :', pp($files));
-
-  my ($num_files, $num_processed, $num_errors) =
-    $batch_publisher->publish_file_batch($files, $collection,
-                                         $primary_avus_callback,
-                                         $secondary_avus_callback);
-  return ($num_files, $num_processed, $num_errors);
-}
-## use critic
-
-# Return a destination collection for a file. The path of the file
-# relative to the source directory is used to determine the path of
-# the data object in iRODS relative to the specified target
-# collection.
-sub _dest_coll {
-  my ($self, $path) = @_;
-
-  my $local_rel  = abs2rel($path, $self->source_directory);
-  my $remote_abs = catfile($self->publish_collection, $local_rel);
-  my ($obj_name, $dest_coll) = fileparse($remote_abs);
-  $self->debug("Destination collection of '$path' is '$dest_coll'");
-
-  return $dest_coll;
+  my $tree_publisher = $self->_make_tree_publisher;
+  return $tree_publisher->publish_tree($files, $obj_factory,
+                                       $primary_avus_callback,
+                                       $secondary_avus_callback);
 }
 
-sub _collate_by_dest_coll {
-  my ($self, $files) = @_;
+sub _make_tree_publisher {
+  my ($self) = @_;
 
-  my %collated_by_dest;
-  foreach my $file (@{$files}) {
-    my $dest_coll = $self->_dest_coll($file);
-    $collated_by_dest{$dest_coll} ||= [];
-    push @{$collated_by_dest{$dest_coll}}, $file;
-  }
-
-  return \%collated_by_dest;
-}
-
-sub _make_batch_publisher {
-  my ($self, $obj_factory) = @_;
-  my @init_args = (
-                   force         => $self->force,
-                   irods         => $self->irods,
-                   obj_factory   => $obj_factory,
-                   publish_state => $self->publish_state);
+  my @init_args = (dest_collection  => $self->publish_collection,
+                   force            => $self->force,
+                   irods            => $self->irods,
+                   publish_state    => $self->publish_state,
+                   source_directory => $self->source_directory);
   if ($self->has_max_errors) {
-    push @init_args, max_errors  => $self->max_errors;
+    if ($self->num_errors >= $self->max_errors) {
+      $self->logconfess(sprintf q[Internal error: the number of publish ].
+                        q[errors (%d) reached the maximum permitted (%d) ] .
+                        q[while working],
+                        $self->num_errors, $self->max_errors);
+    }
+
+    my $max_errors = $self->max_errors - $self->num_errors;
+    push @init_args, max_errors => $max_errors;
   }
 
-  return WTSI::NPG::HTS::BatchPublisher->new(@init_args);
+  return WTSI::NPG::HTS::TreePublisher->new(@init_args);
 }
 
 sub _find_num_reads {
@@ -814,15 +753,6 @@ sub _match_single_file {
   }
 
   return shift @files;
-}
-
-sub _maybe_create_collection {
-  my ($self, $coll) = @_;
-  if (not $self->irods->is_collection($coll)) {
-    $self->irods->add_collection($coll);
-  }
-
-  return $coll;
 }
 
 __PACKAGE__->meta->make_immutable;
