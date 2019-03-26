@@ -291,7 +291,7 @@ sub _build_is_paired_read {
   foreach my $read (@reads) {
     my ($qname, $flag, $rname, $pos) = split /\t/msx, $read;
 
-    if (vec $flag, 0, 1) { # 0x1 == read paired
+    if ($flag & 1) { # 0x1 == read paired
       $is_paired_read = 1;
       last;
     }
