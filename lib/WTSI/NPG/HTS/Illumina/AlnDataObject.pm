@@ -325,6 +325,9 @@ sub _get_reads {
       if ($line) {
         push @reads, $line;
       }
+      else {
+        last;
+      }
       $n++;
     }
 
