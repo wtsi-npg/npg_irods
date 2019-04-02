@@ -195,7 +195,7 @@ sub publish_collection {
       my ($fn, $name) = @_;
 
       if ($self->has_max_errors and $num_errors >= $self->max_errors) {
-        return ($num_files, 0, 0);
+        return;
       }
 
       try {
@@ -220,6 +220,8 @@ sub publish_collection {
       };
 
       $self->num_errors($num_errors);
+
+      return;
     };
 
     $self->read_restart_file;

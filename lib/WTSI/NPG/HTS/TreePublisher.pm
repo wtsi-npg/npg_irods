@@ -169,9 +169,8 @@ WTSI::NPG::HTS::TreePublisher
 
 =head1 DESCRIPTION
 
-A role to be consumed by data publishers that read files from a local
-source directory and write them to a remote iRODS destination
-collection.
+A publisher that reads files from a local source directory tree and writes
+them to a remote iRODS destination collection tree with the same structure.
 
 =head1 AUTHOR
 
