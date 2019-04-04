@@ -1,3 +1,11 @@
+Release 2.12.1
+
+ - WTSI::NPG::HTS::Illumina::AlnDataObject - corrected is_paired_read
+   calculation and added missing test.
+ - Illumina RunPublisher modified to use a TreePublisher backed - no
+   change in behaviour is expected.
+
+
 Release 2.12.0
 
  - WTSI::NPG::HTS::LIMSFactory - for performance, cache st::api::lims
