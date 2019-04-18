@@ -12,14 +12,11 @@ use MooseX::StrictConstructor;
 use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
-use WTSI::NPG::HTS::BatchPublisher;
-
-use WTSI::NPG::HTS::TreePublisher;
-
 use WTSI::NPG::HTS::Illumina::DataObjectFactory;
 use WTSI::NPG::HTS::Illumina::ResultSet;
 use WTSI::NPG::HTS::PublishState;
 use WTSI::NPG::HTS::Seqchksum;
+use WTSI::NPG::HTS::TreePublisher;
 use WTSI::NPG::HTS::Types qw[AlnFormat];
 use WTSI::NPG::iRODS::Metadata;
 
