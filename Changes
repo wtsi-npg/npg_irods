@@ -1,3 +1,5 @@
+ - WTSI::NPG::HTS::Illumina::ResultSet - added geno to genotype_regex
+
 Release 2.12.1
 
  - WTSI::NPG::HTS::Illumina::AlnDataObject - corrected is_paired_read

@@ -39,7 +39,7 @@ our %ILLUMINA_PART_PATTERNS =
    },
    genotype_regex  => sub {
      my $name = shift;
-     return sprintf q[%s[.](bcf|vcf)$], "\Q$name\E";
+     return sprintf q[%s[.](bcf|vcf|geno)$], "\Q$name\E";
    },
    ancillary_regex => sub {
      my $name = shift;
