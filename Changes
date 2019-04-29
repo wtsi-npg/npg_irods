@@ -1,4 +1,4 @@
- - WTSI::NPG::HTS::Illumina::ResultSet - added geno to genotype_regex
+ - WTSI::NPG::HTS::Illumina::ResultSet - added geno to genotype_regex and updated tests
 
 Release 2.12.1
 
