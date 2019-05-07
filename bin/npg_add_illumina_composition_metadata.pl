@@ -305,23 +305,36 @@ for my $path (@file_paths) {
     }
 
     # Create a composition file.
-    my $cpath = join q[/], $idir, $expected_name . q[.composition.json];
+    my $cpath = $idir . $expected_name . q[.composition.json];
     try {
       $num_created++;
       $dry_run or
-     _create_irods_composition_file($irods, $cpath, $composition_json);
+      _create_irods_composition_file($cpath, $composition_json);
     } catch {
       $logger->logcroak("Failed to create file ${cpath}: $_");
     };
     # Will not deal with ACLs for the new file here, the metadata updater
     # can fix them later if necessary. The same for secondary metadata.
-    $irods->add_object_avu($cpath, 'type', 'json');
+    # Setting the same metadata on a file gives an error.
+    try {
+      $irods->add_object_avu($cpath, 'type', 'json');
+    } catch {
+      $logger->error("Error setting type metadata on ${cpath}: $_");
+    };
 
     # Add composition and component metadata where they we
     # previously missing.
-    $irods->add_object_avu($path, $COMPOSITION, $composition);
-    $irods->add_object_avu($path, $COMPONENT,
-                           $composition->get_component(0)->freeze);
+    try {
+      $irods->add_object_avu($path, $COMPOSITION, $composition_json);
+    } catch {
+      $logger->error("Error setting $COMPOSITION metadata on ${path}: $_");
+    };
+    try {
+      $irods->add_object_avu($path, $COMPONENT,
+                             $composition->get_component(0)->freeze);
+    } catch {
+      $logger->error("Error setting $COMPONENT metadata on ${path}: $_");
+    };
   }
 
   # Add id_product (composition digest) metadata
