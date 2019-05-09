@@ -284,7 +284,10 @@ for my $path (@file_paths) {
       ]
     );
     my $expected_name = $product_class->new(composition => $composition)->file_name();
-    if ($ifile_name !~ /\A$expected_name\.(?bam|cram)\Z/xms) {
+    # File names can contain a hash caracter, hense not using 'x' modifier.
+    ##no critic (RegularExpressions::RequireExtendedFormatting)
+    if ($ifile_name !~ /\A$expected_name[.](?:bam|cram)\Z/ms) {
+    ##use critic
       $logger->warn('File name mismatch: ', $path, ' and ', $expected_name);
       $file_name_mismatch = 1;
     }
