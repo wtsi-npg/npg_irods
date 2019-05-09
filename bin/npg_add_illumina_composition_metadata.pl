@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use FindBin qw[$Bin];
 use lib (-d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib");
-
+use Moose::Meta::Class;
 use Data::Dump qw[pp];
 use Getopt::Long;
 use List::AllUtils qw[uniq];
@@ -27,12 +27,22 @@ use WTSI::NPG::iRODS::Metadata qw[ $ALIGNMENT_FILTER
                                    $TAG_INDEX ];
 use npg_tracking::glossary::composition;
 use npg_tracking::glossary::composition::component::illumina;
-use npg_pipeline::product;
 
 our $VERSION = '0';
 
 Readonly::Scalar my $DEFAULT_ZONE => 'seq';
 Readonly::Scalar my $THOUSAND     => 1000;
+
+my $class = Moose::Meta::Class->create_anon_class();
+$class->add_attribute('composition', {
+                     isa        => q[npg_tracking::glossary::composition],
+                     is         => q[ro],
+                     required   => 1,});
+$class = Moose::Meta::Class->create_anon_class(
+      superclasses => [$class->name()],
+      roles        => ['npg_tracking::glossary::moniker'] );
+$class->make_immutable;
+my $product_class = $class->name();
 
 sub _read_run_ids_stdin {
   my ($log, $stdio) = @_;
@@ -273,8 +283,7 @@ for my $path (@file_paths) {
         npg_tracking::glossary::composition::component::illumina->new(\%attrs)
       ]
     );
-    my $product = npg_pipeline::product->new(composition => $composition);
-    my $expected_name = $product->file_name_root(); #? with subset
+    my $expected_name = $product_class->new(composition => $composition)->file_name();
     if ($ifile_name !~ /\A$expected_name\.(?bam|cram)\Z/xms) {
       $logger->warn('File name mismatch: ', $path, ' and ', $expected_name);
       $file_name_mismatch = 1;
