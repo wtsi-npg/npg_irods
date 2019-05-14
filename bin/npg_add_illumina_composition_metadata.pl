@@ -228,6 +228,7 @@ my $num_updated = 0;
 my $num_skipped = 0;
 my $num_mismatches = 0;
 my $num_created = 0;
+my $num_missing_attrs = 0;
 my $report_fh;
 
 if ($report_path) {
@@ -275,8 +276,11 @@ for my $path (@file_paths) {
     my $subset = q[];
     my $subset_mismatch = 0;
 
-    ($attrs{'id_run'} && $attrs{'position'}) or $logger->logcroak(
-      "Either id_run or position is not defined for $path");
+    if (not ($attrs{'id_run'} and $attrs{'position'})) {
+      $logger->error("Either id_run or position is not defined for $path");
+      $num_missing_attrs++;
+      next;
+    }
 
     $composition = npg_tracking::glossary::composition->new(
       components => [
@@ -359,7 +363,8 @@ if ($report_fh) {
     'Failed to close a file handle to ', $report_path, q[: ], $OS_ERROR);
 }
 
-$logger->info("Skipps summary: $num_skipped");
+$logger->info("Skips summary: $num_skipped");
+$logger->info("Skips due to missing attrs summary: $num_missing_attrs");
 $logger->info("Mismatches summary: $num_mismatches");
 $logger->info("Updates summary: $num_updated");
 $logger->info("Creates summary: $num_created");
