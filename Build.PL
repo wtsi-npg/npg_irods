@@ -33,6 +33,7 @@ my $build = Build->new
    },
    requires =>
    {
+    'Cache::LRU'                    => 0,
     'Carp'                          => '>= 1.20',
     'Data::Dump'                    => 0,
     'DateTime'                      => '>= 1.18',
