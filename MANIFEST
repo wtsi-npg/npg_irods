@@ -1,5 +1,6 @@
 .gitattributes
 .travis.yml
+bin/npg_add_illumina_composition_metadata.pl
 bin/npg_audit_gridion_run.pl
 bin/npg_audit_gridion_tar.pl
 bin/npg_gridion_run_monitor.pl
