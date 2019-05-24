@@ -1,4 +1,5 @@
  - WTSI::NPG::HTS::Illumina::ResultSet - added geno to genotype_regex and updated tests
+ - WTSI::NPG::HTS::Illumina::ResultSet - added quant.zip to ancillary_regex  and updated tests
 
 Release 2.12.1
 
