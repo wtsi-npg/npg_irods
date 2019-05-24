@@ -13673,6 +13673,7 @@ t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basec
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.cram.md5
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.flagstat
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.flagstat.md5
+t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.geno
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.markdups_metrics.txt
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.seqchksum
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2.sha512primesums512.seqchksum
@@ -13718,6 +13719,7 @@ t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basec
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2_quality_cycle_surv.txt.md5
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2_quality_error.txt
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2_quality_error.txt.md5
+t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_2_salmon.quant.zip
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3.all.seqchksum
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3.all.seqchksum.md5
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/18448_3.bai

@@ -55,6 +55,7 @@ our %ILLUMINA_PART_PATTERNS =
        '_quality_cycle_caltable[.]txt',   # non-conforming file name
        '_quality_cycle_surv[.]txt',       # non-conforming file name
        '_quality_error[.]txt',            # non-conforming file name
+       '_salmon[.]quant[.]zip',
        '[.]seqchksum',
        '[.]sha512primesums512[.]seqchksum',
        '[.]spatial_filter[.]stats',
