@@ -60,6 +60,7 @@ our %ILLUMINA_PART_PATTERNS =
        '[.]sha512primesums512[.]seqchksum',
        '[.]spatial_filter[.]stats',
        '_target[.]stats',                 # non-conforming file name
+       '_target_autosome[.]stats',        # non-conforming file name
        '[.]stats',
        '[.]txt';
    },
@@ -82,7 +83,8 @@ our %ILLUMINA_PART_PATTERNS =
        '[.]sequence_summary[.]json',
        '[.]spatial_filter[.]json',
        '[.]verify_bam_id[.]json',
-       '_target[.]samtools_stats[.]json'; # non-conforming file name
+       '_target[.]samtools_stats[.]json',          # non-conforming file name
+       '_target_autosome[.]samtools_stats[.]json'; # non-conforming file name
    });
 
 =head2 composition_files
