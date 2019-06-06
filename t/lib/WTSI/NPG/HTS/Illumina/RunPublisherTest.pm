@@ -647,7 +647,7 @@ sub publish_merged_pri_data_samplesheet : Test(19) {
   check_merge_primary_metadata($obj);
 }
 
-sub publish_merged_sec_data_mlwh : Test(69) {
+sub publish_merged_sec_data_mlwh : Test(74) {
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -679,7 +679,8 @@ sub publish_merged_sec_data_mlwh : Test(69) {
                              "plex$plex/26291#1.spatial_filter.stats",
                              "plex$plex/26291#1_F0x900.stats",
                              "plex$plex/26291#1_F0xB00.stats",
-                             "plex$plex/26291#1_F0xF04_target.stats"],
+                             "plex$plex/26291#1_F0xF04_target.stats",
+                             "plex$plex/26291#1_F0xF04_target_autosome.stats"],
                             'Expected data object found');
 
   my @observed = observed_data_objects($irods, "$dest_coll/plex$plex",
@@ -689,7 +690,7 @@ sub publish_merged_sec_data_mlwh : Test(69) {
   check_common_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_merged_sec_data_samplesheet : Test(69) {
+sub publish_merged_sec_data_samplesheet : Test(74) {
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -724,8 +725,9 @@ sub publish_merged_sec_data_samplesheet : Test(69) {
                              "plex$plex/26291#1.sha512primesums512.seqchksum",
                              "plex$plex/26291#1.spatial_filter.stats",
                              "plex$plex/26291#1_F0x900.stats",
-                             "plex$plex/26291#1_F0xB00.stats",
-                             "plex$plex/26291#1_F0xF04_target.stats"],
+                             "plex$plex/26291#1_F0xB00.stats", 
+                             "plex$plex/26291#1_F0xF04_target.stats",
+                             "plex$plex/26291#1_F0xF04_target_autosome.stats"],
                             'Expected data object found');
 
   my @observed = observed_data_objects($irods, "$dest_coll/plex$plex",

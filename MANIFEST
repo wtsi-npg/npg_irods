@@ -15635,6 +15635,7 @@ t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_base
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/26291#1_F0x900.stats
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/26291#1_F0xB00.stats
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/26291#1_F0xF04_target.stats
+t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/26291#1_F0xF04_target_autosome.stats
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/26291#1_phix.bai
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/26291#1_phix.bam
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/26291#1_phix.bam.md5
@@ -15663,6 +15664,7 @@ t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_base
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/qc/26291#1_F0x900.samtools_stats.json
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/qc/26291#1_F0xB00.samtools_stats.json
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/qc/26291#1_F0xF04_target.samtools_stats.json
+t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/qc/26291#1_F0xF04_target_autosome.samtools_stats.json
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/qc/26291#1_phix.bam_flagstats.json
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/qc/26291#1_phix.sequence_summary.json
 t/data/illumina/sequence/180709_A00538_0010_BH3FCMDRXX/Data/Intensities/BAM_basecalls_20180805-013153/no_cal/archive/plex1/qc/26291#1_phix_F0x900.samtools_stats.json
