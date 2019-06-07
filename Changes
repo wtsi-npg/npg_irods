@@ -3,6 +3,7 @@
    and updated tests
  - WTSI::NPG::HTS::Illumina::ResultSet - added _target_autosome.stats to 
    ancillary_regex and updated tests
+ - WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher - archive tag zero file
 
 Release 2.12.1
 
