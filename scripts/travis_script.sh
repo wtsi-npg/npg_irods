@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+set -e -x
 
 export TEST_AUTHOR=1
 export TEST_WITH_H5REPACK=1
