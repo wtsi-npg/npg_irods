@@ -13,11 +13,6 @@ env:
     - WTSI_NPG_GITHUB_URL=https://github.com/wtsi-npg
 
 before_install:
-  # workaround for iRODS buffer overflow
-  # see https://github.com/travis-ci/travis-ci/issues/5227
-  - sudo hostname "$(hostname | cut -c1-63)"
-  - sed -e "s/^\\(127\\.0\\.0\\.1.*\\)/\\1 $(hostname | cut -c1-63)/" /etc/hosts > /tmp/hosts
-  - sudo mv /tmp/hosts /etc/hosts
   - docker pull wsinpg/ub-16.04-irods-4.2
   - docker run -d -p 1247:1247 wsinpg/ub-16.04-irods-4.2
   - docker ps -a
