@@ -1,0 +1,29 @@
+---
+- chip_barcode: KHPZDTGLPQJGPNWU20319131581014320190911XXXXXXXXXXXXX
+  chip_serialnumber: KHPZDTGLPQJGPNWU
+  enzyme_name: Nb.BbvCI
+  experiment_name: 2
+  id_bmap_flowcell_tmp: 2
+  id_flowcell_lims: 3
+  id_library_lims: 1
+  id_lims: Traction
+  id_sample_tmp: 3736454
+  id_study_tmp: 3258
+  instrument_name: saphyr
+  last_updated: 2019-04-12 09:51:35
+  position: 1
+  recorded_at: 2019-04-12 09:51:35
+- chip_barcode: KHPZDTGLPQJGPNWU20319131581014320190911XXXXXXXXXXXXX
+  chip_serialnumber: KHPZDTGLPQJGPNWU
+  enzyme_name: Nb.BbvCI
+  experiment_name: 2
+  id_bmap_flowcell_tmp: 3
+  id_flowcell_lims: 4
+  id_library_lims: 1
+  id_lims: Traction
+  id_sample_tmp: 3135749
+  id_study_tmp: 3258
+  instrument_name: saphyr
+  last_updated: 2019-04-12 10:02:33
+  position: 2
+  recorded_at: 2019-04-12 10:02:33
