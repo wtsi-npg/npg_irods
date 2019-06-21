@@ -3,6 +3,7 @@ package WTSI::NPG::HTS::PacBio::Annotator;
 use List::AllUtils qw[uniq];
 use Moose::Role;
 use WTSI::NPG::iRODS::Metadata;
+use WTSI::DNAP::Utilities::Params qw[function_params];
 
 our $VERSION = '';
 
@@ -13,7 +14,10 @@ with qw[
 =head2 make_primary_metadata
 
   Arg [1]      PacBio run metadata, WTSI::NPG::HTS::PacBio::Metadata.
-  Arg [2]      Is data R & D? Boolean. Optional, defaults to false.
+  
+  Named args : data_level     Processing data level. Optional.
+               is_non_target  Is non target? Boolean. Defaults to false.
+               is_r_and_d     Is data R & D? Boolean. Defaults to false.
 
   Example    : my @avus = $ann->make_primary_metadata($metadata);
   Description: Return instrument, run, cell index, collection number, set
@@ -23,35 +27,49 @@ with qw[
 
 =cut
 
-sub make_primary_metadata {
-  my ($self, $metadata, $is_r_and_d) = @_;
+{
+    my $positional = 2;
+    my @named      = qw[data_level non_target is_r_and_d ];
+    my $params     = function_params($positional, @named);
 
-  defined $metadata or
-    $self->logconfess('A defined metadata argument is required');
+    sub make_primary_metadata {
+        my ($self, $metadata) = $params->parse(@_);
 
-  my @avus;
-  push @avus, $self->make_avu($PACBIO_CELL_INDEX,        $metadata->cell_index);
-  push @avus, $self->make_avu($PACBIO_COLLECTION_NUMBER, $metadata->collection_number);
-  push @avus, $self->make_avu($PACBIO_INSTRUMENT_NAME,   $metadata->instrument_name);
-  push @avus, $self->make_avu($PACBIO_RUN,               $metadata->run_name);
-  push @avus, $self->make_avu($PACBIO_WELL,              $metadata->well_name);
-  push @avus, $self->make_avu($PACBIO_SAMPLE_LOAD_NAME,  $metadata->sample_name);
+        defined $metadata or
+            $self->logconfess('A defined meta argument is required');
 
-  # Deprecated field, used in early version of RS
-  if ($metadata->has_set_number){
-    push @avus, $self->make_avu($PACBIO_SET_NUMBER, $metadata->set_number);
-  }
+        my @avus;
+        push @avus, $self->make_avu($PACBIO_CELL_INDEX,        $metadata->cell_index);
+        push @avus, $self->make_avu($PACBIO_COLLECTION_NUMBER, $metadata->collection_number);
+        push @avus, $self->make_avu($PACBIO_INSTRUMENT_NAME,   $metadata->instrument_name);
+        push @avus, $self->make_avu($PACBIO_RUN,               $metadata->run_name);
+        push @avus, $self->make_avu($PACBIO_WELL,              $metadata->well_name);
+        push @avus, $self->make_avu($PACBIO_SAMPLE_LOAD_NAME,  $metadata->sample_name);
 
-  if ($is_r_and_d) {
-    # R & D data
-    push @avus, $self->make_avu($SAMPLE_NAME, $metadata->sample_name);
-  }
-  else {
-    # Production data
-    push @avus, $self->make_avu($PACBIO_SOURCE, $PACBIO_PRODUCTION);
-  }
+        if ($params->data_level) {
+            push @avus, $self->make_avu($PACBIO_DATA_LEVEL, $params->data_level);
+        }
 
-  return @avus;
+        # Deprecated field, used in early version of RS
+        if ($metadata->has_set_number){
+            push @avus, $self->make_avu($PACBIO_SET_NUMBER, $metadata->set_number);
+        }
+
+        if ($params->is_r_and_d) {
+            # R & D data
+            push @avus, $self->make_avu($SAMPLE_NAME, $metadata->sample_name);
+        }
+        else {
+            # Production data
+            push @avus, $self->make_avu($PACBIO_SOURCE, $PACBIO_PRODUCTION);
+        }
+
+        if (! $params->non_target) {
+            push @avus, $self->make_avu($TARGET, 1);
+        }
+
+        return @avus;
+    }
 }
 
 =head2 make_secondary_metadata

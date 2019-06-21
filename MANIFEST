@@ -16470,6 +16470,10 @@ t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lb
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.removed.bam
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.removed.bam.pbi
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.removed.subreadset.xml
+t/data/pacbio/sequel_analysis/000226/entry-points/acf46f00-12b8-45e6-bc10-b0790f8d6758.subreadset.xml
+t/data/pacbio/sequel_analysis/000226/tasks/pbcoretools.tasks.auto_ccs_outputs-0
+t/data/pacbio/sequel_analysis/000226/tasks/pbcoretools.tasks.auto_ccs_outputs-0/m64016_190608_025655.ccs.bam
+t/data/pacbio/sequel_analysis/000226/tasks/pbcoretools.tasks.auto_ccs_outputs-0/m64016_190608_025655.ccs.bam.pbi
 t/data/pacbio/superfoo/24862_627/A01_1/Analysis_Results/m131209_183112_00127_c100579142550000001823092301191430_s1_p0.1.bax.h5
 t/data/pacbio/superfoo/24862_627/A01_1/Analysis_Results/m131209_183112_00127_c100579142550000001823092301191430_s1_p0.1.log
 t/data/pacbio/superfoo/24862_627/A01_1/Analysis_Results/m131209_183112_00127_c100579142550000001823092301191430_s1_p0.2.bax.h5

@@ -8,7 +8,6 @@ use Moose;
 use MooseX::StrictConstructor;
 use URI;
 use URI::Split qw(uri_join);
-use Readonly;
 use JSON;
 
 with qw[
