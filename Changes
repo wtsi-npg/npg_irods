@@ -1,10 +1,22 @@
+
+Release 2.13.0
+
+ - WTSI::NPG::HTS::Illumina::ResultSet - added geno to genotype_regex.
+ - WTSI::NPG::HTS::Illumina::ResultSet - added quant.zip to ancillary_regex.
+ - WTSI::NPG::HTS::Illumina::ResultSet - added _target_autosome.stats to 
+   ancillary_regex.
+ - WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher - archive tag zero file.
+
+ - Control caching of st::api::lims objects to reduce memory use in highly
+   plxed runs. WTSI::NPG::HTS::LIMSFactory now uses Cache::LRU to limit
+   the number of cached st::api::lims objects to 100.
+
 Release 2.12.1
 
  - WTSI::NPG::HTS::Illumina::AlnDataObject - corrected is_paired_read
    calculation and added missing test.
  - Illumina RunPublisher modified to use a TreePublisher backed - no
    change in behaviour is expected.
-
 
 Release 2.12.0
 
@@ -14,7 +26,7 @@ Release 2.12.0
    attribute's value as a digest of composition JSON string.
  - Metadata updater for Illumina sequencing data - search for a run
    collection in multiple locations.
- - Support for minor Pacbio API changes  
+ - Support for minor Pacbio API changes.
 
 Release 2.11.0
 
@@ -38,8 +50,8 @@ Release 2.10.0
    files.
 
 Release 2.9.2
- - Register RunParameters.xml file for Illumina run publishing
- - When publishing cram files, only publish crai (not bai)
+ - Register RunParameters.xml file for Illumina run publishing.
+ - When publishing cram files, only publish crai (not bai).
 
 Release 2.9.1
  - Illumina::AlnDataObject
@@ -58,23 +70,24 @@ Release 2.8.1
 
 Release 2.8
  - Switched to disposable-irods 1.3 (iRODS packages from Sanger S3,
-   replaced RENCI FTP site)
- - Added single-server option
+   replaced RENCI FTP site).
+ - Added single-server option.
  - Added support for data files to change during the tar process
-   and to detect and archive those changes
- - Individually check the checksum of files local to the gridionxi
-   where they are loaded and compare with the iRODS checksum
- - Updated the samtools and htslib versions to 1.7
- - Added tar file auditor
- - Use manifest checksums to confirm file contents
- - Support loading PacBio RSII files created using out of date reagents
+   and to detect and archive those changes.
+ - Individually check the checksum of files local to the gridion
+   where they are loaded and compare with the iRODS checksum.
+ - Updated the samtools and htslib versions to 1.7.
+ - Added tar file auditor.
+ - Use manifest checksums to confirm file contents.
+ - Support loading PacBio RSII files created using out of date reagents.
  - Allow a user-supplied checksum to be used in TarPublisher and TarStream
-   (so GridIONRunPublisher can allow the checksum of uncompressed data to be used)
- - Publish fastq files during the catchup phase
- - Allow auditing of older GridION tar files which used a relative path for tarred files
- - Archiving changes for illumina sequencing genotype files
- - Fix for the regex used when choosing to ignore files
- - Minor fix to DataObjectFactory.pm
+   (so GridIONRunPublisher can allow the checksum of uncompressed data to be used).
+ - Publish fastq files during the catchup phase.
+ - Allow auditing of older GridION tar files which used a relative path for
+   tarred files.
+ - Archiving changes for illumina sequencing genotype files.
+ - Fix for the regex used when choosing to ignore files.
+ - Minor fix to DataObjectFactory.pm.
 
 Release 2.7
  - Moved quant file tests to illumina run publisher tests
@@ -83,19 +96,19 @@ Release 2.7
 
 Release 2.6
 
- - Extended log publisher find command to include STAR aligner log files
- - Add 'STAR' as a valid aligner to the header parser
- - Make file formats 'tab' and 'zip' have restricted access
- - Add compress suffixes to ancillary lane/plex file patterns
+ - Extended log publisher find command to include STAR aligner log files.
+ - Add 'STAR' as a valid aligner to the header parser.
+ - Make file formats 'tab' and 'zip' have restricted access.
+ - Add compress suffixes to ancillary lane/plex file patterns.
 
 Release 2.5
 
- - Refactored BioNano publication, with metadata from MLWH
- - Add file type option in PacBio meta updater
- - Added a configurable local output directory
- - GridION: ancillary files and metadata; configurable TMPDIR
+ - Refactored BioNano publication, with metadata from MLWH.
+ - Add file type option in PacBio meta updater.
+ - Added a configurable local output directory.
+ - GridION: ancillary files and metadata; configurable TMPDIR.
  - Added Star's tab and Salmon's quant.zip to the list of file
-   formats with restricted access
+   formats with restricted access.
 
 Release 2.4
 

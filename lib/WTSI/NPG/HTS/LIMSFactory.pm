@@ -1,5 +1,6 @@
 package WTSI::NPG::HTS::LIMSFactory;
 
+use Cache::LRU;
 use List::AllUtils qw[any];
 use Moose;
 use MooseX::StrictConstructor;
@@ -27,11 +28,23 @@ has 'driver_type' =>
    documentation => 'The ML warehouse driver type used when obtaining ' .
                     'secondary metadata');
 
+has 'max_lims_cache_size' =>
+    (is            => 'ro',
+     isa           => 'Int',
+     required      => 1,
+     default       => 100,
+     documentation => 'The maximum number of lims objects to cache during ' .
+                      'operation');
+
 has 'lims_cache' =>
   (is            => 'ro',
-   isa           => 'HashRef',
+   isa           => 'Cache::LRU',
    required      => 1,
-   default       => sub { return {} },
+   lazy          => 1,
+   default       => sub {
+     my ($self) = @_;
+     return Cache::LRU->new(size => $self->max_lims_cache_size)
+   },
    documentation => 'Cache of st::api::lims indexed on rpt list',
    init_arg      => undef);
 
