@@ -10,10 +10,10 @@ Release 2.13.0
  - WTSI::NPG::HTS::Illumina::ResultSet - added _target_autosome.stats to 
    ancillary_regex.
  - WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher - archive tag zero file.
-
  - Control caching of st::api::lims objects to reduce memory use in highly
-   plxed runs. WTSI::NPG::HTS::LIMSFactory now uses Cache::LRU to limit
+   plexed runs. WTSI::NPG::HTS::LIMSFactory now uses Cache::LRU to limit
    the number of cached st::api::lims objects to 100.
+ - Added BioNano Saphyr run publisher and run publishing script
 
 Release 2.12.1
 

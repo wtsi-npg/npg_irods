@@ -5,6 +5,8 @@
   id_run: 7915
   instrument_model: HiSeq
   instrument_name: HS26
+  instrument_side: A
+  last_changed: 2019-01-26 18:58:02
   paired_read: 1
   pf_bases: 33316770
   pf_cluster_count: 3470497
@@ -17,6 +19,7 @@
   q40_yield_kb_forward_read: 9607460
   q40_yield_kb_reverse_read: 8053004
   qc_complete: 2012-05-16 15:33:09
+  qc_seq: 1
   raw_cluster_count: 3709563
   raw_cluster_density: 639470.6
   run_complete: 2012-05-13 16:16:23
@@ -27,12 +30,15 @@
   tags_decode_cv: 71.43
   tags_decode_percent: 97.03
   unexpected_tags_percent: 0.01
+  workflow_type: ~
 - cancelled: 0
   cycles: 208
   flowcell_barcode: HBF2DADXX
   id_run: 15440
   instrument_model: HiSeq
   instrument_name: HS24
+  instrument_side: B
+  last_changed: 2019-01-26 07:28:07
   paired_read: 1
   pf_bases: 30562668
   pf_cluster_count: 2387708
@@ -45,6 +51,7 @@
   q40_yield_kb_forward_read: 5368302
   q40_yield_kb_reverse_read: 4532347
   qc_complete: 2015-02-08 21:09:14
+  qc_seq: 1
   raw_cluster_count: 2714415
   raw_cluster_density: 935699.625
   run_complete: 2015-02-05 17:36:52
@@ -55,12 +62,15 @@
   tags_decode_cv: 2.8
   tags_decode_percent: 97.14
   unexpected_tags_percent: 0
+  workflow_type: ~
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
   id_run: 17550
   instrument_model: HiSeq
   instrument_name: HS40
+  instrument_side: A
+  last_changed: 2019-01-26 03:37:36
   paired_read: 1
   pf_bases: 40023008
   pf_cluster_count: 2779376
@@ -73,6 +83,7 @@
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
   qc_complete: 2016-11-29 18:38:20
+  qc_seq: 1
   raw_cluster_count: 2932665
   raw_cluster_density: 1005772.438
   run_complete: 2015-09-14 06:22:53
@@ -83,12 +94,15 @@
   tags_decode_cv: 34.47
   tags_decode_percent: 99.37
   unexpected_tags_percent: 0
+  workflow_type: ~
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
   id_run: 17550
   instrument_model: HiSeq
   instrument_name: HS40
+  instrument_side: A
+  last_changed: 2019-01-26 03:37:36
   paired_read: 1
   pf_bases: 39122190
   pf_cluster_count: 2716819
@@ -101,6 +115,7 @@
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
   qc_complete: 2016-11-29 18:38:20
+  qc_seq: 1
   raw_cluster_count: 2858530
   raw_cluster_density: 981122.188
   run_complete: 2015-09-14 06:22:53
@@ -111,12 +126,15 @@
   tags_decode_cv: 8.75
   tags_decode_percent: 99.31
   unexpected_tags_percent: 0
+  workflow_type: ~
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
   id_run: 17550
   instrument_model: HiSeq
   instrument_name: HS40
+  instrument_side: A
+  last_changed: 2019-01-26 03:37:36
   paired_read: 1
   pf_bases: 33998778
   pf_cluster_count: 2361026
@@ -129,6 +147,7 @@
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
   qc_complete: 2016-11-29 18:38:20
+  qc_seq: 1
   raw_cluster_count: 2447773
   raw_cluster_density: 839135.156
   run_complete: 2015-09-14 06:22:53
@@ -139,12 +158,15 @@
   tags_decode_cv: 5.02
   tags_decode_percent: 99.34
   unexpected_tags_percent: 0
+  workflow_type: ~
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
   id_run: 17550
   instrument_model: HiSeq
   instrument_name: HS40
+  instrument_side: A
+  last_changed: 2019-01-26 03:37:36
   paired_read: 1
   pf_bases: 33859008
   pf_cluster_count: 2351320
@@ -157,6 +179,7 @@
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
   qc_complete: 2016-11-29 18:38:20
+  qc_seq: 1
   raw_cluster_count: 2451064
   raw_cluster_density: 841962.719
   run_complete: 2015-09-14 06:22:53
@@ -167,12 +190,15 @@
   tags_decode_cv: 5.03
   tags_decode_percent: 99.32
   unexpected_tags_percent: 0
+  workflow_type: ~
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
   id_run: 17550
   instrument_model: HiSeq
   instrument_name: HS40
+  instrument_side: A
+  last_changed: 2019-01-26 03:37:36
   paired_read: 1
   pf_bases: 37997692
   pf_cluster_count: 2638729
@@ -185,6 +211,7 @@
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
   qc_complete: 2016-11-29 18:38:20
+  qc_seq: 1
   raw_cluster_count: 2764648
   raw_cluster_density: 950027.688
   run_complete: 2015-09-14 06:22:53
@@ -195,12 +222,15 @@
   tags_decode_cv: 11.19
   tags_decode_percent: 99.24
   unexpected_tags_percent: 0
+  workflow_type: ~
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
   id_run: 17550
   instrument_model: HiSeq
   instrument_name: HS40
+  instrument_side: A
+  last_changed: 2019-01-26 03:37:36
   paired_read: 1
   pf_bases: 29316490
   pf_cluster_count: 2035867
@@ -213,6 +243,7 @@
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
   qc_complete: 2016-11-29 18:38:20
+  qc_seq: 1
   raw_cluster_count: 2098058
   raw_cluster_density: 719131.469
   run_complete: 2015-09-14 06:22:53
@@ -223,12 +254,15 @@
   tags_decode_cv: 5.57
   tags_decode_percent: 99.37
   unexpected_tags_percent: 0
+  workflow_type: ~
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
   id_run: 17550
   instrument_model: HiSeq
   instrument_name: HS40
+  instrument_side: A
+  last_changed: 2019-01-26 03:37:36
   paired_read: 1
   pf_bases: 18675208
   pf_cluster_count: 1296889
@@ -241,6 +275,7 @@
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
   qc_complete: 2016-11-29 18:38:20
+  qc_seq: 1
   raw_cluster_count: 1331252
   raw_cluster_density: 454974.094
   run_complete: 2015-09-14 06:22:53
@@ -251,12 +286,15 @@
   tags_decode_cv: 29.03
   tags_decode_percent: 97.91
   unexpected_tags_percent: 0
+  workflow_type: ~
 - cancelled: 0
   cycles: 158
   flowcell_barcode: C75BCANXX
   id_run: 17550
   instrument_model: HiSeq
   instrument_name: HS40
+  instrument_side: A
+  last_changed: 2019-01-26 03:37:36
   paired_read: 1
   pf_bases: 40880466
   pf_cluster_count: 2838921
@@ -269,6 +307,7 @@
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
   qc_complete: 2016-11-29 18:38:20
+  qc_seq: 1
   raw_cluster_count: 3022313
   raw_cluster_density: 1042369.531
   run_complete: 2015-09-14 06:22:53
@@ -279,12 +318,15 @@
   tags_decode_cv: 35.15
   tags_decode_percent: 97.6
   unexpected_tags_percent: 0
+  workflow_type: ~
 - cancelled: 0
   cycles: 302
   flowcell_barcode: HHH55CCXX
   id_run: 18448
   instrument_model: HiSeqX
   instrument_name: HX3
+  instrument_side: B
+  last_changed: 2019-01-26 01:51:44
   paired_read: 1
   pf_bases: ~
   pf_cluster_count: ~
@@ -297,6 +339,7 @@
   q40_yield_kb_forward_read: 53210502
   q40_yield_kb_reverse_read: 41486147
   qc_complete: 2016-01-04 10:11:25
+  qc_seq: 1
   raw_cluster_count: ~
   raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
@@ -307,12 +350,15 @@
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
+  workflow_type: ~
 - cancelled: 0
   cycles: 302
   flowcell_barcode: HHH55CCXX
   id_run: 18448
   instrument_model: HiSeqX
   instrument_name: HX3
+  instrument_side: B
+  last_changed: 2019-01-26 01:51:44
   paired_read: 1
   pf_bases: ~
   pf_cluster_count: ~
@@ -325,6 +371,7 @@
   q40_yield_kb_forward_read: 52253914
   q40_yield_kb_reverse_read: 41978794
   qc_complete: 2016-01-04 10:11:25
+  qc_seq: 1
   raw_cluster_count: ~
   raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
@@ -335,12 +382,15 @@
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
+  workflow_type: ~
 - cancelled: 0
   cycles: 302
   flowcell_barcode: HHH55CCXX
   id_run: 18448
   instrument_model: HiSeqX
   instrument_name: HX3
+  instrument_side: B
+  last_changed: 2019-01-26 01:51:44
   paired_read: 1
   pf_bases: ~
   pf_cluster_count: ~
@@ -353,6 +403,7 @@
   q40_yield_kb_forward_read: 55261437
   q40_yield_kb_reverse_read: 44454411
   qc_complete: 2016-01-04 10:11:25
+  qc_seq: 1
   raw_cluster_count: ~
   raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
@@ -363,12 +414,15 @@
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
+  workflow_type: ~
 - cancelled: 0
   cycles: 302
   flowcell_barcode: HHH55CCXX
   id_run: 18448
   instrument_model: HiSeqX
   instrument_name: HX3
+  instrument_side: B
+  last_changed: 2019-01-26 01:51:44
   paired_read: 1
   pf_bases: ~
   pf_cluster_count: ~
@@ -381,6 +435,7 @@
   q40_yield_kb_forward_read: 54712192
   q40_yield_kb_reverse_read: 43849161
   qc_complete: 2016-01-04 10:11:25
+  qc_seq: 1
   raw_cluster_count: ~
   raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
@@ -391,12 +446,15 @@
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
+  workflow_type: ~
 - cancelled: 0
   cycles: 302
   flowcell_barcode: HHH55CCXX
   id_run: 18448
   instrument_model: HiSeqX
   instrument_name: HX3
+  instrument_side: B
+  last_changed: 2019-01-26 01:51:44
   paired_read: 1
   pf_bases: ~
   pf_cluster_count: ~
@@ -409,6 +467,7 @@
   q40_yield_kb_forward_read: 52865882
   q40_yield_kb_reverse_read: 42466036
   qc_complete: 2016-01-04 10:11:25
+  qc_seq: 1
   raw_cluster_count: ~
   raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
@@ -419,12 +478,15 @@
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
+  workflow_type: ~
 - cancelled: 0
   cycles: 302
   flowcell_barcode: HHH55CCXX
   id_run: 18448
   instrument_model: HiSeqX
   instrument_name: HX3
+  instrument_side: B
+  last_changed: 2019-01-26 01:51:44
   paired_read: 1
   pf_bases: ~
   pf_cluster_count: ~
@@ -437,6 +499,7 @@
   q40_yield_kb_forward_read: 55451128
   q40_yield_kb_reverse_read: 45809326
   qc_complete: 2016-01-04 10:11:25
+  qc_seq: 1
   raw_cluster_count: ~
   raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
@@ -447,12 +510,15 @@
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
+  workflow_type: ~
 - cancelled: 0
   cycles: 302
   flowcell_barcode: HHH55CCXX
   id_run: 18448
   instrument_model: HiSeqX
   instrument_name: HX3
+  instrument_side: B
+  last_changed: 2019-01-26 01:51:44
   paired_read: 1
   pf_bases: ~
   pf_cluster_count: ~
@@ -465,6 +531,7 @@
   q40_yield_kb_forward_read: 54855190
   q40_yield_kb_reverse_read: 44787479
   qc_complete: 2016-01-04 10:11:25
+  qc_seq: 1
   raw_cluster_count: ~
   raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
@@ -475,12 +542,15 @@
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
+  workflow_type: ~
 - cancelled: 0
   cycles: 302
   flowcell_barcode: HHH55CCXX
   id_run: 18448
   instrument_model: HiSeqX
   instrument_name: HX3
+  instrument_side: B
+  last_changed: 2019-01-26 01:51:44
   paired_read: 1
   pf_bases: ~
   pf_cluster_count: ~
@@ -493,6 +563,7 @@
   q40_yield_kb_forward_read: 56188595
   q40_yield_kb_reverse_read: 46041515
   qc_complete: 2016-01-04 10:11:25
+  qc_seq: 1
   raw_cluster_count: ~
   raw_cluster_density: 2355119.25
   run_complete: 2015-12-14 08:07:13
@@ -503,12 +574,15 @@
   tags_decode_cv: ~
   tags_decode_percent: ~
   unexpected_tags_percent: ~
+  workflow_type: ~
 - cancelled: 0
   cycles: 508
   flowcell_barcode: H7HHMBCXX
   id_run: 18980
   instrument_model: HiSeq
   instrument_name: HS38
+  instrument_side: B
+  last_changed: 2019-01-26 00:49:14
   paired_read: 1
   pf_bases: 117379004
   pf_cluster_count: 3668094
@@ -521,6 +595,7 @@
   q40_yield_kb_forward_read: 18447014
   q40_yield_kb_reverse_read: 13616012
   qc_complete: 2016-03-07 11:49:46
+  qc_seq: 1
   raw_cluster_count: 3986654
   raw_cluster_density: 1366438.812
   run_complete: 2016-02-28 05:52:40
@@ -531,12 +606,15 @@
   tags_decode_cv: 164.68
   tags_decode_percent: 96.74
   unexpected_tags_percent: 0
+  workflow_type: ~
 - cancelled: 0
   cycles: 318
   flowcell_barcode: H3FCMDRXX
   id_run: 26291
   instrument_model: NovaSeq
   instrument_name: NV10
+  instrument_side: B
+  last_changed: 2019-03-29 16:25:53
   paired_read: 1
   pf_bases: ~
   pf_cluster_count: ~
@@ -548,7 +626,8 @@
   q30_yield_kb_reverse_read: 131560909
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
-  qc_complete: 2018-07-30 09:35:04
+  qc_complete: 2019-03-29 15:23:30
+  qc_seq: ~
   raw_cluster_count: ~
   raw_cluster_density: 2961263.957
   run_complete: 2018-07-12 11:27:17
@@ -559,12 +638,15 @@
   tags_decode_cv: 15.14
   tags_decode_percent: 93.77
   unexpected_tags_percent: 0.01
+  workflow_type: NovaSeqStandard
 - cancelled: 0
   cycles: 318
   flowcell_barcode: H3FCMDRXX
   id_run: 26291
   instrument_model: NovaSeq
   instrument_name: NV10
+  instrument_side: B
+  last_changed: 2019-03-29 16:25:53
   paired_read: 1
   pf_bases: ~
   pf_cluster_count: ~
@@ -576,7 +658,8 @@
   q30_yield_kb_reverse_read: 129758468
   q40_yield_kb_forward_read: 0
   q40_yield_kb_reverse_read: 0
-  qc_complete: 2018-07-30 09:35:04
+  qc_complete: 2019-03-29 15:23:30
+  qc_seq: ~
   raw_cluster_count: ~
   raw_cluster_density: 2961263.957
   run_complete: 2018-07-12 11:27:17
@@ -587,3 +670,4 @@
   tags_decode_cv: 15.03
   tags_decode_percent: 93.61
   unexpected_tags_percent: 0.01
+  workflow_type: NovaSeqStandard
