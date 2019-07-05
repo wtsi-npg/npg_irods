@@ -17,6 +17,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 3691209
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ~
   position: 5
@@ -27,6 +28,8 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -38,6 +41,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -56,6 +60,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957423
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -66,6 +71,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -77,6 +84,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -95,6 +103,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957424
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -105,6 +114,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -116,6 +127,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -134,6 +146,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957425
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -144,6 +157,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -155,6 +170,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -173,6 +189,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957426
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -183,6 +200,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -194,6 +213,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -212,6 +232,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957427
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -222,6 +243,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -233,6 +256,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -251,6 +275,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957428
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -261,6 +286,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -272,6 +299,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -290,6 +318,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957429
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -300,6 +329,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -311,6 +342,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -329,6 +361,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957430
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -339,6 +372,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -350,6 +385,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -368,6 +404,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957431
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -378,6 +415,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -389,6 +428,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -407,6 +447,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957432
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -417,6 +458,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -428,6 +471,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -446,6 +490,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957433
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -456,6 +501,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -467,6 +514,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -485,6 +533,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957434
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -495,6 +544,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -506,6 +557,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -524,6 +576,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957435
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -534,6 +587,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -545,6 +600,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -563,6 +619,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957436
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -573,6 +630,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -584,6 +643,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -602,6 +662,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957437
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -612,6 +673,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -623,6 +686,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -641,6 +705,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957438
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -651,6 +716,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -662,6 +729,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -680,6 +748,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957439
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -690,6 +759,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -701,6 +772,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -719,6 +791,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957440
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -729,6 +802,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -740,6 +815,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -758,6 +834,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957441
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -768,6 +845,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -779,6 +858,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -797,6 +877,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957442
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -807,6 +888,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -818,6 +901,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -836,6 +920,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957443
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -846,6 +931,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -857,6 +944,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -875,6 +963,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957444
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -885,6 +974,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -896,6 +987,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -914,6 +1006,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957445
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -924,6 +1017,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -935,6 +1030,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -953,6 +1049,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957446
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -963,6 +1060,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -974,6 +1073,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -992,6 +1092,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957447
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -1002,6 +1103,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1013,6 +1116,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -1031,6 +1135,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957448
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -1041,6 +1146,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1052,6 +1159,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -1070,6 +1178,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957449
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -1080,6 +1189,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1091,6 +1202,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -1109,6 +1221,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957450
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -1119,6 +1232,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1130,6 +1245,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -1148,6 +1264,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957451
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -1158,6 +1275,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1169,6 +1288,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -1187,6 +1307,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957452
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -1197,6 +1318,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1208,6 +1331,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -1226,6 +1350,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957453
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -1236,6 +1361,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1247,6 +1374,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -1265,6 +1393,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957454
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -1275,6 +1404,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1286,6 +1417,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: S0700
   entity_id_lims: 5126670
@@ -1304,6 +1436,7 @@
   is_spiked: 1
   last_updated: 2016-02-09 09:55:33
   legacy_library_id: 4957455
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: No PCR
   position: 5
@@ -1314,6 +1447,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 550
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1325,6 +1460,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: ~
+  workflow: ~
 - bait_name: ~
   cost_code: ~
   entity_id_lims: 12852345
@@ -1343,6 +1479,7 @@
   is_spiked: 1
   last_updated: 2015-05-07 15:03:18
   legacy_library_id: 6759268
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ~
   position: 1
@@ -1353,6 +1490,8 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1364,6 +1503,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-A
+  workflow: ~
 - bait_name: ~
   cost_code: S0969
   entity_id_lims: 12852345
@@ -1382,6 +1522,7 @@
   is_spiked: 1
   last_updated: 2015-05-07 15:03:18
   legacy_library_id: 12789790
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 1
@@ -1392,6 +1533,8 @@
   requested_insert_size_from: 400
   requested_insert_size_to: 600
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1403,6 +1546,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-A
+  workflow: ~
 - bait_name: ~
   cost_code: S0969
   entity_id_lims: 12852345
@@ -1421,6 +1565,7 @@
   is_spiked: 1
   last_updated: 2015-05-07 15:03:18
   legacy_library_id: 12789802
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 1
@@ -1431,6 +1576,8 @@
   requested_insert_size_from: 400
   requested_insert_size_to: 600
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1442,6 +1589,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-A
+  workflow: ~
 - bait_name: ~
   cost_code: S0969
   entity_id_lims: 12852345
@@ -1460,6 +1608,7 @@
   is_spiked: 1
   last_updated: 2015-05-07 15:03:18
   legacy_library_id: 12789814
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 1
@@ -1470,6 +1619,8 @@
   requested_insert_size_from: 400
   requested_insert_size_to: 600
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1481,6 +1632,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-A
+  workflow: ~
 - bait_name: ~
   cost_code: S0969
   entity_id_lims: 12852345
@@ -1499,6 +1651,7 @@
   is_spiked: 1
   last_updated: 2015-05-07 15:03:18
   legacy_library_id: 12789826
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 1
@@ -1509,6 +1662,8 @@
   requested_insert_size_from: 400
   requested_insert_size_to: 600
   reverse_read_length: 100
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1520,6 +1675,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-A
+  workflow: ~
 - bait_name: ~
   cost_code: ~
   entity_id_lims: 14849976
@@ -1538,6 +1694,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ~
   position: 1
@@ -1548,6 +1705,8 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1559,6 +1718,7 @@
   tag_set_id_lims: 42
   tag_set_name: 384plex_11mers
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -1577,6 +1737,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798968
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -1587,6 +1748,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1598,6 +1761,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -1616,6 +1780,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798980
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -1626,6 +1791,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1637,6 +1804,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -1655,6 +1823,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798992
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -1665,6 +1834,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1676,6 +1847,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -1694,6 +1866,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799004
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -1704,6 +1877,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1715,6 +1890,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -1733,6 +1909,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799016
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -1743,6 +1920,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1754,6 +1933,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -1772,6 +1952,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799028
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -1782,6 +1963,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1793,6 +1976,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -1811,6 +1995,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799040
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -1821,6 +2006,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1832,6 +2019,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -1850,6 +2038,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799052
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -1860,6 +2049,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1871,6 +2062,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -1889,6 +2081,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799018
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -1899,6 +2092,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1910,6 +2105,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -1928,6 +2124,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799030
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -1938,6 +2135,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1949,6 +2148,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -1967,6 +2167,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799042
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -1977,6 +2178,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -1988,6 +2191,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -2006,6 +2210,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799054
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -2016,6 +2221,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2027,6 +2234,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -2045,6 +2253,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798971
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -2055,6 +2264,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2066,6 +2277,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -2084,6 +2296,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798983
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -2094,6 +2307,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2105,6 +2320,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -2123,6 +2339,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798995
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -2133,6 +2350,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2144,6 +2363,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849976
@@ -2162,6 +2382,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799007
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 1
@@ -2172,6 +2393,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2183,6 +2406,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: ~
   entity_id_lims: 14849977
@@ -2201,6 +2425,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ~
   position: 2
@@ -2211,6 +2436,8 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2222,6 +2449,7 @@
   tag_set_id_lims: 42
   tag_set_name: 384plex_11mers
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849977
@@ -2240,6 +2468,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798969
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
@@ -2250,6 +2479,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2261,6 +2492,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849977
@@ -2279,6 +2511,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798981
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
@@ -2289,6 +2522,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2300,6 +2535,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849977
@@ -2318,6 +2554,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798993
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
@@ -2328,6 +2565,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2339,6 +2578,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849977
@@ -2357,6 +2597,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799005
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
@@ -2367,6 +2608,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2378,6 +2621,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849977
@@ -2396,6 +2640,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799017
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
@@ -2406,6 +2651,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2417,6 +2664,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849977
@@ -2435,6 +2683,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799029
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
@@ -2445,6 +2694,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2456,6 +2707,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849977
@@ -2474,6 +2726,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799041
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
@@ -2484,6 +2737,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2495,6 +2750,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849977
@@ -2513,6 +2769,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799053
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
@@ -2523,6 +2780,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2534,6 +2793,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849977
@@ -2552,6 +2812,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798970
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
@@ -2562,6 +2823,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2573,6 +2836,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849977
@@ -2591,6 +2855,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798982
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
@@ -2601,6 +2866,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2612,6 +2879,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849977
@@ -2630,6 +2898,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14798994
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
@@ -2640,6 +2909,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2651,6 +2922,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0518
   entity_id_lims: 14849977
@@ -2669,6 +2941,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14799006
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 2
@@ -2679,6 +2952,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2690,6 +2965,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: ~
   entity_id_lims: 14849978
@@ -2708,6 +2984,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ~
   position: 3
@@ -2718,6 +2995,8 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2729,6 +3008,7 @@
   tag_set_id_lims: 42
   tag_set_name: 384plex_11mers
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849978
@@ -2747,6 +3027,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848484
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
@@ -2757,6 +3038,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2768,6 +3051,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849978
@@ -2786,6 +3070,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848496
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
@@ -2796,6 +3081,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2807,6 +3094,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849978
@@ -2825,6 +3113,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848508
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
@@ -2835,6 +3124,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2846,6 +3137,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849978
@@ -2864,6 +3156,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848520
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
@@ -2874,6 +3167,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2885,6 +3180,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849978
@@ -2903,6 +3199,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848532
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
@@ -2913,6 +3210,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2924,6 +3223,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849978
@@ -2942,6 +3242,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848544
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
@@ -2952,6 +3253,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -2963,6 +3266,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849978
@@ -2981,6 +3285,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848556
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
@@ -2991,6 +3296,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3002,6 +3309,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849978
@@ -3020,6 +3328,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848568
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 3
@@ -3030,6 +3339,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3041,6 +3352,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: ~
   entity_id_lims: 14849979
@@ -3059,6 +3371,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ~
   position: 4
@@ -3069,6 +3382,8 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3080,6 +3395,7 @@
   tag_set_id_lims: 42
   tag_set_name: 384plex_11mers
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849979
@@ -3098,6 +3414,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848484
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
@@ -3108,6 +3425,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3119,6 +3438,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849979
@@ -3137,6 +3457,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848496
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
@@ -3147,6 +3468,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3158,6 +3481,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849979
@@ -3176,6 +3500,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848508
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
@@ -3186,6 +3511,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3197,6 +3524,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849979
@@ -3215,6 +3543,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848520
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
@@ -3225,6 +3554,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3236,6 +3567,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849979
@@ -3254,6 +3586,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848532
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
@@ -3264,6 +3597,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3275,6 +3610,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849979
@@ -3293,6 +3629,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848544
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
@@ -3303,6 +3640,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3314,6 +3653,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849979
@@ -3332,6 +3672,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848556
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
@@ -3342,6 +3683,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3353,6 +3696,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0946
   entity_id_lims: 14849979
@@ -3371,6 +3715,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14848568
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP eukaryotic
   position: 4
@@ -3381,6 +3726,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 300
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3392,6 +3739,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: ~
   entity_id_lims: 14849982
@@ -3410,6 +3758,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ~
   position: 5
@@ -3420,6 +3769,8 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3431,6 +3782,7 @@
   tag_set_id_lims: 42
   tag_set_name: 384plex_11mers
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0703
   entity_id_lims: 14849982
@@ -3449,6 +3801,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14766963
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
@@ -3459,6 +3812,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3470,6 +3825,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0703
   entity_id_lims: 14849982
@@ -3488,6 +3844,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14766964
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
@@ -3498,6 +3855,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3509,6 +3868,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0703
   entity_id_lims: 14849982
@@ -3527,6 +3887,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14766965
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
@@ -3537,6 +3898,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3548,6 +3911,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0703
   entity_id_lims: 14849982
@@ -3566,6 +3930,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14766966
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
@@ -3576,6 +3941,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3587,6 +3954,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0703
   entity_id_lims: 14849982
@@ -3605,6 +3973,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14766967
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 5
@@ -3615,6 +3984,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3626,6 +3997,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: ~
   entity_id_lims: 14849983
@@ -3644,6 +4016,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ~
   position: 6
@@ -3654,6 +4027,8 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3665,6 +4040,7 @@
   tag_set_id_lims: 42
   tag_set_name: 384plex_11mers
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0979
   entity_id_lims: 14849983
@@ -3683,6 +4059,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801131
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
@@ -3693,6 +4070,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3704,6 +4083,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0979
   entity_id_lims: 14849983
@@ -3722,6 +4102,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801132
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
@@ -3732,6 +4113,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3743,6 +4126,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0979
   entity_id_lims: 14849983
@@ -3761,6 +4145,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801133
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
@@ -3771,6 +4156,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3782,6 +4169,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0979
   entity_id_lims: 14849983
@@ -3800,6 +4188,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801134
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
@@ -3810,6 +4199,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3821,6 +4212,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0979
   entity_id_lims: 14849983
@@ -3839,6 +4231,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801135
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
@@ -3849,6 +4242,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3860,6 +4255,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0979
   entity_id_lims: 14849983
@@ -3878,6 +4274,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801136
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
@@ -3888,6 +4285,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3899,6 +4298,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0979
   entity_id_lims: 14849983
@@ -3917,6 +4317,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801137
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
@@ -3927,6 +4328,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3938,6 +4341,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0979
   entity_id_lims: 14849983
@@ -3956,6 +4360,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801138
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
@@ -3966,6 +4371,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -3977,6 +4384,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0979
   entity_id_lims: 14849983
@@ -3995,6 +4403,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801139
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
@@ -4005,6 +4414,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4016,6 +4427,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0979
   entity_id_lims: 14849983
@@ -4034,6 +4446,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801140
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
@@ -4044,6 +4457,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4055,6 +4470,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0979
   entity_id_lims: 14849983
@@ -4073,6 +4489,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801141
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
@@ -4083,6 +4500,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4094,6 +4513,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0979
   entity_id_lims: 14849983
@@ -4112,6 +4532,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14801142
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: RNA-seq dUTP
   position: 6
@@ -4122,6 +4543,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4133,6 +4556,7 @@
   tag_set_id_lims: 27
   tag_set_name: 'TruSeq mRNA Adapter and NEB Small RNA Index Sequences - 6mer'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: ~
   entity_id_lims: 14849980
@@ -4151,6 +4575,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ~
   position: 7
@@ -4161,6 +4586,8 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4172,6 +4599,7 @@
   tag_set_id_lims: 42
   tag_set_name: 384plex_11mers
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0815
   entity_id_lims: 14849980
@@ -4190,6 +4618,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727828
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
@@ -4200,6 +4629,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4211,6 +4642,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0815
   entity_id_lims: 14849980
@@ -4229,6 +4661,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727912
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
@@ -4239,6 +4672,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4250,6 +4685,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0815
   entity_id_lims: 14849980
@@ -4268,6 +4704,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727889
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
@@ -4278,6 +4715,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4289,6 +4728,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0815
   entity_id_lims: 14849980
@@ -4307,6 +4747,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727913
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
@@ -4317,6 +4758,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4328,6 +4771,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0815
   entity_id_lims: 14849980
@@ -4346,6 +4790,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727878
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
@@ -4356,6 +4801,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4367,6 +4814,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0815
   entity_id_lims: 14849980
@@ -4385,6 +4833,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727890
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 7
@@ -4395,6 +4844,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4406,6 +4857,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: ~
   entity_id_lims: 14849981
@@ -4424,6 +4876,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 12172503
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ~
   position: 8
@@ -4434,6 +4887,8 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4445,6 +4900,7 @@
   tag_set_id_lims: 42
   tag_set_name: 384plex_11mers
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0815
   entity_id_lims: 14849981
@@ -4463,6 +4919,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727840
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
@@ -4473,6 +4930,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4484,6 +4943,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0815
   entity_id_lims: 14849981
@@ -4502,6 +4962,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727876
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
@@ -4512,6 +4973,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4523,6 +4986,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0815
   entity_id_lims: 14849981
@@ -4541,6 +5005,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727829
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
@@ -4551,6 +5016,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4562,6 +5029,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0815
   entity_id_lims: 14849981
@@ -4580,6 +5048,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727901
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
@@ -4590,6 +5059,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4601,6 +5072,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0815
   entity_id_lims: 14849981
@@ -4619,6 +5091,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727842
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
@@ -4629,6 +5102,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4640,6 +5115,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0815
   entity_id_lims: 14849981
@@ -4658,6 +5134,7 @@
   is_spiked: 1
   last_updated: 2017-05-11 12:33:38
   legacy_library_id: 14727902
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ChIP-Seq Auto
   position: 8
@@ -4668,6 +5145,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 1000
   reverse_read_length: 75
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4679,6 +5158,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-C
+  workflow: ~
 - bait_name: ~
   cost_code: S0821
   entity_id_lims: 15376872
@@ -4697,6 +5177,7 @@
   is_spiked: 1
   last_updated: 2016-01-04 22:02:02
   legacy_library_id: 15333715
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 1
@@ -4707,6 +5188,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4718,6 +5201,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0821
   entity_id_lims: 15376873
@@ -4736,6 +5220,7 @@
   is_spiked: 1
   last_updated: 2016-01-04 22:02:02
   legacy_library_id: 15333727
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 2
@@ -4746,6 +5231,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4757,6 +5244,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0821
   entity_id_lims: 15376874
@@ -4775,6 +5263,7 @@
   is_spiked: 1
   last_updated: 2016-01-04 22:02:02
   legacy_library_id: 15333739
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 3
@@ -4785,6 +5274,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4796,6 +5287,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0821
   entity_id_lims: 15376875
@@ -4814,6 +5306,7 @@
   is_spiked: 1
   last_updated: 2016-01-04 22:02:02
   legacy_library_id: 15333751
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 4
@@ -4824,6 +5317,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4835,6 +5330,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0821
   entity_id_lims: 15376876
@@ -4853,6 +5349,7 @@
   is_spiked: 1
   last_updated: 2016-01-04 22:02:02
   legacy_library_id: 15333763
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 5
@@ -4863,6 +5360,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4874,6 +5373,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0821
   entity_id_lims: 15376877
@@ -4892,6 +5392,7 @@
   is_spiked: 1
   last_updated: 2016-01-04 22:02:02
   legacy_library_id: 15333775
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 6
@@ -4902,6 +5403,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4913,6 +5416,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0821
   entity_id_lims: 15376878
@@ -4931,6 +5435,7 @@
   is_spiked: 1
   last_updated: 2016-01-04 22:02:02
   legacy_library_id: 15333787
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 7
@@ -4941,6 +5446,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4952,6 +5459,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0821
   entity_id_lims: 15376879
@@ -4970,6 +5478,7 @@
   is_spiked: 1
   last_updated: 2016-01-04 22:02:02
   legacy_library_id: 15333799
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 8
@@ -4980,6 +5489,8 @@
   requested_insert_size_from: 450
   requested_insert_size_to: 450
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -4991,6 +5502,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: ~
   entity_id_lims: 15794873
@@ -5009,6 +5521,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 12172503
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: ~
   position: 1
@@ -5019,6 +5532,8 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5030,6 +5545,7 @@
   tag_set_id_lims: 42
   tag_set_name: 384plex_11mers
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5048,6 +5564,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143187
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5058,6 +5575,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5069,6 +5588,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5087,6 +5607,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143211
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5097,6 +5618,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5108,6 +5631,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5126,6 +5650,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143223
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5136,6 +5661,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5147,6 +5674,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5165,6 +5693,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143235
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5175,6 +5704,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5186,6 +5717,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5204,6 +5736,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143247
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5214,6 +5747,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5225,6 +5760,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5243,6 +5779,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143259
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5253,6 +5790,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5264,6 +5803,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5282,6 +5822,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143176
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5292,6 +5833,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5303,6 +5846,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5321,6 +5865,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143188
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5331,6 +5876,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5342,6 +5889,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5360,6 +5908,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143200
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5370,6 +5919,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5381,6 +5932,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5399,6 +5951,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143212
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5409,6 +5962,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5420,6 +5975,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5438,6 +5994,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143224
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5448,6 +6005,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5459,6 +6018,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5477,6 +6037,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143236
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5487,6 +6048,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5498,6 +6061,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5516,6 +6080,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143248
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5526,6 +6091,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5537,6 +6104,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5555,6 +6123,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143260
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5565,6 +6134,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5576,6 +6147,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5594,6 +6166,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143177
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5604,6 +6177,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5615,6 +6190,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5633,6 +6209,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143201
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5643,6 +6220,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5654,6 +6233,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5672,6 +6252,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143213
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5682,6 +6263,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5693,6 +6276,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5711,6 +6295,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143225
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5721,6 +6306,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5732,6 +6319,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5750,6 +6338,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143237
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5760,6 +6349,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5771,6 +6362,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5789,6 +6381,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143249
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5799,6 +6392,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5810,6 +6405,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5828,6 +6424,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143261
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5838,6 +6435,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5849,6 +6448,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5867,6 +6467,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143178
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5877,6 +6478,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5888,6 +6491,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5906,6 +6510,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143202
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5916,6 +6521,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5927,6 +6534,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5945,6 +6553,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143214
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5955,6 +6564,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -5966,6 +6577,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -5984,6 +6596,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143226
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -5994,6 +6607,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6005,6 +6620,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6023,6 +6639,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143238
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6033,6 +6650,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6044,6 +6663,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6062,6 +6682,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143250
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6072,6 +6693,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6083,6 +6706,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6101,6 +6725,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143262
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6111,6 +6736,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6122,6 +6749,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6140,6 +6768,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143179
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6150,6 +6779,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6161,6 +6792,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6179,6 +6811,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143191
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6189,6 +6822,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6200,6 +6835,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6218,6 +6854,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143203
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6228,6 +6865,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6239,6 +6878,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6257,6 +6897,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143215
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6267,6 +6908,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6278,6 +6921,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6296,6 +6940,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143227
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6306,6 +6951,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6317,6 +6964,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6335,6 +6983,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143239
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6345,6 +6994,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6356,6 +7007,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6374,6 +7026,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143251
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6384,6 +7037,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6395,6 +7050,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6413,6 +7069,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143263
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6423,6 +7080,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6434,6 +7093,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6452,6 +7112,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143192
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6462,6 +7123,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6473,6 +7136,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6491,6 +7155,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143228
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6501,6 +7166,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6512,6 +7179,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6530,6 +7198,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143240
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6540,6 +7209,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6551,6 +7222,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6569,6 +7241,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143252
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6579,6 +7252,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6590,6 +7265,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6608,6 +7284,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143264
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6618,6 +7295,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6629,6 +7308,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6647,6 +7327,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143181
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6657,6 +7338,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6668,6 +7351,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6686,6 +7370,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143193
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6696,6 +7381,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6707,6 +7394,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6725,6 +7413,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143205
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6735,6 +7424,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6746,6 +7437,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6764,6 +7456,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143217
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6774,6 +7467,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6785,6 +7480,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6803,6 +7499,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143229
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6813,6 +7510,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6824,6 +7523,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6842,6 +7542,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143241
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6852,6 +7553,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6863,6 +7566,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6881,6 +7585,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143253
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6891,6 +7596,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6902,6 +7609,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6920,6 +7628,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143265
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6930,6 +7639,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6941,6 +7652,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6959,6 +7671,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143182
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -6969,6 +7682,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -6980,6 +7695,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -6998,6 +7714,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143194
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -7008,6 +7725,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7019,6 +7738,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -7037,6 +7757,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143206
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -7047,6 +7768,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7058,6 +7781,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -7076,6 +7800,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143218
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -7086,6 +7811,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7097,6 +7824,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -7115,6 +7843,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143230
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -7125,6 +7854,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7136,6 +7867,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: Agilent EBV baits
   cost_code: S0753
   entity_id_lims: 15794873
@@ -7154,6 +7886,7 @@
   is_spiked: 1
   last_updated: 2016-03-07 22:03:04
   legacy_library_id: 14143254
+  loading_concentration: ~
   manual_qc: 1
   pipeline_id_lims: Agilent Pulldown
   position: 1
@@ -7164,6 +7897,8 @@
   requested_insert_size_from: 100
   requested_insert_size_to: 400
   reverse_read_length: 250
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7175,6 +7910,7 @@
   tag_set_id_lims: 6
   tag_set_name: 'Sanger_168tags - 10 mer tags'
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: ~
   entity_id_lims: 22706626
@@ -7193,6 +7929,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 21210572
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: ~
   position: 1
@@ -7203,6 +7940,8 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7214,6 +7953,7 @@
   tag_set_id_lims: 42
   tag_set_name: 384plex_11mers
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706626
@@ -7232,6 +7972,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705458
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 1
@@ -7242,6 +7983,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7253,6 +7996,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706626
@@ -7271,6 +8015,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705459
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 1
@@ -7281,6 +8026,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7292,6 +8039,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706626
@@ -7310,6 +8058,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705460
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 1
@@ -7320,6 +8069,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7331,6 +8082,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706626
@@ -7349,6 +8101,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705461
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 1
@@ -7359,6 +8112,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7370,6 +8125,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706626
@@ -7388,6 +8144,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705454
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 1
@@ -7398,6 +8155,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7409,6 +8168,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706626
@@ -7427,6 +8187,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705462
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 1
@@ -7437,6 +8198,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7448,6 +8211,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706626
@@ -7466,6 +8230,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705455
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 1
@@ -7476,6 +8241,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7487,6 +8254,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706626
@@ -7505,6 +8273,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705463
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 1
@@ -7515,6 +8284,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7526,6 +8297,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706626
@@ -7544,6 +8316,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705456
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 1
@@ -7554,6 +8327,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7565,6 +8340,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706626
@@ -7583,6 +8359,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705464
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 1
@@ -7593,6 +8370,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7604,6 +8383,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706626
@@ -7622,6 +8402,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705457
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 1
@@ -7632,6 +8413,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7643,6 +8426,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706626
@@ -7661,6 +8445,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705465
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 1
@@ -7671,6 +8456,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7682,6 +8469,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: ~
   entity_id_lims: 22706627
@@ -7700,6 +8488,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 21210572
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: ~
   position: 2
@@ -7710,6 +8499,8 @@
   requested_insert_size_from: ~
   requested_insert_size_to: ~
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: ~
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7721,6 +8512,7 @@
   tag_set_id_lims: 42
   tag_set_name: 384plex_11mers
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706627
@@ -7739,6 +8531,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705458
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 2
@@ -7749,6 +8542,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7760,6 +8555,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706627
@@ -7778,6 +8574,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705459
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 2
@@ -7788,6 +8585,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7799,6 +8598,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706627
@@ -7817,6 +8617,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705460
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 2
@@ -7827,6 +8628,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7838,6 +8641,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706627
@@ -7856,6 +8660,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705461
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 2
@@ -7866,6 +8671,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7877,6 +8684,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706627
@@ -7895,6 +8703,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705454
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 2
@@ -7905,6 +8714,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7916,6 +8727,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706627
@@ -7934,6 +8746,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705462
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 2
@@ -7944,6 +8757,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7955,6 +8770,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706627
@@ -7973,6 +8789,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705455
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 2
@@ -7983,6 +8800,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -7994,6 +8813,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706627
@@ -8012,6 +8832,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705463
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 2
@@ -8022,6 +8843,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -8033,6 +8856,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706627
@@ -8051,6 +8875,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705456
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 2
@@ -8061,6 +8886,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -8072,6 +8899,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706627
@@ -8090,6 +8918,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705464
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 2
@@ -8100,6 +8929,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -8111,6 +8942,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706627
@@ -8129,6 +8961,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705457
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 2
@@ -8139,6 +8972,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -8150,6 +8985,7 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~
 - bait_name: ~
   cost_code: S0910
   entity_id_lims: 22706627
@@ -8168,6 +9004,7 @@
   is_spiked: 1
   last_updated: 2018-08-24 14:36:38
   legacy_library_id: 22705465
+  loading_concentration: ~
   manual_qc: ~
   pipeline_id_lims: HiSeqX PCR free
   position: 2
@@ -8178,6 +9015,8 @@
   requested_insert_size_from: 10
   requested_insert_size_to: 1200
   reverse_read_length: 150
+  spiked_phix_barcode: ~
+  spiked_phix_percentage: ~
   suboptimal: 0
   tag2_identifier: ~
   tag2_sequence: ~
@@ -8189,3 +9028,4 @@
   tag_set_id_lims: 154
   tag_set_name: PF_adapters_UDI_96_B_i7
   team: Illumina-HTP
+  workflow: ~

@@ -1,5 +1,6 @@
 package WTSI::NPG::HTS::LIMSFactory;
 
+use Cache::LRU;
 use List::AllUtils qw[any];
 use Moose;
 use MooseX::StrictConstructor;
@@ -27,54 +28,26 @@ has 'driver_type' =>
    documentation => 'The ML warehouse driver type used when obtaining ' .
                     'secondary metadata');
 
-# =head2 positions
+has 'max_lims_cache_size' =>
+    (is            => 'ro',
+     isa           => 'Int',
+     required      => 1,
+     default       => 100,
+     documentation => 'The maximum number of lims objects to cache during ' .
+                      'operation');
 
-#   Arg [1]      Run identifier, Int.
+has 'lims_cache' =>
+  (is            => 'ro',
+   isa           => 'Cache::LRU',
+   required      => 1,
+   lazy          => 1,
+   default       => sub {
+     my ($self) = @_;
+     return Cache::LRU->new(size => $self->max_lims_cache_size)
+   },
+   documentation => 'Cache of st::api::lims indexed on rpt list',
+   init_arg      => undef);
 
-#   Example    : my @positions = $factory->positions(17750)
-#   Description: Return the valid lane positions of a run, sorted in
-#                ascending order.
-#   Returntype : Array[Int]
-
-# =cut
-
-# sub positions {
-#   my ($self, $id_run) = @_;
-
-#   defined $id_run or
-#     $self->logconfess('A defined id_run argument is required');
-
-#   my $run = $self->make_lims($id_run);
-#   my @positions = sort map {$_->position} $run->children;
-
-#   return @positions;
-# }
-
-# =head2 tag_indices
-
-#   Arg [1]      Run identifier, Int.
-#   Arg [2]      Lane position, Int.
-
-#   Example    : my @tag_indices = $factory->tag_indices(17750, 1)
-#   Description: Return the valid tag indices of a lane, sorted in
-#                ascending order.
-#   Returntype : Array[Int]
-
-# =cut
-
-# sub tag_indices {
-#   my ($self, $id_run, $position) = @_;
-
-#   defined $id_run or
-#     $self->logconfess('A defined id_run argument is required');
-#   defined $position or
-#     $self->logconfess('A defined position argument is required');
-
-#   my $lane = $self->make_lims($id_run, $position);
-#   my @tag_indices = sort map {$_->tag_index} $lane->children;
-
-#   return @tag_indices;
-# }
 
 =head2 make_lims
 
@@ -96,21 +69,33 @@ sub make_lims {
 
   $self->debug('Making a lims using driver_type ', $self->driver_type);
 
-  my @init_args = (driver_type => $self->driver_type,
-                   rpt_list    => $composition->freeze2rpt);
-  if ($self->has_mlwh_schema) {
-    push @init_args, mlwh_schema => $self->mlwh_schema;
+  my $rpt = $composition->freeze2rpt;
+  if (exists $self->lims_cache->{$rpt}) {
+
+    $self->debug("Using cached LIMS for '$rpt'");
+    return $self->lims_cache->{$rpt};
+  }
+  else {
+    my @init_args = (driver_type => $self->driver_type,
+                     rpt_list    => $rpt);
+    if ($self->has_mlwh_schema) {
+      push @init_args, mlwh_schema => $self->mlwh_schema;
+    }
+
+    my $lims = st::api::lims->new(@init_args);
+
+    # If the st::api::lims provided a database handle itself and the
+    # factory has not, cache the handle.
+    if (not $self->has_mlwh_schema and $lims->can('mlwh_schema')) {
+      $self->mlwh_schema($lims->mlwh_schema);
+    }
+
+    $self->lims_cache->{$rpt} = $lims;
+
+    return $lims;
   }
 
-  my $lims = st::api::lims->new(@init_args);
-
-  # If the st::api::lims provided a database handle itself and the
-  # factory has not, cache the handle.
-  if (not $self->has_mlwh_schema and $lims->can('mlwh_schema')) {
-    $self->mlwh_schema($lims->mlwh_schema);
-  }
-
-  return $lims;
+  return;
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -132,12 +117,15 @@ information. This class exists only to encapsulate the ML warehouse
 queries and driver creation necessary to make st::api::lims
 objects. It will serve as a cache for these objects, if required.
 
-The factory will also cache any WTSI::DNAP::Warehouse::Schema created
-by the st::api::lims objects to enablke them to share the same
-underlying database connection.
+The factory will cache an st::api::lims objects for each rpt list it
+encounters. The factory will also cache any
+WTSI::DNAP::Warehouse::Schema created by the st::api::lims objects to
+enable them to share the same underlying database connection.
 
-This functionality probably belongs in the st::api and could be moved
-there, making this class redundant.
+N.B. The st::api::lims objects are constructed per-rpt list; no
+account is taken of subset and these object are unsuitable for doing
+queries on data which vary by subset.
+
 
 =head1 AUTHOR
 
@@ -145,7 +133,8 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016, 2019 Genome Research Limited. All Rights
+Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

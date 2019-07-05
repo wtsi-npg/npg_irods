@@ -17,6 +17,7 @@ use WTSI::NPG::HTS::PacBio::Sequel::AnalysisMonitor;
 
 our $VERSION = '';
 
+my $api_uri;
 my $collection;
 my $debug;
 my $log4perl_config;
@@ -32,6 +33,7 @@ GetOptions('collection=s'                  => \$collection,
            'logconf=s'                     => \$log4perl_config,
            'pipeline-name|pipeline_name=s' => \$pipeline_name,
            'task-name|task_name=s'         => \$task_name,
+           'api-uri|api_uri=s'             => \$api_uri,
            'verbose'                       => \$verbose);
 
 
@@ -60,6 +62,10 @@ if ($pipeline_name) {
 
 if ($task_name) {
   push @init_args, task_name => $task_name;
+}
+
+if($api_uri) {
+  push @init_args, api_uri => $api_uri;
 }
 
 my $monitor = WTSI::NPG::HTS::PacBio::Sequel::AnalysisMonitor->new
@@ -92,7 +98,7 @@ npg_pacbio_analysis_monitor
 npg_pacbio_analysis_monitor
   [--collection <path>] [--debug] [--logconf <path>]
   [--pipeline_name <name>] [--task_name <name>]
-  [--verbose] 
+  [--api-uri] [--verbose] 
 
  Options:
    --collection      The destination collection in iRODS. Optional,
@@ -105,6 +111,8 @@ npg_pacbio_analysis_monitor
    --pipeline_name   The SMRT Link pipeline name. Optional.  
    --task-name
    --task_name       The SMRT Link task name. Optional.  
+   --api-uri
+   --api_uri         Specify the server host and port. Optional.
    --verbose         Print messages while processing. Optional.
 
 
@@ -119,7 +127,7 @@ module.
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2018 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2018, 2019 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

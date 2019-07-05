@@ -322,7 +322,7 @@ sub publish_lane_pri_data_mlwh : Test(21) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_lane_sec_data_mlwh : Test(69) {
+sub publish_lane_sec_data_mlwh : Test(79) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -342,6 +342,7 @@ sub publish_lane_sec_data_mlwh : Test(69) {
                   '18448_2.composition.json',
                   '18448_2.cram.crai',
                   '18448_2.flagstat',
+                  '18448_2.geno',
                   '18448_2.markdups_metrics.txt',
                   '18448_2.seqchksum',
                   '18448_2.sha512primesums512.seqchksum',
@@ -349,7 +350,8 @@ sub publish_lane_sec_data_mlwh : Test(69) {
                   '18448_2_F0xB00.stats',
                   '18448_2_quality_cycle_caltable.txt',
                   '18448_2_quality_cycle_surv.txt',
-                  '18448_2_quality_error.txt');
+                  '18448_2_quality_error.txt',
+                  '18448_2_salmon.quant.zip');
   is_deeply(\@observed, \@expected) or diag explain \@observed;
 
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
@@ -390,7 +392,7 @@ sub publish_lane_pri_data_samplesheet : Test(21) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_lane_sec_data_samplesheet : Test(69) {
+sub publish_lane_sec_data_samplesheet : Test(79) {
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -415,6 +417,7 @@ sub publish_lane_sec_data_samplesheet : Test(69) {
                   '18448_2.composition.json',
                   '18448_2.cram.crai',
                   '18448_2.flagstat',
+                  '18448_2.geno',
                   '18448_2.markdups_metrics.txt',
                   '18448_2.seqchksum',
                   '18448_2.sha512primesums512.seqchksum',
@@ -422,7 +425,8 @@ sub publish_lane_sec_data_samplesheet : Test(69) {
                   '18448_2_F0xB00.stats',
                   '18448_2_quality_cycle_caltable.txt',
                   '18448_2_quality_cycle_surv.txt',
-                  '18448_2_quality_error.txt');
+                  '18448_2_quality_error.txt',
+                  '18448_2_salmon.quant.zip');
   is_deeply(\@observed, \@expected) or diag explain \@observed;
 
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
@@ -643,7 +647,7 @@ sub publish_merged_pri_data_samplesheet : Test(19) {
   check_merge_primary_metadata($obj);
 }
 
-sub publish_merged_sec_data_mlwh : Test(69) {
+sub publish_merged_sec_data_mlwh : Test(74) {
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -675,7 +679,8 @@ sub publish_merged_sec_data_mlwh : Test(69) {
                              "plex$plex/26291#1.spatial_filter.stats",
                              "plex$plex/26291#1_F0x900.stats",
                              "plex$plex/26291#1_F0xB00.stats",
-                             "plex$plex/26291#1_F0xF04_target.stats"],
+                             "plex$plex/26291#1_F0xF04_target.stats",
+                             "plex$plex/26291#1_F0xF04_target_autosome.stats"],
                             'Expected data object found');
 
   my @observed = observed_data_objects($irods, "$dest_coll/plex$plex",
@@ -685,7 +690,7 @@ sub publish_merged_sec_data_mlwh : Test(69) {
   check_common_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_merged_sec_data_samplesheet : Test(69) {
+sub publish_merged_sec_data_samplesheet : Test(74) {
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -720,8 +725,9 @@ sub publish_merged_sec_data_samplesheet : Test(69) {
                              "plex$plex/26291#1.sha512primesums512.seqchksum",
                              "plex$plex/26291#1.spatial_filter.stats",
                              "plex$plex/26291#1_F0x900.stats",
-                             "plex$plex/26291#1_F0xB00.stats",
-                             "plex$plex/26291#1_F0xF04_target.stats"],
+                             "plex$plex/26291#1_F0xB00.stats", 
+                             "plex$plex/26291#1_F0xF04_target.stats",
+                             "plex$plex/26291#1_F0xF04_target_autosome.stats"],
                             'Expected data object found');
 
   my @observed = observed_data_objects($irods, "$dest_coll/plex$plex",
@@ -837,7 +843,7 @@ sub publish_include_exclude : Test(3) {
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
-  cmp_ok($num_processed, '==', 29, 'Published 29 files');
+  cmp_ok($num_processed, '==', 31, 'Published 31 files');
 
   my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
   my @expected = ('18448_2.all.seqchksum',
@@ -846,6 +852,7 @@ sub publish_include_exclude : Test(3) {
                   '18448_2.cram',
                   '18448_2.cram.crai',
                   '18448_2.flagstat',
+                  '18448_2.geno',
                   '18448_2.markdups_metrics.txt',
                   '18448_2.seqchksum',
                   '18448_2.sha512primesums512.seqchksum',
@@ -854,6 +861,7 @@ sub publish_include_exclude : Test(3) {
                   '18448_2_quality_cycle_caltable.txt',
                   '18448_2_quality_cycle_surv.txt',
                   '18448_2_quality_error.txt',
+                  '18448_2_salmon.quant.zip',
                   'qc/18448_2.adapter.json',
                   'qc/18448_2.alignment_filter_metrics.json',
                   'qc/18448_2.bam_flagstats.json',
@@ -897,7 +905,7 @@ sub publish_archive_path_mlwh : Test(6) {
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
-  my $num_expected = 376;
+  my $num_expected = 378;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
 

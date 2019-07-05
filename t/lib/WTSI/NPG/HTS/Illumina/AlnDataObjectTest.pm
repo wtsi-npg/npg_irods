@@ -24,6 +24,7 @@ use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::HTS::Metadata;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
+use npg_tracking::glossary::composition;
 
 {
   package TestDB;
@@ -309,6 +310,31 @@ sub is_restricted_access : Test(12) {
   }
 }
 
+sub is_paired_read : Test(4) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+ foreach my $format (qw[bam cram]) {
+    foreach my $path (sort grep { /15440/ } keys %file_composition) {
+      my $full_path = "$irods_tmp_coll/$path.$format";
+      my @initargs = _build_initargs(\%file_composition, $path);
+
+      my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+        ($irods, $full_path, @initargs);
+
+      my $index = $obj->tag_index;
+      if ($index == 0) {
+        ok($obj->is_paired_read, "15440_1.$format index $index is paired");
+      }
+      elsif ($index == 81) {
+        ok(!$obj->is_paired_read, "15440_1.$format index $index is not paired");
+      }
+      else {
+        fail "Unexpected tag index $index";
+      }
+    }
+  }
+}
+
 sub tag_index : Test(12) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -354,13 +380,16 @@ sub nonconsented_human_access_revoked : Test(6) {
                                       group_filter         => $group_filter,
                                       strict_baton_version => 0);
 
+    my $c_json =
+      '{"components":[{"id_run":7915,"position":5,"subset":"human","tag_index":1}]}';
     my $tag1_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => 'alignment_filter',        value => 'human'},
        {attribute => $COMPONENT,                value =>
         '{"id_run":7915,"position":5,"subset":"human","tag_index":1}'},
-       {attribute => $COMPOSITION,              value =>
-        '{"components":[{"id_run":7915,"position":5,"subset":"human","tag_index":1}]}'},
+       {attribute => $COMPOSITION,              value => $c_json},
+       {attribute => $ID_PRODUCT,
+        value => _composition_json2product_id($c_json)},
        {attribute => $ID_RUN,                   value => '7915'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '5'},
@@ -516,12 +545,14 @@ sub update_secondary_metadata_tag0_no_spike_bact : Test(12) {
                                       group_filter         => $group_filter,
                                       strict_baton_version => 0,);
 
+    my $c_json = '{"components":[{"id_run":7915,"position":5,"tag_index":0}]}';
     my $tag0_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => $COMPONENT,                value =>
         '{"id_run":7915,"position":5,"tag_index":0}'},
-       {attribute => $COMPOSITION,              value =>
-        '{"components":[{"id_run":7915,"position":5,"tag_index":0}]}'},
+       {attribute => $COMPOSITION,              value => $c_json},
+       {attribute => $ID_PRODUCT,
+	value => _composition_json2product_id($c_json)},
        {attribute => $ID_RUN,                   value => '7915'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '5'},
@@ -735,12 +766,14 @@ sub update_secondary_metadata_tag0_spike_bact : Test(12) {
                                       group_filter         => $group_filter,
                                       strict_baton_version => 0,);
 
+    my $c_json = '{"components":[{"id_run":7915,"position":5,"tag_index":0}]}';
     my $tag0_expected_meta =
       [{attribute => $ALIGNMENT,               value => '1'},
        {attribute => $COMPONENT,                value =>
         '{"id_run":7915,"position":5,"tag_index":0}'},
-       {attribute => $COMPOSITION,              value =>
-        '{"components":[{"id_run":7915,"position":5,"tag_index":0}]}'},
+       {attribute => $COMPOSITION,              value =>$c_json},
+       {attribute => $ID_PRODUCT,
+        value => _composition_json2product_id($c_json)},
        {attribute => $ID_RUN,                  value => '7915'},
        {attribute => $IS_PAIRED_READ,          value => '1'},
        {attribute => $POSITION,                value => '5'},
@@ -959,12 +992,14 @@ sub update_secondary_metadata_tag1_no_spike_bact : Test(12) {
                                       group_filter         => $group_filter,
                                       strict_baton_version => 0);
 
+    my $c_json = '{"components":[{"id_run":7915,"position":5,"tag_index":1}]}';
     my $tag1_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => $COMPONENT,                value =>
         '{"id_run":7915,"position":5,"tag_index":1}'},
-       {attribute => $COMPOSITION,              value =>
-        '{"components":[{"id_run":7915,"position":5,"tag_index":1}]}'},
+       {attribute => $COMPOSITION,              value => $c_json},
+       {attribute => $ID_PRODUCT,
+        value => _composition_json2product_id($c_json)},
        {attribute => $ID_RUN,                   value => '7915'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '5'},
@@ -1015,12 +1050,14 @@ sub update_secondary_metadata_tag1_spike_bact : Test(12) {
                                       group_filter         => $group_filter,
                                       strict_baton_version => 0);
 
+    my $c_json = '{"components":[{"id_run":7915,"position":5,"tag_index":1}]}';
     my $tag1_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => $COMPONENT,                value =>
         '{"id_run":7915,"position":5,"tag_index":1}'},
-       {attribute => $COMPOSITION,              value =>
-        '{"components":[{"id_run":7915,"position":5,"tag_index":1}]}'},
+       {attribute => $COMPOSITION,              value => $c_json},
+       {attribute => $ID_PRODUCT,
+        value => _composition_json2product_id($c_json)},
        {attribute => $ID_RUN,                   value => '7915'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '5'},
@@ -1071,12 +1108,14 @@ sub update_secondary_metadata_tag0_no_spike_human : Test(12) {
                                       group_filter         => $group_filter,
                                       strict_baton_version => 0);
 
+    my $c_json = '{"components":[{"id_run":15440,"position":1,"tag_index":0}]}';
     my $tag0_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => $COMPONENT,                value =>
         '{"id_run":15440,"position":1,"tag_index":0}'},
-       {attribute => $COMPOSITION,              value =>
-        '{"components":[{"id_run":15440,"position":1,"tag_index":0}]}'},
+       {attribute => $COMPOSITION,              value => $c_json},
+       {attribute => $ID_PRODUCT,
+        value => _composition_json2product_id($c_json)},
        {attribute => $ID_RUN,                   value => '15440'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '1'},
@@ -1145,12 +1184,14 @@ sub update_secondary_metadata_tag0_spike_human : Test(12) {
                                       group_filter         => $group_filter,
                                       strict_baton_version => 0);
 
+    my $c_json = '{"components":[{"id_run":15440,"position":1,"tag_index":0}]}';
     my $tag0_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => $COMPONENT,                value =>
         '{"id_run":15440,"position":1,"tag_index":0}'},
-       {attribute => $COMPOSITION,              value =>
-        '{"components":[{"id_run":15440,"position":1,"tag_index":0}]}'},
+       {attribute => $COMPOSITION,              value => $c_json},
+       {attribute => $ID_PRODUCT,
+        value => _composition_json2product_id($c_json)},
        {attribute => $ID_RUN,                   value => '15440'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '1'},
@@ -1226,12 +1267,14 @@ sub update_secondary_metadata_tag81_no_spike_human : Test(12) {
                                       group_filter         => $group_filter,
                                       strict_baton_version => 0);
 
+    my $c_json = '{"components":[{"id_run":15440,"position":1,"tag_index":81}]}';
     my $tag81_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => $COMPONENT,                value =>
         '{"id_run":15440,"position":1,"tag_index":81}'},
-       {attribute => $COMPOSITION,              value =>
-        '{"components":[{"id_run":15440,"position":1,"tag_index":81}]}'},
+       {attribute => $COMPOSITION,              value => $c_json},
+       {attribute => $ID_PRODUCT,
+        value => _composition_json2product_id($c_json)},
        {attribute => $ID_RUN,                   value => '15440'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '1'},
@@ -1282,12 +1325,14 @@ sub update_secondary_metadata_tag81_spike_human : Test(12) {
                                       group_filter         => $group_filter,
                                       strict_baton_version => 0);
 
+    my $c_json = '{"components":[{"id_run":15440,"position":1,"tag_index":81}]}';
     my $tag81_expected_meta =
       [{attribute => $ALIGNMENT,                value => '1'},
        {attribute => $COMPONENT,                value =>
         '{"id_run":15440,"position":1,"tag_index":81}'},
-       {attribute => $COMPOSITION,              value =>
-        '{"components":[{"id_run":15440,"position":1,"tag_index":81}]}'},
+       {attribute => $COMPOSITION,              value => $c_json},
+       {attribute => $ID_PRODUCT,
+        value => _composition_json2product_id($c_json)},
        {attribute => $ID_RUN,                   value => '15440'},
        {attribute => $IS_PAIRED_READ,           value => '1'},
        {attribute => $POSITION,                 value => '1'},
@@ -1398,6 +1443,13 @@ sub _build_initargs {
   push @initargs, subset => $subset if defined $subset;
 
   return @initargs;
+}
+
+sub _composition_json2product_id {
+  my $c_json = shift;
+  my $c_class = 'npg_tracking::glossary::composition::component::illumina';
+  return npg_tracking::glossary::composition->thaw(
+    $c_json, component_class => $c_class)->digest;
 }
 
 1;

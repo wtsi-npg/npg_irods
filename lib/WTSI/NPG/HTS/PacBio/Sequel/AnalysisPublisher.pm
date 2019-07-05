@@ -28,6 +28,11 @@ our $ENTRY_DIR       = 'entry-points';
 # Well directory pattern
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
+# Additional sequence filenames permitted for loading 
+our @FNAME_PERMITTED = qw[removed ccs];
+
+# Data processing level
+our $DATA_LEVEL = 'secondary';
 
 has 'analysis_path' =>
   (isa           => 'Str',
@@ -98,20 +103,29 @@ sub publish_sequence_files {
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
   foreach my $file ( @{$files} ){
+    my @tag_records;
+
     my $tag_id = $self->_get_tag_from_fname($file);
+    if ($tag_id) {
+        @tag_records = $self->find_pacbio_runs
+            ($self->_metadata->run_name, $self->_metadata->well_name, $tag_id);
+    } else {
+        $self->_is_allowed_fname($file) or
+            $self->logcroak("Unexpected file name for $file");
+    }
 
-    my @tag_records = $self->find_pacbio_runs
-      ($self->_metadata->run_name, $self->_metadata->well_name, $tag_id);
-
-    ## enter as if not deplexed if a tag is not expected
     my @records =
       (@tag_records == 1) ?
              @tag_records :
              $self->find_pacbio_runs($self->_metadata->run_name,
                                      $self->_metadata->well_name);
-
     if (@records >= 1) {
-      my @primary_avus   = $self->make_primary_metadata($self->_metadata);
+      my $non_target     = @records > 1 ? 1 : 0;
+
+      my @primary_avus   = $self->make_primary_metadata
+         ($self->_metadata,
+          data_level => $DATA_LEVEL,
+          non_target => $non_target);
       my @secondary_avus = $self->make_secondary_metadata(@records);
 
       my ($a_files, $a_processed, $a_errors) =
@@ -242,12 +256,16 @@ sub _get_tag_from_fname {
     my ($bc1, $bc2) = ($1, $2);
     $tag_id = ($bc1 == $bc2) ? $bc1 : undef;
   }
-  defined $tag_id or $self->logcroak("No tag found for $file");
-
   return $tag_id;
 }
 
-sub _dest_path{
+sub _is_allowed_fname {
+  my ($self, $file) = @_;
+  my @exists = grep { $file =~ m{[.] $_ [.]}smx } @FNAME_PERMITTED;
+  return @exists == 1 ? 1 : 0;
+}
+
+sub _dest_path {
   my ($self) = @_;
 
   @{$self->smrt_names} == 1 or
@@ -271,6 +289,16 @@ WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher
 =head1 DESCRIPTION
 
 Publishes relevant files to iRODS, adds metadata and sets permissions.
+
+This module is suitable for loading auto secondary analysis output from 
+demultiplex jobs, ccs analysis and combined demultiplex+css analysis.
+
+Since SMRT Link v7 deplexing jobs have produced BAM files for identified
+barcode tags and also files named removed.bam (equivalent to tag zero
+in Illumina) which contain the reads not assigned to any tag. Expected
+tags are entered with single sample meta data in iRODS whereas
+unexpected tags and tag zero files are entered as multiplexed data
+e.g. multiplex = 1 flag and all sample and tag data for that cell.
 
 =head1 AUTHOR
 

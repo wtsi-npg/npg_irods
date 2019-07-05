@@ -39,7 +39,7 @@ our %ILLUMINA_PART_PATTERNS =
    },
    genotype_regex  => sub {
      my $name = shift;
-     return sprintf q[%s[.](bcf|vcf)$], "\Q$name\E";
+     return sprintf q[%s[.](bcf|vcf|geno)$], "\Q$name\E";
    },
    ancillary_regex => sub {
      my $name = shift;
@@ -55,10 +55,12 @@ our %ILLUMINA_PART_PATTERNS =
        '_quality_cycle_caltable[.]txt',   # non-conforming file name
        '_quality_cycle_surv[.]txt',       # non-conforming file name
        '_quality_error[.]txt',            # non-conforming file name
+       '_salmon[.]quant[.]zip',
        '[.]seqchksum',
        '[.]sha512primesums512[.]seqchksum',
        '[.]spatial_filter[.]stats',
        '_target[.]stats',                 # non-conforming file name
+       '_target_autosome[.]stats',        # non-conforming file name
        '[.]stats',
        '[.]txt';
    },
@@ -81,7 +83,8 @@ our %ILLUMINA_PART_PATTERNS =
        '[.]sequence_summary[.]json',
        '[.]spatial_filter[.]json',
        '[.]verify_bam_id[.]json',
-       '_target[.]samtools_stats[.]json'; # non-conforming file name
+       '_target[.]samtools_stats[.]json',          # non-conforming file name
+       '_target_autosome[.]samtools_stats[.]json'; # non-conforming file name
    });
 
 =head2 composition_files

@@ -83,14 +83,18 @@ sub list_files : Test(3) {
 
   my @expected_paths1 =
     map { catfile($runfolder_path, $_) }
-    ('lima_output.lbc12--lbc12.bam', 'lima_output.lbc5--lbc5.bam');
+    ('lima_output.lbc12--lbc12.bam',
+     'lima_output.lbc5--lbc5.bam',
+     'lima_output.removed.bam');
 
   is_deeply($pub->list_files('bam$'), \@expected_paths1,
      'Found sequence files for 001612');
 
   my @expected_paths2 =
     map { catfile($runfolder_path, $_) }
-    ('lima_output.lbc12--lbc12.bam.pbi', 'lima_output.lbc5--lbc5.bam.pbi');
+    ('lima_output.lbc12--lbc12.bam.pbi',
+     'lima_output.lbc5--lbc5.bam.pbi',
+     'lima_output.removed.bam.pbi');
 
   is_deeply($pub->list_files('pbi$'), \@expected_paths2,
      'Found sequence index files for 001612');
@@ -98,7 +102,8 @@ sub list_files : Test(3) {
   my @expected_paths3 =
     map { catfile($runfolder_path, $_) }
     ('lima_output.lbc12--lbc12.subreadset.xml',
-     'lima_output.lbc5--lbc5.subreadset.xml');
+     'lima_output.lbc5--lbc5.subreadset.xml',
+     'lima_output.removed.subreadset.xml');
 
   is_deeply($pub->list_files('subreadset.xml$'), \@expected_paths3,
      'Found sequence index files for 001612');
@@ -121,13 +126,13 @@ sub publish_files : Test(2) {
      runfolder_path  => $runfolder_path);
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
-  my $num_expected = 6;
+  my $num_expected = 9;
 
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
   cmp_ok($num_errors,    '==', 0);
 }
 
-sub publish_xml_files : Test(14) {
+sub publish_xml_files : Test(19) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $analysis_path  = "$data_path/001612";
@@ -146,7 +151,8 @@ sub publish_xml_files : Test(14) {
   my @expected_paths =
     map { catfile("$dest_coll/2_B01", $_) }
     ('lima_output.lbc12--lbc12.subreadset.xml',
-     'lima_output.lbc5--lbc5.subreadset.xml');
+     'lima_output.lbc5--lbc5.subreadset.xml',
+      'lima_output.removed.subreadset.xml');
 
   my ($num_files, $num_processed, $num_errors) =
     $pub->publish_non_sequence_files('subreadset.xml$');
@@ -162,7 +168,7 @@ sub publish_xml_files : Test(14) {
   check_common_metadata($irods, @observed_paths);
 }
 
-sub publish_sequence_files : Test(38) {
+sub publish_sequence_files : Test(58) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $analysis_path  = "$data_path/001612";
@@ -180,7 +186,9 @@ sub publish_sequence_files : Test(38) {
 
   my @expected_paths =
     map { catfile("$dest_coll/2_B01", $_) }
-    ('lima_output.lbc12--lbc12.bam','lima_output.lbc5--lbc5.bam');
+    ('lima_output.lbc12--lbc12.bam',
+     'lima_output.lbc5--lbc5.bam',
+     'lima_output.removed.bam');
 
   my ($num_files, $num_processed, $num_errors) =
     $pub->publish_sequence_files;
@@ -200,7 +208,7 @@ sub publish_sequence_files : Test(38) {
   unlink $pub->restart_file;
 }
 
-sub publish_index_files : Test(14) {
+sub publish_index_files : Test(19) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $analysis_path  = "$data_path/001612";
@@ -218,7 +226,9 @@ sub publish_index_files : Test(14) {
 
   my @expected_paths =
     map { catfile("$dest_coll/2_B01", $_) }
-    ('lima_output.lbc12--lbc12.bam.pbi','lima_output.lbc5--lbc5.bam.pbi');
+    ('lima_output.lbc12--lbc12.bam.pbi',
+     'lima_output.lbc5--lbc5.bam.pbi',
+     'lima_output.removed.bam.pbi',);
 
   my ($num_files, $num_processed, $num_errors) =
      $pub->publish_non_sequence_files('pbi$');
@@ -274,10 +284,12 @@ sub check_primary_metadata {
     foreach my $attr
       ($PACBIO_CELL_INDEX,
        $PACBIO_COLLECTION_NUMBER,
+       $PACBIO_DATA_LEVEL,
        $PACBIO_INSTRUMENT_NAME,
        $PACBIO_RUN,
        $PACBIO_WELL,
-       $PACBIO_SAMPLE_LOAD_NAME) {
+       $PACBIO_SAMPLE_LOAD_NAME
+      ) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
@@ -292,13 +304,75 @@ sub check_secondary_metadata {
     my $obj = WTSI::NPG::HTS::DataObject->new($irods, $path);
     my $file_name = fileparse($obj->str);
 
+    my @avu_plex = $obj->find_in_metadata($PACBIO_MULTIPLEX);
+
     # study_name is legacy metadata
     foreach my $attr ($STUDY_ID, $STUDY_NAME, $STUDY_ACCESSION_NUMBER,
-                      $PACBIO_STUDY_NAME, $TAG_INDEX, $TAG_SEQUENCE) {
+                      $PACBIO_STUDY_NAME) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
+
+    foreach my $attr ($TAG_INDEX, $TAG_SEQUENCE) {
+      my @avu = $obj->find_in_metadata($attr);
+      my $operator = scalar (@avu_plex == 1) ? '>' : '==';
+      cmp_ok(scalar @avu, $operator, 1, "$file_name $attr metadata present");
+    }
+
   }
+}
+
+sub list_files_2 : Test(2) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $analysis_path  = "$data_path/000226";
+  my $runfolder_path = "$analysis_path/tasks/pbcoretools.tasks.auto_ccs_outputs-0",
+  my $dest_coll      = $irods_tmp_coll;
+
+  my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
+    (dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     analysis_path   => $analysis_path,
+     runfolder_path  => $runfolder_path);
+
+  my @expected_paths1 =
+    map { catfile($runfolder_path, $_) }
+    ('m64016_190608_025655.ccs.bam');
+
+  is_deeply($pub->list_files('bam$'), \@expected_paths1,
+     'Found sequence files for 000226');
+
+  my @expected_paths2 =
+    map { catfile($runfolder_path, $_) }
+    ('m64016_190608_025655.ccs.bam.pbi');
+
+  is_deeply($pub->list_files('pbi$'), \@expected_paths2,
+     'Found sequence index files for 001612');
+
+}
+
+sub publish_files_2 : Test(2) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $analysis_path  = "$data_path/000226";
+  my $runfolder_path = "$analysis_path/tasks/pbcoretools.tasks.auto_ccs_outputs-0",
+  my $dest_coll      = "$irods_tmp_coll/publish_files_2";
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
+    (restart_file    => catfile($tmpdir->dirname, 'published.json'),
+     dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     analysis_path   => $analysis_path,
+     runfolder_path  => $runfolder_path);
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+  my $num_expected = 2;
+
+  cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
+  cmp_ok($num_errors,    '==', 0);
 }
 
 1;

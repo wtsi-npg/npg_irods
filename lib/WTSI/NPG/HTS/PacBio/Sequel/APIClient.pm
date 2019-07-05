@@ -8,7 +8,6 @@ use Moose;
 use MooseX::StrictConstructor;
 use URI;
 use URI::Split qw(uri_join);
-use Readonly;
 use JSON;
 
 with qw[
@@ -27,10 +26,9 @@ has 'api_uri' =>
    is            => 'ro',
    required      => 1,
    default       => sub {
-       return('sf2-farm-srv1.internal.sanger.ac.uk:8071');
+       return('localhost:8071');
    },
    documentation => 'PacBio root API URL');
-
 
 has 'runs_api_uri' =>
   (isa           => 'URI',
@@ -55,7 +53,7 @@ has 'jobs_api_uri' =>
 sub _build_jobs_api_uri {
   my ($self) = @_;
 
-  my $path   = join q[/], q[secondary-analysis/job-manager/jobs], $self->job_type;
+  my $path   = join q[/], q[smrt-link/job-manager/jobs], $self->job_type;
   my $uri    = uri_join($PROTOCOL, $self->api_uri, $path);
   return URI->new($uri);
 }

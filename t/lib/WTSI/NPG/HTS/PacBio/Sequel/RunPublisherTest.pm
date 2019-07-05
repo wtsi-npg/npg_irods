@@ -235,7 +235,7 @@ sub publish_adapter_files : Test(9) {
   check_common_metadata($irods, @observed_paths);
 }
 
-sub publish_sequence_files : Test(34) {
+sub publish_sequence_files : Test(36) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r54097_20170727_165601";
@@ -345,6 +345,7 @@ sub check_primary_metadata {
     foreach my $attr
       ($PACBIO_CELL_INDEX,
        $PACBIO_COLLECTION_NUMBER,
+       $PACBIO_DATA_LEVEL,
        $PACBIO_INSTRUMENT_NAME,
        $PACBIO_RUN,
        $PACBIO_WELL,

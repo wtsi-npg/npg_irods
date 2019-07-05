@@ -77,6 +77,7 @@ sub BUILD {
     $ALT_TARGET,
     $COMPONENT,
     $COMPOSITION,
+    $ID_PRODUCT,
     $ID_RUN,
     $IS_PAIRED_READ,
     $POSITION,
@@ -290,7 +291,7 @@ sub _build_is_paired_read {
   foreach my $read (@reads) {
     my ($qname, $flag, $rname, $pos) = split /\t/msx, $read;
 
-    if (vec $flag, 0, 1) { # 0x1 == read paired
+    if ($flag & 1) { # 0x1 == read paired
       $is_paired_read = 1;
       last;
     }
@@ -323,6 +324,9 @@ sub _get_reads {
       my $line = <$fh>;
       if ($line) {
         push @reads, $line;
+      }
+      else {
+        last;
       }
       $n++;
     }
