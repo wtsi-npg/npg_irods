@@ -18,11 +18,11 @@ with qw[
   Named args : data_level     Processing level of data being archived
                               e.g. Primary - off  instrument, secondary
                               - subsequently post processed. Optional.
-               is_non_target  Is non target? If false then target flag
-                              is set to true. Data is not target where it
+               is_target      Is target? If false then target flag
+                              is not set. Data is not target where it
                               is not deplexed or where data at a different
                               data level is the default for the customer.
-                              Boolean. Defaults to false.
+                              Boolean. Defaults to true.
                is_r_and_d     Is data R & D? Boolean. Defaults to false.
 
   Example    : my @avus = $ann->make_primary_metadata($metadata);
@@ -35,7 +35,7 @@ with qw[
 
 {
     my $positional = 2;
-    my @named      = qw[data_level non_target is_r_and_d ];
+    my @named      = qw[data_level is_target is_r_and_d ];
     my $params     = function_params($positional, @named);
 
     sub make_primary_metadata {
@@ -70,7 +70,7 @@ with qw[
             push @avus, $self->make_avu($PACBIO_SOURCE, $PACBIO_PRODUCTION);
         }
 
-        if (! $params->non_target) {
+        if ($params->is_target || not defined $params->is_target) {
             push @avus, $self->make_avu($TARGET, 1);
         }
 

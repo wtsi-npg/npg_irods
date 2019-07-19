@@ -168,7 +168,7 @@ sub publish_xml_files : Test(19) {
   check_common_metadata($irods, @observed_paths);
 }
 
-sub publish_sequence_files : Test(58) {
+sub publish_sequence_files : Test(61) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $analysis_path  = "$data_path/001612";
@@ -280,6 +280,7 @@ sub check_primary_metadata {
   foreach my $path (@paths) {
     my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $path);
     my $file_name = fileparse($obj->str);
+    my @avu_plex = $obj->find_in_metadata($PACBIO_MULTIPLEX);
 
     foreach my $attr
       ($PACBIO_CELL_INDEX,
@@ -293,7 +294,11 @@ sub check_primary_metadata {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
-
+    foreach my $attr ($TARGET) {
+      my @avu = $obj->find_in_metadata($attr);
+      my $expected = scalar (@avu_plex == 1) ? 0 : 1;
+      cmp_ok(scalar @avu,'==', $expected, "$file_name $attr metadata correct");
+    }
   }
 }
 

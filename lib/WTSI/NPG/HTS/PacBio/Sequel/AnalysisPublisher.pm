@@ -120,12 +120,12 @@ sub publish_sequence_files {
              $self->find_pacbio_runs($self->_metadata->run_name,
                                      $self->_metadata->well_name);
     if (@records >= 1) {
-      my $non_target     = @records > 1 ? 1 : 0;
+      my $is_target      = @records > 1 ? 0 : 1;
 
       my @primary_avus   = $self->make_primary_metadata
          ($self->_metadata,
           data_level => $DATA_LEVEL,
-          non_target => $non_target);
+          is_target  => $is_target);
       my @secondary_avus = $self->make_secondary_metadata(@records);
 
       my ($a_files, $a_processed, $a_errors) =

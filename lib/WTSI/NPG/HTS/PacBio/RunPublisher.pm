@@ -442,10 +442,10 @@ sub publish_basx_files {
     $num_files = $num_processed = $num_errors = scalar @{$files};
   }
   else {
-    my $non_target     = $is_r_and_d ? 0 : 1;
+    my $is_target      = $is_r_and_d ? 0 : 1;
     my @primary_avus   = $self->make_primary_metadata
       ($metadata,
-       non_target => $non_target,
+       is_target  => $is_target,
        is_r_and_d => $is_r_and_d);
     my @secondary_avus = $self->make_secondary_metadata(@run_records);
     my @extra_avus     = $self->make_avu($FILE_TYPE, 'bas');
