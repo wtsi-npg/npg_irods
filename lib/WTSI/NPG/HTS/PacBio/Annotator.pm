@@ -70,7 +70,7 @@ with qw[
             push @avus, $self->make_avu($PACBIO_SOURCE, $PACBIO_PRODUCTION);
         }
 
-        if ($params->is_target || not defined $params->is_target) {
+        if ($params->is_target || !defined $params->is_target) {
             push @avus, $self->make_avu($TARGET, 1);
         }
 
