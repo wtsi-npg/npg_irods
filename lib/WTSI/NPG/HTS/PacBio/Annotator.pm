@@ -15,8 +15,14 @@ with qw[
 
   Arg [1]      PacBio run metadata, WTSI::NPG::HTS::PacBio::Metadata.
   
-  Named args : data_level     Processing data level. Optional.
-               is_non_target  Is non target? Boolean. Defaults to false.
+  Named args : data_level     Processing level of data being archived
+                              e.g. Primary - off  instrument, secondary
+                              - subsequently post processed. Optional.
+               is_non_target  Is non target? If false then target flag
+                              is set to true. Data is not target where it
+                              is not deplexed or where data at a different
+                              data level is the default for the customer.
+                              Boolean. Defaults to false.
                is_r_and_d     Is data R & D? Boolean. Defaults to false.
 
   Example    : my @avus = $ann->make_primary_metadata($metadata);
