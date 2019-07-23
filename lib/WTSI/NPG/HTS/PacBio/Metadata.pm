@@ -76,7 +76,12 @@ has 'results_folder' =>
    predicate     => 'has_results_folder',
    documentation => 'The results folder');
 
-
+has 'is_ccs' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 0,
+   predicate     => 'has_is_ccs',
+   documentation => 'Is the PacBio data ccs');
 
 
 around BUILDARGS => sub {

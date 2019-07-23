@@ -26,6 +26,9 @@ our $FILE_PREFIX_PATTERN    = 'm\d+_\d+_\d+';
 # Well directory pattern
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
+# Data processing level
+our $DATA_LEVEL = 'primary';
+
 override '_build_directory_pattern' => sub {
    my ($self) = @_;
 
@@ -150,7 +153,14 @@ sub publish_sequence_files {
                 ": publishing '$smrt_name' as R and D data");
   }
 
-  my @primary_avus   = $self->make_primary_metadata($metadata, $is_r_and_d);
+  my $is_target =
+      ($metadata->is_ccs eq 'true' || @run_records > 1 || $is_r_and_d) ? 0 : 1;
+
+  my @primary_avus   = $self->make_primary_metadata
+      ($metadata,
+       data_level => $DATA_LEVEL,
+       is_target  => $is_target,
+       is_r_and_d => $is_r_and_d);
   my @secondary_avus = $self->make_secondary_metadata(@run_records);
 
   my $files     = $self->list_sequence_files($smrt_name);
