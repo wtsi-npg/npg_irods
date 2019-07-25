@@ -19,7 +19,7 @@ wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.11-Linux-x86_64.
 . ~/miniconda/etc/profile.d/conda.sh
 
 echo ". ~/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc
-echo "conda activate base" >> ~/.bashrc
+echo "conda activate travis" >> ~/.bashrc
 
 conda config --set auto_update_conda False
 conda config --add channels https://dnap.cog.sanger.ac.uk/npg/conda/devel/generic/
