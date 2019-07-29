@@ -1,5 +1,6 @@
 
-
+Release 2.14.0
+ 
  - Add support for loading PacBio ccs BAM files and setting target = 1
    on relevant PacBio sequence files.
 
