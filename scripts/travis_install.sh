@@ -19,7 +19,7 @@ wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.11-Linux-x86_64.
 . ~/miniconda/etc/profile.d/conda.sh
 
 echo ". ~/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc
-echo "conda activate base" >> ~/.bashrc
+echo "conda activate travis" >> ~/.bashrc
 
 conda config --set auto_update_conda False
 conda config --add channels https://dnap.cog.sanger.ac.uk/npg/conda/devel/generic/
@@ -31,8 +31,8 @@ conda install -y irods-icommands
 conda install -y tears
 conda install -y samtools
 
-ln -s $HOME/miniconda/envs/travis/bin/samtools \
-   $HOME/miniconda/envs/travis/bin/samtools_irods
+ln -s "$HOME/miniconda/envs/travis/bin/samtools" \
+   "$HOME/miniconda/envs/travis/bin/samtools_irods"
 
 mkdir -p ~/.irods
 cat <<EOF > ~/.irods/irods_environment.json
@@ -59,7 +59,7 @@ for repo in perl-dnap-utilities perl-irods-wrap ml_warehouse npg_ml_warehouse np
     cd /tmp
     # Clone deeper than depth 1 to get the tag even if something has been already
     # commited over the tag
-    git clone --branch master --depth 3 ${WTSI_NPG_GITHUB_URL}/${repo}.git ${repo}.git
+    git clone --branch master --depth 3 "${WTSI_NPG_GITHUB_URL}/${repo}.git" "${repo}.git"
     cd /tmp/${repo}.git
     # Shift off master to appropriate branch (if possible)
     git ls-remote --heads --exit-code origin ${WTSI_NPG_BUILD_BRANCH} && git pull origin ${WTSI_NPG_BUILD_BRANCH} && echo "Switched to branch ${WTSI_NPG_BUILD_BRANCH}"
@@ -78,7 +78,7 @@ done
 
 for repo in $repos
 do
-    cd $repo
+    cd "$repo"
     cpanm --notest --installdeps .
     perl Build.PL
     ./Build
@@ -88,7 +88,7 @@ done
 # install
 for repo in $repos
 do
-    cd $repo
+    cd "$repo"
     cpanm --notest --installdeps .
     ./Build install
 done
