@@ -16,19 +16,20 @@ wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.11-Linux-x86_64.
 
 /bin/bash ~/miniconda.sh -b -p ~/miniconda
 ~/miniconda/bin/conda clean -tipsy
+. ~/miniconda/etc/profile.d/conda.sh
+
 echo ". ~/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc
 echo "conda activate base" >> ~/.bashrc
 
-. ~/miniconda/etc/profile.d/conda.sh
-conda activate base
 conda config --set auto_update_conda False
 conda config --add channels https://dnap.cog.sanger.ac.uk/npg/conda/devel/generic/
+
 conda create -y -n travis
 conda activate travis
-conda install -y baton-bin
+conda install -y baton
 conda install -y irods-icommands
 conda install -y tears
-conda install -y samtools-bin
+conda install -y samtools
 
 ln -s $HOME/miniconda/envs/travis/bin/samtools \
    $HOME/miniconda/envs/travis/bin/samtools_irods
