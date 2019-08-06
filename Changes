@@ -1,4 +1,9 @@
 
+Release 2.14.0
+ 
+ - Add support for loading PacBio ccs BAM files and setting target = 1
+   on relevant PacBio sequence files.
+
 Release 2.13.0
 
  - WTSI::NPG::HTS::Illumina::ResultSet - added geno to genotype_regex.

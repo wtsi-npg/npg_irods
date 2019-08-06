@@ -57,7 +57,8 @@ sub _setup_file {
       instrument_name => 'SQ54097', file_path => $file,);
 
   my @avus;
-  push @avus, TestAnnotator->new->make_primary_metadata($meta,$dont_restrict);
+  push @avus, TestAnnotator->new->make_primary_metadata
+      ($meta, is_r_and_d => $dont_restrict);
 
   foreach my $avu (@avus) {
       my $attribute = $avu->{attribute};

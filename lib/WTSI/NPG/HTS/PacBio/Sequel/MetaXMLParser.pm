@@ -29,6 +29,7 @@ our $CELL_INDEX_TAG        = 'CellIndex';
 our $OUTPUT_TAG            = 'OutputOptions';
 our $RFOLDER_TAG           = 'ResultsFolder';
 
+our $IS_CCS_TAG            = 'IsCCS';
 
 
 =head2 parse_file
@@ -76,6 +77,9 @@ sub parse_file {
   my $results_folder =
       $output->getElementsByTagName($prefix . $RFOLDER_TAG)->[0]->string_value;
 
+  my $is_ccs = $dom->getElementsByTagName($prefix . $IS_CCS_TAG) ?
+      $dom->getElementsByTagName($prefix . $IS_CCS_TAG)->[0]->string_value : 0;
+
   return WTSI::NPG::HTS::PacBio::Metadata->new
     (file_path          => $file_path,
      instrument_name    => $instrument_name,
@@ -86,6 +90,7 @@ sub parse_file {
      collection_number  => $collection_number,
      cell_index         => $cell_index,
      results_folder     => $results_folder,
+     is_ccs             => $is_ccs,
      );
 }
 
@@ -105,6 +110,8 @@ WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser
 
 Parser for the Sequel PacBio metadata XML file(s) found in each SMRT 
 cell subdirectory of completed run data.
+
+Some fields e.g. IsCCS are only found in XMLs running ICS version 7+.
 
 =head1 AUTHOR
 
