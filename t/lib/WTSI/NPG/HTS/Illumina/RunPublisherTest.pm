@@ -647,7 +647,7 @@ sub publish_merged_pri_data_samplesheet : Test(19) {
   check_merge_primary_metadata($obj);
 }
 
-sub publish_merged_sec_data_mlwh : Test(74) {
+sub publish_merged_sec_data_mlwh : Test(84) {
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -669,9 +669,11 @@ sub publish_merged_sec_data_mlwh : Test(74) {
                                                    $dest_coll)],
                             ["plex$plex/26291#1.bam_stats",
                              "plex$plex/26291#1.bcfstats",
+                             "plex$plex/26291#1.bqsr_table",
                              "plex$plex/26291#1.composition.json",
                              "plex$plex/26291#1.cram.crai",
                              "plex$plex/26291#1.flagstat",
+                             "plex$plex/26291#1.g.vcf.gz",
                              "plex$plex/26291#1.markdups_metrics.txt",
                              "plex$plex/26291#1.orig.seqchksum",
                              "plex$plex/26291#1.seqchksum",
@@ -690,7 +692,7 @@ sub publish_merged_sec_data_mlwh : Test(74) {
   check_common_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_merged_sec_data_samplesheet : Test(74) {
+sub publish_merged_sec_data_samplesheet : Test(84) {
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -716,9 +718,11 @@ sub publish_merged_sec_data_samplesheet : Test(74) {
                                                    $dest_coll)],
                             ["plex$plex/26291#1.bam_stats",
                              "plex$plex/26291#1.bcfstats",
+                             "plex$plex/26291#1.bqsr_table",
                              "plex$plex/26291#1.composition.json",
                              "plex$plex/26291#1.cram.crai",
                              "plex$plex/26291#1.flagstat",
+                             "plex$plex/26291#1.g.vcf.gz",
                              "plex$plex/26291#1.markdups_metrics.txt",
                              "plex$plex/26291#1.orig.seqchksum",
                              "plex$plex/26291#1.seqchksum",

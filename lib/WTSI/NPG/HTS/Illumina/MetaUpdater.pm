@@ -87,9 +87,7 @@ sub update_secondary_metadata {
         $self->make_composition($self->irods->read_object($composition_file));
 
       my $obj_factory = WTSI::NPG::HTS::Illumina::DataObjectFactory->new
-        (ancillary_formats => [$self->hts_ancillary_suffixes],
-         composition       => $composition,
-         genotype_formats  => [$self->hts_genotype_suffixes],
+        (composition       => $composition,
          irods             => $self->irods);
 
       my ($objs, $colls) =

@@ -38,27 +38,6 @@ has 'composition' =>
    predicate     => 'has_composition',
    documentation => 'The composition describing the composed data');
 
-has 'ancillary_formats' =>
-  (isa           => 'ArrayRef',
-   is            => 'ro',
-   required      => 0,
-   predicate     => 'has_ancillary_formats',
-   documentation => 'The ancillary file formats that have been published');
-
-has 'genotype_formats' =>
-  (isa           => 'ArrayRef',
-   is            => 'ro',
-   required      => 0,
-   predicate     => 'has_genotype_formats',
-   documentation => 'The genotype file formats that have been published');
-
-has 'compress_formats' =>
-  (isa           => 'ArrayRef',
-   is            => 'ro',
-   required      => 0,
-   predicate     => 'has_compress_formats',
-   documentation => 'The compress file formats that have been published');
-
 =head2 make_data_object
 
   Arg [1]      Data object path, Str.
@@ -97,14 +76,14 @@ sub make_data_object {
     push @init_args, composition => $self->composition;
   }
 
-  my $align_regex   = qr{[.](bam|cram)$}msx;
-  my $index_regex   = qr{[.](bai|crai)$}msx;
+  my $align_regex   = $WTSI::NPG::HTS::Illumina::RegEx::ILLUMINA_REGEX_PATTERNS{'alignment_regex'};
+  my $index_regex   = $WTSI::NPG::HTS::Illumina::RegEx::ILLUMINA_REGEX_PATTERNS{'index_regex'};
 
-  my $xml_regex     = qr{[.]xml$}msx;
-  my $interop_regex = qr{[.]bin$}msx;
+  my $xml_regex     = $WTSI::NPG::HTS::Illumina::RegEx::ILLUMINA_REGEX_PATTERNS{'xml_regex'};
+  my $interop_regex = $WTSI::NPG::HTS::Illumina::RegEx::ILLUMINA_REGEX_PATTERNS{'interop_regex'};
 
-  my $anc_regex = $self->_make_ancillary_file_regex;
-  my $agf_regex = $self->_make_genotype_file_regex;
+  my $anc_regex = $WTSI::NPG::HTS::Illumina::RegEx::ILLUMINA_REGEX_PATTERNS{'ancillary_regex'};
+  my $agf_regex = $WTSI::NPG::HTS::Illumina::RegEx::ILLUMINA_REGEX_PATTERNS{'genotype_regex'};
 
   my $obj;
   ## no critic (ControlStructures::ProhibitCascadingIfElse)
@@ -148,34 +127,7 @@ sub make_data_object {
   return $obj;
 }
 
-sub _make_ancillary_file_regex{
-  my ($self) = @_;
-
-  my $anc_regex;
-  if ($self->has_ancillary_formats && @{$self->ancillary_formats}){
-    my $anc_pattern = join q[|], @{$self->ancillary_formats};
-      $anc_regex = qr{[.]($anc_pattern)$}msx;
-    if ($self->has_compress_formats && @{$self->compress_formats}) {
-      my $comp_pattern = join q[|], @{$self->compress_formats};
-      $anc_regex = qr{[.]($anc_pattern)([.]($comp_pattern))?$}msx;
-    }
-  }
-  return $anc_regex;
-}
-
-sub _make_genotype_file_regex{
-  my ($self) = @_;
-  my $agf_regex;
-  if ($self->has_genotype_formats && @{$self->genotype_formats}){
-    my $agf_pattern = join q[|], @{$self->genotype_formats};
-    $agf_regex = qr{[.]($agf_pattern)$}msx;
-  }
-  return $agf_regex;
-}
-
 __PACKAGE__->meta->make_immutable;
-
-no Moose;
 
 1;
 

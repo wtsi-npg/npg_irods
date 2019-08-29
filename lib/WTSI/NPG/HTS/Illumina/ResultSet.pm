@@ -4,6 +4,7 @@ use namespace::autoclean;
 use Data::Dump qw[pp];
 use Moose;
 use MooseX::StrictConstructor;
+use WTSI::NPG::HTS::Illumina::RegEx;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
@@ -24,67 +25,32 @@ has 'result_files' =>
 # and returns a regex.
 our %ILLUMINA_PART_PATTERNS =
   (interop_regex   => sub {
-     return q[[.]bin$];
+    return $WTSI::NPG::HTS::Illumina::RegEx::ILLUMINA_REGEX_PATTERNS{'interop_regex'}.q[$];
    },
    xml_regex       => sub {
-     return q[(RunInfo|[rR]unParameters).xml$];
+     return $WTSI::NPG::HTS::Illumina::RegEx::ILLUMINA_REGEX_PATTERNS{'xml_regex'}.q[$];
    },
    alignment_regex => sub {
      my $name = shift;
-     return sprintf q[%s[.](bam|cram)$], "\Q$name\E";
+     return sprintf q[%s].$WTSI::NPG::HTS::Illumina::RegEx::ILLUMINA_REGEX_PATTERNS{'alignment_regex'}.q[$], "\Q$name\E";
    },
    index_regex     => sub {
      my $name = shift;
-     return sprintf q[%s[.](bai|cram[.]crai|pbi)$], "\Q$name\E";
+     return sprintf q[%s].$WTSI::NPG::HTS::Illumina::RegEx::ILLUMINA_REGEX_PATTERNS{'index_regex'}.q[$], "\Q$name\E";
    },
    genotype_regex  => sub {
      my $name = shift;
-     return sprintf q[%s[.](bcf|vcf|geno)$], "\Q$name\E";
+     return sprintf q[%s].$WTSI::NPG::HTS::Illumina::RegEx::ILLUMINA_REGEX_PATTERNS{'genotype_regex'}.q[$], "\Q$name\E";
    },
    ancillary_regex => sub {
      my $name = shift;
      return sprintf q[(?<!qc)\/%s(_F0x[A-Z0-9]{3})?(%s)$], "\Q$name\E",
-       join q[|],
-       '[.]all[.]seqchksum',
-       '[.]bam_stats',
-       '[.]bcfstats',
-       '[.]flagstat',
-       '[.]composition[.]json',
-       '[.]markdups_metrics[.]txt',
-       '[.]orig[.]seqchksum',
-       '_quality_cycle_caltable[.]txt',   # non-conforming file name
-       '_quality_cycle_surv[.]txt',       # non-conforming file name
-       '_quality_error[.]txt',            # non-conforming file name
-       '_salmon[.]quant[.]zip',
-       '[.]seqchksum',
-       '[.]sha512primesums512[.]seqchksum',
-       '[.]spatial_filter[.]stats',
-       '_target[.]stats',                 # non-conforming file name
-       '_target_autosome[.]stats',        # non-conforming file name
-       '[.]stats',
-       '[.]txt';
+       $WTSI::NPG::HTS::Illumina::RegEx::ILLUMINA_REGEX_PATTERNS{'ancillary_regex'};
    },
    qc_regex        => sub {
      my $name = shift;
      return sprintf q[qc\/%s(_F0x[A-Z0-9]{3})?(%s)$], "\Q$name\E",
-       join q[|],
-       '[.]adapter[.]json',
-       '[.]alignment_filter_metrics[.]json',
-       '[.]bam_flagstats[.]json',
-       '[.]gc_bias[.]json',
-       '[.]gc_fraction[.]json',
-       '[.]gc_fraction[.]json',
-       '[.]genotype[.]json',
-       '[.]insert_size[.]json',
-       '[.]qX_yield[.]json',
-       '[.]ref_match[.]json',
-       '[.]samtools_stats[.]json',
-       '[.]sequence_error[.]json',
-       '[.]sequence_summary[.]json',
-       '[.]spatial_filter[.]json',
-       '[.]verify_bam_id[.]json',
-       '_target[.]samtools_stats[.]json',          # non-conforming file name
-       '_target_autosome[.]samtools_stats[.]json'; # non-conforming file name
+       $WTSI::NPG::HTS::Illumina::RegEx::ILLUMINA_REGEX_PATTERNS{'qc_regex'}; # non-conforming file name
    });
 
 =head2 composition_files

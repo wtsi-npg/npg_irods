@@ -237,9 +237,9 @@ sub publish_collection {
     my $spk = $params->with_spiked_control;
     foreach my $cfile (@cfiles) {
       $call->(sub { $self->publish_alignment_files($cfile, $spk) }, $cfile);
+      $call->(sub { $self->publish_genotype_files($cfile, $spk)  }, $cfile);
       $call->(sub { $self->publish_index_files($cfile, $spk)     }, $cfile);
       $call->(sub { $self->publish_ancillary_files($cfile, $spk) }, $cfile);
-      $call->(sub { $self->publish_genotype_files($cfile, $spk)  }, $cfile);
       $call->(sub { $self->publish_qc_files($cfile, $spk)        }, $cfile);
     }
 
@@ -575,10 +575,7 @@ sub _tree_publish_run_level {
   my ($self, $files, $primary_avus_callback) = @_;
 
   my $obj_factory = WTSI::NPG::HTS::Illumina::DataObjectFactory->new
-    (ancillary_formats => [$self->hts_ancillary_suffixes],
-     genotype_formats  => [$self->hts_genotype_suffixes],
-     compress_formats  => [$self->compress_suffixes],
-     irods             => $self->irods);
+    (irods             => $self->irods);
 
   my $tree_publisher = $self->_make_tree_publisher;
   return $tree_publisher->publish_tree($files, $obj_factory,
@@ -597,9 +594,6 @@ sub _tree_publish_product_level {
 
   my $obj_factory = WTSI::NPG::HTS::Illumina::DataObjectFactory->new
     (composition       => $composition,
-     ancillary_formats => [$self->hts_ancillary_suffixes],
-     genotype_formats  => [$self->hts_genotype_suffixes],
-     compress_formats  => [$self->compress_suffixes],
      irods             => $self->irods);
 
   my $tree_publisher = $self->_make_tree_publisher;
