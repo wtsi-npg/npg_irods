@@ -75,13 +75,6 @@ sub setup_test : Test(setup) {
                         '-o', "irods:$irods_tmp_coll/$data_file.cram",
                         "$data_path/$data_file.sam"],
          executable => 'samtools_irods')->run;
-
-    WTSI::DNAP::Utilities::Runnable->new
-        (arguments  => ['view', '-b',
-                        '-T', "$data_path/$reference_file",
-                        '-o', "irods:$irods_tmp_coll/$data_file.bam",
-                        "$data_path/$data_file.sam"],
-         executable => 'samtools_irods')->run;
   }
 
   $irods->add_collection("$irods_tmp_coll/qc");
@@ -101,7 +94,7 @@ sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::Illumina::MetaUpdater');
 }
 
-sub update_secondary_metadata : Test(5) {
+sub update_secondary_metadata : Test(4) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $updater = WTSI::NPG::HTS::Illumina::MetaUpdater->new
@@ -122,37 +115,35 @@ sub update_secondary_metadata : Test(5) {
 
     # 1 test
     cmp_ok($updater->update_secondary_metadata(\@composition_files),
-           '==', 5, 'All files processed without errors');
+           '==', 4, 'All files processed without errors');
 
-    foreach my $format (qw[bam cram]) {
-      my $expected_meta =
-        [{attribute => $LIBRARY_ID,               value     => '4957423'},
-         {attribute => $LIBRARY_TYPE,             value     => 'No PCR'},
-         {attribute => $QC_STATE,                 value     => '1'},
-         {attribute => $SAMPLE_NAME,              value     => '619s040'},
-         {attribute => $SAMPLE_ACCESSION_NUMBER,  value     => 'ERS012323'},
-         {attribute => $SAMPLE_COMMON_NAME,
-          value     => 'Burkholderia pseudomallei'},
-         {attribute => $SAMPLE_ID,                value     => '230889'},
-         {attribute => $SAMPLE_PUBLIC_NAME,       value     => '153.0'},
-         {attribute => $STUDY_NAME,
-          value     => 'Burkholderia pseudomallei diversity'},
-         {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
-         {attribute => $STUDY_ID,                 value     => '619'},
-         {attribute => $STUDY_TITLE,
-          value     => 'Burkholderia pseudomallei diversity' . $utf8_extra}];
+    my $expected_meta =
+      [{attribute => $LIBRARY_ID,               value     => '4957423'},
+       {attribute => $LIBRARY_TYPE,             value     => 'No PCR'},
+       {attribute => $QC_STATE,                 value     => '1'},
+       {attribute => $SAMPLE_NAME,              value     => '619s040'},
+       {attribute => $SAMPLE_ACCESSION_NUMBER,  value     => 'ERS012323'},
+       {attribute => $SAMPLE_COMMON_NAME,
+        value     => 'Burkholderia pseudomallei'},
+       {attribute => $SAMPLE_ID,                value     => '230889'},
+       {attribute => $SAMPLE_PUBLIC_NAME,       value     => '153.0'},
+       {attribute => $STUDY_NAME,
+        value     => 'Burkholderia pseudomallei diversity'},
+       {attribute => $STUDY_ACCESSION_NUMBER,   value     => 'ERP000251'},
+       {attribute => $STUDY_ID,                 value     => '619'},
+       {attribute => $STUDY_TITLE,
+        value     => 'Burkholderia pseudomallei diversity' . $utf8_extra}];
 
-      my $file_name = "$data_file.$format";
-      my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
-        (collection  => $irods_tmp_coll,
-         data_object => $file_name,
-         irods       => $irods);
+    my $file_name = "$data_file.cram";
+    my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+      (collection  => $irods_tmp_coll,
+       data_object => $file_name,
+       irods       => $irods);
 
-      # 2 tests
-      is_deeply($obj->metadata, $expected_meta,
-                'Secondary metadata updated correctly') or
-                  diag explain $obj->metadata;
-    }
+    # 2 tests
+    is_deeply($obj->metadata, $expected_meta,
+              'Secondary metadata updated correctly') or
+                diag explain $obj->metadata;
   } # SKIP samtools
 
 

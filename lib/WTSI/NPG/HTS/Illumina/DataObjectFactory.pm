@@ -97,8 +97,8 @@ sub make_data_object {
     push @init_args, composition => $self->composition;
   }
 
-  my $align_regex   = qr{[.](bam|cram)$}msx;
-  my $index_regex   = qr{[.](bai|crai)$}msx;
+  my $align_regex   = qr{[.](bam|cram|vcf[.]gz)$}msx;
+  my $index_regex   = qr{[.](bai|crai|tbi)$}msx;
 
   my $xml_regex     = qr{[.]xml$}msx;
   my $interop_regex = qr{[.]bin$}msx;
