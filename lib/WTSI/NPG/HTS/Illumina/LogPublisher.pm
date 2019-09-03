@@ -148,7 +148,7 @@ sub _build_dest_collection  {
 sub _build_run_folder {
   my ($self) = @_;
 
-  if (! ($self->_given_path or $self->has_id_run or $self->has_name)){
+  if (! ($self->subpath or $self->has_id_run or $self->has_name)){
     $self->logconfess('The run folder cannot be determined because ',
                       'it was not supplied to the constructor and ',
                       'no path, id_run or run name were available, ',
