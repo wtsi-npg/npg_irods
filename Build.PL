@@ -56,7 +56,8 @@ my $build = Build->new
     'WTSI::DNAP::Warehouse::Schema' => '>= 2.1',     # ml_warehouse
     'npg_testing::db'               => '>= 85.4',    # npg_tracking
     'st::api::lims'                 => '>= 85.4',    # npg_tracking
-    'st::api::lims::ml_warehouse'   => '>= 39.1'     # npg_ml_warehouse
+    'st::api::lims::ml_warehouse'   => '>= 39.1',    # npg_ml_warehouse
+    'npg_tracking::illumina::runfolder' => 0,
    },
    recommends =>
    {
