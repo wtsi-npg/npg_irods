@@ -1,4 +1,7 @@
 
+ -  WTSI::NPG::HTS::Illumina::ResultSet - added pulldown_metrics to 
+    qc_regex.
+
 Release 2.15.0
 
  - remove usage of private method and prep for simplified path framework
