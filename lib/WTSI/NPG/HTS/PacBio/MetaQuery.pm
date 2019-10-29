@@ -60,12 +60,22 @@ sub find_pacbio_runs {
 
   my @run_records = $self->mlwh_schema->resultset('PacBioRun')->search
     ($query,  {prefetch => ['sample', 'study']});
+  my @unique_records = _uniq(@run_records);
 
-  my $num_records = scalar @run_records;
+  my $num_records = scalar @unique_records;
   $self->debug("Found $num_records records for PacBio ",
                "run $run_id, well $well_label");
+  return @unique_records;
+}
 
-  return @run_records;
+# Uniquify records from mlwarehouse 
+# - in theory duplicates should not happen but they do.
+sub _uniq { 
+  my (@records) = @_;
+  my %seen;
+  my @uniq = grep !$seen{$_->id_pac_bio_run_lims .q[.]. $_->well_label .q[.].
+      (defined $_->tag_identifier ? $_->tag_identifier : q[-])}++, @records;
+  return @uniq;
 }
 
 no Moose::Role;

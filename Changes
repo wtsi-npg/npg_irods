@@ -1,6 +1,8 @@
 
  -  WTSI::NPG::HTS::Illumina::ResultSet - added pulldown_metrics to 
     qc_regex.
+ -  Uniquify pac_bio_run records from mlwarehouse - to handle unexpected
+    duplicate entries. 
 
 Release 2.15.0
 
