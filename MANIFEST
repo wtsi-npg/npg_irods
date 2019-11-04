@@ -14162,6 +14162,8 @@ t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basec
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.genotype.json.md5
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.insert_size.json
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.insert_size.json.md5
+t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.pulldown_metrics.json
+t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.pulldown_metrics.json.md5
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.qX_yield.json
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.qX_yield.json.md5
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.ref_match.json
@@ -16511,7 +16513,6 @@ t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.re
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.removed.bam.pbi
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.removed.subreadset.xml
 t/data/pacbio/sequel_analysis/000226/entry-points/acf46f00-12b8-45e6-bc10-b0790f8d6758.subreadset.xml
-t/data/pacbio/sequel_analysis/000226/tasks/pbcoretools.tasks.auto_ccs_outputs-0
 t/data/pacbio/sequel_analysis/000226/tasks/pbcoretools.tasks.auto_ccs_outputs-0/m64016_190608_025655.ccs.bam
 t/data/pacbio/sequel_analysis/000226/tasks/pbcoretools.tasks.auto_ccs_outputs-0/m64016_190608_025655.ccs.bam.pbi
 t/data/pacbio/superfoo/24862_627/A01_1/Analysis_Results/m131209_183112_00127_c100579142550000001823092301191430_s1_p0.1.bax.h5

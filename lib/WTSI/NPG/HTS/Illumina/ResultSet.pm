@@ -76,6 +76,7 @@ our %ILLUMINA_PART_PATTERNS =
        '[.]gc_fraction[.]json',
        '[.]genotype[.]json',
        '[.]insert_size[.]json',
+       '[.]pulldown_metrics[.]json',
        '[.]qX_yield[.]json',
        '[.]ref_match[.]json',
        '[.]samtools_stats[.]json',

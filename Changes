@@ -1,3 +1,7 @@
+Release 2.16.0
+
+ -  WTSI::NPG::HTS::Illumina::ResultSet - added pulldown_metrics to 
+    qc_regex.
 
 Release 2.15.0
 
