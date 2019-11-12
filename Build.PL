@@ -45,8 +45,6 @@ my $build = Build->new
     'Moose'                         => '>= 2.1',
     'MooseX::Types'                 => '>= 0.45',
     'MooseX::StrictConstructor'     => 0,
-    'Parallel::ForkManager'         => 0,
-    'PDL::IO::HDF5'                 => 0,
     'Text::CSV'                     => '>= 1.33',
     'Try::Tiny'                     => '>= 0.12',
     'URI'                           => 0,

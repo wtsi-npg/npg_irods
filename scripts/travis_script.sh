@@ -14,10 +14,12 @@ echo "irods" | script -q -c "iinit" /dev/null
 ienv
 ils
 
-perl BuildONT.PL
-./BuildONT clean
-./BuildONT test
+which baton-do
+baton-do --version
 
+cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
+
+export PERL5LIB="$PWD:$PERL5LIB"
 perl Build.PL
 ./Build clean
 ./Build test
