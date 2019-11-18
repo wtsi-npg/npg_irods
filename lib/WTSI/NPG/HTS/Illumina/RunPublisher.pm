@@ -68,14 +68,6 @@ has 'restart_file' =>
    documentation => 'A file containing a record of files successfully ' .
                     'published');
 
-has 'file_format' =>
-  (isa           => AlnFormat,
-   is            => 'ro',
-   required      => 1,
-   lazy          => 1,
-   default       => 'cram',
-   documentation => 'The format of the file to be published');
-
 has 'run_files' =>
   (isa           => 'ArrayRef[Str]',
    is            => 'ro',
@@ -237,9 +229,9 @@ sub publish_collection {
     my $spk = $params->with_spiked_control;
     foreach my $cfile (@cfiles) {
       $call->(sub { $self->publish_alignment_files($cfile, $spk) }, $cfile);
+      $call->(sub { $self->publish_genotype_files($cfile, $spk)  }, $cfile);
       $call->(sub { $self->publish_index_files($cfile, $spk)     }, $cfile);
       $call->(sub { $self->publish_ancillary_files($cfile, $spk) }, $cfile);
-      $call->(sub { $self->publish_genotype_files($cfile, $spk)  }, $cfile);
       $call->(sub { $self->publish_qc_files($cfile, $spk)        }, $cfile);
     }
 
@@ -353,9 +345,7 @@ sub publish_alignment_files {
        with_spiked_control => $with_spiked_control);
   };
 
-  my $format = $self->file_format;
-  my @files = grep { m{[.]$format$}msx }
-    $self->result_set->alignment_files($name);
+  my @files = $self->result_set->alignment_files($name);
   $self->debug("Publishing alignment files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
@@ -405,17 +395,7 @@ sub publish_index_files {
        with_spiked_control => $with_spiked_control);
   };
 
-  my $format        = $self->file_format;
-  my %index_formats = (bam  => 'bai',
-                       cram => 'crai');
-  my $index_format = $index_formats{$format};
-  if (not $index_format) {
-    $self->logconfess('No index format is known for alignment format ',
-                      "'$format'");
-  }
-
-  my @files = grep { m{[.]$index_format$}msx }
-    $self->result_set->index_files($name);
+  my @files = $self->result_set->index_files($name);
   $self->debug("Publishing index files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
