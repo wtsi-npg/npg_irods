@@ -9,10 +9,9 @@ WTSI_NPG_BUILD_BRANCH=${WTSI_NPG_BUILD_BRANCH:=$TRAVIS_BRANCH}
 sudo apt-get install uuid-dev # required for Perl UUID module
 sudo apt-get install libgd2-xpm-dev # For npg_tracking
 sudo apt-get install liblzma-dev # For npg_qc
-sudo apt-get install hdf5-tools libhdf5-serial-dev
 sudo apt-get install pigz # for BioNano run publication in npg_irods
 
-wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh -O ~/miniconda.sh
+wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.6.14-Linux-x86_64.sh -O ~/miniconda.sh
 
 /bin/bash ~/miniconda.sh -b -p ~/miniconda
 ~/miniconda/bin/conda clean -tipsy
@@ -26,7 +25,7 @@ conda config --add channels https://dnap.cog.sanger.ac.uk/npg/conda/devel/generi
 
 conda create -y -n travis
 conda activate travis
-conda install -y baton
+conda install -y baton="$BATON_VERSION"
 conda install -y irods-icommands
 conda install -y tears
 conda install -y samtools
@@ -95,4 +94,4 @@ done
 
 cd $TRAVIS_BUILD_DIR
 
-cpanm --notest --installdeps .
+cpanm --notest --installdeps . || cat /home/travis/.cpanm/work/*/build.log
