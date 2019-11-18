@@ -41,7 +41,6 @@ my $build = Build->new
     'File::Touch'                   => 0,
     'Log::Log4perl'                 => '>= 1.42',
     'List::AllUtils'                => '>= 0.09',
-    'Linux::Inotify2'               => 0,
     'Moose'                         => '>= 2.1',
     'MooseX::Types'                 => '>= 0.45',
     'MooseX::StrictConstructor'     => 0,
