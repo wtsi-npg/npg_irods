@@ -31,15 +31,15 @@ our %ILLUMINA_PART_PATTERNS =
    },
    alignment_regex => sub {
      my $name = shift;
-     return sprintf q[%s[.](bam|cram)$], "\Q$name\E";
+     return sprintf q[%s[.](cram)$], "\Q$name\E";
    },
    index_regex     => sub {
      my $name = shift;
-     return sprintf q[%s[.](bai|cram[.]crai|pbi)$], "\Q$name\E";
+     return sprintf q[%s[.](cram[.]crai|pbi|vcf[.]gz[.]tbi|g[.]vcf[.]gz[.]tbi)$], "\Q$name\E";
    },
    genotype_regex  => sub {
      my $name = shift;
-     return sprintf q[%s[.](bcf|vcf|geno)$], "\Q$name\E";
+     return sprintf q[%s[.](bcf|vcf|vcf[.]gz|g[.]vcf[.]gz|geno)$], "\Q$name\E";
    },
    ancillary_regex => sub {
      my $name = shift;
@@ -48,6 +48,7 @@ our %ILLUMINA_PART_PATTERNS =
        '[.]all[.]seqchksum',
        '[.]bam_stats',
        '[.]bcfstats',
+       '[.]bqsr_table',
        '[.]flagstat',
        '[.]composition[.]json',
        '[.]markdups_metrics[.]txt',
