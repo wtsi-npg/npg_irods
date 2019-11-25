@@ -1,5 +1,20 @@
 
+ -  Uniquify pac_bio_run records from mlwarehouse - to handle unexpected
+    duplicate entries and stop adding target = 1 to scraps BAM files. 
 
+Release 2.16.0
+
+ -  WTSI::NPG::HTS::Illumina::ResultSet - added pulldown_metrics to 
+    qc_regex.
+
+Release 2.15.0
+
+ - remove usage of private method and prep for simplified path framework
+ - avoid defining own builders for runfolder accessors by inheriting from
+   runfolder object
+
+Release 2.14.0
+ 
  - Add support for loading PacBio ccs BAM files and setting target = 1
    on relevant PacBio sequence files.
 

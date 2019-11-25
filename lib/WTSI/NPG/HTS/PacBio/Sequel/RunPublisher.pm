@@ -18,10 +18,12 @@ our $SEQUENCE_FILE_FORMAT   = 'bam';
 our $SEQUENCE_INDEX_FORMAT  = 'pbi';
 
 # Sequence file types
-our $SEQUENCE_TYPES         = '(subreads|scraps)';
+our $SEQUENCE_PRODUCT    = 'subreads';
+our $SEQUENCE_AUXILIARY  = 'scraps';
+our $SEQUENCE_TYPES      = qq{($SEQUENCE_PRODUCT|$SEQUENCE_AUXILIARY)};
 
 # Generic file prefix
-our $FILE_PREFIX_PATTERN    = 'm\d+_\d+_\d+';
+our $FILE_PREFIX_PATTERN = 'm\d+_\d+_\d+';
 
 # Well directory pattern
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
@@ -61,17 +63,18 @@ override 'publish_files' => sub {
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
   foreach my $smrt_name (@{$smrt_names}) {
-    my $seq_files = $self->list_sequence_files($smrt_name);
+    my $seq_files = $self->list_sequence_files($smrt_name,$SEQUENCE_PRODUCT);
 
     if (defined $seq_files->[0]) {
       my ($nfx, $npx, $nex) = $self->publish_xml_files($smrt_name);
-      my ($nfb, $npb, $neb) = $self->publish_sequence_files($smrt_name);
+      my ($nfb, $npb, $neb) = $self->publish_sequence_files($smrt_name,$SEQUENCE_PRODUCT);
+      my ($nfs, $nps, $nes) = $self->publish_sequence_files($smrt_name,$SEQUENCE_AUXILIARY);
       my ($nfp, $npp, $nep) = $self->publish_index_files($smrt_name);
       my ($nfa, $npa, $nea) = $self->publish_adapter_files($smrt_name);
 
-      $num_files     += ($nfx + $nfb + $nfp + $nfa);
-      $num_processed += ($npx + $npb + $npp + $npa);
-      $num_errors    += ($nex + $neb + $nep + $nea);
+      $num_files     += ($nfx + $nfb + $nfs + $nfp + $nfa);
+      $num_processed += ($npx + $npb + $nps + $npp + $npa);
+      $num_errors    += ($nex + $neb + $nes + $nep + $nea);
     }
     else {
       $self->info("Skipping $smrt_name as no seq files found");
@@ -120,6 +123,7 @@ sub publish_xml_files {
 =head2 publish_sequence_files
 
   Arg [1]    : smrt_name,  Str.
+  Arg [2]    : File types, Str.
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_sequence_files
@@ -131,7 +135,10 @@ sub publish_xml_files {
 =cut
 
 sub publish_sequence_files {
-  my ($self, $smrt_name) = @_;
+  my ($self, $smrt_name, $types) = @_;
+
+  defined $types or
+      $self->logconfess('A defined file types argument is required');
 
   my $metadata_file = $self->list_xml_files($smrt_name, 'subreadset', '1')->[0];
   $self->debug("Reading metadata from '$metadata_file'");
@@ -153,8 +160,12 @@ sub publish_sequence_files {
                 ": publishing '$smrt_name' as R and D data");
   }
 
-  my $is_target =
-      ($metadata->is_ccs eq 'true' || @run_records > 1 || $is_r_and_d) ? 0 : 1;
+  # Auxiliary files are kept for now but are not useful and so are
+  # not marked as target.
+  my $is_aux = ($types eq $SEQUENCE_AUXILIARY) ? 1 : 0;
+
+  my $is_target = ($metadata->is_ccs eq 'true' || @run_records > 1 ||
+             $is_r_and_d || $is_aux) ? 0 : 1;
 
   my @primary_avus   = $self->make_primary_metadata
       ($metadata,
@@ -163,7 +174,7 @@ sub publish_sequence_files {
        is_r_and_d => $is_r_and_d);
   my @secondary_avus = $self->make_secondary_metadata(@run_records);
 
-  my $files     = $self->list_sequence_files($smrt_name);
+  my $files     = $self->list_sequence_files($smrt_name,$types);
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
 
   my ($num_files, $num_processed, $num_errors) =
@@ -235,6 +246,7 @@ sub publish_adapter_files {
 =head2 list_sequence_files
 
   Arg [1]    : SMRT cell name, Str.
+  Arg [2]    : File types, Str.
 
   Example    : $pub->list_sequence_files('1_A01')
   Description: Return paths of all sequence files for the given SMRT cell.
@@ -244,11 +256,14 @@ sub publish_adapter_files {
 =cut
 
 sub list_sequence_files {
-  my ($self, $smrt_name) = @_;
+  my ($self, $smrt_name, $types) = @_;
+
+  defined $types or
+      $self->logconfess('A defined file types argument is required');
 
   my $name = $self->_check_smrt_name($smrt_name);
 
-  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $SEQUENCE_TYPES .q{[.]}.
+  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $types .q{[.]}.
         $SEQUENCE_FILE_FORMAT .q{$};
 
   return [$self->list_directory($self->smrt_path($name),

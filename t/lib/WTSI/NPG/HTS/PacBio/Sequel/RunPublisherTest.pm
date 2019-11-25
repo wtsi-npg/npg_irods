@@ -32,6 +32,9 @@ my $data_path    = 't/data/pacbio/sequel';
 my $fixture_path = "t/fixtures";
 my $db_dir       = File::Temp->newdir;
 
+my $SEQUENCE_PRODUCT   = $WTSI::NPG::HTS::PacBio::Sequel::RunPublisher::SEQUENCE_PRODUCT;
+my $SEQUENCE_AUXILIARY = $WTSI::NPG::HTS::PacBio::Sequel::RunPublisher::SEQUENCE_AUXILIARY;
+
 my $wh_schema;
 
 my $irods_tmp_coll;
@@ -107,7 +110,7 @@ sub list_adapter_files : Test(1) {
      'Found adapter fasta file 1_A02');
 }
 
-sub list_sequence_files : Test(1) {
+sub list_sequence_files : Test(2) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r54097_20170727_165601";
@@ -119,13 +122,18 @@ sub list_sequence_files : Test(1) {
      mlwh_schema     => $wh_schema,
      runfolder_path  => $runfolder_path);
 
-  my @expected_paths =
+  my @expected_paths1 =
     map { catfile("$runfolder_path/1_A02", $_) }
-    ('m54097_170727_170646.scraps.bam',
-     'm54097_170727_170646.subreads.bam');
+    ('m54097_170727_170646.subreads.bam');
 
-  is_deeply($pub->list_sequence_files('1_A02'), \@expected_paths,
-            'Found sequence files A01_1');
+  my @expected_paths2 =
+    map { catfile("$runfolder_path/1_A02", $_) }
+    ('m54097_170727_170646.scraps.bam');
+
+  is_deeply($pub->list_sequence_files('1_A02', $SEQUENCE_PRODUCT), 
+            \@expected_paths1, 'Found sequence files 1: A01_1');
+  is_deeply($pub->list_sequence_files('1_A02', $SEQUENCE_AUXILIARY), 
+            \@expected_paths2, 'Found sequence files 2: A01_1');
 }
 
 sub list_index_files : Test(1) {
@@ -254,11 +262,14 @@ sub publish_sequence_files : Test(36) {
     ('m54097_170727_170646.scraps.bam',
      'm54097_170727_170646.subreads.bam');
 
-  my ($num_files, $num_processed, $num_errors) =
-    $pub->publish_sequence_files('1_A02');
-  cmp_ok($num_files,     '==', scalar @expected_paths);
-  cmp_ok($num_processed, '==', scalar @expected_paths);
-  cmp_ok($num_errors,    '==', 0);
+  my ($num_files1, $num_processed1, $num_errors1) =
+    $pub->publish_sequence_files('1_A02',$SEQUENCE_PRODUCT);
+  my ($num_files2, $num_processed2, $num_errors2) =
+    $pub->publish_sequence_files('1_A02',$SEQUENCE_AUXILIARY);
+
+  cmp_ok($num_files1 + $num_files2, '==', scalar @expected_paths);
+  cmp_ok($num_processed1 + $num_processed2, '==', scalar @expected_paths);
+  cmp_ok($num_errors1 + $num_errors2, '==', 0);
 
   my @observed_paths = observed_data_objects($irods, $dest_coll);
   is_deeply(\@observed_paths, \@expected_paths,

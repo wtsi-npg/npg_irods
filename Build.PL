@@ -41,12 +41,9 @@ my $build = Build->new
     'File::Touch'                   => 0,
     'Log::Log4perl'                 => '>= 1.42',
     'List::AllUtils'                => '>= 0.09',
-    'Linux::Inotify2'               => 0,
     'Moose'                         => '>= 2.1',
     'MooseX::Types'                 => '>= 0.45',
     'MooseX::StrictConstructor'     => 0,
-    'Parallel::ForkManager'         => 0,
-    'PDL::IO::HDF5'                 => 0,
     'Text::CSV'                     => '>= 1.33',
     'Try::Tiny'                     => '>= 0.12',
     'URI'                           => 0,
@@ -56,7 +53,8 @@ my $build = Build->new
     'WTSI::DNAP::Warehouse::Schema' => '>= 2.1',     # ml_warehouse
     'npg_testing::db'               => '>= 85.4',    # npg_tracking
     'st::api::lims'                 => '>= 85.4',    # npg_tracking
-    'st::api::lims::ml_warehouse'   => '>= 39.1'     # npg_ml_warehouse
+    'st::api::lims::ml_warehouse'   => '>= 39.1',    # npg_ml_warehouse
+    'npg_tracking::illumina::runfolder' => 0,
    },
    recommends =>
    {
