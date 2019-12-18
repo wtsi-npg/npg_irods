@@ -44,7 +44,6 @@ my $alt_process;
 my $dest_collection;
 my $debug;
 my $driver_type;
-my $file_format;
 my $force = 0;
 my $id_run;
 my $log4perl_config;
@@ -61,7 +60,6 @@ GetOptions('alt-process|alt_process=s'           => \$alt_process,
            'debug'                               => \$debug,
            'driver-type|driver_type=s'           => \$driver_type,
            'exclude=s'                           => \@exclude,
-           'file-format|file_format=s'           => \$file_format,
            'force'                               => \$force,
            'help'                                => sub {
              pod2usage(-verbose => 2, -exitval => 0);
@@ -93,11 +91,6 @@ else {
 my $log = Log::Log4perl->get_logger('main');
 $log->level($ALL);
 
-if (not $file_format) {
-  $file_format = 'cram';
-}
-$file_format = lc $file_format;
-
 if (not defined $source_directory) {
   my $msg = 'A --source-directory argument is required';
   pod2usage(-msg     => $msg,
@@ -115,7 +108,6 @@ if ($driver_type) {
 my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(@fac_init_args);
 
 my @pub_init_args = (exclude          => \@exclude,
-                     file_format      => $file_format,
                      force            => $force,
                      include          => \@include,
                      irods            => $irods,
@@ -187,9 +179,6 @@ npg_publish_illumina_run --source-directory <path> [--collection <path>]
                       published. If more than one regex is supplied, they
                       are all applied. Exclude regexes are applied after
                       any include regexes (see below).
-   --file-format
-   --file_format      Load alignment files of this format. Optional,
-                      defaults to CRAM format.
    --force            Force an attempt to re-publish files that have been
                       published successfully.
    --help             Display help.
@@ -232,7 +221,7 @@ run into iRODS.
 
 Data files are divided into seven categories:
 
- - alignment files; the sequencing reads in BAM or CRAM format.
+ - alignment files; the sequencing reads in CRAM format.
  - alignment index files; indices in the relevant format.
  - ancillary files; files containing information about the run.
  - genotype files; files containing genotypes from sequencing data.
@@ -279,7 +268,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2016, 2017, 2018 Genome Research Limited. All Rights
+Copyright (C) 2016, 2017, 2018, 2019 Genome Research Limited. All Rights
 Reserved.
 
 This program is free software: you can redistribute it and/or modify

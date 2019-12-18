@@ -13,7 +13,7 @@ perl:
 env:
   global:
     - WTSI_NPG_GITHUB_URL=https://github.com/wtsi-npg
-    - BATON_VERSION=1.1.0
+    - BATON_VERSION=2.0.1
   matrix:
     - DOCKER_IMAGE=wsinpg/ub-16.04-irods-4.2:latest
     - DOCKER_IMAGE=wsinpg/ub-12.04-irods-4.1:latest
