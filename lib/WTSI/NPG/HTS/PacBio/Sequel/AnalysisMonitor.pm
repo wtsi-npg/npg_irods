@@ -6,7 +6,6 @@ use File::Spec::Functions qw[catdir];
 use Moose;
 use MooseX::StrictConstructor;
 use Try::Tiny;
-use Cwd qw(abs_path realpath);
 
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
 
