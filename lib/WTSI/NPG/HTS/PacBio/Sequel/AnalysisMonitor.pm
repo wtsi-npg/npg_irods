@@ -89,13 +89,13 @@ sub publish_analysed_cells {
   return ($num_jobs, $num_processed, $num_errors);
 }
 
-
 sub _publish_analysis_path {
   my ($self, $analysis_path) = @_;
 
   $self->debug("Publishing data in analysis job path '$analysis_path'");
 
-  my $runfolder_path = catdir($analysis_path, q[tasks], $self->task_name);
+  my @glob = glob catdir($analysis_path, q[cromwell-job], $self->task_name);
+  my $runfolder_path = (@glob == 1) ? $glob[0] : q[];
 
   my @init_args = (irods          => $self->irods,
                    analysis_path  => $analysis_path,

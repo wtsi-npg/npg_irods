@@ -62,7 +62,7 @@ has 'job_type' =>
   (isa           => 'Str',
    is            => 'ro',
    required      => 1,
-   default       => 'pbsmrtpipe',
+   default       => 'analysis',
    documentation => 'The job type');
 
 
@@ -160,8 +160,8 @@ sub query_analysis_jobs {
              ($job->{createdAt} lt $end->iso8601)   &&
              $job->{state}                          &&
              ($job->{state} eq $SUCCESS_STATE)      &&
-             $job->{jsonSettings}                   &&
-             $self->_check_pid($job->{jsonSettings},$pipeline_id)
+             $job->{subJobTypeId}                   &&
+             ($job->{subJobTypeId} eq $pipeline_id)
              ){
               push @jobs, $job;
           }
@@ -189,21 +189,6 @@ sub _get_content{
     $self->logcroak("Failed to get results from URI '$query': ",$msg);
   }
   return $content;
-}
-
-sub _check_pid {
-    my($self,$json_settings,$pipeline_id) = @_;
-
-    my $usejob = 1;
-    my $settings = decode_json($json_settings);
-
-    if($settings->{pipelineId}                   &&
-       $pipeline_id                              &&
-       ($settings->{pipelineId} ne $pipeline_id)
-       ){
-        $usejob = 0;
-    }
-    return $usejob;
 }
 
 
