@@ -427,10 +427,10 @@ sub nonconsented_human_access_revoked : Test(6) {
   }
 }
 
-sub header : Test(9) {
+sub header : Test(13) {
  SKIP: {
     if (not $samtools_available) {
-      skip 'samtools executable not on the PATH', 9;
+      skip 'samtools executable not on the PATH', 13;
     }
 
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -452,10 +452,23 @@ sub header : Test(9) {
         # 2 * 2 * 1 tests
         ok($obj->header, "$format header can be read");
 
-        # 2 * 2 * 1 tests
-        cmp_ok(scalar @{$obj->header}, '==', 11,
-               "Correct number of $format header lines") or
-                 diag explain $obj->header;
+        # 2 * 2 * 2 tests
+        my $num_lines = scalar @{$obj->header};
+        $num_lines ||= 0;
+        # Starting from samtools v. 1.10.0, a @PG line is inserted
+        # into the header for each samtools invocation. The original
+        # number of header lines is 11, at least one more samtools
+        # command is invoked during the tests (getting the header
+        # itself). With older versions of samtools 11 header lines
+        # will be still present at this point.
+        ok(($num_lines >= 11),
+          "Number of $format header lines is the same as in original " .
+          'test data or more') or diag explain $obj->header;
+        $num_lines = scalar grep { /\@PG/ } @{$obj->header};
+        $num_lines ||= 0;
+        ok(($num_lines >= 1),
+          "At least one \@PG line exists in $format header") or
+          diag explain $obj->header;
       }
     }
 
