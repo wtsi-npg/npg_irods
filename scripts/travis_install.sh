@@ -30,9 +30,6 @@ conda install -y irods-icommands
 conda install -y tears
 conda install -y samtools
 
-ln -s "$HOME/miniconda/envs/travis/bin/samtools" \
-   "$HOME/miniconda/envs/travis/bin/samtools_irods"
-
 mkdir -p ~/.irods
 cat <<EOF > ~/.irods/irods_environment.json
 {
