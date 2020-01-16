@@ -21,14 +21,14 @@ echo ". ~/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc
 echo "conda activate travis" >> ~/.bashrc
 
 conda config --set auto_update_conda False
-conda config --add channels https://dnap.cog.sanger.ac.uk/npg/conda/devel/generic/
+conda config --add channels "$WSI_CONDA_CHANNEL"
 
 conda create -y -n travis
 conda activate travis
 conda install -y baton="$BATON_VERSION"
 conda install -y irods-icommands
 conda install -y tears
-conda install -y samtools
+conda install -y samtools="$SAMTOOLS_VERSION"
 
 mkdir -p ~/.irods
 cat <<EOF > ~/.irods/irods_environment.json
@@ -55,7 +55,7 @@ for repo in perl-dnap-utilities perl-irods-wrap ml_warehouse npg_ml_warehouse np
     cd /tmp
     # Clone deeper than depth 1 to get the tag even if something has been already
     # commited over the tag
-    git clone --branch master --depth 3 "${WTSI_NPG_GITHUB_URL}/${repo}.git" "${repo}.git"
+    git clone --branch master --depth 3 "${WSI_NPG_GITHUB_URL}/${repo}.git" "${repo}.git"
     cd /tmp/${repo}.git
     # Shift off master to appropriate branch (if possible)
     git ls-remote --heads --exit-code origin ${WTSI_NPG_BUILD_BRANCH} && git pull origin ${WTSI_NPG_BUILD_BRANCH} && echo "Switched to branch ${WTSI_NPG_BUILD_BRANCH}"
