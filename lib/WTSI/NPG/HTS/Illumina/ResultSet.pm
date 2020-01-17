@@ -31,15 +31,27 @@ our %ILLUMINA_PART_PATTERNS =
    },
    alignment_regex => sub {
      my $name = shift;
-     return sprintf q[%s[.](cram)$], "\Q$name\E";
+     return sprintf q[%s[.](bam|cram)$], "\Q$name\E";
    },
    index_regex     => sub {
      my $name = shift;
-     return sprintf q[%s[.](cram[.]crai|pbi|vcf[.]gz[.]tbi|g[.]vcf[.]gz[.]tbi)$], "\Q$name\E";
+     return sprintf q[%s[.](%s)$], "\Q$name\E",
+                    join q[|],
+                         'bai',
+                         'cram[.]crai',
+                         'g[.]vcf[.]gz[.]tbi',
+                         'tbi',
+                         'vcf[.]gz[.]tbi';
    },
    genotype_regex  => sub {
      my $name = shift;
-     return sprintf q[%s[.](bcf|vcf|vcf[.]gz|g[.]vcf[.]gz|geno)$], "\Q$name\E";
+     return sprintf q[%s[.](%s)$], "\Q$name\E",
+         join q[|],
+              'bcf',
+              'geno',
+              'g[.]vcf[.]gz',
+              'vcf',
+              'vcf[.]gz';
    },
    ancillary_regex => sub {
      my $name = shift;
@@ -251,7 +263,10 @@ sub _filter_files {
   my $regex = $self->_make_filter_regex($category, $name);
   $self->debug("$category filter regex for $name: '$regex'");
 
-  return grep { m{$regex}msx } @{$self->result_files};
+  my @matches = grep { m{$regex}msx } @{$self->result_files};
+  $self->debug("$name regex '$regex' matches", pp(\@matches));
+
+  return @matches;
 }
 
 no Moose;
