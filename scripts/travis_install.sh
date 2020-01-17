@@ -29,6 +29,7 @@ conda install -y baton="$BATON_VERSION"
 conda install -y irods-icommands
 conda install -y tears
 conda install -y samtools="$SAMTOOLS_VERSION"
+conda install -y libhts-plugins="$LIBHTS_PLUGINS_VERSION"
 
 mkdir -p ~/.irods
 cat <<EOF > ~/.irods/irods_environment.json
