@@ -17,7 +17,7 @@ use WTSI::NPG::HTS::Types qw[AlnFormat];
 
 our $VERSION = '';
 
-our $DEFAULT_SAMTOOLS_EXECUTABLE = 'samtools_irods';
+our $DEFAULT_SAMTOOLS_EXECUTABLE = 'samtools';
 
 # SAM SQ header tag
 our $SQ = 'SQ';
@@ -371,10 +371,10 @@ sub _find_samtools {
   my ($self) = @_;
 
   my $samtools;
-  if ($self->can('samtools_irods_cmd')) {
+  if ($self->can('samtools_cmd')) {
     $self->debug('Using npg_common::roles::software_location to find ',
-                 'samtools_irods: ', $self->samtools_irods_cmd);
-    $samtools = $self->samtools_irods_cmd;
+                 'samtools: ', $self->samtools_cmd);
+    $samtools = $self->samtools_cmd;
   }
   else {
     $self->debug('Using the default samtools executable on PATH: ',
@@ -416,8 +416,8 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016, 2017, 2018 Genome Research Limited. All Rights
-Reserved.
+Copyright (C) 2015, 2016, 2017, 2018, 2020 Genome Research Limited.
+ All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
