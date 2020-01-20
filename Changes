@@ -4,7 +4,12 @@
     duplicate entries and stop adding target = 1 to scraps BAM files. 
     Change secondary archiving to support SMRT Link v8.
  -  Use samtools executable instead of samtools_irods.
- -  Specific samtools version to be used in Travis CI tests.
+ -  Travis CI tests:
+      use prod WSI Conda channel,
+      use specific version of samtools, pin it to v.1.10.0,
+      to enable samtools' access to iRODS, install HTS lib irods pligins
+      since they do not come with the samtools v.1.10.0 we have in the
+      channel
  -  Test change to cope with samtools v.1.10.0 inserting PG lines into
     the header.
 
