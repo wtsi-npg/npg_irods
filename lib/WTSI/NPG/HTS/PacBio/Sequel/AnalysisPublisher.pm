@@ -129,7 +129,7 @@ sub publish_sequence_files {
       #  or data is for unexpected barcode
       #  or data is single tag standard (non ccs) deplex 
       my $is_target   = (@records > 1 ||
-          $self->_is_allowed_fname($file, \@FNAME_NON_DEPLEXED) ||
+          $self->_is_allowed_fname($filename, \@FNAME_NON_DEPLEXED) ||
          ($tag_id && @tag_records != 1) ||
          ($self->_metadata->is_ccs ne 'true' && $tag_id && @all_records == 1))
           ? 0 : 1;
