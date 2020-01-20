@@ -12,6 +12,8 @@
       channel
  -  Test change to cope with samtools v.1.10.0 inserting PG lines into
     the header.
+ -  WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher restrict filename 
+    checks to just the filename
 
 Release 2.17.0
 

@@ -3,6 +3,7 @@ package WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
 use namespace::autoclean;
 use Data::Dump qw[pp];
 use English qw[-no_match_vars];
+use File::Basename;
 use File::Spec::Functions qw[catdir];
 use Moose;
 use MooseX::StrictConstructor;
@@ -106,12 +107,14 @@ sub publish_sequence_files {
   foreach my $file ( @{$files} ){
     my @tag_records;
 
-    my $tag_id = $self->_get_tag_from_fname($file);
+    my $filename = fileparse($file);
+    my $tag_id   = $self->_get_tag_from_fname($filename);
+
     if ($tag_id) {
         @tag_records = $self->find_pacbio_runs
             ($self->_metadata->run_name, $self->_metadata->well_name, $tag_id);
     } else {
-        $self->_is_allowed_fname($file, \@FNAME_PERMITTED) or
+        $self->_is_allowed_fname($filename, \@FNAME_PERMITTED) or
             $self->logcroak("Unexpected file name for $file");
     }
 
@@ -126,7 +129,7 @@ sub publish_sequence_files {
       #  or data is for unexpected barcode
       #  or data is single tag standard (non ccs) deplex 
       my $is_target   = (@records > 1 ||
-          $self->_is_allowed_fname($file, \@FNAME_NON_DEPLEXED) ||
+          $self->_is_allowed_fname($filename, \@FNAME_NON_DEPLEXED) ||
          ($tag_id && @tag_records != 1) ||
          ($self->_metadata->is_ccs ne 'true' && $tag_id && @all_records == 1))
           ? 0 : 1;
