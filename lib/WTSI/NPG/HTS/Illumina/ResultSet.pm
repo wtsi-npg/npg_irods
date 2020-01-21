@@ -37,21 +37,21 @@ our %ILLUMINA_PART_PATTERNS =
      my $name = shift;
      return sprintf q[%s[.](%s)$], "\Q$name\E",
                     join q[|],
-                         'bai',
-                         'cram[.]crai',
-                         'g[.]vcf[.]gz[.]tbi',
-                         'tbi',
-                         'vcf[.]gz[.]tbi';
+                         'bai',                # BAM index
+                         'cram[.]crai',        # CRAM index
+                         'g[.]vcf[.]gz[.]tbi', # Compressed gVCF Tabix index
+                         'tbi',                # Tabix index
+                         'vcf[.]gz[.]tbi';     # Compressed VCF Tabix index
    },
    genotype_regex  => sub {
      my $name = shift;
      return sprintf q[%s[.](%s)$], "\Q$name\E",
          join q[|],
-              'bcf',
-              'geno',
-              'g[.]vcf[.]gz',
-              'vcf',
-              'vcf[.]gz';
+              'bcf',          # BCF (Binary Variant Call Format) data
+              'geno',         # Simulated Fluidigm data from genotyping-by-sequencing
+              'g[.]vcf[.]gz', # gVCF (Genome Variant Call Format) data
+              'vcf',          # VCF (Variant Call Format) data
+              'vcf[.]gz';     # Compressed VCF data
    },
    ancillary_regex => sub {
      my $name = shift;
