@@ -68,6 +68,14 @@ has 'restart_file' =>
    documentation => 'A file containing a record of files successfully ' .
                     'published');
 
+has 'file_format' =>
+  (isa           => AlnFormat,
+   is            => 'ro',
+   required      => 1,
+   lazy          => 1,
+   default       => 'cram',
+   documentation => 'The format of the file to be published');
+
 has 'run_files' =>
   (isa           => 'ArrayRef[Str]',
    is            => 'ro',
@@ -346,11 +354,16 @@ sub publish_alignment_files {
   };
 
   my @files = $self->result_set->alignment_files($name);
+
+  my $format = $self->file_format;
+  @files = grep { m{[.]$format$}msx }
+    $self->result_set->alignment_files($name);
   $self->debug("Publishing alignment files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
   return $self->_tree_publish_product_level(\@files,
                                             $composition_file,
+
                                             $primary_avus,
                                             $secondary_avus);
 }
@@ -396,6 +409,16 @@ sub publish_index_files {
   };
 
   my @files = $self->result_set->index_files($name);
+
+  # Skip bai for cram format and skip crai for bam format
+  my $format = $self->file_format;
+  if ($format eq 'bam') {
+    @files = grep { ! m{[.]crai$}msx } @files
+  }
+  if ($format eq 'cram') {
+    @files = grep { ! m{[.]bai$}msx } @files
+  }
+
   $self->debug("Publishing index files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
