@@ -9,10 +9,9 @@ WTSI_NPG_BUILD_BRANCH=${WTSI_NPG_BUILD_BRANCH:=$TRAVIS_BRANCH}
 sudo apt-get install uuid-dev # required for Perl UUID module
 sudo apt-get install libgd2-xpm-dev # For npg_tracking
 sudo apt-get install liblzma-dev # For npg_qc
-sudo apt-get install hdf5-tools libhdf5-serial-dev
 sudo apt-get install pigz # for BioNano run publication in npg_irods
 
-wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh -O ~/miniconda.sh
+wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.6.14-Linux-x86_64.sh -O ~/miniconda.sh
 
 /bin/bash ~/miniconda.sh -b -p ~/miniconda
 ~/miniconda/bin/conda clean -tipsy
@@ -22,17 +21,15 @@ echo ". ~/miniconda/etc/profile.d/conda.sh" >> ~/.bashrc
 echo "conda activate travis" >> ~/.bashrc
 
 conda config --set auto_update_conda False
-conda config --add channels https://dnap.cog.sanger.ac.uk/npg/conda/devel/generic/
+conda config --add channels "$WSI_CONDA_CHANNEL"
 
 conda create -y -n travis
 conda activate travis
-conda install -y baton
+conda install -y baton="$BATON_VERSION"
 conda install -y irods-icommands
 conda install -y tears
-conda install -y samtools
-
-ln -s "$HOME/miniconda/envs/travis/bin/samtools" \
-   "$HOME/miniconda/envs/travis/bin/samtools_irods"
+conda install -y samtools="$SAMTOOLS_VERSION"
+conda install -y libhts-plugins="$LIBHTS_PLUGINS_VERSION"
 
 mkdir -p ~/.irods
 cat <<EOF > ~/.irods/irods_environment.json
@@ -59,7 +56,7 @@ for repo in perl-dnap-utilities perl-irods-wrap ml_warehouse npg_ml_warehouse np
     cd /tmp
     # Clone deeper than depth 1 to get the tag even if something has been already
     # commited over the tag
-    git clone --branch master --depth 3 "${WTSI_NPG_GITHUB_URL}/${repo}.git" "${repo}.git"
+    git clone --branch master --depth 3 "${WSI_NPG_GITHUB_URL}/${repo}.git" "${repo}.git"
     cd /tmp/${repo}.git
     # Shift off master to appropriate branch (if possible)
     git ls-remote --heads --exit-code origin ${WTSI_NPG_BUILD_BRANCH} && git pull origin ${WTSI_NPG_BUILD_BRANCH} && echo "Switched to branch ${WTSI_NPG_BUILD_BRANCH}"
@@ -95,4 +92,4 @@ done
 
 cd $TRAVIS_BUILD_DIR
 
-cpanm --notest --installdeps .
+cpanm --notest --installdeps . || cat /home/travis/.cpanm/work/*/build.log

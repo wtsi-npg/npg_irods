@@ -58,14 +58,14 @@ sub find_pacbio_runs {
       $query->{tag_identifier} = $tag_id;
   }
 
-  my @run_records = $self->mlwh_schema->resultset('PacBioRun')->search
-    ($query,  {prefetch => ['sample', 'study']});
+  my @unique_records = $self->mlwh_schema->resultset('PacBioRun')->search
+    ($query,  {prefetch => ['sample', 'study'],
+     group_by => [qw/id_pac_bio_run_lims well_label tag_identifier/]});
 
-  my $num_records = scalar @run_records;
+  my $num_records = scalar @unique_records;
   $self->debug("Found $num_records records for PacBio ",
                "run $run_id, well $well_label");
-
-  return @run_records;
+  return @unique_records;
 }
 
 no Moose::Role;

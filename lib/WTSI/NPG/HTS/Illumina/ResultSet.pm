@@ -35,11 +35,23 @@ our %ILLUMINA_PART_PATTERNS =
    },
    index_regex     => sub {
      my $name = shift;
-     return sprintf q[%s[.](bai|cram[.]crai|pbi)$], "\Q$name\E";
+     return sprintf q[%s[.](%s)$], "\Q$name\E",
+                    join q[|],
+                         'bai',                # BAM index
+                         'cram[.]crai',        # CRAM index
+                         'g[.]vcf[.]gz[.]tbi', # Compressed gVCF Tabix index
+                         'tbi',                # Tabix index
+                         'vcf[.]gz[.]tbi';     # Compressed VCF Tabix index
    },
    genotype_regex  => sub {
      my $name = shift;
-     return sprintf q[%s[.](bcf|vcf|geno)$], "\Q$name\E";
+     return sprintf q[%s[.](%s)$], "\Q$name\E",
+         join q[|],
+              'bcf',          # BCF (Binary Variant Call Format) data
+              'geno',         # Simulated Fluidigm data from genotyping-by-sequencing
+              'g[.]vcf[.]gz', # gVCF (Genome Variant Call Format) data
+              'vcf',          # VCF (Variant Call Format) data
+              'vcf[.]gz';     # Compressed VCF data
    },
    ancillary_regex => sub {
      my $name = shift;
@@ -48,6 +60,7 @@ our %ILLUMINA_PART_PATTERNS =
        '[.]all[.]seqchksum',
        '[.]bam_stats',
        '[.]bcfstats',
+       '[.]bqsr_table',
        '[.]flagstat',
        '[.]composition[.]json',
        '[.]markdups_metrics[.]txt',
@@ -250,7 +263,10 @@ sub _filter_files {
   my $regex = $self->_make_filter_regex($category, $name);
   $self->debug("$category filter regex for $name: '$regex'");
 
-  return grep { m{$regex}msx } @{$self->result_files};
+  my @matches = grep { m{$regex}msx } @{$self->result_files};
+  $self->debug("$name regex '$regex' matches", pp(\@matches));
+
+  return @matches;
 }
 
 no Moose;

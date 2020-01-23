@@ -3,6 +3,7 @@ package WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
 use namespace::autoclean;
 use Data::Dump qw[pp];
 use English qw[-no_match_vars];
+use File::Basename;
 use File::Spec::Functions qw[catdir];
 use Moose;
 use MooseX::StrictConstructor;
@@ -20,7 +21,7 @@ our $SEQUENCE_INDEX_FORMAT = 'pbi';
 # Metadata relatedist
 our $METADATA_FORMAT = 'xml';
 our $METADATA_PREFIX = 'pbmeta:';
-our $METADATA_SET    = 'subreadset';
+our $METADATA_SET    = q{(subreadset|consensusreadset)};
 
 # Location of source metadata file
 our $ENTRY_DIR       = 'entry-points';
@@ -29,7 +30,8 @@ our $ENTRY_DIR       = 'entry-points';
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
 # Additional sequence filenames permitted for loading 
-our @FNAME_PERMITTED = qw[removed ccs];
+our @FNAME_PERMITTED    = qw[removed ccs];
+our @FNAME_NON_DEPLEXED = qw[removed];
 
 # Data processing level
 our $DATA_LEVEL = 'secondary';
@@ -105,22 +107,32 @@ sub publish_sequence_files {
   foreach my $file ( @{$files} ){
     my @tag_records;
 
-    my $tag_id = $self->_get_tag_from_fname($file);
+    my $filename = fileparse($file);
+    my $tag_id   = $self->_get_tag_from_fname($filename);
+
     if ($tag_id) {
         @tag_records = $self->find_pacbio_runs
             ($self->_metadata->run_name, $self->_metadata->well_name, $tag_id);
     } else {
-        $self->_is_allowed_fname($file) or
+        $self->_is_allowed_fname($filename, \@FNAME_PERMITTED) or
             $self->logcroak("Unexpected file name for $file");
     }
 
-    my @records =
-      (@tag_records == 1) ?
-             @tag_records :
-             $self->find_pacbio_runs($self->_metadata->run_name,
-                                     $self->_metadata->well_name);
+    my @all_records = $self->find_pacbio_runs($self->_metadata->run_name,
+                                              $self->_metadata->well_name);
+
+    my @records = (@tag_records == 1) ? @tag_records : @all_records;
+
     if (@records >= 1) {
-      my $is_target      = @records > 1 ? 0 : 1;
+      # Don't set target = 1 if more than 1 record 
+      #  or data is non deplexed leftovers on multiplexed run
+      #  or data is for unexpected barcode
+      #  or data is single tag standard (non ccs) deplex 
+      my $is_target   = (@records > 1 ||
+          $self->_is_allowed_fname($filename, \@FNAME_NON_DEPLEXED) ||
+         ($tag_id && @tag_records != 1) ||
+         ($self->_metadata->is_ccs ne 'true' && $tag_id && @all_records == 1))
+          ? 0 : 1;
 
       my @primary_avus   = $self->make_primary_metadata
          ($self->_metadata,
@@ -143,7 +155,6 @@ sub publish_sequence_files {
   $self->info("Published $num_processed / $num_files sequence files ",
               'for SMRT cell ', $self->_metadata->well_name, ' run ',
               $self->_metadata->run_name);
-
   return ($num_files, $num_processed, $num_errors);
 }
 
@@ -260,8 +271,8 @@ sub _get_tag_from_fname {
 }
 
 sub _is_allowed_fname {
-  my ($self, $file) = @_;
-  my @exists = grep { $file =~ m{[.] $_ [.]}smx } @FNAME_PERMITTED;
+  my ($self, $file, $fnames) = @_;
+  my @exists = grep { $file =~ m{[.] $_ [.]}smx } @{ $fnames };
   return @exists == 1 ? 1 : 0;
 }
 

@@ -69,6 +69,7 @@ sub teardown_test : Test(teardown) {
 
 # Run-level data files
 sub publish_interop_files : Test(45) {
+  note '=== Tests in publish_interop_files';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -118,6 +119,7 @@ sub publish_interop_files : Test(45) {
 }
 
 sub publish_interop_files_deep : Test(87) {
+  note '=== Tests in publish_interop_files_deep';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   # NovaSeq
@@ -173,6 +175,7 @@ sub publish_interop_files_deep : Test(87) {
 }
 
 sub publish_xml_files : Test(18) {
+  note '=== Tests in publish_xml_files';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
@@ -241,6 +244,7 @@ sub publish_xml_files : Test(18) {
 }
 
 sub publish_qc_files : Test(99) {
+  note '=== Tests in publish_qc_files';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
@@ -298,6 +302,7 @@ sub publish_qc_files : Test(99) {
 
 # Lane-level, primary and secondary data, from ML warehouse
 sub publish_lane_pri_data_mlwh : Test(21) {
+  note '=== Tests in publish_lane_pri_data_mlwh';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -324,6 +329,7 @@ sub publish_lane_pri_data_mlwh : Test(21) {
 }
 
 sub publish_lane_sec_data_mlwh : Test(79) {
+  note '=== Tests in publish_lane_sec_data_mlwh';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -362,6 +368,7 @@ sub publish_lane_sec_data_mlwh : Test(79) {
 
 # Lane-level, primary and secondary data, from samplesheet
 sub publish_lane_pri_data_samplesheet : Test(21) {
+  note '=== Tests in publish_lane_pri_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -394,6 +401,7 @@ sub publish_lane_pri_data_samplesheet : Test(21) {
 }
 
 sub publish_lane_sec_data_samplesheet : Test(79) {
+  note '=== Tests in publish_lane_sec_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
@@ -437,6 +445,7 @@ sub publish_lane_sec_data_samplesheet : Test(79) {
 
 # Plex-level, primary and secondary data, from ML warehouse
 sub publish_plex_pri_data_mlwh : Test(21) {
+  note '=== Tests in publish_plex_pri_data_mlwh';
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20150914-100512/no_cal/archive';
@@ -466,6 +475,7 @@ sub publish_plex_pri_data_mlwh : Test(21) {
 }
 
 sub publish_plex_sec_data_mlwh : Test(59) {
+  note '=== Tests in publish_plex_sec_data_mlwh';
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20150914-100512/no_cal/archive';
@@ -504,6 +514,7 @@ sub publish_plex_sec_data_mlwh : Test(59) {
 
 # Plex-level, primary and secondary data, from samplesheet
 sub publish_plex_pri_data_samplesheet : Test(21) {
+  note '=== Tests in publish_plex_pri_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20150914-100512/no_cal/archive';
@@ -538,6 +549,7 @@ sub publish_plex_pri_data_samplesheet : Test(21) {
 }
 
 sub publish_plex_sec_data_samplesheet : Test(59) {
+  note '=== Tests in publish_plex_sec_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20150914-100512/no_cal/archive';
@@ -580,6 +592,7 @@ sub publish_plex_sec_data_samplesheet : Test(59) {
 
 # Merged NovaSeq data, from ML warehouse
 sub publish_merged_pri_data_mlwh : Test(19) {
+  note '=== Tests in publish_merged_pri_data_mlwh';
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -613,6 +626,7 @@ sub publish_merged_pri_data_mlwh : Test(19) {
 
 # Merged NovaSeq data, from samplesheet
 sub publish_merged_pri_data_samplesheet : Test(19) {
+  note '=== Tests in publish_merged_pri_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -648,7 +662,8 @@ sub publish_merged_pri_data_samplesheet : Test(19) {
   check_merge_primary_metadata($obj);
 }
 
-sub publish_merged_sec_data_mlwh : Test(74) {
+sub publish_merged_sec_data_mlwh : Test(89) {
+  note '=== Tests in publish_merged_sec_data_mlwh';
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -670,9 +685,12 @@ sub publish_merged_sec_data_mlwh : Test(74) {
                                                    $dest_coll)],
                             ["plex$plex/26291#1.bam_stats",
                              "plex$plex/26291#1.bcfstats",
+                             "plex$plex/26291#1.bqsr_table",
                              "plex$plex/26291#1.composition.json",
                              "plex$plex/26291#1.cram.crai",
                              "plex$plex/26291#1.flagstat",
+                             "plex$plex/26291#1.g.vcf.gz",
+                             "plex$plex/26291#1.g.vcf.gz.tbi",
                              "plex$plex/26291#1.markdups_metrics.txt",
                              "plex$plex/26291#1.orig.seqchksum",
                              "plex$plex/26291#1.seqchksum",
@@ -691,7 +709,8 @@ sub publish_merged_sec_data_mlwh : Test(74) {
   check_common_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_merged_sec_data_samplesheet : Test(74) {
+sub publish_merged_sec_data_samplesheet : Test(89) {
+  note '=== Tests in publish_merged_sec_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20180805-013153/no_cal/archive';
@@ -717,9 +736,12 @@ sub publish_merged_sec_data_samplesheet : Test(74) {
                                                    $dest_coll)],
                             ["plex$plex/26291#1.bam_stats",
                              "plex$plex/26291#1.bcfstats",
+                             "plex$plex/26291#1.bqsr_table",
                              "plex$plex/26291#1.composition.json",
                              "plex$plex/26291#1.cram.crai",
                              "plex$plex/26291#1.flagstat",
+                             "plex$plex/26291#1.g.vcf.gz",
+                             "plex$plex/26291#1.g.vcf.gz.tbi",
                              "plex$plex/26291#1.markdups_metrics.txt",
                              "plex$plex/26291#1.orig.seqchksum",
                              "plex$plex/26291#1.seqchksum",
@@ -739,6 +761,7 @@ sub publish_merged_sec_data_samplesheet : Test(74) {
 }
 
 sub publish_plex_pri_data_alt_process : Test(7) {
+  note '=== Tests in publish_plex_pri_data_alt_process';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
@@ -775,6 +798,7 @@ sub publish_plex_pri_data_alt_process : Test(7) {
 }
 
 sub publish_xml_files_alt_process : Test(15) {
+  note '=== Tests in publish_xml_files_alt_process';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
@@ -820,6 +844,7 @@ sub publish_xml_files_alt_process : Test(15) {
 }
 
 sub publish_include_exclude : Test(3) {
+  note '=== Tests in publish_include_exclude';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
@@ -883,6 +908,7 @@ sub publish_include_exclude : Test(3) {
 }
 
 sub publish_archive_path_mlwh : Test(6) {
+  note '=== Tests in publish_archive_path_mlwh';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
