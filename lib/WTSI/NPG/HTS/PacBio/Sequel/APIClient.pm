@@ -73,6 +73,13 @@ has 'default_interval' =>
    default       => 14,
    documentation => 'The default number of days activity to report');
 
+has 'default_end' =>
+  (isa           => 'Int',
+   is            => 'ro',
+   required      => 1,
+   default       => 0,
+   documentation => 'The number of days to subtract from the end date');
+
 has 'begin_date' =>
   (isa           => 'DateTime',
    is            => 'ro',
@@ -95,7 +102,7 @@ has 'end_date' =>
 
 sub _build_end_date {
     my ($self) = shift;
-    return DateTime->now;
+    return DateTime->now->subtract(days => $self->default_end);
 }
 
 

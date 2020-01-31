@@ -15,6 +15,8 @@ has 'api_client' =>
 sub _build_api_client {
     my $self = shift;
     my @init_args = $self->api_uri ? ('api_uri' => $self->api_uri) : ();
+    if($self->interval) { push @init_args, ('default_interval' => $self->interval) };
+    if($self->older_than) { push @init_args, ('default_end' => $self->older_than) };
     return WTSI::NPG::HTS::PacBio::Sequel::APIClient->new(@init_args);
 }
 
@@ -22,6 +24,16 @@ has 'api_uri' =>
   (isa           => 'Str',
    is            => 'ro',
    documentation => 'PacBio root API URL');
+
+has 'interval' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   documentation => 'Interval of time in days');
+
+has 'older_than' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   documentation => 'Time in days to remove from end date');
 
 no Moose::Role;
 
