@@ -2,6 +2,7 @@
 .travis.yml
 bin/npg_add_illumina_composition_metadata.pl
 bin/npg_pacbio_analysis_monitor.pl
+bin/npg_pacbio_rundelete.pl
 bin/npg_pacbio_runmonitor.pl
 bin/npg_publish_bionano_run.pl
 bin/npg_publish_illumina_logs.pl
@@ -67,7 +68,10 @@ lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisPublisher.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/APIClient.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/MetaXMLParser.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/MonitorBase.pm
+lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteMonitor.pm
+lib/WTSI/NPG/HTS/PacBio/Sequel/RunDelete.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunMonitor.pm
+lib/WTSI/NPG/HTS/PacBio/Sequel/RunPublisherBase.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunPublisher.pm
 lib/WTSI/NPG/HTS/PathLister.pm
 lib/WTSI/NPG/HTS/PublishState.pm
@@ -16600,6 +16604,8 @@ t/lib/WTSI/NPG/HTS/PacBio/RunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/SeqDataObjectTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisPublisherTest.pm
+t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteMonitorTest.pm
+t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/SeqchksumTest.pm
@@ -16618,6 +16624,8 @@ t/pacbio_run_publisher.t
 t/pacbio_seq_data_object.t
 t/pacbio_sequel_analysis_monitor.t
 t/pacbio_sequel_analysis_publisher.t
+t/pacbio_sequel_run_delete_monitor.t
+t/pacbio_sequel_run_delete.t
 t/pacbio_sequel_run_monitor.t
 t/pacbio_sequel_run_publisher.t
 t/params.t
