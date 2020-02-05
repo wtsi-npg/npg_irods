@@ -133,7 +133,7 @@ npg_pacbio_rundelete --local-path </path/to/staging/area>
 
 Looks for runs between an interval (default 14 days) a specified number of 
 days ago (default 180 days) and deletes run folders which are determined 
-to have been correctly uploaded to iRODS.
+to have been correctly uploaded to iRODS. Only handles run folders from Sequel (I or II) instruments.
 
 =head1 SYNOPSIS
 
