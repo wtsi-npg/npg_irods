@@ -26,7 +26,7 @@ sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::PacBio::Sequel::RunDelete');
 }
 
-sub delete_run : Test(2) {
+sub delete_run : Test(4) {
    
    my $tmp_output_dir     = "$tmp_dir/rundeletefolder.$pid";
    make_path($tmp_output_dir);
@@ -35,7 +35,10 @@ sub delete_run : Test(2) {
        (runfolder_path => $tmp_output_dir);
 
    isa_ok($deleter, 'WTSI::NPG::HTS::PacBio::Sequel::RunDelete');  
-   ok($deleter->delete_run(), "Deleted runfolder directory");
+   ok(-d $tmp_output_dir, "Runfolder to be deleted exists");
+   ok($deleter->delete_run(), "Deleted the runfolder directory");
+   ok(! -d $tmp_output_dir, "Deleted runfolder doesn't exist");
+   
 }
 
 1;
