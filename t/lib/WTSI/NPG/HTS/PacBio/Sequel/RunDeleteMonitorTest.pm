@@ -108,7 +108,7 @@ sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::PacBio::Sequel::RunDeleteMonitor');
 }
 
-sub delete_runs : Test(7) {
+sub delete_runs : Test(14) {
   my $uri    = URI->new($server->uri . 'QueryJobs');
   my $client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new
      (default_interval => 10000,);
@@ -118,17 +118,19 @@ sub delete_runs : Test(7) {
                                     strict_baton_version => 0);
   my $drirods = WTSI::NPG::DriRODS->new(environment          => \%ENV,
                                         strict_baton_version => 0);
-  my $dest_coll = $irods_tmp_coll;
 
   ## create tmp runfolder which will be deleted later
   my $run_name   = 'r54097_20170727_165601';
   my $well       = '1_A02';
+
   my $data_path  = catdir('t/data/pacbio/sequel', $run_name, $well);
+  my $dest_coll  = catdir($irods_tmp_coll, $run_name);
 
   my $runfolder_path = catdir($tmp_dir,$run_name);
   mkdir $runfolder_path;
   my $runfolder_data = catdir($runfolder_path,$well);
-  dircopy($data_path,$runfolder_path) or die $!;
+  mkdir $runfolder_data;
+  dircopy($data_path,$runfolder_data) or die $!;
 
   ## publish data
   my $monitor = WTSI::NPG::HTS::PacBio::Sequel::RunMonitor->new
@@ -140,13 +142,12 @@ sub delete_runs : Test(7) {
 
   my ($num_jobs, $num_processed, $num_errors) =
     $monitor->publish_completed_runs;
-
   cmp_ok($num_jobs, '==', scalar @{$test_response},
          'Correct number of runs to publish');
   cmp_ok($num_processed, '==', $num_jobs, 'All runs processed');
   cmp_ok($num_errors, '==', 0, 'No error in any run published');
 
-  ## delete run
+  ## delete run successfully
   my $deletable = WTSI::NPG::HTS::PacBio::Sequel::RunDeleteMonitor->new
     (api_client         => $client,
      check_format       => 0,
@@ -161,8 +162,32 @@ sub delete_runs : Test(7) {
   cmp_ok($dnum_runs, '==', scalar @{$test_response},
          'Correct number of runs to delete');
   cmp_ok($dnum_processed, '==', $num_jobs, 'All run folders processed');
-  cmp_ok($dnum_processed, '==', $num_jobs, 'All run folders deleted');
+  cmp_ok($dnum_deleted, '==', $num_jobs, 'All run folders deleted');
   cmp_ok($dnum_errors, '==', 0, 'No error in any run deleted');
+
+  ## recopy and republish
+  dircopy($data_path,$runfolder_data) or die $!;
+  my ($num_jobs2, $num_processed2, $num_errors2) =
+    $monitor->publish_completed_runs;
+
+  cmp_ok($num_jobs2, '==', scalar @{$test_response},
+         'Correct number of runs to publish');
+  cmp_ok($num_processed2, '==', $num_jobs, 'All runs processed');
+  cmp_ok($num_errors2, '==', 0, 'No error in any run published');
+
+  ## remove a file from iRODS so run not deleted
+  my $file_to_remove  = catfile($dest_coll, $well, q[m54097_170727_170646.subreads.bam]);
+  $irods->remove_object($file_to_remove);
+
+  ## fail to delete run
+  my ($dnum_runs2, $dnum_processed2, $dnum_deleted2, $dnum_errors2) = 
+      $deletable->delete_runs();
+
+  cmp_ok($dnum_runs2, '==', scalar @{$test_response},
+         'Correct number of runs to attempt to delete');
+  cmp_ok($dnum_processed2, '==', $num_jobs, 'All run folders processed');
+  cmp_ok($dnum_deleted2, '==', $num_jobs -1, 'Modified run not deleted');
+  cmp_ok($dnum_errors2, '==', 1, 'Error in one run deletion attempt');
 
 }
 
