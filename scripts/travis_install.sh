@@ -7,7 +7,7 @@ set -e -x
 WTSI_NPG_BUILD_BRANCH=${WTSI_NPG_BUILD_BRANCH:=$TRAVIS_BRANCH}
 
 sudo apt-get install uuid-dev # required for Perl UUID module
-sudo apt-get install libgd2-xpm-dev # For npg_tracking
+sudo apt-get install libgd-dev # For npg_tracking
 sudo apt-get install liblzma-dev # For npg_qc
 sudo apt-get install pigz # for BioNano run publication in npg_irods
 
