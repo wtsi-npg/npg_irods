@@ -3,17 +3,16 @@ package WTSI::NPG::HTS::PacBio::Sequel::RunMonitor;
 use namespace::autoclean;
 use Data::Dump qw[pp];
 use DateTime;
-use File::Spec::Functions qw[canonpath catdir catfile splitdir];
+use File::Spec::Functions qw[catfile splitdir];
 use Moose;
 use MooseX::StrictConstructor;
 use Try::Tiny;
-
-use WTSI::NPG::HTS::PacBio::Sequel::RunPublisher;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::HTS::PacBio::MonitorBase
          WTSI::NPG::HTS::PacBio::Sequel::MonitorBase
+         WTSI::NPG::HTS::PacBio::Sequel::RunPublisherBase
        ];
 
 our $VERSION = '';
@@ -43,10 +42,11 @@ sub publish_completed_runs {
 
     foreach my $run (@runs) {
       try {
-        my $runfolder_path = $self->_get_runfolder_path($run);
+        my $runfolder_path = $self->get_runfolder_path($run);
 
         if ($runfolder_path) {
-          my ($nf, $np, $ne) = $self->_publish_runfolder_path($runfolder_path);
+          my $publisher = $self->run_publisher_handle($runfolder_path);
+          my ($nf, $np, $ne) = $publisher->publish_files();
           $self->debug("Processed [$np / $nf] files in ",
                        "'$runfolder_path' with $ne errors");
 
@@ -58,7 +58,7 @@ sub publish_completed_runs {
         }
       } catch {
         $num_errors++;
-        $self->error('Failed to process ', _run_info($run), ' cleanly ',
+        $self->error('Failed to process ',$run->{context},' cleanly',
                      "[$num_processed / $num_runs]: ", $_);
       };
     }
@@ -72,74 +72,6 @@ sub publish_completed_runs {
   return ($num_runs, $num_processed, $num_errors);
 }
 
-# Determine the runfolder to load from the webservice result
-sub _get_runfolder_path {
-  my ($self, $run) = @_;
-
-  my $run_name            = $run->{name};
-  my $run_folder          = $run->{context};
-  my $num_cells_completed = $run->{numCellsCompleted};
-  my $num_cells_failed    = $run->{numCellsFailed};
-  my $total_cells         = $run->{totalCells};
-
-  my $runfolder_path;
-
-  SWITCH: {
-      if (not ($run_name                    and
-               $run_folder                  and
-               defined $total_cells         and
-               defined $num_cells_completed and
-               defined $num_cells_failed
-               )) {
-        $self->warn('Insufficient information to load run '. pp($run));
-        last SWITCH;
-      }
-
-      if ($total_cells != ($num_cells_failed + $num_cells_completed)){
-        $self->warn('IGNORING ', _run_info($run), ' (Some cells may not be complete)');
-        last SWITCH;
-      }
-
-      if ($num_cells_completed < 1){
-        $self->warn('IGNORING ', _run_info($run), ' (No completed cells to load)');
-        last SWITCH;
-      }
-
-      my $path = canonpath(catdir($self->local_staging_area, $run_folder));
-      if(! -e $path){
-          $self->warn('IGNORING ', _run_info($run), ' (Runfolder path not found)');
-          last SWITCH;
-      }
-
-      $self->info(_run_info($run));
-      $runfolder_path = $path;
-  }
-
-  return $runfolder_path;
-}
-
-sub _publish_runfolder_path {
-  my ($self, $runfolder_path) = @_;
-
-  $self->debug("Publishing data in runfolder path '$runfolder_path'");
-
-  my @init_args = (irods          => $self->irods,
-                   runfolder_path => $runfolder_path,
-                   mlwh_schema    => $self->mlwh_schema);
-  if ($self->dest_collection) {
-    push @init_args, dest_collection => $self->dest_collection;
-  }
-
-  my $publisher = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new(@init_args);
-
-  return $publisher->publish_files();
-}
-
-sub _run_info {
-  my ($run) = @_;
-
-  return sprintf 'Run_name %s Id %s ', $run->{name}, $run->{context};
-}
 
 __PACKAGE__->meta->make_immutable;
 
