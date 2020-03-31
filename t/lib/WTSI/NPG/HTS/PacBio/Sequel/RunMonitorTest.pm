@@ -128,7 +128,7 @@ sub publish_completed_runs : Test(3) {
   cmp_ok($num_errors, '==', 0, 'No error in any job');
 }
 
-sub publish_completed_runs : Test(3) {
+sub publish_completed_runs_none : Test(3) {
   my $uri    = URI->new($server->uri . 'QueryJobs');
   my $client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new
      (default_interval => 10,);
@@ -148,7 +148,7 @@ sub publish_completed_runs : Test(3) {
   my ($num_jobs, $num_processed, $num_errors) =
     $monitor->publish_completed_runs;
 
-  cmp_ok($num_jobs, '==', 0, 'Correct number of jobs');
+  cmp_ok($num_jobs, '==', 0, 'Correct number of jobs - none');
   cmp_ok($num_processed, '==', $num_jobs, 'All jobs processed');
   cmp_ok($num_errors, '==', 0, 'No error in any job');
 }

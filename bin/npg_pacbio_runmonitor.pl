@@ -126,7 +126,7 @@ npg_pacbio_runmonitor --local-path </path/to/staging/area
    --debug           Enable debug level logging. Optional, defaults to
                      false.
    --help            Display help.
-   --interval        Interval of time in days for run deletion. 
+   --interval        Interval of time in days for run loading. 
                      Optional, defaults to 14.
    --local-path
    --local_path      The path to the local filesystem where result data
