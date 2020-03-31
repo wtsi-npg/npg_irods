@@ -128,4 +128,28 @@ sub publish_completed_runs : Test(3) {
   cmp_ok($num_errors, '==', 0, 'No error in any job');
 }
 
+sub publish_completed_runs : Test(3) {
+  my $uri    = URI->new($server->uri . 'QueryJobs');
+  my $client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new
+     (default_interval => 10,);
+  $client->{'runs_api_uri'} = $uri;
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $dest_coll = $irods_tmp_coll;
+
+  my $monitor = WTSI::NPG::HTS::PacBio::Sequel::RunMonitor->new
+    (api_client         => $client,
+     dest_collection    => $dest_coll,
+     irods              => $irods,
+     local_staging_area => $data_path,
+     mlwh_schema        => $wh_schema);
+
+  my ($num_jobs, $num_processed, $num_errors) =
+    $monitor->publish_completed_runs;
+
+  cmp_ok($num_jobs, '==', 0, 'Correct number of jobs');
+  cmp_ok($num_processed, '==', $num_jobs, 'All jobs processed');
+  cmp_ok($num_errors, '==', 0, 'No error in any job');
+}
 1;

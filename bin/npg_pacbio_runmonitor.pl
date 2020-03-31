@@ -9,7 +9,7 @@ use lib (-d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib");
 use Getopt::Long;
 use Log::Log4perl qw[:levels];
 use Pod::Usage;
-
+use Readonly;
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::iRODS;
@@ -19,11 +19,16 @@ use WTSI::NPG::HTS::PacBio::Sequel::RunMonitor;
 
 our $VERSION = '';
 
+Readonly::Scalar my $DEFAULT_INTERVAL_DAYS   => 14;
+Readonly::Scalar my $DEFAULT_OLDER_THAN_DAYS => 0;
+
 my $api_uri;
 my $collection;
 my $debug;
+my $interval = $DEFAULT_INTERVAL_DAYS;
 my $local_path;
 my $log4perl_config;
+my $older_than = $DEFAULT_OLDER_THAN_DAYS;
 my $verbose;
 my $sequel;
 
@@ -33,8 +38,10 @@ GetOptions('collection=s'            => \$collection,
              pod2usage(-verbose => 2, -exitval => 0);
            },
            'sequel'                  => \$sequel,
+           'interval=i'              => \$interval,
            'logconf=s'               => \$log4perl_config,
            'local-path|local_path=s' => \$local_path,
+           'older-than|older_than=i' => \$older_than,
            'api-uri|api_uri=s'       => \$api_uri,
            'verbose'                 => \$verbose);
 
@@ -70,9 +77,12 @@ if ($api_uri && ! $sequel){
 my $irods     = WTSI::NPG::iRODS->new;
 my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
 
-my @init_args = (irods              => $irods,
+my @init_args = (interval           => $interval,
+                 irods              => $irods,
                  local_staging_area => $local_path,
-                 mlwh_schema        => $wh_schema);
+                 mlwh_schema        => $wh_schema,
+                 older_than         => $older_than,
+                 );
 if ($collection) {
   push @init_args, dest_collection => $collection;
 }
@@ -107,8 +117,8 @@ npg_pacbio_runmonitor
 =head1 SYNOPSIS
 
 npg_pacbio_runmonitor --local-path </path/to/staging/area
-  [--collection <path>] [--debug] [--logconf <path>]
-  [--verbose] [--sequel] [--api-uri]
+  [--collection <path>] [--debug] [--interval days] [--logconf <path>]
+  [--older-than days] [--verbose] [--sequel] [--api-uri]
 
  Options:
    --collection      The destination collection in iRODS. Optional,
@@ -116,10 +126,16 @@ npg_pacbio_runmonitor --local-path </path/to/staging/area
    --debug           Enable debug level logging. Optional, defaults to
                      false.
    --help            Display help.
+   --interval        Interval of time in days for run deletion. 
+                     Optional, defaults to 14.
    --local-path
    --local_path      The path to the local filesystem where result data
                      are staged for loading into iRODS.
    --logconf         A log4perl configuration file. Optional.
+
+   --older-than
+   --older_than      Only consider runs older than a specified number of 
+                     days. Optional defaults to 0 days. 
    --verbose         Print messages while processing. Optional.
    --sequel          If the target monitor is for the Sequel system. 
                      Optional.
