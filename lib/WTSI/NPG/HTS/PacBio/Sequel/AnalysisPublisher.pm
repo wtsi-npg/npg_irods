@@ -111,8 +111,13 @@ sub publish_sequence_files {
     my $tag_id   = $self->_get_tag_from_fname($filename);
 
     if ($tag_id) {
-        @tag_records = $self->find_pacbio_runs
+        my @tag_id_records = $self->find_pacbio_runs
             ($self->_metadata->run_name, $self->_metadata->well_name, $tag_id);
+
+        @tag_records = (@tag_id_records == 1) ? @tag_id_records :
+            $self->find_pacbio_runs($self->_metadata->run_name,
+                                    $self->_metadata->well_name,
+                                    $self->_get_tag_name_from_fname($filename));
     } else {
         $self->_is_allowed_fname($filename, \@FNAME_PERMITTED) or
             $self->logcroak("Unexpected file name for $file");
@@ -261,6 +266,7 @@ sub _build_metadata{
 }
 
 sub _get_tag_from_fname {
+  # SequenceScape tag id is just the numeric part of the name 
   my ($self, $file) = @_;
   my $tag_id;
   if ($file =~ /bc(\d+).*bc(\d+)/smx){
@@ -268,6 +274,16 @@ sub _get_tag_from_fname {
     $tag_id = ($bc1 == $bc2) ? $bc1 : undef;
   }
   return $tag_id;
+}
+
+sub _get_tag_name_from_fname {
+  # Traction tag id is the full tag name
+  my ($self, $file) = @_;
+  my $tag_name;
+  if ($file =~ m{[.] (\w+\d+\S+) [-] [-]}smx){
+    $tag_name = $1;
+  }
+  return $tag_name;
 }
 
 sub _is_allowed_fname {
