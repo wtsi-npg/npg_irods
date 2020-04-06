@@ -1,3 +1,8 @@
+Release 2.19.0
+
+ - PacBio run loading add options as in other scripts to support loading
+   of older runs.
+
 Release 2.18.0
 
  - Add support for PacBio run deletion.
