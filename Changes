@@ -2,6 +2,7 @@ Release 2.19.0
 
  - PacBio run loading add options as in other scripts to support loading
    of older runs.
+ - PacBio tweak to analysis loading to support traction barcode identifiers.
 
 Release 2.18.0
 

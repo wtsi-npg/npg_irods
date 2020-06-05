@@ -201,7 +201,7 @@ sub publish_sequence_files : Test(61) {
             'Published correctly named sequence files') or
               diag explain \@observed_paths;
 
-  check_primary_metadata($irods, @observed_paths);
+  check_primary_metadata($irods, 0, @observed_paths);
   check_common_metadata($irods, @observed_paths);
   check_secondary_metadata($irods, @observed_paths);
 
@@ -275,7 +275,7 @@ sub check_common_metadata {
 }
 
 sub check_primary_metadata {
-  my ($irods, @paths) = @_;
+  my ($irods, $skip_target_check, @paths) = @_;
 
   foreach my $path (@paths) {
     my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $path);
@@ -294,10 +294,12 @@ sub check_primary_metadata {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
-    foreach my $attr ($TARGET) {
-      my @avu = $obj->find_in_metadata($attr);
-      my $expected = scalar (@avu_plex == 1) ? 0 : 1;
-      cmp_ok(scalar @avu,'==', $expected, "$file_name $attr metadata correct");
+    if (! $skip_target_check) {
+        foreach my $attr ($TARGET) {
+            my @avu = $obj->find_in_metadata($attr);
+            my $expected = scalar (@avu_plex == 1) ? 0 : 1;
+            cmp_ok(scalar @avu,'==', $expected, "$file_name $attr metadata correct");
+        }
     }
   }
 }
@@ -380,4 +382,43 @@ sub publish_files_2 : Test(2) {
   cmp_ok($num_errors,    '==', 0);
 }
 
+
+sub publish_sequence_files_2 : Test(40) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $analysis_path  = "$data_path/001185";
+  my $runfolder_path = "$analysis_path/tasks/barcoding.tasks.lima-0",
+  my $dest_coll      = "$irods_tmp_coll/publish_sequence_files";
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
+    (restart_file    => catfile($tmpdir->dirname, 'published.json'),
+     dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     analysis_path   => $analysis_path,
+     runfolder_path  => $runfolder_path);
+
+  my @expected_paths =
+    map { catfile("$dest_coll/2_B01", $_) }
+    ('lima.bc1022_BAK8B_OA--bc1022_BAK8B_OA.bam',
+     'lima.removed.bam');
+
+  my ($num_files, $num_processed, $num_errors) =
+    $pub->publish_sequence_files;
+  cmp_ok($num_files,     '==', scalar @expected_paths);
+  cmp_ok($num_processed, '==', scalar @expected_paths);
+  cmp_ok($num_errors,    '==', 0);
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named sequence files') or
+              diag explain \@observed_paths;
+
+  check_primary_metadata($irods, 1, @observed_paths);
+  check_common_metadata($irods, @observed_paths);
+  check_secondary_metadata($irods, @observed_paths);
+
+  unlink $pub->restart_file;
+}
 1;
