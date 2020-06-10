@@ -1,3 +1,5 @@
+ - When archiving logs skip large .err files in archive/tmp_.. directories 
+
 Release 2.19.0
 
  - PacBio run loading add options as in other scripts to support loading
