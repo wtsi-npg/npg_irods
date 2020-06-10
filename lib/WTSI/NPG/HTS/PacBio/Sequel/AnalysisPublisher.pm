@@ -3,6 +3,7 @@ package WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
 use namespace::autoclean;
 use Data::Dump qw[pp];
 use English qw[-no_match_vars];
+use File::Basename;
 use File::Spec::Functions qw[catdir];
 use Moose;
 use MooseX::StrictConstructor;
@@ -20,7 +21,7 @@ our $SEQUENCE_INDEX_FORMAT = 'pbi';
 # Metadata relatedist
 our $METADATA_FORMAT = 'xml';
 our $METADATA_PREFIX = 'pbmeta:';
-our $METADATA_SET    = 'subreadset';
+our $METADATA_SET    = q{(subreadset|consensusreadset)};
 
 # Location of source metadata file
 our $ENTRY_DIR       = 'entry-points';
@@ -28,6 +29,12 @@ our $ENTRY_DIR       = 'entry-points';
 # Well directory pattern
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
+# Additional sequence filenames permitted for loading 
+our @FNAME_PERMITTED    = qw[removed ccs];
+our @FNAME_NON_DEPLEXED = qw[removed];
+
+# Data processing level
+our $DATA_LEVEL = 'secondary';
 
 has 'analysis_path' =>
   (isa           => 'Str',
@@ -98,20 +105,44 @@ sub publish_sequence_files {
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
   foreach my $file ( @{$files} ){
-    my $tag_id = $self->_get_tag_from_fname($file);
+    my @tag_records;
 
-    my @tag_records = $self->find_pacbio_runs
-      ($self->_metadata->run_name, $self->_metadata->well_name, $tag_id);
+    my $filename = fileparse($file);
+    my $tag_id   = $self->_get_tag_from_fname($filename);
 
-    ## enter as if not deplexed if a tag is not expected
-    my @records =
-      (@tag_records == 1) ?
-             @tag_records :
-             $self->find_pacbio_runs($self->_metadata->run_name,
-                                     $self->_metadata->well_name);
+    if ($tag_id) {
+        my @tag_id_records = $self->find_pacbio_runs
+            ($self->_metadata->run_name, $self->_metadata->well_name, $tag_id);
+
+        @tag_records = (@tag_id_records == 1) ? @tag_id_records :
+            $self->find_pacbio_runs($self->_metadata->run_name,
+                                    $self->_metadata->well_name,
+                                    $self->_get_tag_name_from_fname($filename));
+    } else {
+        $self->_is_allowed_fname($filename, \@FNAME_PERMITTED) or
+            $self->logcroak("Unexpected file name for $file");
+    }
+
+    my @all_records = $self->find_pacbio_runs($self->_metadata->run_name,
+                                              $self->_metadata->well_name);
+
+    my @records = (@tag_records == 1) ? @tag_records : @all_records;
 
     if (@records >= 1) {
-      my @primary_avus   = $self->make_primary_metadata($self->_metadata);
+      # Don't set target = 1 if more than 1 record 
+      #  or data is non deplexed leftovers on multiplexed run
+      #  or data is for unexpected barcode
+      #  or data is single tag standard (non ccs) deplex 
+      my $is_target   = (@records > 1 ||
+          $self->_is_allowed_fname($filename, \@FNAME_NON_DEPLEXED) ||
+         ($tag_id && @tag_records != 1) ||
+         ($self->_metadata->is_ccs ne 'true' && $tag_id && @all_records == 1))
+          ? 0 : 1;
+
+      my @primary_avus   = $self->make_primary_metadata
+         ($self->_metadata,
+          data_level => $DATA_LEVEL,
+          is_target  => $is_target);
       my @secondary_avus = $self->make_secondary_metadata(@records);
 
       my ($a_files, $a_processed, $a_errors) =
@@ -129,7 +160,6 @@ sub publish_sequence_files {
   $self->info("Published $num_processed / $num_files sequence files ",
               'for SMRT cell ', $self->_metadata->well_name, ' run ',
               $self->_metadata->run_name);
-
   return ($num_files, $num_processed, $num_errors);
 }
 
@@ -236,18 +266,33 @@ sub _build_metadata{
 }
 
 sub _get_tag_from_fname {
+  # SequenceScape tag id is just the numeric part of the name 
   my ($self, $file) = @_;
   my $tag_id;
   if ($file =~ /bc(\d+).*bc(\d+)/smx){
     my ($bc1, $bc2) = ($1, $2);
     $tag_id = ($bc1 == $bc2) ? $bc1 : undef;
   }
-  defined $tag_id or $self->logcroak("No tag found for $file");
-
   return $tag_id;
 }
 
-sub _dest_path{
+sub _get_tag_name_from_fname {
+  # Traction tag id is the full tag name
+  my ($self, $file) = @_;
+  my $tag_name;
+  if ($file =~ m{[.] (\w+\d+\S+) [-] [-]}smx){
+    $tag_name = $1;
+  }
+  return $tag_name;
+}
+
+sub _is_allowed_fname {
+  my ($self, $file, $fnames) = @_;
+  my @exists = grep { $file =~ m{[.] $_ [.]}smx } @{ $fnames };
+  return @exists == 1 ? 1 : 0;
+}
+
+sub _dest_path {
   my ($self) = @_;
 
   @{$self->smrt_names} == 1 or
@@ -271,6 +316,16 @@ WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher
 =head1 DESCRIPTION
 
 Publishes relevant files to iRODS, adds metadata and sets permissions.
+
+This module is suitable for loading auto secondary analysis output from 
+demultiplex jobs, ccs analysis and combined demultiplex+css analysis.
+
+Since SMRT Link v7 deplexing jobs have produced BAM files for identified
+barcode tags and also files named removed.bam (equivalent to tag zero
+in Illumina) which contain the reads not assigned to any tag. Expected
+tags are entered with single sample meta data in iRODS whereas
+unexpected tags and tag zero files are entered as multiplexed data
+e.g. multiplex = 1 flag and all sample and tag data for that cell.
 
 =head1 AUTHOR
 

@@ -237,9 +237,9 @@ sub publish_collection {
     my $spk = $params->with_spiked_control;
     foreach my $cfile (@cfiles) {
       $call->(sub { $self->publish_alignment_files($cfile, $spk) }, $cfile);
+      $call->(sub { $self->publish_genotype_files($cfile, $spk)  }, $cfile);
       $call->(sub { $self->publish_index_files($cfile, $spk)     }, $cfile);
       $call->(sub { $self->publish_ancillary_files($cfile, $spk) }, $cfile);
-      $call->(sub { $self->publish_genotype_files($cfile, $spk)  }, $cfile);
       $call->(sub { $self->publish_qc_files($cfile, $spk)        }, $cfile);
     }
 
@@ -353,14 +353,17 @@ sub publish_alignment_files {
        with_spiked_control => $with_spiked_control);
   };
 
+  my @files = $self->result_set->alignment_files($name);
+
   my $format = $self->file_format;
-  my @files = grep { m{[.]$format$}msx }
+  @files = grep { m{[.]$format$}msx }
     $self->result_set->alignment_files($name);
   $self->debug("Publishing alignment files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here
   return $self->_tree_publish_product_level(\@files,
                                             $composition_file,
+
                                             $primary_avus,
                                             $secondary_avus);
 }
@@ -405,17 +408,17 @@ sub publish_index_files {
        with_spiked_control => $with_spiked_control);
   };
 
-  my $format        = $self->file_format;
-  my %index_formats = (bam  => 'bai',
-                       cram => 'crai');
-  my $index_format = $index_formats{$format};
-  if (not $index_format) {
-    $self->logconfess('No index format is known for alignment format ',
-                      "'$format'");
+  my @files = $self->result_set->index_files($name);
+
+  # Skip bai for cram format and skip crai for bam format
+  my $format = $self->file_format;
+  if ($format eq 'bam') {
+    @files = grep { ! m{[.]crai$}msx } @files
+  }
+  if ($format eq 'cram') {
+    @files = grep { ! m{[.]bai$}msx } @files
   }
 
-  my @files = grep { m{[.]$index_format$}msx }
-    $self->result_set->index_files($name);
   $self->debug("Publishing index files for $name: ", pp(\@files));
 
   # Configure archiving to a custom sub-collection here

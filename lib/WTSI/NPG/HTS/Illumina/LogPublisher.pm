@@ -1,9 +1,8 @@
 package WTSI::NPG::HTS::Illumina::LogPublisher;
 
 use namespace::autoclean;
-use File::Spec::Functions qw[catdir catfile rel2abs splitdir];
+use File::Spec::Functions qw[catdir catfile rel2abs];
 use File::Temp qw[tempdir];
-use List::AllUtils qw[first];
 use Moose;
 use MooseX::StrictConstructor;
 use POSIX qw[strftime];
@@ -14,11 +13,11 @@ use WTSI::NPG::iRODS::Metadata qw[$ID_RUN];
 use WTSI::NPG::iRODS::Publisher;
 use WTSI::NPG::iRODS;
 
+extends q[npg_tracking::illumina::runfolder];
+
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::iRODS::Annotator
-         npg_tracking::illumina::run::short_info
-         npg_tracking::illumina::run::folder
        ];
 
 our $VERSION = '';
@@ -130,7 +129,7 @@ sub _build_tarfile {
   my ($self) = @_;
 
   my $date = strftime '%Y%m%d', localtime;
-  my $runfolder_name = _runfolder_name($self->runfolder_path);
+  my $runfolder_name = $self->run_folder;
 
   return "${date}_${runfolder_name}.log.tar.xz";
 }
@@ -141,28 +140,6 @@ sub _build_dest_collection  {
   my @colls = ($DEFAULT_ROOT_COLL, $self->id_run, $DEFAULT_LOG_COLL);
 
   return catdir(@colls);
-}
-
-# We are required by npg_tracking::illumina::run::short_info to
-# implment this method
-sub _build_run_folder {
-  my ($self) = @_;
-
-  if (! ($self->_given_path or $self->has_id_run or $self->has_name)){
-    $self->logconfess('The run folder cannot be determined because ',
-                      'it was not supplied to the constructor and ',
-                      'no path, id_run or run name were available, ',
-                      'from which it could be inferred');
-  }
-
-  return _runfolder_name($self->runfolder_path);
-}
-
-sub _runfolder_name {
-  my ($path) = @_;
-
-  # splitdir may return empty path elements
-  return first { length } reverse splitdir($path);
 }
 
 __PACKAGE__->meta->make_immutable;

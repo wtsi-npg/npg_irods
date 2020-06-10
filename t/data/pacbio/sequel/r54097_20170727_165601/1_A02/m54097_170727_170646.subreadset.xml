@@ -34,6 +34,7 @@
                     <WellName>A02</WellName>
                     <Concentration>0</Concentration>
                     <InsertSize>20000</InsertSize>
+                    <IsCCS>false</IsCCS>
                     <SampleReuseEnabled>false</SampleReuseEnabled>
                     <StageHotstartEnabled>false</StageHotstartEnabled>
                     <SizeSelectionEnabled>false</SizeSelectionEnabled>

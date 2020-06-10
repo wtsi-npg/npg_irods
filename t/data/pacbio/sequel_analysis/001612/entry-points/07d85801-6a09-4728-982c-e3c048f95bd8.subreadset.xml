@@ -35,6 +35,7 @@
                <pbmeta:WellName>B01</pbmeta:WellName>
                <pbmeta:Concentration>0.0</pbmeta:Concentration>
                <pbmeta:InsertSize>10000</pbmeta:InsertSize>
+               <pbmeta:IsCCS>false</pbmeta:IsCCS>
                <pbmeta:SampleReuseEnabled>false</pbmeta:SampleReuseEnabled>
                <pbmeta:StageHotstartEnabled>false</pbmeta:StageHotstartEnabled>
                <pbmeta:SizeSelectionEnabled>false</pbmeta:SizeSelectionEnabled>

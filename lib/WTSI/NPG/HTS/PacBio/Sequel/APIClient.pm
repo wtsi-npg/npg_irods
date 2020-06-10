@@ -8,7 +8,6 @@ use Moose;
 use MooseX::StrictConstructor;
 use URI;
 use URI::Split qw(uri_join);
-use Readonly;
 use JSON;
 
 with qw[
@@ -63,7 +62,7 @@ has 'job_type' =>
   (isa           => 'Str',
    is            => 'ro',
    required      => 1,
-   default       => 'pbsmrtpipe',
+   default       => 'analysis',
    documentation => 'The job type');
 
 
@@ -73,6 +72,13 @@ has 'default_interval' =>
    required      => 1,
    default       => 14,
    documentation => 'The default number of days activity to report');
+
+has 'default_end' =>
+  (isa           => 'Int',
+   is            => 'ro',
+   required      => 1,
+   default       => 0,
+   documentation => 'The number of days to subtract from the end date');
 
 has 'begin_date' =>
   (isa           => 'DateTime',
@@ -96,7 +102,7 @@ has 'end_date' =>
 
 sub _build_end_date {
     my ($self) = shift;
-    return DateTime->now;
+    return DateTime->now->subtract(days => $self->default_end);
 }
 
 
@@ -161,8 +167,8 @@ sub query_analysis_jobs {
              ($job->{createdAt} lt $end->iso8601)   &&
              $job->{state}                          &&
              ($job->{state} eq $SUCCESS_STATE)      &&
-             $job->{jsonSettings}                   &&
-             $self->_check_pid($job->{jsonSettings},$pipeline_id)
+             $job->{subJobTypeId}                   &&
+             ($job->{subJobTypeId} eq $pipeline_id)
              ){
               push @jobs, $job;
           }
@@ -190,21 +196,6 @@ sub _get_content{
     $self->logcroak("Failed to get results from URI '$query': ",$msg);
   }
   return $content;
-}
-
-sub _check_pid {
-    my($self,$json_settings,$pipeline_id) = @_;
-
-    my $usejob = 1;
-    my $settings = decode_json($json_settings);
-
-    if($settings->{pipelineId}                   &&
-       $pipeline_id                              &&
-       ($settings->{pipelineId} ne $pipeline_id)
-       ){
-        $usejob = 0;
-    }
-    return $usejob;
 }
 
 
