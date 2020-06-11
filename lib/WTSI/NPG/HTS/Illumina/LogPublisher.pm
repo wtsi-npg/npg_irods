@@ -87,9 +87,9 @@ sub publish_logs {
      q[-a -prune \\)];
 
   # find specific files in viv directories - use -prune to stop -path
-  # .. matching subdirectories
+  # .. matching subdirectories. Add -10M to skip large .err files
   my $find_p4 =
-     q[find . -type f ] .
+     q[find . -type f -size -10M ] .
      q[-a \\( -path "*/tmp_[0-9]*" -a -prune \\) ] .
      q[-a \\( -name "*.err" -o -name "*.log" -o -name "*.json" -o -name "*_Log*out" \\)];
 
