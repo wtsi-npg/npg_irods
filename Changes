@@ -1,7 +1,13 @@
+Release 2.20.0
+
+ - When archiving logs skip large .err files in archive/tmp_.. directories
+ - Pacbio tweak to support traction barcode identifiers and loading older analysis.
+
 Release 2.19.0
 
  - PacBio run loading add options as in other scripts to support loading
    of older runs.
+ - PacBio tweak to analysis loading to support traction barcode identifiers.
 
 Release 2.18.0
 

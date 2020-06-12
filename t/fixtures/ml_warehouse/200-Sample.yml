@@ -7985,3 +7985,36 @@
   supplier_name: NA12891_F1_25uM
   taxon_id: 9606
   uuid_sample_lims: ee71fd1c-8426-11e8-8ea7-68b59976a384
+- accession_number: ~
+  cohort: ~
+  common_name: Human
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2019-11-14 15:32:13
+  deleted_at: ~
+  description: ~
+  developmental_stage: ~
+  donor_id: RO_FA_930
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 4295369
+  id_sample_tmp: 4237953
+  last_updated: 2019-11-14 15:34:33
+  mother: ~
+  name: DTOL8493629
+  organism: ~
+  phenotype: ~
+  public_name: ~
+  recorded_at: 2019-11-14 15:34:33
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: DTOL8493629
+  strain: ~
+  supplier_name: RO_FA_930
+  taxon_id: 405009
+  uuid_sample_lims: ee49148c-06f3-11ea-b9f4-fa163e2f1184

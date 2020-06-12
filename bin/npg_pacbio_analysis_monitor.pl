@@ -9,7 +9,7 @@ use lib (-d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib");
 use Getopt::Long;
 use Log::Log4perl qw[:levels];
 use Pod::Usage;
-
+use Readonly;
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::iRODS;
@@ -17,10 +17,15 @@ use WTSI::NPG::HTS::PacBio::Sequel::AnalysisMonitor;
 
 our $VERSION = '';
 
+Readonly::Scalar my $DEFAULT_INTERVAL_DAYS   => 14;
+Readonly::Scalar my $DEFAULT_OLDER_THAN_DAYS => 0;
+
 my $api_uri;
 my $collection;
 my $debug;
+my $interval = $DEFAULT_INTERVAL_DAYS;
 my $log4perl_config;
+my $older_than = $DEFAULT_OLDER_THAN_DAYS;
 my $pipeline_name;
 my $task_name;
 my $verbose;
@@ -30,7 +35,9 @@ GetOptions('collection=s'                  => \$collection,
            'help'                          => sub {
              pod2usage(-verbose => 2, -exitval => 0);
            },
+           'interval=i'                    => \$interval,
            'logconf=s'                     => \$log4perl_config,
+           'older-than|older_than=i'       => \$older_than,
            'pipeline-name|pipeline_name=s' => \$pipeline_name,
            'task-name|task_name=s'         => \$task_name,
            'api-uri|api_uri=s'             => \$api_uri,
@@ -50,8 +57,11 @@ else {
 my $irods     = WTSI::NPG::iRODS->new;
 my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
 
-my @init_args = (irods              => $irods,
-                 mlwh_schema        => $wh_schema);
+my @init_args = (interval           => $interval,
+                 irods              => $irods,
+                 mlwh_schema        => $wh_schema,
+                 older_than         => $older_than,
+                );
 if ($collection) {
   push @init_args, dest_collection => $collection;
 }
@@ -96,8 +106,8 @@ npg_pacbio_analysis_monitor
 =head1 SYNOPSIS
 
 npg_pacbio_analysis_monitor
-  [--collection <path>] [--debug] [--logconf <path>]
-  [--pipeline_name <name>] [--task_name <name>]
+  [--collection <path>] [--debug] [--interval days] [--logconf <path>]
+  [--older-than days] [--pipeline_name <name>] [--task_name <name>]
   [--api-uri] [--verbose] 
 
  Options:
@@ -106,7 +116,13 @@ npg_pacbio_analysis_monitor
    --debug           Enable debug level logging. Optional, defaults to
                      false.
    --help            Display help.
+   --interval        Interval of time in days for analysis loading. 
+                     Optional, defaults to 14.
+ 
    --logconf         A log4perl configuration file. Optional.
+   --older-than
+   --older_than      Only consider analysis older than a specified number of 
+                     days. Optional defaults to 0 days. 
    --pipeline-name
    --pipeline_name   The SMRT Link pipeline name. Optional.  
    --task-name
