@@ -1,115 +1,139 @@
-#########
-# Author:        gq1
-# Maintainer:    $Author: mg8 $
-# Created:       24 October 2012
-# Last Modified: $Date: 2018-06-18 17:48:42 +0100 (Mon, 18 Jun 2018) $
-# Id:            $Id: BamConsentWithdrawn.pm 19810 2018-06-18 16:48:42Z mg8 $
-# $HeadURL: svn+ssh://svn.internal.sanger.ac.uk/repos/svn/new-pipeline-dev/data_handling/branches/prerelease-46.0/lib/npg_common/irods/BamConsentWithdrawn.pm $
-#
+package WTSI::NPG::Data::ConsentWithdrawn;
 
-package npg_common::irods::BamConsentWithdrawn;
-
-use strict;
-use warnings;
 use Moose;
-use Carp;
 use English qw(-no_match_vars);
-use npg_common::irods::Loader;
 use IPC::Open3;
 use MIME::Lite;
+use Readonly;
 
-with qw{MooseX::Getopt
-        npg_common::irods::iRODSCapable};
+use WTSI::NPG::HTS::DataObject;
 
-use Readonly; Readonly::Scalar our $VERSION => do { my ($r) = q$Revision: 19810 $ =~ /(\d+)/mxs; $r; };
+with qw{
+  MooseX::Getopt
+  WTSI::DNAP::Utilities::Loggable
+       };
+
+our $VERSION = '0';
 
 Readonly::Scalar my $EXIT_CODE_SHIFT => 8;
 Readonly::Scalar my $RT_TICKET_EMAIL_ADDRESS => q{new-seq-pipe@sanger.ac.uk};
+Readonly::Scalar my $DEFAULT_ZONE => q{/seq};
 
 =head1 NAME
 
-npg_common::irods::BamConsentWithdrawn
-
-=head1 VERSION
-
-$LastChangedRevision: 19810 $
+WTSI::NPG::Data::ConsentWithdrawn
 
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION
 
-Identifies bam files with sample_consent_withdrawn flag set and sample_consent_withdraw_email_sent not set.
-Finds .bai files (if exist) for these .bam files.
+Identifies data with sample_consent_withdrawn flag set and
+sample_consent_withdraw_email_sent not set. Finds corresponding sequence files.
 
-Creates an RT ticket for all these files, sets the sample_consent_withdraw_email_sent flag for them and
-withdraws all permissions for these files for groups and individuals that are not owners of the files.
+Creates an RT ticket for each sample, sets the sample_consent_withdraw_email_sent
+flag for them and withdraws all permissions for these files for groups and
+individuals that are not owners of the files.
 
 =head1 SUBROUTINES/METHODS
 
 =head2 dry_run
 
-dry_run flag
+Dry run flag, false by default. No changes to iRODS data
+no email sent.
 
 =cut
 
-has 'dry_run'     =>  ( isa           => 'Bool',
-                        is            => 'ro',
-                        required      => 0,
-                        documentation => 'dry_run flag',
-                      );
-=head2 v
-
-verbose flag
-
-=cut
-
-has 'v'           =>  ( isa           => 'Bool',
-                        is            => 'ro',
-                        required      => 0,
-                        documentation => 'verbose flag',
-                      );
+has 'dry_run' => (
+  isa           => 'Bool',
+  is            => 'ro',
+  required      => 0,
+  documentation => 'dry run flag',
+);
 
 =head2 zone
 
-iRODS zone name, defaults to seq, can be set to undef
+iRODS zone name, /seq by default.
 
 =cut
-has 'zone'  =>  ( isa           => 'Maybe[Str]',
-                  is            => 'ro',
-                  required      => 0,
-                  metaclass     => 'NoGetopt',
-                  default       => 'seq',
-                );
+
+has 'zone' => (
+  isa           => 'Str',
+  is            => 'ro',
+  required      => 0,
+  default       => $DEFAULT_ZONE,
+  documentation => 'iRODS zone name',
+);
 
 =head2 collection
 
-iRODS collection name, defaults to undef, below which files are considered
+iRODS collection name, unset by default. If set the search is
+constraint to this collection.
 
 =cut
-has 'collection'  =>  ( isa           => 'Maybe[Str]',
-                  is            => 'ro',
-                  required      => 0,
-                  metaclass     => 'NoGetopt',
-                  default       => undef,
-                );
 
-=head2 bam_files
+has 'collection' => (
+  isa           => 'Str',
+  is            => 'ro',
+  required      => 0,
+  documentation => 'iRODS collection',
+);
 
-list of bam files with sample_consent_withdrawn flag set
+=head2 irods
+
+WTSI::NPG::iRODS type object mediating access to iRODS,
+required.
 
 =cut
-has 'bam_files'  => (
-                      isa        => 'ArrayRef',
-                      is         => 'ro',
-                      required   => 0,
-                      lazy_build => 1,
-                      metaclass => 'NoGetopt',
-                    );
-sub _build_bam_files {
+
+has 'irods' => (
+  isa        => 'WTSI::NPG::iRODS',
+  is         => 'ro',
+  required   => 1,
+  metaclass => 'NoGetopt',
+);
+
+=head2 process
+
+Processes files for samples where consent has been withdrawn.
+
+=cut
+
+sub process {
+  my $self = shift;
+
+  $self->dry_run and $self->info('DRY RUN');
+
+  if (!@{$self->_new_files}) {
+    $self->info('No files to process found');
+    return;
+  }
+
+  foreach my $file (@{$self->_new_files}) {
+    $self->dry_run or $self->_restrict_permissions($file);
+  }
+
+  $self->_create_rt_ticket();
+
+  foreach my $file (@{$self->_new_files}) {
+    $self->dry_run or $self->irods->add_object_avu(
+      $file, q{sample_consent_withdrawn_email_sent}, 1);
+  }
+
+  return;
+}
+
+# List of files with sample_consent_withdrawn flag set
+has '_files' => (
+  isa        => 'ArrayRef',
+  is         => 'ro',
+  required   => 0,
+  lazy_build => 1,
+);
+sub _build__files {
   my $self = shift;
 
   my $iquest_cmd = $self->_iquery;
-  $self->_log_message($iquest_cmd);
+  $self->info($iquest_cmd);
   my @files;
   my $no_rows_error = 0;
 
@@ -118,14 +142,14 @@ sub _build_bam_files {
     chomp $line;
     if($line =~ /^ERROR/mxs) {
       if ($line !~ /CAT_NO_ROWS_FOUND/mxs) {
-        $self->_log_message($line);
+        $self->debug($line);
       } else {
         $no_rows_error = 1;
       }
       last;
     }
     if ($line =~/[.]bam$|[.]cram$/mxs) {
-      $self->_log_message('Found ' . $line);
+      $self->debug('Found ' . $line);
       push @files, $line;
     }
   }
@@ -133,103 +157,34 @@ sub _build_bam_files {
   waitpid $pid, 0;
   if( $CHILD_ERROR >> $EXIT_CODE_SHIFT ) {
     if (!$no_rows_error) {
-      croak "Failed: $iquest_cmd";
+      $self->logcroak("Failed: $iquest_cmd");
     }
   }
-  close $iquest_out_fh or croak "Cannot close iquest command output: $ERRNO";
+  close $iquest_out_fh or
+    $self->logcroak("Cannot close iquest command output: $ERRNO");
 
   return \@files;
 }
 
-=head2 new_bam_files
-
-list of bam files with sample_consent_withdrawn flag set
-and sample_consent_withdrawn_email_sent not set
-
-=cut
-has 'new_bam_files'  => (
-                         isa        => 'ArrayRef',
-                         is         => 'ro',
-                         required   => 0,
-                         lazy_build => 1,
-                         metaclass => 'NoGetopt',
-                        );
-sub _build_new_bam_files {
+# List of files with sample_consent_withdrawn flag set
+# and sample_consent_withdrawn_email_sent not set
+has '_new_files' => (
+  isa        => 'ArrayRef',
+  is         => 'ro',
+  required   => 0,
+  lazy_build => 1,
+);
+sub _build__new_files {
   my $self = shift;
   my @files = ();
-  foreach my $bam_file (@{$self->bam_files}) {
-    if (!_rt_ticket_exists($self->_util->_check_meta_data($bam_file))) {
-      push @files, $bam_file;
+  foreach my $file (@{$self->_files}) {
+    my $meta = $self->irods->get_object_meta(
+                 WTSI::NPG::HTS::DataObject->new($self->irods, $file));
+    if (!_rt_ticket_exists($meta)) {
+      push @files, $file;
     }
   }
   return \@files;
-}
-
-=head2 new_files
-
-list of bam and bai files to inform about
-
-=cut
-has 'new_files'  => (
-                         isa        => 'ArrayRef',
-                         is         => 'ro',
-                         required   => 0,
-                         lazy_build => 1,
-                         metaclass => 'NoGetopt',
-                        );
-sub _build_new_files {
-  my $self = shift;
-  my @files = ();
-  foreach my $bam_file (@{$self->new_bam_files}) {
-    push @files, $bam_file;
-    my $bai = $bam_file;
-    $bai =~ s/[.]bam$/.bai/smx;
-    $bai =~ s/[.]cram$/.cram.crai/smx;
-    if ($self->_util->file_exists($bai)) {
-      push @files, $bai;
-    }
-  }
-  return \@files;
-}
-
-
-has '_util'  =>     (
-                      isa        => 'npg_common::irods::Loader',
-                      is         => 'ro',
-                      required   => 0,
-                      lazy_build => 1,
-                    );
-sub _build__util {
-  my $self = shift;
-  return npg_common::irods::Loader->new(irods    => $self->irods,
-                                        _dry_run => $self->dry_run);
-}
-
-=head2 process
-
-process bam and bai files for samples where consent has been withdrawn
-
-=cut
-sub process {
-  my $self = shift;
-
-  if (!@{$self->new_files}) {
-    $self->_log_message('No files to process found');
-    return;
-  }
-
-  foreach my $file (@{$self->new_files}) {
-    $self->_util->restrict_file_permissions($file);
-  }
-
-  $self->_create_rt_ticket();
-
-  my $meta_data = { sample_consent_withdrawn_email_sent => 1 };
-  foreach my $file (@{$self->new_bam_files}) {
-    $self->_util->add_meta($file, $meta_data);
-  }
-
-  return;
 }
 
 sub _rt_ticket_exists {
@@ -241,23 +196,17 @@ sub _rt_ticket_exists {
 sub _create_rt_ticket {
   my $self = shift;
 
-  my $payload  = "The files with consent withdrawn:\n\n" . join qq[\n] , @{$self->new_files};
-  my $msg = MIME::Lite->new(
-			  To            => $RT_TICKET_EMAIL_ADDRESS,
-			  Subject       => q{iRODS files: sample consent withdrawn},
-			  Type          => 'TEXT',
-			  Data          => $payload,
-  );
+  my $payload  = "The files with consent withdrawn:\n\n" . join qq[\n] , @{$self->_new_files};
+  $self->info(qq{The following email will be sent to $RT_TICKET_EMAIL_ADDRESS\n$payload\n});
 
-  $self->_log_message(qq{The following email will be sent to $RT_TICKET_EMAIL_ADDRESS\n$payload\n});
-  if (!$self->dry_run) {
-    eval {
-      $msg->send();
-      1;
-    } or do {
-      croak "Error sending email : $EVAL_ERROR";
-    };
-  }
+  $self->dry_run and return;
+
+  MIME::Lite->new(
+    To            => $RT_TICKET_EMAIL_ADDRESS,
+    Subject       => q{iRODS files: sample consent withdrawn},
+    Type          => 'TEXT',
+    Data          => $payload,
+  )->send();
 
   return;
 }
@@ -270,20 +219,38 @@ sub _iquery {
     $query .= q[ -z ] .$self->zone;
   }
   $query .=  q{ "%s/%s" "select COLL_NAME, DATA_NAME where META_DATA_ATTR_NAME = 'sample_consent_withdrawn' and META_DATA_ATTR_VALUE = '1' and DATA_NAME not like '%header.bam%'};
-  if (defined $self->collection) { $query .= q{ and COLL_NAME like '} . $self->collection() . q{%'}; }
+  if ($self->collection) {
+    $query .= q{ and COLL_NAME like '} . $self->collection() . q{%'};
+  }
   $query .=  q{"};
+
   return $query;
 }
 
-sub _log_message {
-  my ($self, $message) = @_;
-  if ($self->v) {
-    warn '***** ' .  $message ."\n";
+sub _restrict_permissions {
+  my ($self, $file) = @_;
+
+  my @files = ( $file );
+
+  my $index_file = $file;
+  $index_file =~ s/[.]bam$/.bai/smx;
+  $index_file =~ s/[.]cram$/.cram.crai/smx;
+  my $obj = WTSI::NPG::HTS::DataObject->new($self->irods, $index_file);
+  if ($obj->is_present) {
+    push @files, $index_file;
   }
+
+  my $nullp = $WTSI::NPG::iRODS::NULL_PERMISSION;
+  for my $f (@files) {
+    my @to_remove = grep { $_->{level} ne 'own' }
+                    @{$self->irods->get_object_permissions($f)};
+    for my $p (@to_remove) {
+      $self->irods->set_object_permissions($nullp, $p->{owner}, $f);
+    }
+  }
+
   return;
 }
-
-no Moose;
 
 1;
 
@@ -301,17 +268,17 @@ __END__
 
 =item MooseX::Getopt
 
-=item Carp
-
 =item English -no_match_vars
 
 =item Readonly
 
-=item npg_common::irods::Loader
-
 =item IPC::Open3
 
 =item MIME::Lite
+
+=item WTSI::NPG::HTS::DataObject
+
+=item WTSI::DNAP::Utilities::Loggable
 
 =back
 
@@ -321,11 +288,11 @@ __END__
 
 =head1 AUTHOR
 
-Guoying Qi E<lt>gq1@sanger.ac.ukE<gt>
+Marina Gourtovaia
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (C) 2012 GRL, by Guoying Qi
+Copyright (C) 2012,2013,2015,2020 Genome Research Ltd.
 
 This file is part of NPG.
 

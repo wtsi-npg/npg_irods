@@ -1,12 +1,4 @@
 #!/usr/bin/env perl
-#########
-# Author:        Marina Gourtovaia
-# Maintainer:    $Author: mg8 $
-# Created:       24 October 2012
-# Last Modified: $Date: 2018-06-18 17:48:42 +0100 (Mon, 18 Jun 2018) $
-# Id:            $Id: irods_consent_withdrawn_auto.pl 19810 2018-06-18 16:48:42Z mg8 $
-# $HeadURL: svn+ssh://svn.internal.sanger.ac.uk/repos/svn/new-pipeline-dev/data_handling/branches/prerelease-46.0/bin/irods_consent_withdrawn_auto.pl $
-#
 
 use strict;
 use warnings;
@@ -14,10 +6,10 @@ use FindBin qw($Bin);
 use lib ( -d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib" );
 
 use Log::Log4perl;
+use WTSI::NPG::iRODS;
+use WTSI::NPG::Data::ConsentWithdrawn;
 
-use npg_common::irods::BamConsentWithdrawn;
-
-use Readonly; Readonly::Scalar our $VERSION => do { my ($r) = q$Revision: 19810 $ =~ /(\d+)/smx; $r; };
+our $VERSION = '0';
 
 my $log4perl_config =<< 'CONFIG';
 log4perl.logger.dnap.npg.irods = ERROR, A1
@@ -33,8 +25,8 @@ Log::Log4perl::init_once(\$log4perl_config);
 my $logger = Log::Log4perl->get_logger('dnap.npg.irods');
 my $irods = WTSI::NPG::iRODS->new(logger => $logger);
 
-npg_common::irods::BamConsentWithdrawn->new_with_options
-  (irods => $irods)->process();
+npg_common::irods::BamConsentWithdrawn
+  ->new_with_options(irods => $irods)->process();
 
 exit 0;
 
@@ -42,19 +34,15 @@ __END__
 
 =head1 NAME
 
-irods_consent_withdrawn_auto.pl
-
-=head1 VERSION
-
-$LastChangedRevision: 19810 $
+npg_process_consent_withdrawn.pl
 
 =head1 USAGE
 
-irods_consent_withdrawn_auto.pl
+npg_process_consent_withdrawn.pl
 
 or, just to report actions,
 
-irods_consent_withdrawn_auto.pl --dry_run
+npg_process_consent_withdrawn.pl --dry_run
 
 =head1 CONFIGURATION
 
@@ -62,17 +50,24 @@ irods_consent_withdrawn_auto.pl --dry_run
 
 =head1 DESCRIPTION
 
-Identifies bam files with sample_consent_withdrawn flag set and sample_consent_withdraw_email_sent not set.
-Finds bai files (if exist) for these bam files.
+Identifies bam or cram files with sample_consent_withdrawn flag set
+and sample_consent_withdraw_email_sent flag not set.
 
-Creates an RT ticket with all these files, sets the sample_consent_withdraw_email_sent flag for them and
-withdraws all permissions for these files for groups and individuals that are not owners of the files.
+Withdraws all permissions for these files and their indexes for groups
+and individuals that are not owners of the files.
+
+Creates an RT ticket listing the files,
+sets the sample_consent_withdraw_email_sent flag for the files.
 
 =head1 SUBROUTINES/METHODS
 
 =head1 REQUIRED ARGUMENTS
 
 =head1 OPTIONS
+
+  --zone - an optional iRODS zone, defaults to /seq
+  
+  --collection - an optional iRODS collection
 
 =head1 EXIT STATUS
 
@@ -96,6 +91,10 @@ withdraws all permissions for these files for groups and individuals that are no
 
 =item FindBin
 
+=item Log::Log4perl
+
+=item WTSI::NPG::iRODS
+
 =item npg_common::irods::run::BamConsentWithdrawn
 
 =back
@@ -110,7 +109,7 @@ MArina Gourtovaia E<lt>mg8@sanger.ac.ukE<gt>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (C) 2012 GRL by Marina Gourtovaia
+Copyright (C) 2012,2013,2015,2020 Genome Research Ltd.
 
 This file is part of NPG.
 
