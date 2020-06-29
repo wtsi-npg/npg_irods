@@ -1,7 +1,7 @@
 package WTSI::NPG::Data::ConsentWithdrawn;
 
 use Moose;
-use English qw(-no_match_vars);
+use English qw{-no_match_vars};
 use IPC::Open3;
 use MIME::Lite;
 use Readonly;
@@ -17,7 +17,7 @@ our $VERSION = '0';
 
 Readonly::Scalar my $EXIT_CODE_SHIFT => 8;
 Readonly::Scalar my $RT_TICKET_EMAIL_ADDRESS => q{new-seq-pipe@sanger.ac.uk};
-Readonly::Scalar my $DEFAULT_ZONE => q{/seq};
+Readonly::Scalar my $RT_TICKET_FLAG_META_KEY => q{sample_consent_withdrawn_email_sent};
 
 =head1 NAME
 
@@ -52,7 +52,7 @@ has 'dry_run' => (
 
 =head2 zone
 
-iRODS zone name, /seq by default.
+iRODS zone name, no default.
 
 =cut
 
@@ -60,13 +60,12 @@ has 'zone' => (
   isa           => 'Str',
   is            => 'ro',
   required      => 0,
-  default       => $DEFAULT_ZONE,
-  documentation => 'iRODS zone name',
+  documentation => 'iRODS zone name, unset by default',
 );
 
 =head2 collection
 
-iRODS collection name, unset by default. If set the search is
+iRODS collection name, no default. If set the search is
 constraint to this collection.
 
 =cut
@@ -101,7 +100,7 @@ Processes files for samples where consent has been withdrawn.
 sub process {
   my $self = shift;
 
-  $self->dry_run and $self->info('DRY RUN');
+  $self->dry_run and $self->info('DRY RUN - no metadata and permissions change');
 
   if (!@{$self->_new_files}) {
     $self->info('No files to process found');
@@ -116,7 +115,7 @@ sub process {
 
   foreach my $file (@{$self->_new_files}) {
     $self->dry_run or $self->irods->add_object_avu(
-      $file, q{sample_consent_withdrawn_email_sent}, 1);
+      $file, $RT_TICKET_FLAG_META_KEY, 1);
   }
 
   return;
@@ -133,7 +132,7 @@ sub _build__files {
   my $self = shift;
 
   my $iquest_cmd = $self->_iquery;
-  $self->info($iquest_cmd);
+  $self->info("Will run: $iquest_cmd");
   my @files;
   my $no_rows_error = 0;
 
@@ -163,6 +162,7 @@ sub _build__files {
   close $iquest_out_fh or
     $self->logcroak("Cannot close iquest command output: $ERRNO");
 
+  @files = sort @files;
   return \@files;
 }
 
@@ -176,21 +176,17 @@ has '_new_files' => (
 );
 sub _build__new_files {
   my $self = shift;
+
   my @files = ();
   foreach my $file (@{$self->_files}) {
-    my $meta = $self->irods->get_object_meta(
-                 WTSI::NPG::HTS::DataObject->new($self->irods, $file));
-    if (!_rt_ticket_exists($meta)) {
-      push @files, $file;
-    }
+    my @meta =
+      grep { $_->{value} }
+      grep { $_->{attribute} eq $RT_TICKET_FLAG_META_KEY }
+      $self->irods->get_object_meta($file);
+    @meta or push @files, $file;
   }
-  return \@files;
-}
 
-sub _rt_ticket_exists {
-  my ($irods_meta) = @_;
-  return $irods_meta->{sample_consent_withdrawn_email_sent} &&
-    keys %{$irods_meta->{sample_consent_withdrawn_email_sent}};
+  return \@files;
 }
 
 sub _create_rt_ticket {
@@ -218,11 +214,13 @@ sub _iquery {
   if ($self->zone) {
     $query .= q[ -z ] .$self->zone;
   }
-  $query .=  q{ "%s/%s" "select COLL_NAME, DATA_NAME where META_DATA_ATTR_NAME = 'sample_consent_withdrawn' and META_DATA_ATTR_VALUE = '1' and DATA_NAME not like '%header.bam%'};
+  $query .=
+    q{ "%s/%s" "select COLL_NAME, DATA_NAME where META_DATA_ATTR_NAME = 'sample_consent_withdrawn'} .
+    q{ and META_DATA_ATTR_VALUE = '1' and DATA_NAME not like '%header.bam%'};
   if ($self->collection) {
     $query .= q{ and COLL_NAME like '} . $self->collection() . q{%'};
   }
-  $query .=  q{"};
+  $query .= q{"};
 
   return $query;
 }
@@ -243,7 +241,7 @@ sub _restrict_permissions {
   my $nullp = $WTSI::NPG::iRODS::NULL_PERMISSION;
   for my $f (@files) {
     my @to_remove = grep { $_->{level} ne 'own' }
-                    @{$self->irods->get_object_permissions($f)};
+                    $self->irods->get_object_permissions($f);
     for my $p (@to_remove) {
       $self->irods->set_object_permissions($nullp, $p->{owner}, $f);
     }

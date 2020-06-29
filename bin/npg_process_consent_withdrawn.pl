@@ -12,21 +12,27 @@ use WTSI::NPG::Data::ConsentWithdrawn;
 our $VERSION = '0';
 
 my $log4perl_config =<< 'CONFIG';
-log4perl.logger.dnap.npg.irods = ERROR, A1
 
-log4perl.appender.A1           = Log::Log4perl::Appender::Screen
-log4perl.appender.A1.utf8      = 1
-log4perl.appender.A1.layout    = Log::Log4perl::Layout::PatternLayout
-log4perl.appender.A1.layout.ConversionPattern = %d %-5p %c %M - %m%n
+log4perl.logger = INFO, A1
+log4perl.logger.WTSI.NPG.iRODS = ERROR, A1
+
+log4perl.appender.A1 = Log::Log4perl::Appender::Screen
+log4perl.appender.A1.layout = Log::Log4perl::Layout::PatternLayout
+log4perl.appender.A1.layout.ConversionPattern = %d %-5p %c - %m%n
+log4perl.appender.A1.utf8 = 1
+
+# Prevent duplicate messages with a non-Log4j-compliant Log4perl option
+log4perl.oneMessagePerAppender = 1
 CONFIG
+;
 
 Log::Log4perl::init_once(\$log4perl_config);
 
-my $logger = Log::Log4perl->get_logger('dnap.npg.irods');
+my $logger = Log::Log4perl->get_logger('WTSI.NPG.iRODS');
 my $irods = WTSI::NPG::iRODS->new(logger => $logger);
 
-npg_common::irods::BamConsentWithdrawn
-  ->new_with_options(irods => $irods)->process();
+WTSI::NPG::Data::ConsentWithdrawn
+  ->new_with_options(irods => $irods, zone => 'seq')->process();
 
 exit 0;
 
@@ -95,7 +101,7 @@ sets the sample_consent_withdraw_email_sent flag for the files.
 
 =item WTSI::NPG::iRODS
 
-=item npg_common::irods::run::BamConsentWithdrawn
+=item WTSI::NPG::Data::ConsentWithdrawn
 
 =back
 
