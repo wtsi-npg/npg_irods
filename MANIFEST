@@ -110,6 +110,7 @@ t/bionano_run_finder.t
 t/bionano_run_publisher.t
 t/compile_scripts.t
 t/critic.t
+t/data_consent_withdrawn.t
 t/data/agf_data_object/17550_8#1.geno
 t/data/agf_data_object/17550_8#1.vcf
 t/data/aln_data_object/1000_1#1.cram
@@ -16541,6 +16542,7 @@ t/header_parser.t
 t/illumina_meta_updater.t
 t/illumina_run_publisher.t
 t/lib/WTSI/DNAP/Utilities/ParamsTest.pm
+t/lib/WTSI/NPG/Data/ConsentWithdrawnTest.pm
 t/lib/WTSI/NPG/DataSub/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/DataSub/SubtrackClientTest.pm
 t/lib/WTSI/NPG/HTS/HeaderParserTest.pm
