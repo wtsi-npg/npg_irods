@@ -121,10 +121,11 @@ sub permissions : Test(21) {
   is_deeply($cw->_new_files, \@to_do, 'pending processing files are found');
   lives_ok {$cw->process} 'no error processing data';
 
+  my $ownp = $WTSI::NPG::iRODS::OWN_PERMISSION;
   for my $file (@files_with_extra_permissions) {
     my @permissions = $irods->get_object_permissions($file);
     is (@permissions, 1, "only one set permissions is left for $file");
-    is ($permissions[0]->{level}, 'own', 'the only permission is for the owner');
+    is ($permissions[0]->{level}, $ownp, 'the only permission is for the owner');
   }
   
   for my $file (@to_do) {

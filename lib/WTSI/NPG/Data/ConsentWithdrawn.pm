@@ -239,8 +239,9 @@ sub _restrict_permissions {
   }
 
   my $nullp = $WTSI::NPG::iRODS::NULL_PERMISSION;
+  my $ownp  = $WTSI::NPG::iRODS::OWN_PERMISSION;
   for my $f (@files) {
-    my @to_remove = grep { $_->{level} ne 'own' }
+    my @to_remove = grep { $_->{level} ne $ownp }
                     $self->irods->get_object_permissions($f);
     for my $p (@to_remove) {
       $self->irods->set_object_permissions($nullp, $p->{owner}, $f);
