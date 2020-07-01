@@ -4,6 +4,7 @@ bin/npg_add_illumina_composition_metadata.pl
 bin/npg_pacbio_analysis_monitor.pl
 bin/npg_pacbio_rundelete.pl
 bin/npg_pacbio_runmonitor.pl
+bin/npg_process_consent_withdrawn.pl
 bin/npg_publish_bionano_run.pl
 bin/npg_publish_illumina_logs.pl
 bin/npg_publish_illumina_run.pl
@@ -23,6 +24,7 @@ etc/log4perl_tests.conf
 lib/npg_tracking/glossary/composition/component/generic.pm
 lib/WTSI/DNAP/Utilities/Params.pm
 lib/WTSI/DNAP/Utilities/ParamsParser.pm
+lib/WTSI/NPG/Data/ConsentWithdrawn.pm
 lib/WTSI/NPG/DataSub/File.pm
 lib/WTSI/NPG/DataSub/MetaUpdater.pm
 lib/WTSI/NPG/DataSub/SubtrackClient.pm
@@ -108,6 +110,7 @@ t/bionano_run_finder.t
 t/bionano_run_publisher.t
 t/compile_scripts.t
 t/critic.t
+t/data_consent_withdrawn.t
 t/data/agf_data_object/17550_8#1.geno
 t/data/agf_data_object/17550_8#1.vcf
 t/data/aln_data_object/1000_1#1.cram
@@ -16539,6 +16542,7 @@ t/header_parser.t
 t/illumina_meta_updater.t
 t/illumina_run_publisher.t
 t/lib/WTSI/DNAP/Utilities/ParamsTest.pm
+t/lib/WTSI/NPG/Data/ConsentWithdrawnTest.pm
 t/lib/WTSI/NPG/DataSub/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/DataSub/SubtrackClientTest.pm
 t/lib/WTSI/NPG/HTS/HeaderParserTest.pm
