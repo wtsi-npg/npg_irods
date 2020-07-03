@@ -63,8 +63,10 @@ sub publish_tree : Test(58) {
   };
 
   my ($num_files, $num_processed, $num_errors) =
-    $pub->publish_tree(\@files, $obj_factory, $primary_avus,
-                       $secondary_avus, $extra_avus);
+      $pub->publish_tree(\@files,
+                         primary_cb   => $primary_avus,
+                         secondary_cb => $secondary_avus,
+                         extra_cb     => $extra_avus);
 
   my $num_expected = scalar @files;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
@@ -74,7 +76,7 @@ sub publish_tree : Test(58) {
          'Published the expected number of files');
 
   my @observed_paths = observed_data_objects($irods, $irods_tmp_coll,
-                                       $irods_tmp_coll);
+                                             $irods_tmp_coll);
   my @expected_paths =('a/x/1.txt',
                        'a/x/2.txt',
                        'a/y/3.txt',

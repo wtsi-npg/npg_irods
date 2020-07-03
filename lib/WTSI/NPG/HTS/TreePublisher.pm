@@ -6,8 +6,8 @@ use File::Basename;
 
 use File::Spec::Functions qw[catfile abs2rel];
 use Moose;
+use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::BatchPublisher;
-
 use WTSI::NPG::HTS::PublishState;
 
 with qw[
@@ -17,6 +17,15 @@ with qw[
        ];
 
 our $VERSION = '';
+
+has 'obj_factory' =>
+    (does          => 'WTSI::NPG::HTS::DataObjectFactory',
+     is            => 'ro',
+     required      => 1,
+     lazy          => 1,
+     builder       => '_build_obj_factory',
+     documentation => 'A factory building data objects from files. ' .
+                      'Defaults to WTSI::NPG::HTS::DefaultDataObjectFactory');
 
 has 'force' =>
   (isa           => 'Bool',
@@ -45,16 +54,28 @@ has 'publish_state' =>
 
 =head2 publish_tree
 
-  Arg [1]      None
+  Arg [1]    : File batch, ArrayRef[Str].
+
+  Named args : primary_cb
+               Callback returning primary AVUs for a data object. CodeRef.
+
+               secondary_cb
+               Callback returning secondary AVUs for a data object. CodeRef.
+               Optional.
+
+               extra_cb
+               Callback returning extra AVUs for a data object. CodeRef,
+               Optional.
 
   Example    : my ($num_files, $num_processed, $num_errors) =
-                 $pub->publish_tree($files, $obj_factory, @avu_callbacks);
+                 $pub->publish_tree($files,
+                                    primary_cb   => sub { ... },
+                                    secondary_cb => sub { ... });
+
   Description: Publish set of files from the publisher's source directory
                to its iRODS destination collection while retaining any
                subdirectory structure present under the source directory,
-               creating new iRODS collections as required. The data object
-               factory (WTSI::NPG::HTS::DefaultDataObjectFactory) is used to
-               build the resulting iRODS data objects and the AVU callbacks
+               creating new iRODS collections as required. The AVU callbacks
                are used to attach any metadata.
 
                Each callback must expect a single WTSI::NPG::iRODS::DataObject
@@ -64,52 +85,58 @@ has 'publish_state' =>
 
 =cut
 
-## no critic (Subroutines::ProhibitManyArgs)
-sub publish_tree {
-  my ($self, $files, $obj_factory, $primary_avus_callback,
-      $secondary_avus_callback, $extra_avus_callback) = @_;
 
-  my $collated_by_dest = $self->_collate_by_dest_coll($files);
+{
+  my $positional = 2;
+  my @named      = qw[primary_cb secondary_cb extra_cb];
+  my $params     = function_params($positional, @named);
 
-  my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
- DEST: foreach my $dest_coll (sort keys %{$collated_by_dest}) {
-    $self->_ensure_coll_exists($dest_coll);
+  sub publish_tree {
+    my ($self, $files) = $params->parse(@_);
 
-    my $subset = $collated_by_dest->{$dest_coll};
+    my $collated_by_dest = $self->_collate_by_dest_coll($files);
 
-    $self->debug("Publishing batch to '$dest_coll': ", pp($subset));
+    my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
+    DEST:
+    foreach my $dest_coll (sort keys %{$collated_by_dest}) {
+      $self->_ensure_coll_exists($dest_coll);
 
-    my @init_args = (force         => $self->force,
-                     irods         => $self->irods,
-                     obj_factory   => $obj_factory,
-                     publish_state => $self->publish_state);
+      my $subset = $collated_by_dest->{$dest_coll};
 
-    if ($self->has_max_errors) {
-      if ($num_errors >= $self->max_errors) {
-        $self->error("The number of errors $num_errors reached the maximum ",
-                     'permitted of ', $self->max_errors, '. Aborting');
-        last DEST;
+      $self->debug("Publishing batch to '$dest_coll': ", pp($subset));
+
+      my @init_args = (force         => $self->force,
+                       irods         => $self->irods,
+                       obj_factory   => $self->obj_factory,
+                       publish_state => $self->publish_state);
+
+      if ($self->has_max_errors) {
+        if ($num_errors >= $self->max_errors) {
+          $self->error("The number of errors $num_errors reached the maximum ",
+                       'permitted of ', $self->max_errors, '. Aborting');
+          last DEST;
+        }
+        else {
+          my $batch_max_errors = $self->max_errors - $num_errors;
+          push @init_args, max_errors => $batch_max_errors;
+        }
       }
-      else {
-        my $batch_max_errors = $self->max_errors - $num_errors;
-        push @init_args, max_errors => $batch_max_errors;
-      }
+
+      my $batch_publisher = WTSI::NPG::HTS::BatchPublisher->new(@init_args);
+      my ($nf, $np, $ne)  =
+          $batch_publisher->publish_file_batch
+              ($subset, $dest_coll,
+               primary_cb   => $params->primary_cb,
+               secondary_cb => $params->secondary_cb,
+               extra_cb     => $params->extra_cb);
+      $num_files     += $nf;
+      $num_processed += $np;
+      $num_errors    += $ne;
     }
 
-    my $batch_publisher = WTSI::NPG::HTS::BatchPublisher->new(@init_args);
-    my ($nf, $np, $ne) =
-      $batch_publisher->publish_file_batch($subset, $dest_coll,
-                                           $primary_avus_callback,
-                                           $secondary_avus_callback,
-                                           $extra_avus_callback);
-    $num_files     += $nf;
-    $num_processed += $np;
-    $num_errors    += $ne;
+    return ($num_files, $num_processed, $num_errors);
   }
-
-  return ($num_files, $num_processed, $num_errors);
 }
-## use critic
 
 # Collate files into batches, one batch per destination collection
 sub _collate_by_dest_coll {
@@ -147,6 +174,12 @@ sub _ensure_coll_exists {
   }
 
   return $coll;
+}
+
+sub _build_obj_factory {
+  my ($self) = @_;
+
+  return WTSI::NPG::HTS::DefaultDataObjectFactory->new(irods => $self->irods)
 }
 
 sub _build_publish_state {
