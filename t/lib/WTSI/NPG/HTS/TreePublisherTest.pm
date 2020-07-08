@@ -103,6 +103,54 @@ sub publish_tree : Test(58) {
   check_metadata($irods, map { catfile($irods_tmp_coll, $_) } @observed_paths);
 }
 
+sub publish_tree_filter : Test(4) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $source_path = "$data_path/treepublisher";
+
+  my $pub = WTSI::NPG::HTS::TreePublisher->new
+      (irods            => $irods,
+       source_directory => $source_path,
+       dest_collection  => $irods_tmp_coll);
+
+  my $obj_factory = WTSI::NPG::HTS::DefaultDataObjectFactory->new
+      (irods => $pub->irods);
+
+  my @files = grep { -f } $pub->list_directory($source_path, recurse => 1);
+
+  my ($num_files, $num_processed, $num_errors) =
+      $pub->publish_tree(\@files,
+                        filter => sub {
+                          my ($f) = @_;
+                          my ($n) = $f =~ m{(\d)[.]txt$}; # parse digit
+                          # Return true (i.e. pass/include) for even numbers
+                          return $n % 2 == 0;
+                        });
+
+  my $num_expected = 9;
+  cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
+  cmp_ok($num_files, '==', $num_expected,
+         'Found the expected number of files');
+  cmp_ok($num_processed, '==', $num_expected,
+         'Published the expected number of files');
+
+  my @observed_paths = observed_data_objects($irods, $irods_tmp_coll,
+                                             $irods_tmp_coll);
+  my @expected_paths =('a/x/2.txt',
+                       'a/y/4.txt',
+                       'a/z/6.txt',
+                       'b/x/2.txt',
+                       'b/y/4.txt',
+                       'b/z/6.txt',
+                       'c/x/2.txt',
+                       'c/y/4.txt',
+                       'c/z/6.txt');
+
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly filtered files') or
+      diag explain \@observed_paths;
+}
+
 sub observed_data_objects {
   my ($irods, $dest_collection, $root_collection) = @_;
 

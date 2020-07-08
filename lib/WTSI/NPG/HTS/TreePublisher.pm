@@ -6,6 +6,7 @@ use File::Basename;
 
 use File::Spec::Functions qw[catfile abs2rel];
 use Moose;
+use MooseX::StrictConstructor;
 use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::BatchPublisher;
 use WTSI::NPG::HTS::PublishState;
@@ -51,6 +52,13 @@ has 'publish_state' =>
    lazy          => 1,
    documentation => 'State of all files published, across all batches');
 
+has 'require_checksum_cache' =>
+    (is            => 'ro',
+     isa           => 'ArrayRef[Str]',
+     required      => 1,
+     default       => sub { return [qw[bam cram]] },
+     documentation => 'A list of file suffixes for which MD5 cache files ' .
+                      'must be provided and will not be created on the fly');
 
 =head2 publish_tree
 
@@ -85,14 +93,33 @@ has 'publish_state' =>
 
 =cut
 
-
 {
   my $positional = 2;
-  my @named      = qw[primary_cb secondary_cb extra_cb];
+  my @named      = qw[primary_cb secondary_cb extra_cb filter];
   my $params     = function_params($positional, @named);
 
   sub publish_tree {
     my ($self, $files) = $params->parse(@_);
+
+    if (defined $params->filter) {
+      ref $params->filter eq 'CODE' or
+          $self->logconfess('The filter argument must be a CodeRef');
+      my $fn = $params->filter;
+
+      my $fnlog = sub {
+        my ($file) = @_;
+
+        if ($fn->($file)) {
+          $self->debug("Publish filter true (accepted) for '$file'");
+          return 1;
+        }
+
+        $self->info("Publish filter false (rejected) for '$file'");
+        return 0;
+      };
+
+      $files = [grep { $fnlog->($_) } @{$files}];
+    }
 
     my $collated_by_dest = $self->_collate_by_dest_coll($files);
 
@@ -105,10 +132,12 @@ has 'publish_state' =>
 
       $self->debug("Publishing batch to '$dest_coll': ", pp($subset));
 
-      my @init_args = (force         => $self->force,
-                       irods         => $self->irods,
-                       obj_factory   => $self->obj_factory,
-                       publish_state => $self->publish_state);
+      my @init_args =
+          (force                  => $self->force,
+           irods                  => $self->irods,
+           obj_factory            => $self->obj_factory,
+           publish_state          => $self->publish_state,
+           require_checksum_cache => $self->require_checksum_cache);
 
       if ($self->has_max_errors) {
         if ($num_errors >= $self->max_errors) {
