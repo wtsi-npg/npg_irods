@@ -66,14 +66,19 @@ has 'require_checksum_cache' =>
 
   Named args : primary_cb
                Callback returning primary AVUs for a data object. CodeRef.
+               Optional.
 
                secondary_cb
                Callback returning secondary AVUs for a data object. CodeRef.
                Optional.
 
                extra_cb
-               Callback returning extra AVUs for a data object. CodeRef,
+               Callback returning extra AVUs for a data object. CodeRef.
                Optional.
+
+               filter
+               Function returning true for each file path to be published.
+               CodeRef. Optional.
 
   Example    : my ($num_files, $num_processed, $num_errors) =
                  $pub->publish_tree($files,
