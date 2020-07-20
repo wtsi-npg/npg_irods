@@ -86,9 +86,14 @@ sub setup_test : Test(setup) {
 
   $irods->add_collection("$irods_tmp_coll/qc");
   $irods->add_object("$data_path/qc/$data_file.genotype.json",
-                     "$irods_tmp_coll/qc");
-  $irods->add_object("$data_path/$data_file.seqchksum", $irods_tmp_coll);
-  $irods->add_object("$data_path/$data_file.composition.json", $irods_tmp_coll);
+                     "$irods_tmp_coll/qc",
+                     $WTSI::NPG::iRODS::CALC_CHECKSUM);
+  $irods->add_object("$data_path/$data_file.seqchksum",
+                     $irods_tmp_coll,
+                     $WTSI::NPG::iRODS::CALC_CHECKSUM);
+  $irods->add_object("$data_path/$data_file.composition.json",
+                     $irods_tmp_coll,
+                     $WTSI::NPG::iRODS::CALC_CHECKSUM);
 }
 
 sub teardown_test : Test(teardown) {

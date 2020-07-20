@@ -56,7 +56,9 @@ sub setup_test : Test(setup) {
     $irods->add_collection("PacBioMetaUpdaterTest.$pid.$test_counter");
   $test_counter++;
 
-  $irods->add_object("$data_path/$data_file", "$irods_tmp_coll/$data_file");
+  $irods->add_object("$data_path/$data_file",
+                     "$irods_tmp_coll/$data_file",
+                     $WTSI::NPG::iRODS::CALC_CHECKSUM);
   $irods->add_object_avu("$irods_tmp_coll/$data_file", 'run', 45137);
   $irods->add_object_avu("$irods_tmp_coll/$data_file", 'well', 'A01');
 }

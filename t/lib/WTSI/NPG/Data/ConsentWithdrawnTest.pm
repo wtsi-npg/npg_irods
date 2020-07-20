@@ -36,7 +36,7 @@ sub setup_test : Test(setup) {
     my $source = "$tdir/$file";
     `touch $source`;
     my $target = "$collection/$file";
-    $irods->add_object($source, $target);
+    $irods->add_object($source, $target, $WTSI::NPG::iRODS::CALC_CHECKSUM);
   }
 }
 

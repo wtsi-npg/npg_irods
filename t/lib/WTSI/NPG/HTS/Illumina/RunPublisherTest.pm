@@ -36,8 +36,6 @@ my $fixture_path = "t/fixtures";
 my $db_dir       = File::Temp->newdir;
 
 my $wh_schema;
-my $lims_factory;
-
 my $irods_tmp_coll;
 
 sub setup_databases : Test(startup) {
@@ -1270,17 +1268,6 @@ sub calc_lane_alignment_files {
   }
 
   return %position_index;
-}
-
-sub expected_data_objects {
-  my ($dest_collection, $position_index, $position) = @_;
-
-  my @expected_paths = map {
-    catfile($dest_collection, scalar fileparse($_))
-  } @{$position_index->{$position}};
-  @expected_paths = sort @expected_paths;
-
-  return @expected_paths;
 }
 
 sub observed_data_objects {

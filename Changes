@@ -1,4 +1,14 @@
- Release 2.21.0
+Release 2.22.0
+
+ - New script, npg_publish_tree.pl, to publish arbitrary directory trees of
+   files to iRODS, set permissions and add metadata to the destination root
+   collection.
+ - Add filter parameter to TreePublisher::publish_tree.
+ - Add named parameters to BatchPublisher::publish_file_batch.
+ - Fix teardown of iRODS collection in TreePublishTest.
+
+Release 2.21.0
+
  - New script, npg_process_consent_withdrawn.pl, to withdraw permissions on
    iRODS data for samples with concent withdrawn. Ported from the internal
    SVN repository and refactored to use WTSI::NPG::iRODS class for iRODS
