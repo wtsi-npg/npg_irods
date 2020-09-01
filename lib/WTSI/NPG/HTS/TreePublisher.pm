@@ -126,6 +126,8 @@ has 'require_checksum_cache' =>
       $files = [grep { $fnlog->($_) } @{$files}];
     }
 
+    $self->_ensure_coll_exists($self->dest_collection);
+
     my $collated_by_dest = $self->_collate_by_dest_coll($files);
 
     my ($num_files, $num_processed, $num_errors) = (0, 0, 0);

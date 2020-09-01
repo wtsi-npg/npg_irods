@@ -1,3 +1,8 @@
+Upcoming
+
+ - Make Treepublisher create an empty target directory, even when
+   there are no files to publish.
+
 Release 2.22.0
 
  - New script, npg_publish_tree.pl, to publish arbitrary directory trees of
