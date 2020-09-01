@@ -5,12 +5,14 @@ use warnings;
 use FindBin qw[$Bin];
 use lib (-d "$Bin/../lib/perl5" ? "$Bin/../lib/perl5" : "$Bin/../lib");
 
+use Carp;
 use Data::Dump qw[pp];
 use File::Slurp;
 use List::AllUtils qw[any];
 use Log::Log4perl qw[:levels];
 use Getopt::Long;
 use Pod::Usage;
+use Try::Tiny;
 
 use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::Collection;
@@ -77,18 +79,49 @@ my $log = Log::Log4perl->get_logger('main');
 $log->level($ALL);
 
 sub _make_filter_fn {
-  my @include_re = map { qr{$_}msx } @include;
-  my @exclude_re = map { qr{$_}msx } @exclude;
+
+  my @include_re;
+  my @exclude_re;
+  my $nerr = 0;
+
+  foreach my $re (@include) {
+    try {
+      push @include_re, qr{$re}msx;
+    } catch {
+      $log->error("in include regex '$re': $_");
+      $nerr++;
+    };
+  }
+
+  foreach my $re (@exclude) {
+    try {
+      push @exclude_re, qr{$re}msx;
+    } catch {
+      $log->error("in exclude regex '$re': $_");
+      $nerr++;
+    };
+  }
+
+  if ($nerr > 0) {
+    $log->error("$nerr errors in include / exclude filters");
+    exit 1;
+  }
 
   return sub {
     my ($path) = @_;
 
-    if (not @include_re) {
-      return -f $path;
+    (defined $path and $path ne q[]) or
+        croak 'Path argument is required in callback';
+
+    my $include = -f $path;
+    if (@include_re) {
+      $include = any {$path =~ $_} @include_re;
+    }
+    if ($include and @exclude_re) {
+      $include = not any {$path =~ $_} @exclude_re;
     }
 
-    return (any {$path =~ $_} @include_re and
-        not any {$path =~ $_} @exclude_re);
+    return $include;
   };
 }
 
@@ -161,12 +194,13 @@ my @publish_args = (\@files,
                     });
 
 # Define any file filters required
-if (@include) {
+if (@include or @exclude) {
   push @publish_args, filter => _make_filter_fn();
 }
 
 my ($num_files, $num_published, $num_errors) =
     $publisher->publish_tree(@publish_args);
+
 
 # Set any permissions requested
 if (@groups) {
@@ -176,7 +210,7 @@ if (@groups) {
 # Add any metadata provided
 if ($metadata_file) {
   my $metadata = _read_metadata_file();
-  $log->debug('Adding to ', $coll->str, ' metadata: ', $metadata);
+  $log->debug('Adding to ', $coll->str, ' metadata: ', pp($metadata));
   foreach my $avu (@{$metadata}) {
     $coll->add_avu($avu->{attribute}, $avu->{value}, $avu->{units});
   }
@@ -199,7 +233,7 @@ __END__
 
 =head1 NAME
 
-npg_publish_illumina_run
+npg_publish_tree
 
 =head1 SYNOPSIS
 
@@ -212,7 +246,7 @@ npg_publish_tree --source-directory <path> --collection <path>
    --collection       The destination collection in iRODS.
    --debug            Enable debug level logging. Optional, defaults to
                       false.
-   --exclude          Specifiy one or more regexes to ignore paths under
+   --exclude          Specify one or more regexes to ignore paths under
                       the target collection. Matching paths will be not be
                       published. If more than one regex is supplied, they
                       are all applied. Exclude regexes are applied after
@@ -223,7 +257,7 @@ npg_publish_tree --source-directory <path> --collection <path>
                       to none. May be used multiple times to add read
                       permissions for multiple groups.
    --help             Display help.
-   --include          Specifiy one or more regexes to select paths under
+   --include          Specify one or more regexes to select paths under
                       the target collection. Only matching paths will be
                       published, all others will be ignored. If more than
                       one regex is supplied, the matches for all of them
@@ -247,12 +281,13 @@ npg_publish_tree --source-directory <path> --collection <path>
                       or even check these files in iRODS. Optional. The
                       default restart file is "<archive dir>/published.json".
    --source-directory
-   --source_directory The instrument runfolder path to load.
+   --source_directory The local path to load.
    --verbose          Print messages while processing. Optional.
 
 =head1 DESCRIPTION
 
-
+Publish an arbitrary directory hierarchy to iRODS, set permissions and
+add metadata to the root collection.
 
 =head1 AUTHOR
 

@@ -1,5 +1,6 @@
 Upcoming
 
+ - Bugfix: handling of --exclude CLI arguments by npg_publish_tree.pl.
  - Make Treepublisher create an empty target directory, even when
    there are no files to publish.
 
