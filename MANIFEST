@@ -67,9 +67,11 @@ lib/WTSI/NPG/HTS/PacBio/RunPublisher.pm
 lib/WTSI/NPG/HTS/PacBio/SeqDataObject.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisMonitor.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisPublisher.pm
+lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisReport.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/APIClient.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/MetaXMLParser.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/MonitorBase.pm
+lib/WTSI/NPG/HTS/PacBio/Sequel/Reportdata.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteMonitor.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunDelete.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunMonitor.pm
@@ -16282,9 +16284,13 @@ t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lb
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lbc5--lbc5.bam
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lbc5--lbc5.bam.pbi
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lbc5--lbc5.subreadset.xml
+t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lima.counts
+t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lima.guess.txt
+t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lima.summary.txt
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.removed.bam
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.removed.bam.pbi
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.removed.subreadset.xml
+t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/merged_analysis_report.json
 t/data/pacbio/sequel_analysis/000226/entry-points/acf46f00-12b8-45e6-bc10-b0790f8d6758.subreadset.xml
 t/data/pacbio/sequel_analysis/000226/tasks/pbcoretools.tasks.auto_ccs_outputs-0/m64016_190608_025655.ccs.bam
 t/data/pacbio/sequel_analysis/000226/tasks/pbcoretools.tasks.auto_ccs_outputs-0/m64016_190608_025655.ccs.bam.pbi
@@ -16559,6 +16565,7 @@ t/lib/WTSI/NPG/HTS/PacBio/RunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/SeqDataObjectTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisPublisherTest.pm
+t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisReportTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunMonitorTest.pm
@@ -16579,6 +16586,7 @@ t/pacbio_run_publisher.t
 t/pacbio_seq_data_object.t
 t/pacbio_sequel_analysis_monitor.t
 t/pacbio_sequel_analysis_publisher.t
+t/pacbio_sequel_analysis_report.t
 t/pacbio_sequel_run_delete_monitor.t
 t/pacbio_sequel_run_delete.t
 t/pacbio_sequel_run_monitor.t

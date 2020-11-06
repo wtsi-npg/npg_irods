@@ -1,13 +1,13 @@
 package WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
 
 use namespace::autoclean;
-use Data::Dump qw[pp];
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions qw[catdir];
 use Moose;
 use MooseX::StrictConstructor;
 
+use WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
 
 extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
@@ -68,10 +68,12 @@ override 'publish_files' => sub {
         ($SEQUENCE_INDEX_FORMAT);
     my ($nfx, $npx, $nex) = $self->publish_non_sequence_files
         ($METADATA_SET . q[.] . $METADATA_FORMAT);
+    my ($nfr, $npr, $ner) = $self->publish_non_sequence_files
+        ($self->_merged_report);
 
-    $num_files     += ($nfx + $nfb + $nfp);
-    $num_processed += ($npx + $npb + $npp);
-    $num_errors    += ($nex + $neb + $nep);
+    $num_files     += ($nfx + $nfb + $nfp + $nfr);
+    $num_processed += ($npx + $npb + $npp + $npr);
+    $num_errors    += ($nex + $neb + $nep + $ner);
   }
   else {
     $self->info('Skipping ', $self->analysis_path,
@@ -263,6 +265,25 @@ sub _build_metadata{
   }
   return  WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file
                  ($metafiles[0], $METADATA_PREFIX);
+}
+
+has '_merged_report' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   builder       => '_build_merged_report',
+   lazy          => 1,
+   init_arg      => undef,
+   documentation => 'Merged report file name.',);
+
+sub _build_merged_report {
+  my ($self) = @_;
+
+  my @init_args = (analysis_path  => $self->analysis_path,
+                   runfolder_path => $self->runfolder_path,
+                   meta_data      => $self->_metadata);
+
+  my $report = WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport->new(@init_args);
+  return $report->generate_analysis_report;
 }
 
 sub _get_tag_from_fname {
