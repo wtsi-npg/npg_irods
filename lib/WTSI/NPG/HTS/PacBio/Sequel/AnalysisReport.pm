@@ -137,7 +137,7 @@ sub _read_ccs_files {
         my $fh = IO::File->new($ccs[0],'<') or $self->logcroak("cant open $ccs[0]");
         while (<$fh>) {
           if (m/\A([ \w \s \- ) (]+ \S) \s+ [:] \s+ (\d+)/mxs) {
-              ! defined $ccs_counts->{$1} ? push @ccs_keys, $1 : q[];
+              ! defined $ccs_counts->{$1} ? push @ccs_keys, $1 : undef;
               $ccs_counts->{$1} += $2;
           }
         }
@@ -147,7 +147,7 @@ sub _read_ccs_files {
 
     my $output;
     foreach my $key ( @ccs_keys ) {
-      $output .=  sprintf qq(%-25s), $key;
+      $output .=  sprintf q(%-25s), $key;
       if (exists $ccs_counts->{$key}) {
         my $value = $ccs_counts->{$key};
         if ($key eq $CCS_AHEADER) {
