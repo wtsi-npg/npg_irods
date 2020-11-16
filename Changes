@@ -1,3 +1,10 @@
+Upcoming
+
+- Add iRODS 4.2.8 to tests
+
+  iRODS 4.2.8 is marked as an expected failure because we have not
+  yet built Conda packages of irods-icommands or libhts plugins for
+  iRODS 4.2.8.
 
  - Remove iRODS 4.1.12 from tests
 
