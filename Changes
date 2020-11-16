@@ -1,3 +1,6 @@
+
+ - Remove iRODS 4.1.12 from tests
+
 Release 2.23.0
 
  - Bugfix: handling of --exclude CLI arguments by npg_publish_tree.pl.
