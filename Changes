@@ -1,4 +1,5 @@
 
+ - Create merged analysis report for Sequel analysis jobs
  - Remove iRODS 4.1.12 from tests
 
 Release 2.23.0
