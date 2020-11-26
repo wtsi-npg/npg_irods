@@ -76,7 +76,7 @@ sub parse_file {
      instrument_name    => $instrument_name,
      run_name           => $run_name,
      run_uuid           => $run_uuid,
-     sample_name        => $sample_name,
+     sample_load_name   => $sample_name,
      set_number         => $set_number,
      well_name          => $well_name);
 }
