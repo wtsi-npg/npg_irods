@@ -1,3 +1,11 @@
+Upcoming
+ -
+
+Release 2.24.0
+
+ - Create merged analysis report for Sequel analysis jobs
+ - Remove iRODS 4.1.12 from tests
+
 Release 2.23.0
 
  - Bugfix: handling of --exclude CLI arguments by npg_publish_tree.pl.

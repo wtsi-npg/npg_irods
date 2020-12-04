@@ -126,7 +126,7 @@ npg_pacbio_analysis_monitor
    --pipeline-name
    --pipeline_name   The SMRT Link pipeline name. Optional.  
    --task-name
-   --task_name       The SMRT Link task name. Optional.  
+   --task_name       The SMRT Link task name. Optional.
    --api-uri
    --api_uri         Specify the server host and port. Optional.
    --verbose         Print messages while processing. Optional.

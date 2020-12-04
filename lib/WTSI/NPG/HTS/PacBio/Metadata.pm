@@ -3,6 +3,11 @@ package WTSI::NPG::HTS::PacBio::Metadata;
 use namespace::autoclean;
 use Moose;
 use MooseX::StrictConstructor;
+use MooseX::Storage;
+
+with Storage( 'traits' => ['OnlyWhenBuilt'],
+              'format' => 'JSON',
+              'io'     => 'File' );
 
 our $VERSION = '';
 
@@ -25,7 +30,7 @@ has 'ts_run_name' =>
    predicate     => 'has_ts_run_name',
    documentation => 'The timestamp run name');
 
-has 'sample_name' =>
+has 'sample_load_name' =>
   (isa           => 'Str',
    is            => 'ro',
    required      => 1,
@@ -55,6 +60,13 @@ has 'cell_index' =>
    required      => 1,
    documentation => 'The PacBio XML cell index');
 
+has 'movie_name' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 0,
+   predicate     => 'has_movie_name',
+   documentation => 'The PacBio movie name');
+
 has 'set_number' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -82,6 +94,13 @@ has 'is_ccs' =>
    required      => 0,
    predicate     => 'has_is_ccs',
    documentation => 'Is the PacBio data ccs');
+
+has 'version_info'  =>
+  (isa           => 'HashRef',
+   is            => 'ro',
+   required      => 0,
+   predicate     => 'has_version_info',
+   documentation => 'The PacBio version info');
 
 
 around BUILDARGS => sub {

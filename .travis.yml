@@ -16,7 +16,6 @@ env:
     - WSI_CONDA_CHANNEL=https://dnap.cog.sanger.ac.uk/npg/conda/devel/generic/
   matrix:
     - DOCKER_IMAGE="wsinpg/ub-16.04-irods-4.2:latest" IRODS_VERSION="==4.2.7"  BATON_VERSION=">2.0.1" LIBHTS_PLUGINS_VERSION="==201712+irods_4.2.7"
-    - DOCKER_IMAGE="wsinpg/ub-12.04-irods-4.1:latest" IRODS_VERSION="==4.1.12" BATON_VERSION="==2.0.1"  LIBHTS_PLUGINS_VERSION="==201712"
 
 before_install:
   - docker pull "$DOCKER_IMAGE"
