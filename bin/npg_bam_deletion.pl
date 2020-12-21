@@ -77,13 +77,13 @@ $log->level($ALL);
 
 if (defined $irods_file) {
   push @files,$irods_file;
-} 
+}
 
 if (defined $irods_fofn){
   my $fh;
-   open $fh, '<', $irods_fofn || $log->logcroak(q[Failed to open file '], $irods_fofn, q[']); 
+   open $fh, '<', $irods_fofn || $log->logcroak(q[Failed to open file '], $irods_fofn, q[']);
    while(my $file = <$fh>){
-     chomp($file);
+     chomp $file;
      if ($file =~/[.]\S+$/mxs){
      $log->debug('Found ' . $file);
      push @files,$file;
@@ -93,7 +93,7 @@ if (defined $irods_fofn){
 
 foreach my $file (@files){
  $log->info("Processing $file");
- push  @init_args, file => $file; 
+ push  @init_args, file => $file;
  my $path =
   WTSI::NPG::Data::BamDeletion->new(@init_args)->process;
 
