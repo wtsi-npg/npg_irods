@@ -18,17 +18,10 @@
    <pbds:DataSetMetadata>
       <pbds:TotalLength>341243046149</pbds:TotalLength>
       <pbds:NumRecords>32553113</pbds:NumRecords>
-      <pbsample:BioSamples>
-         <pbsample:BioSample Name="DN678359V-H1&#xd;">
-            <pbsample:DNABarcodes>
-               <pbsample:DNABarcode Name="bc1018_BAK8B_OA--bc1018_BAK8B_OA" UniqueId="493be38a-bcf8-4342-aad3-17a16139c3d6"/>
-            </pbsample:DNABarcodes>
-         </pbsample:BioSample>
-      </pbsample:BioSamples>
       <pbmeta:Collections>
          <pbmeta:CollectionMetadata Version="3.0.1" CreatedAt="2020-10-30T12:01:33.634Z" ModifiedAt="0001-01-01T00:00:00" UniqueId="7da072af-387d-49e8-8ee3-b0fa0c873fb7" MetaType="CollectionMetadata" TimeStampedName="64016-CollectionMetadata-2020-17-30T12:17:42.625Z" Context="m64016_201030_125711" Status="Ready" InstrumentId="64016" InstrumentName="64016">
             <pbmeta:MultiJobId>0</pbmeta:MultiJobId>
-            <ConsensusReadSetRef UniqueId="358e948d-d467-4e68-b5b0-a35b5def1a3f" xmlns="http://pacificbiosciences.com/PacBioCollectionMetadata.xsd"/>
+            <pbmeta:ConsensusReadSetRef UniqueId="358e948d-d467-4e68-b5b0-a35b5def1a3f"/>
             <pbmeta:InstCtrlVer>9.0.0.92233</pbmeta:InstCtrlVer>
             <pbmeta:SigProcVer>9.0.0.92233</pbmeta:SigProcVer>
             <pbmeta:RunDetails>
@@ -51,13 +44,6 @@
                <pbmeta:SizeSelectionEnabled>false</pbmeta:SizeSelectionEnabled>
                <pbmeta:UseCount>0</pbmeta:UseCount>
                <pbmeta:DNAControlComplex>Sequel® II DNA Internal Control 1.0</pbmeta:DNAControlComplex>
-               <pbsample:BioSamples>
-                  <pbsample:BioSample Name="DN678359V-H1&#xd;">
-                     <pbsample:DNABarcodes>
-                        <pbsample:DNABarcode Name="bc1018_BAK8B_OA--bc1018_BAK8B_OA" UniqueId="493be38a-bcf8-4342-aad3-17a16139c3d6"/>
-                     </pbsample:DNABarcodes>
-                  </pbsample:BioSample>
-               </pbsample:BioSamples>
             </pbmeta:WellSample>
             <pbmeta:Automation Name="Diffusion">
                <pbbase:AutomationParameters>
