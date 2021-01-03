@@ -7,6 +7,7 @@ use File::Spec::Functions qw[catdir splitdir];
 use Moose;
 use MooseX::StrictConstructor;
 
+use WTSI::NPG::HTS::PacBio::Sequel::ImageArchive;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
 
 extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
@@ -23,7 +24,7 @@ our $SEQUENCE_AUXILIARY  = 'scraps';
 our $SEQUENCE_TYPES      = qq{($SEQUENCE_PRODUCT|$SEQUENCE_AUXILIARY)};
 
 # Generic file prefix
-our $FILE_PREFIX_PATTERN = 'm\d+_\d+_\d+';
+our $FILE_PREFIX_PATTERN = 'm[0-9a-z]+_\d+_\d+';
 
 # Well directory pattern
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
@@ -31,11 +32,19 @@ our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 # Data processing level
 our $DATA_LEVEL = 'primary';
 
+
+has 'api_client' =>
+  (isa           => 'WTSI::NPG::HTS::PacBio::Sequel::APIClient',
+   is            => 'ro',
+   documentation => 'A PacBio Sequel API client used to fetch runs');
+
+
 override '_build_directory_pattern' => sub {
    my ($self) = @_;
 
    return $WELL_DIRECTORY_PATTERN;
 };
+
 
 =head2 publish_files
 
@@ -63,18 +72,24 @@ override 'publish_files' => sub {
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
   foreach my $smrt_name (@{$smrt_names}) {
-    my $seq_files = $self->list_sequence_files($smrt_name,$SEQUENCE_PRODUCT);
+    my $seq_files = $self->list_files($smrt_name, $SEQUENCE_FILE_FORMAT .q{$});
 
     if (defined $seq_files->[0]) {
+      my ($meta_data) = $self->_read_metadata($smrt_name);
+
       my ($nfx, $npx, $nex) = $self->publish_xml_files($smrt_name);
-      my ($nfb, $npb, $neb) = $self->publish_sequence_files($smrt_name,$SEQUENCE_PRODUCT);
-      my ($nfs, $nps, $nes) = $self->publish_sequence_files($smrt_name,$SEQUENCE_AUXILIARY);
+      my ($nfb, $npb, $neb) = $self->publish_sequence_files
+        ($smrt_name,$SEQUENCE_PRODUCT,$meta_data);
+      my ($nfs, $nps, $nes) = $self->publish_sequence_files
+        ($smrt_name,$SEQUENCE_AUXILIARY,$meta_data);
       my ($nfp, $npp, $nep) = $self->publish_index_files($smrt_name);
       my ($nfa, $npa, $nea) = $self->publish_adapter_files($smrt_name);
+      my ($nfi, $npi, $nei) = $self->publish_image_archive
+        ($smrt_name,$meta_data);
 
-      $num_files     += ($nfx + $nfb + $nfs + $nfp + $nfa);
-      $num_processed += ($npx + $npb + $nps + $npp + $npa);
-      $num_errors    += ($nex + $neb + $nes + $nep + $nea);
+      $num_files     += ($nfx + $nfb + $nfs + $nfp + $nfa + $nfi);
+      $num_processed += ($npx + $npb + $nps + $npp + $npa + $npi);
+      $num_errors    += ($nex + $neb + $nes + $nep + $nea + $nei);
     }
     else {
       $self->info("Skipping $smrt_name as no seq files found");
@@ -108,7 +123,9 @@ sub publish_xml_files {
   my $type = q[subreadset|sts];
   my $num  = scalar split m/[|]/msx, $type;
 
-  my $files = $self->list_xml_files($smrt_name, $type, $num);
+  my $file_pattern = $FILE_PREFIX_PATTERN .'[.]'. '(' . $type .')[.]xml$';
+
+  my $files = $self->list_files($smrt_name, $file_pattern, $num);
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
 
   my ($num_files, $num_processed, $num_errors) =
@@ -124,6 +141,7 @@ sub publish_xml_files {
 
   Arg [1]    : smrt_name,  Str.
   Arg [2]    : File types, Str.
+  Arg [3]    : Metadata. Obj.
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_sequence_files
@@ -135,17 +153,13 @@ sub publish_xml_files {
 =cut
 
 sub publish_sequence_files {
-  my ($self, $smrt_name, $types) = @_;
+  my ($self, $smrt_name, $types, $metadata) = @_;
 
   defined $types or
       $self->logconfess('A defined file types argument is required');
 
-  my $metadata_file = $self->list_xml_files($smrt_name, 'subreadset', '1')->[0];
-  $self->debug("Reading metadata from '$metadata_file'");
-
-  my $metadata =
-    WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file
-      ($metadata_file);
+  defined $metadata or
+      $self->logconfess('A defined metadata argument is required');
 
   # There will be 1 record for a non-multiplexed SMRT cell and >1
   # record for a multiplexed (currently no uuids recorded in XML).
@@ -174,7 +188,10 @@ sub publish_sequence_files {
        is_r_and_d => $is_r_and_d);
   my @secondary_avus = $self->make_secondary_metadata(@run_records);
 
-  my $files     = $self->list_sequence_files($smrt_name,$types);
+  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $types .q{[.]}.
+        $SEQUENCE_FILE_FORMAT .q{$};
+
+  my $files     = $self->list_files($smrt_name,$file_pattern);
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
 
   my ($num_files, $num_processed, $num_errors) =
@@ -203,7 +220,10 @@ sub publish_sequence_files {
 sub publish_index_files {
   my ($self, $smrt_name) = @_;
 
-  my $files = $self->list_index_files($smrt_name);
+  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $SEQUENCE_TYPES. q{[.]}.
+        $SEQUENCE_FILE_FORMAT .q{[.]}. $SEQUENCE_INDEX_FORMAT .q{$};
+
+  my $files = $self->list_files($smrt_name, $file_pattern);
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
 
   my ($num_files, $num_processed, $num_errors) =
@@ -231,126 +251,112 @@ sub publish_index_files {
 sub publish_adapter_files {
   my ($self, $smrt_name) = @_;
 
-  my $files = $self->list_adapter_files($smrt_name);
+  my $file_pattern = $FILE_PREFIX_PATTERN .'[.]adapters[.]fasta$';
+
+  my $files = $self->list_files($smrt_name,$file_pattern);
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
 
   my ($num_files, $num_processed, $num_errors) =
     $self->_publish_files($files, $dest_coll);
 
-  $self->info("Published $num_processed / $num_files index files ",
+  $self->info("Published $num_processed / $num_files adapter files ",
               "in SMRT cell '$smrt_name'");
 
   return ($num_files, $num_processed, $num_errors);
 }
 
-=head2 list_sequence_files
+=head2 publish_image_archive
 
-  Arg [1]    : SMRT cell name, Str.
-  Arg [2]    : File types, Str.
+  Arg [1]    : smrt_name,  Str.
+  Arg [2]    : Metadata. Obj.
 
-  Example    : $pub->list_sequence_files('1_A01')
-  Description: Return paths of all sequence files for the given SMRT cell.
+  Example    : my ($num_files, $num_published, $num_errors) =
+                 $pub->publish_image_archive
+  Description: Publish images archive from SMRT cell import to iRODS. 
+               Return the number of files, the number published and
+               the number of errors.
+  Returntype : Array[Int]
+
+=cut
+
+sub publish_image_archive {
+  my ($self, $smrt_name, $metadata) = @_;
+
+  my $name  = $self->_check_smrt_name($smrt_name);
+
+  defined $metadata or
+      $self->logconfess('A defined metadata argument is required');
+
+  my $file_pattern;
+  if ( $metadata->has_subreads_uuid && $self->api_client ) {
+    my @init_args = (api_client   => $self->api_client,
+                     archive_name => $metadata->movie_name,
+                     dataset_id   => $metadata->subreads_uuid,
+                     output_dir   => $self->smrt_path($name));
+
+    my $ia = WTSI::NPG::HTS::PacBio::Sequel::ImageArchive->new(@init_args);
+    $file_pattern = $ia->generate_image_archive;
+  }
+
+  my ($num_files, $num_processed, $num_errors) = (0,0,0);
+  if ($file_pattern) {
+    my $files = $self->list_files($smrt_name, $file_pattern .q{$});
+    my $dest_coll = catdir($self->dest_collection, $smrt_name);
+
+    ($num_files, $num_processed, $num_errors) =
+      $self->_publish_files($files, $dest_coll);
+
+    $self->info("Published $num_processed / $num_files image archive files ",
+                "in SMRT cell '$smrt_name'");
+  }
+  return ($num_files, $num_processed, $num_errors);
+}
+
+=head2 list_files
+
+  Arg [1]    : SMRT cell name, Str. Required.
+  Arg [2]    : File type. Str. Required.
+  Arg [3]    : Number of files expected. Optional.
+
+  Example    : $pub->list_files('1_A01', $type)
+  Description: Return paths of all files for the given type.
                Calling this method will access the file system.
   Returntype : ArrayRef[Str]
 
 =cut
 
-sub list_sequence_files {
-  my ($self, $smrt_name, $types) = @_;
-
-  defined $types or
-      $self->logconfess('A defined file types argument is required');
-
-  my $name = $self->_check_smrt_name($smrt_name);
-
-  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $types .q{[.]}.
-        $SEQUENCE_FILE_FORMAT .q{$};
-
-  return [$self->list_directory($self->smrt_path($name),
-                                filter => $file_pattern)];
-}
-
-=head2 list_index_files
-
-  Arg [1]    : SMRT cell name, Str.
-
-  Example    : $pub->list_index_files('1_A01')
-  Description: Return paths of all index files for the given SMRT cell.
-               Calling this method will access the file system.
-  Returntype : ArrayRef[Str]
-
-=cut
-
-sub list_index_files {
-  my ($self, $smrt_name) = @_;
-
-  my $name = $self->_check_smrt_name($smrt_name);
-
-  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $SEQUENCE_TYPES. q{[.]}.
-        $SEQUENCE_FILE_FORMAT .q{[.]}. $SEQUENCE_INDEX_FORMAT .q{$};
-
-  return [$self->list_directory($self->smrt_path($name),
-                                filter => $file_pattern)];
-}
-
-=head2 list_xml_files
-
-  Arg [1]    : SMRT cell name, Str.
-  Arg [2]    : Types.
-  Arg [3]    : Number of files expected.
-
-  Example    : $pub->list_xml_files('1_A01')
-  Description: Return the path of the metadata XML files for the given SMRT
-               cell and type.  Calling this method will access the file system.
-  Returntype : ArrayRef[Str]
-
-=cut
-
-sub list_xml_files {
+sub list_files {
   my ($self, $smrt_name, $type, $expect) = @_;
 
-  my $name = $self->_check_smrt_name($smrt_name);
+  my $name  = $self->_check_smrt_name($smrt_name);
 
   defined $type or
     $self->logconfess('A defined file type argument is required');
-  defined $expect or
-    $self->logconfess('A defined expected file count argument is required');
 
-  my $file_pattern = $FILE_PREFIX_PATTERN .'[.]'. '(' . $type .')[.]xml$';
-
-  my @files = $self->list_directory($self->smrt_path($name),
-                                    filter => $file_pattern);
+  my @files = $self->list_directory($self->smrt_path($name), filter => $type);
 
   my $num_files = scalar @files;
-  if ($num_files != $expect) {
-    $self->logconfess("Expected $expect but found $num_files XML ",
-                      "metadata files for SMRT cell '$smrt_name': ",
+  if ($expect && $num_files != $expect) {
+    $self->logconfess("Expected $expect but found $num_files ",
+                      "for SMRT cell '$smrt_name' and type $type : ",
                       pp(\@files));
   }
-
   return \@files;
 }
 
-=head2 list_adapter_files
 
-  Arg [1]    : SMRT cell name, Str.
-
-  Example    : $pub->list_adapter_files('1_A01')
-  Description: Return the path of the adapter files for the given SMRT
-               cell. Calling this method will access the file system.
-  Returntype : ArrayRef[Str]
-
-=cut
-
-sub list_adapter_files {
+sub _read_metadata {
   my ($self, $smrt_name) = @_;
 
-  my $name = $self->_check_smrt_name($smrt_name);
+  my $pattern = $FILE_PREFIX_PATTERN .'[.]'. q[subreadset] .'[.]xml$';
+  my $metadata_file = $self->list_files($smrt_name, $pattern, '1')->[0];
+  $self->debug("Reading metadata from '$metadata_file'");
 
-  my $file_pattern = $FILE_PREFIX_PATTERN .'[.]adapters[.]fasta$';
+  my $metadata =
+    WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file
+      ($metadata_file);
 
-  return [$self->list_directory($self->smrt_path($name),
-                                filter => $file_pattern)];
+  return $metadata;
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -379,6 +385,7 @@ Data files are divided into a number of categories:
  - index files; index files for sequence data
  - XML files; stats and subset xml
  - adapter fasta file
+ - image archive; tar archive of qc images
 
 A RunPublisher provides methods to list the complement of these
 categories and to copy ("publish") them. Each of these list or publish

@@ -95,6 +95,13 @@ has 'is_ccs' =>
    predicate     => 'has_is_ccs',
    documentation => 'Is the PacBio data ccs');
 
+has 'subreads_uuid' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 0,
+   predicate     => 'has_subreads_uuid',
+   documentation => 'The PacBio subreadset uuid');
+
 has 'version_info'  =>
   (isa           => 'HashRef',
    is            => 'ro',

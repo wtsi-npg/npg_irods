@@ -142,7 +142,7 @@ sub query_runs {
 
 =head2 query_analysis_jobs
 
-  Arg [1]    : Pipeline id. Optional.
+  Arg [1]    : Pipeline id. Required.
 
   Example    : my $jobs = $client->query_analysis_jobs($job_type)
   Description: Query for successful analysis jobs within a specific
@@ -153,6 +153,9 @@ sub query_runs {
 
 sub query_analysis_jobs {
   my($self, $pipeline_id) = @_;
+
+  defined $pipeline_id or
+      $self->logconfess('A defined pipeline_id argument is required');
 
   my $end   = $self->end_date;
   my $begin = $self->begin_date;
@@ -177,6 +180,46 @@ sub query_analysis_jobs {
   return [@jobs];
 }
 
+=head2 query_dataset_reports
+
+  Arg [1]    : Dataset type. Required.
+  Arg [2]    : Dataset id. Required.
+
+  Example    : my $reports = $client->query_dataset_reports($type, $id)
+  Description: Query for successfully generated QC reports for a dataset.
+  Returntype : ArrayRef[HashRef]
+
+=cut
+
+sub query_dataset_reports {
+  my($self, $dataset_type, $dataset_id) = @_;
+
+  defined $dataset_id or
+      $self->logconfess('A defined dataset_id is required');
+
+  defined $dataset_type or
+      $self->logconfess('A defined dataset_type is required');
+
+  my $path = join q[/], q[smrt-link/datasets], $dataset_type, $dataset_id, q[reports];
+  my ($content) = $self->_get_content($self->_get_uri($path)->clone);
+
+  my @reports;
+  if(ref $content eq 'ARRAY') {
+    foreach my $rep (@{$content}) {
+      if($rep->{dataStoreFile}->{isActive} == 1 &&
+         $rep->{dataStoreFile}->{path} ) {
+         push @reports, $rep;
+      }
+    }
+  }
+  return [@reports];
+}
+
+sub _get_uri {
+  my($self, $path) = @_;
+  my $uri    = uri_join($PROTOCOL, $self->api_uri, $path);
+  return URI->new($uri);
+}
 
 sub _get_content{
   my($self, $query) = @_;

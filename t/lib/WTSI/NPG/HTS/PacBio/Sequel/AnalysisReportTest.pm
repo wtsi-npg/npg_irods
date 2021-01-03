@@ -10,7 +10,6 @@ use JSON;
 use Log::Log4perl;
 use Test::More;
 use Test::Exception;
-use URI;
 
 use base qw[WTSI::NPG::HTS::Test];
 

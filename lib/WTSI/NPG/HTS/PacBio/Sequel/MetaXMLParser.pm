@@ -36,6 +36,9 @@ our $COMP_VERSION          = 'VersionInfo';
 our $CNAME                 = 'Name';
 our $CVERSION              = 'Version';
 
+our $SUBREADSET_TAG        = 'pbds:SubreadSet';
+our $UNIQUE_ID_TAG         = 'UniqueId';
+
 =head2 parse_file
 
   Arg [1]    : Path to metadata xml file. Required.
@@ -85,6 +88,9 @@ sub parse_file {
   my $is_ccs = $dom->getElementsByTagName($prefix . $IS_CCS_TAG) ?
       $dom->getElementsByTagName($prefix . $IS_CCS_TAG)->[0]->string_value : 0;
 
+  my $subreads_uuid = $dom->getElementsByTagName($SUBREADSET_TAG) ?
+      $dom->getElementsByTagName($SUBREADSET_TAG)->[0]->getAttribute($UNIQUE_ID_TAG) : undef;
+
   my %versions;
   my @version_info = $dom->getElementsByTagName($prefix . $COMP_VERSION);
   foreach my $v (@version_info){
@@ -98,6 +104,7 @@ sub parse_file {
      instrument_name    => $instrument_name,
      run_name           => $run_name,
      ts_run_name        => $ts_run_name,
+     subreads_uuid      => $subreads_uuid,
      sample_load_name   => $sample_name,
      well_name          => $well_name,
      collection_number  => $collection_number,
