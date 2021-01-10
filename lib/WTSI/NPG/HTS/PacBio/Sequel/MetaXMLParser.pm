@@ -39,6 +39,8 @@ our $CVERSION              = 'Version';
 our $SUBREADSET_TAG        = 'pbds:SubreadSet';
 our $UNIQUE_ID_TAG         = 'UniqueId';
 
+our $CCSREADSET_TAG        = 'ConsensusReadSetRef';
+
 =head2 parse_file
 
   Arg [1]    : Path to metadata xml file. Required.
@@ -91,6 +93,9 @@ sub parse_file {
   my $subreads_uuid = $dom->getElementsByTagName($SUBREADSET_TAG) ?
       $dom->getElementsByTagName($SUBREADSET_TAG)->[0]->getAttribute($UNIQUE_ID_TAG) : undef;
 
+  my $ccsreads_uuid = $dom->getElementsByTagName($CCSREADSET_TAG) ?
+      $dom->getElementsByTagName($CCSREADSET_TAG)->[0]->getAttribute($UNIQUE_ID_TAG) : undef;
+
   my %versions;
   my @version_info = $dom->getElementsByTagName($prefix . $COMP_VERSION);
   foreach my $v (@version_info){
@@ -105,6 +110,7 @@ sub parse_file {
      run_name           => $run_name,
      ts_run_name        => $ts_run_name,
      subreads_uuid      => $subreads_uuid,
+     ccsreads_uuid      => $ccsreads_uuid,
      sample_load_name   => $sample_name,
      well_name          => $well_name,
      collection_number  => $collection_number,

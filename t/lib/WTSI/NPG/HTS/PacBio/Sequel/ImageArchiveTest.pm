@@ -81,19 +81,17 @@ sub create_image_archive : Test(2) {
 
   my $run_name  = 'r54097_20170727_165601';
   my $well      = '1_A02';
-
   my $data_path = catdir('t/data/pacbio/sequel', $run_name, $well);
 
   my $metafile  = catfile($data_path,'m54097_170727_170646.subreadset.xml');
   my $metadata  = WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file($metafile);
 
   my $client    = TestAPIClient->new();
-  my $tmpdir    = tempdir(CLEANUP => 1);
 
   my @init_args = (api_client   => $client,
-                   archive_name => $metadata->movie_name,
+                   archive_name => $metadata->movie_name .q[.primary_qc],
                    dataset_id   => $metadata->subreads_uuid,
-                   output_dir   => $tmpdir);
+                   output_dir   => tempdir(CLEANUP => 1));
 
   my $ia = WTSI::NPG::HTS::PacBio::Sequel::ImageArchive->new(@init_args);
   my $archive_file = $ia->generate_image_archive;
@@ -104,6 +102,40 @@ sub create_image_archive : Test(2) {
       (executable => '/bin/bash', arguments  => ['-c', $cmd])->run;
   my $count = ${$run->stdout};
   ok(($count -1) == 6, "created archive file contains correct file count");
+}
+
+sub create_image_archive_with_report_count : Test(2) {
+
+  my $run_name   = 'r54097_20170727_165601';
+  my $well       = '1_A02';
+  my $data_path  = catdir('t/data/pacbio/sequel', $run_name, $well);
+
+  my $metafile   = catfile($data_path,'m54097_170727_170646.subreadset.xml');
+  my $metadata   = WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file($metafile);
+
+  my $client     = TestAPIClient->new();
+
+  my @init_args  = (api_client   => $client,
+                    archive_name => $metadata->movie_name,
+                    dataset_id   => $metadata->subreads_uuid);
+
+  # check qc file count requirement enforced - incorrect count
+  my @init_args1 = @init_args;
+  push @init_args1, report_count => '4';
+  push @init_args1, output_dir   => tempdir(CLEANUP => 1);
+
+  my $ia1 = WTSI::NPG::HTS::PacBio::Sequel::ImageArchive->new(@init_args1);
+  my $archive_file1 = $ia1->generate_image_archive;
+  ok(! -f $archive_file1, "skipped creating archive file with incorrect qc file count");
+
+  # check qc file count requirement enforced - correct count
+  my @init_args2 = @init_args;
+  push @init_args2, report_count => '2';
+  push @init_args2, output_dir   => tempdir(CLEANUP => 1);
+
+  my $ia2 = WTSI::NPG::HTS::PacBio::Sequel::ImageArchive->new(@init_args2);
+  my $archive_file2 = $ia2->generate_image_archive;
+  ok(-f $archive_file2, "created archive file with 2 report files exists");
 }
 
 1;

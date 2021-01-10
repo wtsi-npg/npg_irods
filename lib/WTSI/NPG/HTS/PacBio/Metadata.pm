@@ -102,6 +102,13 @@ has 'subreads_uuid' =>
    predicate     => 'has_subreads_uuid',
    documentation => 'The PacBio subreadset uuid');
 
+has 'ccsreads_uuid' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 0,
+   predicate     => 'has_ccsreads_uuid',
+   documentation => 'The PacBio ccsreads uuid');
+
 has 'version_info'  =>
   (isa           => 'HashRef',
    is            => 'ro',

@@ -191,9 +191,9 @@ sub list_image_archive_files : Test(1) {
 
   my @expected_paths =
     map { catfile("$runfolder_path/1_A02", $_) }
-    ('m54097_170727_170646.subreads_qc.tar.xz');
+    ('m54097_170727_170646.primary_qc.tar.xz');
 
-  is_deeply($pub->list_files('1_A02',$FILE_PREFIX_PATTERN .'[.]subreads_qc[.]tar[.]xz$'),
+  is_deeply($pub->list_files('1_A02',$FILE_PREFIX_PATTERN .'[.]primary_qc[.]tar[.]xz$'),
     \@expected_paths, 'Found image archive files 1_A02');
 }
 
@@ -394,7 +394,7 @@ sub publish_image_archive : Test(9) {
 
   my @expected_paths =
     map { catfile("$dest_coll/1_A02", $_) }
-    ('m54097_170727_170646.subreads_qc.tar.xz');
+    ('m54097_170727_170646.primary_qc.tar.xz');
 
   my ($num_files, $num_processed, $num_errors) =
     $pub->publish_image_archive('1_A02', $meta);

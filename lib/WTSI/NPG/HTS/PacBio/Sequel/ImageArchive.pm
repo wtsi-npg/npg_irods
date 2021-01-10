@@ -51,17 +51,11 @@ has 'output_dir' =>
    required      => 1,
    documentation => 'Output directory for image archive file');
 
-has 'archive_file_name' =>
-  (isa           => 'Str',
+has 'report_count' =>
+  (isa           => 'Int',
    is            => 'ro',
-   lazy          => 1,
-   builder       => q[_build_archive_file_name],
-   documentation => 'File name for image archive');
-
-sub _build_archive_file_name {
-  my ($self) = @_;
-  return $self->archive_name .q[.]. $self->dataset_type .q[_qc];
-}
+   predicate     => 'has_report_count',
+   documentation => 'Minimum expected report count if known');
 
 =head2 generate_image_archive
 
@@ -76,14 +70,17 @@ sub _build_archive_file_name {
 sub generate_image_archive {
   my ($self) = @_;
 
-  my $archive = catfile($self->output_dir, $self->archive_file_name . $ARCHIVE_SUFFIX);
-  if(! -f $archive) {
+  my $archive = catfile($self->output_dir, $self->archive_name . $ARCHIVE_SUFFIX);
+  if (! -f $archive) {
     my $reports = $self->api_client->query_dataset_reports
       ($self->dataset_type,$self->dataset_id);
 
     my $dirs  = $self->_find_qc_directories($reports);
     my $files = $self->_find_qc_files($reports);
-    if ($dirs->[0] || $files->[0]) {
+    my $repc  = $self->has_report_count ?
+      (@{$files} >= $self->report_count ? 1 : 0) : 1;
+
+    if ($repc && ($dirs->[0] || $files->[0])) {
       $self->_create_archive($dirs,$files,$archive);
     }
   }
@@ -121,12 +118,12 @@ sub _create_archive {
   my ($self, $dirs, $files, $archive) = @_;
 
   my $tmpdir = tempdir(CLEANUP => 1);
-  my $tardir = rel2abs(catdir($tmpdir, $self->archive_file_name));
+  my $tardir = rel2abs(catdir($tmpdir, $self->archive_name));
 
   my @find_cmds;
   foreach my $dir (@{$dirs}) {
     push @find_cmds,
-      qq[find "$dir" -maxdepth 1 -type f -name "*.png" | xargs -n1 cp -t $tardir];
+      qq[find "$dir" -maxdepth 1 -type f -name "*.png" -exec cp '{}' $tardir \\;];
   }
   foreach my $file (@{$files}) {
     push @find_cmds,
@@ -134,7 +131,7 @@ sub _create_archive {
   }
 
   my $find   = join q[ && ], @find_cmds;
-  my $tarcmd = qq[cd $tmpdir && tar cJf $archive ]. $self->archive_file_name;
+  my $tarcmd = qq[cd $tmpdir && tar cJf $archive ]. $self->archive_name;
   my $cmd    = qq[set -o pipefail && mkdir -p $tardir && ($find) && $tarcmd];
 
   try {

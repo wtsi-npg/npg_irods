@@ -2,6 +2,7 @@ Upcoming
 
  - Order Conda channels for tests so that NPG channels have highest priority
    and conda-forge the lowest.
+ - Pacbio Sequel generate and publish archive of QC images and reports.
 
 Release 2.24.0
 

@@ -6,9 +6,11 @@ use English qw[-no_match_vars];
 use File::Spec::Functions qw[catdir splitdir];
 use Moose;
 use MooseX::StrictConstructor;
+use Readonly;
 
 use WTSI::NPG::HTS::PacBio::Sequel::ImageArchive;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
+use WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
 
 extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
 
@@ -31,6 +33,12 @@ our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
 # Data processing level
 our $DATA_LEVEL = 'primary';
+
+# Image archive related
+Readonly::Scalar my $PRIMARY_REPORT_COUNT   => 4;
+Readonly::Scalar my $SECONDARY_REPORT_COUNT => 2;
+Readonly::Scalar my $DATA_LEVEL_TWO          =>
+  $WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher::DATA_LEVEL;
 
 
 has 'api_client' =>
@@ -72,7 +80,8 @@ override 'publish_files' => sub {
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
   foreach my $smrt_name (@{$smrt_names}) {
-    my $seq_files = $self->list_files($smrt_name, $SEQUENCE_FILE_FORMAT .q{$});
+    my $seq_files = $self->list_files($smrt_name,
+      $SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$});
 
     if (defined $seq_files->[0]) {
       my ($meta_data) = $self->_read_metadata($smrt_name);
@@ -287,20 +296,39 @@ sub publish_image_archive {
   defined $metadata or
       $self->logconfess('A defined metadata argument is required');
 
-  my $file_pattern;
-  if ( $metadata->has_subreads_uuid && $self->api_client ) {
+  my $files = [];
+  if ($self->api_client) {
     my @init_args = (api_client   => $self->api_client,
-                     archive_name => $metadata->movie_name,
-                     dataset_id   => $metadata->subreads_uuid,
                      output_dir   => $self->smrt_path($name));
-
-    my $ia = WTSI::NPG::HTS::PacBio::Sequel::ImageArchive->new(@init_args);
-    $file_pattern = $ia->generate_image_archive;
+    my @i_handles;
+    if ($metadata->has_subreads_uuid) {
+      my @p_init = @init_args;
+      push @p_init,
+        dataset_id   => $metadata->subreads_uuid,
+        report_count => $PRIMARY_REPORT_COUNT,
+        archive_name => $metadata->movie_name .q[.]. $DATA_LEVEL .q[_qc];
+      my $iap = WTSI::NPG::HTS::PacBio::Sequel::ImageArchive->new(@p_init);
+      push @i_handles, $iap;
+    }
+    if ($metadata->has_ccsreads_uuid) {
+      my @s_init = @init_args;
+      push @s_init,
+        dataset_id   => $metadata->ccsreads_uuid,
+        dataset_type => q[ccsreads],
+        report_count => $SECONDARY_REPORT_COUNT,
+        archive_name => $metadata->movie_name .q[.]. $DATA_LEVEL_TWO .q[_qc];
+      my $ias = WTSI::NPG::HTS::PacBio::Sequel::ImageArchive->new(@s_init);
+      push @i_handles, $ias;
+    }
+    foreach my $i (@i_handles) {
+      my $pattern = $i->generate_image_archive;
+      my $files_i = $self->list_files($smrt_name, $pattern .q{$});
+      push @{$files}, @{$files_i};
+    }
   }
 
   my ($num_files, $num_processed, $num_errors) = (0,0,0);
-  if ($file_pattern) {
-    my $files = $self->list_files($smrt_name, $file_pattern .q{$});
+  if ($files->[0]) {
     my $dest_coll = catdir($self->dest_collection, $smrt_name);
 
     ($num_files, $num_processed, $num_errors) =

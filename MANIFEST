@@ -16277,7 +16277,7 @@ t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.sts.xml
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreads.bam
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreads.bam.pbi
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreadset.xml
-t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreads_qc.tar.xz
+t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.primary_qc.tar.xz
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.transferdone
 t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-pb_ccs/pb_ccs/8a9863e7/call-ccs/shard-0/execution/ccs_report.txt
 t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-pb_ccs/pb_ccs/8a9863e7/call-ccs/shard-1/execution/ccs_report.txt

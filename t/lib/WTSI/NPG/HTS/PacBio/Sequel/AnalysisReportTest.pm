@@ -39,7 +39,7 @@ sub read_report_file : Test(2) {
 
   my $rdo = WTSI::NPG::HTS::PacBio::Sequel::Reportdata->load($merged_file);
   
-  cmp_ok($rdo->created_at, 'eq', '2020-11-05T21:24:30', "created_at is correct");
+  cmp_ok($rdo->created_at, 'eq', '2020-11-05T21:24:30', 'created_at is correct');
   is_deeply($rdo->meta_data, $meta_data, 'meta_data is correct');
 }
 

@@ -142,7 +142,7 @@ sub query_runs {
 
 =head2 query_analysis_jobs
 
-  Arg [1]    : Pipeline id. Required.
+  Arg [1]    : Pipeline id. Optional.
 
   Example    : my $jobs = $client->query_analysis_jobs($job_type)
   Description: Query for successful analysis jobs within a specific
@@ -154,9 +154,6 @@ sub query_runs {
 sub query_analysis_jobs {
   my($self, $pipeline_id) = @_;
 
-  defined $pipeline_id or
-      $self->logconfess('A defined pipeline_id argument is required');
-
   my $end   = $self->end_date;
   my $begin = $self->begin_date;
 
@@ -165,12 +162,12 @@ sub query_analysis_jobs {
   my @jobs;
   if(ref $content eq 'ARRAY') {
       foreach my $job (@{$content}) {
-          if($job->{createdAt}                      &&
-             ($job->{createdAt} gt $begin->iso8601) &&
-             ($job->{createdAt} lt $end->iso8601)   &&
-             $job->{state}                          &&
-             ($job->{state} eq $SUCCESS_STATE)      &&
-             $job->{subJobTypeId}                   &&
+          if($job->{jobCompletedAt}                      &&
+             ($job->{jobCompletedAt} gt $begin->iso8601) &&
+             ($job->{jobCompletedAt} lt $end->iso8601)   &&
+             $job->{state}                               &&
+             ($job->{state} eq $SUCCESS_STATE)           &&
+             $job->{subJobTypeId}                        &&
              ($job->{subJobTypeId} eq $pipeline_id)
              ){
               push @jobs, $job;
