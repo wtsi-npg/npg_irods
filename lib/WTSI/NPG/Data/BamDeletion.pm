@@ -1,7 +1,6 @@
 package WTSI::NPG::Data::BamDeletion;
 
 use Moose;
-#use English qw{-no_match_vars};
 use POSIX qw[strftime];
 use Cwd;
 use File::Slurp;
@@ -15,8 +14,8 @@ use WTSI::NPG::HTS::Illumina::AlnDataObject;
 use WTSI::NPG::iRODS::Publisher;
 
 with qw{
-  MooseX::Getopt
   WTSI::DNAP::Utilities::Loggable
+  WTSI::NPG::HTS::ChecksumCalculator
        };
 
 our $VERSION = '0';
@@ -66,7 +65,6 @@ has 'irods' => (
   isa        => 'WTSI::NPG::iRODS',
   is         => 'ro',
   required   => 1,
-  metaclass => 'NoGetopt',
 );
 
 =head2 rt_ticket
@@ -120,29 +118,36 @@ sub _build_md5_file {
     my $self = shift;
     my $filename = fileparse($self->file);
     my $md5file  = $self->outdir.qq[/$filename].q[.md5];
-return $md5file;
+   return $md5file;
 }
 
+=head2
+
+Generate an md5sum for the stub/header file to load 
+
+=cut
+
+has 'md5sum' =>
+  (is       => 'ro',
+   isa      => 'Str',
+   init_arg => undef,
+   lazy     => 1,
+   builder  => '_build_md5sum',
+   documentation => 'MD5 checksum of the file to load',
+);
 sub _build_md5sum {
     my ($self) = @_;
-    my $md5 = Digest::MD5->new;
-    my $fh;
-    open $fh, '<', $self->outfile ||
-        $self->logcroak(q[Failed to open path '], $self->outfile, q[']);
-        $md5->addfile($fh);
-    close $fh ||
-        $self->logcroak(q[Failed to close path '], $self->outfile, q[']);
+    my $checksum = $self->calculate_checksum($self->outfile);
 
     my $md5_fh;
     open $md5_fh, '>', $self->md5_file ||
          $self->logcroak(q[Failed to open md5 file '], $self->md5_file, q[']);
          $self->logwarn(q[MD5 file ],$self->md5_file);
-    print $md5_fh $md5->hexdigest || $self->logcroak(q[Failed to print to md5 file '], $self->md5_file, q[']);;
+    print $md5_fh $checksum || $self->logcroak(q[Failed to print to md5 file '], $self->md5_file, q[']);;
     close $md5_fh ||
           $self->logcroak(q[Failed to close md5 file '], $self->md5_file, q[']);
-    return $md5->hexdigest;
+    return $checksum;
 }
-
 
 =head2 outdir
 
@@ -174,10 +179,8 @@ sub _build_outfile {
     my $self = shift;
     my $filename = fileparse($self->file);
     my $outfile     = $self->outdir.qq[/$filename];
-return $outfile;
+    return $outfile;
 }
-
-
 
 =head2 process
 
@@ -214,7 +217,7 @@ sub _generate_header{
        $obj->is_present or $self->info($self->file ,q[ not found]);
 
     my $header = $obj->header;
-return $header;
+    return $header;
 }
 
 
@@ -237,7 +240,7 @@ return 1;
 sub _write_md5_file{
     my $self = shift;
     if ($self->dry_run){ carp (q[Would be generating md5 file ],$self->md5_file);return }
-    return $self->_build_md5sum();
+    return $self->md5sum();
 }
 
 sub _reload_file {
@@ -255,8 +258,7 @@ sub _reload_file {
 
      if ($self->rt_ticket){ $obj->add_avu('rt_ticket',$self->rt_ticket) }
 
-     $self->logwarn(q[Meta data for ], $self->file, q[ is ],$obj->meta_json);
-return;
+     return $obj;
 }
 1;
 
@@ -272,8 +274,6 @@ __END__
 
 =item Moose
 
-=item MooseX::Getopt
-
 =item Readonly
 
 =item WTSI::NPG::HTS::Illumina::AlnDataObject
@@ -281,6 +281,8 @@ __END__
 =item WTSI::NPG::iRODS::Publisher
 
 =item WTSI::DNAP::Utilities::Loggable
+
+=item WTSI::NPG::HTS::ChecksumCalculator
 
 =item POSIX
 

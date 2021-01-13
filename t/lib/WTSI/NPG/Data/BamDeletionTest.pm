@@ -4,10 +4,13 @@ use strict;
 use warnings;
 use Carp;
 use English qw(-no_match_vars);
+use File::Slurp qw[read_file];
 use Test::More;
 use Test::Exception;
 use File::Temp qw( tempdir );
+use File::Path qw/make_path/;
 use File::Copy;
+use Data::Dumper;
 use File::Basename;
 use Cwd;
 use Log::Log4perl;
@@ -84,7 +87,7 @@ diag "*** object_creation $test_counter";
 }
 
 
-sub b_header : Test(6) {
+sub b_header : Test(13) {
 
  SKIP: {
     if (not $samtools_available) {
@@ -98,7 +101,11 @@ sub b_header : Test(6) {
 my $tdir = tempdir( CLEANUP => 1 );
 
 diag "*** header $test_counter";
-my $file = $irods->get_irods_home . qq[/RunPublisherTest.$pid.1/20131_8#9_phix.cram];
+my $collection = $irods->get_irods_home . qq[/RunPublisherTest.$pid.1];
+my $t_subdir = join q[/],$tdir,q[post_irods];
+make_path($t_subdir);
+my $cram = q[20131_8#9_phix.cram];
+my $file =  qq[$collection/$cram];
 my $bd = WTSI::NPG::Data::BamDeletion->new(irods => $irods,file => $file, outdir => $tdir, rt_ticket => q[111111], dry_run => 0 );
 is($bd->file,$file,q[File name found]);
 
@@ -116,14 +123,50 @@ is($bd->_write_header($header),1, q[header file written]);
 
 is(-e $path,'1',q[header file exists]);
 
-$bd->_build_md5sum();
-$bd->_reload_file();
+$bd->md5sum;
+my $md5_file =  qq[$tdir/20131_8#9_phix.cram.md5];
+diag "*** md5_file $md5_file";
 
-} # SKIP samtools
+is ( -e $md5_file,1, q[md5 file generated]);
 
+my $obj = $bd->_reload_file();
+
+## check that the uploaded file meta data is correct
+
+my @irods_meta = $irods->get_object_meta($file);
+
+is ($irods_meta[2]{'attribute'}, 'md5_history', 'md5_history meta data found');
+my $md5_history = $irods_meta[2]{'value'};
+my $md5_value;
+if ($irods_meta[2]{'value'} =~ /\s+(\S+)$/){ $md5_value = $1 } #lose date
+is ($md5_value,'8b61d4c67c845676057765f01dbbe407','md5_history value correct');
+
+my $target_history_value;
+is ($irods_meta[8]{'attribute'}, 'target_history','target_history meta data found');
+if ($irods_meta[8]{'value'} =~ /\s+(\d)$/){ $target_history_value = $1 } #lose date
+is ($target_history_value,'1','target history value correct');
+
+delete $irods_meta[0]; # md5
+delete $irods_meta[1]; # dcterms:modified
+delete $irods_meta[2];
+delete $irods_meta[8];
+
+my $res = is_deeply(\@irods_meta,expected_meta(),'cram meta data matches expected');
+if (!$res){
+             carp "RECEIVED: ".Dumper(@irods_meta);
+             carp "EXPECTED: ".Dumper(expected_meta());
+          }
+
+## check that the uploaded file is as expected
+$irods->get_collection($collection,$t_subdir);
+my @orig_file = read_file("$tdir/$cram");
+my @irods_file = read_file("$t_subdir/RunPublisherTest.$pid.1/$cram");
+is_deeply(\@orig_file,\@irods_file) or diag explain @irods_file;
+
+       } # SKIP samtools
 }
 
-sub c_stub : Test(4) {
+sub c_stub : Test(3) {
 
 my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -137,8 +180,25 @@ $bd->process();
 my $path = $tdir.q[/].fileparse($file);
 is($bd->outfile,$path,q[outfile path generated correctly]);
 is($bd->md5_file,$path.q[.md5],q[outfile md5 path generated correctly]);
-is($bd->_build_md5sum,q[d41d8cd98f00b204e9800998ecf8427e],q[md5 calculated correctly]);
 is(-e $path,'1',q[stub file exists]);
 
 }
 
+
+sub expected_meta {
+    my @meta = ();
+
+@meta = (
+        undef,undef,undef,
+  { 'value' => 111111, 'attribute' => 'rt_ticket' },
+  { 'attribute' => 'rt_ticket', 'value' => 12345 },
+  { 'value' => 1, 'attribute' => 'sample_consent_withdrawn_email_sent' },
+  { 'value' => 'mystudy', 'attribute' => 'study' },
+  { 'attribute' => 'target', 'value' => 0 },
+        undef,
+  { 'attribute' => 'type', 'value' => 'cram' }
+);
+
+
+return \@meta;
+}

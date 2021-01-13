@@ -31,9 +31,9 @@ GetOptions(
            'help'                              => sub {
              pod2usage(-verbose => 2, -exitval => 0);
            },
-           'irods_file=s'                   => \$irods_file,
-           'irods_fofn=s'                   => \$irods_fofn,
-           'rt_ticket=i'                    => \$rt_ticket,
+           'irods-file|irods_file=s'                   => \$irods_file,
+           'irods-fofn|irods_fofn=s'                   => \$irods_fofn,
+           'rt-ticket|rt_ticket=i'                    => \$rt_ticket,
            'outdir=s'                       => \$outdir,
            'dry-run|dry_run!'               => \$dry_run,
            'logconf=s'                      => \$log4perl_config,
