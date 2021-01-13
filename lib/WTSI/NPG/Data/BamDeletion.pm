@@ -201,7 +201,7 @@ sub process {
     } else {
       $self->_write_stub_file();
     }
-     $self->_write_md5_file();
+      $self->_write_md5_file();
 
      if ($self->dry_run){ carp q[Would be re-loading file ], $self->file,qq[\n] }
      else { $self->_reload_file(); }
@@ -226,15 +226,13 @@ sub _write_header{
     my $header = shift;
     push @{$header}, $DELETION_MSG;
     if ($self->dry_run){ carp ("Would be writing header and \"$DELETION_MSG\" to ",$self->outfile) ; return }
-    write_file($self->outfile,map { "$_\n" } @{$header}) or $self->logcroak(q[Cannot write ] ,$self->outfile);
-return 1;
+    return write_file($self->outfile,map { "$_\n" } @{$header}) or $self->logcroak(q[Cannot write ] ,$self->outfile);
 }
 
 sub _write_stub_file{
     my $self = shift;
     if ($self->dry_run){ carp ("Would be writing \"$DELETION_MSG\" to ",$self->outfile) ; return }
-    write_file($self->outfile, $DELETION_MSG) or $self->logcroak(q[cannot write ],$self->outfile);
-return 1;
+    return write_file($self->outfile, $DELETION_MSG) or $self->logcroak(q[cannot write ],$self->outfile);
 }
 
 sub _write_md5_file{
@@ -254,7 +252,7 @@ sub _reload_file {
     my $obj =$publisher->publish_file($self->outfile,$self->file);
 
      ## this also adds a target_history avu
-     $obj->supersede_avus('target','0');
+      $obj->supersede_avus('target','0');
 
      if ($self->rt_ticket){ $obj->add_avu('rt_ticket',$self->rt_ticket) }
 

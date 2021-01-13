@@ -69,8 +69,6 @@ sub teardown_test : Test(teardown) { #from Test::Class, teardown methods are run
 
 sub a_object_creation : Test(3){
 
-diag "*** object_creation $test_counter";
-
   use_ok 'WTSI::NPG::Data::BamDeletion';
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -100,7 +98,6 @@ sub b_header : Test(13) {
 
 my $tdir = tempdir( CLEANUP => 1 );
 
-diag "*** header $test_counter";
 my $collection = $irods->get_irods_home . qq[/RunPublisherTest.$pid.1];
 my $t_subdir = join q[/],$tdir,q[post_irods];
 make_path($t_subdir);
@@ -125,7 +122,6 @@ is(-e $path,'1',q[header file exists]);
 
 $bd->md5sum;
 my $md5_file =  qq[$tdir/20131_8#9_phix.cram.md5];
-diag "*** md5_file $md5_file";
 
 is ( -e $md5_file,1, q[md5 file generated]);
 
