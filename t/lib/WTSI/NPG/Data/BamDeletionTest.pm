@@ -26,8 +26,6 @@ my $test_counter = 0;
 my $collection;
 my $samtools_available = `which samtools`;
 
-my @files = qw /f1.bam/;
-
 sub setup_test : Test(setup) { # from Test::Class setup methods are run before every test method
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -37,12 +35,6 @@ sub setup_test : Test(setup) { # from Test::Class setup methods are run before e
   $test_counter++;
 
   my $tdir = tempdir( CLEANUP => 1 );
-  foreach my $file (@files) {
-    my $source = "$tdir/$file";
-    `touch $source`;
-    my $target = "$collection/$file";
-    $irods->add_object($source, $target, $WTSI::NPG::iRODS::CALC_CHECKSUM);
-  }
 
   #copy phix cram file with reads t/data/consent_withdrawn/20131_8#9_phix.cram
   my $example_cram = q[20131_8#9_phix.cram];
@@ -68,7 +60,6 @@ sub teardown_test : Test(teardown) { #from Test::Class, teardown methods are run
 }
 
 sub a_object_creation : Test(3){
-
   use_ok 'WTSI::NPG::Data::BamDeletion';
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -85,7 +76,7 @@ sub a_object_creation : Test(3){
 }
 
 
-sub b_header : Test(13) {
+sub b_header : Test(14) {
 
  SKIP: {
     if (not $samtools_available) {
@@ -105,6 +96,7 @@ my $cram = q[20131_8#9_phix.cram];
 my $file =  qq[$collection/$cram];
 my $bd = WTSI::NPG::Data::BamDeletion->new(irods => $irods,file => $file, outdir => $tdir, rt_ticket => q[111111], dry_run => 0 );
 is($bd->file,$file,q[File name found]);
+is($irods->ensure_object_path($file),$file,q[Original file exists]);
 
 my $header = $bd->_generate_header();
 is (ref($header),q[ARRAY],q[ARRAY returned from _generate_header]);
@@ -164,10 +156,15 @@ is_deeply(\@orig_file,\@irods_file) or diag explain @irods_file;
 
 sub c_stub : Test(3) {
 
+ SKIP: {
+    if (not $samtools_available) {
+      skip 'samtools executable not on the PATH', 3;
+    }
+
+
 my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-
-my $file = $irods->get_irods_home . qq[/RunPublisherTest.$pid.1/20131_8#9_phix.cram.crai];
+my $file = $irods->get_irods_home . qq[/RunPublisherTest.$pid.2/20131_8#9_phix.cram.crai];
 my $tdir = tempdir( CLEANUP => 1 );
 my $bd = WTSI::NPG::Data::BamDeletion->new(irods => $irods,file => $file, outdir => $tdir, rt_ticket => q[222222], dry_run => 0);
 
@@ -178,6 +175,7 @@ is($bd->outfile,$path,q[outfile path generated correctly]);
 is($bd->md5_file,$path.q[.md5],q[outfile md5 path generated correctly]);
 is(-e $path,'1',q[stub file exists]);
 
+  } # SKIP samtools
 }
 
 

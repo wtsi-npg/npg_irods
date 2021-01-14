@@ -195,6 +195,8 @@ sub process {
 
   $self->dry_run and $self->info('DRY RUN - no data removal');
 
+   $self->irods->ensure_object_path($self->file);
+
     ###check file suffix
    if ($self->file =~ /[b|cr]am$/sxm){
       $self->_write_header($self->_generate_header());
@@ -225,19 +227,19 @@ sub _write_header{
     my $self = shift;
     my $header = shift;
     push @{$header}, $DELETION_MSG;
-    if ($self->dry_run){ carp ("Would be writing header and \"$DELETION_MSG\" to ",$self->outfile) ; return }
-    return write_file($self->outfile,map { "$_\n" } @{$header}) or $self->logcroak(q[Cannot write ] ,$self->outfile);
+    if ($self->dry_run){ carp ("Would be writing header and \"$DELETION_MSG\" to ",$self->outfile) ; return 1 }
+    return write_file($self->outfile,map { "$_\n" } @{$header}) || $self->logcroak(q[Cannot write ] ,$self->outfile);
 }
 
 sub _write_stub_file{
     my $self = shift;
-    if ($self->dry_run){ carp ("Would be writing \"$DELETION_MSG\" to ",$self->outfile) ; return }
-    return write_file($self->outfile, $DELETION_MSG) or $self->logcroak(q[cannot write ],$self->outfile);
+    if ($self->dry_run){ carp ("Would be writing \"$DELETION_MSG\" to ",$self->outfile) ; return 1 }
+    return write_file($self->outfile, $DELETION_MSG) || $self->logcroak(q[Cannot write ] ,$self->outfile);
 }
 
 sub _write_md5_file{
     my $self = shift;
-    if ($self->dry_run){ carp (q[Would be generating md5 file ],$self->md5_file);return }
+    if ($self->dry_run){ carp (q[Would be generating md5 file ],$self->md5_file); return 1 }
     return $self->md5sum();
 }
 
