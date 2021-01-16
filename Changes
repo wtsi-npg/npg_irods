@@ -2,6 +2,7 @@ Upcoming
 
  - Order Conda channels for tests so that NPG channels have highest priority
    and conda-forge the lowest.
+ - Pacbio Sequel merged analysis report file changes due to version update
 
 Release 2.24.0
 
