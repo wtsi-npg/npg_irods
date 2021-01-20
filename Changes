@@ -1,5 +1,7 @@
 Upcoming
 
+Release 2.24.1
+
  - Order Conda channels for tests so that NPG channels have highest priority
    and conda-forge the lowest.
 
