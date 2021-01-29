@@ -34,16 +34,11 @@ has 'task_name' =>
    default       => 'barcoding.tasks.lima-0',
    documentation => 'A specified task name to identify relevent output directories');
 
-has 'ccs_report' =>
-  (isa           => 'Str',
-   is            => 'ro',
-   documentation => 'A specified task location containing ccs output directories');
-
 has 'job_root' =>
   (isa           => 'Str',
    is            => 'ro',
    required      => '1',
-   default       => 'cromwell-task',
+   default       => 'cromwell-job',
    documentation => 'Root directory for job processing output');
 
 
