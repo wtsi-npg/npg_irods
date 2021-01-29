@@ -16277,9 +16277,6 @@ t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreads.
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreads.bam.pbi
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreadset.xml
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.transferdone
-t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-pb_ccs/pb_ccs/8a9863e7/call-ccs/shard-0/execution/ccs_report.txt
-t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-pb_ccs/pb_ccs/8a9863e7/call-ccs/shard-1/execution/ccs_report.txt
-t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-pb_ccs/pb_ccs/8a9863e7/call-ccs/shard-2/execution/ccs_report.txt
 t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-demultiplex_barcodes/demultiplex_barcodes/5df96c44/call-lima/execution/demultiplex.bc1018_BAK8B_OA--bc1018_BAK8B_OA.bam
 t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-demultiplex_barcodes/demultiplex_barcodes/5df96c44/call-lima/execution/demultiplex.bc1018_BAK8B_OA--bc1018_BAK8B_OA.bam.pbi
 t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-demultiplex_barcodes/demultiplex_barcodes/5df96c44/call-lima/execution/demultiplex.bc1018_BAK8B_OA--bc1018_BAK8B_OA.consensusreadset.xml
@@ -16291,7 +16288,9 @@ t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-demultiplex_barcodes/
 t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-demultiplex_barcodes/demultiplex_barcodes/5df96c44/call-lima/execution/demultiplex.removed.consensusreadset.xml
 t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-demultiplex_barcodes/demultiplex_barcodes/5df96c44/call-lima/execution/merged_analysis_report.json
 t/data/pacbio/sequel_analysis/0000002152/entry-points/7da072af-387d-49e8-8ee3-b0fa0c873fb7.subreadset.xml
-t/data/pacbio/sequel_analysis/0000002152/outputs/final.consensusreadset.xml
+t/data/pacbio/sequel_analysis/0000002152/outputs/barcode_ccs.report.json
+t/data/pacbio/sequel_analysis/0000002152/outputs/ccs_processing.report.json
+t/data/pacbio/sequel_analysis/0000002152/outputs/ccs.report.json
 t/data/pacbio/sequel_analysis/001612/entry-points/07d85801-6a09-4728-982c-e3c048f95bd8.subreadset.xml
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lbc12--lbc12.bam
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lbc12--lbc12.bam.pbi

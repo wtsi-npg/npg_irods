@@ -1,24 +1,24 @@
-ZMWs input                (A) : 1813341
-ZMWs above all thresholds (B) : 1809428 (100%)
-ZMWs below any threshold  (C) : 3913 (0%)
+ZMWs input                (A) : 1813979
+ZMWs above all thresholds (B) : 1810026 (100%)
+ZMWs below any threshold  (C) : 3953 (0%)
 
 ZMW marginals for (C):
-Below min length              : 80 (2%)
-Below min score               : 106 (3%)
-Below min end score           : 106 (3%)
+Below min length              : 91 (2%)
+Below min score               : 107 (3%)
+Below min end score           : 107 (3%)
 Below min passes              : 0 (0%)
-Below min score lead          : 106 (3%)
-Below min ref span            : 3837 (98%)
+Below min score lead          : 107 (3%)
+Below min ref span            : 3865 (98%)
 Without SMRTbell adapter      : 0 (0%)
 
 ZMWs for (B):
-With same pair                : 1809428 (100%)
+With same pair                : 1810026 (100%)
 Coefficient of correlation    : 0%
 
 ZMWs for (A):
-Allow diff pair               : 1813341 (100%)
-Allow same pair               : 1813341 (100%)
+Allow diff pair               : 1813979 (100%)
+Allow same pair               : 1813979 (100%)
 
 Reads for (B):
-Above length                  : 1809428 (100%)
+Above length                  : 1810026 (100%)
 Below length                  : 0 (0%)
