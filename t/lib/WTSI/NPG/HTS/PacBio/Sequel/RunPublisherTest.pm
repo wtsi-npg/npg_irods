@@ -157,7 +157,7 @@ sub list_index_files : Test(1) {
             'Found sequence index files 1_A02');
 }
 
-sub publish_files : Test(2) {
+sub publish_files : Test(4) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r54097_20170727_165601";
@@ -176,6 +176,24 @@ sub publish_files : Test(2) {
 
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
   cmp_ok($num_errors,    '==', 0);
+
+  my $restart_file = $pub->restart_file;
+  $pub->write_restart_file;
+  ok(-e $restart_file, "Restart file $restart_file was written by publisher");
+
+  my $restart_state = WTSI::NPG::HTS::PublishState->new;
+  $restart_state->read_state($restart_file);
+  cmp_ok($restart_state->num_published, '==', $num_files,
+         "Restart file recorded $num_files files published") or
+           diag explain $restart_state->state;
+
+  my $repub = WTSI::NPG::HTS::PacBio::RunPublisher->new
+    (dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
+     runfolder_path  => $runfolder_path);
+ 
 }
 
 sub publish_xml_files : Test(14) {

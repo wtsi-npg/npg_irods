@@ -31,7 +31,7 @@ our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 # Data processing level
 our $DATA_LEVEL = 'primary';
 
-override '_build_directory_pattern' => sub {
+sub _build_directory_pattern{
    my ($self) = @_;
 
    return $WELL_DIRECTORY_PATTERN;
@@ -51,7 +51,7 @@ override '_build_directory_pattern' => sub {
 
 =cut
 
-override 'publish_files' => sub {
+sub publish_files {
   my ($self, $smrt_names) = @_;
 
   if (!$smrt_names) {
@@ -112,7 +112,7 @@ sub publish_xml_files {
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
 
   my ($num_files, $num_processed, $num_errors) =
-    $self->_publish_files($files, $dest_coll);
+    $self->pb_publish_files($files, $dest_coll);
 
   $self->info("Published $num_processed / $num_files metadata XML files ",
               "in SMRT cell '$smrt_name'");
@@ -178,7 +178,7 @@ sub publish_sequence_files {
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
 
   my ($num_files, $num_processed, $num_errors) =
-    $self->_publish_files($files, $dest_coll,
+    $self->pb_publish_files($files, $dest_coll,
                           \@primary_avus, \@secondary_avus);
 
   $self->info("Published $num_processed / $num_files sequence files ",
@@ -207,7 +207,7 @@ sub publish_index_files {
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
 
   my ($num_files, $num_processed, $num_errors) =
-    $self->_publish_files($files, $dest_coll);
+    $self->pb_publish_files($files, $dest_coll);
 
   $self->info("Published $num_processed / $num_files index files ",
               "in SMRT cell '$smrt_name'");
@@ -235,7 +235,7 @@ sub publish_adapter_files {
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
 
   my ($num_files, $num_processed, $num_errors) =
-    $self->_publish_files($files, $dest_coll);
+    $self->pb_publish_files($files, $dest_coll);
 
   $self->info("Published $num_processed / $num_files index files ",
               "in SMRT cell '$smrt_name'");
