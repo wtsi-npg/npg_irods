@@ -1,6 +1,7 @@
 .gitattributes
 .travis.yml
 bin/npg_add_illumina_composition_metadata.pl
+bin/npg_bam_deletion.pl
 bin/npg_pacbio_analysis_monitor.pl
 bin/npg_pacbio_rundelete.pl
 bin/npg_pacbio_runmonitor.pl
@@ -24,6 +25,7 @@ etc/log4perl_tests.conf
 lib/npg_tracking/glossary/composition/component/generic.pm
 lib/WTSI/DNAP/Utilities/Params.pm
 lib/WTSI/DNAP/Utilities/ParamsParser.pm
+lib/WTSI/NPG/Data/BamDeletion.pm
 lib/WTSI/NPG/Data/ConsentWithdrawn.pm
 lib/WTSI/NPG/DataSub/File.pm
 lib/WTSI/NPG/DataSub/MetaUpdater.pm
@@ -112,6 +114,7 @@ t/bionano_run_finder.t
 t/bionano_run_publisher.t
 t/compile_scripts.t
 t/critic.t
+t/data_bam_deletion.t
 t/data_consent_withdrawn.t
 t/data/agf_data_object/17550_8#1.geno
 t/data/agf_data_object/17550_8#1.vcf
@@ -213,6 +216,8 @@ t/data/bionano/stock_barcode_56789_2016-10-05_12_00/Detect_Molecules/Stitch3.fov
 t/data/bionano/stock_barcode_56789_2016-10-05_12_00/Detect_Molecules/Stitch4.fov
 t/data/bionano/stock_barcode_56789_2016-10-05_12_00/Metadata.xml
 t/data/bionano/stock_barcode_56789_2016-10-05_12_00/stock_barcode_56789_2016-10-05_12_00_AllScans.tiff
+t/data/consent_withdrawn/20131_8#9_phix.cram
+t/data/consent_withdrawn/20131_8#9_phix.cram.crai
 t/data/datasub/invalid/a.txt
 t/data/datasub/invalid/x/a.txt
 t/data/datasub/valid/a.txt
@@ -16563,6 +16568,7 @@ t/header_parser.t
 t/illumina_meta_updater.t
 t/illumina_run_publisher.t
 t/lib/WTSI/DNAP/Utilities/ParamsTest.pm
+t/lib/WTSI/NPG/Data/BamDeletionTest.pm
 t/lib/WTSI/NPG/Data/ConsentWithdrawnTest.pm
 t/lib/WTSI/NPG/DataSub/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/DataSub/SubtrackClientTest.pm
