@@ -71,6 +71,7 @@ lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisMonitor.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisPublisher.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisReport.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/APIClient.pm
+lib/WTSI/NPG/HTS/PacBio/Sequel/ImageArchive.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/MetaXMLParser.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/MonitorBase.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/Reportdata.pm
@@ -16281,6 +16282,7 @@ t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.sts.xml
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreads.bam
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreads.bam.pbi
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreadset.xml
+t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.primary_qc.tar.xz
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.transferdone
 t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-demultiplex_barcodes/demultiplex_barcodes/5df96c44/call-lima/execution/demultiplex.bc1018_BAK8B_OA--bc1018_BAK8B_OA.bam
 t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-demultiplex_barcodes/demultiplex_barcodes/5df96c44/call-lima/execution/demultiplex.bc1018_BAK8B_OA--bc1018_BAK8B_OA.bam.pbi
@@ -16296,6 +16298,12 @@ t/data/pacbio/sequel_analysis/0000002152/entry-points/7da072af-387d-49e8-8ee3-b0
 t/data/pacbio/sequel_analysis/0000002152/outputs/barcode_ccs.report.json
 t/data/pacbio/sequel_analysis/0000002152/outputs/ccs_processing.report.json
 t/data/pacbio/sequel_analysis/0000002152/outputs/ccs.report.json
+t/data/pacbio/sequel_analysis/0000003462/cromwell-job/call-sl_dataset_reports/sl_dataset_reports/75cf695b/call-import_dataset_reports/execution/adapter.report.json
+t/data/pacbio/sequel_analysis/0000003462/cromwell-job/call-sl_dataset_reports/sl_dataset_reports/75cf695b/call-import_dataset_reports/execution/concordance_plot.png
+t/data/pacbio/sequel_analysis/0000003462/cromwell-job/call-sl_dataset_reports/sl_dataset_reports/75cf695b/call-import_dataset_reports/execution/concordance_plot_thumb.png
+t/data/pacbio/sequel_analysis/0000003462/cromwell-job/call-sl_dataset_reports/sl_dataset_reports/75cf695b/call-import_dataset_reports/execution/control.report.json
+t/data/pacbio/sequel_analysis/0000003462/cromwell-job/call-sl_dataset_reports/sl_dataset_reports/75cf695b/call-import_dataset_reports/execution/readlength_plot.png
+t/data/pacbio/sequel_analysis/0000003462/cromwell-job/call-sl_dataset_reports/sl_dataset_reports/75cf695b/call-import_dataset_reports/execution/readlength_plot_thumb.png
 t/data/pacbio/sequel_analysis/001612/entry-points/07d85801-6a09-4728-982c-e3c048f95bd8.subreadset.xml
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lbc12--lbc12.bam
 t/data/pacbio/sequel_analysis/001612/tasks/barcoding.tasks.lima-0/lima_output.lbc12--lbc12.bam.pbi
@@ -16587,6 +16595,7 @@ t/lib/WTSI/NPG/HTS/PacBio/SeqDataObjectTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisReportTest.pm
+t/lib/WTSI/NPG/HTS/PacBio/Sequel/ImageArchiveTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunMonitorTest.pm
@@ -16608,6 +16617,7 @@ t/pacbio_seq_data_object.t
 t/pacbio_sequel_analysis_monitor.t
 t/pacbio_sequel_analysis_publisher.t
 t/pacbio_sequel_analysis_report.t
+t/pacbio_sequel_image_archive.t
 t/pacbio_sequel_run_delete_monitor.t
 t/pacbio_sequel_run_delete.t
 t/pacbio_sequel_run_monitor.t
