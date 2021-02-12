@@ -326,7 +326,7 @@ sub publish_lane_pri_data_mlwh : Test(21) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_lane_sec_data_mlwh : Test(79) {
+sub publish_lane_sec_data_mlwh : Test(80) {
   note '=== Tests in publish_lane_sec_data_mlwh';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -359,9 +359,14 @@ sub publish_lane_sec_data_mlwh : Test(79) {
                   '18448_2_salmon.quant.zip');
   is_deeply(\@observed, \@expected) or diag explain \@observed;
 
-  my @absolute_paths = map { "$dest_coll/$_" } @observed;
+  my @absolute_paths = map { $_ !~ /\.geno$/smx ? "$dest_coll/$_" : () } @observed;
   my $pkg = 'WTSI::NPG::HTS::Illumina::AncDataObject';
   check_common_metadata($irods, $pkg, @absolute_paths);
+ 
+  my @absolute_paths2 = map { $_ =~ /\.geno$/smx ? "$dest_coll/$_" : () } @observed;
+  my $pkg2 = 'WTSI::NPG::HTS::Illumina::AgfDataObject';
+  check_common_metadata($irods, $pkg2, @absolute_paths2);
+  check_gbs_plex_metadata($irods, $pkg2, @absolute_paths2);
 }
 
 # Lane-level, primary and secondary data, from samplesheet
@@ -1258,6 +1263,18 @@ sub check_alt_process_metadata {
               [{attribute => $ALT_PROCESS,
                 value     => $alt_process}],
               "$file_name $ALT_PROCESS metadata correct when alt_process");
+  }
+}
+
+sub check_gbs_plex_metadata {
+  my ($irods, $pkg, @paths) = @_;
+
+  foreach my $path (@paths) {
+    my $obj = $pkg->new($irods, $path);
+    my $file_name = fileparse($obj->str);
+
+    my @avu = $obj->find_in_metadata($GBS_PLEX_NAME);
+    cmp_ok(scalar @avu, '==', 1, "$file_name $GBS_PLEX_NAME metadata present");
   }
 }
 
