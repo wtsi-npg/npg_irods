@@ -1,11 +1,26 @@
 Upcoming
 
-- Add iRODS 4.2.8 to tests
+ - Add iRODS 4.2.8 to tests
 
   iRODS 4.2.8 is marked as an expected failure because we have not
   yet built Conda packages of irods-icommands or libhts plugins for
   iRODS 4.2.8.
 
+ - Pacbio Sequel merged analysis report file changes due to version update
+ - Pacbio Sequel generate and publish archive of QC images and reports.
+
+Release 2.25.0
+
+ - Pacbio Sequel merged analysis report file changes due to version update
+
+Release 2.24.1
+
+ - Order Conda channels for tests so that NPG channels have highest priority
+   and conda-forge the lowest.
+
+Release 2.24.0
+
+ - Create merged analysis report for Sequel analysis jobs
  - Remove iRODS 4.1.12 from tests
 
 Release 2.23.0

@@ -28,6 +28,14 @@ use WTSI::NPG::HTS::PacBio::Sequel::RunMonitor;
   with 'npg_testing::db';
 }
 
+{
+  package TestAPIClient;
+  use Moose;
+
+  extends 'WTSI::NPG::HTS::PacBio::Sequel::APIClient';
+  override 'query_dataset_reports' => sub { my @r; return [@r]; }
+}
+
 my $pid          = $PID;
 my $test_counter = 0;
 my $data_path    = 't/data/pacbio/sequel';
@@ -102,11 +110,9 @@ sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::PacBio::Sequel::APIClient');
 }
 
-
 sub publish_completed_runs : Test(3) {
   my $uri    = URI->new($server->uri . 'QueryJobs');
-  my $client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new
-     (default_interval => 10000,);
+  my $client = TestAPIClient->new(default_interval => 10000,);
   $client->{'runs_api_uri'} = $uri;
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,

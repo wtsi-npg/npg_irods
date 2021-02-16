@@ -34,6 +34,13 @@ has 'task_name' =>
    default       => 'barcoding.tasks.lima-0',
    documentation => 'A specified task name to identify relevent output directories');
 
+has 'job_root' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => '1',
+   default       => 'cromwell-job',
+   documentation => 'Root directory for job processing output');
+
 
 =head2 publish_analysed_cells
 
@@ -94,7 +101,7 @@ sub _publish_analysis_path {
 
   $self->debug("Publishing data in analysis job path '$analysis_path'");
 
-  my @glob = glob catdir($analysis_path, q[cromwell-job], $self->task_name);
+  my @glob = glob catdir($analysis_path, $self->job_root, $self->task_name);
   my $runfolder_path = (@glob == 1) ? $glob[0] : q[];
 
   my @init_args = (irods          => $self->irods,

@@ -53,7 +53,7 @@ sub _setup_file {
   
   my $meta = WTSI::NPG::HTS::PacBio::Metadata->new(
       run_name => 'test', well_name => 'A01', cell_index => 1,
-      collection_number => 1, sample_name => 'test', 
+      collection_number => 1, sample_load_name => 'test', 
       instrument_name => 'SQ54097', file_path => $file,);
 
   my @avus;
