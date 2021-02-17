@@ -23,7 +23,13 @@ our $SEQUENCE_INDEX_FORMAT  = 'pbi';
 # Sequence file types
 our $SEQUENCE_PRODUCT    = 'subreads';
 our $SEQUENCE_AUXILIARY  = 'scraps';
-our $SEQUENCE_TYPES      = qq{($SEQUENCE_PRODUCT|$SEQUENCE_AUXILIARY)};
+
+# CCS Sequence file types
+our $CCS_SEQUENCE_PRODUCT = 'reads';
+
+## Processing types
+our $OFFINSTRUMENT = 'OnInstrument';
+our $ONINSTRUMENT  = 'OffInstrument';
 
 # Generic file prefix
 our $FILE_PREFIX_PATTERN = 'm[0-9a-z]+_\d+_\d+';
@@ -37,7 +43,8 @@ our $DATA_LEVEL = 'primary';
 # Image archive related
 Readonly::Scalar my $PRIMARY_REPORT_COUNT   => 4;
 Readonly::Scalar my $SECONDARY_REPORT_COUNT => 2;
-Readonly::Scalar my $DATA_LEVEL_TWO          =>
+Readonly::Scalar my $CCS_REPORT_COUNT       => 6;
+Readonly::Scalar my $DATA_LEVEL_TWO         =>
   $WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher::DATA_LEVEL;
 
 
@@ -80,29 +87,26 @@ override 'publish_files' => sub {
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
   foreach my $smrt_name (@{$smrt_names}) {
-    my $seq_files = $self->list_files($smrt_name,
-      $SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$});
 
-    if (defined $seq_files->[0]) {
-      my ($meta_data) = $self->_read_metadata($smrt_name);
+    my $process_type = $self->_processing_type($smrt_name);
 
-      my ($nfx, $npx, $nex) = $self->publish_xml_files($smrt_name);
-      my ($nfb, $npb, $neb) = $self->publish_sequence_files
-        ($smrt_name,$SEQUENCE_PRODUCT,$meta_data);
-      my ($nfs, $nps, $nes) = $self->publish_sequence_files
-        ($smrt_name,$SEQUENCE_AUXILIARY,$meta_data);
-      my ($nfp, $npp, $nep) = $self->publish_index_files($smrt_name);
-      my ($nfa, $npa, $nea) = $self->publish_adapter_files($smrt_name);
-      my ($nfi, $npi, $nei) = $self->publish_image_archive
-        ($smrt_name,$meta_data);
+    my ($num_files_cell, $num_processed_cell, $num_errors_cell) = (0, 0, 0);
 
-      $num_files     += ($nfx + $nfb + $nfs + $nfp + $nfa + $nfi);
-      $num_processed += ($npx + $npb + $nps + $npp + $npa + $npi);
-      $num_errors    += ($nex + $neb + $nes + $nep + $nea + $nei);
+    if ($process_type eq $OFFINSTRUMENT) {
+      ($num_files_cell, $num_processed_cell, $num_errors_cell) =
+        $self->_publish_off_instrument_cell($smrt_name);
+    }
+    elsif ($process_type eq $ONINSTRUMENT) {
+     ($num_files_cell, $num_processed_cell, $num_errors_cell) =
+       $self->_publish_on_instrument_cell($smrt_name);
     }
     else {
       $self->info("Skipping $smrt_name as no seq files found");
     }
+
+    $num_files     += $num_files_cell;
+    $num_processed += $num_processed_cell;
+    $num_errors    += $num_errors_cell;
 
     if ($num_errors > 0) {
       $self->error("Encountered errors on $num_errors / ",
@@ -113,12 +117,75 @@ override 'publish_files' => sub {
   return ($num_files, $num_processed, $num_errors);
 };
 
+sub _processing_type {
+   my ($self, $smrt_name) = @_;
+
+   my $seq_files = $self->list_files($smrt_name,
+      $SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$});
+
+   my $ccs_seq_files = $self->list_files($smrt_name,
+      $CCS_SEQUENCE_PRODUCT  .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$});
+
+   return defined $seq_files->[0] ? $OFFINSTRUMENT :
+       (defined $ccs_seq_files->[0] ? $ONINSTRUMENT : q[]);
+}
+
+sub _publish_off_instrument_cell {
+  my ($self, $smrt_name) = @_;
+
+  my ($meta_data) = $self->_read_metadata($smrt_name,q[subreadset]);
+
+  my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
+  my ($nfx, $npx, $nex) = $self->publish_xml_files
+    ($smrt_name, q[subreadset|sts]);
+  my ($nfb, $npb, $neb) = $self->publish_sequence_files
+    ($smrt_name, $SEQUENCE_PRODUCT, $meta_data);
+  my ($nfs, $nps, $nes) = $self->publish_sequence_files
+    ($smrt_name, $SEQUENCE_AUXILIARY, $meta_data);
+  my ($nfp, $npp, $nep) = $self->publish_index_files
+    ($smrt_name, qq{($SEQUENCE_PRODUCT|$SEQUENCE_AUXILIARY)});
+  my ($nfi, $npi, $nei) = $self->publish_image_archive
+    ($smrt_name,$meta_data);
+
+  $num_files     += ($nfx + $nfb + $nfs + $nfp + $nfi);
+  $num_processed += ($npx + $npb + $nps + $npp + $npi);
+  $num_errors    += ($nex + $neb + $nes + $nep + $nei);
+
+  return ($num_files,$num_processed,$num_errors);
+}
+
+sub _publish_on_instrument_cell {
+  my ($self, $smrt_name) = @_;
+
+  my ($meta_data) = $self->_read_metadata
+    ($smrt_name, q[consensusreadset], q[pbmeta:]);
+
+  my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
+  my ($nfx, $npx, $nex) = $self->publish_xml_files
+    ($smrt_name, q[consensusreadset|sts]);
+  my ($nfb, $npb, $neb) = $self->publish_sequence_files
+    ($smrt_name, $CCS_SEQUENCE_PRODUCT, $meta_data);
+  my ($nfp, $npp, $nep) = $self->publish_index_files
+    ($smrt_name, $CCS_SEQUENCE_PRODUCT);
+  my ($nfa, $npa, $nea) = $self->publish_aux_files
+    ($smrt_name, 'zmw_metrics[.]json[.]gz');
+  my ($nfi, $npi, $nei) = $self->publish_image_archive
+    ($smrt_name, $meta_data);
+
+  $num_files     += ($nfx + $nfb + $nfp + $nfa + $nfi);
+  $num_processed += ($npx + $npb + $npp + $npa + $npi);
+  $num_errors    += ($nex + $neb + $nep + $nea + $nei);
+
+  return ($num_files,$num_processed,$num_errors);
+}
+
 =head2 publish_xml_files
 
-  Arg [1]    : smrt_name,  Str.
+  Arg [1]    : smrt_name,  Str. Required.
+  Arg [2]    : File type, Str. Required.
 
   Example    : my ($num_files, $num_published, $num_errors) =
-                 $pub->publish_xml_files()
+                 $pub->publish_xml_files($smrt_name, $type)
   Description: Publish XML files for a SMRT cell to iRODS. Return
                the number of files, the number published and the number
                of errors.
@@ -127,9 +194,11 @@ override 'publish_files' => sub {
 =cut
 
 sub publish_xml_files {
-  my ($self, $smrt_name) = @_;
+  my ($self, $smrt_name, $type) = @_;
 
-  my $type = q[subreadset|sts];
+  defined $type or
+      $self->logconfess('A defined file types argument is required');
+
   my $num  = scalar split m/[|]/msx, $type;
 
   my $file_pattern = $FILE_PREFIX_PATTERN .'[.]'. '(' . $type .')[.]xml$';
@@ -149,11 +218,11 @@ sub publish_xml_files {
 =head2 publish_sequence_files
 
   Arg [1]    : smrt_name,  Str.
-  Arg [2]    : File types, Str.
+  Arg [2]    : File type, Str.
   Arg [3]    : Metadata. Obj.
 
   Example    : my ($num_files, $num_published, $num_errors) =
-                 $pub->publish_sequence_files
+                 $pub->publish_sequence_files($smrt_name, $type, $meta)
   Description: Publish sequence files for a SMRT cell to iRODS. Return
                the number of files, the number published and the number
                of errors.
@@ -162,9 +231,9 @@ sub publish_xml_files {
 =cut
 
 sub publish_sequence_files {
-  my ($self, $smrt_name, $types, $metadata) = @_;
+  my ($self, $smrt_name, $type, $metadata) = @_;
 
-  defined $types or
+  defined $type or
       $self->logconfess('A defined file types argument is required');
 
   defined $metadata or
@@ -185,10 +254,13 @@ sub publish_sequence_files {
 
   # Auxiliary files are kept for now but are not useful and so are
   # not marked as target.
-  my $is_aux = ($types eq $SEQUENCE_AUXILIARY) ? 1 : 0;
+  my $is_aux = ($type eq $SEQUENCE_AUXILIARY) ? 1 : 0;
 
-  my $is_target = ($metadata->is_ccs eq 'true' || @run_records > 1 ||
-             $is_r_and_d || $is_aux) ? 0 : 1;
+  # is_target = 0 logic - relies on all barcoded samples being 
+  # deplexed even if they are in a single sample pool. 
+  my $is_target = ((@run_records == 1 && $run_records[0]->tag_sequence) ||
+    ($type ne $CCS_SEQUENCE_PRODUCT && $metadata->is_ccs eq 'true') ||
+     @run_records > 1 || $is_r_and_d || $is_aux) ? 0 : 1;
 
   my @primary_avus   = $self->make_primary_metadata
       ($metadata,
@@ -197,7 +269,7 @@ sub publish_sequence_files {
        is_r_and_d => $is_r_and_d);
   my @secondary_avus = $self->make_secondary_metadata(@run_records);
 
-  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $types .q{[.]}.
+  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $type .q{[.]}.
         $SEQUENCE_FILE_FORMAT .q{$};
 
   my $files     = $self->list_files($smrt_name,$file_pattern);
@@ -216,9 +288,10 @@ sub publish_sequence_files {
 =head2 publish_index_files
 
   Arg [1]    : smrt_name,  Str.
+  Arg [2]    : File type. Str. Required.
 
   Example    : my ($num_files, $num_published, $num_errors) =
-                 $pub->publish_index_files
+                 $pub->publish_index_files($smrt_name, $type)
   Description: Publish index files for a SMRT cell to iRODS. Return
                the number of files, the number published and the number
                of errors.
@@ -227,9 +300,12 @@ sub publish_sequence_files {
 =cut
 
 sub publish_index_files {
-  my ($self, $smrt_name) = @_;
+  my ($self, $smrt_name, $type) = @_;
 
-  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $SEQUENCE_TYPES. q{[.]}.
+  defined $type or
+    $self->logconfess('A defined file type argument is required');
+
+  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $type . q{[.]}.
         $SEQUENCE_FILE_FORMAT .q{[.]}. $SEQUENCE_INDEX_FORMAT .q{$};
 
   my $files = $self->list_files($smrt_name, $file_pattern);
@@ -244,12 +320,13 @@ sub publish_index_files {
   return ($num_files, $num_processed, $num_errors);
 }
 
-=head2 publish_adapter_files
+=head2 publish_aux_files
 
-  Arg [1]    : smrt_name,  Str.
+  Arg [1]    : smrt_name,  Str. Required.
+  Arg [2]    : File type. Str. Required.
 
   Example    : my ($num_files, $num_published, $num_errors) =
-                 $pub->publish_index_files
+                 $pub->publish_aux_files($smrt_name, $type)
   Description: Publish adapter files for a SMRT cell to iRODS. Return
                the number of files, the number published and the number
                of errors.
@@ -257,10 +334,13 @@ sub publish_index_files {
 
 =cut
 
-sub publish_adapter_files {
-  my ($self, $smrt_name) = @_;
+sub publish_aux_files {
+  my ($self, $smrt_name, $type) = @_;
 
-  my $file_pattern = $FILE_PREFIX_PATTERN .'[.]adapters[.]fasta$';
+  defined $type or
+    $self->logconfess('A defined file type argument is required');
+
+  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $type .q{$};
 
   my $files = $self->list_files($smrt_name,$file_pattern);
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
@@ -276,11 +356,11 @@ sub publish_adapter_files {
 
 =head2 publish_image_archive
 
-  Arg [1]    : smrt_name,  Str.
-  Arg [2]    : Metadata. Obj.
+  Arg [1]    : smrt_name,  Str. Required.
+  Arg [2]    : Metadata. Obj. Required.
 
   Example    : my ($num_files, $num_published, $num_errors) =
-                 $pub->publish_image_archive
+                 $pub->publish_image_archive($smrt_name, $metadata)
   Description: Publish images archive from SMRT cell import to iRODS. 
                Return the number of files, the number published and
                the number of errors.
@@ -301,6 +381,7 @@ sub publish_image_archive {
     my @init_args = (api_client   => $self->api_client,
                      output_dir   => $self->smrt_path($name));
     my @i_handles;
+    ## OffInstrument processed data
     if ($metadata->has_subreads_uuid) {
       my @p_init = @init_args;
       push @p_init,
@@ -309,17 +390,34 @@ sub publish_image_archive {
         archive_name => $metadata->movie_name .q[.]. $DATA_LEVEL .q[_qc];
       my $iap = WTSI::NPG::HTS::PacBio::Sequel::ImageArchive->new(@p_init);
       push @i_handles, $iap;
+
+      if ($metadata->has_ccsreads_uuid) {
+        my @s_init = @init_args;
+        push @s_init,
+          dataset_id   => $metadata->ccsreads_uuid,
+          dataset_type => q[ccsreads],
+          report_count => $SECONDARY_REPORT_COUNT,
+          archive_name => $metadata->movie_name .q[.]. $DATA_LEVEL_TWO .q[_qc];
+        my $ias = WTSI::NPG::HTS::PacBio::Sequel::ImageArchive->new(@s_init);
+        push @i_handles, $ias;
+      }
     }
-    if ($metadata->has_ccsreads_uuid) {
+    ## OnInstrument processed data
+    elsif ($metadata->has_ccsreads_uuid) {
+      my $file_pattern   = $FILE_PREFIX_PATTERN .q{.ccs_reports.json$};
+      my $runfolder_file = $self->list_files($smrt_name,$file_pattern,1);
+
       my @s_init = @init_args;
       push @s_init,
-        dataset_id   => $metadata->ccsreads_uuid,
-        dataset_type => q[ccsreads],
-        report_count => $SECONDARY_REPORT_COUNT,
-        archive_name => $metadata->movie_name .q[.]. $DATA_LEVEL_TWO .q[_qc];
+        dataset_id      => $metadata->ccsreads_uuid,
+        dataset_type    => q[ccsreads],
+        report_count    => $CCS_REPORT_COUNT,
+        archive_name    => $metadata->movie_name .q[.]. $DATA_LEVEL .q[_qc],
+        specified_files => $runfolder_file;
       my $ias = WTSI::NPG::HTS::PacBio::Sequel::ImageArchive->new(@s_init);
       push @i_handles, $ias;
     }
+
     foreach my $i (@i_handles) {
       my $pattern = $i->generate_image_archive;
       my $files_i = $self->list_files($smrt_name, $pattern .q{$});
@@ -374,15 +472,18 @@ sub list_files {
 
 
 sub _read_metadata {
-  my ($self, $smrt_name) = @_;
+  my ($self, $smrt_name, $type, $prefix) = @_;
 
-  my $pattern = $FILE_PREFIX_PATTERN .'[.]'. q[subreadset] .'[.]xml$';
+  defined $type or
+    $self->logconfess('A defined file type argument is required');
+
+  my $pattern = $FILE_PREFIX_PATTERN .'[.]'. $type .'[.]xml$';
   my $metadata_file = $self->list_files($smrt_name, $pattern, '1')->[0];
   $self->debug("Reading metadata from '$metadata_file'");
 
   my $metadata =
     WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file
-      ($metadata_file);
+      ($metadata_file,$prefix);
 
   return $metadata;
 }
@@ -411,8 +512,9 @@ Data files are divided into a number of categories:
 
  - sequence files; sequence files for sequence data
  - index files; index files for sequence data
- - XML files; stats and subset xml
- - adapter fasta file
+ - XML files; stats and dataset xml
+ - auxilliary files; requested available additional files which
+   have changed over time.
  - image archive; tar archive of qc images
 
 A RunPublisher provides methods to list the complement of these

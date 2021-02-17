@@ -74,27 +74,31 @@ sub parse_file {
 
   my $sample_name = $sample->getAttribute($SAMPLE_NAME_TAG);
 
-  my $collection = $dom->getElementsByTagName($prefix . $COLLECTION_TAG)->[0];
+  my $collection = $dom->getElementsByTagName($prefix . $COLLECTION_TAG) ?
+    $dom->getElementsByTagName($prefix . $COLLECTION_TAG)->[0] :
+    $dom->getElementsByTagName($COLLECTION_TAG)->[0];
   my $instrument_name = $collection->getAttribute($INSTRUMENT_NAME_TAG);
   my $movie_name = $collection->getAttribute($MOVIE_TAG);
 
   my $collection_number =
-      $dom->getElementsByTagName($prefix . $COLL_NUMBER_TAG)->[0]->string_value;
+    $dom->getElementsByTagName($prefix . $COLL_NUMBER_TAG)->[0]->string_value;
   my $cell_index =
-      $dom->getElementsByTagName($prefix . $CELL_INDEX_TAG)->[0]->string_value;
+    $dom->getElementsByTagName($prefix . $CELL_INDEX_TAG)->[0]->string_value;
 
   my $output =  $dom->getElementsByTagName($prefix . $OUTPUT_TAG)->[0];
   my $results_folder =
-      $output->getElementsByTagName($prefix . $RFOLDER_TAG)->[0]->string_value;
+    $output->getElementsByTagName($prefix . $RFOLDER_TAG)->[0]->string_value;
 
   my $is_ccs = $dom->getElementsByTagName($prefix . $IS_CCS_TAG) ?
-      $dom->getElementsByTagName($prefix . $IS_CCS_TAG)->[0]->string_value : 0;
+    $dom->getElementsByTagName($prefix . $IS_CCS_TAG)->[0]->string_value : 0;
 
   my $subreads_uuid = $dom->getElementsByTagName($SUBREADSET_TAG) ?
-      $dom->getElementsByTagName($SUBREADSET_TAG)->[0]->getAttribute($UNIQUE_ID_TAG) : undef;
+    $dom->getElementsByTagName($SUBREADSET_TAG)->[0]->getAttribute($UNIQUE_ID_TAG)
+    : undef;
 
-  my $ccsreads_uuid = $dom->getElementsByTagName($CCSREADSET_TAG) ?
-      $dom->getElementsByTagName($CCSREADSET_TAG)->[0]->getAttribute($UNIQUE_ID_TAG) : undef;
+  my $ccsreads_uuid = $dom->getElementsByTagName($prefix . $CCSREADSET_TAG) ?
+    $dom->getElementsByTagName($prefix . $CCSREADSET_TAG)->[0]->getAttribute($UNIQUE_ID_TAG)
+    : undef;
 
   my %versions;
   my @version_info = $dom->getElementsByTagName($prefix . $COMP_VERSION);

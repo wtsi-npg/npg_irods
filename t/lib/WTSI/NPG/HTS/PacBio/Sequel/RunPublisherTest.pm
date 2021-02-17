@@ -46,7 +46,6 @@ my $SEQUENCE_AUXILIARY    = $WTSI::NPG::HTS::PacBio::Sequel::RunPublisher::SEQUE
 my $FILE_PREFIX_PATTERN   = $WTSI::NPG::HTS::PacBio::Sequel::RunPublisher::FILE_PREFIX_PATTERN;
 my $SEQUENCE_FILE_FORMAT  = $WTSI::NPG::HTS::PacBio::Sequel::RunPublisher::SEQUENCE_FILE_FORMAT;
 my $SEQUENCE_INDEX_FORMAT = $WTSI::NPG::HTS::PacBio::Sequel::RunPublisher::SEQUENCE_INDEX_FORMAT;
-my $SEQUENCE_TYPES        = $WTSI::NPG::HTS::PacBio::Sequel::RunPublisher::SEQUENCE_TYPES;
 
 my $wh_schema;
 
@@ -104,7 +103,7 @@ sub list_xml_files : Test(1) {
      \@expected_paths, 'Found meta XML file 1_A02');
 }
 
-sub list_adapter_files : Test(1) {
+sub list_aux_files : Test(1) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r54097_20170727_165601";
@@ -170,7 +169,8 @@ sub list_index_files : Test(1) {
     ('m54097_170727_170646.scraps.bam.pbi',
      'm54097_170727_170646.subreads.bam.pbi');
 
-  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $SEQUENCE_TYPES. q{[.]}.
+  my $seq_types = qq{($SEQUENCE_PRODUCT|$SEQUENCE_AUXILIARY)};
+  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $seq_types . q{[.]}.
         $SEQUENCE_FILE_FORMAT .q{[.]}. $SEQUENCE_INDEX_FORMAT .q{$};
 
   is_deeply($pub->list_files('1_A02',$file_pattern), \@expected_paths,
@@ -197,7 +197,47 @@ sub list_image_archive_files : Test(1) {
     \@expected_paths, 'Found image archive files 1_A02');
 }
 
-sub publish_files : Test(2) {
+sub publish_files_on_instrument : Test(3) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/r64174e_20210114_161659";
+  my $dest_coll = "$irods_tmp_coll/publish_files";
+
+  my $client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new();
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
+    (api_client      => $client,
+     dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     restart_file    => catfile($tmpdir->dirname, 'published.json'),
+     runfolder_path  => $runfolder_path);
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+
+  my @expected_paths =
+    map { catfile("$dest_coll/1_A01", $_) }
+    ('m64174e_210114_162751.consensusreadset.xml',
+     'm64174e_210114_162751.primary_qc.tar.xz',
+     'm64174e_210114_162751.reads.bam',
+     'm64174e_210114_162751.reads.bam.pbi',
+     'm64174e_210114_162751.sts.xml',
+     'm64174e_210114_162751.zmw_metrics.json.gz');
+
+  cmp_ok($num_processed, '==', scalar @expected_paths,
+     "Published on instrument files correctly");
+  cmp_ok($num_errors,    '==', 0);
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named on instrument files') or
+              diag explain \@observed_paths;
+
+  unlink $pub->restart_file;
+}
+
+sub publish_files_off_instrument : Test(3) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r54097_20170727_165601";
@@ -215,10 +255,25 @@ sub publish_files : Test(2) {
      runfolder_path  => $runfolder_path);
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
-  my $num_expected = 8;
 
-  cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
+  my @expected_paths =
+    map { catfile("$dest_coll/1_A02", $_) }
+    ('m54097_170727_170646.primary_qc.tar.xz',
+     'm54097_170727_170646.scraps.bam',
+     'm54097_170727_170646.scraps.bam.pbi',
+     'm54097_170727_170646.sts.xml',
+     'm54097_170727_170646.subreads.bam',
+     'm54097_170727_170646.subreads.bam.pbi',
+     'm54097_170727_170646.subreadset.xml');
+
+  cmp_ok($num_processed, '==', scalar @expected_paths,
+    "Published off instrument files correctly");
   cmp_ok($num_errors,    '==', 0);
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named off instrument files') or
+              diag explain \@observed_paths;
 
   unlink $pub->restart_file;
 }
@@ -258,7 +313,7 @@ sub publish_xml_files : Test(14) {
   unlink $pub->restart_file;
 }
 
-sub publish_adapter_files : Test(9) {
+sub publish_aux_files : Test(9) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r54097_20170727_165601";
@@ -277,14 +332,14 @@ sub publish_adapter_files : Test(9) {
     ('m54097_170727_170646.adapters.fasta');
 
   my ($num_files, $num_processed, $num_errors) =
-    $pub->publish_adapter_files('1_A02');
+    $pub->publish_aux_files('1_A02','adapters[.]fasta$');
   cmp_ok($num_files,     '==', scalar @expected_paths);
   cmp_ok($num_processed, '==', scalar @expected_paths);
   cmp_ok($num_errors,    '==', 0);
 
   my @observed_paths = observed_data_objects($irods, $dest_coll);
   is_deeply(\@observed_paths, \@expected_paths,
-            'Published correctly named metadata XML files') or
+            'Published correctly named aux files') or
               diag explain \@observed_paths;
 
   check_common_metadata($irods, @observed_paths);
@@ -354,9 +409,10 @@ sub publish_index_files : Test(14) {
     map { catfile("$dest_coll/1_A02", $_) }
     ('m54097_170727_170646.scraps.bam.pbi',
      'm54097_170727_170646.subreads.bam.pbi');
-
+  
+  my $seq_types = qq{($SEQUENCE_PRODUCT|$SEQUENCE_AUXILIARY)};
   my ($num_files, $num_processed, $num_errors) =
-    $pub->publish_index_files('1_A02');
+    $pub->publish_index_files('1_A02', $seq_types);
   cmp_ok($num_files,     '==', scalar @expected_paths);
   cmp_ok($num_processed, '==', scalar @expected_paths);
   cmp_ok($num_errors,    '==', 0);

@@ -140,6 +140,58 @@ sub query_runs {
   return [@runs];
 }
 
+=head2 query_run
+
+  Arg [1]    : Run id. Required.
+
+  Example    : my $run = $client->query_run($run_id)
+  Description: Query for a specific 
+  Returntype : ArrayRef[HashRef]
+
+=cut
+
+sub query_run {
+  my($self, $run_id) = @_;
+
+  defined $run_id or
+      $self->logconfess('A defined run_id is required');
+
+  my $path  = join q[/], q[smrt-link/runs], $run_id;
+  my ($run) = $self->_get_content($self->_get_uri($path)->clone);
+  return $run;
+}
+
+=head2 query_run_collections
+
+  Arg [1]    : Run id. Optional.
+
+  Example    : my $collections = $client->query_run_collections($run_id)
+  Description: Query for collections via runs within a specific
+               time frame. Optionally specify a single run id, but note
+               there is no time frame restriction applied when a single 
+               run id is defined.
+  Returntype : ArrayRef[HashRef]
+
+=cut
+
+sub query_run_collections {
+  my($self, $run_id) = @_;
+
+  my $run_data = length $run_id ? [$self->query_run($run_id)] : $self->query_runs;
+
+  my @collections;
+  if(ref $run_data eq 'ARRAY') {
+    foreach my $run (@{$run_data}) {
+      my $path = join q[/], q[smrt-link/runs], $run->{uniqueId}, q[collections];
+      my ($col) = $self->_get_content($self->_get_uri($path)->clone);
+      if(ref $col eq 'ARRAY') {
+        push @collections, @{$col};
+      }
+    }
+  }
+  return[@collections];
+}
+
 =head2 query_analysis_jobs
 
   Arg [1]    : Pipeline id. Optional.
