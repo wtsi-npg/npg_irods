@@ -31,6 +31,9 @@ sub run_publisher_handle {
     my @init_args = (irods          => $self->irods,
                      runfolder_path => $runfolder_path,
                      mlwh_schema    => $self->mlwh_schema);
+    if ($self->api_client) {
+        push @init_args, api_client => $self->api_client;
+    }
     if ($self->dest_collection) {
         push @init_args, dest_collection => $self->dest_collection;
     }

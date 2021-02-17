@@ -758,7 +758,7 @@ sub publish_merged_sec_data_samplesheet : Test(89) {
   check_common_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_plex_pri_data_alt_process : Test(7) {
+sub publish_plex_pri_data_alt_process : Test(13) {
   note '=== Tests in publish_plex_pri_data_alt_process';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -773,26 +773,32 @@ sub publish_plex_pri_data_alt_process : Test(7) {
   my $lims_factory =
     WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
-  my $name = sprintf q[%s_%s#%s], $id_run, $lane, $plex;
-  my $composition_file = sprintf q[%s/lane%s/%s.composition.json],
-    $archive_path, $lane, $name;
-  my $alt_process = 'an_alternative_process';
-  my $coll = 'publish_alt_process';
+  my $alt_process;
+  my $dest_coll;
 
-  my $dest_coll =
-    check_publish_pri_data($runfolder_path, $archive_path, $lims_factory,
-                           $composition_file, $coll, $alt_process);
+  foreach my $name_string (q[%s_%s#%s], q[%s_%s#%s_phix]) {
+    my $name = sprintf $name_string, $id_run, $lane, $plex;
+    my $composition_file = sprintf q[%s/lane%s/%s.composition.json],
+      $archive_path, $lane, $name;
+    $alt_process = 'an_alternative_process';
+    my $coll = 'publish_alt_process';
 
-  my @path = grep { length } splitdir($dest_coll);
+    $dest_coll =
+      check_publish_pri_data($runfolder_path, $archive_path, $lims_factory,
+        $composition_file, $coll, $alt_process);
+  }
+
+  my @path = grep {length} splitdir($dest_coll);
   is($path[-1], $alt_process, 'Expected leaf collection present')
     or diag explain $dest_coll;
 
   my @observed = observed_data_objects($irods, "$dest_coll/lane$lane",
-                                       $dest_coll);
-  my @absolute_paths = map { "$dest_coll/$_" } @observed;
+    $dest_coll);
+  my @absolute_paths = map {"$dest_coll/$_"} @observed;
 
   my $pkg = 'WTSI::NPG::HTS::Illumina::AlnDataObject';
   check_alt_process_metadata($irods, $pkg, $alt_process, @absolute_paths);
+
 }
 
 sub publish_xml_files_alt_process : Test(15) {
@@ -1238,11 +1244,17 @@ sub check_alt_process_metadata {
               [{attribute => $TARGET,
                 value     => 0}],
               "$file_name $TARGET metadata correct when alt_process");
-    is_deeply([$obj->get_avu($ALT_TARGET)],
-              [{attribute => $ALT_TARGET,
-                value     => 1}],
-              "$file_name $ALT_TARGET metadata correct when alt_process");
-    is_deeply([$obj->get_avu($ALT_PROCESS)],
+    if ($path =~ /phix/) {
+      is_deeply([$obj->get_avu($ALT_TARGET)],
+                [undef],
+                "$file_name $ALT_TARGET metadata not set for phiX file");
+    }else{
+      is_deeply([$obj->get_avu($ALT_TARGET)],
+                [{attribute => $ALT_TARGET,
+                  value     => 1}],
+                "$file_name $ALT_TARGET metadata correct when alt_process");
+    }
+     is_deeply([$obj->get_avu($ALT_PROCESS)],
               [{attribute => $ALT_PROCESS,
                 value     => $alt_process}],
               "$file_name $ALT_PROCESS metadata correct when alt_process");
