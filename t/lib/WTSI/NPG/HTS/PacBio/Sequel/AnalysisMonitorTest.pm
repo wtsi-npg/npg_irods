@@ -51,6 +51,9 @@ my $test_response =
   updatedAt => "2018-04-24T11:02:04.223Z",
   uuid => "3bf09718-58fe-4fb6-a32a-9adbda384b27",
   workflow => "{}",
+  jobStartedAt => "2018-04-25T11:02:04.223Z",
+  jobCompletedAt => "2018-04-26T11:02:04.223Z",
+  jobUpdatedAt => "2018-04-26T11:02:04.223Z"
    }
   ];
 

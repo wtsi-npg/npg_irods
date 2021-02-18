@@ -224,7 +224,7 @@ sub make_target_metadata {
   }
 
   my @avus = ($self->make_avu($TARGET, $target));
-  if ($alt_process) {
+  if ($alt_process and $component->subset ne 'phix') {
     push @avus, $self->make_avu($ALT_TARGET, 1);
   }
 

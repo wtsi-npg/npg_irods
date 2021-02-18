@@ -33,6 +33,14 @@ use WTSI::NPG::iRODS;
   with 'npg_testing::db';
 }
 
+{
+  package TestAPIClient;
+  use Moose;
+
+  extends 'WTSI::NPG::HTS::PacBio::Sequel::APIClient';
+  override 'query_dataset_reports' => sub { my @r; return [@r]; }
+}
+
 my $pid          = $PID;
 my $test_counter = 0;
 my $fixture_path = "t/fixtures";
@@ -110,8 +118,7 @@ sub require : Test(1) {
 
 sub delete_runs : Test(14) {
   my $uri    = URI->new($server->uri . 'QueryJobs');
-  my $client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new
-     (default_interval => 10000,);
+  my $client = TestAPIClient->new(default_interval => 10000,);
   $client->{'runs_api_uri'} = $uri;
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
