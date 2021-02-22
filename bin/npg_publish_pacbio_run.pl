@@ -11,7 +11,6 @@ use Pod::Usage;
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::iRODS;
-use WTSI::NPG::HTS::PacBio::RunPublisher;
 use WTSI::NPG::HTS::PacBio::Sequel::RunPublisher;
 
 our $VERSION = '';
@@ -44,7 +43,6 @@ my $force = 0;
 my $log4perl_config;
 my $runfolder_path;
 my $verbose;
-my $sequel;
 
 GetOptions('collection=s'                    => \$collection,
            'debug'                           => \$debug,
@@ -52,19 +50,13 @@ GetOptions('collection=s'                    => \$collection,
            'help'                            => sub {
              pod2usage(-verbose => 2, -exitval => 0);
            },
-           'sequel'                          => \$sequel,
            'logconf=s'                       => \$log4perl_config,
            'runfolder-path|runfolder_path=s' => \$runfolder_path,
            'verbose'                         => \$verbose);
 
 
 
-my $module;
-if ($sequel) {
-  $module = 'WTSI::NPG::HTS::PacBio::Sequel::RunPublisher';
-} else {
-  $module = 'WTSI::NPG::HTS::PacBio::RunPublisher';
-}
+my   $module = 'WTSI::NPG::HTS::PacBio::Sequel::RunPublisher';
 
 # Process CLI arguments
 if ($log4perl_config) {
@@ -131,7 +123,7 @@ npg_publish_pacbio_run
 =head1 SYNOPSIS
 
 npg_publish_pacbio_run --runfolder-path <path> [--collection <path>]
-  [--force] [--debug] [--verbose] [--logconf <path>] [--sequel]
+  [--force] [--debug] [--verbose] [--logconf <path>]
 
  Options:
    --collection      The destination collection in iRODS. Optional,
@@ -145,8 +137,6 @@ npg_publish_pacbio_run --runfolder-path <path> [--collection <path>]
    --runfolder_path  The instrument runfolder path to load.
    --logconf         A log4perl configuration file. Optional.
    --verbose         Print messages while processing. Optional.
-   --sequel          If the run folder is output from a PacBio Sequel 
-                     system. Optional.
 
 =head1 DESCRIPTION
 
