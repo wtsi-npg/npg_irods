@@ -1,4 +1,5 @@
 Upcoming
+ - set_object_permissions in WTSI::NPG::Data::ConsentWithdrawn updated to use <user>#<zone> rather than <user> only format 
  - Pacbio RSII specific code clear out
 
  - 
