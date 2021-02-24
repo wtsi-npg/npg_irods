@@ -5224,7 +5224,7 @@
   manual_qc: 1
   pipeline_id_lims: Standard
   position: 2
-  primer_panel: Minor_v1.0
+  primer_panel: ~
   priority: 3
   purpose: standard
   recorded_at: 2016-01-04 22:02:02
