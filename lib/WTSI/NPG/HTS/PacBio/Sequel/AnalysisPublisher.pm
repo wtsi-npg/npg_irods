@@ -54,7 +54,7 @@ has 'analysis_path' =>
 
 =cut
 
-override 'publish_files' => sub {
+sub publish_files {
   my ($self) = @_;
 
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
@@ -148,7 +148,7 @@ sub publish_sequence_files {
       my @secondary_avus = $self->make_secondary_metadata(@records);
 
       my ($a_files, $a_processed, $a_errors) =
-        $self->_publish_files([$file], $self->_dest_path,
+        $self->pb_publish_files([$file], $self->_dest_path,
                               \@primary_avus, \@secondary_avus);
 
       $num_files     += $a_files;
@@ -187,7 +187,7 @@ sub publish_non_sequence_files {
   my $files = $self->list_files($format . q[$]);
 
   my ($num_files, $num_processed, $num_errors) =
-    $self->_publish_files($files, $self->_dest_path);
+    $self->pb_publish_files($files, $self->_dest_path);
 
   $self->info("Published $num_processed / $num_files $format files ",
               'for SMRT cell ', $self->_metadata->well_name, ' run ',

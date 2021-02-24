@@ -135,7 +135,7 @@ It also updates the meta data for target and adds the rt_ticket.
 
 =head1 AUTHOR
 
-Jillian Durham <kdj@sanger.ac.uk>
+Jillian Durham <jillian@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
