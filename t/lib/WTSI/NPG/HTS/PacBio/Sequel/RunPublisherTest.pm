@@ -237,7 +237,7 @@ sub publish_files_on_instrument : Test(3) {
   unlink $pub->restart_file;
 }
 
-sub publish_files_off_instrument : Test(9) {
+sub publish_files_off_instrument : Test(3) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r54097_20170727_165601";
@@ -274,27 +274,6 @@ sub publish_files_off_instrument : Test(9) {
   is_deeply(\@observed_paths, \@expected_paths,
             'Published correctly named off instrument files') or
               diag explain \@observed_paths;
-
-  my $restart_file = $pub->restart_file;
-  $pub->write_restart_file;
-  ok(-e $restart_file, "Restart file $restart_file was written by publisher");
-
-  my $restart_state = WTSI::NPG::HTS::PublishState->new;
-  $restart_state->read_state($restart_file);
-  cmp_ok($restart_state->num_published, '==', scalar @expected_paths,
-         "Restart file recorded $num_files files published") or
-           diag explain $restart_state->state;
-
-  my $repub = WTSI::NPG::HTS::PacBio::RunPublisher->new
-    (dest_collection => $dest_coll,
-     irods           => $irods,
-     mlwh_schema     => $wh_schema,
-     restart_file    => catfile($tmpdir->dirname, 'published.json'),
-     runfolder_path  => $runfolder_path);
-
-  my ($repub_files, $repub_processed, $repub_errors) = $repub->publish_files;
-  cmp_ok($repub_errors,    '==', 0, 'No errors on re-publishing');
-  cmp_ok($repub_processed, '==', 0, "Re-published no files");
 
   unlink $pub->restart_file;
 }
