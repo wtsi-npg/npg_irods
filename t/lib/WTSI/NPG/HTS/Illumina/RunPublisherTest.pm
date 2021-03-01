@@ -362,6 +362,7 @@ sub publish_lane_sec_data_mlwh : Test(79) {
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
   my $pkg = 'WTSI::NPG::HTS::Illumina::AncDataObject';
   check_common_metadata($irods, $pkg, @absolute_paths);
+ 
 }
 
 # Lane-level, primary and secondary data, from samplesheet
@@ -586,6 +587,59 @@ sub publish_plex_sec_data_samplesheet : Test(59) {
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
   my $pkg = 'WTSI::NPG::HTS::Illumina::AncDataObject';
   check_common_metadata($irods, $pkg, @absolute_paths);
+}
+
+
+# Plex-level, secondary data including geno and vcf, from samplesheet
+sub publish_plex_geno_sec_data_samplesheet : Test(63) {
+  note '=== Tests in publish_plex_geno_sec_data_samplesheet';
+  my $runfolder_path = "$data_path/sequence/190514_MS5_29467_A_MS8070734-300V2";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20190520-165319/no_cal/archive';
+  my $id_run         = 29467;
+  my $lane           = 1;
+  my $plex           = 1;
+
+  local $ENV{NPG_CACHED_SAMPLESHEET_FILE} =
+    "$runfolder_path/Data/Intensities/BAM_basecalls_20190520-165319/" .
+    "metadata_cache_29467/samplesheet_29467.csv";
+
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(driver_type => 'samplesheet');
+
+  my $dest_coll = check_publish_plex_sec_data($runfolder_path, $archive_path,
+                                              $id_run, $lane, $plex,
+                                              $lims_factory);
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
+  
+  my @expected = ("lane$lane/29467_1#1.composition.json",
+                  "lane$lane/29467_1#1.cram.crai",
+                  "lane$lane/29467_1#1.flagstat",
+                  "lane$lane/29467_1#1.geno",
+                  "lane$lane/29467_1#1.orig.seqchksum",
+                  "lane$lane/29467_1#1.seqchksum",
+                  "lane$lane/29467_1#1.sha512primesums512.seqchksum",
+                  "lane$lane/29467_1#1.spatial_filter.stats",
+                  "lane$lane/29467_1#1.vcf",
+                  "lane$lane/29467_1#1_F0x900.stats",
+                  "lane$lane/29467_1#1_F0xB00.stats",
+                  );
+
+  is_deeply(\@observed, \@expected) or diag explain \@observed;
+
+  my @absolute_paths = map { $_ !~ /\.(geno|vcf)$/smx ? "$dest_coll/$_" : () } @observed;
+  my $pkg = 'WTSI::NPG::HTS::Illumina::AncDataObject';
+  check_common_metadata($irods, $pkg, @absolute_paths);
+
+  my @absolute_paths2 = map { $_ =~ /\.(geno|vcf)$/smx ? "$dest_coll/$_" : () } @observed;
+  my $pkg2 = 'WTSI::NPG::HTS::Illumina::AgfDataObject';
+  check_common_metadata($irods, $pkg2, @absolute_paths2);
+  check_gbs_plex_metadata($irods, $pkg2, @absolute_paths2);
+  check_study_id_metadata($irods, $pkg2, @absolute_paths2);
+
 }
 
 # Merged NovaSeq data, from ML warehouse
@@ -1258,6 +1312,18 @@ sub check_alt_process_metadata {
               [{attribute => $ALT_PROCESS,
                 value     => $alt_process}],
               "$file_name $ALT_PROCESS metadata correct when alt_process");
+  }
+}
+
+sub check_gbs_plex_metadata {
+  my ($irods, $pkg, @paths) = @_;
+
+  foreach my $path (@paths) {
+    my $obj = $pkg->new($irods, $path);
+    my $file_name = fileparse($obj->str);
+
+    my @avu = $obj->find_in_metadata($GBS_PLEX_NAME);
+    cmp_ok(scalar @avu, '==', 1, "$file_name $GBS_PLEX_NAME metadata present");
   }
 }
 

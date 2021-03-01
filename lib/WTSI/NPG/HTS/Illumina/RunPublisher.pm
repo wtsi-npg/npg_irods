@@ -494,7 +494,8 @@ sub publish_genotype_files {
   my $primary_avus = sub {
     my ($obj) = @_;
     return $self->make_primary_metadata
-      ($obj->composition, alt_process => $self->alt_process);
+      ($obj->composition, alt_process  => $self->alt_process,
+       lims_factory => $self->lims_factory);
   };
 
   my $secondary_avus = sub {
