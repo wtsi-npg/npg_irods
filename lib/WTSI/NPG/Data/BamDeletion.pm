@@ -21,7 +21,7 @@ with qw{
 our $VERSION = '0';
 
 our $DATE = strftime '%Y%m%d', localtime;
-our $DELETION_MSG = qq[#The data from this file was removed on $DATE as consent was withdrawn];
+our $DELETION_MSG = qq[\@CO\tThe data from this file was removed on $DATE as consent was withdrawn];
 
 =head1 NAME
 
