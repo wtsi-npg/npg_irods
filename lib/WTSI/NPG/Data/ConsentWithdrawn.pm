@@ -244,7 +244,8 @@ sub _restrict_permissions {
     my @to_remove = grep { $_->{level} ne $ownp }
                     $self->irods->get_object_permissions($f);
     for my $p (@to_remove) {
-      $self->irods->set_object_permissions($nullp, $p->{owner}, $f);
+        my $owner_zone = join q[#],$p->{owner},$p->{zone};
+        $self->irods->set_object_permissions($nullp, $owner_zone, $f);
     }
   }
 

@@ -1,4 +1,5 @@
 Upcoming
+ - set_object_permissions in WTSI::NPG::Data::ConsentWithdrawn updated to use <user>#<zone> rather than <user> only format 
  - Pacbio RSII specific code clear out
 
  - 
@@ -13,6 +14,7 @@ Release 2.26.0
 
  - Pacbio Sequel merged analysis report file changes due to version update
  - Pacbio Sequel generate and publish archive of QC images and reports.
+ - Restore the gbs plex meta data.
 
 Release 2.25.0
 
