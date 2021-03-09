@@ -182,8 +182,9 @@ sub _publish_on_instrument_cell {
 =head2 publish_xml_files
 
   Arg [1]    : smrt_name,  Str. Required.
-  Arg [2]    : File type, Str. Required.
-
+  Arg [2]    : File type regex. Str. Can be single regex or multiple 
+               seperated by pipe. Required.
+ 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_xml_files($smrt_name, $type)
   Description: Publish XML files for a SMRT cell to iRODS. Return
@@ -218,7 +219,7 @@ sub publish_xml_files {
 =head2 publish_sequence_files
 
   Arg [1]    : smrt_name,  Str.
-  Arg [2]    : File type, Str.
+  Arg [2]    : File type regex. Str. Required.
   Arg [3]    : Metadata. Obj.
 
   Example    : my ($num_files, $num_published, $num_errors) =
@@ -252,12 +253,17 @@ sub publish_sequence_files {
                 ": publishing '$smrt_name' as R and D data");
   }
 
-  # Auxiliary files are kept for now but are not useful and so are
-  # not marked as target.
+  # Auxiliary files (adapter and low quality data only)are kept for now but 
+  # are not useful and so are not marked as target.
   my $is_aux = ($type eq $SEQUENCE_AUXILIARY) ? 1 : 0;
 
-  # is_target = 0 logic - relies on all barcoded samples being 
-  # deplexed even if they are in a single sample pool. 
+  # is_target is set to 0 where the bam file contains sample data but there
+  # is another preferred file for the customer. The logic to set is_target = 0
+  # is if the sample is the only one in the pool but the sample is barcoded
+  # (as all barcoded samples will be deplexed), if the bam is not from on board
+  # processing and is ccs is true (as ccs analysis will be run off instrument),
+  # if there is more than 1 sample in the pool (as the data will be deplexed),
+  # if the data is R&D (will be untracked in LIMs) or the bam is auxiliary.
   my $is_target = ((@run_records == 1 && $run_records[0]->tag_sequence) ||
     ($type ne $CCS_SEQUENCE_PRODUCT && $metadata->is_ccs eq 'true') ||
      @run_records > 1 || $is_r_and_d || $is_aux) ? 0 : 1;
@@ -287,8 +293,9 @@ sub publish_sequence_files {
 
 =head2 publish_index_files
 
-  Arg [1]    : smrt_name,  Str.
-  Arg [2]    : File type. Str. Required.
+  Arg [1]    : smrt_name,  Str. Required.
+  Arg [2]    : File type regex. Str. Can be single regex or multiple 
+               seperated by pipe. Required.
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_index_files($smrt_name, $type)
@@ -305,10 +312,12 @@ sub publish_index_files {
   defined $type or
     $self->logconfess('A defined file type argument is required');
 
+  my $num  = scalar split m/[|]/msx, $type;
+
   my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $type . q{[.]}.
         $SEQUENCE_FILE_FORMAT .q{[.]}. $SEQUENCE_INDEX_FORMAT .q{$};
 
-  my $files = $self->list_files($smrt_name, $file_pattern);
+  my $files = $self->list_files($smrt_name, $file_pattern, $num);
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
 
   my ($num_files, $num_processed, $num_errors) =
@@ -323,7 +332,8 @@ sub publish_index_files {
 =head2 publish_aux_files
 
   Arg [1]    : smrt_name,  Str. Required.
-  Arg [2]    : File type. Str. Required.
+  Arg [2]    : File type regex. Str. Can be single regex or multiple 
+               seperated by pipe. Required.
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_aux_files($smrt_name, $type)
@@ -340,9 +350,11 @@ sub publish_aux_files {
   defined $type or
     $self->logconfess('A defined file type argument is required');
 
+  my $num  = scalar split m/[|]/msx, $type;
+
   my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $type .q{$};
 
-  my $files = $self->list_files($smrt_name,$file_pattern);
+  my $files = $self->list_files($smrt_name,$file_pattern,$num);
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
 
   my ($num_files, $num_processed, $num_errors) =
@@ -357,7 +369,8 @@ sub publish_aux_files {
 =head2 publish_image_archive
 
   Arg [1]    : smrt_name,  Str. Required.
-  Arg [2]    : Metadata. Obj. Required.
+  Arg [2]    : Pacbio run metadata, WTSI::NPG::HTS::PacBio::Metadata.
+               Required.
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_image_archive($smrt_name, $metadata)
