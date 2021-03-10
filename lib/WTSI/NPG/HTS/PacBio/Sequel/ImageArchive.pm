@@ -57,6 +57,13 @@ has 'report_count' =>
    predicate     => 'has_report_count',
    documentation => 'Minimum expected report count if known');
 
+has 'specified_files' =>
+  (isa           => 'ArrayRef[Str]',
+   is            => 'ro',
+   predicate     => 'has_specified_files',
+   documentation => 'Optionally specify additional files');
+
+
 =head2 generate_image_archive
 
   Arg [1]    : None
@@ -111,6 +118,13 @@ sub _find_qc_files {
       if (-f $qcfile) { $files{$qcfile}++; }
     }
   }
+
+  if ( $self->has_specified_files ) {
+    foreach my $sfile ( @ {$self->specified_files} ) {
+      if (-f $sfile) { $files{$sfile}++; }
+    }
+  }
+
   return [keys %files];
 }
 
@@ -158,8 +172,8 @@ WTSI::NPG::HTS::PacBio::Sequel::ImageArchive
 
 =head1 DESCRIPTION
 
-Find QC images for a specified dataset and combine them into a 
-single archive file. 
+Find QC images and assocated json files for a specified dataset and 
+combine them into a single archive file. 
 
 =head1 AUTHOR
 

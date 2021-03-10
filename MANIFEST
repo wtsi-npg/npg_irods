@@ -16297,6 +16297,15 @@ t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreads.
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreadset.xml
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.primary_qc.tar.xz
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.transferdone
+t/data/pacbio/sequel/r64174e_20210114_161659/1_A01/m64174e_210114_162751.ccs_reports.json
+t/data/pacbio/sequel/r64174e_20210114_161659/1_A01/m64174e_210114_162751.ccs_reports.txt
+t/data/pacbio/sequel/r64174e_20210114_161659/1_A01/m64174e_210114_162751.consensusreadset.xml
+t/data/pacbio/sequel/r64174e_20210114_161659/1_A01/m64174e_210114_162751.primary_qc.tar.xz
+t/data/pacbio/sequel/r64174e_20210114_161659/1_A01/m64174e_210114_162751.reads.bam
+t/data/pacbio/sequel/r64174e_20210114_161659/1_A01/m64174e_210114_162751.reads.bam.pbi
+t/data/pacbio/sequel/r64174e_20210114_161659/1_A01/m64174e_210114_162751.sts.xml
+t/data/pacbio/sequel/r64174e_20210114_161659/1_A01/m64174e_210114_162751.transferdone
+t/data/pacbio/sequel/r64174e_20210114_161659/1_A01/m64174e_210114_162751.zmw_metrics.json.gz
 t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-demultiplex_barcodes/demultiplex_barcodes/5df96c44/call-lima/execution/demultiplex.bc1018_BAK8B_OA--bc1018_BAK8B_OA.bam
 t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-demultiplex_barcodes/demultiplex_barcodes/5df96c44/call-lima/execution/demultiplex.bc1018_BAK8B_OA--bc1018_BAK8B_OA.bam.pbi
 t/data/pacbio/sequel_analysis/0000002152/cromwell-job/call-demultiplex_barcodes/demultiplex_barcodes/5df96c44/call-lima/execution/demultiplex.bc1018_BAK8B_OA--bc1018_BAK8B_OA.consensusreadset.xml
