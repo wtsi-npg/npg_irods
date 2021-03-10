@@ -3,7 +3,6 @@ package WTSI::NPG::HTS::PacBio::Sequel::ImageArchiveTest;
 use strict;
 use warnings;
 
-use Data::Dump qw(pp);
 use Digest::MD5;
 use English qw[-no_match_vars];
 use File::Spec::Functions;
@@ -136,6 +135,38 @@ sub create_image_archive_with_report_count : Test(2) {
   my $ia2 = WTSI::NPG::HTS::PacBio::Sequel::ImageArchive->new(@init_args2);
   my $archive_file2 = $ia2->generate_image_archive;
   ok(-f $archive_file2, "created archive file with 2 report files exists");
+}
+
+sub create_image_archive_with_specified_files : Test(2) {
+
+  my $run_name  = 'r64174e_20210114_161659';
+  my $well      = '1_A01';
+  my $data_path = catdir('t/data/pacbio/sequel', $run_name, $well);
+
+  my $metafile  = catfile($data_path,'m64174e_210114_162751.consensusreadset.xml');
+  my $metadata  = WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file($metafile, q[pbmeta:]);
+
+  my @files     = (catfile($data_path,'m64174e_210114_162751.ccs_reports.json'));
+
+  my $client    = TestAPIClient->new();
+
+  my @init_args = (api_client      => $client,
+                   archive_name    => $metadata->movie_name .q[.primary_qc],
+                   dataset_id      => $metadata->ccsreads_uuid,
+                   dataset_type    => 'ccsreads',
+                   output_dir      => tempdir(CLEANUP => 1),
+                   report_count    => '3',
+                   specified_files => \@files);
+
+  my $ia = WTSI::NPG::HTS::PacBio::Sequel::ImageArchive->new(@init_args);
+  my $archive_file = $ia->generate_image_archive;
+  ok(-f $archive_file, "created archive file with specified file exists");
+
+  my $cmd = qq[tar tvf $archive_file | wc -l];
+  my $run =  WTSI::DNAP::Utilities::Runnable->new
+      (executable => '/bin/bash', arguments  => ['-c', $cmd])->run;
+  my $count = ${$run->stdout};
+  ok(($count -1) == 7, "created archive file with specified file contains correct file count");
 }
 
 1;
