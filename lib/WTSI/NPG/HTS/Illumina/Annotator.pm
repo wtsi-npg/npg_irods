@@ -28,6 +28,8 @@ with qw[
                alt_process      Alternative process name, Str. Optional.
                alignment_filter Alignment filter name, Str. Optional.
                seqchksum        Seqchksum digestgg112, Str. Optional.
+               lims_factory     Factory for st:api::lims objects,
+                                WTSI::NPG::HTS::LIMSFactory. Optional.
 
   Example    : my @avus = $ann->make_primary_metadata
                    ($id_run, $position, $num_reads,
@@ -45,7 +47,7 @@ with qw[
 {
   my $positional = 2;
   my @named      = qw[alt_process is_paired_read is_aligned
-                      num_reads reference seqchksum];
+                      lims_factory num_reads reference seqchksum];
   my $params = function_params($positional, @named);
 
   sub make_primary_metadata {
@@ -80,6 +82,11 @@ with qw[
 
     if ($params->seqchksum) {
       push @avus, $self->make_seqchksum_metadata($params->seqchksum);
+    }
+
+    if ($params->lims_factory) {
+      my $lims = $params->lims_factory->make_lims($composition);
+      push @avus, $self->make_gbs_metadata($lims);
     }
 
     return @avus;
@@ -503,7 +510,7 @@ sub make_plex_metadata {
   Arg [1]    :  A LIMS handle, st::api::lims.
 
   Example    : my @avus = $ann->make_gbs_metadata($lims);
-  Description: Return HTS plex metadata AVUs.
+  Description: Return HTS gbs plex metadata AVUs.
   Returntype : Array[HashRef]
 
 =cut

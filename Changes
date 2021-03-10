@@ -1,6 +1,11 @@
 Upcoming
 
- - 
+Release 2.27.0
+
+ - set_object_permissions in WTSI::NPG::Data::ConsentWithdrawn updated to
+   use <user>#<zone> rather than <user> only format 
+ - Pacbio RSII specific code clear out
+ - Restore the gbs plex meta data
 
 Release 2.26.0
 
