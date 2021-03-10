@@ -1,5 +1,9 @@
 Upcoming
 
+Release 2.28.0
+
+ - Support loading of Pacbio Sequel OnInstrument data
+
 Release 2.27.0
 
  - set_object_permissions in WTSI::NPG::Data::ConsentWithdrawn updated to
