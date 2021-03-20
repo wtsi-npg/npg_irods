@@ -1,5 +1,7 @@
 Upcoming
 
+ - additional PacBio API queries to support mlwarehouse loading.
+
 Release 2.28.0
 
  - Support loading of Pacbio Sequel OnInstrument data
