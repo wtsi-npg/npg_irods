@@ -7,14 +7,16 @@ use Digest::MD5;
 use English qw[-no_match_vars];
 use File::Spec::Functions;
 use File::Temp qw[tempdir];
+use JSON;
 use Log::Log4perl;
 use Test::More;
 use Test::Exception;
-use URI;
+use Test::LWP::UserAgent;
 
 use base qw[WTSI::NPG::HTS::Test];
 
 use WTSI::DNAP::Utilities::Runnable;
+use WTSI::NPG::HTS::PacBio::Sequel::APIClient;
 use WTSI::NPG::HTS::PacBio::Sequel::ImageArchive;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
 
@@ -26,19 +28,17 @@ my $pid          = $PID;
 my $test_counter = 0;
 my $data_path    = 't/data/pacbio/sequel_analysis';
 
-{
-  package TestAPIClient;
-  use Moose;
+my $user_agent;
+sub setup_useragent : Test(startup) {
 
-  extends 'WTSI::NPG::HTS::PacBio::Sequel::APIClient';
-  override 'query_dataset_reports' => sub { 
-      my $test_response = 
+    $user_agent = Test::LWP::UserAgent->new(network_fallback => 1);
+    my $test_response =
 [
   {
     reportTypeId=> 'sl_import_subreads.report_adapters',
     dataStoreFile=> {
       sourceId=> 'sl_import_subreads.report_adapters',
-      isActive=> 'true',
+      isActive=> '1',
       createdAt=> '2020-12-28T16::36::56.212Z',
       modifiedAt=> '2020-12-28T16::36::56.212Z',
       name=> 'Adapter Report',
@@ -54,7 +54,7 @@ my $data_path    = 't/data/pacbio/sequel_analysis';
     reportTypeId=> 'sl_import_subreads.report_control',
     dataStoreFile=> {
       sourceId=> 'sl_import_subreads.report_control',
-      isActive=> 'true',
+      isActive=> '1',
       createdAt=> '2020-12-28T16::36::56.213Z',
       modifiedAt=> '2020-12-28T16::36::56.213Z',
       name=> 'Control Report',
@@ -67,10 +67,14 @@ my $data_path    = 't/data/pacbio/sequel_analysis';
     }
   }
 ];
-      return $test_response; 
-  }
-}
+    $user_agent->map_response(
+      qr{http://localhost:8071/smrt-link/datasets/subreads/37e7b734-5706-409a-94f8-85172abe3d50/reports},
+      HTTP::Response->new('200', 'OK', ['Content-Type' => 'application/json'], encode_json($test_response)));
 
+    $user_agent->map_response(
+      qr{http://localhost:8071/smrt-link/datasets/ccsreads/1b70315e-03de-4344-bc16-0db4683e675e/reports},
+      HTTP::Response->new('200', 'OK', ['Content-Type' => 'application/json'], encode_json($test_response)));
+}
 
 sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::PacBio::Sequel::ImageArchive');
@@ -85,7 +89,7 @@ sub create_image_archive : Test(2) {
   my $metafile  = catfile($data_path,'m54097_170727_170646.subreadset.xml');
   my $metadata  = WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file($metafile);
 
-  my $client    = TestAPIClient->new();
+  my $client    = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new(user_agent => $user_agent);
 
   my @init_args = (api_client   => $client,
                    archive_name => $metadata->movie_name .q[.primary_qc],
@@ -112,7 +116,7 @@ sub create_image_archive_with_report_count : Test(2) {
   my $metafile   = catfile($data_path,'m54097_170727_170646.subreadset.xml');
   my $metadata   = WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file($metafile);
 
-  my $client     = TestAPIClient->new();
+  my $client    = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new(user_agent => $user_agent);
 
   my @init_args  = (api_client   => $client,
                     archive_name => $metadata->movie_name,
@@ -148,7 +152,7 @@ sub create_image_archive_with_specified_files : Test(2) {
 
   my @files     = (catfile($data_path,'m64174e_210114_162751.ccs_reports.json'));
 
-  my $client    = TestAPIClient->new();
+  my $client    = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new(user_agent => $user_agent);
 
   my @init_args = (api_client      => $client,
                    archive_name    => $metadata->movie_name .q[.primary_qc],
