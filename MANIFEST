@@ -16413,6 +16413,7 @@ t/lib/WTSI/NPG/HTS/PacBio/SeqDataObjectTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisReportTest.pm
+t/lib/WTSI/NPG/HTS/PacBio/Sequel/ApiClientTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/ImageArchiveTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteTest.pm
@@ -16433,6 +16434,7 @@ t/pacbio_seq_data_object.t
 t/pacbio_sequel_analysis_monitor.t
 t/pacbio_sequel_analysis_publisher.t
 t/pacbio_sequel_analysis_report.t
+t/pacbio_sequel_api_client.t
 t/pacbio_sequel_image_archive.t
 t/pacbio_sequel_run_delete_monitor.t
 t/pacbio_sequel_run_delete.t
