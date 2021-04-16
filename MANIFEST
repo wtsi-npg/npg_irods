@@ -225,6 +225,7 @@ t/data/datasub/valid/d.txt
 t/data/header_parser/17550_1#1.txt
 t/data/header_parser/17550_3#1.txt
 t/data/header_parser/20625_8#99.txt
+t/data/header_parser/37220_1#1.txt
 t/data/illumina/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/metadata_cache_17550/samplesheet_17550.csv
 t/data/illumina/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/17550_1.all.seqchksum
 t/data/illumina/sequence/150910_HS40_17550_A_C75BCANXX/Data/Intensities/BAM_basecalls_20150914-100512/no_cal/archive/17550_1_1.fastq
