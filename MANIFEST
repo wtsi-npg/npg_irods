@@ -16351,7 +16351,7 @@ t/data/pacbio/sequel_analysis/0000003462/cromwell-job/call-sl_dataset_reports/sl
 t/data/pacbio/sequel_analysis/0000003499/entry-points/2a711efd-0812-4a5f-b4a2-29714400611f.subreadset.xml
 t/data/pacbio/sequel_analysis/0000003499/cromwell-job/call-export_bam/execution/m64089e_210503_164858.hifi_reads.bam
 t/data/pacbio/sequel_analysis/0000003499/cromwell-job/call-export_bam/execution/m64089e_210503_164858.hifi_reads.bam.bai
-t/data/pacbio/sequel_analysis/0000003499/cromwell-job/call-export_bam/execution/m64089e_210503_164858.hifi_reads.pbi
+t/data/pacbio/sequel_analysis/0000003499/cromwell-job/call-export_bam/execution/m64089e_210503_164858.hifi_reads.bam.pbi
 t/data/pacbio/sequel_analysis/0000003499/cromwell-job/call-export_bam/execution/merged_analysis_report.json
 t/data/pacbio/sequel_analysis/001185/entry-points/2c677e30-8918-4ef1-8649-f44adaac75d3.subreadset.xml
 t/data/pacbio/sequel_analysis/001185/tasks/barcoding.tasks.lima-0/lima.bc1022_BAK8B_OA--bc1022_BAK8B_OA.bam
