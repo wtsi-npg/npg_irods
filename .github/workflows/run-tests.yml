@@ -149,4 +149,4 @@ jobs:
           export TEST_AUTHOR=1
           export WTSI_NPG_iRODS_Test_irodsEnvFile=NULL
           export WTSI_NPG_iRODS_Test_IRODS_ENVIRONMENT_FILE="$HOME/.irods/irods_environment.json"
-          ./Build test --test-files t/aln_data_object.t --verbose
+          ./Build test
