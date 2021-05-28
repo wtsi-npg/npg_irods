@@ -1,5 +1,6 @@
 .gitattributes
-.travis.yml
+.github/workflows/run-tests.yml
+.github/workflows/perlbrew.sha256
 bin/npg_add_illumina_composition_metadata.pl
 bin/npg_bam_deletion.pl
 bin/npg_pacbio_analysis_monitor.pl
@@ -100,9 +101,7 @@ LICENSE
 MANIFEST			This list of files
 META.yml
 README
-scripts/travis_before_install.sh
-scripts/travis_install.sh
-scripts/travis_script.sh
+scripts/install_wsi_dependencies.sh
 t/agf_data_object.t
 t/aln_data_object.t
 t/anc_data_object.t
