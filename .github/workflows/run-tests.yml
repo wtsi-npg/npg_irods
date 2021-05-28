@@ -13,8 +13,9 @@ jobs:
 
     env:
       WSI_CONDA_CHANNEL: "https://dnap.cog.sanger.ac.uk/npg/conda/devel/generic"
-      CONDA_ENV: "testenv"
-      PERL_CACHE: ~/perl5
+      CONDA_TEST_ENVIRONMENT: "testenv"
+      PERL_CACHE: ~/perl5 # Perlbrew and CPAN modules installed here, cached
+      NPG_LIB: ~/perl5npg # NPG modules installed here, not cached
 
     strategy:
       matrix:
@@ -22,12 +23,16 @@ jobs:
         baton: [ "2.1.0" ]
         experimental: [ false ]
         include:
-          - irods: "4.2.7"
-            server_image: "wsinpg/ub-16.04-irods-4.2.7:latest"
+          - perl: "5.22.4"
+            baton: "2.1.0"
             plugins: "201712+irods_4.2.7"
+            irods: "4.2.7"
+            server_image: "wsinpg/ub-16.04-irods-4.2.7:latest"
             experimental: false
-          - irods: "4.2.8"
+          - perl: "5.22.4"
+            baton: "3.0.0"
             plugins: "201712+irods_4.2.8"
+            irods: "4.2.8"
             server_image: "wsinpg/ub-18.04-irods-4.2.8:latest"
             experimental: true
 
@@ -73,16 +78,16 @@ jobs:
 
       - name: "Install iRODS clients"
         run: |
-          conda create -qy -n "$CONDA_ENV"
-          conda install -qy -n "$CONDA_ENV" "irods-icommands ==${{ matrix.irods }}"
-          conda install -qy -n "$CONDA_ENV" "baton ==${{ matrix.baton }}"
-          conda install -qy -n "$CONDA_ENV" "libhts-plugins ==${{ matrix.plugins }}"
-          conda install -qy -n "$CONDA_ENV" samtools
-          conda install -qy -n "$CONDA_ENV" tears
+          conda create -qy -n "$CONDA_TEST_ENVIRONMENT"
+          conda install -qy -n "$CONDA_TEST_ENVIRONMENT" "irods-icommands ==${{ matrix.irods }}"
+          conda install -qy -n "$CONDA_TEST_ENVIRONMENT" "baton ==${{ matrix.baton }}"
+          conda install -qy -n "$CONDA_TEST_ENVIRONMENT" "libhts-plugins ==${{ matrix.plugins }}"
+          conda install -qy -n "$CONDA_TEST_ENVIRONMENT" samtools
+          conda install -qy -n "$CONDA_TEST_ENVIRONMENT" tears
 
       - name: "Configure iRODS clients"
         run: |
-          conda activate "$CONDA_ENV"
+          conda activate "$CONDA_TEST_ENVIRONMENT"
 
           mkdir -p "$HOME/.irods"
           cat <<'EOF' > "$HOME/.irods/irods_environment.json"
@@ -127,26 +132,51 @@ jobs:
         run: |
           echo "source ${{ env.PERL_CACHE }}/etc/bashrc" >> "$HOME/.bash_profile"
 
-      - name: "Install CPAN dependencies"
+      - name: "Install Perl dependencies"
         run: |
-          cpanm --local-lib=${{ env.PERL_CACHE }} local::lib && \
-            eval $(perl -I ${{ env.PERL_CACHE }}/lib/perl5/ -Mlocal::lib)
+          cpanm --local-lib=${{ env.PERL_CACHE }} local::lib
+          eval $(perl -I ${{ env.PERL_CACHE }}/lib/perl5/ -Mlocal::lib="$NPG_LIB")
+          eval $(perl -I ${{ env.PERL_CACHE }}/lib/perl5/ -Mlocal::lib)
 
-          ./scripts/install_wsi_dependencies.sh
-          cpanm --installdeps --notest . || cat ~/.cpanm/work/*/build.log
+          # Required for npg_tracking (at least), but not declared as a
+          # dependency
+          cpanm --quiet --notest Alien::Tidyp
+
+          # Required for npg_qc
+          cpanm --quiet --notest https://github.com/chapmanb/vcftools-cpan/archive/v0.953.tar.gz
+
+          # Work around the circular dependency between npg_irods and
+          # npg_ml_warehouse. The latter dependency requires the former (which
+          # is this repository itself).
+          export PERL5LIB="$GITHUB_WORKSPACE/lib:$PERL5LIB"
+
+          ./scripts/install_wsi_dependencies.sh "$NPG_LIB" \
+             perl-dnap-utilities \
+             perl-irods-wrap \
+             ml_warehouse \
+             npg_ml_warehouse \
+             npg_tracking \
+             npg_seq_common \
+             npg_qc
+          cpanm --installdeps --notest .
+
+      - name: "Log install failure"
+        if: ${{ failure() }}
+        run: |
+          find ~/.cpanm/work -cmin -1 -name '*.log' -exec tail -n20  {} \;
 
       - name: "Run tests"
+        env:
+          TEST_AUTHOR: 1
         run: |
-          conda activate "$CONDA_ENV"
-          cpanm --local-lib=${{ env.PERL_CACHE }} local::lib && \
-            eval $(perl -I ${{ env.PERL_CACHE }}/lib/perl5/ -Mlocal::lib)
+          conda activate "$CONDA_TEST_ENVIRONMENT"
+
+          eval $(perl -I ${{ env.PERL_CACHE }}/lib/perl5/ -Mlocal::lib)
+          eval $(perl -I ${{ env.PERL_CACHE }}/lib/perl5/ -Mlocal::lib="$NPG_LIB")
           export PERL5LIB="$PWD:$PERL5LIB"
 
           perl Build.PL
 
-          conda list
-
-          export TEST_AUTHOR=1
           export WTSI_NPG_iRODS_Test_irodsEnvFile=NULL
           export WTSI_NPG_iRODS_Test_IRODS_ENVIRONMENT_FILE="$HOME/.irods/irods_environment.json"
-          ./Build test --test-files t/aln_data_object.t --verbose
+          ./Build test
