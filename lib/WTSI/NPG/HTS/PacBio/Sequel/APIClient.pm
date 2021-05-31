@@ -244,6 +244,33 @@ sub query_analysis_jobs {
   return [@jobs];
 }
 
+
+=head2 query_datasets
+
+  Arg [1]    : Dataset type. Required.
+
+  Example    : my $reports = $client->query_datasets($type)
+  Description: Query for successfully generated datasets by type.
+  Returntype : ArrayRef[HashRef]
+
+=cut
+
+sub query_datasets {
+  my($self, $dataset_type) = @_;
+
+  defined $dataset_type or
+      $self->logconfess('A defined dataset_type is required');
+ 
+  my $path = join q[/], q[smrt-link/datasets], $dataset_type;
+  my ($content) = $self->_get_content($self->_get_uri($path)->clone);
+
+  my @datasets;
+  if(ref $content eq 'ARRAY') {
+    push @datasets, @{$content};
+  }
+  return [@datasets];
+}
+
 =head2 query_dataset_reports
 
   Arg [1]    : Dataset type. Required.

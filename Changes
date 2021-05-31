@@ -1,5 +1,8 @@
 Upcoming
 
+ - 1 additional PacBio API query (query_datasets) to support mlwarehouse 
+   loading.
+
 Release 2.29.0
 
  - Additional PacBio API queries to support mlwarehouse loading.
