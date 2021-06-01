@@ -260,7 +260,7 @@ sub query_datasets {
 
   defined $dataset_type or
       $self->logconfess('A defined dataset_type is required');
- 
+
   my $path = join q[/], q[smrt-link/datasets], $dataset_type;
   my ($content) = $self->_get_content($self->_get_uri($path)->clone);
 
