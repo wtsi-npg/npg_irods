@@ -1,5 +1,7 @@
 Upcoming
 
+ - Added substitution_analyis and substition_metrics ancillary files
+
 Release 2.29.0
 
  - Additional PacBio API queries to support mlwarehouse loading.
