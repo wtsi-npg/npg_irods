@@ -473,7 +473,8 @@ sub header : Test(13) {
     }
 
     $irods->add_object("$data_path/$invalid.cram",
-                       "$irods_tmp_coll/$invalid.cram");
+                       "$irods_tmp_coll/$invalid.cram",
+                       $WTSI::NPG::iRODS::CALC_CHECKSUM);
 
     # Ensure that a malformed file raises an exception
     my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new

@@ -13,7 +13,6 @@ use Readonly;
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::iRODS;
-use WTSI::NPG::HTS::PacBio::RunMonitor;
 use WTSI::NPG::HTS::PacBio::Sequel::RunMonitor;
 
 
@@ -30,14 +29,12 @@ my $local_path;
 my $log4perl_config;
 my $older_than = $DEFAULT_OLDER_THAN_DAYS;
 my $verbose;
-my $sequel;
 
 GetOptions('collection=s'            => \$collection,
            'debug'                   => \$debug,
            'help'                    => sub {
              pod2usage(-verbose => 2, -exitval => 0);
            },
-           'sequel'                  => \$sequel,
            'interval=i'              => \$interval,
            'logconf=s'               => \$log4perl_config,
            'local-path|local_path=s' => \$local_path,
@@ -46,13 +43,7 @@ GetOptions('collection=s'            => \$collection,
            'verbose'                 => \$verbose);
 
 
-my $module;
-if ($sequel) {
-  $module = 'WTSI::NPG::HTS::PacBio::Sequel::RunMonitor';
-} else {
-  $module = 'WTSI::NPG::HTS::PacBio::RunMonitor';
-}
-
+my $module = 'WTSI::NPG::HTS::PacBio::Sequel::RunMonitor';
 
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
@@ -66,11 +57,6 @@ else {
 
 if (not $local_path) {
   pod2usage(-msg     => 'A local-path argument is required',
-            -exitval => 2);
-}
-
-if ($api_uri && ! $sequel){
-  pod2usage(-msg     => 'Specifying urls is only supported for Sequels',
             -exitval => 2);
 }
 
@@ -118,7 +104,7 @@ npg_pacbio_runmonitor
 
 npg_pacbio_runmonitor --local-path </path/to/staging/area
   [--collection <path>] [--debug] [--interval days] [--logconf <path>]
-  [--older-than days] [--verbose] [--sequel] [--api-uri]
+  [--older-than days] [--verbose] [--api-uri]
 
  Options:
    --collection      The destination collection in iRODS. Optional,
@@ -137,16 +123,15 @@ npg_pacbio_runmonitor --local-path </path/to/staging/area
    --older_than      Only consider runs older than a specified number of 
                      days. Optional defaults to 0 days. 
    --verbose         Print messages while processing. Optional.
-   --sequel          If the target monitor is for the Sequel system. 
-                     Optional.
-   --api-uri
+
+   --api_uri   
    --api_uri         Specify the server host and port. Optional.
 
 
 =head1 DESCRIPTION
 
 This script queries a PacBio web service for runs and loads completed
-runs into iRODS using the relevant PacBio RunPublisher module.
+runs into iRODS using the PacBio RunPublisher module.
 
 =head1 AUTHOR
 

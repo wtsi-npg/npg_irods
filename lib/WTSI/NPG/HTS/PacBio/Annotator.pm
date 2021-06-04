@@ -50,7 +50,7 @@ with qw[
         push @avus, $self->make_avu($PACBIO_INSTRUMENT_NAME,   $metadata->instrument_name);
         push @avus, $self->make_avu($PACBIO_RUN,               $metadata->run_name);
         push @avus, $self->make_avu($PACBIO_WELL,              $metadata->well_name);
-        push @avus, $self->make_avu($PACBIO_SAMPLE_LOAD_NAME,  $metadata->sample_name);
+        push @avus, $self->make_avu($PACBIO_SAMPLE_LOAD_NAME,  $metadata->sample_load_name);
 
         if ($params->data_level) {
             push @avus, $self->make_avu($PACBIO_DATA_LEVEL, $params->data_level);
@@ -63,7 +63,7 @@ with qw[
 
         if ($params->is_r_and_d) {
             # R & D data
-            push @avus, $self->make_avu($SAMPLE_NAME, $metadata->sample_name);
+            push @avus, $self->make_avu($SAMPLE_NAME, $metadata->sample_load_name);
         }
         else {
             # Production data

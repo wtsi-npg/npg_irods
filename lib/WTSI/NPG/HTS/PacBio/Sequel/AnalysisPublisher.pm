@@ -1,13 +1,13 @@
 package WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
 
 use namespace::autoclean;
-use Data::Dump qw[pp];
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions qw[catdir];
 use Moose;
 use MooseX::StrictConstructor;
 
+use WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
 
 extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
@@ -54,7 +54,7 @@ has 'analysis_path' =>
 
 =cut
 
-override 'publish_files' => sub {
+sub publish_files {
   my ($self) = @_;
 
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
@@ -68,10 +68,12 @@ override 'publish_files' => sub {
         ($SEQUENCE_INDEX_FORMAT);
     my ($nfx, $npx, $nex) = $self->publish_non_sequence_files
         ($METADATA_SET . q[.] . $METADATA_FORMAT);
+    my ($nfr, $npr, $ner) = $self->publish_non_sequence_files
+        ($self->_merged_report);
 
-    $num_files     += ($nfx + $nfb + $nfp);
-    $num_processed += ($npx + $npb + $npp);
-    $num_errors    += ($nex + $neb + $nep);
+    $num_files     += ($nfx + $nfb + $nfp + $nfr);
+    $num_processed += ($npx + $npb + $npp + $npr);
+    $num_errors    += ($nex + $neb + $nep + $ner);
   }
   else {
     $self->info('Skipping ', $self->analysis_path,
@@ -146,7 +148,7 @@ sub publish_sequence_files {
       my @secondary_avus = $self->make_secondary_metadata(@records);
 
       my ($a_files, $a_processed, $a_errors) =
-        $self->_publish_files([$file], $self->_dest_path,
+        $self->pb_publish_files([$file], $self->_dest_path,
                               \@primary_avus, \@secondary_avus);
 
       $num_files     += $a_files;
@@ -185,7 +187,7 @@ sub publish_non_sequence_files {
   my $files = $self->list_files($format . q[$]);
 
   my ($num_files, $num_processed, $num_errors) =
-    $self->_publish_files($files, $self->_dest_path);
+    $self->pb_publish_files($files, $self->_dest_path);
 
   $self->info("Published $num_processed / $num_files $format files ",
               'for SMRT cell ', $self->_metadata->well_name, ' run ',
@@ -263,6 +265,25 @@ sub _build_metadata{
   }
   return  WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file
                  ($metafiles[0], $METADATA_PREFIX);
+}
+
+has '_merged_report' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   builder       => '_build_merged_report',
+   lazy          => 1,
+   init_arg      => undef,
+   documentation => 'Merged report file name.',);
+
+sub _build_merged_report {
+  my ($self) = @_;
+
+  my @init_args = (analysis_path  => $self->analysis_path,
+                   runfolder_path => $self->runfolder_path,
+                   meta_data      => $self->_metadata);
+
+  my $report = WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport->new(@init_args);
+  return $report->generate_analysis_report;
 }
 
 sub _get_tag_from_fname {

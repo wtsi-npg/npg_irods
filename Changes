@@ -1,3 +1,73 @@
+Upcoming
+
+Release 2.29.0
+
+ - Additional PacBio API queries to support mlwarehouse loading.
+
+Release 2.28.0
+
+ - Support loading of Pacbio Sequel OnInstrument data
+
+Release 2.27.0
+
+ - set_object_permissions in WTSI::NPG::Data::ConsentWithdrawn updated to
+   use <user>#<zone> rather than <user> only format 
+ - Pacbio RSII specific code clear out
+ - Restore the gbs plex meta data
+
+Release 2.26.0
+
+ - Add iRODS 4.2.8 to tests
+
+   iRODS 4.2.8 is marked as an expected failure because we have not
+   yet built Conda packages of irods-icommands or libhts plugins for
+   iRODS 4.2.8.
+
+ - Pacbio Sequel merged analysis report file changes due to version update
+ - Pacbio Sequel generate and publish archive of QC images and reports.
+
+Release 2.25.0
+
+ - Pacbio Sequel merged analysis report file changes due to version update
+
+Release 2.24.1
+
+ - Order Conda channels for tests so that NPG channels have highest priority
+   and conda-forge the lowest.
+
+Release 2.24.0
+
+ - Create merged analysis report for Sequel analysis jobs
+ - Remove iRODS 4.1.12 from tests
+
+Release 2.23.0
+
+ - Bugfix: handling of --exclude CLI arguments by npg_publish_tree.pl.
+ - Make Treepublisher create an empty target directory, even when
+   there are no files to publish.
+
+Release 2.22.0
+
+ - New script, npg_publish_tree.pl, to publish arbitrary directory trees of
+   files to iRODS, set permissions and add metadata to the destination root
+   collection.
+ - Add filter parameter to TreePublisher::publish_tree.
+ - Add named parameters to BatchPublisher::publish_file_batch.
+ - Fix teardown of iRODS collection in TreePublishTest.
+
+Release 2.21.0
+
+ - New script, npg_process_consent_withdrawn.pl, to withdraw permissions on
+   iRODS data for samples with concent withdrawn. Ported from the internal
+   SVN repository and refactored to use WTSI::NPG::iRODS class for iRODS
+   operations.
+ - Add testing with iRODS v4.2.7 clients to Travis CI matrix.
+
+Release 2.20.0
+
+ - When archiving logs skip large .err files in archive/tmp_.. directories
+ - Pacbio tweak to support traction barcode identifiers and loading older analysis.
+
 Release 2.19.0
 
  - PacBio run loading add options as in other scripts to support loading

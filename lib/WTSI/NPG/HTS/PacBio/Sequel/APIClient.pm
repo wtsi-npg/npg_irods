@@ -43,7 +43,6 @@ sub _build_runs_api_uri {
   return URI->new($uri);
 }
 
-
 has 'jobs_api_uri' =>
   (isa           => 'URI',
    is            => 'ro',
@@ -58,6 +57,15 @@ sub _build_jobs_api_uri {
   return URI->new($uri);
 }
 
+has 'user_agent' =>
+  (isa           => 'LWP::UserAgent',
+   is            => 'ro',
+   required      => 1,
+   default       => sub {
+       return LWP::UserAgent->new;
+   },
+   documentation => 'Web user agent handle');
+
 has 'job_type' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -65,6 +73,12 @@ has 'job_type' =>
    default       => 'analysis',
    documentation => 'The job type');
 
+has 'job_status' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 1,
+   default       => 'completedAt',
+   documentation => 'The required job status');
 
 has 'default_interval' =>
   (isa           => 'Int',
@@ -123,21 +137,74 @@ sub query_runs {
 
   my $end   = $self->end_date;
   my $begin = $self->begin_date;
+  my $status = $self->job_status;
 
   my ($content) = $self->_get_content($self->runs_api_uri->clone);
 
   my @runs;
   if (ref $content eq 'ARRAY') {
       foreach my $run (@{$content}) {
-          if($run->{completedAt}                      &&
-             ($run->{completedAt} gt $begin->iso8601) &&
-             ($run->{completedAt} lt $end->iso8601)){
+          if($run->{$status}                      &&
+             ($run->{$status} gt $begin->iso8601) &&
+             ($run->{$status} lt $end->iso8601)){
               push @runs, $run;
           }
       }
   }
 
   return [@runs];
+}
+
+
+=head2 query_run
+
+  Arg [1]    : Run id. Required.
+
+  Example    : my $run = $client->query_run($run_id)
+  Description: Query for a specific run by run_id.
+  Returntype : HashRef
+
+=cut
+
+sub query_run {
+  my($self, $run_id) = @_;
+
+  defined $run_id or
+      $self->logconfess('A defined run_id is required');
+
+  my $path  = join q[/], q[smrt-link/runs], $run_id;
+  my ($run) = $self->_get_content($self->_get_uri($path)->clone);
+  return $run;
+}
+
+=head2 query_run_collections
+
+  Arg [1]    : Run id. Optional.
+
+  Example    : my $collections = $client->query_run_collections($run_id)
+  Description: Query for collections via runs within a specific
+               time frame. Optionally specify a single run id, but note
+               there is no time frame restriction applied when a single
+               run id is defined.
+  Returntype : ArrayRef[HashRef]
+
+=cut
+
+sub query_run_collections {
+  my($self, $run_id) = @_;
+
+  my $run_data = length $run_id ? [$self->query_run($run_id)] : $self->query_runs;
+  my @collections;
+  if(ref $run_data eq 'ARRAY') {
+    foreach my $run (@{$run_data}) {
+      my $path = join q[/], q[smrt-link/runs], $run->{uniqueId}, q[collections];
+      my ($col) = $self->_get_content($self->_get_uri($path)->clone);
+      if(ref $col eq 'ARRAY') {
+        push @collections, @{$col};
+      }
+    }
+  }
+  return[@collections];
 }
 
 =head2 query_analysis_jobs
@@ -162,12 +229,12 @@ sub query_analysis_jobs {
   my @jobs;
   if(ref $content eq 'ARRAY') {
       foreach my $job (@{$content}) {
-          if($job->{createdAt}                      &&
-             ($job->{createdAt} gt $begin->iso8601) &&
-             ($job->{createdAt} lt $end->iso8601)   &&
-             $job->{state}                          &&
-             ($job->{state} eq $SUCCESS_STATE)      &&
-             $job->{subJobTypeId}                   &&
+          if($job->{jobCompletedAt}                      &&
+             ($job->{jobCompletedAt} gt $begin->iso8601) &&
+             ($job->{jobCompletedAt} lt $end->iso8601)   &&
+             $job->{state}                               &&
+             ($job->{state} eq $SUCCESS_STATE)           &&
+             $job->{subJobTypeId}                        &&
              ($job->{subJobTypeId} eq $pipeline_id)
              ){
               push @jobs, $job;
@@ -177,12 +244,52 @@ sub query_analysis_jobs {
   return [@jobs];
 }
 
+=head2 query_dataset_reports
+
+  Arg [1]    : Dataset type. Required.
+  Arg [2]    : Dataset id. Required.
+
+  Example    : my $reports = $client->query_dataset_reports($type, $id)
+  Description: Query for successfully generated QC reports for a dataset.
+  Returntype : ArrayRef[HashRef]
+
+=cut
+
+sub query_dataset_reports {
+  my($self, $dataset_type, $dataset_id) = @_;
+
+  defined $dataset_id or
+      $self->logconfess('A defined dataset_id is required');
+
+  defined $dataset_type or
+      $self->logconfess('A defined dataset_type is required');
+
+  my $path = join q[/], q[smrt-link/datasets], $dataset_type, $dataset_id, q[reports];
+  my ($content) = $self->_get_content($self->_get_uri($path)->clone);
+
+  my @reports;
+  if(ref $content eq 'ARRAY') {
+    foreach my $rep (@{$content}) {
+      if($rep->{dataStoreFile}->{isActive} == 1 &&
+         $rep->{dataStoreFile}->{path} ) {
+         push @reports, $rep;
+      }
+    }
+  }
+  return [@reports];
+}
+
+sub _get_uri {
+  my($self, $path) = @_;
+  my $uri    = uri_join($PROTOCOL, $self->api_uri, $path);
+  return URI->new($uri);
+}
 
 sub _get_content{
   my($self, $query) = @_;
 
   $self->debug("Getting query URI '$query'");
-  my $ua = LWP::UserAgent->new;
+  my $ua = $self->user_agent;
   my $response = $ua->get($query);
 
   my $msg = sprintf 'code %d, %s', $response->code, $response->message;
@@ -197,7 +304,6 @@ sub _get_content{
   }
   return $content;
 }
-
 
 __PACKAGE__->meta->make_immutable;
 

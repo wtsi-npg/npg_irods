@@ -12,10 +12,8 @@ use MooseX::StrictConstructor;
 use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
-use WTSI::NPG::HTS::BatchPublisher;
 
 use WTSI::NPG::HTS::TreePublisher;
-
 use WTSI::NPG::HTS::Illumina::DataObjectFactory;
 use WTSI::NPG::HTS::Illumina::ResultSet;
 use WTSI::NPG::HTS::PublishState;
@@ -496,7 +494,8 @@ sub publish_genotype_files {
   my $primary_avus = sub {
     my ($obj) = @_;
     return $self->make_primary_metadata
-      ($obj->composition, alt_process => $self->alt_process);
+      ($obj->composition, alt_process  => $self->alt_process,
+       lims_factory => $self->lims_factory);
   };
 
   my $secondary_avus = sub {
@@ -583,9 +582,10 @@ sub _tree_publish_run_level {
      compress_formats  => [$self->compress_suffixes],
      irods             => $self->irods);
 
-  my $tree_publisher = $self->_make_tree_publisher;
-  return $tree_publisher->publish_tree($files, $obj_factory,
-                                       $primary_avus_callback);
+  my $tree_publisher = $self->_make_tree_publisher($obj_factory);
+  return $tree_publisher->publish_tree
+      ($files,
+       primary_cb => $primary_avus_callback);
 }
 
 sub _tree_publish_product_level {
@@ -605,18 +605,20 @@ sub _tree_publish_product_level {
      compress_formats  => [$self->compress_suffixes],
      irods             => $self->irods);
 
-  my $tree_publisher = $self->_make_tree_publisher;
-  return $tree_publisher->publish_tree($files, $obj_factory,
-                                       $primary_avus_callback,
-                                       $secondary_avus_callback);
+  my $tree_publisher = $self->_make_tree_publisher($obj_factory);
+  return $tree_publisher->publish_tree
+      ($files,
+       primary_cb   => $primary_avus_callback,
+       secondary_cb => $secondary_avus_callback);
 }
 
 sub _make_tree_publisher {
-  my ($self) = @_;
+  my ($self, $obj_factory) = @_;
 
   my @init_args = (dest_collection  => $self->publish_collection,
                    force            => $self->force,
                    irods            => $self->irods,
+                   obj_factory      => $obj_factory,
                    publish_state    => $self->publish_state,
                    source_directory => $self->source_directory);
   if ($self->has_max_errors) {

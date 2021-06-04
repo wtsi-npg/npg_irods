@@ -126,7 +126,7 @@ sub publish_files : Test(2) {
      runfolder_path  => $runfolder_path);
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
-  my $num_expected = 9;
+  my $num_expected = 10;
 
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
   cmp_ok($num_errors,    '==', 0);
@@ -376,7 +376,7 @@ sub publish_files_2 : Test(2) {
      runfolder_path  => $runfolder_path);
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
-  my $num_expected = 2;
+  my $num_expected = 3;
 
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
   cmp_ok($num_errors,    '==', 0);

@@ -59,7 +59,9 @@ sub setup_test : Test(setup) {
   $test_counter++;
 
   foreach my $file ($f5_data_file, $fq_data_file) {
-    $irods->add_object("$data_path/$file", "$irods_tmp_coll/$file");
+    $irods->add_object("$data_path/$file",
+                       "$irods_tmp_coll/$file",
+                       $WTSI::NPG::iRODS::CALC_CHECKSUM);
     $irods->add_object_avu("$irods_tmp_coll/$file", 'experiment_name', 2);
     $irods->add_object_avu("$irods_tmp_coll/$file", 'device_id', 'GA10000');
   }

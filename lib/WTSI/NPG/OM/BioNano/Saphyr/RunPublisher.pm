@@ -211,9 +211,9 @@ sub _publish_files {
 
   return $self->batch_publisher->publish_file_batch
     ($files, $dest_coll,
-     $primary_avus_callback,
-     $secondary_avus_callback,
-     $extra_avus_callback);
+     primary_cb   => $primary_avus_callback,
+     secondary_cb => $secondary_avus_callback,
+     extra_cb     => $extra_avus_callback);
 }
 ## use critic
 

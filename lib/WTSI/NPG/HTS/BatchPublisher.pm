@@ -79,16 +79,22 @@ has 'require_checksum_cache' =>
 
   Arg [1]    : File batch, ArrayRef[Str].
   Arg [2]    : Destination collection, Str.
-  Arg [3]    : Callback returning primary AVUs for a data object. CodeRef.
-  Arg [4]    : Callback returning secondary AVUs for a data object. CodeRef.
+
+  Named args : primary_cb
+               Callback returning primary AVUs for a data object. CodeRef.
+
+               secondary_cb
+               Callback returning secondary AVUs for a data object. CodeRef.
                Optional.
-  Arg [5]    : Callback returning extra AVUs for a data object. CodeRef,
+
+               extra_cb
+               Callback returning extra AVUs for a data object. CodeRef,
                Optional.
 
   Example    : $pub->publish_file_batch(['x.txt', 'y.txt'],
                                         '/destination/collection',
-                                        sub { ... },
-                                        sub { ... });
+                                        primary_cb   => sub { ... },
+                                        secondary_cb => sub { ... });
 
   Description: Publish a list of files to iRODS, using callbacks to
                caculate the metadata to be applied to each file. Return the
@@ -98,110 +104,132 @@ has 'require_checksum_cache' =>
 
 =cut
 
-## no critic (ProhibitManyArgs)
-sub publish_file_batch {
-  my ($self, $files, $dest_coll, $primary_avus_callback,
-      $secondary_avus_callback, $extra_avus_callback) = @_;
 
-  defined $files or
-    $self->logconfess('A defined files argument is required');
-  ref $files eq 'ARRAY' or
-    $self->logconfess('The files argument must be an ArrayRef');
-  defined $dest_coll or
-    $self->logconfess('A defined dest_coll argument is required');
+## no critic (Subroutines::ProhibitExcessComplexity)
+{
+  my $positional = 3;
+  my @named      = qw[primary_cb secondary_cb extra_cb];
+  my $params     = function_params($positional, @named);
 
-  defined $primary_avus_callback or
-    $self->logconfess('A defined primary_avus_callback is required');
-  ref $primary_avus_callback eq 'CODE' or
-    $self->logconfess('The primary_avus_callback must be a CodeRef');
+  sub publish_file_batch {
+    my ($self, $files, $dest_coll) = $params->parse(@_);
 
-  $secondary_avus_callback ||= sub { return () };
-  $extra_avus_callback     ||= sub { return () };
+    defined $files or
+        $self->logconfess('A defined files argument is required');
+    ref $files eq 'ARRAY' or
+        $self->logconfess('The files argument must be an ArrayRef');
+    defined $dest_coll or
+        $self->logconfess('A defined dest_coll argument is required');
 
-  my $publisher =
-    WTSI::NPG::iRODS::Publisher->new
-      (irods                  => $self->irods,
-       require_checksum_cache => $self->require_checksum_cache);
-
-  my $num_files     = scalar @{$files};
-  my $num_processed = 0;
-  my $num_errors    = 0;
-
-  $self->debug("Publishing a batch of $num_files files: ", pp($files));
-
- FILE: foreach my $file (@{$files}) {
-    my $remote_path = q[];
-
-    if ($self->has_max_errors and $num_errors >= $self->max_errors) {
-      $self->error("The number of errors $num_errors reached the maximum ",
-                   'permitted of ', $self->max_errors, '. Aborting');
-      last FILE;
+    my $primary_cb = sub {return ()};
+    if (defined $params->primary_cb) {
+      ref $params->primary_cb eq 'CODE' or
+          $self->logconfess('The primary_cb argument must be a CodeRef');
+      $primary_cb = $params->primary_cb;
     }
 
-    $self->debug("Publishing '$file', a member of a batch of $num_files");
-
-    if ($self->publish_state->is_published($file)) {
-      if ($self->force) {
-        $self->info("Forcing re-publication of local file '$file'");
-      }
-      else {
-        $self->info("Skipping local file '$file'; already published");
-        next FILE;
-      }
+    my $secondary_cb = sub {return ()};
+    if (defined $params->secondary_cb) {
+      ref $params->secondary_cb eq 'CODE' or
+          $self->logconfess('The secondary_cb argument must be a CodeRef');
+      $secondary_cb = $params->secondary_cb;
     }
 
-    try {
-      $num_processed++;
-      my ($filename, $directories, $suffix) = fileparse($file);
-      $remote_path = catfile($dest_coll, $filename);
+    my $extra_cb = sub {return ()};
+    if (defined $params->extra_cb) {
+      ref $params->extra_cb eq 'CODE' or
+          $self->logconfess('The extra_cb argument must be a CodeRef');
+      $extra_cb = $params->extra_cb;
+    }
 
-      my $obj = $self->obj_factory->make_data_object($remote_path);
-      if (not $obj) {
-        $self->logconfess("Failed to make an object from '$remote_path'");
+    my $publisher =
+        WTSI::NPG::iRODS::Publisher->new
+            (irods                  => $self->irods,
+             require_checksum_cache => $self->require_checksum_cache);
+
+    my $num_files     = scalar @{$files};
+    my $num_processed = 0;
+    my $num_errors    = 0;
+
+    $self->debug("Publishing a batch of $num_files files: ", pp($files));
+
+    FILE:
+    foreach my $file (@{$files}) {
+      my $remote_path = q[];
+
+      if ($self->has_max_errors and $num_errors >= $self->max_errors) {
+        $self->error("The number of errors $num_errors reached the maximum ",
+                     'permitted of ', $self->max_errors, '. Aborting');
+        last FILE;
       }
 
-      $self->debug("Publishing '$file' to '$remote_path'");
-      my $dest = $publisher->publish($file, $remote_path)->str;
+      $self->debug("Publishing '$file', a member of a batch of $num_files");
 
-      my @primary_avus = $primary_avus_callback->($obj);
-      my ($num_pattr, $num_pproc, $num_perr) =
-        $obj->set_primary_metadata(@primary_avus);
-
-      my @secondary_avus = $secondary_avus_callback->($obj);
-      my ($num_sattr, $num_sproc, $num_serr) =
-        $obj->update_secondary_metadata(@secondary_avus);
-
-      my @extra_avus = $extra_avus_callback->($obj);
-      my ($num_xattr, $num_xproc, $num_xerr) =
-        $self->_add_extra_metadata($obj, @extra_avus);
-
-      # Test metadata at the end
-      if ($num_perr > 0) {
-        $self->logcroak("Failed to set primary metadata cleanly on '$dest'");
-      }
-      if ($num_serr > 0) {
-        $self->logcroak("Failed to set secondary metadata cleanly on '$dest'");
-      }
-      if ($num_xerr > 0) {
-        $self->logcroak("Failed to set extra metadata cleanly on '$dest'");
+      if ($self->publish_state->is_published($file)) {
+        if ($self->force) {
+          $self->info("Forcing re-publication of local file '$file'");
+        }
+        else {
+          $self->info("Skipping local file '$file'; already published");
+          next FILE;
+        }
       }
 
-      $self->publish_state->set_published($file);
-      $self->info("Published '$dest' [$num_processed / $num_files]");
-    } catch {
-      $num_errors++;
-      $self->error("Failed to publish '$file' to '$remote_path' cleanly ",
-                   "[$num_processed / $num_files]: ", $_);
-    };
+      try {
+        $num_processed++;
+        my ($filename, $directories, $suffix) = fileparse($file);
+        $remote_path                          = catfile($dest_coll, $filename);
+
+        my $obj = $self->obj_factory->make_data_object($remote_path);
+        if (not $obj) {
+          $self->logconfess("Failed to make an object from '$remote_path'");
+        }
+
+        $self->debug("Publishing '$file' to '$remote_path'");
+        my $dest = $publisher->publish($file, $remote_path)->str;
+
+        my @primary_avus                       = $primary_cb->($obj);
+        my ($num_pattr, $num_pproc, $num_perr) =
+            $obj->set_primary_metadata(@primary_avus);
+
+        my @secondary_avus                     = $secondary_cb->($obj);
+        my ($num_sattr, $num_sproc, $num_serr) =
+            $obj->update_secondary_metadata(@secondary_avus);
+
+        my @extra_avus                         = $extra_cb->($obj);
+        my ($num_xattr, $num_xproc, $num_xerr) =
+            $self->_add_extra_metadata($obj, @extra_avus);
+
+        # Test metadata at the end
+        if ($num_perr > 0) {
+          $self->logcroak("Failed to set primary metadata cleanly on '$dest'");
+        }
+        if ($num_serr > 0) {
+          $self->logcroak("Failed to set secondary metadata cleanly on '$dest'");
+        }
+        if ($num_xerr > 0) {
+          $self->logcroak("Failed to set extra metadata cleanly on '$dest'");
+        }
+
+        $self->publish_state->set_published($file);
+        $self->info("Published '$dest' [$num_processed / $num_files]");
+      }
+      catch {
+        $num_errors++;
+        $self->error("Failed to publish '$file' to '$remote_path' cleanly ",
+                     "[$num_processed / $num_files]: ", $_);
+      };
+    }
+
+    if ($num_errors > 0) {
+      $self->error("Encountered errors on $num_errors / ",
+                   "$num_processed files processed");
+    }
+
+    return ($num_files, $num_processed, $num_errors);
   }
-
-  if ($num_errors > 0) {
-    $self->error("Encountered errors on $num_errors / ",
-                 "$num_processed files processed");
-  }
-
-  return ($num_files, $num_processed, $num_errors);
 }
+## use critic
 
 sub read_state {
   my ($self) = @_;
