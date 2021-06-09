@@ -4,8 +4,11 @@ use namespace::autoclean;
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions qw[catdir];
+use JSON;
 use Moose;
 use MooseX::StrictConstructor;
+use Perl6::Slurp;
+use Readonly;
 
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
@@ -30,11 +33,18 @@ our $ENTRY_DIR       = 'entry-points';
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
 # Additional sequence filenames permitted for loading 
-our @FNAME_PERMITTED    = qw[removed ccs];
+our @FNAME_PERMITTED    = qw[removed ccs hifi_reads];
 our @FNAME_NON_DEPLEXED = qw[removed];
 
 # Data processing level
 our $DATA_LEVEL = 'secondary';
+
+# If deplexed - minimum deplexed percentage to load
+Readonly::Scalar my $MIN_BARCODED  => 0.3;
+Readonly::Scalar my $BARCODE_FIELD => 'Percent Barcoded Reads';
+Readonly::Scalar my $REPORT_TITLE  =>
+  $WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport::REPORTS;
+
 
 has 'analysis_path' =>
   (isa           => 'Str',
@@ -63,6 +73,12 @@ sub publish_files {
 
   if (defined $seq_files->[0] && @{$self->smrt_names} == 1) {
 
+    my $qc_fail = $self->_basic_qc();
+    if ($qc_fail) {
+      $self->logcroak('Skipping ', $self->analysis_path,
+                      ' : QC check failed');
+    }
+
     my ($nfb, $npb, $neb) = $self->publish_sequence_files;
     my ($nfp, $npp, $nep) = $self->publish_non_sequence_files
         ($SEQUENCE_INDEX_FORMAT);
@@ -76,7 +92,7 @@ sub publish_files {
     $num_errors    += ($nex + $neb + $nep + $ner);
   }
   else {
-    $self->info('Skipping ', $self->analysis_path,
+    $self->warn('Skipping ', $self->analysis_path,
                 ' : unexpected file issues');
   }
 
@@ -120,6 +136,11 @@ sub publish_sequence_files {
             $self->find_pacbio_runs($self->_metadata->run_name,
                                     $self->_metadata->well_name,
                                     $self->_get_tag_name_from_fname($filename));
+
+        if (@tag_records != 1) {
+          $self->logcroak("Unexpected barcode from $file for SMRT cell ",
+              $self->_metadata->well_name, ' run ', $self->_metadata->run_name);
+        }
     } else {
         $self->_is_allowed_fname($filename, \@FNAME_PERMITTED) or
             $self->logcroak("Unexpected file name for $file");
@@ -156,7 +177,7 @@ sub publish_sequence_files {
       $num_errors    += $a_errors;
     }
     else {
-      $self->info("Skipping publishing $file as no records found");
+      $self->warn("Skipping publishing $file as no records found");
     }
   }
   $self->info("Published $num_processed / $num_files sequence files ",
@@ -284,6 +305,36 @@ sub _build_merged_report {
 
   my $report = WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport->new(@init_args);
   return $report->generate_analysis_report;
+}
+
+sub _basic_qc {
+  # common sense qc checks prior to loading
+  my ($self) = @_;
+
+  my $merged_report = $self->_merged_report;
+  my $files         = $self->list_files($merged_report . q[$]);
+
+  my $decoded;
+  if (scalar @{$files} == 1) {
+    my $file_contents = slurp $files->[0];
+    $decoded = decode_json($file_contents);
+  }
+
+  my $qc_fail = 0;
+  if ($decoded && $decoded->{$REPORT_TITLE}) {
+    foreach my $report (%{$decoded->{$REPORT_TITLE}}) {
+      next if ref $decoded->{$REPORT_TITLE}->{$report}  ne 'ARRAY';
+      foreach my $x (@{$decoded->{$REPORT_TITLE}->{$report}}) {
+        if ($x->{'name'} eq $BARCODE_FIELD && $x->{'value'} < $MIN_BARCODED) {
+          $qc_fail = 1;
+        }
+      }
+    }
+  }
+  else {
+    $self->warn('No qc check possible for ', $self->analysis_path);
+  }
+  return $qc_fail;
 }
 
 sub _get_tag_from_fname {

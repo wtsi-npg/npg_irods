@@ -1908,3 +1908,49 @@
   tag_set_name: Sequel_16_barcodes_v3
   well_label: B1
   well_uuid_lims: e4e76495-adc5-4b5d-9c05-db3fe72b754c
+- cost_code: S4773
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 81230
+  id_pac_bio_tmp: 20300
+  id_sample_tmp: 5490195
+  id_study_tmp: 5735
+  last_updated: 2021-04-09 13:00:40
+  library_created_at: ~
+  pac_bio_library_tube_id_lims: NT1667187Q
+  pac_bio_library_tube_legacy_id: 40356040
+  pac_bio_library_tube_name: DN787408U-C2
+  pac_bio_library_tube_uuid: f284c87f-57ae-4624-baa6-2688bc5c1f72
+  pac_bio_run_name: 81230
+  pac_bio_run_uuid: 5d406d89-18f6-4fa8-8b8-93aab251c22f
+  plate_barcode: DN799664B
+  plate_uuid_lims: 9422f314-9933-11eb-bdb9-fa163eea3084
+  recorded_at: 2021-04-09 13:00:40
+  tag_identifier: 1017
+  tag_sequence: CACACGCGCGCTATATT
+  tag_set_id_lims: 1
+  tag_set_name: Sequel_16_barcodes_v3
+  well_label: B1
+  well_uuid_lims: 942eb05a-9933-11eb-bdb9-fa163eea3084
+- cost_code: S4773
+  id_lims: SQSCP
+  id_pac_bio_run_lims: 81876
+  id_pac_bio_tmp: 20301
+  id_sample_tmp: 5490195
+  id_study_tmp: 5735
+  last_updated: 2021-04-29 16:50:57
+  library_created_at: ~
+  pac_bio_library_tube_id_lims: NT1670945H
+  pac_bio_library_tube_legacy_id: 41562896 
+  pac_bio_library_tube_name: DN712146I-B1
+  pac_bio_library_tube_uuid: 077f0032-a2b2-11eb-8894-fa163eac3af7
+  pac_bio_run_name: 81876
+  pac_bio_run_uuid: 04209068-a90b-11eb-bc5e-fa163eac3af7
+  plate_barcode: DN804753L
+  plate_uuid_lims: 10041238-a90b-11eb-81ec-fa163eea3084
+  recorded_at: 2021-04-29 16:50:57
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  well_label: A1
+  well_uuid_lims: 10101d08-a90b-11eb-81ec-fa163eea3084
