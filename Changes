@@ -1,6 +1,7 @@
 Upcoming
 
  - Added substitution_analyis and substition_metrics ancillary files
+ - Add some extra checks before loading PacBio secondary analysis data.
 
 Release 2.29.0
 

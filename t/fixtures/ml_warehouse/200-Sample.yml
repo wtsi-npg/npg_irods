@@ -8018,3 +8018,36 @@
   supplier_name: RO_FA_930
   taxon_id: 405009
   uuid_sample_lims: ee49148c-06f3-11ea-b9f4-fa163e2f1184
+- accession_number: SAMEA7701669
+  cohort: ~
+  common_name: Lomaspilis marginata
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2021-03-09 14:37:48
+  deleted_at: ~
+  description: ~
+  developmental_stage: ~
+  donor_id: SAMEA7701492
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 5547638
+  id_sample_tmp: 5490195
+  last_updated: 2021-04-13 02:47:13
+  mother: ~
+  name: DTOL10037997
+  organism: ~
+  phenotype: ~
+  public_name: ilLomMarg1
+  recorded_at: 2021-04-13 10:28:13
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: DTOL10037997
+  strain: ~
+  supplier_name: FD21267933
+  taxon_id: 722666
+  uuid_sample_lims: 050cb7ac-80e5-11eb-8671-fa163eac3af7
