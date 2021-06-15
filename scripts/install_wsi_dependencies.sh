@@ -5,9 +5,14 @@ set -e -u -x
 WSI_NPG_GITHUB_URL=${WSI_NPG_GITHUB_URL:=https://github.com/wtsi-npg}
 WSI_NPG_BUILD_BRANCH=${WSI_NPG_BUILD_BRANCH:=devel}
 
+# The first argument is the install base for NPG modules, enabling them to be
+# installed independently of CPAN dependencies. E.g. for cases where we want
+# different caching behaviour.
+NPG_ROOT="$1"
+shift
+
 repos=""
-for repo in perl-dnap-utilities perl-irods-wrap ml_warehouse \
-            npg_ml_warehouse npg_tracking npg_seq_common npg_qc ; do
+for repo in "$@" ; do
     cd /tmp
 
     # Clone deeper than depth 1 to get the tag even if something has been already
@@ -28,13 +33,13 @@ done
 # be before the libs for cpanm to pick them up in preference.
 for repo in $repos
 do
-    export PERL5LIB="$repo/blib/lib:$PERL5LIB:$repo/lib:$PERL5LIB"
+    export PERL5LIB="$PERL5LIB:$repo/blib/lib:$repo/lib"
 done
 
 for repo in $repos
 do
     cd "$repo"
-    cpanm --quiet --notest --installdeps . || cat ~/.cpanm/work/*/build.log
+    cpanm --quiet --notest --installdeps .
     perl Build.PL
     ./Build
 done
@@ -44,6 +49,6 @@ done
 for repo in $repos
 do
     cd "$repo"
-    cpanm --quiet --notest --installdeps . || cat ~/.cpanm/work/*/build.log
-    ./Build install
+    cpanm --quiet --notest --installdeps .
+    ./Build install --install-base "$NPG_ROOT"
 done
