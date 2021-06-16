@@ -21,6 +21,7 @@ our $PP = 'PP';
 our $ALIGNER_BWA    = qr{^bwa(?!_sam)}msx;
 our $ALIGNER_TOPHAT = qr{^TopHat}msx;
 our $ALIGNER_STAR   = qr{^STAR}msx;
+our $ALIGNER_MINIMAP2 = qr{^minimap2}msx;
 
 # Regex for matching to reference sequence paths in HTS file header PG
 # records.
@@ -153,7 +154,8 @@ sub get_unique_value {
     $self->logconfess("Multiple '$tag' tags in '$header_record'");
   }
 
-  return shift @values;
+  my $value = shift @values;
+  return $value;
 }
 
 =head2 pg_walk
@@ -259,10 +261,9 @@ sub pg_walk {
 
   Arg [1]      Entire header. This may be provided as a Str or ArrayRef[Str]
                where each header row is an element of the array.
-  Arg [2]      A callback to be executed on each line of BWA @PG line
-               of the BAM/CRAM header, CodeRef. Optional, defaults to
-               a filter that matches on the default reference regex,
-               CodeRef.
+  Arg [2]      A callback to be executed on each @PG line of the BAM/CRAM
+               header, CodeRef. Optional, defaults to a filter that matches on
+               the default reference regex, CodeRef.
 
   Example    : my $reference = $obj->alignment_reference($header, sub {
                   return $_[0] =~ /my_reference/
@@ -329,7 +330,7 @@ sub _find_aligner_record {
     my $cl = $self->get_unique_value($rec, $CL);
 
     if (defined $cl) {
-      if ($id =~ m{$ALIGNER_BWA|$ALIGNER_TOPHAT|$ALIGNER_STAR}msx) {
+      if ($id =~ m{$ALIGNER_BWA|$ALIGNER_TOPHAT|$ALIGNER_STAR|$ALIGNER_MINIMAP2}msx) {
         $self->debug("ID $id identified as an aligner in $rec");
         return 1;
       }
@@ -352,7 +353,8 @@ sub _find_aligner_record {
                     "in $num_graphs PP <- PP graphs: ", pp(\@aligner_records));
   }
 
-  return shift @aligner_records;
+  my $rec = shift @aligner_records;
+  return $rec;
 }
 
 # Parse a reference path from an aligner PG record
@@ -374,7 +376,8 @@ sub _parse_pg_reference_path {
                     "record '$pg_record': ", pp(\@fields));
   }
 
-  return shift @fields;
+  my $field = shift @fields;
+  return $field;
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -404,7 +407,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016, 2021 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

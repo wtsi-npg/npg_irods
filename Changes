@@ -2,6 +2,7 @@ Upcoming
 
  - 1 additional PacBio API query (query_datasets) to support mlwarehouse 
    loading.
+ - Add some extra checks before loading PacBio secondary analysis data.
 
 Release 2.29.0
 
