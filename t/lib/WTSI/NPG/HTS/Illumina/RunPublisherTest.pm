@@ -591,7 +591,7 @@ sub publish_plex_sec_data_samplesheet : Test(59) {
 
 
 # Plex-level, secondary data including geno and vcf, from samplesheet
-sub publish_plex_geno_sec_data_samplesheet : Test(63) {
+sub publish_plex_geno_sec_data_samplesheet : Test(73) {
   note '=== Tests in publish_plex_geno_sec_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/190514_MS5_29467_A_MS8070734-300V2";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -626,6 +626,8 @@ sub publish_plex_geno_sec_data_samplesheet : Test(63) {
                   "lane$lane/29467_1#1.vcf",
                   "lane$lane/29467_1#1_F0x900.stats",
                   "lane$lane/29467_1#1_F0xB00.stats",
+                  "lane$lane/29467_1#1_substitution_analysis.txt",
+                  "lane$lane/29467_1#1_substitution_metrics.txt",
                   );
 
   is_deeply(\@observed, \@expected) or diag explain \@observed;
