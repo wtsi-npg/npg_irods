@@ -1,6 +1,8 @@
 Upcoming
 
- - Added substitution_analyis and substition_metrics ancillary files
+ - Add substitution_analyis and substition_metrics ancillary files.
+ - 1 additional PacBio API query (query_datasets) to support mlwarehouse 
+   loading.
  - Add some extra checks before loading PacBio secondary analysis data.
 
 Release 2.29.0
@@ -9,7 +11,7 @@ Release 2.29.0
 
 Release 2.28.0
 
- - Support loading of Pacbio Sequel OnInstrument data
+ - Support loading of Pacbio Sequel OnInstrument data.
 
 Release 2.27.0
 
