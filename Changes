@@ -1,9 +1,14 @@
 Upcoming
 
+Release 2.30.0
+
  - Add substitution_analyis and substition_metrics ancillary files.
- - 1 additional PacBio API query (query_datasets) to support mlwarehouse 
-   loading.
+ - Add PacBio API query (query_datasets) to support mlwarehouse loading.
  - Add some extra checks before loading PacBio secondary analysis data.
+ - Update alignment file header parser for minimap2.
+- Install NPG and CPAN Perl modules separately in CI, to avoid caching
+   NPG modules.
+ - Move from Travis CI to GitHub Actions.
 
 Release 2.29.0
 
