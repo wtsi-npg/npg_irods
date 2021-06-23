@@ -100,7 +100,7 @@ sub pg_walk : Test(1) {
   is_deeply(\@observed, $expected) or diag explain \@observed;
 }
 
-sub alignment_reference : Test(3) {
+sub alignment_reference : Test(4) {
   my $header_path = "$data_path/17550_1#1.txt";
   my $parser = WTSI::NPG::HTS::HeaderParser->new;
 
@@ -114,6 +114,10 @@ sub alignment_reference : Test(3) {
   $header_path = "$data_path/20625_8#99.txt";
   is($parser->alignment_reference(read_file($header_path)),
      '/lustre/scratch117/core/sciops_repository/references/Plasmodium_falciparum/PF3K_Dd2v1/all/star');
+
+  $header_path = "$data_path/37220_1#1.txt";
+  is($parser->alignment_reference(read_file($header_path)),
+     '/lustre/scratch120/npg_repository/references/Homo_sapiens/GRCh38_15_plus_hs38d1/all/minimap2/Homo_sapiens.GRCh38_15_plus_hs38d1.fa.mmi')
 }
 
 sub split_lines {
