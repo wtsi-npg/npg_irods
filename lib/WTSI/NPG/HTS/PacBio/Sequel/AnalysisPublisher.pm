@@ -33,7 +33,7 @@ our $ENTRY_DIR       = 'entry-points';
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
 # Additional sequence filenames permitted for loading 
-our @FNAME_PERMITTED    = qw[removed ccs hifi_reads];
+our @FNAME_PERMITTED    = qw[removed ccs hifi_reads fl_transcripts];
 our @FNAME_NON_DEPLEXED = qw[removed];
 
 # Data processing level
