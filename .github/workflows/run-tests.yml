@@ -19,21 +19,16 @@ jobs:
 
     strategy:
       matrix:
-        perl: [ "5.22.4" ]
-        baton: [ "2.1.0" ]
-        experimental: [ false ]
         include:
           - perl: "5.22.4"
-            baton: "2.1.0"
-            plugins: "201712+irods_4.2.7"
             irods: "4.2.7"
             server_image: "wsinpg/ub-16.04-irods-4.2.7:latest"
+            baton: "2.1.0"
             experimental: false
           - perl: "5.22.4"
-            baton: "3.0.0"
-            plugins: "201712+irods_4.2.8"
             irods: "4.2.8"
             server_image: "wsinpg/ub-18.04-irods-4.2.8:latest"
+            baton: "3.0.1"
             experimental: true
 
     services:
@@ -73,7 +68,6 @@ jobs:
 
           conda config --set auto_update_conda False
           conda config --prepend channels "$WSI_CONDA_CHANNEL"
-          conda config --append channels conda-forge
           conda info
 
       - name: "Install iRODS clients"
@@ -81,7 +75,7 @@ jobs:
           conda create -qy -n "$CONDA_TEST_ENVIRONMENT"
           conda install -qy -n "$CONDA_TEST_ENVIRONMENT" "irods-icommands ==${{ matrix.irods }}"
           conda install -qy -n "$CONDA_TEST_ENVIRONMENT" "baton ==${{ matrix.baton }}"
-          conda install -qy -n "$CONDA_TEST_ENVIRONMENT" "libhts-plugins ==${{ matrix.plugins }}"
+          conda install -qy -n "$CONDA_TEST_ENVIRONMENT" libhts-plugins
           conda install -qy -n "$CONDA_TEST_ENVIRONMENT" samtools
           conda install -qy -n "$CONDA_TEST_ENVIRONMENT" tears
 
