@@ -1,5 +1,8 @@
 Upcoming
 
+ - PacBio - ensure runfolders are writable for md5 files prior to iRODS
+   loading. 
+
 Release 2.30.0
 
  - Add substitution_analyis and substition_metrics ancillary files.

@@ -5,6 +5,7 @@ use warnings;
 
 use English qw[-no_match_vars];
 use File::Basename;
+use File::Copy::Recursive qw(dircopy);
 use File::Spec::Functions;
 use File::Temp;
 use Log::Log4perl;
@@ -206,13 +207,17 @@ sub publish_files_on_instrument : Test(3) {
   my $client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new();
 
   my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $tmprf_path = catdir($tmpdir->dirname, 'r64174e_20210114_161659');
+  dircopy($runfolder_path,$tmprf_path) or die $!;
+  chmod (0770, "$tmprf_path/1_A01") or die "Chmod 0770 directory failed : $!";
+
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
     (api_client      => $client,
      dest_collection => $dest_coll,
      irods           => $irods,
      mlwh_schema     => $wh_schema,
      restart_file    => catfile($tmpdir->dirname, 'published.json'),
-     runfolder_path  => $runfolder_path);
+     runfolder_path  => $tmprf_path);
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
@@ -246,13 +251,17 @@ sub publish_files_off_instrument : Test(3) {
   my $client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new();
 
   my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $tmprf_path = catdir($tmpdir->dirname, 'r54097_20170727_165601');
+  dircopy($runfolder_path,$tmprf_path) or die $!;
+  chmod (0770, "$tmprf_path/1_A02") or die "Chmod 0770 directory failed : $!";
+
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
     (api_client      => $client,
      dest_collection => $dest_coll,
      irods           => $irods,
      mlwh_schema     => $wh_schema,
      restart_file    => catfile($tmpdir->dirname, 'published.json'),
-     runfolder_path  => $runfolder_path);
+     runfolder_path  => $tmprf_path);
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
@@ -274,6 +283,43 @@ sub publish_files_off_instrument : Test(3) {
   is_deeply(\@observed_paths, \@expected_paths,
             'Published correctly named off instrument files') or
               diag explain \@observed_paths;
+
+  unlink $pub->restart_file;
+}
+
+sub publish_only_runfolder_writable : Test(6) {
+  my $irods   = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $client  = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new();
+
+  my $tpath = "$data_path/r64174e_20210114_161659";
+
+  my $tmpdir  = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $trunfolder_path = catdir($tmpdir->dirname, 'r64174e_20210114_161659');
+  my $tdata_path = "$trunfolder_path/1_A01";
+  dircopy($tpath,$trunfolder_path);
+  chmod (0700, $trunfolder_path) or die "Chmod directory $trunfolder_path failed : $!";
+  chmod (0700, $tdata_path) or die "Chmod directory $tdata_path failed : $!";
+
+  my $dest_coll = "$irods_tmp_coll/publish_runfolder_writable";
+  my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
+    (dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     restart_file    => catfile($trunfolder_path, 'published.json'),
+     runfolder_path  => $trunfolder_path);
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+  cmp_ok($num_files,     '==', 0);
+  cmp_ok($num_processed, '==', 0);
+  cmp_ok($num_errors,    '==', 0);
+
+  chmod (0770, $tdata_path) or die "Chmod directory $tdata_path failed : $!";
+
+  my ($num_files2, $num_processed2, $num_errors2) = $pub->publish_files;
+  cmp_ok($num_files2,     '==', 5);
+  cmp_ok($num_processed2, '==', 5);
+  cmp_ok($num_errors2,    '==', 0);
 
   unlink $pub->restart_file;
 }

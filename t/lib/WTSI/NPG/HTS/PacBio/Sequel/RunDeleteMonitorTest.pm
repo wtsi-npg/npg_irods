@@ -138,6 +138,7 @@ sub delete_runs : Test(14) {
   my $runfolder_data = catdir($runfolder_path,$well);
   mkdir $runfolder_data;
   dircopy($data_path,$runfolder_data) or die $!;
+  chmod (0770, $runfolder_data) or die "Chmod 0770 directory $runfolder_data failed : $!";
 
   ## publish data
   my $monitor = WTSI::NPG::HTS::PacBio::Sequel::RunMonitor->new
@@ -174,6 +175,7 @@ sub delete_runs : Test(14) {
 
   ## recopy and republish
   dircopy($data_path,$runfolder_data) or die $!;
+  chmod (0770, $runfolder_data) or die "Chmod 0770 directory $runfolder_data failed : $!";
   my ($num_jobs2, $num_processed2, $num_errors2) =
     $monitor->publish_completed_runs;
 
