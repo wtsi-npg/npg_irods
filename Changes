@@ -1,5 +1,7 @@
 Upcoming
 
+ - PacBio code to check and change unix permissions on runfolders. 
+
 Release 2.30.0
 
  - Add substitution_analyis and substition_metrics ancillary files.

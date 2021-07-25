@@ -192,10 +192,9 @@ sub delete_runs : Test(14) {
 
   cmp_ok($dnum_runs2, '==', scalar @{$test_response},
          'Correct number of runs to attempt to delete');
-  cmp_ok($dnum_processed2, '==', $num_jobs, 'All run folders processed');
+  cmp_ok($dnum_processed2, '==', $num_jobs -1, 'All run folders processed');
   cmp_ok($dnum_deleted2, '==', $num_jobs -1, 'Modified run not deleted');
   cmp_ok($dnum_errors2, '==', 1, 'Error in one run deletion attempt');
-
 }
 
 1;
