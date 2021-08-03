@@ -1,5 +1,7 @@
 Upcoming
 
+ - Allow another BAM file prefix in PacBio analysis loading (IsoSeq).
+
 Release 2.30.0
 
  - Add substitution_analyis and substition_metrics ancillary files.
