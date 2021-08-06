@@ -1,7 +1,6 @@
 package WTSI::NPG::HTS::PacBio::Sequel::RunDeleteMonitor;
 
 use namespace::autoclean;
-use DateTime;
 use Moose;
 use MooseX::StrictConstructor;
 use Try::Tiny;
@@ -60,15 +59,17 @@ sub delete_runs {
             # only pick up runs that would be picked up for publication
             my $runfolder_path = $self->get_runfolder_path($run);
 
-            if($runfolder_path && -d $runfolder_path && ! -l $runfolder_path){
-                $num_processed++;
+            if($runfolder_path && $self->valid_runfolder_directory($runfolder_path)) {
+                if(defined $self->check_format && $self->check_format == 1) {
+                    $self->valid_runfolder_format($runfolder_path);
+                }
 
                 ## dry run publish - to check no changes to published files
                 my $publisher = $self->run_publisher_handle($runfolder_path);
                 my ($nf, $np, $ne) = $publisher->publish_files();
 
                 if ($ne > 0) {
-                     $self->logcroak("Encountered $ne errors while processing ",
+                    $self->logcroak("Encountered $ne errors while processing ",
                             "[$np / $nf] files in $runfolder_path");
                 }
 
@@ -78,6 +79,7 @@ sub delete_runs {
                         $num_deleted++;
                     }
                 }
+                $num_processed++;
             }
         } catch {
             $num_errors++;

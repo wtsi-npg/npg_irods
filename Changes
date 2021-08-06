@@ -2,6 +2,8 @@ Upcoming
 
  - PacBio - ensure runfolders are writable for md5 files prior to iRODS
    loading. 
+ - Allow another BAM file prefix in PacBio analysis loading (IsoSeq).
+ - PacBio code to check and change unix permissions on runfolders.
 
 Release 2.30.0
 
