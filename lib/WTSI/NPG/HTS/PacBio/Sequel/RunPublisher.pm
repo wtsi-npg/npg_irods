@@ -47,9 +47,7 @@ Readonly::Scalar my $CCS_REPORT_COUNT       => 6;
 Readonly::Scalar my $DATA_LEVEL_TWO         =>
   $WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher::DATA_LEVEL;
 
-## no critic (ValuesAndExpressions::ProhibitLeadingZeros)
-Readonly::Scalar my $MODE_GROUP_WRITABLE => 0020;
-## use critic
+Readonly::Scalar my $MODE_GROUP_WRITABLE => q(0020);
 
 has 'api_client' =>
   (isa           => 'WTSI::NPG::HTS::PacBio::Sequel::APIClient',
