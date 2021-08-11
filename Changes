@@ -1,5 +1,13 @@
 Upcoming
 
+Release 2.31.0
+
+ - PacBio - ensure runfolders are writable for md5 files prior to iRODS
+   loading. 
+ - Allow another BAM file prefix in PacBio analysis loading (IsoSeq).
+ - PacBio code to check and change unix permissions on runfolders.
+ - GitHub Actions: verbose testing and update baton clients
+
 Release 2.30.0
 
  - Add substitution_analyis and substition_metrics ancillary files.

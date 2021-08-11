@@ -5,6 +5,10 @@ use File::Spec::Functions qw[canonpath catdir];
 
 use WTSI::NPG::HTS::PacBio::Sequel::RunPublisher;
 
+Readonly::Scalar my $PROD_DIR_COUNT     => 5;
+Readonly::Scalar my $NEW_PROD_DIR_COUNT => 6;
+Readonly::Scalar my $PACBIO_FOLDER_NAME => q[pacbio];
+
 with qw[
          WTSI::DNAP::Utilities::Loggable
        ];
@@ -97,6 +101,57 @@ sub get_runfolder_path {
   }
 
   return $runfolder_path;
+}
+
+=head2 valid_runfolder_directory
+
+  Arg [1]    : directory path
+  Example    : my $publisher = $self->valid_runfolder_directory($directory);
+  Description: Basic sanity checks.
+  Returntype : Boolean. Defaults to false.
+
+=cut
+
+sub valid_runfolder_directory {
+  my ($self,$directory) = @_;
+
+  my $mode   = (stat $directory)[2];
+  my $valid = 0;
+  SWITCH: {
+    if ( ! -d $directory ) {
+      $self->info(qq[Skipping '$directory' as it is not a directory]);
+      last SWITCH;
+    }
+    if ( -l $directory ) {
+      $self->info(qq[Skipping '$directory' as it is a symlink]);
+      last SWITCH;
+    }
+    $valid = 1;
+  }
+  return $valid;
+}
+
+
+=head2 valid_runfolder_format
+
+  Arg [1]    : directory path
+  Example    : my $publisher = $self->valid_runfolder_format($directory);
+  Description: Check path conforms to production path format
+  Returntype : Boolean.
+
+=cut
+
+sub valid_runfolder_format {
+  my ($self,$directory) = @_;
+
+  my @fields = split /\//mxs, $directory;
+  if((@fields != $PROD_DIR_COUNT && @fields != $NEW_PROD_DIR_COUNT) ||
+     ($fields[3] ne $PACBIO_FOLDER_NAME)) {
+      $self->logcroak(qq[Folder failed format checks '$directory']);
+  } else {
+      $self->info(qq[Run folder '$directory' passed format checks]);
+  }
+  return 1;
 }
 
 sub _run_info {
