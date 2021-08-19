@@ -72,8 +72,8 @@ our %ILLUMINA_PART_PATTERNS =
        '[.]seqchksum',
        '[.]sha512primesums512[.]seqchksum',
        '[.]spatial_filter[.]stats',
-       '_substitution_analysis.txt',      # non-conforming file name
-       '_substitution_metrics.txt',       # non-conforming file name
+       '.substitution_analysis.txt',      # non-conforming file name
+       '.substitution_metrics.txt',       # non-conforming file name
        '_target[.]stats',                 # non-conforming file name
        '_target_autosome[.]stats',        # non-conforming file name
        '[.]stats',
