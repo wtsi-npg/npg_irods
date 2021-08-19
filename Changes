@@ -1,5 +1,7 @@
 Upcoming
 
+  - substitution_analyis filename fix
+
 Release 2.31.0
 
  - PacBio - ensure runfolders are writable for md5 files prior to iRODS

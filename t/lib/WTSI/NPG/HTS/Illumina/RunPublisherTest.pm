@@ -623,11 +623,11 @@ sub publish_plex_geno_sec_data_samplesheet : Test(73) {
                   "lane$lane/29467_1#1.seqchksum",
                   "lane$lane/29467_1#1.sha512primesums512.seqchksum",
                   "lane$lane/29467_1#1.spatial_filter.stats",
+                  "lane$lane/29467_1#1.substitution_analysis.txt",
+                  "lane$lane/29467_1#1.substitution_metrics.txt",
                   "lane$lane/29467_1#1.vcf",
                   "lane$lane/29467_1#1_F0x900.stats",
                   "lane$lane/29467_1#1_F0xB00.stats",
-                  "lane$lane/29467_1#1_substitution_analysis.txt",
-                  "lane$lane/29467_1#1_substitution_metrics.txt",
                   );
 
   is_deeply(\@observed, \@expected) or diag explain \@observed;
