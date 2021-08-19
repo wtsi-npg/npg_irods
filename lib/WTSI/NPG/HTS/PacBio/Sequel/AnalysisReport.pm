@@ -31,6 +31,7 @@ our $OUTPUT_DIR  = 'outputs';
 our $CCS_REPORT  = 'ccs.report.json';
 our $CCS_PROCESS = 'ccs_processing.report.json';
 our $CCS_FILES   = qq{($CCS_REPORT|$CCS_PROCESS)};
+our $REPORTS     = 'reports';
 
 has 'analysis_path' =>
   (isa           => 'Str',
@@ -144,8 +145,8 @@ sub _save_results {
   }
 
   my $data = WTSI::NPG::HTS::PacBio::Sequel::Reportdata->new
-    (meta_data       => $self->meta_data,
-     reports         => \%files );
+    (meta_data => $self->meta_data,
+     $REPORTS  => \%files );
 
   $self->debug("Writing merged analysis report JSON to '$file'");
   my $fh = IO::File->new($file,'>') or $self->logcroak("cant open $file");

@@ -138,6 +138,7 @@ sub delete_runs : Test(14) {
   my $runfolder_data = catdir($runfolder_path,$well);
   mkdir $runfolder_data;
   dircopy($data_path,$runfolder_data) or die $!;
+  chmod (0770, $runfolder_data) or die "Chmod 0770 directory $runfolder_data failed : $!";
 
   ## publish data
   my $monitor = WTSI::NPG::HTS::PacBio::Sequel::RunMonitor->new
@@ -174,6 +175,7 @@ sub delete_runs : Test(14) {
 
   ## recopy and republish
   dircopy($data_path,$runfolder_data) or die $!;
+  chmod (0770, $runfolder_data) or die "Chmod 0770 directory $runfolder_data failed : $!";
   my ($num_jobs2, $num_processed2, $num_errors2) =
     $monitor->publish_completed_runs;
 
@@ -192,10 +194,9 @@ sub delete_runs : Test(14) {
 
   cmp_ok($dnum_runs2, '==', scalar @{$test_response},
          'Correct number of runs to attempt to delete');
-  cmp_ok($dnum_processed2, '==', $num_jobs, 'All run folders processed');
+  cmp_ok($dnum_processed2, '==', $num_jobs -1, 'All run folders processed');
   cmp_ok($dnum_deleted2, '==', $num_jobs -1, 'Modified run not deleted');
   cmp_ok($dnum_errors2, '==', 1, 'Error in one run deletion attempt');
-
 }
 
 1;
