@@ -1,4 +1,7 @@
 Upcoming
+ 
+  - Archive raw pulldown metrics (gatk_collecthsmetrics) txt file from
+    the qc directory
 
 Release 2.31.1
 
