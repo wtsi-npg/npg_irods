@@ -86,6 +86,7 @@ our %ILLUMINA_PART_PATTERNS =
        '[.]adapter[.]json',
        '[.]alignment_filter_metrics[.]json',
        '[.]bam_flagstats[.]json',
+       '[.]gatk_collecthsmetrics[.]txt',           # non-conforming file name
        '[.]gc_bias[.]json',
        '[.]gc_fraction[.]json',
        '[.]gc_fraction[.]json',
