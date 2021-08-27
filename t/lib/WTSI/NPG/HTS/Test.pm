@@ -35,6 +35,10 @@ sub runtests {
     }
   }
 
+  # For tests involving samtools, disable the CRAM reference cache
+  # throughout all tests
+  $env_copy{'REF_PATH'} = 'DUMMY_VALUE';
+
   {
     local %ENV = %env_copy;
     return $self->SUPER::runtests;
