@@ -1,5 +1,11 @@
 Upcoming
 
+Release 2.32.0
+ 
+  - Archive raw pulldown metrics (gatk_collecthsmetrics) txt file from
+    the qc directory.
+  - Disable the samtools CRAM reference cache during tests.
+
 Release 2.31.1
 
   - substitution_analyis filename fix

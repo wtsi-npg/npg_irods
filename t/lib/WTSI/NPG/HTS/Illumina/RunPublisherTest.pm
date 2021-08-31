@@ -241,7 +241,7 @@ sub publish_xml_files : Test(18) {
     diag explain \@observed;
 }
 
-sub publish_qc_files : Test(99) {
+sub publish_qc_files : Test(104) {
   note '=== Tests in publish_qc_files';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -268,13 +268,13 @@ sub publish_qc_files : Test(99) {
   my ($num_files, $num_processed, $num_errors) =
     $pub->publish_qc_files($composition_file);
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
-  cmp_ok($num_processed, '==', 16, 'Published 16 QC files');
+  cmp_ok($num_processed, '==', 17, 'Published 17 QC files');
 
-  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll,
-                                       '[.]json$');
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
   my @expected = ('qc/18448_2.adapter.json',
                   'qc/18448_2.alignment_filter_metrics.json',
                   'qc/18448_2.bam_flagstats.json',
+                  'qc/18448_2.gatk_collecthsmetrics.txt',
                   'qc/18448_2.gc_bias.json',
                   'qc/18448_2.gc_fraction.json',
                   'qc/18448_2.genotype.json',
@@ -292,10 +292,11 @@ sub publish_qc_files : Test(99) {
     diag explain \@observed;
 
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
+  my @absolute_paths2 = grep { m{[.]json$}msx } @absolute_paths;
 
   my $pkg = 'WTSI::NPG::HTS::Illumina::AncDataObject';
   check_common_metadata($irods, $pkg, @absolute_paths);
-  check_study_id_metadata($irods, $pkg, @absolute_paths);
+  check_study_id_metadata($irods, $pkg, @absolute_paths2);
 }
 
 # Lane-level, primary and secondary data, from ML warehouse
@@ -929,7 +930,7 @@ sub publish_include_exclude : Test(3) {
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
-  cmp_ok($num_processed, '==', 32, 'Published 32 files');
+  cmp_ok($num_processed, '==', 33, 'Published 33 files');
 
   my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
   my @expected = ('18448_2.all.seqchksum',
@@ -951,6 +952,7 @@ sub publish_include_exclude : Test(3) {
                   'qc/18448_2.adapter.json',
                   'qc/18448_2.alignment_filter_metrics.json',
                   'qc/18448_2.bam_flagstats.json',
+                  'qc/18448_2.gatk_collecthsmetrics.txt',
                   'qc/18448_2.gc_bias.json',
                   'qc/18448_2.gc_fraction.json',
                   'qc/18448_2.genotype.json',
@@ -993,7 +995,7 @@ sub publish_archive_path_mlwh : Test(6) {
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
-  my $num_expected = 379;
+  my $num_expected = 380;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
 
