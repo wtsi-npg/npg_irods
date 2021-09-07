@@ -10,6 +10,7 @@ use JSON;
 use Moose;
 use MooseX::StrictConstructor;
 use Try::Tiny;
+use Readonly;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
 
@@ -35,6 +36,11 @@ our $VERSION = '';
 
 our $DEFAULT_ROOT_COLL       = '/seq';
 our $NUM_READS_JSON_PROPERTY = 'num_total_reads';
+
+Readonly::Scalar my $JSON_FILE_VERSION = '0.1';
+Readonly::Scalar my $ILLUMINA = 'illumina';
+Readonly::Scalar my $ALT_PROCESS = 'npg-prod-alt-process';
+Readonly::Scalar my $NPG_PROD = 'npg-prod';
 
 has 'id_run' =>
   (isa           => 'NpgTrackingRunId',
@@ -121,6 +127,13 @@ has 'max_errors' =>
    predicate     => 'has_max_errors',
    documentation => 'The maximum number of errors permitted before ' .
                     'the remainder of a publishing process is aborted');
+
+has 'mlwh_json' =>
+  (isa           => 'Str',
+  is             => 'ro',
+  required       => 0,
+  documentation  => 'The json file to which information about the run will be '.
+                    'added for upload to ml_warehouse');
 
 has 'num_errors' =>
   (isa           => 'Int',
@@ -351,6 +364,41 @@ sub publish_alignment_files {
        with_spiked_control => $with_spiked_control);
   };
 
+  my $mlwh_json_cb = sub {
+    my ($obj, $file) = @_;
+    my $mlwh_hash = {
+      id_product               => $obj->primary_cb->{$ID_PRODUCT},
+      seq_platform_name        => $ILLUMINA,
+      pipeline_name            => defined($self->alt_process) ?
+                                      $ALT_PROCESS : $NPG_PROD,
+      irods_root_collection    => $self->dest_collection,
+      irods_data_relative_path => $file,
+    };
+
+    open my $json_fh, '+<:encoding(UTF-8)', $self->mlwh_json or
+      die qq[could not open ml warehouse json file $self->mlwh_json];
+    my $json_hash;
+    if (-e $self->mlwh_json) {
+      $json_hash = decode_json <$json_fh>;
+    } else {
+      $json_hash = {
+        version  => $JSON_FILE_VERSION,
+        products => [],
+      };
+    }
+    push @{$json_hash->{products}}, $mlwh_hash;
+
+    seek ($json_fh, 0, 0);
+
+    print $json_fh encode_json($json_hash);
+
+    close $json_fh or
+      die qq[could not close ml warehouse json file $self->mlwh_json];
+
+    return;
+
+  };
+
   my @files = $self->result_set->alignment_files($name);
 
   my $format = $self->file_format;
@@ -363,7 +411,9 @@ sub publish_alignment_files {
                                             $composition_file,
 
                                             $primary_avus,
-                                            $secondary_avus);
+                                            $secondary_avus,
+
+                                            $mlwh_json_cb);
 }
 
 =head2 publish_index_files
@@ -590,7 +640,7 @@ sub _tree_publish_run_level {
 
 sub _tree_publish_product_level {
   my ($self, $files, $composition_file, $primary_avus_callback,
-      $secondary_avus_callback) = @_;
+      $secondary_avus_callback, $mlwh_json_callback) = @_;
 
   $composition_file or
     $self->logconfess('A non-empty composition_file argument is required');
@@ -609,7 +659,8 @@ sub _tree_publish_product_level {
   return $tree_publisher->publish_tree
       ($files,
        primary_cb   => $primary_avus_callback,
-       secondary_cb => $secondary_avus_callback);
+       secondary_cb => $secondary_avus_callback,
+       mlwh_json_cb => $mlwh_json_callback);
 }
 
 sub _make_tree_publisher {
@@ -839,7 +890,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016, 2017, 2018, 2019 Genome Research
+Copyright (C) 2015, 2016, 2017, 2018, 2019, 2021 Genome Research
 Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
