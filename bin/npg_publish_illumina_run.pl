@@ -71,7 +71,7 @@ GetOptions('alt-process|alt_process=s'           => \$alt_process,
            'max-errors|max_errors=i'             => \$max_errors,
            'restart-file|restart_file=s'         => \$restart_file,
            'source-directory|source_directory=s' => \$source_directory,
-           'mlwh_json'                           => \$mlwh_json,
+           'mlwh_json=s'                         => \$mlwh_json,
            'verbose'                             => \$verbose);
 
 # Process CLI arguments
