@@ -38,7 +38,7 @@ LOGCONF
 ;
 
 my $begin_date;
-my $collection;
+my $collections = [];
 my $debug;
 my $dry_run = 1;
 my $end_date;
@@ -47,7 +47,7 @@ my $verbose;
 
 GetOptions('begin-date|begin_date=s'   => \$begin_date,
            'debug'                     => \$debug,
-           'collection=s'              => \$collection,
+           'collection=s@'             => \$collections,
            'dry-run|dry_run!'          => \$dry_run,
            'end-date|end_date=s'       => \$end_date,
            'help'                      => sub { pod2usage(-verbose => 2,
@@ -81,7 +81,7 @@ if ($log4perl_config) {
   $log->info("Using log config file '$log4perl_config'");
 }
 
-$collection ||= $DEFAULT_COLLECTION;
+@{$collections} or $collections = [$DEFAULT_COLLECTION];
 
 my $irods;
 if ($dry_run) {
@@ -117,7 +117,7 @@ my $num_updated = 0;
 if (@submitted_files) {
   my $meta_updater = WTSI::NPG::DataSub::MetaUpdater->new(irods => $irods);
   $num_updated =
-    $meta_updater->update_submission_metadata($collection, \@submitted_files);
+    $meta_updater->update_submission_metadata($collections, \@submitted_files);
 }
 
 $log->info("Updated metadata on $num_updated submitted files");
@@ -141,8 +141,8 @@ npg_update_ebi_metadata [--begin-date YYYY-MM-DD] [--collection path]
   --begin_date  Submission update date range to query, beginning. Optional,
                 defaults to 14 days prior to date given as the --end-date
                 argument.
-  --collection  The iRODS collection in which to work. Optional, defaults
-                to '/seq'.
+  --collection  The iRODS collections in which to work - can be given multiple 
+                times. Optional, defaults to '/seq'.
   --debug       Enable debug level logging. Optional, defaults to false.
   --dry-run
   --dry_run     Enable dry-run mode. Propose metadata changes, but do not

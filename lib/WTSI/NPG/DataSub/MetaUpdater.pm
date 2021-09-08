@@ -31,10 +31,11 @@ has 'irods' =>
 
 =head2 update_submission_metadata
 
-  Arg [1]    : iRODS collection under which to search for data objects
+  Arg [1]    : iRODS collections under which to search for data objects, 
+               ArrayRef[Str]
   Arg [2]    : Files to update, ArrayRef[WTSI::NPG::DataSub::File]
 
-  Example    : my $num_updated = $obj->
+  Example    : my $num_updated = $obj->update_submission_metadata($cols,$files)
 
   Description: Update all EBI submission (subtrack-supplied) metadata on the
                data objects in iRODS corresponding to the supplied files.
@@ -44,17 +45,20 @@ has 'irods' =>
 =cut
 
 sub update_submission_metadata {
-  my ($self, $root, $files) = @_;
+  my ($self, $collections, $files) = @_;
 
-  defined $root or $self->logconfess('A defined root argument is required');
-  $root eq q[] and $self->logconfess('A non-empty root argument is required');
+  defined $collections or
+    $self->logconfess('A collections argument is required');
+  ref $collections eq 'ARRAY' or
+    $self->logconfess('The collections argument must be an array reference');
 
   defined $files or
     $self->logconfess('A files argument is required');
   ref $files eq 'ARRAY' or
     $self->logconfess('The files argument must be an array reference');
 
-  my ($num_files, $num_processed, $num_errors) = (scalar @{$files}, 0, 0);
+  my ($num_files, $num_processed, $num_errors, $num_not_found) =
+    (scalar @{$files}, 0, 0, 0);
 
   foreach my $file (@{$files}) {
     my $md5       = $file->submission_md5;
@@ -63,27 +67,34 @@ sub update_submission_metadata {
     try {
       $num_processed++;
 
-      my @objs = grep { $_->data_object eq $file_name }
-                 map  { WTSI::NPG::iRODS::DataObject->new($self->irods, $_) }
-                 $self->irods->find_objects_by_meta($root,
-                                                    [$FILE_MD5 => $md5]);
+      my @objs;
+      foreach my $root ( @{$collections} ) {
+          my @sobs = grep { $_->data_object eq $file_name }
+                     map  { WTSI::NPG::iRODS::DataObject->new($self->irods, $_) }
+                     $self->irods->find_objects_by_meta($root,
+                                                       [$FILE_MD5 => $md5]);
+          if (scalar @sobs >= 1) {
+            push @objs, @sobs;
+          }
+      }
 
       my $num_objs = scalar @objs;
       if ($num_objs > 1) {
         $self->logcroak("Found $num_objs data objects with MD5 '$md5' and ",
-                        "file name '$file_name' in '$root': ",
+                        "file name '$file_name' in '@{$collections}': ",
                         pp(map { $_->str } @objs));
       }
 
       if ($num_objs == 0) {
-        $self->logwarn("No data data object exists with MD5 '$md5' and ",
-                       "file name '$file_name' in '$root'");
+        $num_not_found++;
+        $self->info("No data object exists with MD5 '$md5' and ",
+                    "file name '$file_name' in '@{$collections}'");
       }
       else {
         my $obj = shift @objs;
         my $path = $obj->str;
         $self->debug("Found one data object with MD5 '$md5' and ",
-                     "file name '$file_name' in '$root': '$path'");
+                     "file name '$file_name' at '$path'");
 
         my @datasub_metadata = $self->_make_datasub_metadata($file);
         $self->_set_metadata($obj, \@datasub_metadata);
@@ -99,13 +110,17 @@ sub update_submission_metadata {
 
   $self->info("Processed $num_processed / $num_files files");
 
+  if ($num_not_found > 0) {
+    $self->info("Failed to find $num_not_found files");
+  }
+
   if ($num_errors > 0) {
     $self->error('Failed to update submission metadata cleanly; ',
                  "errors were recorded on $num_errors / $num_processed ",
                  'processed. See logs for details.')
   }
 
-  my $num_updated = $num_processed - $num_errors;
+  my $num_updated = $num_processed - ($num_errors + $num_not_found);
   $self->info("Updated metadata on $num_updated / $num_files files");
 
   return $num_updated;
