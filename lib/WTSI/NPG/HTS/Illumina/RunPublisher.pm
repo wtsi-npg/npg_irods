@@ -37,10 +37,10 @@ our $VERSION = '';
 our $DEFAULT_ROOT_COLL       = '/seq';
 our $NUM_READS_JSON_PROPERTY = 'num_total_reads';
 
-Readonly::Scalar my $JSON_FILE_VERSION = '0.1';
-Readonly::Scalar my $ILLUMINA = 'illumina';
-Readonly::Scalar my $ALT_PROCESS = 'npg-prod-alt-process';
-Readonly::Scalar my $NPG_PROD = 'npg-prod';
+Readonly::Scalar my $JSON_FILE_VERSION => '0.1';
+Readonly::Scalar my $ILLUMINA => 'illumina';
+Readonly::Scalar my $ALT_PROCESS => 'npg-prod-alt-process';
+Readonly::Scalar my $NPG_PROD => 'npg-prod';
 
 has 'id_run' =>
   (isa           => 'NpgTrackingRunId',
@@ -366,36 +366,42 @@ sub publish_alignment_files {
 
   my $mlwh_json_cb = sub {
     my ($obj, $file) = @_;
-    my $mlwh_hash = {
-      id_product               => $obj->composition->digest,
-      seq_platform_name        => $ILLUMINA,
-      pipeline_name            => defined($self->alt_process) ?
-                                      $ALT_PROCESS : $NPG_PROD,
-      irods_root_collection    => $self->dest_collection,
-      irods_data_relative_path => $file,
-    };
-
-    open my $json_fh, '+<:encoding(UTF-8)', $self->mlwh_json or
-      croak qq[could not open ml warehouse json file $self->mlwh_json];
-    my $json_hash;
-    if (-e $self->mlwh_json) {
-      $json_hash = decode_json <$json_fh>;
-    } else {
-      $json_hash = {
-        version  => $JSON_FILE_VERSION,
-        products => [],
+    if (self->mlwh_json) {
+      my $mlwh_hash = {
+        id_product               => $obj->composition->digest,
+        seq_platform_name        => $ILLUMINA,
+        pipeline_name            => defined($self->alt_process) ?
+          $ALT_PROCESS : $NPG_PROD,
+        irods_root_collection    => $self->dest_collection,
+        irods_data_relative_path => $file,
       };
-    }
-    push @{$json_hash->{products}}, $mlwh_hash;
 
-    seek ($json_fh, 0, 0);
+      open my $json_fh, '+<:encoding(UTF-8)', $self->mlwh_json or
+        self->logcroak(qq[could not open ml warehouse json file $self->mlwh_json]);
+      my $json_hash;
+      if (-e $self->mlwh_json) {
+        $json_hash = decode_json <$json_fh>;
+      }
+      else {
+        $json_hash = {
+          version  => $JSON_FILE_VERSION,
+          products => [],
+        };
+      }
+      push @{$json_hash->{products}}, $mlwh_hash;
 
-    print $json_fh encode_json($json_hash);
+      seek $json_fh, 0, 0;
 
-    close $json_fh or
-      croak qq[could not close ml warehouse json file $self->mlwh_json];
+      print $json_fh encode_json($json_hash) or
+        self->logcroak(qq[could not write to ml warehouse json file $self->mlwh_json]);
 
+      close $json_fh or
+        self->logcroak(qq[could not close ml warehouse json file $self->mlwh_json]);
+
+      return;
+    }else{
     return;
+    }
 
   };
 
@@ -472,8 +478,10 @@ sub publish_index_files {
   # Configure archiving to a custom sub-collection here
   return $self->_tree_publish_product_level(\@files,
                                             $composition_file,
-                                            $primary_avus,
-                                            $secondary_avus);
+                                            {
+                                              primary   => $primary_avus,
+                                              secondary => $secondary_avus
+                                            });
 }
 
 =head2 publish_ancillary_files
@@ -516,8 +524,10 @@ sub publish_ancillary_files {
   # Configure archiving to a custom sub-collection here
   return $self->_tree_publish_product_level(\@files,
                                             $composition_file,
-                                            $primary_avus,
-                                            $secondary_avus);
+                                            {
+                                              primary => $primary_avus,
+                                              primary => $secondary_avus
+                                            });
 }
 
 =head2 publish_genotype_files
@@ -561,8 +571,10 @@ sub publish_genotype_files {
   # Configure archiving to a custom sub-collection here
   return $self->_tree_publish_product_level(\@files,
                                             $composition_file,
-                                            $primary_avus,
-                                            $secondary_avus);
+                                            {
+                                              primary   => $primary_avus,
+                                              secondary => $secondary_avus
+                                            });
 }
 
 =head2 publish_qc_files
@@ -605,8 +617,10 @@ sub publish_qc_files {
   # Configure archiving to a custom sub-collection here
   return $self->_tree_publish_product_level(\@files,
                                             $composition_file,
-                                            $primary_avus,
-                                            $secondary_avus);
+                                            {
+                                              primary   => $primary_avus,
+                                              secondary => $secondary_avus
+                                            });
 }
 
 sub read_restart_file {
