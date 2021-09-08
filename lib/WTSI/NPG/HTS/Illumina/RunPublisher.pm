@@ -367,7 +367,7 @@ sub publish_alignment_files {
   my $mlwh_json_cb = sub {
     my ($obj, $file) = @_;
     my $mlwh_hash = {
-      id_product               => $obj->primary_cb->{$ID_PRODUCT},
+      id_product               => $obj->composition->digest,
       seq_platform_name        => $ILLUMINA,
       pipeline_name            => defined($self->alt_process) ?
                                       $ALT_PROCESS : $NPG_PROD,
@@ -376,7 +376,7 @@ sub publish_alignment_files {
     };
 
     open my $json_fh, '+<:encoding(UTF-8)', $self->mlwh_json or
-      die qq[could not open ml warehouse json file $self->mlwh_json];
+      croak qq[could not open ml warehouse json file $self->mlwh_json];
     my $json_hash;
     if (-e $self->mlwh_json) {
       $json_hash = decode_json <$json_fh>;
@@ -393,7 +393,7 @@ sub publish_alignment_files {
     print $json_fh encode_json($json_hash);
 
     close $json_fh or
-      die qq[could not close ml warehouse json file $self->mlwh_json];
+      croak qq[could not close ml warehouse json file $self->mlwh_json];
 
     return;
 
@@ -409,11 +409,11 @@ sub publish_alignment_files {
   # Configure archiving to a custom sub-collection here
   return $self->_tree_publish_product_level(\@files,
                                             $composition_file,
-
-                                            $primary_avus,
-                                            $secondary_avus,
-
-                                            $mlwh_json_cb);
+                                            {
+                                              primary   => $primary_avus,
+                                              secondary => $secondary_avus,
+                                              mlwh_json => $mlwh_json_cb
+                                            });
 }
 
 =head2 publish_index_files
@@ -639,12 +639,16 @@ sub _tree_publish_run_level {
 }
 
 sub _tree_publish_product_level {
-  my ($self, $files, $composition_file, $primary_avus_callback,
-      $secondary_avus_callback, $mlwh_json_callback) = @_;
+  my ($self, $files, $composition_file, $callbacks) = @_;
 
   $composition_file or
     $self->logconfess('A non-empty composition_file argument is required');
-  $secondary_avus_callback ||= sub { return () };
+  if (!exists($callbacks->{secondary})) {
+    $callbacks->{secondary} = sub {return ()};
+  }
+  if (!exists($callbacks->{mlwh_json})){
+    $callbacks->{mlwh_json} = sub {return ()};
+  }
 
   my $composition = $self->read_composition_file($composition_file);
 
@@ -658,9 +662,9 @@ sub _tree_publish_product_level {
   my $tree_publisher = $self->_make_tree_publisher($obj_factory);
   return $tree_publisher->publish_tree
       ($files,
-       primary_cb   => $primary_avus_callback,
-       secondary_cb => $secondary_avus_callback,
-       mlwh_json_cb => $mlwh_json_callback);
+       primary_cb   => $callbacks->{primary},
+       secondary_cb => $callbacks->{secondary},
+       mlwh_json_cb => $callbacks->{mlwh_json});
 }
 
 sub _make_tree_publisher {
