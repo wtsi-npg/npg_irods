@@ -366,7 +366,7 @@ sub publish_alignment_files {
 
   my $mlwh_json_cb = sub {
     my ($obj, $file) = @_;
-    if (self->mlwh_json) {
+    if ($self->mlwh_json) {
       my $mlwh_hash = {
         id_product               => $obj->composition->digest,
         seq_platform_name        => $ILLUMINA,
@@ -376,13 +376,15 @@ sub publish_alignment_files {
         irods_data_relative_path => $file,
       };
 
-      open my $json_fh, '+<:encoding(UTF-8)', $self->mlwh_json or
-        self->logcroak(qq[could not open ml warehouse json file $self->mlwh_json]);
-      my $json_hash;
+      my ($json_fh, $json_hash);
       if (-e $self->mlwh_json) {
+        open $json_fh, '+<:encoding(UTF-8)', $self->mlwh_json or
+          self->logcroak(qq[could not open ml warehouse json file $self->mlwh_json]);
         $json_hash = decode_json <$json_fh>;
       }
       else {
+        open $json_fh, '>:encoding(UTF-8)', $self->mlwh_json or
+          self->logcroak(qq[could not open ml warehouse json file $self->mlwh_json]);
         $json_hash = {
           version  => $JSON_FILE_VERSION,
           products => [],
@@ -398,10 +400,9 @@ sub publish_alignment_files {
       close $json_fh or
         self->logcroak(qq[could not close ml warehouse json file $self->mlwh_json]);
 
-      return;
-    }else{
-    return;
     }
+    return 1;
+
 
   };
 
@@ -525,8 +526,8 @@ sub publish_ancillary_files {
   return $self->_tree_publish_product_level(\@files,
                                             $composition_file,
                                             {
-                                              primary => $primary_avus,
-                                              primary => $secondary_avus
+                                              primary   => $primary_avus,
+                                              secondary => $secondary_avus
                                             });
 }
 
@@ -661,7 +662,7 @@ sub _tree_publish_product_level {
     $callbacks->{secondary} = sub {return ()};
   }
   if (!exists($callbacks->{mlwh_json})){
-    $callbacks->{mlwh_json} = sub {return ()};
+    $callbacks->{mlwh_json} = sub {return 1};
   }
 
   my $composition = $self->read_composition_file($composition_file);
