@@ -142,7 +142,7 @@ has 'require_checksum_cache' =>
       $extra_cb = $params->extra_cb;
     }
 
-    my $mlwh_json_cb = sub {return ()};
+    my $mlwh_json_cb = sub {return 1};
     if (defined $params->mlwh_json_cb) {
       ref $params->mlwh_json_cb eq 'CODE' or
           $self->logconfess('The mlwh_json_cb argument must be a CodeRef');
