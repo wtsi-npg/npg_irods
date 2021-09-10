@@ -366,7 +366,7 @@ sub publish_alignment_files {
 
   my $mlwh_json_cb = sub {
     my ($obj, $file) = @_;
-    if ($self->mlwh_json) {
+    if ($self->mlwh_json && $file =~ /cram$/xsm && !($file =~/(phix|human)/xsm)) {
       my $mlwh_hash = {
         id_product               => $obj->composition->digest,
         seq_platform_name        => $ILLUMINA,
@@ -379,12 +379,14 @@ sub publish_alignment_files {
       my ($json_fh, $json_hash);
       if (-e $self->mlwh_json) {
         open $json_fh, '+<:encoding(UTF-8)', $self->mlwh_json or
-          self->logcroak(qq[could not open ml warehouse json file $self->mlwh_json]);
+          self->logcroak(q[could not open ml warehouse json file] .
+          qq[$self->mlwh_json]);
         $json_hash = decode_json <$json_fh>;
       }
       else {
         open $json_fh, '>:encoding(UTF-8)', $self->mlwh_json or
-          self->logcroak(qq[could not open ml warehouse json file $self->mlwh_json]);
+          self->logcroak(q[could not open ml warehouse json file] .
+          qq[$self->mlwh_json]);
         $json_hash = {
           version  => $JSON_FILE_VERSION,
           products => [],
@@ -395,10 +397,12 @@ sub publish_alignment_files {
       seek $json_fh, 0, 0;
 
       print $json_fh encode_json($json_hash) or
-        self->logcroak(qq[could not write to ml warehouse json file $self->mlwh_json]);
+        self->logcroak(q[could not write to ml warehouse json file ] .
+        qq[$self->mlwh_json]);
 
       close $json_fh or
-        self->logcroak(qq[could not close ml warehouse json file $self->mlwh_json]);
+        self->logcroak(q[could not close ml warehouse json file] .
+        qq[$self->mlwh_json]);
 
     }
     return 1;
