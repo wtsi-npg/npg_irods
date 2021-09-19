@@ -21,7 +21,7 @@ has 'irods' =>
    required      => 1,
    documentation => 'The iRODS connection handle');
 
-my $sequence_regex = qr{[.](h5|bam)$}msx;
+my $sequence_regex = qr{[.](h5|bam|fasta.gz)$}msx;
 
 
 =head2 make_data_object

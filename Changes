@@ -1,5 +1,7 @@
 Upcoming
 
+  - PacBio - prep and load fasta file output from IsoSeq analysis.
+
 Release 2.32.0
  
   - Archive raw pulldown metrics (gatk_collecthsmetrics) txt file from
