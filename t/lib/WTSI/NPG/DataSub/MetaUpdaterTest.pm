@@ -86,9 +86,9 @@ sub update_submission_metadata : Test(22) {
   my $dbh_valid = _make_mock_dbh(@expected_valid);
   my @files_valid = WTSI::NPG::DataSub::SubtrackClient->new
     (dbh => $dbh_valid)->query_submitted_files;
-
+ 
   # These 3 files should have submission metadata added
-  cmp_ok($meta_updater->update_submission_metadata("$irods_tmp_coll/valid",
+  cmp_ok($meta_updater->update_submission_metadata(["$irods_tmp_coll/valid"],
                                                    \@files_valid),
          '==', 3, "Updated metadata on unambiguous name/MD5 results");
 
@@ -125,7 +125,7 @@ sub update_submission_metadata : Test(22) {
 
   # These files should not have submission metadata added because they
   # are duplicates
-  cmp_ok($meta_updater->update_submission_metadata("$irods_tmp_coll/invalid",
+  cmp_ok($meta_updater->update_submission_metadata(["$irods_tmp_coll/invalid"],
                                                    \@files_invalid),
          '==', 0, "No metadata update on ambiguous name/MD5 results");
 
