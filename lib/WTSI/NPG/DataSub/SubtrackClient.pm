@@ -96,6 +96,7 @@ sub _do_query {
    JOIN files file ON (sub.id = file.sub_id)
    WHERE (stat.status = 'SD' OR stat.status = 'P')
    AND file.md5 IS NOT NULL
+   AND sub.ebi_sub_acc IS NOT NULL
    AND DATE(stat.timestamp) >= ?
    AND DATE(stat.timestamp) <= ?
 SQL
