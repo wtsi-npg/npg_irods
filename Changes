@@ -1,7 +1,10 @@
 Upcoming
 
+Release 2.33.0
+
   - Tweaks to ebi meta updater to account for files with no md5 in
     the subtrack db (now common due to special projects).
+  - Tests simplified.
 
 Release 2.32.0
  
