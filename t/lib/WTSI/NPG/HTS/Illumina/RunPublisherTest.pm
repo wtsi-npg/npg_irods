@@ -10,6 +10,7 @@ use File::Spec::Functions qw[abs2rel catfile catdir splitdir];
 use File::Temp;
 use Log::Log4perl;
 use Test::More;
+use JSON;
 
 use base qw[WTSI::NPG::HTS::Test];
 
@@ -969,12 +970,13 @@ sub publish_include_exclude : Test(3) {
   is_deeply(\@observed, \@expected) or diag explain \@observed;
 }
 
-sub publish_archive_path_mlwh : Test(6) {
+sub publish_archive_path_mlwh : Test(8) {
   note '=== Tests in publish_archive_path_mlwh';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
   my $id_run         = 18448;
+  my $expected_json  = "t/data/mlwh_json/illumina.json";
 
   my $lims_factory =
     WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
@@ -991,13 +993,20 @@ sub publish_archive_path_mlwh : Test(6) {
      irods            => $irods,
      lims_factory     => $lims_factory,
      restart_file     => catfile($tmpdir->dirname, 'published.json'),
-     source_directory => $runfolder_path);
+     source_directory => $runfolder_path,
+     mlwh_json        => catfile($tmpdir->dirname, 'mlwh_irods.json'));
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
   my $num_expected = 380;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
+
+  my $mlwh_json = $pub->mlwh_json;
+  ok(-e $mlwh_json, "mlwh loader json file $mlwh_json was written by publisher");
+  is_deeply(read_json_content($mlwh_json),
+    set_destination(read_json_content($expected_json), $dest_coll),
+    "contents of $mlwh_json are correct");
 
   my $restart_file = $pub->restart_file;
   ok(-e $restart_file, "Restart file $restart_file was written by publisher");
@@ -1350,6 +1359,22 @@ sub calc_lane_alignment_files {
   }
 
   return %position_index;
+}
+
+sub read_json_content {
+  my ($path) = @_;
+
+  open my $mlwh_json_fh, '<:encoding(UTF-8)', $path or die qq[could not open $path];
+
+  return decode_json <$mlwh_json_fh>;
+}
+
+sub set_destination {
+  my ($json_hash, $dest) = @_;
+  foreach my $product (@{$json_hash->{products}}){
+    $product->{irods_root_collection} = $dest;
+  }
+  return $json_hash;
 }
 
 sub observed_data_objects {
