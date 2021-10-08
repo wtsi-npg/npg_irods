@@ -51,7 +51,6 @@ my $max_errors = 0;
 my $restart_file;
 my $source_directory;
 my $verbose;
-my $mlwh_json;
 
 my @include;
 my @exclude;
@@ -71,7 +70,6 @@ GetOptions('alt-process|alt_process=s'           => \$alt_process,
            'max-errors|max_errors=i'             => \$max_errors,
            'restart-file|restart_file=s'         => \$restart_file,
            'source-directory|source_directory=s' => \$source_directory,
-           'mlwh_json=s'                         => \$mlwh_json,
            'verbose'                             => \$verbose);
 
 # Process CLI arguments
@@ -131,9 +129,6 @@ if ($restart_file) {
 }
 if ($max_errors) {
   push @pub_init_args, max_errors => $max_errors;
-}
-if ($mlwh_json) {
-  push @pub_init_args, mlwh_json => $mlwh_json;
 }
 
 my $publisher = WTSI::NPG::HTS::Illumina::RunPublisher->new(@pub_init_args);
@@ -208,8 +203,6 @@ npg_publish_illumina_run --source-directory <path> [--collection <path>]
                       default restart file is "<archive dir>/published.json".
    --source-directory
    --source_directory The instrument runfolder path to load.
-   --mlwh_json        The json file to which information about the run will be
-                      added for upload to ml_warehouse. Optional
    --logconf          A log4perl configuration file. Optional.
    --verbose          Print messages while processing. Optional.
 
@@ -275,7 +268,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2016, 2017, 2018, 2019, 2021 Genome Research Limited. All Rights
+Copyright (C) 2016, 2017, 2018, 2019 Genome Research Limited. All Rights
 Reserved.
 
 This program is free software: you can redistribute it and/or modify

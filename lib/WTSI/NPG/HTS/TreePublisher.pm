@@ -100,7 +100,7 @@ has 'require_checksum_cache' =>
 
 {
   my $positional = 2;
-  my @named      = qw[primary_cb secondary_cb extra_cb filter mlwh_json_cb];
+  my @named      = qw[primary_cb secondary_cb extra_cb filter];
   my $params     = function_params($positional, @named);
 
   sub publish_tree {
@@ -164,8 +164,7 @@ has 'require_checksum_cache' =>
               ($subset, $dest_coll,
                primary_cb   => $params->primary_cb,
                secondary_cb => $params->secondary_cb,
-               extra_cb     => $params->extra_cb,
-               mlwh_json_cb => $params->mlwh_json_cb);
+               extra_cb     => $params->extra_cb);
       $num_files     += $nf;
       $num_processed += $np;
       $num_errors    += $ne;
@@ -248,7 +247,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2019, 2021 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2019 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
