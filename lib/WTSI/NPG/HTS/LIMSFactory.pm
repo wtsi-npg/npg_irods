@@ -84,12 +84,6 @@ sub make_lims {
 
     my $lims = st::api::lims->new(@init_args);
 
-    # If the st::api::lims provided a database handle itself and the
-    # factory has not, cache the handle.
-    if (not $self->has_mlwh_schema and $lims->can('mlwh_schema')) {
-      $self->mlwh_schema($lims->mlwh_schema);
-    }
-
     $self->lims_cache->{$rpt} = $lims;
 
     return $lims;

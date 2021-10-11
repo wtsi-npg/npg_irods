@@ -98,8 +98,9 @@ if (not defined $source_directory) {
 }
 
 my $irods = WTSI::NPG::iRODS->new;
+my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect();
 
-my @fac_init_args = ();
+my @fac_init_args = ('mlwh_schema' => $wh_schema);
 if ($driver_type) {
   $log->info("Overriding default driver type with '$driver_type'");
   push @fac_init_args, 'driver_type' => $driver_type;
