@@ -365,14 +365,14 @@ sub publish_alignment_files {
   };
 
   my $mlwh_json_cb = sub {
-    my ($obj, $file) = @_;
+    my ($obj, $collection, $file) = @_;
     if ($self->mlwh_json && $file =~ /cram$/xsm && !($file =~/(phix|human)/xsm)) {
       my $mlwh_hash = {
         id_product               => $obj->composition->digest,
         seq_platform_name        => $ILLUMINA,
         pipeline_name            => defined($self->alt_process) ?
           $ALT_PROCESS : $NPG_PROD,
-        irods_root_collection    => $self->dest_collection,
+        irods_root_collection    => $collection,
         irods_data_relative_path => $file,
       };
 

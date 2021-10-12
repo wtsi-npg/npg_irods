@@ -221,7 +221,7 @@ has 'require_checksum_cache' =>
         $self->publish_state->set_published($file);
         $self->info("Published '$dest' [$num_processed / $num_files]");
 
-        if (!$mlwh_json_cb->($obj, $filename)){
+        if (!$mlwh_json_cb->($obj, $dest_coll, $filename)){
           $self->logcroak("Failed to add '$file' to ml warehouse json file");
         }
       }
