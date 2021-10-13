@@ -8,6 +8,7 @@ use Scalar::Util qw[refaddr];
 
 use npg_tracking::util::types qw[:all];
 use st::api::lims;
+use WTSI::DNAP::Warehouse::Schema;
 
 our $VERSION = '';
 
@@ -76,6 +77,10 @@ sub make_lims {
     return $self->lims_cache->{$rpt};
   }
   else {
+
+    if ( $self->driver_type =~ /^ml_warehouse/xms) {
+      $self->mlwh_schema = WTSI::DNAP::Warehouse::Schema->connect();
+    }
     my @init_args = (driver_type => $self->driver_type,
                      rpt_list    => $rpt);
     if ($self->has_mlwh_schema) {
