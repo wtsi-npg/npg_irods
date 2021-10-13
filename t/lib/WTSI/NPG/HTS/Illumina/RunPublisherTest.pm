@@ -1005,7 +1005,7 @@ sub publish_archive_path_mlwh : Test(8) {
   my $mlwh_json = $pub->mlwh_json;
   ok(-e $mlwh_json, "mlwh loader json file $mlwh_json was written by publisher");
   is_deeply(read_json_content($mlwh_json),
-    set_destination(read_json_content($expected_json), $dest_coll),
+    set_destination(read_json_content($expected_json), $irods_tmp_coll),
     "contents of $mlwh_json are correct");
 
   my $restart_file = $pub->restart_file;
@@ -1370,9 +1370,9 @@ sub read_json_content {
 }
 
 sub set_destination {
-  my ($json_hash, $dest) = @_;
+  my ($json_hash, $temp_coll) = @_;
   foreach my $product (@{$json_hash->{products}}){
-    $product->{irods_root_collection} = $dest;
+    $product->{irods_root_collection} =~ s|/testZone/home/irods/RunPublisherTest.XXXXX.0/|$temp_coll/|xms;
   }
   return $json_hash;
 }
