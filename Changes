@@ -1,5 +1,10 @@
 Upcoming
 
+Release 2.34.0
+
+  - Change baton version in actions to 3.2.0 for compatibility
+  - Add Haplotagging logs to log publisher
+
 Release 2.33.0
 
   - Tweaks to ebi meta updater to account for files with no md5 in
