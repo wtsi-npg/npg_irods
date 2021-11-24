@@ -111,13 +111,15 @@ sub publish_files {
 
 =head2 publish_sequence_files
 
-  Arg [1]    : Format - which needs to be at the end. Required
+  Arg [1]    : File format match regex, Str. Required.
 
   Example    : my ($num_files, $num_published, $num_errors) =
-                 $pub->publish_sequence_files
-  Description: Publish sequence files to iRODS. Return the number of files,
-               the number published and the number of errors. R&D data
-               not supported - only files with databased information.
+                 $pub->publish_sequence_files($format)
+  Description: Identify sequence files which match the required file 
+               format regex. and publish those files to iRODS. Return 
+               the number of files, the number published and the number 
+               of errors. R&D data not supported - only files with 
+               databased information.
   Returntype : Array[Int]
 
 =cut
@@ -200,11 +202,12 @@ sub publish_sequence_files {
 
 =head2 publish_non_sequence_files
 
-  Arg [1]    : Format - which needs to be at the end. Required.
+  Arg [1]    : File format match regex, Str. Required.
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_non_sequence_files($format)
-  Description: Publish non sequence files by type to iRODS. Return
+  Description: Identify non sequence files which match the required file 
+               format regex and publish those files to iRODS. Return
                the number of files, the number published and the number
                of errors.
   Returntype : Array[Int]

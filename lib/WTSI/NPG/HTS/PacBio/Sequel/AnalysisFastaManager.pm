@@ -141,6 +141,8 @@ sub _process_deplexed_data {
       if (defined $fa) {
         while (my $line = <$fa>) {
           if ( $line =~ /^>/smx ){
+            # keep only sequence name in fasta header and remove
+            # sample name which is meaningless outside SMRT Link
             my @l = split /\s+/smx, $line;
             $gz->write($l[0]."\n");
           } else {
@@ -153,7 +155,7 @@ sub _process_deplexed_data {
       $gz->close or $self->logcroak('Cannot close file: ', $faout);
     }
   }
-  return();
+  return;
 }
 
 __PACKAGE__->meta->make_immutable;
