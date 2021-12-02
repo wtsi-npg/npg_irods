@@ -16291,6 +16291,7 @@ t/data/log_publisher/outgoing/100818_IL32_10371/Latest_Summary/log/bam2fastqchec
 t/data/log_publisher/outgoing/100818_IL32_10371/log/interop_17547_post_qc_review_20150915-142055.out
 t/data/log_publisher/outgoing/100818_IL32_10371/Logs/PreRun.log
 t/data/log_publisher/outgoing/100818_IL32_10371/RTALogs/20150909-1608_WarningLog_00.tsv
+t/data/mlwh_json/illumina.json
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.adapters.fasta
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.scraps.bam
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.scraps.bam.pbi
