@@ -11,6 +11,7 @@ use Perl6::Slurp;
 use Readonly;
 
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport;
+use WTSI::NPG::HTS::PacBio::Sequel::AnalysisFastaManager;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
 
 extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
@@ -18,8 +19,9 @@ extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
 our $VERSION = '';
 
 # Sequence and index file suffixes
-our $SEQUENCE_FILE_FORMAT  = 'bam';
-our $SEQUENCE_INDEX_FORMAT = 'pbi';
+our $SEQUENCE_FILE_FORMAT   = 'bam';
+our $SEQUENCE_FASTA_FORMAT  = 'fasta.gz';
+our $SEQUENCE_INDEX_FORMAT  = 'pbi';
 
 # Metadata relatedist
 our $METADATA_FORMAT = 'xml';
@@ -79,7 +81,10 @@ sub publish_files {
                       ' : QC check failed');
     }
 
-    my ($nfb, $npb, $neb) = $self->publish_sequence_files;
+    my ($nff, $npf, $nef) = $self->_iso_fasta_files() ?
+        $self->publish_sequence_files($SEQUENCE_FASTA_FORMAT) : (0,0,0);
+    my ($nfb, $npb, $neb) = $self->publish_sequence_files
+        ($SEQUENCE_FILE_FORMAT);
     my ($nfp, $npp, $nep) = $self->publish_non_sequence_files
         ($SEQUENCE_INDEX_FORMAT);
     my ($nfx, $npx, $nex) = $self->publish_non_sequence_files
@@ -87,9 +92,9 @@ sub publish_files {
     my ($nfr, $npr, $ner) = $self->publish_non_sequence_files
         ($self->_merged_report);
 
-    $num_files     += ($nfx + $nfb + $nfp + $nfr);
-    $num_processed += ($npx + $npb + $npp + $npr);
-    $num_errors    += ($nex + $neb + $nep + $ner);
+    $num_files     += ($nfx + $nfb + $nff + $nfp + $nfr);
+    $num_processed += ($npx + $npb + $npf + $npp + $npr);
+    $num_errors    += ($nex + $neb + $nef + $nep + $ner);
   }
   else {
     $self->warn('Skipping ', $self->analysis_path,
@@ -106,19 +111,26 @@ sub publish_files {
 
 =head2 publish_sequence_files
 
+  Arg [1]    : File format match regex, Str. Required.
+
   Example    : my ($num_files, $num_published, $num_errors) =
-                 $pub->publish_sequence_files
-  Description: Publish sequence files to iRODS. Return the number of files,
-               the number published and the number of errors. R&D data
-               not supported - only files with databased information.
+                 $pub->publish_sequence_files($format)
+  Description: Identify sequence files which match the required file 
+               format regex. and publish those files to iRODS. Return 
+               the number of files, the number published and the number 
+               of errors. R&D data not supported - only files with 
+               databased information.
   Returntype : Array[Int]
 
 =cut
 
 sub publish_sequence_files {
-  my ($self) = @_;
+  my ($self,$format) = @_;
 
-  my $files = $self->list_files($SEQUENCE_FILE_FORMAT . q[$]);
+  defined $format or
+    $self->logconfess('A defined file format argument is required');
+
+  my $files = $self->list_files($format . q[$]);
 
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
@@ -156,10 +168,12 @@ sub publish_sequence_files {
       #  or data is non deplexed leftovers on multiplexed run
       #  or data is for unexpected barcode
       #  or data is single tag standard (non ccs) deplex 
+      #  or data is fasta.gz format
       my $is_target   = (@records > 1 ||
           $self->_is_allowed_fname($filename, \@FNAME_NON_DEPLEXED) ||
          ($tag_id && @tag_records != 1) ||
-         ($self->_metadata->is_ccs ne 'true' && $tag_id && @all_records == 1))
+         ($self->_metadata->is_ccs ne 'true' && $tag_id && @all_records == 1) ||
+         ($format eq $SEQUENCE_FASTA_FORMAT))
           ? 0 : 1;
 
       my @primary_avus   = $self->make_primary_metadata
@@ -188,11 +202,12 @@ sub publish_sequence_files {
 
 =head2 publish_non_sequence_files
 
-  Arg [1]    : Format - which needs to be at the end. Required.
+  Arg [1]    : File format match regex, Str. Required.
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_non_sequence_files($format)
-  Description: Publish non sequence files by type to iRODS. Return
+  Description: Identify non sequence files which match the required file 
+               format regex and publish those files to iRODS. Return
                the number of files, the number published and the number
                of errors.
   Returntype : Array[Int]
@@ -307,6 +322,28 @@ sub _build_merged_report {
   return $report->generate_analysis_report;
 }
 
+has '_iso_fasta_files' =>
+  (isa           => 'Bool',
+   is            => 'ro',
+   builder       => '_build_iso_fasta_files',
+   lazy          => 1,
+   init_arg      => undef,
+   documentation => 'Find, reformat and write any isoseq fasta files to the analysis directory.',);
+
+sub _build_iso_fasta_files {
+  my ($self) = @_;
+
+  my @init_args  = (analysis_path  => $self->analysis_path,
+                    runfolder_path => $self->runfolder_path,
+                    meta_data      => $self->_metadata);
+
+  my $iso = WTSI::NPG::HTS::PacBio::Sequel::AnalysisFastaManager->new(@init_args);
+  my $is_success = $iso->make_loadable_files;
+
+  return $is_success;
+}
+
+
 sub _basic_qc {
   # common sense qc checks prior to loading
   my ($self) = @_;
@@ -352,8 +389,10 @@ sub _get_tag_name_from_fname {
   # Traction tag id is the full tag name
   my ($self, $file) = @_;
   my $tag_name;
-  if ($file =~ m{[.] (\w+\d+\S+) [-] [-]}smx){
+  if ($file =~ m{[.] (\w+\d+\S*) [-] [-]}smx){
     $tag_name = $1;
+    # remove 5 or 3 prime suffix
+    $tag_name =~ s/_\dp//smxg;
   }
   return $tag_name;
 }

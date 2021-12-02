@@ -96,10 +96,13 @@ sub publish_logs {
   # find links
   my $find_llist = q[find . -type l];
 
+  # find SamHaplotag files
+  my $find_hlist = q[find . -name "*SamHaplotag*"];
+
   my $tarcmd = "tar cJf $tarpath --exclude-vcs --exclude='core*' -T -";
   my $cmd =
     qq[set -o pipefail && cd $search_root && ] .
-    qq[($find_dlist && $find_p4 && $find_llist) | $tarcmd];
+    qq[($find_dlist && $find_p4 && $find_llist && $find_hlist) | $tarcmd];
 
   try {
     WTSI::DNAP::Utilities::Runnable->new(executable => '/bin/bash',
