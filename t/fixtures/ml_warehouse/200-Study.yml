@@ -1055,7 +1055,7 @@
   study_type: Transcriptome Analysis
   abstract: ~
   abbreviation: LRRT
-  accession_number: ~
+  accession_number: XXXX123
   description: Transcriptome analysis using long read technologies
   contains_human_dna: '0'
   contaminated_human_dna: '0'
