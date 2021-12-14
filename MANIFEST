@@ -16475,6 +16475,7 @@ t/fixtures/npgqc/MqcOutcomeDict.yml
 t/header_parser.t
 t/illumina_meta_updater.t
 t/illumina_run_publisher.t
+t/lims_factory.t
 t/lib/WTSI/DNAP/Utilities/ParamsTest.pm
 t/lib/WTSI/NPG/Data/BamDeletionTest.pm
 t/lib/WTSI/NPG/Data/ConsentWithdrawnTest.pm
@@ -16487,6 +16488,7 @@ t/lib/WTSI/NPG/HTS/Illumina/AncDataObjectTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/LogPublisherTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/RunPublisherTest.pm
+t/lib/WTSI/NPG/HTS/LIMSFactoryTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/RunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/SeqDataObjectTest.pm
