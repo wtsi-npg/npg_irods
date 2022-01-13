@@ -294,8 +294,9 @@ sub _build_metadata{
 
   my $entry_dir = catdir($self->analysis_path, $ENTRY_DIR);
 
-  my @metafiles = $self->list_directory($entry_dir,
-                                        filter => $METADATA_FORMAT . q[$]);
+  my @metafiles = $self->list_directory
+    ($entry_dir, filter => $METADATA_FORMAT . q[$], recurse => 1);
+
   if (@metafiles != 1) {
     $self->logcroak("Expect one $METADATA_FORMAT file in $entry_dir");
   }

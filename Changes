@@ -1,5 +1,7 @@
 Upcoming
 
+  - Tweak Sequel AnalysisPublisher for SMRT Link 10.2 to allow xml
+    in entry-points subdir.
 
 Release 2.34.0
 
