@@ -1,5 +1,12 @@
 Upcoming
 
+Release 2.35.0
+  - Tweak Sequel AnalysisPublisher for SMRT Link 10.2 to allow xml
+    in entry-points subdir.
+  - Correct propagation of the ml warehouse db connection to st::api::lims
+    object. The publisher was previously written to cache the connection
+    created by LIMSFactory, but failed to do so, leading to creation of
+    multiple connections. 
 
 Release 2.34.0
 

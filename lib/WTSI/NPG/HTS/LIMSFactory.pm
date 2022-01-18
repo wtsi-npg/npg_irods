@@ -8,6 +8,7 @@ use Scalar::Util qw[refaddr];
 
 use npg_tracking::util::types qw[:all];
 use st::api::lims;
+use WTSI::DNAP::Warehouse::Schema;
 
 our $VERSION = '';
 
@@ -18,6 +19,9 @@ has 'mlwh_schema' =>
    isa           => 'WTSI::DNAP::Warehouse::Schema',
    required      => 0,
    predicate     => 'has_mlwh_schema',
+   clearer       => 'clear_mlwh_schema',
+   lazy          => 1,
+   default       => sub {return WTSI::DNAP::Warehouse::Schema->connect();},
    documentation => 'A ML warehouse handle to obtain secondary metadata');
 
 has 'driver_type' =>
@@ -75,27 +79,18 @@ sub make_lims {
     $self->debug("Using cached LIMS for '$rpt'");
     return $self->lims_cache->{$rpt};
   }
-  else {
-    my @init_args = (driver_type => $self->driver_type,
-                     rpt_list    => $rpt);
-    if ($self->has_mlwh_schema) {
-      push @init_args, mlwh_schema => $self->mlwh_schema;
-    }
 
-    my $lims = st::api::lims->new(@init_args);
-
-    # If the st::api::lims provided a database handle itself and the
-    # factory has not, cache the handle.
-    if (not $self->has_mlwh_schema and $lims->can('mlwh_schema')) {
-      $self->mlwh_schema($lims->mlwh_schema);
-    }
-
-    $self->lims_cache->{$rpt} = $lims;
-
-    return $lims;
+  my @init_args = (driver_type => $self->driver_type,
+                   rpt_list    => $rpt);
+  if ($self->driver_type =~ /^ml_warehouse/xms) {
+    push @init_args, mlwh_schema => $self->mlwh_schema;
   }
 
-  return;
+  my $lims = st::api::lims->new(@init_args);
+
+  $self->lims_cache->{$rpt} = $lims;
+
+  return $lims;
 }
 
 __PACKAGE__->meta->make_immutable;
