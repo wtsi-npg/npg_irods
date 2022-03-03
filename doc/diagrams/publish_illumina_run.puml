@@ -1,0 +1,100 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+participant "Sequencing\npipeline" as seqpipe
+control "seq_to_irods_archiver" as archiver
+control "npg_publish_illumina_run.pl" as publish_illumina_run
+participant "Staging\nvolume" as staging
+boundary "Perl ML\nWarehouse\nAPI" as perl_mlwh_api
+database "ML\nWarehouse" as mlwh
+boundary "NPG iRODS\nAPI" as npg_irods_api
+boundary "Perl iRODS\nAPI" as perl_irods_api
+boundary "baton" as baton
+participant "iRODS" as irods
+
+activate mlwh
+activate irods
+activate staging
+activate seqpipe
+
+seqpipe -> archiver
+activate archiver
+archiver -> publish_illumina_run
+activate publish_illumina_run
+activate baton
+
+publish_illumina_run -> npg_irods_api
+
+group Copy data
+npg_irods_api -> perl_irods_api
+perl_irods_api -> baton
+baton -> staging
+staging --> baton : Data files
+baton -> irods : iRODS\nAPI
+irods --> baton
+baton --> perl_irods_api
+
+perl_irods_api --> perl_irods_api : Build metadata
+perl_irods_api -> baton : Send\nmetadata
+baton -> irods : iRODS\nAPI
+irods --> baton
+baton --> perl_irods_api
+perl_irods_api --> npg_irods_api
+end
+
+group Add primary metadata
+npg_irods_api -> staging
+staging --> npg_irods_api : Composition JSON file
+npg_irods_api --> npg_irods_api : Build\nmetadata
+npg_irods_api -> perl_irods_api : Send\nmetadata
+perl_irods_api -> baton
+baton -> irods : iRODS\nAPI
+irods --> baton
+baton --> perl_irods_api
+perl_irods_api --> npg_irods_api
+end
+
+group Add secondary metadata
+npg_irods_api -> staging
+staging --> npg_irods_api : Composition JSON file
+npg_irods_api -> perl_mlwh_api : Metadata\nrequest
+perl_mlwh_api -> mlwh : SQL\nquery
+mlwh --> perl_mlwh_api
+perl_mlwh_api --> npg_irods_api
+
+npg_irods_api --> npg_irods_api : Build\nmetadata
+npg_irods_api -> perl_irods_api : Send\nmetadata
+perl_irods_api -> baton
+baton -> irods : iRODS\nAPI
+irods --> baton
+baton --> perl_irods_api
+perl_irods_api --> npg_irods_api
+end
+
+group Update permissions
+npg_irods_api -> perl_irods_api : Metadata\nrequest
+perl_irods_api -> baton
+baton -> irods : iRODS\nAPI
+irods --> baton
+baton --> perl_irods_api
+perl_irods_api --> npg_irods_api
+
+npg_irods_api --> npg_irods_api : Build\npermissions
+npg_irods_api -> perl_irods_api : Set\npermissions
+perl_irods_api -> baton
+baton -> irods : iRODS\nAPI
+irods --> baton
+baton --> perl_irods_api
+perl_irods_api --> npg_irods_api
+end
+
+npg_irods_api --> publish_illumina_run
+
+deactivate baton
+deactivate publish_illumina_run
+deactivate archiver
+deactivate seqpipe
+
+@enduml
