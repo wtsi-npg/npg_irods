@@ -998,7 +998,7 @@ sub publish_archive_path_mlwh : Test(8) {
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
-  my $num_expected = 380;
+  my $num_expected = 383;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
 
