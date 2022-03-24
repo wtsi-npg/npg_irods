@@ -78,9 +78,9 @@ our %ILLUMINA_PART_PATTERNS =
        '_target_autosome[.]stats',        # non-conforming file name
        '[.]stats',
        '[.]txt',
-       '_SamHaplotag_Clear_BC',           # more non-conformist file names
-       '_SamHaplotag_UnClear_BC',
-       '_SamHaplotag_Missing_BC_QT_tags';
+       '[.]_SamHaplotag_Clear_BC',           # more non-conformist file names
+       '[.]_SamHaplotag_UnClear_BC',
+       '[.]_SamHaplotag_Missing_BC_QT_tags';
    },
    qc_regex        => sub {
      my $name = shift;
