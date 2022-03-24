@@ -134,7 +134,7 @@ sub avoid_inconsistent_objects : Test(4) {
     $m->update_single_replica_metadata(end_date => $middle);
   is($num_objs, 4, 'Expected 4 objects found');
   is($num_processed, 4, 'Expected 4 objects processed');
-  is($num_errors, 1, 'Expected no errors');
+  is($num_errors, 1, 'Expected 1 error');
 
   my $sr = $WTSI::NPG::Data::SingleReplicaMetaUpdater::SINGLE_REPLICA_ATTR;
   my @expected = map { "$irods_tmp_coll/single_replica/$_.txt" } 3 .. 5;
