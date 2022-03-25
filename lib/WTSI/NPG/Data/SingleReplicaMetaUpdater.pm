@@ -211,7 +211,7 @@ sub _parse_iquest_records {
     # Work around the iquest bug/misfeature where it mixes its logging output
     # with its data output
     next if $line =~ m{^Zone is}msx;
-    next if $line =~ m{^No rows found}msx;
+    next if $line =~ m{^No\s+rows\s+found}msx;
 
     $self->debug("iquest: $line");
     if ($line eq $record_separator and @path_elements) {
