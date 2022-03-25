@@ -42,10 +42,6 @@ sub setup_fixture : Test(startup) {
     (executable => './scripts/add_single_replica_query.sh')->run;
 }
 
-#sub teardown_fixture : Test(shutdown) {
-#
-#}
-
 sub setup_test : Test(setup) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
