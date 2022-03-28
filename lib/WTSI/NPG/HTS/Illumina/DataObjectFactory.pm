@@ -154,10 +154,10 @@ sub _make_ancillary_file_regex{
   my $anc_regex;
   if ($self->has_ancillary_formats && @{$self->ancillary_formats}){
     my $anc_pattern = join q[|], @{$self->ancillary_formats};
-      $anc_regex = qr{[._]($anc_pattern)$}msx;
+      $anc_regex = qr{[.]($anc_pattern)$}msx;
     if ($self->has_compress_formats && @{$self->compress_formats}) {
       my $comp_pattern = join q[|], @{$self->compress_formats};
-      $anc_regex = qr{[._]($anc_pattern)([.]($comp_pattern))?$}msx;
+      $anc_regex = qr{[.]($anc_pattern)([.]($comp_pattern))?$}msx;
     }
   }
   return $anc_regex;
