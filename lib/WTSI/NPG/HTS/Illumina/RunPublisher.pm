@@ -382,11 +382,16 @@ sub publish_alignment_files {
           self->logcroak(q[could not open ml warehouse json file] .
           qq[$self->mlwh_json]);
         $json_hash = decode_json <$json_fh>;
+        foreach my $match (grep { $mlwh_hash->{id_product} eq $_->{id_product}} @{$json_hash->{products}}){
+          if ($match->{irods_root_collection} eq $mlwh_hash->{irods_root_collection}) {
+            $json_hash = grep {!$match} @{$json_hash->{products}}
+          }
+        }
       }
       else {
         open $json_fh, '>:encoding(UTF-8)', $self->mlwh_json or
           self->logcroak(q[could not open ml warehouse json file] .
-          qq[$self->mlwh_json]);
+            qq[$self->mlwh_json]);
         $json_hash = {
           version  => $JSON_FILE_VERSION,
           products => [],
