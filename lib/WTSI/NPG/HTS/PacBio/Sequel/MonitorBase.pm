@@ -1,9 +1,17 @@
 package WTSI::NPG::HTS::PacBio::Sequel::MonitorBase;
 
 use Moose::Role;
+use DateTime;
+use English qw[-no_match_vars];
+use File::Spec::Functions qw[catfile];
 use WTSI::NPG::HTS::PacBio::Sequel::APIClient;
 
+with qw[ WTSI::DNAP::Utilities::Loggable ];
+
 our $VERSION = '';
+
+# filename for mark file
+our $MARK_FILENAME  = 'processing_in_progess';
 
 has 'api_client' =>
   (isa           => 'WTSI::NPG::HTS::PacBio::Sequel::APIClient',
@@ -13,11 +21,11 @@ has 'api_client' =>
    documentation => 'A PacBio Sequel API client used to fetch runs');
 
 sub _build_api_client {
-    my $self = shift;
-    my @init_args = $self->api_uri ? ('api_uri' => $self->api_uri) : ();
-    if($self->interval) { push @init_args, ('default_interval' => $self->interval) };
-    if($self->older_than) { push @init_args, ('default_end' => $self->older_than) };
-    return WTSI::NPG::HTS::PacBio::Sequel::APIClient->new(@init_args);
+  my $self = shift;
+  my @init_args = $self->api_uri ? ('api_uri' => $self->api_uri) : ();
+  if($self->interval) { push @init_args, ('default_interval' => $self->interval) };
+  if($self->older_than) { push @init_args, ('default_end' => $self->older_than) };
+  return WTSI::NPG::HTS::PacBio::Sequel::APIClient->new(@init_args);
 }
 
 has 'api_uri' =>
@@ -34,6 +42,70 @@ has 'older_than' =>
   (isa           => 'Str',
    is            => 'ro',
    documentation => 'Time in days to remove from end date');
+
+
+=head2 mark_folder
+
+  Arg [1]    : Folder path name. Required.
+  Example    : my ($marked) = $self->mark_folder($folder)
+  Description: 
+  Returntype : Boolean
+
+=cut
+
+sub mark_folder {
+  my ($self,$folder,$run_name) = @_;
+
+  defined $folder or
+    $self->logconfess('A defined folder argument is required');
+  defined $run_name or
+    $self->logconfess('A defined run_name argument is required');
+
+  my $marked = 0;
+  my $file = catfile($folder,$run_name .q[_]. $MARK_FILENAME);
+  if(-d $folder && !-f $file){
+    open my $fh, '>', $file or
+      $self->logcroak("Failed to open '$file' for writing: ", $ERRNO);
+
+    print $fh 'Processing started at: '. DateTime ->now()
+      or $self->logcroak("Failed to write to '$file': $ERRNO");
+
+    close $fh or $self->warn("Failed to close '$file'");
+
+    if(-f $file) { $marked = 1; }
+  }
+  return $marked;
+}
+
+=head2 unmark_folder
+
+  Arg [1]    : Folder path name. Required.
+  Example    : my ($unmarked) = $self->unmark_folder($folder)
+  Description: 
+  Returntype : Boolean
+
+=cut
+
+sub unmark_folder {
+  my ($self,$folder,$run_name) = @_;
+
+  defined $folder or
+    $self->logconfess('A defined folder argument is required');
+  defined $folder or
+    $self->logconfess('A defined run_name argument is required');
+
+  my $unmarked = 0;
+  my $file = catfile($folder,$run_name .q[_]. $MARK_FILENAME);
+  if(-f $file){
+     unlink $file;
+     if(!-f $file) {
+       $unmarked = 1;
+     } else {
+       $self->error("Failed to unmark '$folder'");
+     }
+  }
+  return $unmarked;
+}
 
 no Moose::Role;
 

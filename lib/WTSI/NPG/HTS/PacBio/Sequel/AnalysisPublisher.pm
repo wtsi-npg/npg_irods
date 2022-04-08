@@ -13,6 +13,7 @@ use Readonly;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisFastaManager;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
+use WTSI::NPG::HTS::PacBio::Sequel::SeqchkCalculator;
 
 extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
 
@@ -22,6 +23,7 @@ our $VERSION = '';
 our $SEQUENCE_FILE_FORMAT   = 'bam';
 our $SEQUENCE_FASTA_FORMAT  = 'fasta.gz';
 our $SEQUENCE_INDEX_FORMAT  = 'pbi';
+
 
 # Metadata relatedist
 our $METADATA_FORMAT = 'xml';
@@ -36,7 +38,7 @@ our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
 # Additional sequence filenames permitted for loading 
 our @FNAME_PERMITTED    = qw[removed ccs hifi_reads fl_transcripts];
-our @FNAME_NON_DEPLEXED = qw[removed];
+our @FNAME_NON_DEPLEXED = qw[removed other];
 
 # Data processing level
 our $DATA_LEVEL = 'secondary';
@@ -46,7 +48,8 @@ Readonly::Scalar my $MIN_BARCODED  => 0.3;
 Readonly::Scalar my $BARCODE_FIELD => 'Percent Barcoded Reads';
 Readonly::Scalar my $REPORT_TITLE  =>
   $WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport::REPORTS;
-
+Readonly::Scalar my $SEQUENCE_SEQCHKSUM =>
+  $WTSI::NPG::HTS::PacBio::Sequel::SeqchkCalculator::SEQCHKSUM_SUFFIX;
 
 has 'analysis_path' =>
   (isa           => 'Str',
@@ -81,20 +84,26 @@ sub publish_files {
                       ' : QC check failed');
     }
 
+    my $se = 0;
+    ($se) = $self->_make_seqchk_files($SEQUENCE_FILE_FORMAT);
+
     my ($nff, $npf, $nef) = $self->_iso_fasta_files() ?
         $self->publish_sequence_files($SEQUENCE_FASTA_FORMAT) : (0,0,0);
+
     my ($nfb, $npb, $neb) = $self->publish_sequence_files
         ($SEQUENCE_FILE_FORMAT);
     my ($nfp, $npp, $nep) = $self->publish_non_sequence_files
         ($SEQUENCE_INDEX_FORMAT);
-    my ($nfx, $npx, $nex) = $self->publish_non_sequence_files
-        ($METADATA_SET . q[.] . $METADATA_FORMAT);
-    my ($nfr, $npr, $ner) = $self->publish_non_sequence_files
-        ($self->_merged_report);
 
-    $num_files     += ($nfx + $nfb + $nff + $nfp + $nfr);
-    $num_processed += ($npx + $npb + $npf + $npp + $npr);
-    $num_errors    += ($nex + $neb + $nef + $nep + $ner);
+    my $aux = $SEQUENCE_SEQCHKSUM .q[|]. $self->_merged_report .q[|].
+        $METADATA_SET . q[.] . $METADATA_FORMAT;
+    my ($nfr, $npr, $ner) = $self->publish_non_sequence_files($aux);
+
+
+    $num_files     += ($nfb + $nff + $nfp + $nfr);
+    $num_processed += ($npb + $npf + $npp + $npr);
+    $num_errors    += ($neb + $nef + $nep + $ner + $se);
+
   }
   else {
     $self->warn('Skipping ', $self->analysis_path,
@@ -220,7 +229,8 @@ sub publish_non_sequence_files {
   defined $format or
     $self->logconfess('A defined file format argument is required');
 
-  my $files = $self->list_files($format . q[$]);
+  my $pattern = '('. $format .')$';
+  my $files = $self->list_files($pattern);
 
   my ($num_files, $num_processed, $num_errors) =
     $self->pb_publish_files($files, $self->_dest_path);
@@ -412,6 +422,23 @@ sub _dest_path {
 
   return catdir($self->dest_collection, $self->smrt_names->[0]);
 }
+
+sub _make_seqchk_files {
+  my ($self, $type) = @_;
+
+  defined $type or
+    $self->logconfess('A defined file types argument is required');
+
+  my $files = $self->list_files($type . q[$]);
+
+  my $errors = 0;
+  foreach my $file ( @{$files} ){
+    $errors += WTSI::NPG::HTS::PacBio::Sequel::SeqchkCalculator->new
+      (input_file  => $file)->calculate_seqchksum;
+  }
+  return $errors;
+}
+
 
 __PACKAGE__->meta->make_immutable;
 

@@ -79,6 +79,9 @@ lib/WTSI/NPG/HTS/PacBio/Sequel/RunDelete.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunMonitor.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunPublisherBase.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunPublisher.pm
+lib/WTSI/NPG/HTS/PacBio/Sequel/SeqchkCalculator.pm
+lib/WTSI/NPG/HTS/PacBio/Sequel/JobExecute/JobBase.pm
+lib/WTSI/NPG/HTS/PacBio/Sequel/JobExecute/WrJob.pm
 lib/WTSI/NPG/HTS/PathLister.pm
 lib/WTSI/NPG/HTS/PublishState.pm
 lib/WTSI/NPG/HTS/RunPublisher.pm
@@ -16301,6 +16304,7 @@ t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreads.
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.subreadset.xml
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.primary_qc.tar.xz
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.transferdone
+t/data/pacbio/sequel/r64016e_20220316_164414/1_A01/m64016e_220316_165505.reads.bam
 t/data/pacbio/sequel/r64174e_20210114_161659/1_A01/m64174e_210114_162751.ccs_reports.json
 t/data/pacbio/sequel/r64174e_20210114_161659/1_A01/m64174e_210114_162751.ccs_reports.txt
 t/data/pacbio/sequel/r64174e_20210114_161659/1_A01/m64174e_210114_162751.consensusreadset.xml
@@ -16498,11 +16502,13 @@ t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisReportTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/ApiClientTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/ImageArchiveTest.pm
+t/lib/WTSI/NPG/HTS/PacBio/Sequel/JobExecute/JobTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunAuditorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunPublisherTest.pm
+t/lib/WTSI/NPG/HTS/PacBio/Sequel/SeqchkCalculatorTest.pm
 t/lib/WTSI/NPG/HTS/SeqchksumTest.pm
 t/lib/WTSI/NPG/HTS/Test.pm
 t/lib/WTSI/NPG/HTS/TreePublisherTest.pm
@@ -16521,11 +16527,13 @@ t/pacbio_sequel_analysis_publisher.t
 t/pacbio_sequel_analysis_report.t
 t/pacbio_sequel_api_client.t
 t/pacbio_sequel_image_archive.t
+t/pacbio_sequel_job.t
 t/pacbio_sequel_run_auditor.t
 t/pacbio_sequel_run_delete_monitor.t
 t/pacbio_sequel_run_delete.t
 t/pacbio_sequel_run_monitor.t
 t/pacbio_sequel_run_publisher.t
+t/pacbio_sequel_seqchk_calculator.t
 t/params.t
 t/perlcriticrc
 t/README
