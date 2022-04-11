@@ -16,14 +16,43 @@ use WTSI::NPG::iRODS;
 
 use JSON;
 use Readonly;
+use IPC::System::Simple qw(system);
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
 my $pid          = $PID;
 my $test_counter = 0;
 my $data_path    = 't/data';
+my $bin_path     = 'bin';
 
 my $irods_tmp_coll;
+
+sub write_json {
+  my ($json_filename, $irods_collection) = @_;
+  if (defined $json_filename && (not $json_filename =~ qr/^\s*$/sxm)
+      && defined $irods_collection && (not $irods_collection =~ qr/^\s*$/sxm)) {
+    Readonly::Scalar my $JSON_FILE_VERSION => '1.0';
+
+    my ($json_fh, $json_hash);
+    open $json_fh, '>:encoding(UTF-8)', $json_filename or
+      self->logcroak(q[could not open ml warehouse json file] .
+      qq[$json_filename]);
+    $json_hash = {
+      version  => $JSON_FILE_VERSION,
+      irods_collection => $irods_collection
+    };
+    print $json_fh encode_json($json_hash) or
+      self->logcroak(q[could not write to ml warehouse json file ] .
+      qq[$json_filename]);
+
+    close $json_fh or
+      self->logcroak(q[could not close ml warehouse json file] .
+      qq[$json_filename]);
+  } else {
+    self->logcroak(q[Wrong parameters in write_json]);
+  }
+  return 1;
+}
 
 sub setup_test : Test(setup) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -65,54 +94,14 @@ sub publish_tree : Test(59) {
     return ({attribute => 'extra', value => 'evalue'})
   };
 
-  my $mlwh_json_filename = qq[metadata.json];
-  my $mlwh_json_cb = sub {
-    # DataObject, path to file folder, collection file
-    my ($obj, $collection, $file) = @_;
-      if (defined $mlwh_json_filename) { 
-        Readonly::Scalar my $JSON_FILE_VERSION => '1.0';
-        my $mlwh_hash = {
-          irods_root_collection    => $collection,
-          irods_data_relative_path => $file
-        };
-        my ($json_fh, $json_hash);
-        if (-e $mlwh_json_filename) {
-          open $json_fh, '+<:encoding(UTF-8)', $mlwh_json_filename or
-            self->logcroak(q[could not open ml warehouse json file] .
-            qq[$mlwh_json_filename]);
-          $json_hash = decode_json <$json_fh>;
-        }
-        else {
-          open $json_fh, '>:encoding(UTF-8)', $mlwh_json_filename or
-            self->logcroak(q[could not open ml warehouse json file] .
-            qq[$mlwh_json_filename]);
-          $json_hash = {
-            version  => $JSON_FILE_VERSION,
-            irods_top_collection_folder => $irods_tmp_coll,
-            products => [],
-          };
-        }
-        push @{$json_hash->{products}}, $mlwh_hash;
-
-        seek $json_fh, 0, 0;
-
-        print $json_fh encode_json($json_hash) or
-          self->logcroak(q[could not write to ml warehouse json file ] .
-          qq[$mlwh_json_filename]);
-
-        close $json_fh or
-          self->logcroak(q[could not close ml warehouse json file] .
-          qq[$mlwh_json_filename]);
-      }
-      return 1;
-    };
-
   my ($num_files, $num_processed, $num_errors) =
       $pub->publish_tree(\@files,
                          primary_cb   => $primary_avus,
                          secondary_cb => $secondary_avus,
-                         extra_cb     => $extra_avus,
-                         mlwh_json_cb => $mlwh_json_cb);
+                         extra_cb     => $extra_avus);
+
+  my $mlwh_json_filename = qq[metadata.json];
+  write_json($mlwh_json_filename, $pub->dest_collection);
 
   my $num_expected = scalar @files;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
@@ -149,6 +138,25 @@ sub publish_tree : Test(59) {
   check_metadata($irods, map { catfile($irods_tmp_coll, $_) } @observed_paths);
 
   ok(-e $mlwh_json_filename, "File json in public_tree correctly created");
+  unlink $mlwh_json_filename;
+}
+
+sub npg_publish_tree_script : Test(3) {
+  my $source_path = "${data_path}/treepublisher";
+  my $mlwh_json_filename = "metadata.json";
+
+  my @script_args = (qq[--mlwh_json], ${mlwh_json_filename}, qq[--collection], ${irods_tmp_coll}, qq[--source_directory], ${source_path});
+  my $result = system($^X, "${bin_path}/npg_publish_tree.pl", @script_args);
+  ok($result == 0, 'Script npg_publish_tree.pl correctly exited');
+
+  ok(-e $mlwh_json_filename, "File json in npg_publish_tree_script correctly created");
+  my ($json_fh, $json_hash);
+  open $json_fh, '<:encoding(UTF-8)', $mlwh_json_filename or
+    self->logcroak(q[could not open ml warehouse json file] .
+    qq[$mlwh_json_filename]);
+  $json_hash = decode_json <$json_fh>;
+  ok($json_hash->{irods_collection} eq ${irods_tmp_coll}, 'Irods collection folder correct');
+  unlink $mlwh_json_filename;
 }
 
 sub publish_tree_filter : Test(4) {

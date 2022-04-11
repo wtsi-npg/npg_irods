@@ -188,46 +188,32 @@ sub handler {
 my @files = grep { -f } $publisher->list_directory($source_directory,
                                                    recurse => 1);
 
-my $mlwh_json_cb = sub {
-  # DataObject, path to file folder, collection file
-  my ($obj, $collection, $file) = @_;
-  if (defined $mlwh_json_filename) {
+sub write_json {
+  my ($json_filename, $irods_collection) = @_;
+  if (defined $json_filename && (not $json_filename =~ qr/^\s*$/sxm)
+      && defined $irods_collection && (not $irods_collection =~ qr/^\s*$/sxm)) {
     Readonly::Scalar my $JSON_FILE_VERSION => '1.0';
-    my $mlwh_hash = {
-      irods_root_collection    => $collection,
-      irods_data_relative_path => $file
-    };
+
     my ($json_fh, $json_hash);
-    if (-e $mlwh_json_filename) {
-      open $json_fh, '+<:encoding(UTF-8)', $mlwh_json_filename or
-        self->logcroak(q[could not open ml warehouse json file] .
-        qq[$mlwh_json_filename]);
-      $json_hash = decode_json <$json_fh>;
-    }
-    else {
-      open $json_fh, '>:encoding(UTF-8)', $mlwh_json_filename or
-        self->logcroak(q[could not open ml warehouse json file] .
-        qq[$mlwh_json_filename]);
-      $json_hash = {
-        version  => $JSON_FILE_VERSION,
-        top_collection_folder => $dest_collection,
-        products => [],
-      };
-    }
-    push @{$json_hash->{products}}, $mlwh_hash;
-
-    seek $json_fh, 0, 0;
-
+    open $json_fh, '>:encoding(UTF-8)', $json_filename or
+      self->logcroak(q[could not open ml warehouse json file] .
+      qq[$json_filename]);
+    $json_hash = {
+      version  => $JSON_FILE_VERSION,
+      irods_collection => $irods_collection
+    };
     print $json_fh encode_json($json_hash) or
       self->logcroak(q[could not write to ml warehouse json file ] .
-      qq[$mlwh_json_filename]);
+      qq[$json_filename]);
 
     close $json_fh or
       self->logcroak(q[could not close ml warehouse json file] .
-      qq[$mlwh_json_filename]);
+      qq[$json_filename]);
+  } else {
+    self->logcroak(q[Wrong parameters in write_json]);
   }
   return 1;
-};
+}
 
 my @publish_args = (\@files,
                     secondary_cb => sub {
@@ -238,8 +224,7 @@ my @publish_args = (\@files,
                       $obj->is_restricted_access(1);
 
                       return ();
-                    },
-                    mlwh_json_cb => $mlwh_json_cb);
+                    });
 
 # Define any file filters required
 if (@include or @exclude) {
@@ -249,6 +234,9 @@ if (@include or @exclude) {
 my ($num_files, $num_published, $num_errors) =
     $publisher->publish_tree(@publish_args);
 
+if (defined $mlwh_json_filename) {
+  write_json($mlwh_json_filename, $publisher->dest_collection);
+}
 
 # Set any permissions requested
 if (@groups) {
