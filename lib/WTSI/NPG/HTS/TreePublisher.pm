@@ -80,6 +80,10 @@ has 'require_checksum_cache' =>
                Function returning true for each file path to be published.
                CodeRef. Optional.
 
+               mlwh_json_cb
+               Callback writing metadata of all objects to a JSON file.
+               CodeRef. Optional.
+
   Example    : my ($num_files, $num_processed, $num_errors) =
                  $pub->publish_tree($files,
                                     primary_cb   => sub { ... },

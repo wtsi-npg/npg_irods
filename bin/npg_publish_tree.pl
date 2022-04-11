@@ -18,6 +18,9 @@ use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::HTS::TreePublisher;
 
+use Readonly;
+use JSON;
+
 our $VERSION = '';
 
 my $log_config = << 'LOGCONF'
@@ -45,6 +48,7 @@ my $metadata_file;
 my $restart_file;
 my $source_directory;
 my $verbose;
+my $mlwh_json_filename;
 
 my @include;
 my @exclude;
@@ -63,7 +67,8 @@ GetOptions('collection=s'                        => \$dest_collection,
            'metadata=s'                          => \$metadata_file,
            'restart-file|restart_file=s'         => \$restart_file,
            'source-directory|source_directory=s' => \$source_directory,
-           'verbose'                             => \$verbose);
+           'verbose'                             => \$verbose,
+           'mlwh_json=s'                         => \$mlwh_json_filename);
 
 if ($verbose and not $debug) {
   Log::Log4perl::init(\$log_config);
@@ -182,6 +187,48 @@ sub handler {
 
 my @files = grep { -f } $publisher->list_directory($source_directory,
                                                    recurse => 1);
+
+my $mlwh_json_cb = sub {
+  # DataObject, path to file folder, collection file
+  my ($obj, $collection, $file) = @_;
+  if (defined $mlwh_json_filename) { 
+    Readonly::Scalar my $JSON_FILE_VERSION => '1.0';
+    my $mlwh_hash = {
+      irods_root_collection    => $collection,
+      irods_data_relative_path => $file
+    };
+    my ($json_fh, $json_hash);
+    if (-e $mlwh_json_filename) {
+      open $json_fh, '+<:encoding(UTF-8)', $mlwh_json_filename or
+        self->logcroak(q[could not open ml warehouse json file] .
+        qq[$mlwh_json_filename]);
+      $json_hash = decode_json <$json_fh>;
+    }
+    else {
+      open $json_fh, '>:encoding(UTF-8)', $mlwh_json_filename or
+        self->logcroak(q[could not open ml warehouse json file] .
+        qq[$mlwh_json_filename]);
+      $json_hash = {
+        version  => $JSON_FILE_VERSION,
+        irods_top_collection_folder => $irods_tmp_coll,
+        products => [],
+      };
+    }
+    push @{$json_hash->{products}}, $mlwh_hash;
+
+    seek $json_fh, 0, 0;
+
+    print $json_fh encode_json($json_hash) or
+      self->logcroak(q[could not write to ml warehouse json file ] .
+      qq[$mlwh_json_filename]);
+
+    close $json_fh or
+      self->logcroak(q[could not close ml warehouse json file] .
+      qq[$mlwh_json_filename]);
+  }
+  return 1;
+};
+
 my @publish_args = (\@files,
                     secondary_cb => sub {
                       my ($obj) = @_;
@@ -191,7 +238,8 @@ my @publish_args = (\@files,
                       $obj->is_restricted_access(1);
 
                       return ();
-                    });
+                    },
+                    mlwh_json_cb => $mlwh_json_cb);
 
 # Define any file filters required
 if (@include or @exclude) {
@@ -283,7 +331,7 @@ npg_publish_tree --source-directory <path> --collection <path>
    --source-directory
    --source_directory The local path to load.
    --verbose          Print messages while processing. Optional.
-
+   --mlwh_json        Write information about the collection to json file. Optional.
 =head1 DESCRIPTION
 
 Publish an arbitrary directory hierarchy to iRODS, set permissions and

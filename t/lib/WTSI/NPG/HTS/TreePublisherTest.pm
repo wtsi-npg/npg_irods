@@ -14,6 +14,9 @@ use base qw[WTSI::NPG::HTS::Test];
 use WTSI::NPG::HTS::TreePublisher;
 use WTSI::NPG::iRODS;
 
+use JSON;
+use Readonly;
+
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
 my $pid          = $PID;
@@ -37,7 +40,7 @@ sub teardown_test : Test(teardown) {
   $irods->remove_collection($irods_tmp_coll);
 }
 
-sub publish_tree : Test(58) {
+sub publish_tree : Test(59) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $source_path = "$data_path/treepublisher";
@@ -62,11 +65,54 @@ sub publish_tree : Test(58) {
     return ({attribute => 'extra', value => 'evalue'})
   };
 
+  my $mlwh_json_filename = qq[metadata.json];
+  my $mlwh_json_cb = sub {
+    # DataObject, path to file folder, collection file
+    my ($obj, $collection, $file) = @_;
+      if (defined $mlwh_json_filename) { 
+        Readonly::Scalar my $JSON_FILE_VERSION => '1.0';
+        my $mlwh_hash = {
+          irods_root_collection    => $collection,
+          irods_data_relative_path => $file
+        };
+        my ($json_fh, $json_hash);
+        if (-e $mlwh_json_filename) {
+          open $json_fh, '+<:encoding(UTF-8)', $mlwh_json_filename or
+            self->logcroak(q[could not open ml warehouse json file] .
+            qq[$mlwh_json_filename]);
+          $json_hash = decode_json <$json_fh>;
+        }
+        else {
+          open $json_fh, '>:encoding(UTF-8)', $mlwh_json_filename or
+            self->logcroak(q[could not open ml warehouse json file] .
+            qq[$mlwh_json_filename]);
+          $json_hash = {
+            version  => $JSON_FILE_VERSION,
+            irods_top_collection_folder => $irods_tmp_coll,
+            products => [],
+          };
+        }
+        push @{$json_hash->{products}}, $mlwh_hash;
+
+        seek $json_fh, 0, 0;
+
+        print $json_fh encode_json($json_hash) or
+          self->logcroak(q[could not write to ml warehouse json file ] .
+          qq[$mlwh_json_filename]);
+
+        close $json_fh or
+          self->logcroak(q[could not close ml warehouse json file] .
+          qq[$mlwh_json_filename]);
+      }
+      return 1;
+    };
+
   my ($num_files, $num_processed, $num_errors) =
       $pub->publish_tree(\@files,
                          primary_cb   => $primary_avus,
                          secondary_cb => $secondary_avus,
-                         extra_cb     => $extra_avus);
+                         extra_cb     => $extra_avus,
+                         mlwh_json_cb => $mlwh_json_cb);
 
   my $num_expected = scalar @files;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
@@ -101,6 +147,8 @@ sub publish_tree : Test(58) {
               diag explain \@observed_paths;
 
   check_metadata($irods, map { catfile($irods_tmp_coll, $_) } @observed_paths);
+
+  ok(-e $mlwh_json_filename, "File json in public_tree correctly created");
 }
 
 sub publish_tree_filter : Test(4) {
