@@ -191,7 +191,7 @@ my @files = grep { -f } $publisher->list_directory($source_directory,
 my $mlwh_json_cb = sub {
   # DataObject, path to file folder, collection file
   my ($obj, $collection, $file) = @_;
-  if (defined $mlwh_json_filename) { 
+  if (defined $mlwh_json_filename) {
     Readonly::Scalar my $JSON_FILE_VERSION => '1.0';
     my $mlwh_hash = {
       irods_root_collection    => $collection,
@@ -210,7 +210,7 @@ my $mlwh_json_cb = sub {
         qq[$mlwh_json_filename]);
       $json_hash = {
         version  => $JSON_FILE_VERSION,
-        irods_top_collection_folder => $irods_tmp_coll,
+        top_collection_folder => $dest_collection,
         products => [],
       };
     }
