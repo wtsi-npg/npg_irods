@@ -103,7 +103,6 @@ sub calculate_seqchksum {
       unlink $self->output_file;
     }
   }
-
   return ($num_errors < 1 || -z $self->input_file) ? 0 : 1;
 }
 

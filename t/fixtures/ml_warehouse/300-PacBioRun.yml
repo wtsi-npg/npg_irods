@@ -2170,3 +2170,31 @@
   pac_bio_library_tube_legacy_id: '43509080'
   library_created_at: ~
   pac_bio_run_name: '83472'
+- id_pac_bio_tmp: '92902'
+  last_updated: '2022-04-01 10:32:12'
+  recorded_at: '2022-04-01 10:32:12'
+  id_sample_tmp: '7910248'
+  id_study_tmp: '5735'
+  id_pac_bio_run_lims: 'TRACTION-RUN-85'
+  pac_bio_run_uuid: f056f6a1-c102-4403-8134-327b8a30543e
+  cost_code: S4773
+  id_lims: Traction
+  tag_identifier: 'bc1002_BAK8A_OA'
+  tag_sequence: ACACACAGACTGTGAGT
+  tag_set_id_lims: '1'
+  tag_set_name: Sequel_16_barcodes_v3
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag2_identifier: ~
+  plate_barcode: 'plate_barcode placeholder'
+  plate_uuid_lims: 97f08169-44c3-4fcb-be39-ad48d30d3c7e
+  well_label: D1
+  well_uuid_lims: 626fe-7a51-4ce8-8273-4cb9b69b3969
+  pac_bio_library_tube_id_lims: 275
+  pac_bio_library_tube_uuid: 55c626fe-7a51-4ce8-8273-4cb9b69b3969
+  pac_bio_library_tube_name: DTOL12483224
+  pac_bio_library_tube_legacy_id: ~
+  library_created_at: ~
+  pac_bio_run_name: 'TRACTION-RUN-85'
+  pipeline_id_lims: 'Pacbio_HiFi_mplx'

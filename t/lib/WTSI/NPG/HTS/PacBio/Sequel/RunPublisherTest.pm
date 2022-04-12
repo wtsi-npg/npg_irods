@@ -42,6 +42,9 @@ my $data_path    = 't/data/pacbio/sequel';
 my $fixture_path = "t/fixtures";
 my $db_dir       = File::Temp->newdir;
 
+my $bamseqchksum_available = `which bamseqchksum`;
+my $samtools_available     = `which samtools`;
+
 my $SEQUENCE_PRODUCT      = $WTSI::NPG::HTS::PacBio::Sequel::RunPublisher::SEQUENCE_PRODUCT;
 my $SEQUENCE_AUXILIARY    = $WTSI::NPG::HTS::PacBio::Sequel::RunPublisher::SEQUENCE_AUXILIARY;
 my $FILE_PREFIX_PATTERN   = $WTSI::NPG::HTS::PacBio::Sequel::RunPublisher::FILE_PREFIX_PATTERN;
@@ -241,6 +244,58 @@ sub publish_files_on_instrument : Test(3) {
 
   unlink $pub->restart_file;
 }
+
+sub publish_files_on_instrument_with_split : Test(3) {
+  SKIP: {
+    if ((not $bamseqchksum_available) || (not $samtools_available)) {
+      skip 'bamseqchksum or samtools executable not on the PATH', 3;
+    }
+
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+    my $runfolder_path = "$data_path/r64094e_20220401_114325";
+    my $dest_coll = "$irods_tmp_coll/publish_files";
+
+    my $client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new();
+
+    my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+    my $tmprf_path = catdir($tmpdir->dirname, 'r64094e_20220401_114325');
+    dircopy($runfolder_path,$tmprf_path) or die $!;
+    chmod (0770, "$tmprf_path/4_D01") or die "Chmod 0770 directory failed : $!";
+
+    my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
+      (api_client      => $client,
+       dest_collection => $dest_coll,
+       irods           => $irods,
+       mlwh_schema     => $wh_schema,
+       restart_file    => catfile($tmpdir->dirname, 'published.json'),
+       runfolder_path  => $tmprf_path);
+
+    my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+
+    my @expected_paths =
+      map { catfile("$dest_coll/4_D01", $_) }
+      ('m64094e_220405_144215.consensusreadset.xml',
+       'm64094e_220405_144215.other.bam',
+       'm64094e_220405_144215.other.bam.pbi',
+       'm64094e_220405_144215.other.seqchksum',
+       'm64094e_220405_144215.primary_qc.tar.xz',
+       'm64094e_220405_144215.reads.seqchksum',
+       'm64094e_220405_144215.sts.xml',
+       'm64094e_220405_144215.zmw_metrics.json.gz');
+
+    cmp_ok($num_processed, '==', scalar @expected_paths,
+      "Published on instrument files correctly");
+    cmp_ok($num_errors,    '==', 0);
+
+    my @observed_paths = observed_data_objects($irods, $dest_coll);
+    is_deeply(\@observed_paths, \@expected_paths,
+              'Published correctly named on instrument files') or
+                diag explain \@observed_paths;
+
+    unlink $pub->restart_file;
+  };
+};
 
 sub publish_files_off_instrument : Test(3) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,

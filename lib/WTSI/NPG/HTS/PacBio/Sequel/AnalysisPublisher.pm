@@ -99,7 +99,6 @@ sub publish_files {
         $METADATA_SET . q[.] . $METADATA_FORMAT;
     my ($nfr, $npr, $ner) = $self->publish_non_sequence_files($aux);
 
-
     $num_files     += ($nfb + $nff + $nfp + $nfr);
     $num_processed += ($npb + $npf + $npp + $npr);
     $num_errors    += ($neb + $nef + $nep + $ner + $se);

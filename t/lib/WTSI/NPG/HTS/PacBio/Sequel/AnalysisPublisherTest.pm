@@ -34,6 +34,8 @@ my $data_path    = 't/data/pacbio/sequel_analysis';
 my $fixture_path = "t/fixtures";
 my $db_dir       = File::Temp->newdir;
 
+my $bamseqchksum_available = `which bamseqchksum`;
+
 my $wh_schema;
 
 my $irods_tmp_coll;
@@ -628,5 +630,40 @@ sub publish_files_4 : Test(291) {
   
   unlink $pub->restart_file;
 }
+
+sub publish_files_5 : Test(2) {
+# test creating seqchksum files and publishing them
+# where bamseqchksum is available on the PATH    
+
+  SKIP: {
+    if (not $bamseqchksum_available) {
+      skip 'bamseqchksum executable not on the PATH', 2;
+    }
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                      strict_baton_version => 0);
+
+    my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+    my $analysis_path = catdir($tmpdir->dirname, '001612v2');
+    dircopy("$data_path/001612v2",$analysis_path) or die $!;
+    chmod (0770, "$analysis_path") or die "Chmod 0770 directory failed : $!";
+
+    my $runfolder_path = "$analysis_path/tasks/barcoding.tasks.lima-0",
+    my $dest_coll      = "$irods_tmp_coll/publish_sequence_files";
+
+    my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
+      (restart_file    => catfile($tmpdir->dirname, 'published.json'),
+       dest_collection => $dest_coll,
+       irods           => $irods,
+       mlwh_schema     => $wh_schema,
+       analysis_path   => $analysis_path,
+       runfolder_path  => $runfolder_path);
+
+    my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+    my $num_expected = 13;
+
+    cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
+    cmp_ok($num_errors,    '==', 0);
+  };
+};
 
 1;

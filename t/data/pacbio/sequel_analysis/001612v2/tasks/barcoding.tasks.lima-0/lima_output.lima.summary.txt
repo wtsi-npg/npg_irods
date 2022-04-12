@@ -1,0 +1,23 @@
+ZMWs input                (A) : 36601
+ZMWs above all thresholds (B) : 26366 (72%)
+ZMWs below any threshold  (C) : 10235 (28%)
+
+ZMW marginals for (C):
+Below min length              : 405 (4%)
+Below min score               : 0 (0%)
+Below min passes              : 0 (0%)
+Below min score lead          : 1241 (12%)
+Without adapter               : 8379 (82%)
+Undesired diff barcode pairs  : 282 (3%)
+
+ZMWs for (B):
+With same barcode             : 26366 (100%)
+Coefficient of correlation    : 52.22%
+
+ZMWs for (A):
+Allow diff barcode pair       : 24902 (68%)
+Allow same barcode pair       : 28222 (77%)
+
+Reads for (B):
+Above length                  : 1436782 (71%)
+Below length                  : 575385 (29%)

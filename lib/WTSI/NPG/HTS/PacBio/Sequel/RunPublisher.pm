@@ -179,11 +179,13 @@ sub _publish_on_instrument_cell {
   ## if multiplexed and CCS on instrument and not IsoSeq split the reads.bam 
   ## file so as to avoid duplicate storage of reads in bam format. 
   if (@run_records && (@run_records > 1 || $run_records[0]->tag_sequence) &&
-      $run_records[0]->pipeline_id_lims !~ /^Pacbio_IsoSeq/msx ) {
+      (!$run_records[0]->pipeline_id_lims ||
+       $run_records[0]->pipeline_id_lims !~ /^Pacbio_IsoSeq/msx )) {
     $self->_make_other_files
       ($smrt_name, $CCS_SEQUENCE_PRODUCT, $meta_data->movie_name);
     $product = $NONHIFI_SEQUENCE_PRODUCT;
-    $aux = q[zmw_metrics[.]json[.]gz|]. $product .q[[.]]. $SEQUENCE_SEQCHKSUM;
+    $aux = q[zmw_metrics[.]json[.]gz|]. $product .q[[.]]. $SEQUENCE_SEQCHKSUM
+      .q[|]. $CCS_SEQUENCE_PRODUCT .q[[.]]. $SEQUENCE_SEQCHKSUM;
   } else {
     $product = $CCS_SEQUENCE_PRODUCT;
     $aux = q[zmw_metrics[.]json[.]gz];
@@ -579,22 +581,19 @@ sub _make_other_files {
       WTSI::DNAP::Utilities::Runnable->new(executable => '/bin/bash',
         arguments  => ['-c', $cmd])->run;
     }
-
-    WTSI::NPG::HTS::PacBio::Sequel::SeqchkCalculator->new
-      (input_file  => $readss)->calculate_seqchksum;
-    WTSI::NPG::HTS::PacBio::Sequel::SeqchkCalculator->new
+    $num_errors += WTSI::NPG::HTS::PacBio::Sequel::SeqchkCalculator->new
+        (input_file  => $readss)->calculate_seqchksum;
+    $num_errors += WTSI::NPG::HTS::PacBio::Sequel::SeqchkCalculator->new
       (input_file  => $otherb)->calculate_seqchksum;
-
   } catch {
     $num_errors++;
-    my @stack = split /\n/msx;
-    $self->logcroak(pop @stack);
   };
 
   if ($num_errors > 0 ) {
     foreach my $file ($otherb, $otheri) {
        if($file && -e $file) { unlink $file };
-     }
+    }
+    $self->logcroak("$num_errors - error generating other files for $readss");
   }
 
   return;
