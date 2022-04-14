@@ -8,6 +8,7 @@ use File::Basename;
 use File::Spec::Functions qw[abs2rel catfile];
 use Log::Log4perl;
 use Test::More;
+use Test::Exception;
 
 use base qw[WTSI::NPG::HTS::Test];
 
@@ -15,8 +16,6 @@ use WTSI::NPG::HTS::TreePublisher;
 use WTSI::NPG::iRODS;
 
 use JSON;
-use Readonly;
-use IPC::System::Simple qw(system);
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
@@ -26,33 +25,6 @@ my $data_path    = 't/data';
 my $bin_path     = 'bin';
 
 my $irods_tmp_coll;
-
-sub write_json {
-  my ($json_filename, $irods_collection) = @_;
-  if (defined $json_filename && (not $json_filename =~ qr/^\s*$/sxm)
-      && defined $irods_collection && (not $irods_collection =~ qr/^\s*$/sxm)) {
-    Readonly::Scalar my $JSON_FILE_VERSION => '1.0';
-
-    my ($json_fh, $json_hash);
-    open $json_fh, '>:encoding(UTF-8)', $json_filename or
-      self->logcroak(q[could not open ml warehouse json file] .
-      qq[$json_filename]);
-    $json_hash = {
-      version  => $JSON_FILE_VERSION,
-      irods_collection => $irods_collection
-    };
-    print $json_fh encode_json($json_hash) or
-      self->logcroak(q[could not write to ml warehouse json file ] .
-      qq[$json_filename]);
-
-    close $json_fh or
-      self->logcroak(q[could not close ml warehouse json file] .
-      qq[$json_filename]);
-  } else {
-    self->logcroak(q[Wrong parameters in write_json]);
-  }
-  return 1;
-}
 
 sub setup_test : Test(setup) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -69,7 +41,7 @@ sub teardown_test : Test(teardown) {
   $irods->remove_collection($irods_tmp_coll);
 }
 
-sub publish_tree : Test(59) {
+sub publish_tree : Test(58) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $source_path = "$data_path/treepublisher";
@@ -99,9 +71,6 @@ sub publish_tree : Test(59) {
                          primary_cb   => $primary_avus,
                          secondary_cb => $secondary_avus,
                          extra_cb     => $extra_avus);
-
-  my $mlwh_json_filename = qq[metadata.json];
-  write_json($mlwh_json_filename, $pub->dest_collection);
 
   my $num_expected = scalar @files;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
@@ -136,27 +105,81 @@ sub publish_tree : Test(59) {
               diag explain \@observed_paths;
 
   check_metadata($irods, map { catfile($irods_tmp_coll, $_) } @observed_paths);
-
-  ok(-e $mlwh_json_filename, "File json in public_tree correctly created");
-  unlink $mlwh_json_filename;
 }
 
-sub npg_publish_tree_script : Test(3) {
+sub npg_publish_tree_pl_writes_json : Test(2) {
   my $source_path = "${data_path}/treepublisher";
   my $mlwh_json_filename = "metadata.json";
 
-  my @script_args = (qq[--mlwh_json], ${mlwh_json_filename}, qq[--collection], ${irods_tmp_coll}, qq[--source_directory], ${source_path});
-  my $result = system($^X, "${bin_path}/npg_publish_tree.pl", @script_args);
-  ok($result == 0, 'Script npg_publish_tree.pl correctly exited');
+  my @script_args = (q[--mlwh_json], ${mlwh_json_filename}, q[--collection], ${irods_tmp_coll}, q[--source_directory], ${source_path});
+  ok(system($^X, "${bin_path}/npg_publish_tree.pl", @script_args) == 0, 'Script npg_publish_tree.pl correctly exited');
 
-  ok(-e $mlwh_json_filename, "File json in npg_publish_tree_script correctly created");
+  ok(-e $mlwh_json_filename, 'File json in npg_publish_tree_script correctly created');
+  unlink $mlwh_json_filename;
+}
+
+sub write_json_correct_keyvalue : Test(2) {
+  my $source_path = "${data_path}/treepublisher";
+  my $mlwh_json_filename = "metadata.json";
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $pub = WTSI::NPG::HTS::TreePublisher->new
+    (irods            => $irods,
+     source_directory => $source_path,
+     dest_collection  => $irods_tmp_coll,
+     mlwh_json        => $mlwh_json_filename);
+  my @files = grep { -f } $pub->list_directory($source_path, recurse => 1);
+  
+  $pub->publish_tree(\@files);
+  ok(-e $mlwh_json_filename, 'File json in write_json correctly created');
   my ($json_fh, $json_hash);
   open $json_fh, '<:encoding(UTF-8)', $mlwh_json_filename or
     self->logcroak(q[could not open ml warehouse json file] .
     qq[$mlwh_json_filename]);
   $json_hash = decode_json <$json_fh>;
-  ok($json_hash->{irods_collection} eq ${irods_tmp_coll}, 'Irods collection folder correct');
+  ok($json_hash->{irods_collection} eq ${irods_tmp_coll}, 'Correct irods collection folder in json file');
   unlink $mlwh_json_filename;
+}
+
+sub publish_tree_mlwh_json : Test(1) {
+  my $source_path = "${data_path}/treepublisher";
+  my $mlwh_json_filename = "metadata.json";
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $pub = WTSI::NPG::HTS::TreePublisher->new
+    (irods            => $irods,
+     source_directory => $source_path,
+     dest_collection  => $irods_tmp_coll,
+     mlwh_json        => $mlwh_json_filename);
+  my @files = grep { -f } $pub->list_directory($source_path, recurse => 1);
+  
+  $pub->publish_tree(\@files);
+  ok(-e $mlwh_json_filename, 'File json correctly created with no callback');
+  unlink $mlwh_json_filename;
+}
+
+sub publish_tree_mlwh_json_plus_cb : Test(2) {
+  my $source_path = "${data_path}/treepublisher";
+  my $mlwh_json_filename = "metadata.json";
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $pub = WTSI::NPG::HTS::TreePublisher->new
+    (irods            => $irods,
+     source_directory => $source_path,
+     dest_collection  => $irods_tmp_coll,
+     mlwh_json        => $mlwh_json_filename);
+  my @files = grep { -f } $pub->list_directory($source_path, recurse => 1);
+  
+  dies_ok{
+    $pub->publish_tree(\@files,
+                        mlwh_json_cb => sub {
+                          return 1;
+                        });
+  }, 'publish_tree correctly exited with error (json callback clash)'; 
+  ok(! -e $mlwh_json_filename, 'No json file as expected (json callback clash)');
 }
 
 sub publish_tree_filter : Test(4) {

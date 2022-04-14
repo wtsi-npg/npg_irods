@@ -18,9 +18,6 @@ use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::Collection;
 use WTSI::NPG::HTS::TreePublisher;
 
-use Readonly;
-use JSON;
-
 our $VERSION = '';
 
 my $log_config = << 'LOGCONF'
@@ -65,10 +62,10 @@ GetOptions('collection=s'                        => \$dest_collection,
            'include=s'                           => \@include,
            'max-errors|max_errors=i'             => \$max_errors,
            'metadata=s'                          => \$metadata_file,
+           'mlwh-json|mlwh_json=s'               => \$mlwh_json_filename,
            'restart-file|restart_file=s'         => \$restart_file,
            'source-directory|source_directory=s' => \$source_directory,
-           'verbose'                             => \$verbose,
-           'mlwh_json=s'                         => \$mlwh_json_filename);
+           'verbose'                             => \$verbose);
 
 if ($verbose and not $debug) {
   Log::Log4perl::init(\$log_config);
@@ -162,7 +159,9 @@ my @init_args = (dest_collection        => $dest_collection,
 if ($max_errors) {
   push @init_args, max_errors => $max_errors;
 }
-
+if (defined $mlwh_json_filename) {
+  push @init_args, mlwh_json => $mlwh_json_filename;
+}
 my $coll = WTSI::NPG::iRODS::Collection->new($irods, $dest_collection);
 my $publisher = WTSI::NPG::HTS::TreePublisher->new(@init_args);
 
@@ -187,34 +186,6 @@ sub handler {
 
 my @files = grep { -f } $publisher->list_directory($source_directory,
                                                    recurse => 1);
-
-sub write_json {
-  my ($json_filename, $irods_collection) = @_;
-  if (defined $json_filename && (not $json_filename =~ qr/^\s*$/sxm)
-      && defined $irods_collection && (not $irods_collection =~ qr/^\s*$/sxm)) {
-    Readonly::Scalar my $JSON_FILE_VERSION => '1.0';
-
-    my ($json_fh, $json_hash);
-    open $json_fh, '>:encoding(UTF-8)', $json_filename or
-      self->logcroak(q[could not open ml warehouse json file] .
-      qq[$json_filename]);
-    $json_hash = {
-      version  => $JSON_FILE_VERSION,
-      irods_collection => $irods_collection
-    };
-    print $json_fh encode_json($json_hash) or
-      self->logcroak(q[could not write to ml warehouse json file ] .
-      qq[$json_filename]);
-
-    close $json_fh or
-      self->logcroak(q[could not close ml warehouse json file] .
-      qq[$json_filename]);
-  } else {
-    self->logcroak(q[Wrong parameters in write_json]);
-  }
-  return 1;
-}
-
 my @publish_args = (\@files,
                     secondary_cb => sub {
                       my ($obj) = @_;
@@ -234,9 +205,6 @@ if (@include or @exclude) {
 my ($num_files, $num_published, $num_errors) =
     $publisher->publish_tree(@publish_args);
 
-if (defined $mlwh_json_filename) {
-  write_json($mlwh_json_filename, $publisher->dest_collection);
-}
 
 # Set any permissions requested
 if (@groups) {
@@ -309,7 +277,9 @@ npg_publish_tree --source-directory <path> --collection <path>
                       E.g. [{"attribute": "attr1", "value": "val1"},
                             {"attribute": "attr2", "value": "val2"}]
 
-
+   --mlwh-json        
+   --mlwh_json        Write information about the root collection to json file. 
+                      Optional.
    --restart-file
    --restart_file     A file path where a record of successfully published
                       files will be recorded in JSON format on exit. If the
@@ -319,7 +289,7 @@ npg_publish_tree --source-directory <path> --collection <path>
    --source-directory
    --source_directory The local path to load.
    --verbose          Print messages while processing. Optional.
-   --mlwh_json        Write information about the collection to json file. Optional.
+
 =head1 DESCRIPTION
 
 Publish an arbitrary directory hierarchy to iRODS, set permissions and
