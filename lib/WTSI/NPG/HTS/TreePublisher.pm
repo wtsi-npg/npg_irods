@@ -68,6 +68,7 @@ has 'mlwh_json' =>
   (isa           => 'Str',
   is             => 'ro',
   required       => 0,
+  predicate     => 'has_mlwh_json',
   documentation  => 'The json file to which information about the irods collection ' .
                     'folder will be added. Cannot be used with mlwh_json_cb defined.');
 
@@ -92,8 +93,8 @@ has 'mlwh_json' =>
                CodeRef. Optional.
 
                mlwh_json_cb
-               Callback writing information of a collection to JSON file.
-               CodeRef. Optional. Cannot be used with mlwh_json attribute set.
+               Callback writing information about data objects to a JSON file.
+               CodeRef. Optional. Cannot be used with the mlwh_json attribute set.
 
   Example    : my ($num_files, $num_processed, $num_errors) =
                  $pub->publish_tree($files,
@@ -141,8 +142,8 @@ has 'mlwh_json' =>
   sub publish_tree {
     my ($self, $files) = $params->parse(@_);
 
-    if (defined $self->mlwh_json && defined $params->mlwh_json_cb) {
-      $self->logconfess('The mlwh_json_cb cannot be defined with mlwh_json variable set');
+    if ($self->has_mlwh_json && defined $params->mlwh_json_cb) {
+      $self->logconfess('The mlwh_json_cb cannot be defined with the mlwh_json attribute set');
     }
     if (defined $params->filter) {
       ref $params->filter eq 'CODE' or
@@ -209,7 +210,7 @@ has 'mlwh_json' =>
       $num_errors    += $ne;
     }
 
-    if (defined $self->mlwh_json) {
+    if ($self->has_mlwh_json) {
       $self->write_json();
     }
 
