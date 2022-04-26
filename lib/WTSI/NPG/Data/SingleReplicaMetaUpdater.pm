@@ -2,10 +2,12 @@ package WTSI::NPG::Data::SingleReplicaMetaUpdater;
 
 use namespace::autoclean;
 use Carp;
-use Data::Dump qw[pp];
+use English qw[-no_match_vars];
+use IPC::Open3;
 use DateTime;
 use DateTime::Duration;
 use Moose;
+use Symbol qw[gensym];
 use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
@@ -176,16 +178,44 @@ sub _find_candidate_objects {
   $self->debug(sprintf q[Running query %s %s %s], $SPECIFIC_QUERY_NAME,
                        $begin_date->iso8601, $end_date->iso8601);
 
-  my @args = ('--no-page');
+  my @iquest_cmd = qw[iquest --no-page];
   if ($zone) {
-    push @args, '-z', $zone;
+    push @iquest_cmd, '-z', $zone;
+  }
+  push @iquest_cmd, '--sql', $SPECIFIC_QUERY_NAME, $begin_date->iso8601, $end_date->iso8601;
+  my $iquest_cmd = join q[ ], @iquest_cmd;
+
+  $self->debug("Executing '$iquest_cmd'");
+  my $pid = open3(undef, my $stdout, my $stderr = gensym, $iquest_cmd);
+
+  my @records;
+  while (my $line = <$stdout>) {
+    chomp $line;
+    next if $line =~ m{^\s*$}msx;
+
+    # Work around the iquest bug/misfeature where it mixes its logging output
+    # with its data output
+    next if $line =~ m{^Zone is}msx;
+    next if $line =~ m{^No rows found}msx;
+
+    $self->debug("iquest: $line");
+    push @records, $line;
   }
 
-  my @records = WTSI::DNAP::Utilities::Runnable->new
-    (executable => 'iquest',
-     arguments  => [@args, '--sql', $SPECIFIC_QUERY_NAME,
-                    $begin_date->iso8601,
-                    $end_date->iso8601])->run->split_stdout;
+  waitpid $pid, 0;
+  if ($CHILD_ERROR >> 8) {
+    my $errmsg = q[];
+    if ($stderr) {
+      while (my $line = <$stderr>) {
+        chomp $line;
+        $errmsg .= " $line";
+      }
+    }
+
+    $self->logcroak("Failed to run iquest: '$iquest_cmd': $errmsg");
+  }
+  close $stdout or
+      $self->logcroak("Failed close STDOUT of iquest '$iquest_cmd': $ERRNO");
 
   my $paths = $self->_parse_iquest_records(@records);
   $self->debug(sprintf q[Found %d paths], scalar @{$paths});
@@ -205,15 +235,6 @@ sub _parse_iquest_records {
   my @paths;
   my @path_elements;
   foreach my $line (@records) {
-    chomp $line;
-    next if $line =~ m{^\s*$}msx;
-
-    # Work around the iquest bug/misfeature where it mixes its logging output
-    # with its data output
-    next if $line =~ m{^Zone is}msx;
-    next if $line =~ m{^No\s+rows\s+found}msx;
-
-    $self->debug("iquest: $line");
     if ($line eq $record_separator and @path_elements) {
       push @paths, join q[/], @path_elements;
       @path_elements = ();

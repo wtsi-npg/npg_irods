@@ -3,6 +3,7 @@ package WTSI::NPG::Data::SingleReplicaMetaUpdaterTest;
 use strict;
 use warnings;
 
+use Cwd qw[cwd];
 use DateTime;
 use English qw[-no_match_vars];
 use File::Basename;
@@ -19,7 +20,7 @@ Log::Log4perl::init('./etc/log4perl_tests.conf');
 
 my $pid          = $PID;
 my $test_counter = 0;
-my $data_path    = 't/data/single_replica';
+my $data_path    = cwd . q[/] . 't/data/single_replica';
 
 my $irods_tmp_coll;
 
