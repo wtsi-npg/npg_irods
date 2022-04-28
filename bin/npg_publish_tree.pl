@@ -46,6 +46,7 @@ my $restart_file;
 my $source_directory;
 my $verbose;
 my $mlwh_json_filename;
+my $stdio;
 
 my @include;
 my @exclude;
@@ -65,7 +66,8 @@ GetOptions('collection=s'                        => \$dest_collection,
            'mlwh-json|mlwh_json=s'               => \$mlwh_json_filename,
            'restart-file|restart_file=s'         => \$restart_file,
            'source-directory|source_directory=s' => \$source_directory,
-           'verbose'                             => \$verbose);
+           'verbose'                             => \$verbose,
+           q[]                                   => \$stdio);
 
 if ($verbose and not $debug) {
   Log::Log4perl::init(\$log_config);
@@ -127,6 +129,21 @@ sub _make_filter_fn {
   };
 }
 
+sub _read_metadata_stdin {
+  my $metadata_text;
+  while (my $line = <>) {
+    chomp $line;
+    $metadata_text .= $line;
+  }
+  my $metadata_json = JSON->new->utf8(1)->decode($metadata_text);
+
+  if (not ref $metadata_json eq 'ARRAY') {
+    $log->logcroak("Malformed metadata JSON in '$metadata_json'; expected ",
+                   'an array');
+  }
+  return $metadata_json;
+}
+
 sub _read_metadata_file {
   my $metadata_json = read_file($metadata_file);
   my $metadata = JSON->new->utf8(1)->decode($metadata_json);
@@ -148,6 +165,10 @@ if (not $dest_collection) {
   my $msg = 'A --collection argument is required';
   pod2usage(-msg     => $msg,
             -exitval => 2);
+}
+
+if (defined $metadata_file and $stdio) {
+  $log->logconfess('Metadata json file and metadata from stdin options cannot be specified together');
 }
 
 my $irods = WTSI::NPG::iRODS->new;
@@ -217,6 +238,13 @@ if ($metadata_file) {
   $log->debug('Adding to ', $coll->str, ' metadata: ', pp($metadata));
   foreach my $avu (@{$metadata}) {
     $coll->add_avu($avu->{attribute}, $avu->{value}, $avu->{units});
+  }
+}
+
+if ($stdio) {
+  my $metadata_in = _read_metadata_stdin();
+  foreach my $avu_hash (@{$metadata_in}) {
+    $coll->add_avu($avu_hash->{attribute}, $avu_hash->{value}, $avu_hash->{units});
   }
 }
 
