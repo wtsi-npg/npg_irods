@@ -128,6 +128,23 @@ sub npg_publish_tree_pl_metadata_from_stdin : Test(3) {
   unlink $metadata_file_in;
 }
 
+sub npg_publish_tree_pl_metadata_from_stdin_plus_cmd : Test(1) {
+  my $source_path = "${data_path}/treepublisher";
+  my @attributes;  
+  push @attributes, {attribute => 'attr1', value => 'val1', units => q[]};
+  push @attributes, {attribute => 'attr2', value => 'val2', units => q[]};
+
+  my $metadata_text = JSON->new->utf8->encode(\@attributes);
+  my $metadata_file_in = "metadata.json.in";
+  open my $md_stdio, '>', $metadata_file_in or die "Cannot open ${metadata_file_in} for test";
+  print $md_stdio "${metadata_text}\n";
+
+  my $script_args = qq[--collection ${irods_tmp_coll} --source_directory ${source_path} --metadata ${metadata_file_in} -];
+  ok(system("cat ${metadata_file_in} | ${bin_path}/npg_publish_tree.pl ${script_args}") != 0, 'npg_publish_tree.pl with metadata in stdin (stdin and cmd clash)');
+
+  unlink $metadata_file_in;
+}
+
 sub npg_publish_tree_pl_writes_json : Test(2) {
   my $source_path = "${data_path}/treepublisher";
   my $mlwh_json_filename = "metadata.json";

@@ -318,6 +318,8 @@ npg_publish_tree --source-directory <path> --collection <path>
    --source_directory The local path to load.
    --verbose          Print messages while processing. Optional.
 
+   -                  Specify a metadata file from standard input.
+
 =head1 DESCRIPTION
 
 Publish an arbitrary directory hierarchy to iRODS, set permissions and
