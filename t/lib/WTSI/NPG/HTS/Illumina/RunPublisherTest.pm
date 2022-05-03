@@ -1030,7 +1030,7 @@ sub publish_archive_path_mlwh : Test(8) {
   cmp_ok($repub_processed, '==', 0, "Re-published no files");
 }
 
-sub publish_archive_path_existing_mlwh_json : Test(3) {
+sub publish_archive_path_existing_mlwh_json : Test(2) {
   note '=== Tests in publish_existing_mlwh_json';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $id_run         = 18448;
@@ -1048,7 +1048,7 @@ sub publish_archive_path_existing_mlwh_json : Test(3) {
         { # unaffected by publish
           "irods_data_relative_path" => "test.cram",
           "id_product"               => "7382ff198a7321eadcea98bb39ade23749b3bace2874bbaced29789dbcd987659",
-          "irods_root_collection"    => "$irods_tmp_coll/publish_entire_mlwh/Data/Intensities/test",
+          "irods_root_collection"    => "$irods_tmp_coll/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/",
           "pipeline_name"            => "npg-prod",
           "seq_platform_name"        => "illumina"
         }]};
@@ -1083,7 +1083,6 @@ sub publish_archive_path_existing_mlwh_json : Test(3) {
 
   $pub->publish_files;
 
-  ok(-e $mlwh_json, "mlwh loader json file $mlwh_json was written by publisher");
   is_deeply(read_json_content($mlwh_json),
     set_destination(read_json_content($expected_json), $irods_tmp_coll),
     "contents of $mlwh_json are correct");
@@ -1425,7 +1424,9 @@ sub read_json_content {
 
   open my $mlwh_json_fh, '<:encoding(UTF-8)', $path or die qq[could not open $path];
 
-  return decode_json <$mlwh_json_fh>;
+  my $json = decode_json <$mlwh_json_fh>;
+  close $mlwh_json_fh;
+  return $json
 }
 
 sub set_destination {
