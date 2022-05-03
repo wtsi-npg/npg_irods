@@ -382,9 +382,10 @@ sub publish_alignment_files {
           self->logcroak(q[could not open ml warehouse json file] .
           qq[$self->mlwh_json]);
         $json_hash = decode_json <$json_fh>;
+        # Remove matching location/id_product entry from product list list
         foreach my $match (grep { $mlwh_hash->{id_product} eq $_->{id_product}} @{$json_hash->{products}}){
           if ($match->{irods_root_collection} eq $mlwh_hash->{irods_root_collection}) {
-            $json_hash = grep {!$match} @{$json_hash->{products}}
+            $json_hash->{products} = grep {%{$match} != %{$_}} @{$json_hash->{products}}
           }
         }
       }
