@@ -9,6 +9,7 @@ use File::Spec::Functions qw[abs2rel catfile];
 use Log::Log4perl;
 use Test::More;
 use Test::Exception;
+use File::Temp;
 
 use base qw[WTSI::NPG::HTS::Test];
 
@@ -109,40 +110,49 @@ sub publish_tree : Test(58) {
 
 sub npg_publish_tree_pl_metadata_from_stdin : Test(3) {
   my $source_path = "${data_path}/treepublisher";
-  my @attributes;  
-  push @attributes, {attribute => 'attr1', value => 'val1', units => q[]};
-  push @attributes, {attribute => 'attr2', value => 'val2', units => q[]};
+  my @attributes = (  
+    {attribute => 'attr1', value => 'val1', units => q[]},
+    {attribute => 'attr2', value => 'val2', units => q[]}
+  );
 
   my $metadata_text = JSON->new->utf8->encode(\@attributes);
-  my $metadata_file_in = "metadata.json.in";
-  open my $md_stdio, '>', $metadata_file_in or die "Cannot open ${metadata_file_in} for test";
-  print $md_stdio "$metadata_text\n";
+  my $md_stdio = File::Temp->new(SUFFIX => ".json");
+  my $metadata_file_in = $md_stdio->filename;
+  print $md_stdio "${metadata_text}\n";
 
-  my $script_args = qq[--collection ${irods_tmp_coll} --source_directory ${source_path} -];
-  ok(system("cat ${metadata_file_in} | ${bin_path}/npg_publish_tree.pl ${script_args}") == 0, 'Script npg_publish_tree.pl with metadata in stdin');
+  my $script_args = "--collection ${irods_tmp_coll} " . 
+                      "--source_directory ${source_path} -";
+  ok(system("cat ${metadata_file_in} | " .
+            "${bin_path}/npg_publish_tree.pl ${script_args}") == 0,
+      'Script npg_publish_tree.pl with metadata in STDIN');
 
   my $imeta_output = `imeta ls -C ${irods_tmp_coll}`;
   foreach my $avu (@attributes) {
-    ok($imeta_output =~ m/attribute: $avu->{attribute}\nvalue: $avu->{value}\nunits: $avu->{units}/, 'Expected attributes from stdin found by imeta');
+    ok($imeta_output =~ m/attribute:\s$avu->{attribute}\n
+                              value:\s$avu->{value}\n
+                              units:\s$avu->{units}/x,
+        'Expected attributes from STDIN found by imeta');
   }
-  unlink $metadata_file_in;
 }
 
 sub npg_publish_tree_pl_metadata_from_stdin_plus_cmd : Test(1) {
   my $source_path = "${data_path}/treepublisher";
-  my @attributes;  
-  push @attributes, {attribute => 'attr1', value => 'val1', units => q[]};
-  push @attributes, {attribute => 'attr2', value => 'val2', units => q[]};
+  my @attributes = (  
+    {attribute => 'attr1', value => 'val1', units => q[]},
+    {attribute => 'attr2', value => 'val2', units => q[]}
+  );
 
   my $metadata_text = JSON->new->utf8->encode(\@attributes);
-  my $metadata_file_in = "metadata.json.in";
-  open my $md_stdio, '>', $metadata_file_in or die "Cannot open ${metadata_file_in} for test";
+  my $md_stdio = File::Temp->new(SUFFIX => ".json");
+  my $metadata_file_in = $md_stdio->filename;
   print $md_stdio "${metadata_text}\n";
 
-  my $script_args = qq[--collection ${irods_tmp_coll} --source_directory ${source_path} --metadata ${metadata_file_in} -];
-  ok(system("cat ${metadata_file_in} | ${bin_path}/npg_publish_tree.pl ${script_args}") != 0, 'npg_publish_tree.pl with metadata in stdin (stdin and cmd clash)');
-
-  unlink $metadata_file_in;
+  my $script_args = "--collection ${irods_tmp_coll} " .
+                      "--source_directory ${source_path} " . 
+                        "--metadata ${metadata_file_in} -";
+  ok(system("cat ${metadata_file_in} | " .
+            "${bin_path}/npg_publish_tree.pl ${script_args}") != 0, 
+      'npg_publish_tree.pl with metadata in STDIN (STDIN and CMD clash)');
 }
 
 sub npg_publish_tree_pl_writes_json : Test(2) {

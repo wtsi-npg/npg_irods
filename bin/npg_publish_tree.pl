@@ -129,30 +129,29 @@ sub _make_filter_fn {
   };
 }
 
+sub _decode_and_check_metadata {
+  my ($metadata_encoded) = @_;
+  my $metadata_decoded = JSON->new->utf8(1)->decode($metadata_encoded);
+
+  if (not ref $metadata_decoded eq 'ARRAY') {
+    $log->logcroak("Malformed metadata JSON in '${metadata_decoded}'; expected",
+                   ' an array');
+  }
+  return $metadata_decoded;
+}
+
 sub _read_metadata_stdin {
-  my $metadata_text;
+  my $metadata_json;
   while (my $line = <>) {
     chomp $line;
-    $metadata_text .= $line;
+    $metadata_json .= $line;
   }
-  my $metadata_json = JSON->new->utf8(1)->decode($metadata_text);
-
-  if (not ref $metadata_json eq 'ARRAY') {
-    $log->logcroak("Malformed metadata JSON in '$metadata_json'; expected ",
-                   'an array');
-  }
-  return $metadata_json;
+  return _decode_and_check_metadata($metadata_json);
 }
 
 sub _read_metadata_file {
   my $metadata_json = read_file($metadata_file);
-  my $metadata = JSON->new->utf8(1)->decode($metadata_json);
-
-  if (not ref $metadata eq 'ARRAY') {
-    $log->logcroak("Malformed metadata JSON in '$metadata_file'; expected",
-                   'an array');
-  }
-  return $metadata;
+  return _decode_and_check_metadata($metadata_json);
 }
 
 if (not $source_directory) {
@@ -168,7 +167,8 @@ if (not $dest_collection) {
 }
 
 if (defined $metadata_file and $stdio) {
-  $log->logconfess('Metadata json file and metadata from stdin options cannot be specified together');
+  $log->logconfess('Metadata JSON file and metadata from STDIN options' .
+                    'cannot be specified together');
 }
 
 my $irods = WTSI::NPG::iRODS->new;
@@ -243,8 +243,8 @@ if ($metadata_file) {
 
 if ($stdio) {
   my $metadata_in = _read_metadata_stdin();
-  foreach my $avu_hash (@{$metadata_in}) {
-    $coll->add_avu($avu_hash->{attribute}, $avu_hash->{value}, $avu_hash->{units});
+  foreach my $avu (@{$metadata_in}) {
+    $coll->add_avu($avu->{attribute}, $avu->{value}, $avu->{units});
   }
 }
 
@@ -318,7 +318,7 @@ npg_publish_tree --source-directory <path> --collection <path>
    --source_directory The local path to load.
    --verbose          Print messages while processing. Optional.
 
-   -                  Specify a metadata file from standard input.
+   -                  Read JSON metadata from standard input.
 
 =head1 DESCRIPTION
 
