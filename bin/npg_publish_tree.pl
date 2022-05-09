@@ -167,8 +167,8 @@ if (not $dest_collection) {
 }
 
 if (defined $metadata_file and $stdio) {
-  $log->logconfess('Metadata JSON file and metadata from STDIN options' .
-                    'cannot be specified together');
+  $log->logcroak('Metadata JSON file and metadata from STDIN options',
+                    ' cannot be specified together');
 }
 
 my $irods = WTSI::NPG::iRODS->new;

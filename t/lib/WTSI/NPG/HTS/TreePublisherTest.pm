@@ -108,14 +108,14 @@ sub publish_tree : Test(58) {
   check_metadata($irods, map { catfile($irods_tmp_coll, $_) } @observed_paths);
 }
 
-sub npg_publish_tree_pl_metadata_from_stdin : Test(3) {
+sub npg_publish_tree_pl_metadata_from_stdin : Test(2) {
   my $source_path = "${data_path}/treepublisher";
-  my @attributes = (  
-    {attribute => 'attr1', value => 'val1', units => q[]},
-    {attribute => 'attr2', value => 'val2', units => q[]}
+  my @expected_avus = (  
+    {attribute => 'attr1', value => 'val1', units => '1'},
+    {attribute => 'attr2', value => 'val2', units => '2'}
   );
 
-  my $metadata_text = JSON->new->utf8->encode(\@attributes);
+  my $metadata_text = JSON->new->utf8->encode(\@expected_avus);
   my $md_stdio = File::Temp->new(SUFFIX => ".json");
   my $metadata_file_in = $md_stdio->filename;
   print $md_stdio "${metadata_text}\n";
@@ -126,13 +126,14 @@ sub npg_publish_tree_pl_metadata_from_stdin : Test(3) {
             "${bin_path}/npg_publish_tree.pl ${script_args}") == 0,
       'Script npg_publish_tree.pl with metadata in STDIN');
 
-  my $imeta_output = `imeta ls -C ${irods_tmp_coll}`;
-  foreach my $avu (@attributes) {
-    ok($imeta_output =~ m/attribute:\s$avu->{attribute}\n
-                              value:\s$avu->{value}\n
-                              units:\s$avu->{units}/x,
-        'Expected attributes from STDIN found by imeta');
-  }
+  my $irods = WTSI::NPG::iRODS->new;
+  my $irods_coll = WTSI::NPG::iRODS::Collection->new($irods, $irods_tmp_coll);
+
+  my @observed_avus = map{$irods_coll->get_avu($_->{attribute})} @expected_avus; 
+
+  is_deeply(\@observed_avus, \@expected_avus,
+            'Found expected avus from STDIN') or
+              diag explain \@observed_avus;
 }
 
 sub npg_publish_tree_pl_metadata_from_stdin_plus_cmd : Test(1) {
