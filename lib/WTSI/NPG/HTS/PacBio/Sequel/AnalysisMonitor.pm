@@ -68,17 +68,18 @@ sub publish_analysed_cells {
     foreach my $job (@jobs) {
        try {
          my $analysis_path = $job->{path};
-         if(-d $analysis_path){
-            my ($nf, $np, $ne) =  $self->_publish_analysis_path($analysis_path);
+         if (-d $analysis_path) {
+            my ($nf, $np, $ne) = $self->_publish_analysis_path($analysis_path);
             $self->debug("Processed [$np / $nf] files in ",
-                       "'$analysis_path' with $ne errors");
+                         "'$analysis_path' with $ne errors");
 
             if ($ne > 0) {
-               $self->logcroak("Encountered $ne errors while processing ",
+              $self->logcroak("Encountered $ne errors while processing ",
                            "[$np / $nf] files in '$analysis_path'");
             }
             $num_processed++;
-         }else{
+         }
+         else {
             $self->warn('IGNORING job id ',$job->{id} .
                 qq[ as output dir [$analysis_path] not found]);
          }

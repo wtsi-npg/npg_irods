@@ -1,0 +1,13 @@
+Transfer Manifest nfiles:11
+AcqId 65d2abca-7399-4095-b70f-cc4d66c0df80 transfer list size : 11
+/data/pa/.m64094e_220405_144215.run.metadata.xml
+/data/pa/.m64094e_220405_144215.metadata.xml
+/data/pa/m64094e_220405_144215.consensusreadset.xml
+/data/pa/m64094e_220405_144215.reads.bam
+/data/pa/m64094e_220405_144215.reads.bam.pbi
+/data/pa/m64094e_220405_144215.zmw_metrics.json.gz
+/data/pa/m64094e_220405_144215.ccs_reports.json
+/data/pa/m64094e_220405_144215.ccs.log
+/data/pa/m64094e_220405_144215.ccs_reports.txt
+/data/pa/m64094e_220405_144215.sts.xml
+/data/pa/m64094e_220405_144215.baz2bam_1.log

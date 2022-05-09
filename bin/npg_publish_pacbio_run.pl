@@ -11,6 +11,7 @@ use Pod::Usage;
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::iRODS;
+use WTSI::NPG::HTS::PacBio::Sequel::APIClient;
 use WTSI::NPG::HTS::PacBio::Sequel::RunPublisher;
 
 our $VERSION = '';
@@ -37,6 +38,7 @@ log4perl.oneMessagePerAppender = 1
 LOGCONF
 ;
 
+my $api_uri;
 my $collection;
 my $debug;
 my $force = 0;
@@ -44,7 +46,8 @@ my $log4perl_config;
 my $runfolder_path;
 my $verbose;
 
-GetOptions('collection=s'                    => \$collection,
+GetOptions('api-uri|api_uri=s'               => \$api_uri,
+           'collection=s'                    => \$collection,
            'debug'                           => \$debug,
            'force'                           => \$force,
            'help'                            => sub {
@@ -55,8 +58,7 @@ GetOptions('collection=s'                    => \$collection,
            'verbose'                         => \$verbose);
 
 
-
-my   $module = 'WTSI::NPG::HTS::PacBio::Sequel::RunPublisher';
+my $module = 'WTSI::NPG::HTS::PacBio::Sequel::RunPublisher';
 
 # Process CLI arguments
 if ($log4perl_config) {
@@ -78,9 +80,9 @@ if (not (defined $runfolder_path)) {
             -exitval => 2);
 }
 
-
 my $irods     = WTSI::NPG::iRODS->new;
 my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
+
 
 my @init_args = (force          => $force,
                  irods          => $irods,
@@ -89,6 +91,11 @@ my @init_args = (force          => $force,
 if ($collection) {
   push @init_args, dest_collection => $collection;
 }
+if ($api_uri) {
+  my $api_client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new
+    ('api_uri' => $api_uri);
+  push @init_args, api_client => $api_client;
+}
 
 my $publisher = $module->new(@init_args);
 
@@ -96,9 +103,6 @@ use sigtrap 'handler', \&handler, 'normal-signals';
 
 sub handler {
   my ($signal) = @_;
-
-  $log->info('Writing restart file ', $publisher->restart_file);
-  $publisher->write_restart_file;
   $log->error("Exiting due to $signal");
   exit 1;
 }
@@ -114,6 +118,8 @@ else {
                  "with $num_errors errors");
 }
 
+exit 0;
+
 __END__
 
 =head1 NAME
@@ -122,10 +128,12 @@ npg_publish_pacbio_run
 
 =head1 SYNOPSIS
 
-npg_publish_pacbio_run --runfolder-path <path> [--collection <path>]
-  [--force] [--debug] [--verbose] [--logconf <path>]
+npg_publish_pacbio_run --runfolder-path <path> [--api-uri <uri>] 
+  [--collection <path>] [--force] [--debug] [--verbose] [--logconf <path>]
 
  Options:
+   --api-uri   
+   --api_uri         Specify the server host and port. Optional.
    --collection      The destination collection in iRODS. Optional,
                      defaults to /seq/pacbio/.
    --debug           Enable debug level logging. Optional, defaults to
@@ -171,7 +179,8 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2016, 2017 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2016, 2017, 2022 Genome Research Limited. All Rights
+Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

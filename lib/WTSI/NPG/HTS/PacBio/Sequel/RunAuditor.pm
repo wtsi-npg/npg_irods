@@ -9,8 +9,9 @@ use Try::Tiny;
 
 ## no critic (ValuesAndExpressions::ProhibitLeadingZeros)
 Readonly::Scalar my $DIR_PERMISSION      => 0770;
-Readonly::Scalar my $MODE_OTHER_WRITABLE => 0002;
-Readonly::Scalar my $MODE_GROUP_WRITABLE => 0020;
+## use critic
+Readonly::Scalar my $MODE_OTHER_WRITABLE => q(0002);
+Readonly::Scalar my $MODE_GROUP_WRITABLE => q(0020);
 
 with qw[
          WTSI::DNAP::Utilities::Loggable

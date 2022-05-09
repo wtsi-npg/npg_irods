@@ -1,5 +1,10 @@
 Upcoming
 
+  - Support for splitting PacBio reads.bam file where data is ccs
+    processed on the instrument. Allow iRODS loading jobs to be
+    submitted to wr as instument run file loading will protentially
+    take considerably longer.
+
 Release 2.35.0
   - Tweak Sequel AnalysisPublisher for SMRT Link 10.2 to allow xml
     in entry-points subdir.

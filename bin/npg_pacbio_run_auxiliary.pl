@@ -20,6 +20,7 @@ our $VERSION = '';
 
 Readonly::Scalar my $DEFAULT_INTERVAL_DAYS   => 14;
 Readonly::Scalar my $DEFAULT_OLDER_THAN_DAYS => 60;
+Readonly::Scalar my $MINIMUM_DELETION_DAYS   => 30;
 Readonly::Array  my @TYPES => qw(delete audit);
 
 my $api_uri;
@@ -93,6 +94,11 @@ if($api_uri) {
 my ($num_runs, $num_processed, $num_actioned, $num_errors);
 
 if ($task eq 'delete') {
+  ## error if older_than is less than minimum deletion allowed
+  if($older_than < $MINIMUM_DELETION_DAYS) {
+    pod2usage(-msg => 'For delete older_than must be >'. $MINIMUM_DELETION_DAYS,
+              -exitval => 2);
+  }
   my $delete = WTSI::NPG::HTS::PacBio::Sequel::RunDeleteMonitor->new(@init_args);
   ($num_runs, $num_processed, $num_actioned, $num_errors) = $delete->delete_runs;
 } elsif ($task eq 'audit') {
@@ -141,7 +147,8 @@ npg_pacbio_run_auxiliary --local-path </path/to/staging/area>
   --logconf       A log4perl configuration file. Optional.
   --older-than
   --older_than    Only consider runs older than a specified number of 
-                  days. Optional defaults to 60 days.
+                  days. 30 days is the minimum for the delete task.
+                  Optional defaults to 60 days. 
   --task          Required. Current permitted options are delete and
                   audit. 
   --verbose       Print messages while processing. Optional.

@@ -3,14 +3,17 @@ package WTSI::NPG::HTS::PacBio::Sequel::RunPublisher;
 use namespace::autoclean;
 use Data::Dump qw[pp];
 use English qw[-no_match_vars];
-use File::Spec::Functions qw[catdir splitdir];
+use File::Spec::Functions qw[catdir catfile splitdir];
 use Moose;
 use MooseX::StrictConstructor;
 use Readonly;
+use Try::Tiny;
 
+use WTSI::DNAP::Utilities::Runnable;
 use WTSI::NPG::HTS::PacBio::Sequel::ImageArchive;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
+use WTSI::NPG::HTS::PacBio::Sequel::SeqchkCalculator;
 
 extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
 
@@ -25,7 +28,8 @@ our $SEQUENCE_PRODUCT    = 'subreads';
 our $SEQUENCE_AUXILIARY  = 'scraps';
 
 # CCS Sequence file types
-our $CCS_SEQUENCE_PRODUCT = 'reads';
+our $CCS_SEQUENCE_PRODUCT     = 'reads';
+our $NONHIFI_SEQUENCE_PRODUCT = 'other';
 
 ## Processing types
 our $OFFINSTRUMENT = 'OnInstrument';
@@ -47,7 +51,11 @@ Readonly::Scalar my $CCS_REPORT_COUNT       => 6;
 Readonly::Scalar my $DATA_LEVEL_TWO         =>
   $WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher::DATA_LEVEL;
 
+Readonly::Scalar my $SEQUENCE_SEQCHKSUM =>
+  $WTSI::NPG::HTS::PacBio::Sequel::SeqchkCalculator::SEQCHKSUM_SUFFIX;
+
 Readonly::Scalar my $MODE_GROUP_WRITABLE => q(0020);
+
 
 has 'api_client' =>
   (isa           => 'WTSI::NPG::HTS::PacBio::Sequel::APIClient',
@@ -164,15 +172,34 @@ sub _publish_on_instrument_cell {
   my ($meta_data) = $self->_read_metadata
     ($smrt_name, q[consensusreadset], q[pbmeta:]);
 
+  # make other.bam from reads.bam if cell multiplexed
+  my (@run_records) = $self->_get_run_records($meta_data);
+
+  my ($product,$aux);
+  ## if multiplexed and CCS on instrument and not IsoSeq split the reads.bam 
+  ## file so as to avoid duplicate storage of reads in bam format. 
+  if (@run_records && (@run_records > 1 || $run_records[0]->tag_sequence) &&
+      (!$run_records[0]->pipeline_id_lims ||
+       $run_records[0]->pipeline_id_lims !~ /^Pacbio_IsoSeq/msx )) {
+    $self->_make_other_files
+      ($smrt_name, $CCS_SEQUENCE_PRODUCT, $meta_data->movie_name);
+    $product = $NONHIFI_SEQUENCE_PRODUCT;
+    $aux = q[zmw_metrics[.]json[.]gz|]. $product .q[[.]]. $SEQUENCE_SEQCHKSUM
+      .q[|]. $CCS_SEQUENCE_PRODUCT .q[[.]]. $SEQUENCE_SEQCHKSUM;
+  } else {
+    $product = $CCS_SEQUENCE_PRODUCT;
+    $aux = q[zmw_metrics[.]json[.]gz];
+  }
+
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
+  my ($nfb, $npb, $neb) = $self->publish_sequence_files
+    ($smrt_name, $product, $meta_data);
   my ($nfx, $npx, $nex) = $self->publish_xml_files
     ($smrt_name, q[consensusreadset|sts]);
-  my ($nfb, $npb, $neb) = $self->publish_sequence_files
-    ($smrt_name, $CCS_SEQUENCE_PRODUCT, $meta_data);
   my ($nfp, $npp, $nep) = $self->publish_index_files
-    ($smrt_name, $CCS_SEQUENCE_PRODUCT);
+    ($smrt_name, $product);
   my ($nfa, $npa, $nea) = $self->publish_aux_files
-    ($smrt_name, 'zmw_metrics[.]json[.]gz');
+    ($smrt_name, $aux);
   my ($nfi, $npi, $nei) = $self->publish_image_archive
     ($smrt_name, $meta_data);
 
@@ -224,7 +251,7 @@ sub publish_xml_files {
 
   Arg [1]    : smrt_name,  Str.
   Arg [2]    : File type regex. Str. Required.
-  Arg [3]    : Metadata. Obj.
+  Arg [3]    : Metadata. Obj. Required.
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_sequence_files($smrt_name, $type, $meta)
@@ -246,11 +273,10 @@ sub publish_sequence_files {
 
   # There will be 1 record for a non-multiplexed SMRT cell and >1
   # record for a multiplexed (currently no uuids recorded in XML).
-  my @run_records =
-    $self->find_pacbio_runs($metadata->run_name, $metadata->well_name);
+  my (@run_records) = $self->_get_run_records($metadata);
 
   # R & D runs have no records in the ML warehouse
-  my $is_r_and_d = @run_records ? 0 : 1;
+  my $is_r_and_d  = @run_records ? 0 : 1;
 
   if ($is_r_and_d) {
     $self->warn($metadata->run_name,
@@ -512,6 +538,65 @@ sub _dir_group_writable {
   my $mode = (stat $self->smrt_path($name))[2];
 
   return ($mode & $MODE_GROUP_WRITABLE) ? 1 : 0;
+}
+
+sub _get_run_records {
+  my($self, $metadata) = @_;
+
+  defined $metadata or
+      $self->logconfess('A defined metadata argument is required');
+
+  return $self->find_pacbio_runs($metadata->run_name, $metadata->well_name);
+}
+
+sub _make_other_files {
+  my ($self, $smrt_name, $type, $moviename) = @_;
+
+  defined $type or
+    $self->logconfess('A defined file types argument is required');
+  defined $moviename or
+      $self->logconfess('A defined moviename argument is required');
+
+  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $type .q{[.]}.
+    $SEQUENCE_FILE_FORMAT .q{$};
+  my $files = $self->list_files($smrt_name,$file_pattern,1);
+  my $name  = $self->_check_smrt_name($smrt_name);
+  my $rdir  = $self->smrt_path($name);
+
+  my $readss = $files->[0];
+  my $readsc = catfile($rdir, $moviename .q{.}. $type .q{.}.
+    $SEQUENCE_SEQCHKSUM);
+  my $otherb = catfile($rdir, $moviename .q{.}. $NONHIFI_SEQUENCE_PRODUCT .q{.}.
+    $SEQUENCE_FILE_FORMAT);
+  my $otheri = catfile($otherb .q{.}. $SEQUENCE_INDEX_FORMAT);
+
+  # make other bam file, index & create seqchksum files
+  my $cmd    = join q[ && ], q{set -o pipefail},
+    qq{samtools view -e "[rq] && [rq]<0.99" --threads 3 -o $otherb $readss},
+    qq{pbindex $otherb};
+
+  my $num_errors = 0;
+  try {
+    if( !-f $otherb) {
+      WTSI::DNAP::Utilities::Runnable->new(executable => '/bin/bash',
+        arguments  => ['-c', $cmd])->run;
+    }
+    $num_errors += WTSI::NPG::HTS::PacBio::Sequel::SeqchkCalculator->new
+        (input_file  => $readss)->calculate_seqchksum;
+    $num_errors += WTSI::NPG::HTS::PacBio::Sequel::SeqchkCalculator->new
+      (input_file  => $otherb)->calculate_seqchksum;
+  } catch {
+    $num_errors++;
+  };
+
+  if ($num_errors > 0 ) {
+    foreach my $file ($otherb, $otheri) {
+       if($file && -e $file) { unlink $file };
+    }
+    $self->logcroak("$num_errors - error generating other files for $readss");
+  }
+
+  return;
 }
 
 __PACKAGE__->meta->make_immutable;

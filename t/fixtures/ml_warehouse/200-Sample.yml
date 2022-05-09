@@ -8323,3 +8323,37 @@
   phenotype: ~
   developmental_stage: ~
   control_type: ~
+- id_sample_tmp: '7910248'
+  id_lims: SQSCP
+  uuid_sample_lims: aef3e8e4-a12d-11ec-9feb-fa163eac3af7
+  id_sample_lims: '7974439'
+  last_updated: '2022-03-11 11:23:32'
+  recorded_at: '2022-03-11 11:23:32'
+  deleted_at: ~
+  created: '2022-03-11 11:23:32'
+  name: DTOL12483224
+  reference_genome: ~
+  organism: ~
+  accession_number: SAMEA10201292
+  common_name: 'Tenthredo mesomela'
+  description: ~
+  taxon_id: ~
+  father: ~
+  mother: ~
+  replicate: ~
+  ethnicity: ~
+  gender: ~
+  cohort: ~
+  country_of_origin: ~
+  geographical_region: ~
+  sanger_sample_id: DTOL12483224
+  control: '0'
+  supplier_name: 'FD30882738'
+  public_name: 'iyTenMeso1'
+  sample_visibility: ~
+  strain: ~
+  consent_withdrawn: '0'
+  donor_id: LRRT10377418
+  phenotype: ~
+  developmental_stage: ~
+  control_type: ~
