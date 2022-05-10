@@ -376,37 +376,36 @@ sub publish_alignment_files {
         irods_data_relative_path => $file,
       };
 
-      my $json_hash;
+      my @existing;
       if (-e $self->mlwh_json) {
-        open my $json_fh, '<:encoding(UTF-8)', $self->mlwh_json or
-          self->logcroak(q[could not open ml warehouse json file] .
+        open my $json_in_fh, '<:encoding(UTF-8)', $self->mlwh_json or
+          $self->logcroak(q[could not open ml warehouse json file] .
             qq[$self->mlwh_json]);
-        $json_hash = decode_json <$json_fh>;
-        close $json_fh or self->logcroak(q[could not close ml warehouse ] .
+        my $json_in_hash = decode_json <$json_in_fh>;
+        close $json_in_fh or $self->logcroak(q[could not close ml warehouse ] .
           qq[json file $self->mlwh_json]);
         # Remove location/id_product entries that match the current item from the product list read from file
-        $json_hash->{products} = \grep {
+        @existing = grep {
           $mlwh_hash->{id_product} ne $_->{id_product} ||
             $mlwh_hash->{irods_root_collection} ne $_->{irods_root_collection}}
-          @{$json_hash->{products}};
+          @{$json_in_hash->{products}};
       }
-      else {
-        $json_hash = {
-          version  => $JSON_FILE_VERSION,
-          products => [],
-        };
-      }
-      push @{$json_hash->{products}}, $mlwh_hash;
-      open my $json_fh, '>:encoding(UTF-8)', $self->mlwh_json or
-        self->logcroak(q[could not open ml warehouse json file] .
+      my $json_out_hash = {
+        version  => $JSON_FILE_VERSION,
+        products => [],
+      };
+      push @{$json_out_hash->{products}}, @existing;
+      push @{$json_out_hash->{products}}, $mlwh_hash;
+      open my $json_out_fh, '>:encoding(UTF-8)', $self->mlwh_json or
+        $self->logcroak(q[could not open ml warehouse json file] .
           qq[$self->mlwh_json]);
 
-      print $json_fh encode_json($json_hash) or
-        self->logcroak(q[could not write to ml warehouse json file ] .
+      print $json_out_fh encode_json($json_out_hash) or
+        $self->logcroak(q[could not write to ml warehouse json file ] .
         qq[$self->mlwh_json]);
 
-      close $json_fh or
-        self->logcroak(q[could not close ml warehouse json file] .
+      close $json_out_fh or
+        $self->logcroak(q[could not close ml warehouse json file] .
         qq[$self->mlwh_json]);
 
     }
