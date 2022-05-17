@@ -1,4 +1,6 @@
 Upcoming
+  - Remove entries from mlwh_json file before adding a new entry for the
+    same product and root collection
 
 Release 2.35.0
   - Tweak Sequel AnalysisPublisher for SMRT Link 10.2 to allow xml

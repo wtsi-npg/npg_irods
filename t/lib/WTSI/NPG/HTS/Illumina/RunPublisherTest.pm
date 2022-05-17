@@ -1030,6 +1030,64 @@ sub publish_archive_path_mlwh : Test(8) {
   cmp_ok($repub_processed, '==', 0, "Re-published no files");
 }
 
+sub publish_archive_path_existing_mlwh_json : Test(2) {
+  note '=== Tests in publish_existing_mlwh_json';
+  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $id_run         = 18448;
+  my $initial_json = {
+    "version" => "1.0",
+    "products"=>
+      [
+        { # replaced during publish
+          "irods_data_relative_path" => "18448_1.cram",
+          "id_product"               => "98441df9e535436533620dcba86eef653d5749c546eb218dc9e2f7c587cec272",
+          "irods_root_collection"    => "$irods_tmp_coll/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/",
+          "pipeline_name"            => "npg-prod-alt-process",
+          "seq_platform_name"        => "illumina"
+        },
+        { # unaffected by publish
+          "irods_data_relative_path" => "test.cram",
+          "id_product"               => "7382ff198a7321eadcea98bb39ade23749b3bace2874bbaced29789dbcd987659",
+          "irods_root_collection"    => "$irods_tmp_coll/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/",
+          "pipeline_name"            => "npg-prod",
+          "seq_platform_name"        => "illumina"
+        }]};
+  my $expected_json  = "t/data/mlwh_json/illumina_existing.json";
+
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
+  my $dest_coll = "$irods_tmp_coll/publish_entire_mlwh";
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+
+  my $mlwh_json = catfile($tmpdir->dirname, 'mlwh_irods_existing.json');
+  open my $mlwh_json_fh, '>:encoding(UTF-8)', $mlwh_json
+    or die 'failed to create a test file';
+  print $mlwh_json_fh encode_json($initial_json)
+    or die 'failed to write to a test file';
+  close $mlwh_json_fh;
+  is_deeply(read_json_content($mlwh_json), $initial_json, 'contents of existing mlwh_json file are correct');
+
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (id_run           => $id_run,
+     dest_collection  => $dest_coll,
+     irods            => $irods,
+     lims_factory     => $lims_factory,
+     restart_file     => catfile($tmpdir->dirname, 'published.json'),
+     source_directory => $runfolder_path,
+     mlwh_json        => $mlwh_json);
+
+  $pub->publish_files;
+
+  is_deeply(read_json_content($mlwh_json),
+    set_destination(read_json_content($expected_json), $irods_tmp_coll),
+    "contents of $mlwh_json are correct");
+}
+
 # From here onwards are test support functions
 
 sub check_publish_lane_pri_data {
@@ -1366,7 +1424,9 @@ sub read_json_content {
 
   open my $mlwh_json_fh, '<:encoding(UTF-8)', $path or die qq[could not open $path];
 
-  return decode_json <$mlwh_json_fh>;
+  my $json = decode_json <$mlwh_json_fh>;
+  close $mlwh_json_fh;
+  return $json
 }
 
 sub set_destination {
