@@ -61,6 +61,9 @@ has 'default_grace_period' =>
                Include only data objects with a dcterms:created earlier than
                this value, DateTime.
 
+               limit
+               Update no more than this number of data objects, integer.
+
   Example    : $meta->update_single_replica_metadata(begin_date => $begin,
                                                      end_date   => $end);
 
@@ -91,7 +94,7 @@ has 'default_grace_period' =>
 
 {
   my $positional = 1;
-  my @named      = qw[begin_date end_date zone];
+  my @named      = qw[begin_date end_date limit zone];
   my $params     = function_params($positional, @named);
 
   sub update_single_replica_metadata {
@@ -105,13 +108,17 @@ has 'default_grace_period' =>
                      $default_begin;
     my $end_date   = $params->end_date ? $params->end_date :
                      $default_end;
+    my $limit      = defined $params->limit ? int($params->limit) : 0;
 
     $begin_date->isa('DateTime') or
       $self->logconfess('The begin_date argument must be a DateTime');
     $end_date->isa('DateTime') or
       $self->logconfess('The end_date argument must be a DateTime');
 
-    my $paths = $self->_find_candidate_objects($begin_date, $end_date,
+    $limit >= 0 or
+      $self->logconfess('The limit argument must be >= 0');
+
+    my $paths = $self->_find_candidate_objects($begin_date, $end_date, $limit,
                                                $params->zone);
     return $self->_do_update_metadata($paths);
   }
@@ -173,7 +180,7 @@ sub _do_update_metadata {
 }
 
 sub _find_candidate_objects {
-  my ($self, $begin_date, $end_date, $zone) = @_;
+  my ($self, $begin_date, $end_date, $limit, $zone) = @_;
 
   $self->debug(sprintf q[Running query %s %s %s], $SPECIFIC_QUERY_NAME,
                        $begin_date->iso8601, $end_date->iso8601);
@@ -220,22 +227,24 @@ sub _find_candidate_objects {
   my $paths = $self->_parse_iquest_records(@records);
   $self->debug(sprintf q[Found %d paths], scalar @{$paths});
 
+  if ($limit > 0) {
+    my $found = scalar @{$paths};
+    $paths = [@{$paths}[0 .. $limit-1]];
+    my $limited = scalar @{$paths};
+
+    $self->info(sprintf q[Found %d paths, limiting to %d], $found, $limited);
+  }
+
   return $paths;
 }
 
 sub _parse_iquest_records {
   my ($self, @records) = @_;
 
-  # iquest does not add a trailing record separator. Having one makes
-  # processing easier because each set of 3 lines may be treated the same
-  # way and there is no special case for having a single record.
-  my $record_separator = '----';
-  push @records, $record_separator;
-
   my @paths;
   my @path_elements;
   foreach my $line (@records) {
-    if ($line eq $record_separator and @path_elements) {
+    if ($line and scalar @path_elements == 2) {
       push @paths, join q[/], @path_elements;
       @path_elements = ();
       next;
@@ -243,6 +252,10 @@ sub _parse_iquest_records {
 
     push @path_elements, $line;
   }
+
+  push @paths, join q[/], @path_elements; # Capture the last pair
+
+  @paths = sort { $a cmp $b } @paths;
 
   return \@paths;
 }
