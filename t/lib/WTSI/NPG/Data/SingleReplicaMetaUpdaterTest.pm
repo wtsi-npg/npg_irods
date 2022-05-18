@@ -141,4 +141,27 @@ sub avoid_inconsistent_objects : Test(4) {
     explain \@observed;
 }
 
+sub limit_number_processed : Test(4) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+      strict_baton_version => 0);
+
+  my $m = WTSI::NPG::Data::SingleReplicaMetaUpdater->new(irods => $irods);
+
+  # The first 5 objects are older than the threshold (middle) time point (the
+  # others are exactly on it, or more recent. We limit that to just 2
+  my ($num_objs, $num_processed, $num_errors) =
+      $m->update_single_replica_metadata(end_date => $middle,
+                                         limit    => 2);
+  is($num_objs, 2, 'Expected 2 objects found');
+  is($num_processed, 2, 'Expected 2 objects processed');
+  is($num_errors, 0, 'Expected no errors');
+
+  my $sr = $WTSI::NPG::Data::SingleReplicaMetaUpdater::SINGLE_REPLICA_ATTR;
+  my @expected = map { "$irods_tmp_coll/single_replica/$_.txt" } 1 .. 2;
+
+  my @observed = $irods->find_objects_by_meta($irods_tmp_coll, [$sr => 1]);
+  is_deeply(\@observed, \@expected, 'Single replica metadata added') or diag
+      explain \@observed;
+}
+
 1;

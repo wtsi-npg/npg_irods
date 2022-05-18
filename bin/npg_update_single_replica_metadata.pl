@@ -38,6 +38,7 @@ my $debug;
 my $dry_run;
 my $end_date;
 my $log4perl_config;
+my $limit = 0;
 my $verbose;
 
 GetOptions('begin-date|begin_date=s' => \$begin_date,
@@ -47,6 +48,7 @@ GetOptions('begin-date|begin_date=s' => \$begin_date,
            'help'                    => sub { pod2usage(-verbose => 2,
                                                         -exitval => 0) },
            'logconf=s'               => \$log4perl_config,
+           'limit=i'                 => \$limit,
            'verbose'                 => \$verbose);
 
 # Process CLI arguments
@@ -84,7 +86,6 @@ my $updater = WTSI::NPG::Data::SingleReplicaMetaUpdater->new(irods => $irods);
 my $grace = DateTime::Duration->new(years => $updater->default_grace_period);
 my $grace_threshold = DateTime->now->subtract($grace);
 
-
 my $begin;
 if (defined $begin_date) {
   $begin = DateTime::Format::ISO8601->parse_datetime($begin_date);
@@ -117,12 +118,22 @@ if (not DateTime->compare($begin, $end) < 0) {
                          $begin->iso8601, $end->iso8601);
 }
 
+if ($limit) {
+  $limit =~ m{^\d+$}msx or
+      $log->logcroak(sprintf q[The limit must be a non-negative ] .
+                             q[integer; %s is invalid],
+                             $limit);
+  $limit = int $limit;
+}
+
+my $limit_msg = $limit ? ", limited to $limit objects" : q[];
 $log->info(sprintf q[Updating objects with creation dates between %s ] .
-                   q[and %s], $begin, $end);
+                   q[and %s%s], $begin, $end, $limit_msg);
 
 my ($num_objects, $num_processed, $num_errors) =
     $updater->update_single_replica_metadata(begin_date => $begin,
-                                             end_date   => $end);
+                                             end_date   => $end,
+                                             limit      => $limit);
 
 my $msg = sprintf q[Found %d data objects, processed %d with %d errors],
                   $num_objects, $num_processed, $num_errors;
@@ -141,7 +152,7 @@ npg_update_single_replica_metadata
 =head1 SYNOPSIS
 
 npg_update_single_replica_metadata [--begin-date YYYY-MM-DD] [--debug]
-[--end-date YYYY-MM-DD] [--help] [--logconf file] [--verbose]
+[--end-date YYYY-MM-DD] [--help] [--limit <n>] [--logconf file] [--verbose]
 
  Options:
 
@@ -156,6 +167,7 @@ npg_update_single_replica_metadata [--begin-date YYYY-MM-DD] [--debug]
   --end_date    Latest creation date of data objects to consider for update.
                 Optional, defaults to 1 day earlier than the grace period.
   --help        Display help.
+  --limit       Limit the number of updates done to this number. Optional.
   --logconf     A log4perl configuration file. Optional.
   --verbose     Print messages while processing. Optional.
 
