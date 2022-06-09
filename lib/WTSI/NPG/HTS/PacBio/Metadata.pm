@@ -88,12 +88,12 @@ has 'results_folder' =>
    predicate     => 'has_results_folder',
    documentation => 'The results folder');
 
-has 'is_ccs' =>
+has 'execution_mode' =>
   (isa           => 'Str',
    is            => 'ro',
    required      => 0,
-   predicate     => 'has_is_ccs',
-   documentation => 'Is the PacBio data ccs');
+   predicate     => 'has_execution_mode',
+   documentation => 'Execution mode for running css (if required)');
 
 has 'subreads_uuid' =>
   (isa           => 'Str',
