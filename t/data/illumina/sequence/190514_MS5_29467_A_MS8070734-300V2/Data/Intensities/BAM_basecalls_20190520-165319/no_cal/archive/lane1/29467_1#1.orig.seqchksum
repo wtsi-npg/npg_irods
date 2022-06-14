@@ -1,0 +1,7 @@
+###	set	count		b_seq	name_b_seq	b_seq_qual	b_seq_tags(BC,FI,QT,RT,TC)
+all	all	114010		62e9a849	5606237e	5c1c9b24	3661a5ca
+all	pass	114010		62e9a849	5606237e	5c1c9b24	3661a5ca
+	all	0		1	1	1	1
+	pass	0		1	1	1	1
+29467_1#1	all	114010		62e9a849	5606237e	5c1c9b24	3661a5ca
+29467_1#1	pass	114010		62e9a849	5606237e	5c1c9b24	3661a5ca

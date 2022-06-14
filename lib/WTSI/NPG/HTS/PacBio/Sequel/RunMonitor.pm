@@ -2,7 +2,6 @@ package WTSI::NPG::HTS::PacBio::Sequel::RunMonitor;
 
 use namespace::autoclean;
 use Data::Dump qw[pp];
-use DateTime;
 use File::Spec::Functions qw[catfile splitdir];
 use Moose;
 use MooseX::StrictConstructor;

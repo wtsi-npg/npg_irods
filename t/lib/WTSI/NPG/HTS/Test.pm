@@ -15,25 +15,19 @@ use Test::More;
 sub runtests {
   my ($self) = @_;
 
+  my $default_irods_env = 'IRODS_ENVIRONMENT_FILE';
+  my $test_irods_env = "WTSI_NPG_iRODS_Test_$default_irods_env";
+  defined $ENV{$test_irods_env} or
+    die "iRODS test environment variable $test_irods_env was not set";
+
   my %env_copy = %ENV;
 
-  # iRODS 3.* and iRODS 4.* have different env vars for configuration
-  foreach my $file (qw[irodsEnvFile IRODS_ENVIRONMENT_FILE]) {
-    my $env_file = $ENV{"WTSI_NPG_iRODS_Test_$file"} || q[];
+  # Ensure that the iRODS connection details are set to the test environment
+  $env_copy{$default_irods_env} = $ENV{$test_irods_env};
 
-    # Ensure that the iRODS connection details are a nonsense value if
-    # they are not set explicitly via WTSI_NPG_iRODS_Test_*
-    $env_copy{$file} = $env_file || 'DUMMY_VALUE';
-
-    if (not $env_file) {
-      if ($ENV{TEST_AUTHOR}) {
-        die "Environment variable WTSI_NPG_iRODS_Test_$file was not set";
-      }
-      else {
-        $self->SKIP_CLASS('TEST_AUTHOR environment variable is false');
-      }
-    }
-  }
+  # For tests involving samtools, disable the CRAM reference cache
+  # throughout all tests
+  $env_copy{'REF_PATH'} = 'DUMMY_VALUE';
 
   {
     local %ENV = %env_copy;

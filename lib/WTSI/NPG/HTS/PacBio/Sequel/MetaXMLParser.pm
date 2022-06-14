@@ -30,11 +30,16 @@ our $MOVIE_TAG             = 'Context';
 our $OUTPUT_TAG            = 'OutputOptions';
 our $RFOLDER_TAG           = 'ResultsFolder';
 
-our $IS_CCS_TAG            = 'IsCCS';
+our $EXECUTION_MODE_TAG    = 'ExecutionMode';
 
 our $COMP_VERSION          = 'VersionInfo';
 our $CNAME                 = 'Name';
 our $CVERSION              = 'Version';
+
+our $SUBREADSET_TAG        = 'pbds:SubreadSet';
+our $UNIQUE_ID_TAG         = 'UniqueId';
+
+our $CCSREADSET_TAG        = 'ConsensusReadSetRef';
 
 =head2 parse_file
 
@@ -69,21 +74,31 @@ sub parse_file {
 
   my $sample_name = $sample->getAttribute($SAMPLE_NAME_TAG);
 
-  my $collection = $dom->getElementsByTagName($prefix . $COLLECTION_TAG)->[0];
+  my $collection = $dom->getElementsByTagName($prefix . $COLLECTION_TAG) ?
+    $dom->getElementsByTagName($prefix . $COLLECTION_TAG)->[0] :
+    $dom->getElementsByTagName($COLLECTION_TAG)->[0];
   my $instrument_name = $collection->getAttribute($INSTRUMENT_NAME_TAG);
   my $movie_name = $collection->getAttribute($MOVIE_TAG);
 
   my $collection_number =
-      $dom->getElementsByTagName($prefix . $COLL_NUMBER_TAG)->[0]->string_value;
+    $dom->getElementsByTagName($prefix . $COLL_NUMBER_TAG)->[0]->string_value;
   my $cell_index =
-      $dom->getElementsByTagName($prefix . $CELL_INDEX_TAG)->[0]->string_value;
+    $dom->getElementsByTagName($prefix . $CELL_INDEX_TAG)->[0]->string_value;
 
   my $output =  $dom->getElementsByTagName($prefix . $OUTPUT_TAG)->[0];
   my $results_folder =
-      $output->getElementsByTagName($prefix . $RFOLDER_TAG)->[0]->string_value;
+    $output->getElementsByTagName($prefix . $RFOLDER_TAG)->[0]->string_value;
 
-  my $is_ccs = $dom->getElementsByTagName($prefix . $IS_CCS_TAG) ?
-      $dom->getElementsByTagName($prefix . $IS_CCS_TAG)->[0]->string_value : 0;
+  my $exec_mode = $dom->getElementsByTagName($prefix . $EXECUTION_MODE_TAG) ?
+    $dom->getElementsByTagName($prefix . $EXECUTION_MODE_TAG)->[0]->string_value : 'None';
+
+  my $subreads_uuid = $dom->getElementsByTagName($SUBREADSET_TAG) ?
+    $dom->getElementsByTagName($SUBREADSET_TAG)->[0]->getAttribute($UNIQUE_ID_TAG)
+    : undef;
+
+  my $ccsreads_uuid = $dom->getElementsByTagName($prefix . $CCSREADSET_TAG) ?
+    $dom->getElementsByTagName($prefix . $CCSREADSET_TAG)->[0]->getAttribute($UNIQUE_ID_TAG)
+    : undef;
 
   my %versions;
   my @version_info = $dom->getElementsByTagName($prefix . $COMP_VERSION);
@@ -98,13 +113,15 @@ sub parse_file {
      instrument_name    => $instrument_name,
      run_name           => $run_name,
      ts_run_name        => $ts_run_name,
+     subreads_uuid      => $subreads_uuid,
+     ccsreads_uuid      => $ccsreads_uuid,
      sample_load_name   => $sample_name,
      well_name          => $well_name,
      collection_number  => $collection_number,
      cell_index         => $cell_index,
      movie_name         => $movie_name,
      results_folder     => $results_folder,
-     is_ccs             => $is_ccs,
+     execution_mode     => $exec_mode,
      version_info       => \%versions,
      );
 }

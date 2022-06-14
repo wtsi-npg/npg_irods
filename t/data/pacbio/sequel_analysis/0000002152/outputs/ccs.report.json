@@ -1,0 +1,133 @@
+{
+    "_comment": "Generated with pbcommand version  at 2020-12-21T17:04:17.008884",
+    "attributes": [
+        {
+            "id": "ccs2.number_of_ccs_reads",
+            "name": "HiFi Reads",
+            "value": 1813979
+        },
+        {
+            "id": "ccs2.total_number_of_ccs_bases",
+            "name": "HiFi Yield (bp)",
+            "value": 22540634412
+        },
+        {
+            "id": "ccs2.mean_ccs_readlength",
+            "name": "HiFi Read Length (mean, bp)",
+            "value": 12426
+        },
+        {
+            "id": "ccs2.median_accuracy",
+            "name": "HiFi Read Quality (median)",
+            "value": "Q31"
+        },
+        {
+            "id": "ccs2.mean_npasses",
+            "name": "HiFi Number of Passes (mean)",
+            "value": 11
+        },
+        {
+            "id": "ccs2.n_low_quality_reads",
+            "name": "<Q20 Reads",
+            "value": 360373
+        },
+        {
+            "id": "ccs2.total_number_of_ccs_bases_lq",
+            "name": "<Q20 Yield (bp)",
+            "value": 5134415371
+        },
+        {
+            "id": "ccs2.mean_ccs_readlength_lq",
+            "name": "<Q20 Read Length (mean, bp)",
+            "value": 14247
+        },
+        {
+            "id": "ccs2.median_accuracy_lq",
+            "name": "<Q20 Read Quality (median)",
+            "value": "Q16"
+        }
+    ],
+    "dataset_uuids": [
+        "0bf44ab9-2bd8-482e-4c1a-93ad79d3569e"
+    ],
+    "id": "ccs2",
+    "plotGroups": [
+        {
+            "id": "ccs2.readlength_group",
+            "legend": null,
+            "plots": [
+                {
+                    "caption": "HiFi Read Length Distribution",
+                    "id": "ccs2.readlength_group.readlength_hist",
+                    "image": "ccs_readlength_hist.png",
+                    "plotType": "image",
+                    "thumbnail": "ccs_readlength_hist_thumb.png",
+                    "title": "HiFi Read Length Distribution"
+                },
+                {
+                    "caption": "Read Length Distribution",
+                    "id": "ccs2.readlength_group.all_readlength_hist",
+                    "image": "all_readlength_hist.png",
+                    "plotType": "image",
+                    "thumbnail": "all_readlength_hist_thumb.png",
+                    "title": "Read Length Distribution"
+                }
+            ],
+            "thumbnail": "ccs_readlength_hist_thumb.png",
+            "title": "Read Length Distribution"
+        },
+        {
+            "id": "ccs2.npasses_group",
+            "legend": null,
+            "plots": [
+                {
+                    "caption": "Number of Passes",
+                    "id": "ccs2.npasses_group.npasses_hist",
+                    "image": "ccs_npasses_hist.png",
+                    "plotType": "image",
+                    "thumbnail": "ccs_npasses_hist_thumb.png",
+                    "title": "Number of Passes"
+                }
+            ],
+            "thumbnail": "ccs_npasses_hist_thumb.png",
+            "title": "Number of Passes"
+        },
+        {
+            "id": "ccs2.accuracy_group",
+            "legend": null,
+            "plots": [
+                {
+                    "caption": "Read Quality Distribution",
+                    "id": "ccs2.accuracy_group.accuracy_hist",
+                    "image": "ccs_accuracy_hist.png",
+                    "plotType": "image",
+                    "thumbnail": "ccs_accuracy_hist_thumb.png",
+                    "title": "Read Quality Distribution"
+                }
+            ],
+            "thumbnail": "ccs_accuracy_hist_thumb.png",
+            "title": "Read Quality Distribution"
+        },
+        {
+            "id": "ccs2.readlength_qv_hist2d_group",
+            "legend": null,
+            "plots": [
+                {
+                    "caption": "Predicted Accuracy vs. Read Length",
+                    "id": "ccs2.readlength_qv_hist2d_group.readlength_qv_hist2d",
+                    "image": "readlength_qv_hist2d.hexbin.png",
+                    "plotType": "image",
+                    "thumbnail": "readlength_qv_hist2d.hexbin_thumb.png",
+                    "title": "Predicted Accuracy vs. Read Length"
+                }
+            ],
+            "thumbnail": "readlength_qv_hist2d.hexbin_thumb.png",
+            "title": "Predicted Accuracy vs. Read Length"
+        }
+    ],
+    "tables": [],
+    "tags": [],
+    "title": "CCS Analysis Report",
+    "uuid": "34fa16dc-3dce-4d53-970e-b858ae648a7a",
+    "version": "1.0.1"
+}

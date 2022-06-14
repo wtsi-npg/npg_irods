@@ -4,6 +4,7 @@ use namespace::autoclean;
 use File::Basename;
 use File::Spec::Functions qw[catfile catdir];
 use IO::File;
+use JSON;
 use Moose;
 use MooseX::StrictConstructor;
 use Perl6::Slurp;
@@ -11,8 +12,6 @@ use Readonly;
 use XML::LibXML;
 
 use WTSI::NPG::HTS::PacBio::Sequel::Reportdata;
-
-Readonly::Scalar my $HUNDRED => 100;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
@@ -29,16 +28,10 @@ our $LIMA        = q{(lima.guess.txt|lima.summary.txt|lima.counts)};
 
 # Combined metadata file inputs and outputs
 our $OUTPUT_DIR  = 'outputs';
-our $FINAL_XML   = 'final.consensusreadset.xml';
-our $EXT_RES     = 'pbbase:ExternalResource';
-our $RES_VALUE   = 'PacBio.ConsensusReadFile.ConsensusReadBamFile';
-our $RES_TYPE    = 'MetaType';
-our $RES_PATH    = 'ResourceId';
-our $CCS_REPORT  = 'ccs_report.txt';
-our $MERGED_CCS  = 'merged_'. $CCS_REPORT;
-our $CCS_AHEADER = 'ZMWs input          (A)';
-our $CCS_CHEADER = 'ZMWs filtered       (C)';
-
+our $CCS_REPORT  = 'ccs.report.json';
+our $CCS_PROCESS = 'ccs_processing.report.json';
+our $CCS_FILES   = qq{($CCS_REPORT|$CCS_PROCESS)};
+our $REPORTS     = 'reports';
 
 has 'analysis_path' =>
   (isa           => 'Str',
@@ -77,8 +70,7 @@ has 'output_dir' =>
 
   Arg [1]    : None
   Example    : my ($report_file_path) = $report->generate_analysis_report
-  Description: Generate a combined report file with deplexing and ccs stats
-               if available from up to ~100 small job output files.
+  Description: Generate a combined file from various ccs and deplexing files 
   Returntype : Str
 
 =cut
@@ -117,52 +109,17 @@ sub _read_ccs_files {
   my ($self) = @_;
 
   my @files = $self->list_directory(catdir($self->analysis_path, $OUTPUT_DIR),
-    filter => $FINAL_XML .q[$]);
+    filter => $CCS_FILES .q[$]);
 
-  if(@files == 1){
-    my $ccs_counts;
-    my @ccs_keys;
-
-    my $dom = XML::LibXML->new->parse_file($files[0]);
-    my $loc = $dom->getElementsByTagName($EXT_RES);
-    foreach my $f (@{$loc}) {
-      my $type = $f->getAttribute($RES_TYPE);
-      my $file = $f->getAttribute($RES_PATH);
-      if ($file && $type eq $RES_VALUE) {
-        my $shard_dir = dirname($file);
-        my @ccs = $self->list_directory($shard_dir, filter => $CCS_REPORT .q[$]);
-        if (@ccs != 1) {
-          $self->logcroak("Expect only one $CCS_REPORT file in $shard_dir");
-        }
-        my $fh = IO::File->new($ccs[0],'<') or $self->logcroak("cant open $ccs[0]");
-        while (<$fh>) {
-          if (m/\A([ \w \s \- ) (]+ \S) \s+ [:] \s+ (\d+)/mxs) {
-              ! defined $ccs_counts->{$1} ? push @ccs_keys, $1 : undef;
-              $ccs_counts->{$1} += $2;
-          }
-        }
-        $fh->close or $self->logcroak("cannot close file $file");
+  if(@files >= 1){
+    foreach my $file (@files) {
+      my $file_name     = fileparse($file);
+      my $file_contents = slurp $file;
+      my $decoded       = decode_json($file_contents);
+      if (defined $decoded->{'attributes'} ) {
+        $self->_set_result($file_name => $decoded->{'attributes'});
       }
     }
-
-    my $output;
-    foreach my $key ( @ccs_keys ) {
-      $output .=  sprintf q(%-25s), $key;
-      if (exists $ccs_counts->{$key}) {
-        my $value = $ccs_counts->{$key};
-        if ($key eq $CCS_AHEADER) {
-          $output .= qq(: $value\n);
-        } else {
-          my $denom = $key =~ /^ZMW/smx ? $ccs_counts->{$CCS_AHEADER} :
-            $ccs_counts->{$CCS_CHEADER};
-          $output .= sprintf qq(: %d (%0.2f%%)\n), $value, $HUNDRED * $value / $denom;
-          if ($key eq $CCS_CHEADER) {
-            $output .= qq(\nExclusive ZMW counts for (C):\n);
-          }
-        }
-      }
-    }
-    $self->_set_result($MERGED_CCS => $output);
   }
   return;
 }
@@ -188,8 +145,8 @@ sub _save_results {
   }
 
   my $data = WTSI::NPG::HTS::PacBio::Sequel::Reportdata->new
-    (meta_data       => $self->meta_data,
-     reports         => \%files );
+    (meta_data => $self->meta_data,
+     $REPORTS  => \%files );
 
   $self->debug("Writing merged analysis report JSON to '$file'");
   my $fh = IO::File->new($file,'>') or $self->logcroak("cant open $file");
@@ -215,9 +172,6 @@ WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport
 
 Combine various small analysis output files if they exist into a single json 
 output file.
-
-CCS file merging based on a script from Shane McCarthy :
-https://github.com/sanger-tol/mergePacBioCCSreports
 
 =head1 AUTHOR
 

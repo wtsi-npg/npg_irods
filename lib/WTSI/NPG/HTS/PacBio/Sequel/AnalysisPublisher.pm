@@ -4,10 +4,14 @@ use namespace::autoclean;
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions qw[catdir];
+use JSON;
 use Moose;
 use MooseX::StrictConstructor;
+use Perl6::Slurp;
+use Readonly;
 
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport;
+use WTSI::NPG::HTS::PacBio::Sequel::AnalysisFastaManager;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
 
 extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
@@ -15,8 +19,9 @@ extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
 our $VERSION = '';
 
 # Sequence and index file suffixes
-our $SEQUENCE_FILE_FORMAT  = 'bam';
-our $SEQUENCE_INDEX_FORMAT = 'pbi';
+our $SEQUENCE_FILE_FORMAT   = 'bam';
+our $SEQUENCE_FASTA_FORMAT  = 'fasta.gz';
+our $SEQUENCE_INDEX_FORMAT  = 'pbi';
 
 # Metadata relatedist
 our $METADATA_FORMAT = 'xml';
@@ -30,11 +35,18 @@ our $ENTRY_DIR       = 'entry-points';
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
 # Additional sequence filenames permitted for loading 
-our @FNAME_PERMITTED    = qw[removed ccs];
+our @FNAME_PERMITTED    = qw[removed ccs hifi_reads fl_transcripts];
 our @FNAME_NON_DEPLEXED = qw[removed];
 
 # Data processing level
 our $DATA_LEVEL = 'secondary';
+
+# If deplexed - minimum deplexed percentage to load
+Readonly::Scalar my $MIN_BARCODED  => 0.3;
+Readonly::Scalar my $BARCODE_FIELD => 'Percent Barcoded Reads';
+Readonly::Scalar my $REPORT_TITLE  =>
+  $WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport::REPORTS;
+
 
 has 'analysis_path' =>
   (isa           => 'Str',
@@ -54,7 +66,7 @@ has 'analysis_path' =>
 
 =cut
 
-override 'publish_files' => sub {
+sub publish_files {
   my ($self) = @_;
 
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
@@ -63,7 +75,16 @@ override 'publish_files' => sub {
 
   if (defined $seq_files->[0] && @{$self->smrt_names} == 1) {
 
-    my ($nfb, $npb, $neb) = $self->publish_sequence_files;
+    my $qc_fail = $self->_basic_qc();
+    if ($qc_fail) {
+      $self->logcroak('Skipping ', $self->analysis_path,
+                      ' : QC check failed');
+    }
+
+    my ($nff, $npf, $nef) = $self->_iso_fasta_files() ?
+        $self->publish_sequence_files($SEQUENCE_FASTA_FORMAT) : (0,0,0);
+    my ($nfb, $npb, $neb) = $self->publish_sequence_files
+        ($SEQUENCE_FILE_FORMAT);
     my ($nfp, $npp, $nep) = $self->publish_non_sequence_files
         ($SEQUENCE_INDEX_FORMAT);
     my ($nfx, $npx, $nex) = $self->publish_non_sequence_files
@@ -71,12 +92,12 @@ override 'publish_files' => sub {
     my ($nfr, $npr, $ner) = $self->publish_non_sequence_files
         ($self->_merged_report);
 
-    $num_files     += ($nfx + $nfb + $nfp + $nfr);
-    $num_processed += ($npx + $npb + $npp + $npr);
-    $num_errors    += ($nex + $neb + $nep + $ner);
+    $num_files     += ($nfx + $nfb + $nff + $nfp + $nfr);
+    $num_processed += ($npx + $npb + $npf + $npp + $npr);
+    $num_errors    += ($nex + $neb + $nef + $nep + $ner);
   }
   else {
-    $self->info('Skipping ', $self->analysis_path,
+    $self->warn('Skipping ', $self->analysis_path,
                 ' : unexpected file issues');
   }
 
@@ -90,19 +111,26 @@ override 'publish_files' => sub {
 
 =head2 publish_sequence_files
 
+  Arg [1]    : File format match regex, Str. Required.
+
   Example    : my ($num_files, $num_published, $num_errors) =
-                 $pub->publish_sequence_files
-  Description: Publish sequence files to iRODS. Return the number of files,
-               the number published and the number of errors. R&D data
-               not supported - only files with databased information.
+                 $pub->publish_sequence_files($format)
+  Description: Identify sequence files which match the required file 
+               format regex. and publish those files to iRODS. Return 
+               the number of files, the number published and the number 
+               of errors. R&D data not supported - only files with 
+               databased information.
   Returntype : Array[Int]
 
 =cut
 
 sub publish_sequence_files {
-  my ($self) = @_;
+  my ($self,$format) = @_;
 
-  my $files = $self->list_files($SEQUENCE_FILE_FORMAT . q[$]);
+  defined $format or
+    $self->logconfess('A defined file format argument is required');
+
+  my $files = $self->list_files($format . q[$]);
 
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
@@ -120,6 +148,11 @@ sub publish_sequence_files {
             $self->find_pacbio_runs($self->_metadata->run_name,
                                     $self->_metadata->well_name,
                                     $self->_get_tag_name_from_fname($filename));
+
+        if (@tag_records != 1) {
+          $self->logcroak("Unexpected barcode from $file for SMRT cell ",
+              $self->_metadata->well_name, ' run ', $self->_metadata->run_name);
+        }
     } else {
         $self->_is_allowed_fname($filename, \@FNAME_PERMITTED) or
             $self->logcroak("Unexpected file name for $file");
@@ -131,14 +164,16 @@ sub publish_sequence_files {
     my @records = (@tag_records == 1) ? @tag_records : @all_records;
 
     if (@records >= 1) {
-      # Don't set target = 1 if more than 1 record 
+      # Don't set target = 1 if more than 1 record
       #  or data is non deplexed leftovers on multiplexed run
       #  or data is for unexpected barcode
-      #  or data is single tag standard (non ccs) deplex 
+      #  or data is single tag standard (non ccs) deplex
+      #  or data is fasta.gz format
       my $is_target   = (@records > 1 ||
           $self->_is_allowed_fname($filename, \@FNAME_NON_DEPLEXED) ||
          ($tag_id && @tag_records != 1) ||
-         ($self->_metadata->is_ccs ne 'true' && $tag_id && @all_records == 1))
+         ($self->_metadata->execution_mode eq 'None' && $tag_id && @all_records == 1) ||
+         ($format eq $SEQUENCE_FASTA_FORMAT))
           ? 0 : 1;
 
       my @primary_avus   = $self->make_primary_metadata
@@ -148,7 +183,7 @@ sub publish_sequence_files {
       my @secondary_avus = $self->make_secondary_metadata(@records);
 
       my ($a_files, $a_processed, $a_errors) =
-        $self->_publish_files([$file], $self->_dest_path,
+        $self->pb_publish_files([$file], $self->_dest_path,
                               \@primary_avus, \@secondary_avus);
 
       $num_files     += $a_files;
@@ -156,7 +191,7 @@ sub publish_sequence_files {
       $num_errors    += $a_errors;
     }
     else {
-      $self->info("Skipping publishing $file as no records found");
+      $self->warn("Skipping publishing $file as no records found");
     }
   }
   $self->info("Published $num_processed / $num_files sequence files ",
@@ -167,11 +202,12 @@ sub publish_sequence_files {
 
 =head2 publish_non_sequence_files
 
-  Arg [1]    : Format - which needs to be at the end. Required.
+  Arg [1]    : File format match regex, Str. Required.
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_non_sequence_files($format)
-  Description: Publish non sequence files by type to iRODS. Return
+  Description: Identify non sequence files which match the required file 
+               format regex and publish those files to iRODS. Return
                the number of files, the number published and the number
                of errors.
   Returntype : Array[Int]
@@ -187,7 +223,7 @@ sub publish_non_sequence_files {
   my $files = $self->list_files($format . q[$]);
 
   my ($num_files, $num_processed, $num_errors) =
-    $self->_publish_files($files, $self->_dest_path);
+    $self->pb_publish_files($files, $self->_dest_path);
 
   $self->info("Published $num_processed / $num_files $format files ",
               'for SMRT cell ', $self->_metadata->well_name, ' run ',
@@ -258,8 +294,9 @@ sub _build_metadata{
 
   my $entry_dir = catdir($self->analysis_path, $ENTRY_DIR);
 
-  my @metafiles = $self->list_directory($entry_dir,
-                                        filter => $METADATA_FORMAT . q[$]);
+  my @metafiles = $self->list_directory
+    ($entry_dir, filter => $METADATA_FORMAT . q[$], recurse => 1);
+
   if (@metafiles != 1) {
     $self->logcroak("Expect one $METADATA_FORMAT file in $entry_dir");
   }
@@ -286,6 +323,58 @@ sub _build_merged_report {
   return $report->generate_analysis_report;
 }
 
+has '_iso_fasta_files' =>
+  (isa           => 'Bool',
+   is            => 'ro',
+   builder       => '_build_iso_fasta_files',
+   lazy          => 1,
+   init_arg      => undef,
+   documentation => 'Find, reformat and write any isoseq fasta files to the analysis directory.',);
+
+sub _build_iso_fasta_files {
+  my ($self) = @_;
+
+  my @init_args  = (analysis_path  => $self->analysis_path,
+                    runfolder_path => $self->runfolder_path,
+                    meta_data      => $self->_metadata);
+
+  my $iso = WTSI::NPG::HTS::PacBio::Sequel::AnalysisFastaManager->new(@init_args);
+  my $is_success = $iso->make_loadable_files;
+
+  return $is_success;
+}
+
+
+sub _basic_qc {
+  # common sense qc checks prior to loading
+  my ($self) = @_;
+
+  my $merged_report = $self->_merged_report;
+  my $files         = $self->list_files($merged_report . q[$]);
+
+  my $decoded;
+  if (scalar @{$files} == 1) {
+    my $file_contents = slurp $files->[0];
+    $decoded = decode_json($file_contents);
+  }
+
+  my $qc_fail = 0;
+  if ($decoded && $decoded->{$REPORT_TITLE}) {
+    foreach my $report (%{$decoded->{$REPORT_TITLE}}) {
+      next if ref $decoded->{$REPORT_TITLE}->{$report}  ne 'ARRAY';
+      foreach my $x (@{$decoded->{$REPORT_TITLE}->{$report}}) {
+        if ($x->{'name'} eq $BARCODE_FIELD && $x->{'value'} < $MIN_BARCODED) {
+          $qc_fail = 1;
+        }
+      }
+    }
+  }
+  else {
+    $self->warn('No qc check possible for ', $self->analysis_path);
+  }
+  return $qc_fail;
+}
+
 sub _get_tag_from_fname {
   # SequenceScape tag id is just the numeric part of the name 
   my ($self, $file) = @_;
@@ -301,8 +390,10 @@ sub _get_tag_name_from_fname {
   # Traction tag id is the full tag name
   my ($self, $file) = @_;
   my $tag_name;
-  if ($file =~ m{[.] (\w+\d+\S+) [-] [-]}smx){
+  if ($file =~ m{[.] (\w+\d+\S*) [-] [-]}smx){
     $tag_name = $1;
+    # remove 5 or 3 prime suffix
+    $tag_name =~ s/_\dp//smxg;
   }
   return $tag_name;
 }

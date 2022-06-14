@@ -8018,3 +8018,308 @@
   supplier_name: RO_FA_930
   taxon_id: 405009
   uuid_sample_lims: ee49148c-06f3-11ea-b9f4-fa163e2f1184
+- accession_number: SAMEA7701669
+  cohort: ~
+  common_name: Lomaspilis marginata
+  consent_withdrawn: 0
+  control: 0
+  country_of_origin: ~
+  created: 2021-03-09 14:37:48
+  deleted_at: ~
+  description: ~
+  developmental_stage: ~
+  donor_id: SAMEA7701492
+  ethnicity: ~
+  father: ~
+  gender: ~
+  geographical_region: ~
+  id_lims: SQSCP
+  id_sample_lims: 5547638
+  id_sample_tmp: 5490195
+  last_updated: 2021-04-13 02:47:13
+  mother: ~
+  name: DTOL10037997
+  organism: ~
+  phenotype: ~
+  public_name: ilLomMarg1
+  recorded_at: 2021-04-13 10:28:13
+  reference_genome: ~
+  replicate: ~
+  sample_visibility: ~
+  sanger_sample_id: DTOL10037997
+  strain: ~
+  supplier_name: FD21267933
+  taxon_id: 722666
+  uuid_sample_lims: 050cb7ac-80e5-11eb-8671-fa163eac3af7
+- id_sample_tmp: '5784049'
+  id_lims: SQSCP
+  uuid_sample_lims: f9016ba4-caa1-11eb-ade6-fa163eac3af7
+  id_sample_lims: '5841241'
+  last_updated: '2021-06-11 10:44:19'
+  recorded_at: '2021-06-11 10:44:19'
+  deleted_at: ~
+  created: '2021-06-11 10:44:18'
+  name: LRRT10377411
+  reference_genome: ~
+  organism: ~
+  accession_number: ~
+  common_name: ~
+  description: ~
+  taxon_id: ~
+  father: ~
+  mother: ~
+  replicate: ~
+  ethnicity: ~
+  gender: ~
+  cohort: ~
+  country_of_origin: ~
+  geographical_region: ~
+  sanger_sample_id: LRRT10377411
+  control: '0'
+  supplier_name: Mouse Brain
+  public_name: Mus Musculus
+  sample_visibility: ~
+  strain: ~
+  consent_withdrawn: '0'
+  donor_id: LRRT10377411
+  phenotype: ~
+  developmental_stage: ~
+  control_type: ~
+- id_sample_tmp: '5784050'
+  id_lims: SQSCP
+  uuid_sample_lims: f9396cac-caa1-11eb-ade6-fa163eac3af7
+  id_sample_lims: '5841242'
+  last_updated: '2021-06-11 10:44:19'
+  recorded_at: '2021-06-11 10:44:19'
+  deleted_at: ~
+  created: '2021-06-11 10:44:18'
+  name: LRRT10377412
+  reference_genome: ~
+  organism: ~
+  accession_number: ~
+  common_name: ~
+  description: ~
+  taxon_id: ~
+  father: ~
+  mother: ~
+  replicate: ~
+  ethnicity: ~
+  gender: ~
+  cohort: ~
+  country_of_origin: ~
+  geographical_region: ~
+  sanger_sample_id: LRRT10377412
+  control: '0'
+  supplier_name: Human B re-amplified
+  public_name: Homo Sapiens
+  sample_visibility: ~
+  strain: ~
+  consent_withdrawn: '0'
+  donor_id: LRRT10377412
+  phenotype: ~
+  developmental_stage: ~
+  control_type: ~
+- id_sample_tmp: '5784051'
+  id_lims: SQSCP
+  uuid_sample_lims: f9579330-caa1-11eb-ade6-fa163eac3af7
+  id_sample_lims: '5841243'
+  last_updated: '2021-06-11 10:44:19'
+  recorded_at: '2021-06-11 10:44:19'
+  deleted_at: ~
+  created: '2021-06-11 10:44:18'
+  name: LRRT10377413
+  reference_genome: ~
+  organism: ~
+  accession_number: ~
+  common_name: ~
+  description: ~
+  taxon_id: ~
+  father: ~
+  mother: ~
+  replicate: ~
+  ethnicity: ~
+  gender: ~
+  cohort: ~
+  country_of_origin: ~
+  geographical_region: ~
+  sanger_sample_id: LRRT10377413
+  control: '0'
+  supplier_name: '8102'
+  public_name: Adalia bipunctata
+  sample_visibility: ~
+  strain: ~
+  consent_withdrawn: '0'
+  donor_id: LRRT10377413
+  phenotype: ~
+  developmental_stage: ~
+  control_type: ~
+- id_sample_tmp: '5784052'
+  id_lims: SQSCP
+  uuid_sample_lims: f9608e18-caa1-11eb-ade6-fa163eac3af7
+  id_sample_lims: '5841244'
+  last_updated: '2021-06-11 10:44:19'
+  recorded_at: '2021-06-11 10:44:19'
+  deleted_at: ~
+  created: '2021-06-11 10:44:18'
+  name: LRRT10377414
+  reference_genome: ~
+  organism: ~
+  accession_number: ~
+  common_name: ~
+  description: ~
+  taxon_id: ~
+  father: ~
+  mother: ~
+  replicate: ~
+  ethnicity: ~
+  gender: ~
+  cohort: ~
+  country_of_origin: ~
+  geographical_region: ~
+  sanger_sample_id: LRRT10377414
+  control: '0'
+  supplier_name: '8102'
+  public_name: Adalia bipunctata
+  sample_visibility: ~
+  strain: ~
+  consent_withdrawn: '0'
+  donor_id: LRRT10377414
+  phenotype: ~
+  developmental_stage: ~
+  control_type: ~
+- id_sample_tmp: '5784053'
+  id_lims: SQSCP
+  uuid_sample_lims: f9695336-caa1-11eb-ade6-fa163eac3af7
+  id_sample_lims: '5841245'
+  last_updated: '2021-06-11 10:44:19'
+  recorded_at: '2021-06-11 10:44:19'
+  deleted_at: ~
+  created: '2021-06-11 10:44:18'
+  name: LRRT10377415
+  reference_genome: ~
+  organism: ~
+  accession_number: ~
+  common_name: ~
+  description: ~
+  taxon_id: ~
+  father: ~
+  mother: ~
+  replicate: ~
+  ethnicity: ~
+  gender: ~
+  cohort: ~
+  country_of_origin: ~
+  geographical_region: ~
+  sanger_sample_id: LRRT10377415
+  control: '0'
+  supplier_name: 8497 re-amplified
+  public_name: Physella acuta
+  sample_visibility: ~
+  strain: ~
+  consent_withdrawn: '0'
+  donor_id: LRRT10377415
+  phenotype: ~
+  developmental_stage: ~
+  control_type: ~
+- id_sample_tmp: '5784054'
+  id_lims: SQSCP
+  uuid_sample_lims: f973ff0c-caa1-11eb-ade6-fa163eac3af7
+  id_sample_lims: '5841246'
+  last_updated: '2021-06-11 10:44:19'
+  recorded_at: '2021-06-11 10:44:19'
+  deleted_at: ~
+  created: '2021-06-11 10:44:18'
+  name: LRRT10377416
+  reference_genome: ~
+  organism: ~
+  accession_number: ~
+  common_name: ~
+  description: ~
+  taxon_id: ~
+  father: ~
+  mother: ~
+  replicate: ~
+  ethnicity: ~
+  gender: ~
+  cohort: ~
+  country_of_origin: ~
+  geographical_region: ~
+  sanger_sample_id: LRRT10377416
+  control: '0'
+  supplier_name: '8497'
+  public_name: Physella acuta
+  sample_visibility: ~
+  strain: ~
+  consent_withdrawn: '0'
+  donor_id: LRRT10377416
+  phenotype: ~
+  developmental_stage: ~
+  control_type: ~
+- id_sample_tmp: '5784055'
+  id_lims: SQSCP
+  uuid_sample_lims: f97d29a6-caa1-11eb-ade6-fa163eac3af7
+  id_sample_lims: '5841247'
+  last_updated: '2021-06-11 10:44:19'
+  recorded_at: '2021-06-11 10:44:19'
+  deleted_at: ~
+  created: '2021-06-11 10:44:18'
+  name: LRRT10377417
+  reference_genome: ~
+  organism: ~
+  accession_number: ~
+  common_name: ~
+  description: ~
+  taxon_id: ~
+  father: ~
+  mother: ~
+  replicate: ~
+  ethnicity: ~
+  gender: ~
+  cohort: ~
+  country_of_origin: ~
+  geographical_region: ~
+  sanger_sample_id: LRRT10377417
+  control: '0'
+  supplier_name: 4453 re-amplified
+  public_name: Metschnikowia zobellii
+  sample_visibility: ~
+  strain: ~
+  consent_withdrawn: '0'
+  donor_id: LRRT10377417
+  phenotype: ~
+  developmental_stage: ~
+  control_type: ~
+- id_sample_tmp: '5784056'
+  id_lims: SQSCP
+  uuid_sample_lims: f9877f5a-caa1-11eb-ade6-fa163eac3af7
+  id_sample_lims: '5841248'
+  last_updated: '2021-06-11 10:44:19'
+  recorded_at: '2021-06-11 10:44:19'
+  deleted_at: ~
+  created: '2021-06-11 10:44:18'
+  name: LRRT10377418
+  reference_genome: ~
+  organism: ~
+  accession_number: ~
+  common_name: ~
+  description: ~
+  taxon_id: ~
+  father: ~
+  mother: ~
+  replicate: ~
+  ethnicity: ~
+  gender: ~
+  cohort: ~
+  country_of_origin: ~
+  geographical_region: ~
+  sanger_sample_id: LRRT10377418
+  control: '0'
+  supplier_name: '8105'
+  public_name: Danio rerio
+  sample_visibility: ~
+  strain: ~
+  consent_withdrawn: '0'
+  donor_id: LRRT10377418
+  phenotype: ~
+  developmental_stage: ~
+  control_type: ~

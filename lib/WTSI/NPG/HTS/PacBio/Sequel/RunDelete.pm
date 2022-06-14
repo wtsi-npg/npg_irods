@@ -3,11 +3,7 @@ package WTSI::NPG::HTS::PacBio::Sequel::RunDelete;
 use namespace::autoclean;
 use Moose;
 use MooseX::StrictConstructor;
-use Readonly;
 use English qw[-no_match_vars];
-
-Readonly::Scalar my $PROD_DIR_COUNT => 5;
-Readonly::Scalar my $PACBIO_FOLDER_NAME => q[pacbio];
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
@@ -36,15 +32,6 @@ sub delete_run {
 
     defined $self->runfolder_path or
         $self->logconfess('A defined runfolder is required');
-
-    ## check path conforms to production path format if required
-    if(defined $checkformat && $checkformat == 1) {
-        my @fields = split /\//mxs, $self->runfolder_path;
-         if( @fields != $PROD_DIR_COUNT ||
-            $fields[3] ne $PACBIO_FOLDER_NAME ) {
-            $self->logcroak('Folder failed format checks '. $self->runfolder_path);
-        }
-    }
 
     ## touch first to check runfolder permissions
     my $touch = q{touch }. $self->runfolder_path;

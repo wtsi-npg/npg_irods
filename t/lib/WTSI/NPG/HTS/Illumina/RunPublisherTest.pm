@@ -10,6 +10,7 @@ use File::Spec::Functions qw[abs2rel catfile catdir splitdir];
 use File::Temp;
 use Log::Log4perl;
 use Test::More;
+use JSON;
 
 use base qw[WTSI::NPG::HTS::Test];
 
@@ -241,6 +242,7 @@ sub publish_xml_files : Test(18) {
     diag explain \@observed;
 }
 
+
 sub publish_qc_files : Test(105) {
   note '=== Tests in publish_qc_files';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -270,11 +272,11 @@ sub publish_qc_files : Test(105) {
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', 17, 'Published 17 QC files');
 
-  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll,
-                                       '[.]json$');
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
   my @expected = ('qc/18448_2.adapter.json',
                   'qc/18448_2.alignment_filter_metrics.json',
                   'qc/18448_2.bam_flagstats.json',
+                  'qc/18448_2.gatk_collecthsmetrics.txt',
                   'qc/18448_2.gc_bias.json',
                   'qc/18448_2.gc_fraction.json',
                   'qc/18448_2.genotype.json',
@@ -293,10 +295,11 @@ sub publish_qc_files : Test(105) {
     diag explain \@observed;
 
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
+  my @absolute_paths2 = grep { m{[.]json$}msx } @absolute_paths;
 
   my $pkg = 'WTSI::NPG::HTS::Illumina::AncDataObject';
   check_common_metadata($irods, $pkg, @absolute_paths);
-  check_study_id_metadata($irods, $pkg, @absolute_paths);
+  check_study_id_metadata($irods, $pkg, @absolute_paths2);
 }
 
 # Lane-level, primary and secondary data, from ML warehouse
@@ -363,6 +366,7 @@ sub publish_lane_sec_data_mlwh : Test(79) {
   my @absolute_paths = map { "$dest_coll/$_" } @observed;
   my $pkg = 'WTSI::NPG::HTS::Illumina::AncDataObject';
   check_common_metadata($irods, $pkg, @absolute_paths);
+ 
 }
 
 # Lane-level, primary and secondary data, from samplesheet
@@ -589,6 +593,61 @@ sub publish_plex_sec_data_samplesheet : Test(59) {
   check_common_metadata($irods, $pkg, @absolute_paths);
 }
 
+
+# Plex-level, secondary data including geno and vcf, from samplesheet
+sub publish_plex_geno_sec_data_samplesheet : Test(73) {
+  note '=== Tests in publish_plex_geno_sec_data_samplesheet';
+  my $runfolder_path = "$data_path/sequence/190514_MS5_29467_A_MS8070734-300V2";
+  my $archive_path   = "$runfolder_path/Data/Intensities/" .
+                       'BAM_basecalls_20190520-165319/no_cal/archive';
+  my $id_run         = 29467;
+  my $lane           = 1;
+  my $plex           = 1;
+
+  local $ENV{NPG_CACHED_SAMPLESHEET_FILE} =
+    "$runfolder_path/Data/Intensities/BAM_basecalls_20190520-165319/" .
+    "metadata_cache_29467/samplesheet_29467.csv";
+
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(driver_type => 'samplesheet');
+
+  my $dest_coll = check_publish_plex_sec_data($runfolder_path, $archive_path,
+                                              $id_run, $lane, $plex,
+                                              $lims_factory);
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
+  
+  my @expected = ("lane$lane/29467_1#1.composition.json",
+                  "lane$lane/29467_1#1.cram.crai",
+                  "lane$lane/29467_1#1.flagstat",
+                  "lane$lane/29467_1#1.geno",
+                  "lane$lane/29467_1#1.orig.seqchksum",
+                  "lane$lane/29467_1#1.seqchksum",
+                  "lane$lane/29467_1#1.sha512primesums512.seqchksum",
+                  "lane$lane/29467_1#1.spatial_filter.stats",
+                  "lane$lane/29467_1#1.substitution_analysis.txt",
+                  "lane$lane/29467_1#1.substitution_metrics.txt",
+                  "lane$lane/29467_1#1.vcf",
+                  "lane$lane/29467_1#1_F0x900.stats",
+                  "lane$lane/29467_1#1_F0xB00.stats",
+                  );
+
+  is_deeply(\@observed, \@expected) or diag explain \@observed;
+
+  my @absolute_paths = map { $_ !~ /\.(geno|vcf)$/smx ? "$dest_coll/$_" : () } @observed;
+  my $pkg = 'WTSI::NPG::HTS::Illumina::AncDataObject';
+  check_common_metadata($irods, $pkg, @absolute_paths);
+
+  my @absolute_paths2 = map { $_ =~ /\.(geno|vcf)$/smx ? "$dest_coll/$_" : () } @observed;
+  my $pkg2 = 'WTSI::NPG::HTS::Illumina::AgfDataObject';
+  check_common_metadata($irods, $pkg2, @absolute_paths2);
+  check_gbs_plex_metadata($irods, $pkg2, @absolute_paths2);
+  check_study_id_metadata($irods, $pkg2, @absolute_paths2);
+
+}
+
 # Merged NovaSeq data, from ML warehouse
 sub publish_merged_pri_data_mlwh : Test(19) {
   note '=== Tests in publish_merged_pri_data_mlwh';
@@ -759,7 +818,7 @@ sub publish_merged_sec_data_samplesheet : Test(89) {
   check_common_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_plex_pri_data_alt_process : Test(7) {
+sub publish_plex_pri_data_alt_process : Test(13) {
   note '=== Tests in publish_plex_pri_data_alt_process';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -774,26 +833,32 @@ sub publish_plex_pri_data_alt_process : Test(7) {
   my $lims_factory =
     WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
 
-  my $name = sprintf q[%s_%s#%s], $id_run, $lane, $plex;
-  my $composition_file = sprintf q[%s/lane%s/%s.composition.json],
-    $archive_path, $lane, $name;
-  my $alt_process = 'an_alternative_process';
-  my $coll = 'publish_alt_process';
+  my $alt_process;
+  my $dest_coll;
 
-  my $dest_coll =
-    check_publish_pri_data($runfolder_path, $archive_path, $lims_factory,
-                           $composition_file, $coll, $alt_process);
+  foreach my $name_string (q[%s_%s#%s], q[%s_%s#%s_phix]) {
+    my $name = sprintf $name_string, $id_run, $lane, $plex;
+    my $composition_file = sprintf q[%s/lane%s/%s.composition.json],
+      $archive_path, $lane, $name;
+    $alt_process = 'an_alternative_process';
+    my $coll = 'publish_alt_process';
 
-  my @path = grep { length } splitdir($dest_coll);
+    $dest_coll =
+      check_publish_pri_data($runfolder_path, $archive_path, $lims_factory,
+        $composition_file, $coll, $alt_process);
+  }
+
+  my @path = grep {length} splitdir($dest_coll);
   is($path[-1], $alt_process, 'Expected leaf collection present')
     or diag explain $dest_coll;
 
   my @observed = observed_data_objects($irods, "$dest_coll/lane$lane",
-                                       $dest_coll);
-  my @absolute_paths = map { "$dest_coll/$_" } @observed;
+    $dest_coll);
+  my @absolute_paths = map {"$dest_coll/$_"} @observed;
 
   my $pkg = 'WTSI::NPG::HTS::Illumina::AlnDataObject';
   check_alt_process_metadata($irods, $pkg, $alt_process, @absolute_paths);
+
 }
 
 sub publish_xml_files_alt_process : Test(15) {
@@ -890,6 +955,7 @@ sub publish_include_exclude : Test(3) {
                   'qc/18448_2.adapter.json',
                   'qc/18448_2.alignment_filter_metrics.json',
                   'qc/18448_2.bam_flagstats.json',
+                  'qc/18448_2.gatk_collecthsmetrics.txt',
                   'qc/18448_2.gc_bias.json',
                   'qc/18448_2.gc_fraction.json',
                   'qc/18448_2.genotype.json',
@@ -907,12 +973,13 @@ sub publish_include_exclude : Test(3) {
   is_deeply(\@observed, \@expected) or diag explain \@observed;
 }
 
-sub publish_archive_path_mlwh : Test(6) {
+sub publish_archive_path_mlwh : Test(8) {
   note '=== Tests in publish_archive_path_mlwh';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
                        'BAM_basecalls_20151214-085833/no_cal/archive';
   my $id_run         = 18448;
+  my $expected_json  = "t/data/mlwh_json/illumina.json";
 
   my $lims_factory =
     WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
@@ -929,13 +996,20 @@ sub publish_archive_path_mlwh : Test(6) {
      irods            => $irods,
      lims_factory     => $lims_factory,
      restart_file     => catfile($tmpdir->dirname, 'published.json'),
-     source_directory => $runfolder_path);
+     source_directory => $runfolder_path,
+     mlwh_json        => catfile($tmpdir->dirname, 'mlwh_irods.json'));
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
   my $num_expected = 380;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
+
+  my $mlwh_json = $pub->mlwh_json;
+  ok(-e $mlwh_json, "mlwh loader json file $mlwh_json was written by publisher");
+  is_deeply(read_json_content($mlwh_json),
+    set_destination(read_json_content($expected_json), $irods_tmp_coll),
+    "contents of $mlwh_json are correct");
 
   my $restart_file = $pub->restart_file;
   ok(-e $restart_file, "Restart file $restart_file was written by publisher");
@@ -957,6 +1031,64 @@ sub publish_archive_path_mlwh : Test(6) {
   my ($repub_files, $repub_processed, $repub_errors) = $repub->publish_files;
   cmp_ok($repub_errors,    '==', 0, 'No errors on re-publishing');
   cmp_ok($repub_processed, '==', 0, "Re-published no files");
+}
+
+sub publish_archive_path_existing_mlwh_json : Test(2) {
+  note '=== Tests in publish_existing_mlwh_json';
+  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $id_run         = 18448;
+  my $initial_json = {
+    "version" => "1.0",
+    "products"=>
+      [
+        { # replaced during publish
+          "irods_data_relative_path" => "18448_1.cram",
+          "id_product"               => "98441df9e535436533620dcba86eef653d5749c546eb218dc9e2f7c587cec272",
+          "irods_root_collection"    => "$irods_tmp_coll/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/",
+          "pipeline_name"            => "npg-prod-alt-process",
+          "seq_platform_name"        => "illumina"
+        },
+        { # unaffected by publish
+          "irods_data_relative_path" => "test.cram",
+          "id_product"               => "7382ff198a7321eadcea98bb39ade23749b3bace2874bbaced29789dbcd987659",
+          "irods_root_collection"    => "$irods_tmp_coll/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/",
+          "pipeline_name"            => "npg-prod",
+          "seq_platform_name"        => "illumina"
+        }]};
+  my $expected_json  = "t/data/mlwh_json/illumina_existing.json";
+
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
+  my $dest_coll = "$irods_tmp_coll/publish_entire_mlwh";
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+
+  my $mlwh_json = catfile($tmpdir->dirname, 'mlwh_irods_existing.json');
+  open my $mlwh_json_fh, '>:encoding(UTF-8)', $mlwh_json
+    or die 'failed to create a test file';
+  print $mlwh_json_fh encode_json($initial_json)
+    or die 'failed to write to a test file';
+  close $mlwh_json_fh;
+  is_deeply(read_json_content($mlwh_json), $initial_json, 'contents of existing mlwh_json file are correct');
+
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (id_run           => $id_run,
+     dest_collection  => $dest_coll,
+     irods            => $irods,
+     lims_factory     => $lims_factory,
+     restart_file     => catfile($tmpdir->dirname, 'published.json'),
+     source_directory => $runfolder_path,
+     mlwh_json        => $mlwh_json);
+
+  $pub->publish_files;
+
+  is_deeply(read_json_content($mlwh_json),
+    set_destination(read_json_content($expected_json), $irods_tmp_coll),
+    "contents of $mlwh_json are correct");
 }
 
 # From here onwards are test support functions
@@ -1240,14 +1372,32 @@ sub check_alt_process_metadata {
               [{attribute => $TARGET,
                 value     => 0}],
               "$file_name $TARGET metadata correct when alt_process");
-    is_deeply([$obj->get_avu($ALT_TARGET)],
-              [{attribute => $ALT_TARGET,
-                value     => 1}],
-              "$file_name $ALT_TARGET metadata correct when alt_process");
-    is_deeply([$obj->get_avu($ALT_PROCESS)],
+    if ($path =~ /phix/) {
+      is_deeply([$obj->get_avu($ALT_TARGET)],
+                [undef],
+                "$file_name $ALT_TARGET metadata not set for phiX file");
+    }else{
+      is_deeply([$obj->get_avu($ALT_TARGET)],
+                [{attribute => $ALT_TARGET,
+                  value     => 1}],
+                "$file_name $ALT_TARGET metadata correct when alt_process");
+    }
+     is_deeply([$obj->get_avu($ALT_PROCESS)],
               [{attribute => $ALT_PROCESS,
                 value     => $alt_process}],
               "$file_name $ALT_PROCESS metadata correct when alt_process");
+  }
+}
+
+sub check_gbs_plex_metadata {
+  my ($irods, $pkg, @paths) = @_;
+
+  foreach my $path (@paths) {
+    my $obj = $pkg->new($irods, $path);
+    my $file_name = fileparse($obj->str);
+
+    my @avu = $obj->find_in_metadata($GBS_PLEX_NAME);
+    cmp_ok(scalar @avu, '==', 1, "$file_name $GBS_PLEX_NAME metadata present");
   }
 }
 
@@ -1270,6 +1420,24 @@ sub calc_lane_alignment_files {
   }
 
   return %position_index;
+}
+
+sub read_json_content {
+  my ($path) = @_;
+
+  open my $mlwh_json_fh, '<:encoding(UTF-8)', $path or die qq[could not open $path];
+
+  my $json = decode_json <$mlwh_json_fh>;
+  close $mlwh_json_fh;
+  return $json
+}
+
+sub set_destination {
+  my ($json_hash, $temp_coll) = @_;
+  foreach my $product (@{$json_hash->{products}}){
+    $product->{irods_root_collection} =~ s|/testZone/home/irods/RunPublisherTest.XXXXX.0/|$temp_coll/|xms;
+  }
+  return $json_hash;
 }
 
 sub observed_data_objects {

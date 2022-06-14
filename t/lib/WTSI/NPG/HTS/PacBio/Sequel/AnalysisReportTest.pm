@@ -10,7 +10,6 @@ use JSON;
 use Log::Log4perl;
 use Test::More;
 use Test::Exception;
-use URI;
 
 use base qw[WTSI::NPG::HTS::Test];
 
@@ -40,7 +39,7 @@ sub read_report_file : Test(2) {
 
   my $rdo = WTSI::NPG::HTS::PacBio::Sequel::Reportdata->load($merged_file);
   
-  cmp_ok($rdo->created_at, 'eq', '2020-11-05T21:24:30', "created_at is correct");
+  cmp_ok($rdo->created_at, 'eq', '2020-11-05T21:24:30', 'created_at is correct');
   is_deeply($rdo->meta_data, $meta_data, 'meta_data is correct');
 }
 
@@ -103,6 +102,38 @@ sub create_report_file_2 : Test(3) {
 
   is_deeply($rdo1->meta_data, $rdo2->meta_data, '[2] created report meta_data is correct');
   is_deeply($rdo1->reports, $rdo2->reports, '[2] created report reports is correct');
+
+}
+
+sub create_report_file_3 : Test(3) {
+  
+  my $analysis_path  = "$data_path/0000003442";
+  my $runfolder_path = "$analysis_path/cromwell-job/call-demultiplex_barcodes/call-lima/execution/";
+  my $report_file_1  = "$runfolder_path/merged_analysis_report.json";
+
+  my $meta_file      = "$analysis_path/entry-points/081746ec-5099-4efb-9702-0f97bf22dc59.subreadset.xml";
+  my $meta_data      = WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file
+    ($meta_file, 'pbmeta:');
+
+  my $rdo1 = WTSI::NPG::HTS::PacBio::Sequel::Reportdata->load($report_file_1);
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./report_tmp.XXXXXX");
+  my @init_args = (
+    analysis_path  => $analysis_path,
+    runfolder_path => $runfolder_path,
+    output_dir     => $tmpdir->dirname,
+    meta_data      => $meta_data );
+
+ 
+  my $report = WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport->new(@init_args);
+  my $report_file_name_2 = $report->generate_analysis_report;
+  my $report_file_2 = catfile($report->output_dir,$report_file_name_2);
+  ok(-f $report_file_2, "[3] created report file exists");
+
+  my $rdo2 = WTSI::NPG::HTS::PacBio::Sequel::Reportdata->load($report_file_2);
+
+  is_deeply($rdo1->meta_data, $rdo2->meta_data, '[3] created report meta_data is correct');
+  is_deeply($rdo1->reports, $rdo2->reports, '[3] created report reports is correct');
 
 }
 

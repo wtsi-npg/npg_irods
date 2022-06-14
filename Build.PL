@@ -25,6 +25,7 @@ my $build = Build->new
     'Test::Class'                   => '>= 0.41',
     'Test::Compile'                 => 0,
     'Test::HTTP::Server'            => 0,
+    'Test::LWP::UserAgent'          => 0,
     'Test::MockObject::Extends'     => 0,
     'Test::More'                    => '>= 0.98',
     'Test::Exception'               => '>= 0.32',

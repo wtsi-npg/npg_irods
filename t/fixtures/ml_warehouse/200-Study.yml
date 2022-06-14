@@ -1039,3 +1039,43 @@
   study_type: Whole Genome Sequencing
   study_visibility: Public
   uuid_study_lims: cf04ea86-ac82-11e9-8998-68b599768938
+- id_study_tmp: '6276'
+  id_lims: SQSCP
+  uuid_study_lims: 9b154b66-9d31-11eb-aab2-fa163eea3084
+  id_study_lims: '6446'
+  last_updated: '2021-06-14 08:37:24'
+  recorded_at: '2021-06-14 08:37:24'
+  deleted_at: ~
+  created: '2021-04-14 14:56:34'
+  name: Long-Read RNA Testing
+  reference_genome: ' '
+  ethically_approved: ~
+  faculty_sponsor: Harold Swerdlow
+  state: active
+  study_type: Transcriptome Analysis
+  abstract: ~
+  abbreviation: LRRT
+  accession_number: XXXX123
+  description: Transcriptome analysis using long read technologies
+  contains_human_dna: '0'
+  contaminated_human_dna: '0'
+  data_release_strategy: managed
+  data_release_sort_of_study: transcriptomics
+  ena_project_id: ~
+  study_title: ~
+  study_visibility: Hold
+  ega_dac_accession_number: ~
+  array_express_accession_number: ~
+  ega_policy_accession_number: ~
+  data_release_timing: standard
+  data_release_delay_period: ~
+  data_release_delay_reason: ~
+  remove_x_and_autosomes: '0'
+  aligned: '1'
+  separate_y_chromosome_data: '0'
+  data_access_group: team51 kj2 sm15
+  prelim_id: ~
+  hmdmc_number: ~
+  data_destination: ~
+  s3_email_list: ~
+  data_deletion_period: ~
