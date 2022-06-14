@@ -241,7 +241,7 @@ sub publish_xml_files : Test(18) {
     diag explain \@observed;
 }
 
-sub publish_qc_files : Test(99) {
+sub publish_qc_files : Test(105) {
   note '=== Tests in publish_qc_files';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -268,7 +268,7 @@ sub publish_qc_files : Test(99) {
   my ($num_files, $num_processed, $num_errors) =
     $pub->publish_qc_files($composition_file);
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
-  cmp_ok($num_processed, '==', 16, 'Published 16 QC files');
+  cmp_ok($num_processed, '==', 17, 'Published 17 QC files');
 
   my @observed = observed_data_objects($irods, $dest_coll, $dest_coll,
                                        '[.]json$');
@@ -282,6 +282,7 @@ sub publish_qc_files : Test(99) {
                   'qc/18448_2.pulldown_metrics.json',
                   'qc/18448_2.qX_yield.json',
                   'qc/18448_2.ref_match.json',
+                  'qc/18448_2.rna_seqc.json',
                   'qc/18448_2.sequence_error.json',
                   'qc/18448_2.sequence_summary.json',
                   'qc/18448_2.spatial_filter.json',
@@ -867,7 +868,7 @@ sub publish_include_exclude : Test(3) {
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
-  cmp_ok($num_processed, '==', 32, 'Published 32 files');
+  cmp_ok($num_processed, '==', 33, 'Published 33 files');
 
   my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
   my @expected = ('18448_2.all.seqchksum',
@@ -896,6 +897,7 @@ sub publish_include_exclude : Test(3) {
                   'qc/18448_2.pulldown_metrics.json',
                   'qc/18448_2.qX_yield.json',
                   'qc/18448_2.ref_match.json',
+                  'qc/18448_2.rna_seqc.json',
                   'qc/18448_2.sequence_error.json',
                   'qc/18448_2.sequence_summary.json',
                   'qc/18448_2.spatial_filter.json',
@@ -931,7 +933,7 @@ sub publish_archive_path_mlwh : Test(6) {
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
-  my $num_expected = 379;
+  my $num_expected = 380;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
 
