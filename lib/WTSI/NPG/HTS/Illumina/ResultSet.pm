@@ -95,6 +95,7 @@ our %ILLUMINA_PART_PATTERNS =
        '[.]pulldown_metrics[.]json',
        '[.]qX_yield[.]json',
        '[.]ref_match[.]json',
+       '[.]rna_seqc[.]json',
        '[.]samtools_stats[.]json',
        '[.]sequence_error[.]json',
        '[.]sequence_summary[.]json',

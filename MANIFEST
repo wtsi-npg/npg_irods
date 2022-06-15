@@ -14142,6 +14142,8 @@ t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basec
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.qX_yield.json.md5
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.ref_match.json
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.ref_match.json.md5
+t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.rna_seqc.json
+t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.rna_seqc.json.md5
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.sequence_error.json
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.sequence_error.json.md5
 t/data/illumina/sequence/151211_HX3_18448_B_HHH55CCXX/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/qc/18448_2.sequence_summary.json
