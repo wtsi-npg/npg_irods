@@ -100,6 +100,7 @@ our %ILLUMINA_PART_PATTERNS =
        '[.]sequence_error[.]json',
        '[.]sequence_summary[.]json',
        '[.]spatial_filter[.]json',
+       '[.]substitution_metrics[.]json',
        '[.]verify_bam_id[.]json',
        '_target[.]samtools_stats[.]json',          # non-conforming file name
        '_target_autosome[.]samtools_stats[.]json'; # non-conforming file name
