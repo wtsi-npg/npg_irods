@@ -1,5 +1,11 @@
 Upcoming
 
+Release 2.37.0
+
+  - Bugfix: iquest parsing for the iRODS single replica object-finding query
+  - Change the field used to determine IsCCS for PacBio
+  - Archive the substitution metrics qc JSON file for Illumina
+
 Release 2.36.0
 
   - Add ML warehouse JSON file generation to npg_publish_tree.pl
