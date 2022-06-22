@@ -263,13 +263,19 @@ sub publish_sequence_files {
 
   # is_target is set to 0 where the bam file contains sample data but there
   # is another preferred file for the customer. The logic to set is_target = 0
-  # is if the sample is the only one in the pool but the sample is barcoded
-  # (as all barcoded samples will be deplexed), if the bam is not from on board
-  # processing and is ccs is true (as ccs analysis will be run off instrument),
-  # if there is more than 1 sample in the pool (as the data will be deplexed),
-  # if the data is R&D (will be untracked in LIMs) or the bam is auxiliary.
-  my $is_target = ((@run_records == 1 && $run_records[0]->tag_sequence) ||
-    ($type ne $CCS_SEQUENCE_PRODUCT && $metadata->is_ccs eq 'true') ||
+  # is ;
+  #  if the data is single tag and ccs either on or off instrument (as data will
+  #    be deplexed. if single tag non ccs customer prefers non deplexed data as
+  #    target = 1) 
+  #  if the bam is not from on board processing and ccs execution mode is not
+  #   None (as ccs analysis will be run and ccs data will be target = 1),
+  #  if there is more than 1 sample in the pool (as the data will be deplexed),
+  #  if the data is R&D (will be untracked in LIMs)
+  #  if the bam is auxiliary.
+  my $is_target =
+    ((@run_records == 1 && $run_records[0]->tag_sequence &&
+      $metadata->execution_mode ne 'None') ||
+    ($type ne $CCS_SEQUENCE_PRODUCT && $metadata->execution_mode ne 'None') ||
      @run_records > 1 || $is_r_and_d || $is_aux) ? 0 : 1;
 
   my @primary_avus   = $self->make_primary_metadata

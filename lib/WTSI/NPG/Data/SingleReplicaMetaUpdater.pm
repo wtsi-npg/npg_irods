@@ -204,6 +204,9 @@ sub _find_candidate_objects {
     # with its data output
     next if $line =~ m{^Zone is}msx;
     next if $line =~ m{^No rows found}msx;
+    # Skip record separators. These are not printed consistently; when there
+    # are sufficient records to cause pagination, the separator is missing.
+    next if $line =~ m{^----$}msx;
 
     $self->debug("iquest: $line");
     push @records, $line;
@@ -238,22 +241,20 @@ sub _find_candidate_objects {
   return $paths;
 }
 
+# A record is a pair of lines; collection path and data object name
 sub _parse_iquest_records {
   my ($self, @records) = @_;
 
   my @paths;
   my @path_elements;
   foreach my $line (@records) {
-    if ($line and scalar @path_elements == 2) {
+    push @path_elements, $line;
+
+    if (scalar @path_elements == 2) {
       push @paths, join q[/], @path_elements;
       @path_elements = ();
-      next;
     }
-
-    push @path_elements, $line;
   }
-
-  push @paths, join q[/], @path_elements; # Capture the last pair
 
   @paths = sort { $a cmp $b } @paths;
 
