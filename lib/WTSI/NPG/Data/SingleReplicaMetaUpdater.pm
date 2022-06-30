@@ -228,10 +228,10 @@ sub _find_candidate_objects {
       $self->logcroak("Failed close STDOUT of iquest '$iquest_cmd': $ERRNO");
 
   my $paths = $self->_parse_iquest_records(@records);
-  $self->debug(sprintf q[Found %d paths], scalar @{$paths});
+  my $found = scalar @{$paths};
+  $self->debug(sprintf q[Found %d paths], $found);
 
-  if ($limit > 0) {
-    my $found = scalar @{$paths};
+  if ($limit and $limit < $found) {
     $paths = [@{$paths}[0 .. $limit-1]];
     my $limited = scalar @{$paths};
 
