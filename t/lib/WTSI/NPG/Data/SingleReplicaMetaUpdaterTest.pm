@@ -141,11 +141,14 @@ sub avoid_inconsistent_objects : Test(4) {
     explain \@observed;
 }
 
-sub limit_number_processed : Test(4) {
+sub limit_number_processed_more_found : Test(4) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-      strict_baton_version => 0);
+                                    strict_baton_version => 0);
 
   my $m = WTSI::NPG::Data::SingleReplicaMetaUpdater->new(irods => $irods);
+
+  # We find more candidates than the limit number, so the limit should be in
+  # effect.
 
   # The first 5 objects are older than the threshold (middle) time point (the
   # others are exactly on it, or more recent. We limit that to just 2
@@ -163,5 +166,34 @@ sub limit_number_processed : Test(4) {
   is_deeply(\@observed, \@expected, 'Single replica metadata added') or diag
       explain \@observed;
 }
+
+sub limit_number_processed_fewer_found : Test(4) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+      strict_baton_version => 0);
+
+  my $m = WTSI::NPG::Data::SingleReplicaMetaUpdater->new(irods => $irods);
+
+  # We find fewer candidates than the limit number, so the limit should have
+  # no effect.
+
+  # The first 5 objects are older than the threshold (middle) time point (the
+  # others are exactly on it, or more recent.
+  my ($num_objs, $num_processed, $num_errors) =
+      $m->update_single_replica_metadata(end_date => $middle,
+                                         limit    => 10);
+  is($num_objs, 5, 'Expected 5 objects found');
+  is($num_processed, 5, 'Expected 5 objects processed');
+  is($num_errors, 0, 'Expected no errors');
+
+  my $sr = $WTSI::NPG::Data::SingleReplicaMetaUpdater::SINGLE_REPLICA_ATTR;
+  my @expected = map { "$irods_tmp_coll/single_replica/$_.txt" } 1 .. 5;
+
+  my @observed = $irods->find_objects_by_meta($irods_tmp_coll, [$sr => 1]);
+  is_deeply(\@observed, \@expected, 'Single replica metadata added') or diag
+      explain \@observed;
+}
+
+
+
 
 1;

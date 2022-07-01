@@ -1,4 +1,7 @@
 Upcoming
+Release 2.37.1
+
+  - Bugfix: Object limit for the iRODS single replica object-finding query
 
 Release 2.37.0
 
