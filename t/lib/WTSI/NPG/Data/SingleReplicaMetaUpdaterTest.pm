@@ -120,8 +120,8 @@ sub avoid_inconsistent_objects : Test(4) {
   $obj1->remove_avu($ebi_md5, '68b22040025784da775f55cfcb6dee2e');
 
   # Make the second of the candidate objects inconsistent by changing its
-  # ebi_sub_md5 metadata. This means the object will be found, but will
-  # raise an error on processing.
+  # ebi_sub_md5 metadata. This means the object will be found, and will
+  # raise a warning on processing with no error.
   my $obj2 =
     WTSI::NPG::iRODS::DataObject->new($irods,
                                       "$irods_tmp_coll/single_replica/2.txt");
@@ -131,10 +131,10 @@ sub avoid_inconsistent_objects : Test(4) {
     $m->update_single_replica_metadata(end_date => $middle);
   is($num_objs, 4, 'Expected 4 objects found');
   is($num_processed, 4, 'Expected 4 objects processed');
-  is($num_errors, 1, 'Expected 1 error');
+  is($num_errors, 0, 'Expected 0 error');
 
   my $sr = $WTSI::NPG::Data::SingleReplicaMetaUpdater::SINGLE_REPLICA_ATTR;
-  my @expected = map { "$irods_tmp_coll/single_replica/$_.txt" } 3 .. 5;
+  my @expected = map { "$irods_tmp_coll/single_replica/$_.txt" } 2 .. 5;
 
   my @observed = $irods->find_objects_by_meta($irods_tmp_coll, [$sr => 1]);
   is_deeply(\@observed, \@expected, 'Single replica metadata added') or diag
