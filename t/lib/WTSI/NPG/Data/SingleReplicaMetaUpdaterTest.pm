@@ -120,8 +120,8 @@ sub avoid_inconsistent_objects : Test(4) {
   $obj1->remove_avu($ebi_md5, '68b22040025784da775f55cfcb6dee2e');
 
   # Make the second of the candidate objects inconsistent by changing its
-  # ebi_sub_md5 metadata. This means the object will be found, and will
-  # raise a warning on processing with no error.
+  # ebi_sub_md5 metadata. This means the object will be found, and a warning 
+  # will be logged on processing with no error.
   my $obj2 =
     WTSI::NPG::iRODS::DataObject->new($irods,
                                       "$irods_tmp_coll/single_replica/2.txt");
