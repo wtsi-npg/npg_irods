@@ -30,7 +30,7 @@ our $MOVIE_TAG             = 'Context';
 our $OUTPUT_TAG            = 'OutputOptions';
 our $RFOLDER_TAG           = 'ResultsFolder';
 
-our $IS_CCS_TAG            = 'IsCCS';
+our $EXECUTION_MODE_TAG    = 'ExecutionMode';
 
 our $COMP_VERSION          = 'VersionInfo';
 our $CNAME                 = 'Name';
@@ -89,8 +89,8 @@ sub parse_file {
   my $results_folder =
     $output->getElementsByTagName($prefix . $RFOLDER_TAG)->[0]->string_value;
 
-  my $is_ccs = $dom->getElementsByTagName($prefix . $IS_CCS_TAG) ?
-    $dom->getElementsByTagName($prefix . $IS_CCS_TAG)->[0]->string_value : 0;
+  my $exec_mode = $dom->getElementsByTagName($prefix . $EXECUTION_MODE_TAG) ?
+    $dom->getElementsByTagName($prefix . $EXECUTION_MODE_TAG)->[0]->string_value : 'None';
 
   my $subreads_uuid = $dom->getElementsByTagName($SUBREADSET_TAG) ?
     $dom->getElementsByTagName($SUBREADSET_TAG)->[0]->getAttribute($UNIQUE_ID_TAG)
@@ -121,7 +121,7 @@ sub parse_file {
      cell_index         => $cell_index,
      movie_name         => $movie_name,
      results_folder     => $results_folder,
-     is_ccs             => $is_ccs,
+     execution_mode     => $exec_mode,
      version_info       => \%versions,
      );
 }

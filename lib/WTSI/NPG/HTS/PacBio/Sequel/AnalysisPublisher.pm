@@ -164,15 +164,15 @@ sub publish_sequence_files {
     my @records = (@tag_records == 1) ? @tag_records : @all_records;
 
     if (@records >= 1) {
-      # Don't set target = 1 if more than 1 record 
+      # Don't set target = 1 if more than 1 record
       #  or data is non deplexed leftovers on multiplexed run
       #  or data is for unexpected barcode
-      #  or data is single tag standard (non ccs) deplex 
+      #  or data is single tag standard (non ccs) deplex
       #  or data is fasta.gz format
       my $is_target   = (@records > 1 ||
           $self->_is_allowed_fname($filename, \@FNAME_NON_DEPLEXED) ||
          ($tag_id && @tag_records != 1) ||
-         ($self->_metadata->is_ccs ne 'true' && $tag_id && @all_records == 1) ||
+         ($self->_metadata->execution_mode eq 'None' && $tag_id && @all_records == 1) ||
          ($format eq $SEQUENCE_FASTA_FORMAT))
           ? 0 : 1;
 

@@ -45,6 +45,8 @@ my $metadata_file;
 my $restart_file;
 my $source_directory;
 my $verbose;
+my $mlwh_json_filename;
+my $stdio;
 
 my @include;
 my @exclude;
@@ -61,9 +63,11 @@ GetOptions('collection=s'                        => \$dest_collection,
            'include=s'                           => \@include,
            'max-errors|max_errors=i'             => \$max_errors,
            'metadata=s'                          => \$metadata_file,
+           'mlwh-json|mlwh_json=s'               => \$mlwh_json_filename,
            'restart-file|restart_file=s'         => \$restart_file,
            'source-directory|source_directory=s' => \$source_directory,
-           'verbose'                             => \$verbose);
+           'verbose'                             => \$verbose,
+           q[]                                   => \$stdio);
 
 if ($verbose and not $debug) {
   Log::Log4perl::init(\$log_config);
@@ -125,15 +129,29 @@ sub _make_filter_fn {
   };
 }
 
+sub _decode_and_check_metadata {
+  my ($metadata_encoded) = @_;
+  my $metadata_decoded = JSON->new->utf8(1)->decode($metadata_encoded);
+
+  if (not ref $metadata_decoded eq 'ARRAY') {
+    $log->logcroak("Malformed metadata JSON in '${metadata_decoded}'; expected",
+                   ' an array');
+  }
+  return $metadata_decoded;
+}
+
+sub _read_metadata_stdin {
+  my $metadata_json;
+  while (my $line = <>) {
+    chomp $line;
+    $metadata_json .= $line;
+  }
+  return _decode_and_check_metadata($metadata_json);
+}
+
 sub _read_metadata_file {
   my $metadata_json = read_file($metadata_file);
-  my $metadata = JSON->new->utf8(1)->decode($metadata_json);
-
-  if (not ref $metadata eq 'ARRAY') {
-    $log->logcroak("Malformed metadata JSON in '$metadata_file'; expected",
-                   'an array');
-  }
-  return $metadata;
+  return _decode_and_check_metadata($metadata_json);
 }
 
 if (not $source_directory) {
@@ -148,6 +166,11 @@ if (not $dest_collection) {
             -exitval => 2);
 }
 
+if (defined $metadata_file and $stdio) {
+  $log->logcroak('Metadata JSON file and metadata from STDIN options',
+                    ' cannot be specified together');
+}
+
 my $irods = WTSI::NPG::iRODS->new;
 my @init_args = (dest_collection        => $dest_collection,
                 force                  => $force,
@@ -157,7 +180,9 @@ my @init_args = (dest_collection        => $dest_collection,
 if ($max_errors) {
   push @init_args, max_errors => $max_errors;
 }
-
+if (defined $mlwh_json_filename) {
+  push @init_args, mlwh_json => $mlwh_json_filename;
+}
 my $coll = WTSI::NPG::iRODS::Collection->new($irods, $dest_collection);
 my $publisher = WTSI::NPG::HTS::TreePublisher->new(@init_args);
 
@@ -212,6 +237,13 @@ if ($metadata_file) {
   my $metadata = _read_metadata_file();
   $log->debug('Adding to ', $coll->str, ' metadata: ', pp($metadata));
   foreach my $avu (@{$metadata}) {
+    $coll->add_avu($avu->{attribute}, $avu->{value}, $avu->{units});
+  }
+}
+
+if ($stdio) {
+  my $metadata_in = _read_metadata_stdin();
+  foreach my $avu (@{$metadata_in}) {
     $coll->add_avu($avu->{attribute}, $avu->{value}, $avu->{units});
   }
 }
@@ -273,7 +305,9 @@ npg_publish_tree --source-directory <path> --collection <path>
                       E.g. [{"attribute": "attr1", "value": "val1"},
                             {"attribute": "attr2", "value": "val2"}]
 
-
+   --mlwh-json        
+   --mlwh_json        Write information about the root collection to json file. 
+                      Optional.
    --restart-file
    --restart_file     A file path where a record of successfully published
                       files will be recorded in JSON format on exit. If the
@@ -283,6 +317,8 @@ npg_publish_tree --source-directory <path> --collection <path>
    --source-directory
    --source_directory The local path to load.
    --verbose          Print messages while processing. Optional.
+
+   -                  Read JSON metadata from standard input.
 
 =head1 DESCRIPTION
 

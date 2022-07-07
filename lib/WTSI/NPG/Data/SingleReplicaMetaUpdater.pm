@@ -2,10 +2,12 @@ package WTSI::NPG::Data::SingleReplicaMetaUpdater;
 
 use namespace::autoclean;
 use Carp;
-use Data::Dump qw[pp];
+use English qw[-no_match_vars];
+use IPC::Open3;
 use DateTime;
 use DateTime::Duration;
 use Moose;
+use Symbol qw[gensym];
 use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
@@ -59,6 +61,9 @@ has 'default_grace_period' =>
                Include only data objects with a dcterms:created earlier than
                this value, DateTime.
 
+               limit
+               Update no more than this number of data objects, integer.
+
   Example    : $meta->update_single_replica_metadata(begin_date => $begin,
                                                      end_date   => $end);
 
@@ -89,7 +94,7 @@ has 'default_grace_period' =>
 
 {
   my $positional = 1;
-  my @named      = qw[begin_date end_date zone];
+  my @named      = qw[begin_date end_date limit zone];
   my $params     = function_params($positional, @named);
 
   sub update_single_replica_metadata {
@@ -103,13 +108,17 @@ has 'default_grace_period' =>
                      $default_begin;
     my $end_date   = $params->end_date ? $params->end_date :
                      $default_end;
+    my $limit      = defined $params->limit ? int($params->limit) : 0;
 
     $begin_date->isa('DateTime') or
       $self->logconfess('The begin_date argument must be a DateTime');
     $end_date->isa('DateTime') or
       $self->logconfess('The end_date argument must be a DateTime');
 
-    my $paths = $self->_find_candidate_objects($begin_date, $end_date,
+    $limit >= 0 or
+      $self->logconfess('The limit argument must be >= 0');
+
+    my $paths = $self->_find_candidate_objects($begin_date, $end_date, $limit,
                                                $params->zone);
     return $self->_do_update_metadata($paths);
   }
@@ -171,40 +180,23 @@ sub _do_update_metadata {
 }
 
 sub _find_candidate_objects {
-  my ($self, $begin_date, $end_date, $zone) = @_;
+  my ($self, $begin_date, $end_date, $limit, $zone) = @_;
 
   $self->debug(sprintf q[Running query %s %s %s], $SPECIFIC_QUERY_NAME,
                        $begin_date->iso8601, $end_date->iso8601);
 
-  my @args = ('--no-page');
+  my @iquest_cmd = qw[iquest --no-page];
   if ($zone) {
-    push @args, '-z', $zone;
+    push @iquest_cmd, '-z', $zone;
   }
+  push @iquest_cmd, '--sql', $SPECIFIC_QUERY_NAME, $begin_date->iso8601, $end_date->iso8601;
+  my $iquest_cmd = join q[ ], @iquest_cmd;
 
-  my @records = WTSI::DNAP::Utilities::Runnable->new
-    (executable => 'iquest',
-     arguments  => [@args, '--sql', $SPECIFIC_QUERY_NAME,
-                    $begin_date->iso8601,
-                    $end_date->iso8601])->run->split_stdout;
+  $self->debug("Executing '$iquest_cmd'");
+  my $pid = open3(undef, my $stdout, my $stderr = gensym, $iquest_cmd);
 
-  my $paths = $self->_parse_iquest_records(@records);
-  $self->debug(sprintf q[Found %d paths], scalar @{$paths});
-
-  return $paths;
-}
-
-sub _parse_iquest_records {
-  my ($self, @records) = @_;
-
-  # iquest does not add a trailing record separator. Having one makes
-  # processing easier because each set of 3 lines may be treated the same
-  # way and there is no special case for having a single record.
-  my $record_separator = '----';
-  push @records, $record_separator;
-
-  my @paths;
-  my @path_elements;
-  foreach my $line (@records) {
+  my @records;
+  while (my $line = <$stdout>) {
     chomp $line;
     next if $line =~ m{^\s*$}msx;
 
@@ -212,16 +204,59 @@ sub _parse_iquest_records {
     # with its data output
     next if $line =~ m{^Zone is}msx;
     next if $line =~ m{^No rows found}msx;
+    # Skip record separators. These are not printed consistently; when there
+    # are sufficient records to cause pagination, the separator is missing.
+    next if $line =~ m{^----$}msx;
 
     $self->debug("iquest: $line");
-    if ($line eq $record_separator and @path_elements) {
-      push @paths, join q[/], @path_elements;
-      @path_elements = ();
-      next;
+    push @records, $line;
+  }
+
+  waitpid $pid, 0;
+  if ($CHILD_ERROR >> 8) {
+    my $errmsg = q[];
+    if ($stderr) {
+      while (my $line = <$stderr>) {
+        chomp $line;
+        $errmsg .= " $line";
+      }
     }
 
-    push @path_elements, $line;
+    $self->logcroak("Failed to run iquest: '$iquest_cmd': $errmsg");
   }
+  close $stdout or
+      $self->logcroak("Failed close STDOUT of iquest '$iquest_cmd': $ERRNO");
+
+  my $paths = $self->_parse_iquest_records(@records);
+  my $found = scalar @{$paths};
+  $self->debug(sprintf q[Found %d paths], $found);
+
+  if ($limit and $limit < $found) {
+    $paths = [@{$paths}[0 .. $limit-1]];
+    my $limited = scalar @{$paths};
+
+    $self->info(sprintf q[Found %d paths, limiting to %d], $found, $limited);
+  }
+
+  return $paths;
+}
+
+# A record is a pair of lines; collection path and data object name
+sub _parse_iquest_records {
+  my ($self, @records) = @_;
+
+  my @paths;
+  my @path_elements;
+  foreach my $line (@records) {
+    push @path_elements, $line;
+
+    if (scalar @path_elements == 2) {
+      push @paths, join q[/], @path_elements;
+      @path_elements = ();
+    }
+  }
+
+  @paths = sort { $a cmp $b } @paths;
 
   return \@paths;
 }
