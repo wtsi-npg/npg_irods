@@ -11,6 +11,9 @@ use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::BatchPublisher;
 use WTSI::NPG::HTS::PublishState;
 
+use JSON;
+use Readonly;
+
 with qw[
          WTSI::DNAP::Utilities::Loggable
          WTSI::NPG::HTS::RunPublisher
@@ -18,6 +21,7 @@ with qw[
        ];
 
 our $VERSION = '';
+Readonly::Scalar my $JSON_FILE_VERSION => '1.1';
 
 has 'obj_factory' =>
     (does          => 'WTSI::NPG::HTS::DataObjectFactory',
@@ -60,6 +64,14 @@ has 'require_checksum_cache' =>
      documentation => 'A list of file suffixes for which MD5 cache files ' .
                       'must be provided and will not be created on the fly');
 
+has 'mlwh_json' =>
+  (isa           => 'Str',
+  is             => 'ro',
+  required       => 0,
+  predicate     => 'has_mlwh_json',
+  documentation  => 'The json file to which information about the irods collection ' .
+                    'folder will be added. Cannot be used with mlwh_json_cb defined.');
+
 =head2 publish_tree
 
   Arg [1]    : File batch, ArrayRef[Str].
@@ -79,6 +91,10 @@ has 'require_checksum_cache' =>
                filter
                Function returning true for each file path to be published.
                CodeRef. Optional.
+
+               mlwh_json_cb
+               Callback writing information about data objects to a JSON file.
+               CodeRef. Optional. Cannot be used with the mlwh_json attribute set.
 
   Example    : my ($num_files, $num_processed, $num_errors) =
                  $pub->publish_tree($files,
@@ -103,9 +119,32 @@ has 'require_checksum_cache' =>
   my @named      = qw[primary_cb secondary_cb extra_cb filter mlwh_json_cb];
   my $params     = function_params($positional, @named);
 
+  sub write_json {
+    my ($self) = @_;
+    my ($json_fh, $json_hash);
+    open $json_fh, '>:encoding(UTF-8)', $self->mlwh_json or
+      self->logconfess(q[could not open ml warehouse json file] .
+      qq[$self->mlwh_json]);
+    $json_hash = {
+      version  => $JSON_FILE_VERSION,
+      irods_collection => $self->dest_collection
+    };
+    print $json_fh encode_json($json_hash) or
+      self->logconfess(q[could not write to ml warehouse json file ] .
+      qq[$self->mlwh_json]);
+
+    close $json_fh or
+      self->logconfess(q[could not close ml warehouse json file] .
+      qq[$self->mlwh_json]);
+    return 1;
+  }
+
   sub publish_tree {
     my ($self, $files) = $params->parse(@_);
 
+    if ($self->has_mlwh_json && defined $params->mlwh_json_cb) {
+      $self->logconfess('The mlwh_json_cb cannot be defined with the mlwh_json attribute set');
+    }
     if (defined $params->filter) {
       ref $params->filter eq 'CODE' or
           $self->logconfess('The filter argument must be a CodeRef');
@@ -169,6 +208,10 @@ has 'require_checksum_cache' =>
       $num_files     += $nf;
       $num_processed += $np;
       $num_errors    += $ne;
+    }
+
+    if ($self->has_mlwh_json) {
+      $self->write_json();
     }
 
     return ($num_files, $num_processed, $num_errors);

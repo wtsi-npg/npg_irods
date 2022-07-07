@@ -98,10 +98,12 @@ our %ILLUMINA_PART_PATTERNS =
        '[.]pulldown_metrics[.]json',
        '[.]qX_yield[.]json',
        '[.]ref_match[.]json',
+       '[.]rna_seqc[.]json',
        '[.]samtools_stats[.]json',
        '[.]sequence_error[.]json',
        '[.]sequence_summary[.]json',
        '[.]spatial_filter[.]json',
+       '[.]substitution_metrics[.]json',
        '[.]verify_bam_id[.]json',
        '_target[.]samtools_stats[.]json',          # non-conforming file name
        '_target_autosome[.]samtools_stats[.]json'; # non-conforming file name

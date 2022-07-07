@@ -242,7 +242,8 @@ sub publish_xml_files : Test(18) {
     diag explain \@observed;
 }
 
-sub publish_qc_files : Test(104) {
+
+sub publish_qc_files : Test(116) {
   note '=== Tests in publish_qc_files';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -269,7 +270,7 @@ sub publish_qc_files : Test(104) {
   my ($num_files, $num_processed, $num_errors) =
     $pub->publish_qc_files($composition_file);
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
-  cmp_ok($num_processed, '==', 17, 'Published 17 QC files');
+  cmp_ok($num_processed, '==', 19, 'Published 19 QC files');
 
   my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
   my @expected = ('qc/18448_2.adapter.json',
@@ -283,9 +284,11 @@ sub publish_qc_files : Test(104) {
                   'qc/18448_2.pulldown_metrics.json',
                   'qc/18448_2.qX_yield.json',
                   'qc/18448_2.ref_match.json',
+                  'qc/18448_2.rna_seqc.json',
                   'qc/18448_2.sequence_error.json',
                   'qc/18448_2.sequence_summary.json',
                   'qc/18448_2.spatial_filter.json',
+                  'qc/18448_2.substitution_metrics.json',
                   'qc/18448_2.verify_bam_id.json',
                   'qc/18448_2_F0x900.samtools_stats.json',
                   'qc/18448_2_F0xB00.samtools_stats.json');
@@ -931,7 +934,7 @@ sub publish_include_exclude : Test(3) {
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
-  cmp_ok($num_processed, '==', 33, 'Published 33 files');
+  cmp_ok($num_processed, '==', 35, 'Published 35 files');
 
   my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
   my @expected = ('18448_2.all.seqchksum',
@@ -961,9 +964,11 @@ sub publish_include_exclude : Test(3) {
                   'qc/18448_2.pulldown_metrics.json',
                   'qc/18448_2.qX_yield.json',
                   'qc/18448_2.ref_match.json',
+                  'qc/18448_2.rna_seqc.json',
                   'qc/18448_2.sequence_error.json',
                   'qc/18448_2.sequence_summary.json',
                   'qc/18448_2.spatial_filter.json',
+                  'qc/18448_2.substitution_metrics.json',
                   'qc/18448_2.verify_bam_id.json',
                   'qc/18448_2_F0x900.samtools_stats.json',
                   'qc/18448_2_F0xB00.samtools_stats.json');
@@ -998,7 +1003,7 @@ sub publish_archive_path_mlwh : Test(8) {
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
-  my $num_expected = 383;
+  my $num_expected = 385;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
 
@@ -1028,6 +1033,64 @@ sub publish_archive_path_mlwh : Test(8) {
   my ($repub_files, $repub_processed, $repub_errors) = $repub->publish_files;
   cmp_ok($repub_errors,    '==', 0, 'No errors on re-publishing');
   cmp_ok($repub_processed, '==', 0, "Re-published no files");
+}
+
+sub publish_archive_path_existing_mlwh_json : Test(2) {
+  note '=== Tests in publish_existing_mlwh_json';
+  my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
+  my $id_run         = 18448;
+  my $initial_json = {
+    "version" => "1.0",
+    "products"=>
+      [
+        { # replaced during publish
+          "irods_data_relative_path" => "18448_1.cram",
+          "id_product"               => "98441df9e535436533620dcba86eef653d5749c546eb218dc9e2f7c587cec272",
+          "irods_root_collection"    => "$irods_tmp_coll/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/",
+          "pipeline_name"            => "npg-prod-alt-process",
+          "seq_platform_name"        => "illumina"
+        },
+        { # unaffected by publish
+          "irods_data_relative_path" => "test.cram",
+          "id_product"               => "7382ff198a7321eadcea98bb39ade23749b3bace2874bbaced29789dbcd987659",
+          "irods_root_collection"    => "$irods_tmp_coll/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/",
+          "pipeline_name"            => "npg-prod",
+          "seq_platform_name"        => "illumina"
+        }]};
+  my $expected_json  = "t/data/mlwh_json/illumina_existing.json";
+
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(mlwh_schema => $wh_schema);
+
+  my $dest_coll = "$irods_tmp_coll/publish_entire_mlwh";
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+
+  my $mlwh_json = catfile($tmpdir->dirname, 'mlwh_irods_existing.json');
+  open my $mlwh_json_fh, '>:encoding(UTF-8)', $mlwh_json
+    or die 'failed to create a test file';
+  print $mlwh_json_fh encode_json($initial_json)
+    or die 'failed to write to a test file';
+  close $mlwh_json_fh;
+  is_deeply(read_json_content($mlwh_json), $initial_json, 'contents of existing mlwh_json file are correct');
+
+  my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new
+    (id_run           => $id_run,
+     dest_collection  => $dest_coll,
+     irods            => $irods,
+     lims_factory     => $lims_factory,
+     restart_file     => catfile($tmpdir->dirname, 'published.json'),
+     source_directory => $runfolder_path,
+     mlwh_json        => $mlwh_json);
+
+  $pub->publish_files;
+
+  is_deeply(read_json_content($mlwh_json),
+    set_destination(read_json_content($expected_json), $irods_tmp_coll),
+    "contents of $mlwh_json are correct");
 }
 
 # From here onwards are test support functions
@@ -1366,7 +1429,9 @@ sub read_json_content {
 
   open my $mlwh_json_fh, '<:encoding(UTF-8)', $path or die qq[could not open $path];
 
-  return decode_json <$mlwh_json_fh>;
+  my $json = decode_json <$mlwh_json_fh>;
+  close $mlwh_json_fh;
+  return $json
 }
 
 sub set_destination {
