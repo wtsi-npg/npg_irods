@@ -151,10 +151,11 @@ sub _do_update_metadata {
 
       my $ebi_sub_md5 = $obj->get_avu($EBI_SUB_MD5_ATTR)->{value};
       if (not $ebi_sub_md5 eq $obj->checksum) {
-        croak sprintf q[object's ebi_sub_md5 %s is not equal to ] .
-                      q[the current checksum %s], $ebi_sub_md5, $obj->checksum;
+        $self->warn(
+          sprintf q[object's ebi_sub_md5 %s is not equal to ] .
+                  q[the current checksum %s], $ebi_sub_md5, $obj->checksum
+        );
       }
-
       if (not $obj->is_consistent_size) {
         croak sprintf q[object size %d is not consistent with its checksum %s],
           $obj->size, $obj->has_checksum ? $obj->checksum : 'undef';
