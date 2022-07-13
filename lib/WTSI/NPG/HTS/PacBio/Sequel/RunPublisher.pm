@@ -25,11 +25,15 @@ our $SEQUENCE_PRODUCT    = 'subreads';
 our $SEQUENCE_AUXILIARY  = 'scraps';
 
 # CCS Sequence file types
-our $CCS_SEQUENCE_PRODUCT = 'reads';
+our $CCS_SEQUENCE_PRODUCT    = 'reads';
+our $HIFI_SEQUENCE_PRODUCT   = 'hifi_reads';
+our $HIFIUB_SEQUENCE_PRODUCT = 'unbarcoded.hifi_reads';
 
 ## Processing types
-our $OFFINSTRUMENT = 'OnInstrument';
-our $ONINSTRUMENT  = 'OffInstrument';
+our $OFFINSTRUMENT  = 'OffInstrument';
+our $ONINSTRUMENT   = 'OnInstrument';
+our $ONINSTRUMENTHO = 'OnInstrumentHifiOnly';
+our $ONINSTRUMENTDP = 'OnInstrumentDeplex';
 
 # Generic file prefix
 our $FILE_PREFIX_PATTERN = 'm[0-9a-z]+_\d+_\d+';
@@ -47,6 +51,7 @@ Readonly::Scalar my $CCS_REPORT_COUNT       => 6;
 Readonly::Scalar my $DATA_LEVEL_TWO         =>
   $WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher::DATA_LEVEL;
 
+Readonly::Scalar my $ANALYSIS_ONBOARD    => 1;
 Readonly::Scalar my $MODE_GROUP_WRITABLE => q(0020);
 
 has 'api_client' =>
@@ -100,9 +105,11 @@ sub publish_files {
       ($num_files_cell, $num_processed_cell, $num_errors_cell) =
         $self->_publish_off_instrument_cell($smrt_name);
     }
-    elsif ($process_type eq $ONINSTRUMENT) {
+    elsif (($process_type eq $ONINSTRUMENT) ||
+           ($process_type eq $ONINSTRUMENTHO) ||
+           ($process_type eq $ONINSTRUMENTDP)) {
       ($num_files_cell, $num_processed_cell, $num_errors_cell) =
-        $self->_publish_on_instrument_cell($smrt_name);
+        $self->_publish_on_instrument_cell($smrt_name, $process_type);
     }
     else {
       $self->warn('Skipping '. $self->smrt_path($smrt_name) .' as no seq files found');
@@ -124,14 +131,25 @@ sub publish_files {
 sub _processing_type {
    my ($self, $smrt_name) = @_;
 
-   my $seq_files = $self->list_files($smrt_name,
-      $SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$});
+   my $type;
+   if (defined $self->list_files($smrt_name, $FILE_PREFIX_PATTERN .q{[.]}.
+    $SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$})->[0]) {
+     $type = $OFFINSTRUMENT;
+   }
+   elsif (defined $self->list_files($smrt_name, $FILE_PREFIX_PATTERN .q{[.]}.
+    $CCS_SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$})->[0]) {
+     $type = $ONINSTRUMENT;
+   }
+   elsif (defined $self->list_files($smrt_name, $FILE_PREFIX_PATTERN .q{[.]}.
+    $HIFI_SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$})->[0]) {
+     $type = $ONINSTRUMENTHO;
+   }
+   elsif (defined $self->list_files($smrt_name, $FILE_PREFIX_PATTERN .q{[.]}.
+    $HIFIUB_SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$})->[0]) {
+     $type = $ONINSTRUMENTDP;
+   }
 
-   my $ccs_seq_files = $self->list_files($smrt_name,
-      $CCS_SEQUENCE_PRODUCT  .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$});
-
-   return defined $seq_files->[0] ? $OFFINSTRUMENT :
-       (defined $ccs_seq_files->[0] ? $ONINSTRUMENT : q[]);
+   return $type;
 }
 
 sub _publish_off_instrument_cell {
@@ -149,7 +167,7 @@ sub _publish_off_instrument_cell {
   my ($nfp, $npp, $nep) = $self->publish_index_files
     ($smrt_name, qq{($SEQUENCE_PRODUCT|$SEQUENCE_AUXILIARY)});
   my ($nfi, $npi, $nei) = $self->publish_image_archive
-    ($smrt_name,$meta_data);
+    ($smrt_name, $meta_data, $OFFINSTRUMENT);
 
   $num_files     += ($nfx + $nfb + $nfs + $nfp + $nfi);
   $num_processed += ($npx + $npb + $nps + $npp + $npi);
@@ -159,26 +177,60 @@ sub _publish_off_instrument_cell {
 }
 
 sub _publish_on_instrument_cell {
-  my ($self, $smrt_name) = @_;
+  my ($self, $smrt_name, $process_type) = @_;
 
   my ($meta_data) = $self->_read_metadata
     ($smrt_name, q[consensusreadset], q[pbmeta:]);
 
+  my $seqtype = ($process_type eq $ONINSTRUMENT) ? $CCS_SEQUENCE_PRODUCT :
+    (($process_type eq $ONINSTRUMENTHO) ? $HIFI_SEQUENCE_PRODUCT :
+     $HIFIUB_SEQUENCE_PRODUCT);
+
+  my $pub_xml = ($process_type eq $ONINSTRUMENTDP) ?
+      q[consensusreadset|sts|unbarcoded.consensusreadset] :
+      q[consensusreadset|sts];
+
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
   my ($nfx, $npx, $nex) = $self->publish_xml_files
-    ($smrt_name, q[consensusreadset|sts]);
+    ($smrt_name, $pub_xml);
   my ($nfb, $npb, $neb) = $self->publish_sequence_files
-    ($smrt_name, $CCS_SEQUENCE_PRODUCT, $meta_data);
+    ($smrt_name, $seqtype, $meta_data);
   my ($nfp, $npp, $nep) = $self->publish_index_files
-    ($smrt_name, $CCS_SEQUENCE_PRODUCT);
+    ($smrt_name, $seqtype);
   my ($nfa, $npa, $nea) = $self->publish_aux_files
     ($smrt_name, 'zmw_metrics[.]json[.]gz');
   my ($nfi, $npi, $nei) = $self->publish_image_archive
-    ($smrt_name, $meta_data);
+    ($smrt_name, $meta_data, $process_type);
 
-  $num_files     += ($nfx + $nfb + $nfp + $nfa + $nfi);
-  $num_processed += ($npx + $npb + $npp + $npa + $npi);
-  $num_errors    += ($nex + $neb + $nep + $nea + $nei);
+  my ($nfd, $npd, $ned) = (0, 0, 0);
+  if ($process_type eq $ONINSTRUMENTDP) {
+    ($nfd, $npd, $ned) = $self->_publish_deplexed_files($smrt_name);
+  }
+
+  $num_files     += ($nfx + $nfb + $nfp + $nfa + $nfi + $nfd);
+  $num_processed += ($npx + $npb + $npp + $npa + $npi + $npd);
+  $num_errors    += ($nex + $neb + $nep + $nea + $nei + $ned);
+
+  return ($num_files,$num_processed,$num_errors);
+}
+
+sub _publish_deplexed_files {
+  my ($self, $smrt_name) = @_;
+
+  my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
+
+  my @init_args =
+    (is_oninstrument => $ANALYSIS_ONBOARD,
+     irods           => $self->irods,
+     analysis_path   => $self->smrt_path($smrt_name),
+     runfolder_path  => $self->smrt_path($smrt_name),
+     mlwh_schema     => $self->mlwh_schema,
+     dest_collection => $self->dest_collection);
+
+  my $publisher =
+    WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new(@init_args);
+
+  ($num_files, $num_processed, $num_errors) = $publisher->publish_files();
 
   return ($num_files,$num_processed,$num_errors);
 }
@@ -257,25 +309,22 @@ sub publish_sequence_files {
                 ": publishing '$smrt_name' as R and D data");
   }
 
-  # Auxiliary files (adapter and low quality data only)are kept for now but 
-  # are not useful and so are not marked as target.
+  # Auxiliary files (scraps - adapter and low quality data only) are kept for 
+  # now but are not useful and so are not marked as target.
   my $is_aux = ($type eq $SEQUENCE_AUXILIARY) ? 1 : 0;
 
   # is_target is set to 0 where the bam file contains sample data but there
   # is another preferred file for the customer. The logic to set is_target = 0
   # is ;
-  #  if the data is single tag and ccs either on or off instrument (as data will
-  #    be deplexed. if single tag non ccs customer prefers non deplexed data as
-  #    target = 1) 
-  #  if the bam is not from on board processing and ccs execution mode is not
-  #   None (as ccs analysis will be run and ccs data will be target = 1),
+  #  if the data is single tag (as data will be deplexed). 
+  #  if the ccs execution mode is OffInstrument (as ccs analysis will be run and 
+  #    ccs data will be target = 1),
   #  if there is more than 1 sample in the pool (as the data will be deplexed),
   #  if the data is R&D (will be untracked in LIMs)
   #  if the bam is auxiliary.
   my $is_target =
-    ((@run_records == 1 && $run_records[0]->tag_sequence &&
-      $metadata->execution_mode ne 'None') ||
-    ($type ne $CCS_SEQUENCE_PRODUCT && $metadata->execution_mode ne 'None') ||
+    ((@run_records == 1 && $run_records[0]->tag_sequence) ||
+     ($metadata->execution_mode eq 'OffInstrument') ||
      @run_records > 1 || $is_r_and_d || $is_aux) ? 0 : 1;
 
   my @primary_avus   = $self->make_primary_metadata
@@ -381,6 +430,7 @@ sub publish_aux_files {
   Arg [1]    : smrt_name,  Str. Required.
   Arg [2]    : Pacbio run metadata, WTSI::NPG::HTS::PacBio::Metadata.
                Required.
+  Arg [3]    : Processing type. Required.
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_image_archive($smrt_name, $metadata)
@@ -392,12 +442,14 @@ sub publish_aux_files {
 =cut
 
 sub publish_image_archive {
-  my ($self, $smrt_name, $metadata) = @_;
+  my ($self, $smrt_name, $metadata, $process_type) = @_;
 
   my $name  = $self->_check_smrt_name($smrt_name);
 
   defined $metadata or
       $self->logconfess('A defined metadata argument is required');
+  defined $process_type or
+      $self->logconfess('A defined process_type argument is required');
 
   my $files = [];
   if ($self->api_client) {
@@ -427,8 +479,28 @@ sub publish_image_archive {
     }
     ## OnInstrument processed data
     elsif ($metadata->has_ccsreads_uuid) {
-      my $file_pattern   = $FILE_PREFIX_PATTERN .q{.ccs_reports.json$};
-      my $runfolder_file = $self->list_files($smrt_name,$file_pattern,1);
+
+      my(@runfolder_files,);
+      ## OnInstrument processed data - CCS or CCS HiFi only
+      if(($process_type eq $ONINSTRUMENT) || ($process_type eq $ONINSTRUMENTHO)){
+        my $file_pattern1   = $FILE_PREFIX_PATTERN .q{.ccs_reports.json$};
+        my $runfolder_file1 = $self->list_files($smrt_name,$file_pattern1,1);
+        push @runfolder_files, $runfolder_file1->[0];
+      }
+      elsif ($process_type eq $ONINSTRUMENTDP) {
+        my $file_pattern1   = $FILE_PREFIX_PATTERN .q{.}.
+          q{ccs_reports.json|lima_guess.json|lima_guess.txt|lima_counts.txt|lima_summary.txt|ccs_reports.txt}.
+          q{$};
+        my $runfolder_file1 = $self->list_files($smrt_name,$file_pattern1,6);
+        push @runfolder_files, $runfolder_file1->[0];
+      }
+
+      # Optional 5mC report file
+      my $file_pattern2   = $FILE_PREFIX_PATTERN .q{.5mc_report.json$};
+      my $runfolder_file2 = $self->list_files($smrt_name,$file_pattern2);
+      if(defined $runfolder_file2->[0]){
+        push @runfolder_files, $runfolder_file2->[0];
+      }
 
       my @s_init = @init_args;
       push @s_init,
@@ -436,7 +508,7 @@ sub publish_image_archive {
         dataset_type    => q[ccsreads],
         report_count    => $CCS_REPORT_COUNT,
         archive_name    => $metadata->movie_name .q[.]. $DATA_LEVEL .q[_qc],
-        specified_files => $runfolder_file;
+        specified_files => \@runfolder_files;
       my $ias = WTSI::NPG::HTS::PacBio::Sequel::ImageArchive->new(@s_init);
       push @i_handles, $ias;
     }
@@ -548,6 +620,7 @@ Data files are divided into a number of categories:
  - auxilliary files; requested available additional files which
    have changed over time.
  - image archive; tar archive of qc images
+ - deplexed files (if deplexing was run on the instrument)
 
 A RunPublisher provides methods to list the complement of these
 categories and to copy ("publish") them. Each of these list or publish

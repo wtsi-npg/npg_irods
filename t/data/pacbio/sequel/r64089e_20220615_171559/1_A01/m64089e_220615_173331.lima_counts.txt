@@ -1,0 +1,2 @@
+IdxFirst	IdxCombined	IdxFirstNamed	IdxCombinedNamed	Counts	MeanScore
+8	8	bc1015_BAK8B_OA	bc1015_BAK8B_OA	1993008	98

@@ -31,6 +31,9 @@ our $METADATA_SET    = q{(subreadset|consensusreadset)};
 # Location of source metadata file
 our $ENTRY_DIR       = 'entry-points';
 
+# Generic moviename file prefix
+our $MOVIENAME_PATTERN = 'm[0-9a-z]+_\d+_\d+';
+
 # Well directory pattern
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
@@ -54,6 +57,13 @@ has 'analysis_path' =>
    required      => 1,
    documentation => 'PacBio root analysis job path');
 
+has 'is_oninstrument' =>
+  (isa           => 'Bool',
+   is            => 'ro',
+   required      => 0,
+   default       => 0,
+   documentation => 'The analysis was done on the instrument (not in SMRT Link)');
+
 
 =head2 publish_files
 
@@ -71,7 +81,8 @@ sub publish_files {
 
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
-  my $seq_files = $self->list_files($SEQUENCE_FILE_FORMAT . q[$]);
+  my $seq_files = $self->list_files
+    ($SEQUENCE_FILE_FORMAT . q[$], $self->is_oninstrument);
 
   if (defined $seq_files->[0] && @{$self->smrt_names} == 1) {
 
@@ -84,11 +95,11 @@ sub publish_files {
     my ($nff, $npf, $nef) = $self->_iso_fasta_files() ?
         $self->publish_sequence_files($SEQUENCE_FASTA_FORMAT) : (0,0,0);
     my ($nfb, $npb, $neb) = $self->publish_sequence_files
-        ($SEQUENCE_FILE_FORMAT);
+        ($SEQUENCE_FILE_FORMAT, $self->is_oninstrument);
     my ($nfp, $npp, $nep) = $self->publish_non_sequence_files
-        ($SEQUENCE_INDEX_FORMAT);
+        ($SEQUENCE_INDEX_FORMAT, $self->is_oninstrument);
     my ($nfx, $npx, $nex) = $self->publish_non_sequence_files
-        ($METADATA_SET . q[.] . $METADATA_FORMAT);
+        ($METADATA_SET . q[.] . $METADATA_FORMAT, $self->is_oninstrument);
     my ($nfr, $npr, $ner) = $self->publish_non_sequence_files
         ($self->_merged_report);
 
@@ -112,6 +123,7 @@ sub publish_files {
 =head2 publish_sequence_files
 
   Arg [1]    : File format match regex, Str. Required.
+  Arg [2]    : Sub dir only search, Boolean. Optional.
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_sequence_files($format)
@@ -125,12 +137,12 @@ sub publish_files {
 =cut
 
 sub publish_sequence_files {
-  my ($self,$format) = @_;
+  my ($self, $format, $subdironly) = @_;
 
   defined $format or
     $self->logconfess('A defined file format argument is required');
 
-  my $files = $self->list_files($format . q[$]);
+  my $files = $self->list_files($format . q[$], $subdironly);
 
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
@@ -167,12 +179,10 @@ sub publish_sequence_files {
       # Don't set target = 1 if more than 1 record
       #  or data is non deplexed leftovers on multiplexed run
       #  or data is for unexpected barcode
-      #  or data is single tag standard (non ccs) deplex
       #  or data is fasta.gz format
       my $is_target   = (@records > 1 ||
           $self->_is_allowed_fname($filename, \@FNAME_NON_DEPLEXED) ||
          ($tag_id && @tag_records != 1) ||
-         ($self->_metadata->execution_mode eq 'None' && $tag_id && @all_records == 1) ||
          ($format eq $SEQUENCE_FASTA_FORMAT))
           ? 0 : 1;
 
@@ -203,6 +213,7 @@ sub publish_sequence_files {
 =head2 publish_non_sequence_files
 
   Arg [1]    : File format match regex, Str. Required.
+  Arg [2]    : Sub dir only search, Boolean. Optional.
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_non_sequence_files($format)
@@ -215,12 +226,12 @@ sub publish_sequence_files {
 =cut
 
 sub publish_non_sequence_files {
-  my ($self, $format) = @_;
+  my ($self, $format, $subdironly) = @_;
 
   defined $format or
     $self->logconfess('A defined file format argument is required');
 
-  my $files = $self->list_files($format . q[$]);
+  my $files = $self->list_files($format . q[$], $subdironly);
 
   my ($num_files, $num_processed, $num_errors) =
     $self->pb_publish_files($files, $self->_dest_path);
@@ -236,6 +247,7 @@ sub publish_non_sequence_files {
 =head2 list_files
 
   Arg [1]    : File type. Required.
+  Arg [2]    : Sub dir only search, Boolean. Optional.
 
   Example    : $pub->list_files($type)
   Description: Return paths of all sequence files for the given analysis.
@@ -245,13 +257,31 @@ sub publish_non_sequence_files {
 =cut
 
 sub list_files {
-  my ($self, $type) = @_;
+  my ($self, $type, $subdironly) = @_;
 
   defined $type or
     $self->logconfess('A defined file type argument is required');
 
-  return [$self->list_directory($self->runfolder_path, filter => $type)];
+  my @files;
+  if (defined $subdironly && $subdironly == 1) {
+    # for analysis files produced on the instrument we are only looking
+    # in subdirectories for files to load directly to iRODS
+    my @allfiles = $self->list_directory
+      ($self->runfolder_path, filter => $type, recurse => 1);
+    foreach my $file (@allfiles) {
+      my ($filename, $directory, $suffix) = fileparse($file);
+      $directory =~ s/\/$//smx;
+      if ($directory && ($directory ne $self->runfolder_path)){
+        push @files, $file;
+      }
+    }
+  } else {
+    @files = $self->list_directory($self->runfolder_path, filter => $type);
+  }
+
+  return \@files;
 }
+
 
 override 'run_name'  => sub {
   my ($self) = @_;
@@ -292,13 +322,19 @@ has '_metadata' =>
 sub _build_metadata{
   my ($self) = @_;
 
-  my $entry_dir = catdir($self->analysis_path, $ENTRY_DIR);
-
-  my @metafiles = $self->list_directory
-    ($entry_dir, filter => $METADATA_FORMAT . q[$], recurse => 1);
+  my @metafiles;
+  if($self->is_oninstrument == 1) {
+    @metafiles = $self->list_directory
+      ($self->analysis_path,
+       filter => $MOVIENAME_PATTERN .q[.]. $METADATA_SET .q[.]. $METADATA_FORMAT .q[$])
+  } else {
+    @metafiles = $self->list_directory
+      (catdir($self->analysis_path, $ENTRY_DIR),
+       filter => $METADATA_FORMAT . q[$], recurse => 1);
+  }
 
   if (@metafiles != 1) {
-    $self->logcroak("Expect one $METADATA_FORMAT file in $entry_dir");
+    $self->logcroak('Expect one xml file in '. $self->analysis_path . ' (entry_dir)');
   }
   return  WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file
                  ($metafiles[0], $METADATA_PREFIX);

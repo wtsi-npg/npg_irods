@@ -134,6 +134,7 @@ sub publish_files : Test(2) {
   cmp_ok($num_errors,    '==', 0);
 }
 
+
 sub publish_xml_files : Test(19) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);

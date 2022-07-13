@@ -24,7 +24,7 @@ our $VERSION = '';
 our $REPORT_NAME = 'merged_analysis_report.json';
 
 # Deplex files
-our $LIMA        = q{(lima.guess.txt|lima.summary.txt|lima.counts)};
+our $LIMA        = q{(lima.guess.txt|lima.summary.txt|lima_counts.txt|lima.counts)};
 
 # Combined metadata file inputs and outputs
 our $OUTPUT_DIR  = 'outputs';
