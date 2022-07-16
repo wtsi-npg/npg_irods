@@ -479,7 +479,6 @@ sub publish_image_archive {
     }
     ## OnInstrument processed data
     elsif ($metadata->has_ccsreads_uuid) {
-
       my(@runfolder_files,);
       ## OnInstrument processed data - CCS or CCS HiFi only
       if(($process_type eq $ONINSTRUMENT) || ($process_type eq $ONINSTRUMENTHO)){
@@ -492,7 +491,7 @@ sub publish_image_archive {
           q{ccs_reports.json|lima_guess.json|lima_guess.txt|lima_counts.txt|lima_summary.txt|ccs_reports.txt}.
           q{$};
         my $runfolder_file1 = $self->list_files($smrt_name,$file_pattern1,6);
-        push @runfolder_files, $runfolder_file1->[0];
+        push @runfolder_files, @{$runfolder_file1};
       }
 
       # Optional 5mC report file

@@ -258,7 +258,6 @@ sub publish_files_on_instrument_2 : Test(80) {
   my $tmprf_path = catdir($tmpdir->dirname, 'r64089e_20220615_171559');
   dircopy($runfolder_path,$tmprf_path) or die $!;
   chmod (0770, "$tmprf_path/1_A01") or die "Chmod 0770 directory failed : $!";
-  ###my $tmprf_path = $runfolder_path;
   
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
     (api_client      => $client,
