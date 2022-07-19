@@ -62,7 +62,7 @@ has 'is_oninstrument' =>
    is            => 'ro',
    required      => 0,
    default       => 0,
-   documentation => 'The analysis was done on the instrument (not in SMRT Link)');
+   documentation => 'Set if the analysis was done on the instrument and not if the analysis was run via SMRT Link. If analysis is done in SMRT Link then all standard publishable files will be found in the analysis_path directory whereas if the analysis is done on the instrument per cell meta, auxiliary and also bam files (not to be published) are found at the analysis path directory and publishable deplexed bam, index and xml files are to be found in one or more sub-directories of the analysis path.');
 
 
 =head2 publish_files
@@ -95,7 +95,7 @@ sub publish_files {
     my ($nff, $npf, $nef) = $self->_iso_fasta_files() ?
         $self->publish_sequence_files($SEQUENCE_FASTA_FORMAT) : (0,0,0);
     my ($nfb, $npb, $neb) = $self->publish_sequence_files
-        ($SEQUENCE_FILE_FORMAT, $self->is_oninstrument);
+        ($SEQUENCE_FILE_FORMAT);
     my ($nfp, $npp, $nep) = $self->publish_non_sequence_files
         ($SEQUENCE_INDEX_FORMAT, $self->is_oninstrument);
     my ($nfx, $npx, $nex) = $self->publish_non_sequence_files
@@ -123,8 +123,7 @@ sub publish_files {
 =head2 publish_sequence_files
 
   Arg [1]    : File format match regex, Str. Required.
-  Arg [2]    : Sub dir only search, Boolean. Optional.
-
+ 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_sequence_files($format)
   Description: Identify sequence files which match the required file 
@@ -137,12 +136,12 @@ sub publish_files {
 =cut
 
 sub publish_sequence_files {
-  my ($self, $format, $subdironly) = @_;
+  my ($self, $format) = @_;
 
   defined $format or
     $self->logconfess('A defined file format argument is required');
 
-  my $files = $self->list_files($format . q[$], $subdironly);
+  my $files = $self->list_files($format . q[$], $self->is_oninstrument);
 
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
@@ -213,7 +212,7 @@ sub publish_sequence_files {
 =head2 publish_non_sequence_files
 
   Arg [1]    : File format match regex, Str. Required.
-  Arg [2]    : Sub dir only search, Boolean. Optional.
+  Arg [2]    : On instrument analysis, Boolean. Optional.
 
   Example    : my ($num_files, $num_published, $num_errors) =
                  $pub->publish_non_sequence_files($format)
@@ -226,12 +225,12 @@ sub publish_sequence_files {
 =cut
 
 sub publish_non_sequence_files {
-  my ($self, $format, $subdironly) = @_;
+  my ($self, $format, $on_instrument) = @_;
 
   defined $format or
     $self->logconfess('A defined file format argument is required');
 
-  my $files = $self->list_files($format . q[$], $subdironly);
+  my $files = $self->list_files($format . q[$], $on_instrument);
 
   my ($num_files, $num_processed, $num_errors) =
     $self->pb_publish_files($files, $self->_dest_path);
@@ -247,7 +246,7 @@ sub publish_non_sequence_files {
 =head2 list_files
 
   Arg [1]    : File type. Required.
-  Arg [2]    : Sub dir only search, Boolean. Optional.
+  Arg [2]    : List files in sub-directories only, Boolean. Optional.
 
   Example    : $pub->list_files($type)
   Description: Return paths of all sequence files for the given analysis.
