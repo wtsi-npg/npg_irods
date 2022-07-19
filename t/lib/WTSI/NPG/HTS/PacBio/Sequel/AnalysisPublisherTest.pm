@@ -1,3 +1,4 @@
+
 package WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisherTest;
 
 use strict;
@@ -31,6 +32,7 @@ Log::Log4perl::init('./etc/log4perl_tests.conf');
 my $pid          = $PID;
 my $test_counter = 0;
 my $data_path    = 't/data/pacbio/sequel_analysis';
+my $rundata_path = 't/data/pacbio/sequel';
 my $fixture_path = "t/fixtures";
 my $db_dir       = File::Temp->newdir;
 
@@ -133,6 +135,7 @@ sub publish_files : Test(2) {
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
   cmp_ok($num_errors,    '==', 0);
 }
+
 
 sub publish_xml_files : Test(19) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -357,7 +360,7 @@ sub list_files_2 : Test(2) {
     ('m64016_190608_025655.ccs.bam.pbi');
 
   is_deeply($pub->list_files('pbi$'), \@expected_paths2,
-     'Found sequence index files for 001612');
+     'Found sequence index files for 000226');
 
 }
 
@@ -627,6 +630,40 @@ sub publish_files_4 : Test(291) {
   check_secondary_metadata($irods, @observed_paths);
   
   unlink $pub->restart_file;
+}
+
+sub list_files_3 : Test(2) {
+# testing finding files in sud-directories for on instrument analysis 
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $analysis_path  = "$rundata_path/r64089e_20220615_171559/1_A01";
+  my $runfolder_path = $analysis_path;
+  my $subdir_path    = "$analysis_path/bc1015_BAK8B_OA--bc1015_BAK8B_OA";  
+  my $dest_coll      = $irods_tmp_coll;
+
+  my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
+    (dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     analysis_path   => $analysis_path,
+     runfolder_path  => $runfolder_path,
+     is_oninstrument => 1);
+
+  my @expected_paths1 =
+    map { catfile($subdir_path, $_) }
+    ('m64089e_220615_173331.bc1015_BAK8B_OA--bc1015_BAK8B_OA.consensusreadset.xml');
+
+  is_deeply(
+    $pub->list_files(q{(subreadset|consensusreadset)}. '.xml', 1), \@expected_paths1,
+    'Found sequence files for r64089e_20220615_171559/1_A01');
+
+  my @expected_paths2 =
+    map { catfile($subdir_path, $_) }
+    ('m64089e_220615_173331.hifi_reads.bc1015_BAK8B_OA--bc1015_BAK8B_OA.bam.pbi');
+
+  is_deeply($pub->list_files('pbi$', 1), \@expected_paths2,
+     'Found sequence index files for r64089e_20220615_171559/1_A01');
+
 }
 
 1;

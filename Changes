@@ -1,8 +1,10 @@
 Upcoming
 
+  - PacBio - add new files from new run configurations in SMRT Link v11.0
+    to RunPublisher
   - Update baton version in github actions workflow to 3.3.0
   - Remove iRODS 4.2.10 from github actions workflow
-  
+
 Release 2.37.1
 
   - Bugfix: Object limit for the iRODS single replica object-finding query

@@ -1,3 +1,5 @@
+[ControlStructures::ProhibitCascadingIfElse]
+max_elsif = 3
 
 [-CodeLayout::RequireTidyCode]
 [-CodeLayout::RequireTrailingCommas]

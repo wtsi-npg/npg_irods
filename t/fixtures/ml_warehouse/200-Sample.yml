@@ -8323,3 +8323,37 @@
   phenotype: ~
   developmental_stage: ~
   control_type: ~
+- id_sample_tmp: '8162355'
+  id_lims: SQSCP
+  uuid_sample_lims: c0502400-bfc7-11ec-9167-fa163eac3af7
+  id_sample_lims: '8227008'
+  last_updated: '2022-04-19 10:01:58'
+  recorded_at: '2022-04-19 10:01:59'
+  deleted_at: ~
+  created: '2022-04-19 10:01:58'
+  name: TOL_ASG12815096
+  reference_genome: ~
+  organism: ~
+  accession_number: SAMEA12367008
+  common_name: Sepiola atlantica
+  description: ~
+  taxon_id: 70193
+  father: ~
+  mother: ~
+  replicate: ~
+  ethnicity: ~
+  gender: ~
+  cohort: ~
+  country_of_origin: ~
+  geographical_region: ~
+  sanger_sample_id: TOL_ASG12815096 
+  control: '0'
+  supplier_name: FD30880039
+  public_name: xcSepAtla11
+  sample_visibility: ~
+  strain: ~
+  consent_withdrawn: '0'
+  donor_id: SAMEA12366955
+  phenotype: ~
+  developmental_stage: ~
+  control_type: ~

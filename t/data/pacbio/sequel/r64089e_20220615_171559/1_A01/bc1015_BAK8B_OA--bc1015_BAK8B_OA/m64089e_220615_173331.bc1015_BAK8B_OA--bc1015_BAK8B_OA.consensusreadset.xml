@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pbds:ConsensusReadSet CreatedAt="2022-06-17T12:41:38.215Z" MetaType="PacBio.DataSet.ConsensusReadSet" Name="TRAC-2-605-Cell1 (CCS) (TOL_ASG12815096)" Tags="ccs,barcoded" TimeStampedName="TRAC-2-605-Cell1 (CCS) (TOL_ASG12815096)-220617_124138215" UniqueId="aaec81b5-e86c-4af4-a8d1-dd2926e6cba0" Version="3.0.1" xmlns:pbbase="http://pacificbiosciences.com/PacBioBaseDataModel.xsd" xmlns:pbdm="http://pacificbiosciences.com/PacBioDataModel.xsd" xmlns:pbmeta="http://pacificbiosciences.com/PacBioCollectionMetadata.xsd" xmlns:pbpn="http://pacificbiosciences.com/PacBioPartNumbers.xsd" xmlns:pbrk="http://pacificbiosciences.com/PacBioReagentKit.xsd" xmlns:pbsample="http://pacificbiosciences.com/PacBioSampleInfo.xsd" xmlns="http://pacificbiosciences.com/PacBioDatasets.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pacificbiosciences.com/PacBioDatasets.xsd" xmlns:pbds="http://pacificbiosciences.com/PacBioDatasets.xsd">
+	<pbds:DataSetMetadata>
+		<pbds:TotalLength>26537686834</pbds:TotalLength>
+		<pbds:NumRecords>1993008</pbds:NumRecords>
+		<Collections xmlns="http://pacificbiosciences.com/PacBioCollectionMetadata.xsd">
+			<CollectionMetadata Context="m64089e_220615_173331" CreatedAt="2022-06-15T17:13:54.58Z" InstrumentId="64089e" InstrumentName="64089E" MetaType="CollectionMetadata" ModifiedAt="0001-01-01T00:00:00" Status="Ready" TimeStampedName="64089e-CollectionMetadata-2022-15-15T17:15:59.040Z" UniqueId="26aa8fc6-664c-43bf-b8da-32f0c0d1c4f2">
+				<pbmeta:MultiJobId>0</pbmeta:MultiJobId>
+				<pbmeta:ConsensusReadSetRef UniqueId="fbd6e4f9-58a9-4f74-8542-7fd080d9a9b9" />
+				<pbmeta:RunDetails>
+					<pbmeta:TimeStampedName>r64089e_20220615_171559</pbmeta:TimeStampedName>
+					<pbmeta:Name>TRACTION-RUN-142</pbmeta:Name>
+					<pbmeta:CreatedBy>chc</pbmeta:CreatedBy>
+					<pbmeta:WhenCreated>2022-06-15T17:13:54.58Z</pbmeta:WhenCreated>
+					<pbmeta:StartedBy>unknown</pbmeta:StartedBy>
+					<pbmeta:WhenStarted>0001-01-01T00:00:00</pbmeta:WhenStarted>
+				</pbmeta:RunDetails>
+				<pbmeta:WellSample CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="TRAC-2-605">
+					<pbmeta:WellName>A01</pbmeta:WellName>
+					<pbmeta:Application>custom</pbmeta:Application>
+					<pbmeta:Concentration>0</pbmeta:Concentration>
+					<pbmeta:OnPlateLoadingConcentration>130</pbmeta:OnPlateLoadingConcentration>
+					<pbmeta:InsertSize>16959</pbmeta:InsertSize>
+					<pbmeta:IsoSeq>false</pbmeta:IsoSeq>
+					<pbmeta:IsCCS>false</pbmeta:IsCCS>
+					<pbmeta:AutoAnalysisEnabled>false</pbmeta:AutoAnalysisEnabled>
+					<pbmeta:SampleReuseEnabled>false</pbmeta:SampleReuseEnabled>
+					<pbmeta:StageHotstartEnabled>false</pbmeta:StageHotstartEnabled>
+					<pbmeta:SizeSelectionEnabled>false</pbmeta:SizeSelectionEnabled>
+					<pbmeta:UseCount>0</pbmeta:UseCount>
+					<pbmeta:DNAControlComplex>Sequel® II DNA Internal Control Complex 3.2</pbmeta:DNAControlComplex>
+					<pbsample:BioSamples>
+						<pbsample:BioSample Name="TOL_ASG12815096">
+							<pbsample:DNABarcodes>
+								<pbsample:DNABarcode Name="bc1015_BAK8B_OA--bc1015_BAK8B_OA" UniqueId="aaec81b5-e86c-4af4-a8d1-dd2926e6cba0" />
+							</pbsample:DNABarcodes>
+						</pbsample:BioSample>
+					</pbsample:BioSamples>
+				</pbmeta:WellSample>
+				<pbmeta:Automation Name="Diffusion">
+					<pbbase:AutomationParameters xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="ReuseCell" SimpleValue="False" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="DynamicLoadingCognate" SimpleValue="True" ValueDataType="String" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="DynamicLoadingTarget" SimpleValue="0.85" ValueDataType="Double" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="DynamicLoadingMaxImmobilization" SimpleValue="120" ValueDataType="Int32" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="ReuseSample" SimpleValue="False" ValueDataType="String" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="ImmobilizationTime" SimpleValue="120" ValueDataType="Double" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="ExtendFirst" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="ExtensionTime" SimpleValue="120" ValueDataType="Double" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="MovieLength" SimpleValue="1800" ValueDataType="Double" />
+						<pbbase:AutomationParameter Name="PCDinPlate" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter Name="UsePredictiveLoadingBuffer" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter Name="CollectionNumber" SimpleValue="0" ValueDataType="Int32" />
+						<pbbase:AutomationParameter Name="InsertSize" SimpleValue="16959" ValueDataType="Int32" />
+						<pbbase:AutomationParameter Name="BindingKitPartNumber" SimpleValue="102-194-100" ValueDataType="String" />
+						<pbbase:AutomationParameter Name="PPAEstimatedDuration" SimpleValue="660" ValueDataType="Double" />
+						<pbbase:AutomationParameter Name="PPAMinDuration" SimpleValue="450.21" ValueDataType="Double" />
+						<pbbase:AutomationParameter Name="PPAMaxDuration" SimpleValue="869.79" ValueDataType="Double" />
+						<pbbase:AutomationParameter Name="PPATimeout" SimpleValue="3630" ValueDataType="Double" />
+						<pbbase:AutomationParameter Name="CCSOverheadDurationMinutesPerUmyGBase" SimpleValue="0.9" ValueDataType="Double" />
+						<pbbase:AutomationParameter Name="TipSearchMaxDuration" SimpleValue="576" ValueDataType="Int32" />
+						<pbbase:AutomationParameter Name="SNRCut" SimpleValue="1.5" ValueDataType="Double" />
+						<pbbase:AutomationParameter Name="HQRFMethod" SimpleValue="N2" ValueDataType="String" />
+					</pbbase:AutomationParameters>
+				</pbmeta:Automation>
+				<pbmeta:CollectionNumber>0</pbmeta:CollectionNumber>
+				<pbmeta:CellIndex>0</pbmeta:CellIndex>
+				<pbmeta:SetNumber>0</pbmeta:SetNumber>
+				<pbmeta:CellPac Barcode="DA165889" Description="Individual 4 Pack containing 4 SMRT®Cells each containing 7.76 million ZMWs" ExpirationDate="2023-04-07" LotNumber="418416" MovieTimeGrade="LR" Name="Sequel® II SMRT® Cell 8M (4/tray)" PartNumber="101-389-001" Version="1.0">
+					<pbmeta:ChipLayout xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">Spider_1p0_NTO</pbmeta:ChipLayout>
+				</pbmeta:CellPac>
+				<pbmeta:ControlKit Barcode="Lxxxxx102249600123199" ChipType="8mChip" Description="Sequel II DNA Internal Control Complex 3.2 contains a fixed template of 11 kb length, bound to Sequel DNA Polymerase 2.2 for use as an internal sequencing control on the Sequel System. Reagent quantities provide spike-in controls for a minimum of 24 samples." ExpirationDate="2099-12-31" LotNumber="Lxxxxx" Name="Sequel® II DNA Internal Control Complex 3.2" PartNumber="102-249-600" Tags="Control Kit, CCK" Version="1.0">
+					<pbmeta:CustomSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">&gt;left_adapter\nTAGAGAGAGAAAAGGAGGAGGAGGCAACAACAACAACTCTCTCTA\n&gt;right_adapter\nTAGAGAGAGAAAAGGAGGAGGAGGCAACAACAACAACTCTCTCTA\n&gt;custom_sequence\nTCCCGACTGGAAAGCGGGCAGTGAGCGCAACGCAATTAATGTGAGTTAGCTCACTCATTAGGCACCCCAGGCTTTACACTTTATGCTTCCGGCTCGTATGTTGTGTGGAATTGTGAGCGGATAACAATTTCACACAGGAAACAGCTATGACCATGATTACGCCAAGCTTGCATGCCTGCAGGTCGACTCTAGAGGATCCCCCTGGCCGCATCCAGACTCAAATCAACGACCAGATCGCCTACCGGTTCAGCCATACCGGACTCCTCCTGCGATCCCTTCTGATACTGTCATCAGCATTACGTCATCCTCCGTCATGTCCGCCACATCCGGGGAAGCGGGGATAACTTCATTCCCGTCCGGGCCAAAGCGGACACCTCCGGCAAGCCCTGCCGCTTTCTGCAGCAGGCTCGCCAGCAGCGCACTGAGATCCAGCTGCCAGCGGGAAATACTGATGCGCAGCGCCGCCAGCGCATAAACGAAGCAGTCGAGTGCCTCATTGCGTCGCTTTTTGCTGTCCCACAGTATTTTTTTCCTGCCATCCACCCATTTTTCGACCTGCTCTTCAGCAGTCAGCTGCTGCGCTTCGGTCAGATCAAAAATAGGGTACCGAGCTCGAATTCACTGGCCGTCGTTTTACAACGTCGTGACTGGGAAAACCCTGGCGTTACCCAACTTAATCGCCTTGCAGCACATCCCCCTTTCGCCAGCTGGCGTAATAGCGAAGAGGCCCGCACCGATCGCCCTTCCCAACAGTTGCGCAGCCTGAATGGCGAATGGCGCCTGATGCGGTATTTTCTCCTTA</pbmeta:CustomSequence>
+				</pbmeta:ControlKit>
+				<pbmeta:TemplatePrepKit Barcode="025922100938900083122" Description="The SMRTbell® Template Prep Kit contains reagent supplies to perform 96 automated SMRTbell non-size-selected library preparations of primer-annealed SMRTbell libraries for insert sizes ranging from 500 bp to over 20 kb. Reagents come in 4 x 24 reaction sets." ExpirationDate="2022-08-31" LotNumber="025922" MaxInsertSize="20000" MinInsertSize="500" Name="SMRTbell® Express Template Prep Kit 2.0" PartNumber="100-938-900" Tags="Template Prep Kit, TPK" Version="2.0">
+					<pbmeta:LeftAdaptorSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">ATCTCTCTCAACAACAACAACGGAGGAGGAGGAAAAGAGAGAGAT</pbmeta:LeftAdaptorSequence>
+					<pbmeta:LeftPrimerSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">aacggaggaggagga</pbmeta:LeftPrimerSequence>
+					<pbmeta:RightAdaptorSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">ATCTCTCTCAACAACAACAACGGAGGAGGAGGAAAAGAGAGAGAT</pbmeta:RightAdaptorSequence>
+					<pbmeta:RightPrimerSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">aacggaggaggagga</pbmeta:RightPrimerSequence>
+				</pbmeta:TemplatePrepKit>
+				<pbmeta:BindingKit Barcode="027100102194100032923" ChipType="8mChip" Description="he Sequel II Binding Kit 3.2 contains reagent supplies to bind prepared DNA template libraries to the Sequel II Polymerase 2.2 in preparation for HiFi sequencing. The result is a DNA polymerase template complex ready for use with Adaptive Loading on the Sequel II and Sequel IIe Systems. Sequel II Polymerase 2.2 should be used with Sequel II Sequencing Kit 2.0. Reagent quantities support at least 24 binding reactions, and at least 3 SMRT Cells 8M per reaction (72 cells total), depending on use case, sample size and concentration. Note: Sequel II Binding Kit 3.2 is not recommended for inserts smaller than 3 kb" ExpirationDate="2023-03-29" LotNumber="027100" Name="Sequel® II Binding Kit 3.2" PartNumber="102-194-100" Tags="Binding Kit, BDK" Version="1.0" />
+				<pbmeta:SequencingKitPlate Barcode="126648101826100110222" ChipType="8mChip" Description="The DNA Sequencing Kit contains a sequencing reagent plate with chemistry for single molecule real-time sequencing on the PacBio Sequel® Dev with Dynamic Loading. Reagent quantities support 4 sequencing reactions to be used in conjunction with SMRT® Cell 4Pac(s).  (4 Cells max/Each Row supplies reagents for 1 Sequel SMRT Cell)" ExpirationDate="2022-11-02" LotNumber="126648" MaxCollections="4" Name="Sequel® II Sequencing Plate 2.0 (4 rxn)" NumOseTubes="0" PartNumber="101-826-100" SupportsDynamicLoading="true" Tags="Sequencing Kit, SQK" Version="2.0">
+					<pbmeta:ReagentTubes Barcode="022413100619600063025" ExpirationDate="2025-06-30" LotNumber="022413" Name="Sequel® SMRT®Cell Oil" PartNumber="100-619-600" xmlns="http://pacificbiosciences.com/PacBioReagentKit.xsd" />
+				</pbmeta:SequencingKitPlate>
+				<pbmeta:Primary>
+					<pbmeta:AutomationName>SequelAlpha</pbmeta:AutomationName>
+					<pbmeta:ConfigFileName>SqlPoC_SubCrf_2C2A-t2.xml</pbmeta:ConfigFileName>
+					<pbmeta:SequencingCondition>DefaultPrimarySequencingCondition</pbmeta:SequencingCondition>
+					<pbmeta:CCSOptions>
+						<pbmeta:ExecutionMode>OnInstrument</pbmeta:ExecutionMode>
+						<pbmeta:IncludeKinetics>true</pbmeta:IncludeKinetics>
+					</pbmeta:CCSOptions>
+					<pbmeta:OutputOptions>
+						<pbmeta:ResultsFolder>r64089e_20220615_171559/1_A01/</pbmeta:ResultsFolder>
+						<pbmeta:CollectionPathUri>/lustre/scratch120/pacbio/staging/r64089e_20220615_171559/1_A01/</pbmeta:CollectionPathUri>
+						<pbmeta:CopyFiles>
+							<pbmeta:CollectionFileCopy>Fasta</pbmeta:CollectionFileCopy>
+							<pbmeta:CollectionFileCopy>Bam</pbmeta:CollectionFileCopy>
+						</pbmeta:CopyFiles>
+						<pbmeta:Readout>Bases_Without_QVs</pbmeta:Readout>
+						<pbmeta:MetricsVerbosity>Minimal</pbmeta:MetricsVerbosity>
+						<pbmeta:TransferResource>
+							<pbmeta:Id>srs-scheme-1</pbmeta:Id>
+							<pbmeta:TransferScheme>SRS</pbmeta:TransferScheme>
+							<pbmeta:Name>Sanger SRS</pbmeta:Name>
+							<pbmeta:Description>Sanger SRS transfer settings</pbmeta:Description>
+							<pbmeta:DestPath>/lustre/scratch120/pacbio/staging/</pbmeta:DestPath>
+						</pbmeta:TransferResource>
+					</pbmeta:OutputOptions>
+				</pbmeta:Primary>
+				<pbmeta:Secondary>
+					<pbmeta:AutomationName>DefaultSecondaryAutomationName</pbmeta:AutomationName>
+					<pbbase:AutomationParameters>
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="SourceId" SimpleValue="smrtlink-ui" ValueDataType="String" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="CCS" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="CCSMode" SimpleValue="OnInstrument" ValueDataType="String" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="AllReads" SimpleValue="False" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="CpG" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="AAV" SimpleValue="False" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="Kinetics" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="Heteroduplex" SimpleValue="False" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="Demultiplex" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="DemultiplexMode" SimpleValue="OnInstrument" ValueDataType="String" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="BarcodesUuid" SimpleValue="4d87a8ab-4d16-f0b0-77e5-0f467dba442e" ValueDataType="String" />
+						<pbbase:AutomationParameter CreatedAt="2022-06-15T17:13:54.58Z" ModifiedAt="0001-01-01T00:00:00" Name="DemultiplexPreset" SimpleValue="SYMMETRIC-ADAPTERS" ValueDataType="String" />
+					</pbbase:AutomationParameters>
+					<pbmeta:CellCountInJob>0</pbmeta:CellCountInJob>
+					<pbmeta:BarcodesFasta>PmJjMTAwMV9CQUs4QV9PQQpDQUNBVEFUQ0FHQUdUR0NHVAo+YmMxMDAyX0JBSzhBX09BCkFDQUNBQ0FHQUNUR1RHQUdUCj5iYzEwMDNfQkFLOEFfT0EKQUNBQ0FUQ1RDR1RHQUdBR1QKPmJjMTAwOF9CQUs4QV9PQQpBQ0FHVENHQUdDR0NUR0NHVAo+YmMxMDA5X0JBSzhBX09BCkFDQUNBQ0dDR0FHQUNBR0FUCj5iYzEwMTBfQkFLOEFfT0EKQUNHQ0dDVEFUQ1RDQUdBR1QKPmJjMTAxMV9CQUs4QV9PQQpDVEFUQUNHVEFUQVRDVEFUVAo+YmMxMDEyX0JBSzhBX09BCkFDQUNUQUdBVENHQ0dUR1RUCj5iYzEwMTVfQkFLOEJfT0EKQ0dDQVRHQUNBQ0dUR1RHVFQKPmJjMTAxNl9CQUs4Ql9PQQpDQVRBR0FHQUdBVEFHVEFUVAo+YmMxMDE3X0JBSzhCX09BCkNBQ0FDR0NHQ0dDVEFUQVRUCj5iYzEwMThfQkFLOEJfT0EKVENBQ0dUR0NUQ0FDVEdUR1QKPmJjMTAxOV9CQUs4Ql9PQQpBQ0FDQUNUQ1RBVENBR0FUVAo+YmMxMDIwX0JBSzhCX09BCkNBQ0dBQ0FDR0FDR0FUR1RUCj5iYzEwMjFfQkFLOEJfT0EKQ1RBVEFDQVRBR1RHQVRHVFQKPmJjMTAyMl9CQUs4Ql9PQQpDQUNUQ0FDR1RHVEdBVEFUVAo=</pbmeta:BarcodesFasta>
+				</pbmeta:Secondary>
+				<pbmeta:UserDefinedFields>
+					<pbmeta:DataEntities Name=" LIMS_IMPORT " SimpleValue="DefaultUserDefinedFieldLIMS" ValueDataType="String" xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd" />
+				</pbmeta:UserDefinedFields>
+				<pbmeta:ComponentVersions>
+					<pbmeta:VersionInfo Name="ics" Version="11.0.0.144466" />
+					<pbmeta:VersionInfo Name="iui" Version="11.0.0.144466" />
+					<pbmeta:VersionInfo Name="chemistry" Version="11.0.0.143406" />
+					<pbmeta:VersionInfo Name="pa" Version="11.0.0.144466" />
+					<pbmeta:VersionInfo Name="paws" Version="11.0.0.144466" />
+					<pbmeta:VersionInfo Name="ppa" Version="11.0.0.144466" />
+					<pbmeta:VersionInfo Name="realtime" Version="11.0.0.144466" />
+					<pbmeta:VersionInfo Name="transfer" Version="11.0.0.144466" />
+					<pbmeta:VersionInfo Name="smrtlink" Version="11.0.0.146107" />
+					<pbmeta:VersionInfo Name="smrtimisc" Version="11.0.0.146107" />
+					<pbmeta:VersionInfo Name="smrtinub" Version="11.0.0.146107" />
+					<pbmeta:VersionInfo Name="smrtlink-analysisservices-gui" Version="11.0.0.146107" />
+					<pbmeta:VersionInfo Name="smrttools" Version="11.0.0.146107" />
+				</pbmeta:ComponentVersions>
+			</CollectionMetadata>
+		</Collections>
+		<pbds:Provenance CreatedBy="AnalysisJob">
+			<pbds:ParentDataSet MetaType="PacBio.ConsensusReadFile.ConsensusReadBamFile" TimeStampedNamed="ParentDataSet-220617_124138215" UniqueId="fbd6e4f9-58a9-4f74-8542-7fd080d9a9b9" />
+		</pbds:Provenance>
+	</pbds:DataSetMetadata>
+	<pbbase:ExternalResources>
+		<pbbase:ExternalResource CreatedAt="2022-06-17T12:41:38.215Z" MetaType="PacBio.ConsensusReadFile.ConsensusReadBamFile" ResourceId="m64089e_220615_173331.hifi_reads.bc1015_BAK8B_OA--bc1015_BAK8B_OA.bam" TimeStampedName="pacbio_consensusreadfile_consensusreadbamfile-220617_124138215" UniqueId="c1b5b11b-2ef5-44cd-9e47-966a02bdd4ff" Version="3.0.1">
+			<pbbase:FileIndices>
+				<pbbase:FileIndex CreatedAt="2022-06-17T12:41:38.215Z" MetaType="PacBio.Index.PacBioIndex" ResourceId="m64089e_220615_173331.hifi_reads.bc1015_BAK8B_OA--bc1015_BAK8B_OA.bam.pbi" TimeStampedName="pacbio_index_pacbioindex-220617_124138215" UniqueId="bc44d8b8-c7d2-432e-a44e-d62bbd5b6ac6" Version="3.0.1" />
+			</pbbase:FileIndices>
+		</pbbase:ExternalResource>
+	</pbbase:ExternalResources>
+</pbds:ConsensusReadSet>
