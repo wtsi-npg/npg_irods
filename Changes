@@ -4,6 +4,7 @@ Upcoming
     to RunPublisher
   - Update baton version in github actions workflow to 3.3.0
   - Remove iRODS 4.2.10 from github actions workflow
+  - archive metrics files produced by SamHaplotag
 
 Release 2.37.1
 
