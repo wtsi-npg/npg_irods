@@ -16520,7 +16520,7 @@ t/lib/WTSI/NPG/HTS/LIMSFactoryTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/RunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/SeqDataObjectTest.pm
-t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisFastaManager.pm
+t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisFastaManagerTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisReportTest.pm

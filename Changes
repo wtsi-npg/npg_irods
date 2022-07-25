@@ -5,6 +5,8 @@ Upcoming
   - Update baton version in github actions workflow to 3.3.0
   - Remove iRODS 4.2.10 from github actions workflow
   - archive metrics files produced by SamHaplotag
+  - PacBio - extend runauditor to cope with fixing permissions on
+    runfolder subdirectories created by deplexing on board
 
 Release 2.37.1
 
