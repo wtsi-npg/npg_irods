@@ -23,17 +23,12 @@ jobs:
           - perl: "5.22.4"
             irods: "4.2.7"
             server_image: "wsinpg/ub-16.04-irods-4.2.7:latest"
-            baton: "3.2.0"
+            baton: "3.3.0"
             experimental: false
-          - perl: "5.22.4"
-            irods: "4.2.10"
-            server_image: "wsinpg/ub-18.04-irods-4.2.10:latest"
-            baton: "3.2.0"
-            experimental: true
           - perl: "5.22.4"
             irods: "4.2.11"
             server_image: "wsinpg/ub-18.04-irods-4.2.11:latest"
-            baton: "3.2.0"
+            baton: "3.3.0"
             experimental: true
 
     services:
@@ -48,8 +43,9 @@ jobs:
 
       - name: "Install OS dependencies"
         run: |
+          sudo apt-get update
           sudo apt-get install -qq uuid-dev    # For Perl UUID module
-          sudo apt-get install -qq libgd-dev   # For npg_tracking
+          sudo apt-get install -qq libgd-dev libgd-text-perl # For npg_tracking
           sudo apt-get install -qq liblzma-dev # For npg_qc
           sudo apt-get install -qq pigz        # for BioNano run publication in npg_irods
 

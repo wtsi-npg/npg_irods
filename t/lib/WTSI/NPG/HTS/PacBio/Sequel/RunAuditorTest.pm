@@ -116,7 +116,7 @@ sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::PacBio::Sequel::RunAuditor');
 }
 
-sub audit_runs : Test(20) {
+sub audit_runs : Test(26) {
   my $uri    = URI->new($server->uri . 'QueryJobs');
   my $client = TestAPIClient->new(default_interval => 10000,);
   $client->{'runs_api_uri'} = $uri;
@@ -207,11 +207,33 @@ sub audit_runs : Test(20) {
 
   ## no folder format check, no dry run, permissions set to user read only
   cmp_ok($num_run4, '==', scalar @{$test_response},
-         'Correct number of runs to check - check_format => 0, dry_run => 0');
+         'Correct number of runs to check (dirs 0700) - check_format => 0, dry_run => 0');
   cmp_ok($num_processed4, '==', $num_run4, 'All runs processed');
   cmp_ok($num_actioned4, '==', $num_run4, 'All runs actioned to correct permissions');
   cmp_ok($num_errors4, '==', 0, 'No errors found');
+  
+  ## check no runs found to fix post fix
+  my ($num_run5, $num_processed5, $num_actioned5, $num_errors5) =
+    $auditor3->check_runs;
 
+  cmp_ok($num_run5, '==', scalar @{$test_response},
+         'Correct number of runs to check (post fix) - check_format => 0, dry_run => 0');
+  cmp_ok($num_actioned5, '==', 0, 'No runs actioned to correct permissions (post fix)');
+ 
+  ## make a runfolder subdirectory - which exist after deplexing on board
+  my $runfolder_data_subdir = catdir($runfolder_data,'bc1015_BAK8B_OA--bc1015_BAK8B_OA');
+  mkdir $runfolder_data_subdir;
+  chmod (0700, $runfolder_data_subdir) or die "Chmod 0700 directory $runfolder_data failed : $!";
+  
+  my ($num_run6, $num_processed6, $num_actioned6, $num_errors6) =
+    $auditor3->check_runs;
+
+  ## no folder format check, no dry run, permissions set to user read only
+  cmp_ok($num_run6, '==', scalar @{$test_response},
+         'Correct number of runs to check (dirs 0700 + subdir) - check_format => 0, dry_run => 0');
+  cmp_ok($num_processed6, '==', $num_run6, 'All runs processed (subdir)');
+  cmp_ok($num_actioned6, '==', $num_run6, 'All runs actioned to correct permissions (subdir)');
+  cmp_ok($num_errors6, '==', 0, 'No errors found (subdir)');
 }
 
 1;

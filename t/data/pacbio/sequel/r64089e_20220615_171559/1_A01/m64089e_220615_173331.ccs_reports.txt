@@ -1,0 +1,27 @@
+ZMWs input               : 5930422         
+
+ZMWs pass filters        : 2098821 (35.39%)
+ZMWs fail filters        : 3831601 (64.61%)
+ZMWs shortcut filters    : 0 (0.000%)
+
+ZMWs with tandem repeats : 133956 (3.496%)
+
+Exclusive failed counts
+Below SNR threshold      : 165725 (4.325%)
+Median length filter     : 0 (0.000%)
+Lacking full passes      : 3209420 (83.76%)
+Heteroduplex insertions  : 37741 (0.985%)
+Coverage drops           : 23026 (0.601%)
+Insufficient draft cov   : 22939 (0.599%)
+Draft too different      : 0 (0.000%)
+Draft generation error   : 69770 (1.821%)
+Draft above --max-length : 92 (0.002%)
+Draft below --min-length : 4 (0.000%)
+Reads failed polishing   : 2 (0.000%)
+Empty coverage windows   : 1581 (0.041%)
+CCS did not converge     : 365 (0.010%)
+CCS below minimum RQ     : 300936 (7.854%)
+Unknown error            : 0 (0.000%)
+
+Additional passing metrics
+ZMWs missing adapters    : 158987 (7.575%)

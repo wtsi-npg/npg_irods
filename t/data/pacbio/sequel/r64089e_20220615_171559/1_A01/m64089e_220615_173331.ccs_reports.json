@@ -1,0 +1,119 @@
+{
+    "_comment": "Created by pbcopper v2.0.0",
+    "attributes": [
+        {
+            "id": "ccs_processing.zmw_input",
+            "name": "ZMWs input",
+            "value": 5930422
+        },
+        {
+            "id": "ccs_processing.zmw_passed_yield",
+            "name": "ZMWs pass filters",
+            "value": 2098821
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_yield",
+            "name": "ZMWs fail filters",
+            "value": 3831601
+        },
+        {
+            "id": "ccs_processing.zmw_2_pass_shortcut",
+            "name": "ZMWs shortcut filters",
+            "value": 0
+        },
+        {
+            "id": "ccs_processing.zmw_tandem_repeat",
+            "name": "ZMWs with tandem repeats",
+            "value": 133956
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_poor_snr",
+            "name": "Below SNR threshold",
+            "value": 165725
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_median_length_filter",
+            "name": "Median length filter",
+            "value": 0
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_too_few_passes",
+            "name": "Lacking full passes",
+            "value": 3209420
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_heteroduplexes",
+            "name": "Heteroduplex insertions",
+            "value": 37741
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_coverage_drops",
+            "name": "Coverage drops",
+            "value": 23026
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_insufficient_draft_cov",
+            "name": "Insufficient draft cov",
+            "value": 22939
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_draft_too_different",
+            "name": "Draft too different",
+            "value": 0
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_draft_failure",
+            "name": "Draft generation error",
+            "value": 69770
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_draft_too_long",
+            "name": "Draft above --max-length",
+            "value": 92
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_draft_too_short",
+            "name": "Draft below --min-length",
+            "value": 4
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_read_failed_polish",
+            "name": "Reads failed polishing",
+            "value": 2
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_empty_window_during_polishing",
+            "name": "Empty coverage windows",
+            "value": 1581
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_non_convergent",
+            "name": "CCS did not converge",
+            "value": 365
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_below_rq",
+            "name": "CCS below minimum RQ",
+            "value": 300936
+        },
+        {
+            "id": "ccs_processing.zmw_filtered_unknown_error",
+            "name": "Unknown error",
+            "value": 0
+        },
+        {
+            "id": "ccs_processing.zmw_missing_adapters",
+            "name": "ZMWs missing adapters",
+            "value": 158987
+        }
+    ],
+    "dataset_uuids": [
+        "fbd6e4f9-58a9-4f74-8542-7fd080d9a9b9"
+    ],
+    "id": "ccs_processing",
+    "plotGroups": [],
+    "tables": [],
+    "title": "CCS Processing Report",
+    "uuid": "3d8b4b4e-80a5-4f9f-be07-d1c7735c0c6c",
+    "version": "1.0.1"
+}

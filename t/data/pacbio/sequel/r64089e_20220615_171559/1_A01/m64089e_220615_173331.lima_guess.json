@@ -1,0 +1,39 @@
+{
+    "_comment": "Created by pbcopper v2.0.0",
+    "attributes": [],
+    "dataset_uuids": [],
+    "id": "lima_infer",
+    "plotGroups": [],
+    "tables": [
+        {
+            "columns": [
+                {
+                    "header": "Barcode Name",
+                    "id": "first_bc_name",
+                    "values": [
+                        "bc1015_BAK8B_OA--bc1015_BAK8B_OA"
+                    ]
+                },
+                {
+                    "header": "#ZMWs",
+                    "id": "num_zmws",
+                    "values": [
+                        43564
+                    ]
+                },
+                {
+                    "header": "Mean Barcode Score",
+                    "id": "mean_bc_score",
+                    "values": [
+                        98
+                    ]
+                }
+            ],
+            "id": "inferred_barcode_table",
+            "title": "Inferred Barcodes"
+        }
+    ],
+    "title": "Barcoding Inferred Barcodes Report",
+    "uuid": "51662bc9-c88f-47af-9225-dd6407fc41b7",
+    "version": "1.0.1"
+}

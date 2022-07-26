@@ -198,7 +198,7 @@ sub list_image_archive_files : Test(1) {
     \@expected_paths, 'Found image archive files 1_A02');
 }
 
-sub publish_files_on_instrument : Test(3) {
+sub publish_files_on_instrument_1 : Test(40) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r64174e_20210114_161659";
@@ -239,7 +239,64 @@ sub publish_files_on_instrument : Test(3) {
             'Published correctly named on instrument files') or
               diag explain \@observed_paths;
 
+  check_common_metadata($irods, @observed_paths);
+  my @seq_paths = grep /.bam$/, @observed_paths;
+  check_primary_metadata($irods, @seq_paths);
+ 
   unlink $pub->restart_file;
+}
+
+sub publish_files_on_instrument_2 : Test(80) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/r64089e_20220615_171559";
+  my $dest_coll = "$irods_tmp_coll/publish_files";
+
+  my $client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new();
+  
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $tmprf_path = catdir($tmpdir->dirname, 'r64089e_20220615_171559');
+  dircopy($runfolder_path,$tmprf_path) or die $!;
+  chmod (0770, "$tmprf_path/1_A01") or die "Chmod 0770 directory failed : $!";
+  
+  my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
+    (api_client      => $client,
+     dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     runfolder_path  => $tmprf_path);
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+
+  my @expected_paths =
+    map { catfile("$dest_coll/1_A01", $_) }
+    ('m64089e_220615_173331.bc1015_BAK8B_OA--bc1015_BAK8B_OA.consensusreadset.xml',
+     'm64089e_220615_173331.consensusreadset.xml',
+     'm64089e_220615_173331.hifi_reads.bc1015_BAK8B_OA--bc1015_BAK8B_OA.bam',
+     'm64089e_220615_173331.hifi_reads.bc1015_BAK8B_OA--bc1015_BAK8B_OA.bam.pbi',
+     'm64089e_220615_173331.primary_qc.tar.xz',
+     'm64089e_220615_173331.sts.xml',
+     'm64089e_220615_173331.unbarcoded.consensusreadset.xml',
+     'm64089e_220615_173331.unbarcoded.hifi_reads.bam',
+     'm64089e_220615_173331.unbarcoded.hifi_reads.bam.pbi',
+     'm64089e_220615_173331.zmw_metrics.json.gz',
+     'merged_analysis_report.json',);
+  
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+ 
+  cmp_ok($num_processed, '==', scalar @expected_paths,
+      "Published on instrument files correctly");
+  cmp_ok($num_errors,    '==', 0);
+  
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named on instrument files') or
+              diag explain \@observed_paths;
+
+  check_common_metadata($irods, @observed_paths);
+  my @seq_paths = grep /.bam$/, @observed_paths;
+  check_primary_metadata($irods, @seq_paths);
+  check_study_metadata($irods, @seq_paths);
+
 }
 
 sub publish_files_off_instrument : Test(3) {
@@ -327,16 +384,21 @@ sub publish_only_runfolder_writable : Test(6) {
 sub publish_xml_files : Test(14) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
+
   my $runfolder_path = "$data_path/r54097_20170727_165601";
-  my $dest_coll = "$irods_tmp_coll/publish_xml_files";
+  my $dest_coll = "$irods_tmp_coll/publish_files";
 
   my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $tmprf_path = catdir($tmpdir->dirname, 'r54097_20170727_165601');
+  dircopy($runfolder_path,$tmprf_path) or die $!;
+  chmod (0770, "$tmprf_path/1_A02") or die "Chmod 0770 directory failed : $!";
+
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
     (dest_collection => $dest_coll,
      irods           => $irods,
      mlwh_schema     => $wh_schema,
      restart_file    => catfile($tmpdir->dirname, 'published.json'),
-     runfolder_path  => $runfolder_path);
+     runfolder_path  => $tmprf_path);
 
   my @expected_paths =
     map { catfile("$dest_coll/1_A02", $_) }
@@ -499,7 +561,9 @@ sub publish_image_archive : Test(9) {
     ('m54097_170727_170646.primary_qc.tar.xz');
 
   my ($num_files, $num_processed, $num_errors) =
-    $pub->publish_image_archive('1_A02', $meta);
+    $pub->publish_image_archive('1_A02', $meta,
+    $WTSI::NPG::HTS::PacBio::Sequel::RunPublisher::OFFINSTRUMENT);
+
   cmp_ok($num_files,     '==', scalar @expected_paths);
   cmp_ok($num_processed, '==', scalar @expected_paths);
   cmp_ok($num_errors,    '==', 0);
