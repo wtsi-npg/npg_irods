@@ -1,10 +1,11 @@
-Upcoming
+Release 2.38.0
 
   - PacBio - add new files from new run configurations in SMRT Link v11.0
     to RunPublisher
   - Update baton version in github actions workflow to 3.3.0
   - Remove iRODS 4.2.10 from github actions workflow
   - archive metrics files produced by SamHaplotag
+  - Demote error to warning when EBI and iRODS checksums are different
 
 Release 2.37.1
 
