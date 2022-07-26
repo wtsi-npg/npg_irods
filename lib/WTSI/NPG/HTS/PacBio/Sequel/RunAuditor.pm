@@ -2,6 +2,8 @@ package WTSI::NPG::HTS::PacBio::Sequel::RunAuditor;
 
 use namespace::autoclean;
 use English qw[-no_match_vars];
+use File::Slurp qw[read_dir];
+use File::Spec::Functions qw[catfile];
 use Moose;
 use MooseX::StrictConstructor;
 use Readonly;
@@ -79,13 +81,15 @@ sub check_runs {
             my $publisher  = $self->run_publisher_handle($runfolder_path);
             my $smrt_names = [$publisher->smrt_names];
 
-            foreach my $smrt_name (@{$smrt_names}) {
+            NAME: foreach my $smrt_name (@{$smrt_names}) {
               my $run_cell_path = $publisher->smrt_path($smrt_name);
-              if($self->valid_runfolder_directory($run_cell_path) &&
-                 $self->_permissions_fixable($run_cell_path)) {
+              next NAME if ! $self->valid_runfolder_directory($run_cell_path);
+              if($self->_permissions_fixable($run_cell_path)) {
                 push @paths_to_fix, $run_cell_path;
               }
+              push @paths_to_fix, @{$self->_scan_for_subdirs($run_cell_path)};
             }
+
             my $dir_changed = $self->_fix_permissions(\@paths_to_fix);
             if($dir_changed > 0) { $num_changed++ }
 
@@ -100,6 +104,19 @@ sub check_runs {
   return ($num_runs, $num_processed, $num_changed, $num_errors);
 }
 
+sub _scan_for_subdirs {
+  my ($self, $run_cell_path) = @_;
+
+  my @subdirs;
+  my @dirs = grep { -d } map { catfile $run_cell_path, $_ } read_dir $run_cell_path;
+  foreach my $dir(@dirs) {
+    if ($self->valid_runfolder_directory($dir) &&
+        $self->_permissions_fixable($dir)) {
+      push @subdirs, $dir;
+    }
+  }
+  return \@subdirs;
+}
 
 sub _permissions_fixable {
    my ($self, $directory) = @_;
