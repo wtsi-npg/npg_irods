@@ -1,4 +1,4 @@
-Upcoming
+Release 2.38.0
 
   - PacBio - add new files from new run configurations in SMRT Link v11.0
     to RunPublisher
@@ -7,6 +7,7 @@ Upcoming
   - archive metrics files produced by SamHaplotag
   - PacBio - extend runauditor to cope with fixing permissions on
     runfolder subdirectories created by deplexing on board
+  - Demote error to warning when EBI and iRODS checksums are different
 
 Release 2.37.1
 
