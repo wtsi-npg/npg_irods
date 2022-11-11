@@ -8357,3 +8357,37 @@
   phenotype: ~
   developmental_stage: ~
   control_type: ~
+- id_sample_tmp: '8409942'
+  id_lims: SQSCP
+  uuid_sample_lims: fb6d5516-43e4-11ed-bf20-fa163eea3084
+  id_sample_lims: '8482990'
+  last_updated: '2022-10-04 13:03:47'
+  recorded_at: '2022-10-04 13:03:47'
+  deleted_at: ~
+  created: '2022-10-04 13:03:47'
+  name: TOL_ASG13067103
+  reference_genome: ~
+  organism: ~
+  accession_number: SAMEA13602795
+  common_name: Cruzella marina
+  description: ~
+  taxon_id: 140242
+  father: ~
+  mother: ~
+  replicate: ~
+  ethnicity: ~
+  gender: ~
+  cohort: ~
+  country_of_origin: ~
+  geographical_region: ~
+  sanger_sample_id: TOL_ASG13067103
+  control: '0'
+  supplier_name: FD30823600
+  public_name: peCruMari1
+  sample_visibility: ~
+  strain: ~
+  consent_withdrawn: '0'
+  donor_id: SAMEA13602751
+  phenotype: ~
+  developmental_stage: ~
+  control_type: ~

@@ -45,11 +45,12 @@ our @FNAME_NON_DEPLEXED = qw[removed];
 our $DATA_LEVEL = 'secondary';
 
 # If deplexed - minimum deplexed percentage to load
+Readonly::Scalar my $HUNDRED       => 100;
 Readonly::Scalar my $MIN_BARCODED  => 0.3;
 Readonly::Scalar my $BARCODE_FIELD => 'Percent Barcoded Reads';
 Readonly::Scalar my $REPORT_TITLE  =>
   $WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport::REPORTS;
-
+Readonly::Scalar my $LIMA_SUMMARY  => 'lima.summary.txt';
 
 has 'analysis_path' =>
   (isa           => 'Str',
@@ -62,7 +63,7 @@ has 'is_oninstrument' =>
    is            => 'ro',
    required      => 0,
    default       => 0,
-   documentation => 'Set if the analysis was done on the instrument and not if the analysis was run via SMRT Link. If analysis is done in SMRT Link then all standard publishable files will be found in the analysis_path directory whereas if the analysis is done on the instrument per cell meta, auxiliary and also bam files (not to be published) are found at the analysis path directory and publishable deplexed bam, index and xml files are to be found in one or more sub-directories of the analysis path.');
+   documentation => 'Set if the analysis was done on the instrument or in SMRT Link where publishable files are in analysis sub-directories. Historically if analysis is done in SMRT Link then all standard publishable files will be found in the analysis directory whereas if the analysis is done on the instrument or in a post v11.0 version of SMRT Link publishable deplexed bam, index and xml files are to be found in one or more sub-directories of the specified analysis path.');
 
 
 =head2 publish_files
@@ -321,15 +322,16 @@ has '_metadata' =>
 sub _build_metadata{
   my ($self) = @_;
 
+  my $entry_path = catdir($self->analysis_path, $ENTRY_DIR);
+
   my @metafiles;
-  if($self->is_oninstrument == 1) {
+  if ($self->is_oninstrument == 1 && ! -d $entry_path) {
     @metafiles = $self->list_directory
       ($self->analysis_path,
        filter => $MOVIENAME_PATTERN .q[.]. $METADATA_SET .q[.]. $METADATA_FORMAT .q[$])
   } else {
     @metafiles = $self->list_directory
-      (catdir($self->analysis_path, $ENTRY_DIR),
-       filter => $METADATA_FORMAT . q[$], recurse => 1);
+      ($entry_path, filter => $METADATA_FORMAT . q[$], recurse => 1);
   }
 
   if (@metafiles != 1) {
@@ -395,10 +397,24 @@ sub _basic_qc {
 
   my $qc_fail = 0;
   if ($decoded && $decoded->{$REPORT_TITLE}) {
+
+    my $lima_text;
     foreach my $report (%{$decoded->{$REPORT_TITLE}}) {
+      if ($report =~ m{$LIMA_SUMMARY$}smx) {
+        $lima_text = $decoded->{$REPORT_TITLE}->{$report};
+      }
       next if ref $decoded->{$REPORT_TITLE}->{$report}  ne 'ARRAY';
       foreach my $x (@{$decoded->{$REPORT_TITLE}->{$report}}) {
         if ($x->{'name'} eq $BARCODE_FIELD && $x->{'value'} < $MIN_BARCODED) {
+          $qc_fail = 1;
+        }
+      }
+    }
+
+    if ($qc_fail == 0 && $lima_text) {
+      if ($lima_text =~ m{thresholds \s+ [(]B [)] \s+ \: \s+ \d+ \s+ [(](\d+)}smx) {
+        my $value = $1;
+        if ($value < ($MIN_BARCODED * $HUNDRED)) {
           $qc_fail = 1;
         }
       }
@@ -407,6 +423,7 @@ sub _basic_qc {
   else {
     $self->warn('No qc check possible for ', $self->analysis_path);
   }
+
   return $qc_fail;
 }
 

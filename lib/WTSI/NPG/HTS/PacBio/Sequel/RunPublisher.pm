@@ -7,6 +7,7 @@ use File::Spec::Functions qw[catdir splitdir];
 use Moose;
 use MooseX::StrictConstructor;
 use Readonly;
+use Try::Tiny;
 
 use WTSI::NPG::HTS::PacBio::Sequel::ImageArchive;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
@@ -230,7 +231,13 @@ sub _publish_deplexed_files {
   my $publisher =
     WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new(@init_args);
 
-  ($num_files, $num_processed, $num_errors) = $publisher->publish_files();
+  try {
+    ($num_files, $num_processed, $num_errors) = $publisher->publish_files();
+  } catch {
+    $num_errors++;
+    $self->error('Failed to process deplexed files for : ',
+                 $self->smrt_path($smrt_name), $_);
+  };
 
   return ($num_files,$num_processed,$num_errors);
 }
@@ -482,9 +489,11 @@ sub publish_image_archive {
       my(@runfolder_files,);
       ## OnInstrument processed data - CCS or CCS HiFi only
       if(($process_type eq $ONINSTRUMENT) || ($process_type eq $ONINSTRUMENTHO)){
-        my $file_pattern1   = $FILE_PREFIX_PATTERN .q{.ccs_reports.json$};
-        my $runfolder_file1 = $self->list_files($smrt_name,$file_pattern1,1);
-        push @runfolder_files, $runfolder_file1->[0];
+        my $file_pattern1   = $FILE_PREFIX_PATTERN .q{.}.
+          q{ccs_reports.json|ccs_reports.txt}.
+          q{$};
+        my $runfolder_file1 = $self->list_files($smrt_name,$file_pattern1,2);
+        push @runfolder_files, @{$runfolder_file1};
       }
       elsif ($process_type eq $ONINSTRUMENTDP) {
         my $file_pattern1   = $FILE_PREFIX_PATTERN .q{.}.
