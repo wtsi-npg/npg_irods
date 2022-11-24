@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     continue-on-error: ${{ matrix.experimental }} # Experimental builds may fail
 
     defaults:
@@ -44,6 +44,8 @@ jobs:
       - name: "Install OS dependencies"
         run: |
           sudo apt-get update
+          # https://github.com/actions/runner-images/issues/2139
+          sudo apt-get remove -y nginx libgd3
           sudo apt-get install -qq uuid-dev    # For Perl UUID module
           sudo apt-get install -qq libgd-dev libgd-text-perl # For npg_tracking
           sudo apt-get install -qq liblzma-dev # For npg_qc
