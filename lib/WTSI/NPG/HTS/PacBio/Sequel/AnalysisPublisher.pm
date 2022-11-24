@@ -13,6 +13,7 @@ use Readonly;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisFastaManager;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
+use npg_warehouse::loader::pacbio::product;
 
 extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
 
@@ -186,16 +187,28 @@ sub publish_sequence_files {
          ($format eq $SEQUENCE_FASTA_FORMAT))
           ? 0 : 1;
 
+      my $id_product = q[];
+      my $tags;
+      if ($is_target){
+        $tags = npg_warehouse::loader::pacbio::product->get_tag_sequences($records[0]);
+        if ($tags){
+          $id_product = npg_warehouse::loader::pacbio::product->generate_product_id(
+            $self->_metadata->run_name, $self->_metadata->well_name, $tags);
+        } else {
+          $id_product = npg_warehouse::loader::pacbio::product->generate_product_id(
+            $self->_metadata->run_name, $self->_metadata->well_name);
+        }
+      }
       my @primary_avus   = $self->make_primary_metadata
          ($self->_metadata,
           data_level => $DATA_LEVEL,
+          id_product => $id_product,
           is_target  => $is_target);
       my @secondary_avus = $self->make_secondary_metadata(@records);
 
       my ($a_files, $a_processed, $a_errors) =
         $self->pb_publish_files([$file], $self->_dest_path,
                               \@primary_avus, \@secondary_avus);
-
       $num_files     += $a_files;
       $num_processed += $a_processed;
       $num_errors    += $a_errors;

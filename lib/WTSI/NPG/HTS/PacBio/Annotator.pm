@@ -18,6 +18,7 @@ with qw[
   Named args : data_level     Processing level of data being archived
                               e.g. Primary - off  instrument, secondary
                               - subsequently post processed. Optional.
+               id_product     Product id for the data. Optional.
                is_target      Is target? If false then target flag
                               is not set. Data is not target where it
                               is not deplexed or where data at a different
@@ -72,6 +73,10 @@ with qw[
 
         if ($params->is_target || !defined $params->is_target) {
             push @avus, $self->make_avu($TARGET, 1);
+        }
+
+        if ($params->id_product) {
+          push @avus, $self->make_avu($ID_PRODUCT, $params->id_product);
         }
 
         return @avus;

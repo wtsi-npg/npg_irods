@@ -12,6 +12,7 @@ use Try::Tiny;
 use WTSI::NPG::HTS::PacBio::Sequel::ImageArchive;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
+use npg_warehouse::loader::pacbio::product;
 
 extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
 
@@ -374,9 +375,16 @@ sub publish_sequence_files {
      ($metadata->execution_mode eq 'OffInstrument') ||
      @run_records > 1 || $is_r_and_d || $is_aux) ? 0 : 1;
 
+  my $id_product = q[];
+  if ($is_target){
+    $id_product = npg_warehouse::loader::pacbio::product->generate_product_id(
+            $self->_metadata->run_name, $self->_metadata->well_name);
+  }
+
   my @primary_avus   = $self->make_primary_metadata
       ($metadata,
        data_level => $DATA_LEVEL,
+       id_product => $id_product,
        is_target  => $is_target,
        is_r_and_d => $is_r_and_d);
   my @secondary_avus = $self->make_secondary_metadata(@run_records);
