@@ -57,7 +57,6 @@ sub find_pacbio_runs {
   if (defined $tag_id){
       $query->{tag_identifier} = $tag_id;
   }
-
   my @unique_records = $self->mlwh_schema->resultset('PacBioRun')->search
     ($query,  {prefetch => ['sample', 'study'],
      group_by => [qw/pac_bio_run_name well_label tag_identifier/]});

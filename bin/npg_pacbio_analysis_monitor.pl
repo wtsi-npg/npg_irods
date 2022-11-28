@@ -19,11 +19,13 @@ our $VERSION = '';
 
 Readonly::Scalar my $DEFAULT_INTERVAL_DAYS   => 14;
 Readonly::Scalar my $DEFAULT_OLDER_THAN_DAYS => 0;
+Readonly::Scalar my $DEFAULT_SUBDIR => 0;
 
 my $api_uri;
 my $collection;
 my $debug;
 my $interval = $DEFAULT_INTERVAL_DAYS;
+my $is_sub = $DEFAULT_SUBDIR;
 my $log4perl_config;
 my $older_than = $DEFAULT_OLDER_THAN_DAYS;
 my $pipeline_name;
@@ -36,6 +38,7 @@ GetOptions('collection=s'                  => \$collection,
              pod2usage(-verbose => 2, -exitval => 0);
            },
            'interval=i'                    => \$interval,
+           'is_sub'                        => \$is_sub,
            'logconf=s'                     => \$log4perl_config,
            'older-than|older_than=i'       => \$older_than,
            'pipeline-name|pipeline_name=s' => \$pipeline_name,
@@ -59,6 +62,7 @@ my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
 
 my @init_args = (interval           => $interval,
                  irods              => $irods,
+                 is_sub             => $is_sub,
                  mlwh_schema        => $wh_schema,
                  older_than         => $older_than,
                 );
@@ -106,9 +110,9 @@ npg_pacbio_analysis_monitor
 =head1 SYNOPSIS
 
 npg_pacbio_analysis_monitor
-  [--collection <path>] [--debug] [--interval days] [--logconf <path>]
-  [--older-than days] [--pipeline_name <name>] [--task_name <name>]
-  [--api-uri] [--verbose] 
+  [--collection <path>] [--debug] [--interval days] [--is_sub]
+  [--logconf <path>] [--older-than days] [--pipeline_name <name>]
+  [--task_name <name>] [--api-uri] [--verbose]
 
  Options:
    --collection      The destination collection in iRODS. Optional,
@@ -116,6 +120,9 @@ npg_pacbio_analysis_monitor
    --debug           Enable debug level logging. Optional, defaults to
                      false.
    --help            Display help.
+   --is_sub          Data to be loaded is in sub-direcories of the
+                     main analysis output directroy. Optional, defaults
+                     to false.
    --interval        Interval of time in days for analysis loading. 
                      Optional, defaults to 14.
  
