@@ -1,3 +1,8 @@
+Release 2.39.0
+  - PacBio - support iRODS loading for changed deplexing off instrument
+    files & directory structure in SMRT Link v11.
+  - Update to ubuntu-latest in actions
+
 Release 2.38.1
 
   - Update baton version in github actions workflow to 4.0.0

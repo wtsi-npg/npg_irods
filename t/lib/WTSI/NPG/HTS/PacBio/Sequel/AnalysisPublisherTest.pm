@@ -1,4 +1,3 @@
-
 package WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisherTest;
 
 use strict;
@@ -630,6 +629,73 @@ sub publish_files_4 : Test(291) {
   check_secondary_metadata($irods, @observed_paths);
   
   unlink $pub->restart_file;
+}
+
+sub publish_files_5 : Test(4) {
+## run TRACTION-RUN-327 cell A01 - SMRT Link deplex in subdirectories
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $analysis_path = catdir($tmpdir->dirname, '0000010313');
+  dircopy("$data_path/0000010313",$analysis_path) or die $!;
+  chmod (0770, "$analysis_path") or die "Chmod 0770 directory failed : $!";
+
+  my $runfolder_path = "$analysis_path/cromwell-job/call-lima/execution",
+  my $dest_coll      = "$irods_tmp_coll/publish_sequence_files";
+
+  my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
+    (restart_file    => catfile($tmpdir->dirname, 'published.json'),
+     dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     analysis_path   => $analysis_path,
+     runfolder_path  => $runfolder_path,
+     is_oninstrument => 1);
+
+
+  my @expected_paths =  map { catfile("$dest_coll/1_A01", $_) }
+    ('demultiplex.bc1019_BAK8B_OA--bc1019_BAK8B_OA.bam',
+     'demultiplex.bc1019_BAK8B_OA--bc1019_BAK8B_OA.bam.pbi',
+     'demultiplex.bc1019_BAK8B_OA--bc1019_BAK8B_OA.consensusreadset.xml',
+     'merged_analysis_report.json');
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+
+  cmp_ok($num_files,     '==', scalar @expected_paths);
+  cmp_ok($num_processed, '==', scalar @expected_paths);
+  cmp_ok($num_errors,    '==', 0);
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named sequence files') or
+              diag explain \@observed_paths;
+
+}
+sub publish_files_6 : Test(1) {
+## run TRACTION-RUN-327 cell A01 - deplex in subdirectories - deplex fail
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $analysis_path = catdir($tmpdir->dirname, '0000010313_deplexfail');
+  dircopy("$data_path/0000010313_deplexfail",$analysis_path) or die $!;
+  chmod (0770, "$analysis_path") or die "Chmod 0770 directory failed : $!";
+
+  my $runfolder_path = "$analysis_path/cromwell-job/call-lima/execution",
+  my $dest_coll      = "$irods_tmp_coll/publish_sequence_files";
+
+  my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
+    (restart_file    => catfile($tmpdir->dirname, 'published.json'),
+     dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     analysis_path   => $analysis_path,
+     runfolder_path  => $runfolder_path,
+     is_oninstrument => 1);
+
+   throws_ok { $pub->publish_files(); } qr /QC check failed/, 
+    'Correctly failed to publish data where QC check fails';
 }
 
 sub list_files_3 : Test(2) {

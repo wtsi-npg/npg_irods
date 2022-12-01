@@ -247,6 +247,8 @@ sub publish_files_on_instrument_1 : Test(40) {
 }
 
 sub publish_files_on_instrument_2 : Test(80) {
+## on instrument deplexing: 1 cell
+
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r64089e_20220615_171559";
@@ -297,6 +299,69 @@ sub publish_files_on_instrument_2 : Test(80) {
   check_primary_metadata($irods, @seq_paths);
   check_study_metadata($irods, @seq_paths);
 
+}
+
+sub publish_files_on_instrument_3 : Test(3) {
+## on instrument deplexing: 2 cells - 1 cell (A1) failed to deplex
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/r64089e_20220930_164018";
+  my $dest_coll = "$irods_tmp_coll/publish_files";
+
+  my $client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new();
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $tmprf_path = catdir($tmpdir->dirname, 'r64089e_20220930_164018');
+  dircopy($runfolder_path,$tmprf_path) or die $!;
+  chmod (0770, "$tmprf_path/1_A01") or die "Chmod 0770 directory failed : $!";  
+  chmod (0770, "$tmprf_path/2_B01") or die "Chmod 0770 directory failed : $!";
+
+  my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
+    (api_client      => $client,
+     dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     runfolder_path  => $tmprf_path);
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+
+  my @expected_pathsA =
+    map { catfile("$dest_coll/1_A01", $_) }
+    ('m64089e_220930_165238.consensusreadset.xml',
+     'm64089e_220930_165238.primary_qc.tar.xz',
+     'm64089e_220930_165238.sts.xml',
+     'm64089e_220930_165238.unbarcoded.consensusreadset.xml',
+     'm64089e_220930_165238.unbarcoded.hifi_reads.bam',
+     'm64089e_220930_165238.unbarcoded.hifi_reads.bam.pbi',
+     'm64089e_220930_165238.zmw_metrics.json.gz',);
+
+  my @expected_pathsB =
+    map { catfile("$dest_coll/2_B01", $_) }
+    ('m64089e_221001_201630.bc1012_BAK8A_OA--bc1012_BAK8A_OA.consensusreadset.xml',
+     'm64089e_221001_201630.consensusreadset.xml',
+     'm64089e_221001_201630.hifi_reads.bc1012_BAK8A_OA--bc1012_BAK8A_OA.bam',
+     'm64089e_221001_201630.hifi_reads.bc1012_BAK8A_OA--bc1012_BAK8A_OA.bam.pbi',
+     'm64089e_221001_201630.primary_qc.tar.xz',
+     'm64089e_221001_201630.sts.xml',
+     'm64089e_221001_201630.unbarcoded.consensusreadset.xml',
+     'm64089e_221001_201630.unbarcoded.hifi_reads.bam',
+     'm64089e_221001_201630.unbarcoded.hifi_reads.bam.pbi',
+     'm64089e_221001_201630.zmw_metrics.json.gz',
+     'merged_analysis_report.json',);
+
+  my @expected_paths;
+  push @expected_paths, @expected_pathsA, @expected_pathsB;
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+
+  cmp_ok($num_processed, '==', scalar @expected_paths,
+      "Published on instrument files correctly");
+  cmp_ok($num_errors,    '==', 1);
+
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named on instrument files') or
+            diag explain \@observed_paths;
 }
 
 sub publish_files_off_instrument : Test(3) {
