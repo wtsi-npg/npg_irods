@@ -293,7 +293,8 @@ sub check_primary_metadata {
        $PACBIO_INSTRUMENT_NAME,
        $PACBIO_RUN,
        $PACBIO_WELL,
-       $PACBIO_SAMPLE_LOAD_NAME
+       $PACBIO_SAMPLE_LOAD_NAME,
+       $ID_PRODUCT
       ) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");

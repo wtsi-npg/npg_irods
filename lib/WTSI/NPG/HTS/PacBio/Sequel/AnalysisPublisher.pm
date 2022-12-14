@@ -209,6 +209,7 @@ sub publish_sequence_files {
       my ($a_files, $a_processed, $a_errors) =
         $self->pb_publish_files([$file], $self->_dest_path,
                               \@primary_avus, \@secondary_avus);
+
       $num_files     += $a_files;
       $num_processed += $a_processed;
       $num_errors    += $a_errors;

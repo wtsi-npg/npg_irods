@@ -36,7 +36,7 @@ with qw[
 
 {
     my $positional = 2;
-    my @named      = qw[data_level is_target is_r_and_d ];
+    my @named      = qw[data_level id_product is_target is_r_and_d ];
     my $params     = function_params($positional, @named);
 
     sub make_primary_metadata {

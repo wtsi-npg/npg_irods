@@ -564,7 +564,7 @@ sub publish_aux_files : Test(9) {
   unlink $pub->restart_file;
 }
 
-sub publish_sequence_files : Test(36) {
+sub publish_sequence_files : Test(39) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r54097_20170727_165601";
@@ -729,7 +729,8 @@ sub check_primary_metadata {
        $PACBIO_INSTRUMENT_NAME,
        $PACBIO_RUN,
        $PACBIO_WELL,
-       $PACBIO_SAMPLE_LOAD_NAME) {
+       $PACBIO_SAMPLE_LOAD_NAME,
+       $ID_PRODUCT) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
