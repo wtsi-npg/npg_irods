@@ -304,6 +304,7 @@ sub check_primary_metadata {
             my @avu = $obj->find_in_metadata($attr);
             my $expected = scalar (@avu_plex == 1) ? 0 : 1;
             cmp_ok(scalar @avu,'==', $expected, "$file_name $attr metadata correct");
+
         }
     }
   }

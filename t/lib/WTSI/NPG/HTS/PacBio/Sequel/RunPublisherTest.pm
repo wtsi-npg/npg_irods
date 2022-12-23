@@ -18,6 +18,7 @@ use WTSI::NPG::HTS::PacBio::Sequel::RunPublisher;
 use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS::Metadata;
+use npg_warehouse::loader::pacbio::product;
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
@@ -734,6 +735,13 @@ sub check_primary_metadata {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
+
+    my $run  = $obj->find_in_metadata($PACBIO_RUN)->[0];
+    my $well = $obj->find_in_metadata($PACBIO_WELL)->[0];
+    my $product_id  = $obj->find_in_metadata($ID_PRODUCT)->[0];
+
+    is($product_id, npg_warehouse::loader::pacbio::product->generate_product_id($run, $well),
+      "$file_name has expected id_product metadata");
   }
 }
 

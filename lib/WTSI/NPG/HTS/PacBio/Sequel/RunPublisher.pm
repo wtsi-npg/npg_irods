@@ -375,11 +375,8 @@ sub publish_sequence_files {
      ($metadata->execution_mode eq 'OffInstrument') ||
      @run_records > 1 || $is_r_and_d || $is_aux) ? 0 : 1;
 
-  my $id_product = q[];
-  if ($is_target){
-    $id_product = npg_warehouse::loader::pacbio::product->generate_product_id(
-            $self->_metadata->run_name, $self->_metadata->well_name);
-  }
+  my $id_product = npg_warehouse::loader::pacbio::product->generate_product_id(
+          $self->_metadata->run_name, $self->_metadata->well_name);
 
   my @primary_avus   = $self->make_primary_metadata
       ($metadata,
