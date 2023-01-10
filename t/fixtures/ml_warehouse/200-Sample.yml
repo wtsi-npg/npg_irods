@@ -8425,6 +8425,40 @@
   phenotype: ~
   developmental_stage: ~
   control_type: ~
+- id_sample_tmp: '8409933'
+  id_lims: SQSCP
+  uuid_sample_lims: 924e6d32-43e3-11ed-9f51-fa163eea3084
+  id_sample_lims: '8482981'
+  last_updated: '2022-10-04 12:53:42'
+  recorded_at: '2022-10-04 12:53:42'
+  deleted_at: ~
+  created: '2022-10-04 12:53:40'
+  name: 5976STDY13173124
+  reference_genome: ~
+  organism: ~
+  accession_number: SAMEA110743979
+  common_name: Platycheirus albimanus
+  description: Non-Plant
+  taxon_id: 414846
+  father: ~
+  mother: ~
+  replicate: ~
+  ethnicity: ~
+  gender: ~
+  cohort: ~
+  country_of_origin: ~
+  geographical_region: ~
+  sanger_sample_id: 5976STDY13173124
+  control: '0'
+  supplier_name: Ox002753
+  public_name: idPlaAlba4
+  sample_visibility: ~
+  strain: ~
+  consent_withdrawn: '0'
+  donor_id: 5976STDY13173124
+  phenotype: ~
+  developmental_stage: ~
+  control_type: ~
 - id_sample_tmp: '8409942'
   id_lims: SQSCP
   uuid_sample_lims: fb6d5516-43e4-11ed-bf20-fa163eea3084

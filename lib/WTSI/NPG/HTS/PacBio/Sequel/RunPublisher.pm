@@ -35,6 +35,7 @@ our $OFFINSTRUMENT  = 'OffInstrument';
 our $ONINSTRUMENT   = 'OnInstrument';
 our $ONINSTRUMENTHO = 'OnInstrumentHifiOnly';
 our $ONINSTRUMENTDP = 'OnInstrumentDeplex';
+our $ONINSTRUMENTSR = 'OnInstrumentPlusSubreads';
 
 # Generic file prefix
 our $FILE_PREFIX_PATTERN = 'm[0-9a-z]+_\d+_\d+';
@@ -106,6 +107,10 @@ sub publish_files {
       ($num_files_cell, $num_processed_cell, $num_errors_cell) =
         $self->_publish_off_instrument_cell($smrt_name);
     }
+    elsif ($process_type eq $ONINSTRUMENTSR) {
+      ($num_files_cell, $num_processed_cell, $num_errors_cell) =
+        $self->_publish_on_instrument_sr_cell($smrt_name, $process_type);
+    }
     elsif (($process_type eq $ONINSTRUMENT) ||
            ($process_type eq $ONINSTRUMENTHO) ||
            ($process_type eq $ONINSTRUMENTDP)) {
@@ -135,7 +140,15 @@ sub _processing_type {
    my $type;
    if (defined $self->list_files($smrt_name, $FILE_PREFIX_PATTERN .q{[.]}.
     $SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$})->[0]) {
-     $type = $OFFINSTRUMENT;
+     if (defined $self->list_files($smrt_name, $FILE_PREFIX_PATTERN .q{[.]}.
+      $CCS_SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$})->[0]) {
+        # special configuration v11+ resulting in subreads.bam (no scraps.bam)
+        # & oninstrument CCS processed reads.bam (so including low qual reads)
+        # to enable completion of a historic project.     
+      $type = $ONINSTRUMENTSR;
+     } else {
+      $type = $OFFINSTRUMENT;
+     }
    }
    elsif (defined $self->list_files($smrt_name, $FILE_PREFIX_PATTERN .q{[.]}.
     $CCS_SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$})->[0]) {
@@ -173,6 +186,33 @@ sub _publish_off_instrument_cell {
   $num_files     += ($nfx + $nfb + $nfs + $nfp + $nfi);
   $num_processed += ($npx + $npb + $nps + $npp + $npi);
   $num_errors    += ($nex + $neb + $nes + $nep + $nei);
+
+  return ($num_files,$num_processed,$num_errors);
+}
+
+sub _publish_on_instrument_sr_cell {
+  my ($self, $smrt_name, $process_type) = @_;
+
+  my ($meta_data) = $self->_read_metadata
+      ($smrt_name, q[consensusreadset], q[pbmeta:]);
+
+  my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
+  my ($nfx, $npx, $nex) = $self->publish_xml_files
+    ($smrt_name, q[consensusreadset|sts]);
+  my ($nfb, $npb, $neb) = $self->publish_sequence_files
+    ($smrt_name, $SEQUENCE_PRODUCT, $meta_data);
+  my ($nfs, $nps, $nes) = $self->publish_sequence_files
+    ($smrt_name, $CCS_SEQUENCE_PRODUCT, $meta_data);
+  my ($nfp, $npp, $nep) = $self->publish_index_files
+    ($smrt_name, qq{($SEQUENCE_PRODUCT|$CCS_SEQUENCE_PRODUCT)});
+  my ($nfa, $npa, $nea) = $self->publish_aux_files
+    ($smrt_name, 'zmw_metrics[.]json[.]gz');
+  my ($nfi, $npi, $nei) = $self->publish_image_archive
+    ($smrt_name, $meta_data, $process_type);
+
+  $num_files     += ($nfx + $nfb + $nfs + $nfp + $nfa + $nfi);
+  $num_processed += ($npx + $npb + $nps + $npp + $npa + $npi);
+  $num_errors    += ($nex + $neb + $nes + $nep + $nea + $nei);
 
   return ($num_files,$num_processed,$num_errors);
 }
@@ -488,7 +528,8 @@ sub publish_image_archive {
     elsif ($metadata->has_ccsreads_uuid) {
       my(@runfolder_files,);
       ## OnInstrument processed data - CCS or CCS HiFi only
-      if(($process_type eq $ONINSTRUMENT) || ($process_type eq $ONINSTRUMENTHO)){
+      if(($process_type eq $ONINSTRUMENT) || ($process_type eq $ONINSTRUMENTHO) ||
+         ($process_type eq $ONINSTRUMENTSR)){
         my $file_pattern1   = $FILE_PREFIX_PATTERN .q{.}.
           q{ccs_reports.json|ccs_reports.txt}.
           q{$};
