@@ -1,3 +1,8 @@
+
+  - PacBio - added support niche run folder processing special case
+    to support an ongoing PhD process (not likely to be required once
+    the project is finished)
+
 Release 2.39.0
   - PacBio - support iRODS loading for changed deplexing off instrument
     files & directory structure in SMRT Link v11.
