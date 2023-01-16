@@ -1,7 +1,9 @@
 
+Release 2.40.0
   - PacBio - added support niche run folder processing special case
     to support an ongoing PhD process (not likely to be required once
     the project is finished)
+  - Update action versions in CI
 
 Release 2.39.0
   - PacBio - support iRODS loading for changed deplexing off instrument
