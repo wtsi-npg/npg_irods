@@ -364,6 +364,50 @@ sub publish_files_on_instrument_3 : Test(3) {
             diag explain \@observed_paths;
 }
 
+sub publish_files_on_instrument_4 : Test(3) {
+  ## on instrument CCS - CCS + subreads bam files produced, deplex off instrument
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/r64094e_20221214_160714";
+  my $dest_coll = "$irods_tmp_coll/publish_files";
+
+  my $client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new();
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $tmprf_path = catdir($tmpdir->dirname, 'r64094e_20221214_160714');
+  dircopy($runfolder_path,$tmprf_path) or die $!;
+  chmod (0770, "$tmprf_path/1_A01") or die "Chmod 0770 directory failed : $!";  
+
+  my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
+    (api_client      => $client,
+     dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     runfolder_path  => $tmprf_path);
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+  my @expected_paths =
+    map { catfile("$dest_coll/1_A01", $_) }
+    ('m64094e_221214_161800.consensusreadset.xml',
+     'm64094e_221214_161800.primary_qc.tar.xz',
+     'm64094e_221214_161800.reads.bam',
+     'm64094e_221214_161800.reads.bam.pbi',
+     'm64094e_221214_161800.sts.xml',
+     'm64094e_221214_161800.subreads.bam',
+     'm64094e_221214_161800.subreads.bam.pbi',
+     'm64094e_221214_161800.zmw_metrics.json.gz',);
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+
+  cmp_ok($num_processed, '==', scalar @expected_paths,
+      "Published on instrument files correctly");
+  cmp_ok($num_errors,    '==', 0);
+
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named on instrument files') or
+            diag explain \@observed_paths;
+}
+
 sub publish_files_off_instrument : Test(3) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
