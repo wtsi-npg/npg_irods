@@ -1,0 +1,80 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+database "LIMS" as lims
+control "ML Warehouse\nUpdater" as wh_updater
+
+database "ML\nWarehouse" as mlwh
+boundary "ML\nWarehouse\nAPI" as mlwh_api
+
+control "iRODS metadata\nupdater" as irods_updater
+
+boundary "NPG business\nAPI" as npg_business_api
+boundary "NPG iRODS\nAPI" as npg_irods_api
+
+boundary "baton" as baton
+participant "iRODS" as irods
+
+activate wh_updater
+wh_updater -> lims
+wh_updater -> mlwh
+deactivate wh_updater
+
+group Update iRODS metadata
+group Find changed ML warehouse records
+activate irods_updater
+irods_updater -> mlwh_api
+mlwh_api -> mlwh : SQL\nquery
+mlwh --> mlwh_api
+end group
+
+group Update affected iRODS data
+irods_updater -> npg_business_api : Find affected iRODS data
+npg_business_api -> npg_irods_api
+npg_irods_api -> baton
+baton -> irods : iRODS\nAPI
+irods --> baton
+baton --> npg_irods_api
+npg_irods_api --> npg_business_api
+end group
+
+loop affected iRODS data
+
+group Update secondary metadata
+irods_updater -> npg_business_api
+
+npg_business_api --> npg_business_api : Build metadata
+
+npg_business_api -> npg_irods_api : Compare/update\nmetadata
+npg_irods_api -> baton
+baton -> irods : iRODS\nAPI
+irods --> baton
+baton --> npg_irods_api
+npg_irods_api --> npg_business_api
+end group
+
+group Update permissions
+irods_updater -> npg_business_api
+npg_business_api -> npg_irods_api : Read\nmetadata
+
+npg_irods_api -> baton
+baton -> irods : iRODS\nAPI
+irods --> baton
+baton --> npg_irods_api
+npg_irods_api --> npg_business_api
+
+npg_business_api --> npg_business_api : Build\npermissions
+
+npg_business_api -> npg_irods_api : Compare/update\npermissions
+npg_irods_api -> baton
+baton -> irods : iRODS\nAPI
+irods --> baton
+baton --> npg_irods_api
+npg_irods_api --> npg_business_api
+end group
+end
+
+deactivate irods_updater
+
+@enduml

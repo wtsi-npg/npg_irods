@@ -5,6 +5,9 @@ biological data and associated metadata to iRODS.
 
 ![Publish Illumina Run](publish_illumina_run.svg)
 
+
+![Update iRODS Metadata](update_irods_metadata.svg)
+
 ## Editing the diagram
 
 The diagrams are in [PlantUML](https://plantuml.com/) format, which may be

@@ -9,8 +9,8 @@ control "npg_publish_illumina_run.pl" as publish_illumina_run
 participant "Staging\nvolume" as staging
 boundary "Perl ML\nWarehouse\nAPI" as perl_mlwh_api
 database "ML\nWarehouse" as mlwh
+boundary "NPG business\nAPI" as npg_business_api
 boundary "NPG iRODS\nAPI" as npg_irods_api
-boundary "Perl iRODS\nAPI" as perl_irods_api
 boundary "baton" as baton
 participant "iRODS" as irods
 
@@ -27,70 +27,79 @@ activate baton
 
 publish_illumina_run -> npg_irods_api
 
+loop data files
+
 group Copy data
-npg_irods_api -> perl_irods_api
-perl_irods_api -> baton
+npg_business_api -> npg_irods_api
+npg_irods_api -> baton
 baton -> staging
 staging --> baton : Data files
 baton -> irods : iRODS\nAPI
 irods --> baton
-baton --> perl_irods_api
+baton --> npg_irods_api
 
-perl_irods_api --> perl_irods_api : Build metadata
-perl_irods_api -> baton : Send\nmetadata
+npg_business_api --> npg_business_api : Build metadata
+
+npg_business_api -> npg_irods_api : Set \nmetadata
+npg_irods_api -> baton
 baton -> irods : iRODS\nAPI
 irods --> baton
-baton --> perl_irods_api
-perl_irods_api --> npg_irods_api
+baton --> npg_irods_api
+npg_irods_api --> npg_business_api
 end
 
 group Add primary metadata
-npg_irods_api -> staging
-staging --> npg_irods_api : Composition JSON file
-npg_irods_api --> npg_irods_api : Build\nmetadata
-npg_irods_api -> perl_irods_api : Send\nmetadata
-perl_irods_api -> baton
+npg_business_api -> staging
+staging --> npg_business_api : Composition JSON file
+npg_business_api --> npg_business_api : Build\nmetadata
+
+npg_business_api -> npg_irods_api : Set\nmetadata
+npg_irods_api -> baton
 baton -> irods : iRODS\nAPI
 irods --> baton
-baton --> perl_irods_api
-perl_irods_api --> npg_irods_api
-end
+baton --> npg_irods_api
+npg_irods_api --> npg_business_api
+end group
 
 group Add secondary metadata
-npg_irods_api -> staging
-staging --> npg_irods_api : Composition JSON file
-npg_irods_api -> perl_mlwh_api : Metadata\nrequest
+npg_business_api -> staging
+staging --> npg_business_api : Composition JSON file
+npg_business_api -> perl_mlwh_api : Metadata\nrequest
 perl_mlwh_api -> mlwh : SQL\nquery
 mlwh --> perl_mlwh_api
-perl_mlwh_api --> npg_irods_api
+perl_mlwh_api --> npg_business_api
 
-npg_irods_api --> npg_irods_api : Build\nmetadata
-npg_irods_api -> perl_irods_api : Send\nmetadata
-perl_irods_api -> baton
+npg_business_api --> npg_business_api : Build\nmetadata
+
+npg_business_api -> npg_irods_api : Compare/update\nmetadata
+npg_irods_api -> baton
 baton -> irods : iRODS\nAPI
 irods --> baton
-baton --> perl_irods_api
-perl_irods_api --> npg_irods_api
-end
+baton --> npg_irods_api
+npg_irods_api --> npg_business_api
+end group
 
 group Update permissions
-npg_irods_api -> perl_irods_api : Metadata\nrequest
-perl_irods_api -> baton
+npg_business_api -> npg_business_api : Metadata\nrequest
+npg_irods_api -> baton
 baton -> irods : iRODS\nAPI
 irods --> baton
-baton --> perl_irods_api
-perl_irods_api --> npg_irods_api
+baton --> npg_irods_api
+npg_irods_api --> npg_business_api
 
-npg_irods_api --> npg_irods_api : Build\npermissions
-npg_irods_api -> perl_irods_api : Set\npermissions
-perl_irods_api -> baton
+npg_business_api --> npg_business_api : Build\npermissions
+
+npg_business_api -> npg_irods_api : Compare/update\npermissions
+npg_irods_api -> baton
 baton -> irods : iRODS\nAPI
 irods --> baton
-baton --> perl_irods_api
-perl_irods_api --> npg_irods_api
-end
+baton --> npg_irods_api
+npg_irods_api --> npg_business_api
+end group
 
 npg_irods_api --> publish_illumina_run
+
+end
 
 deactivate baton
 deactivate publish_illumina_run
