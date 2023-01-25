@@ -3,8 +3,17 @@
 These sequence diagrams show the main components involved in publishing
 biological data and associated metadata to iRODS.
 
+## Publishing an Illumina run
+
+This diagram gives an overview of the steps involved in publishing a single
+Illumina run to iRODS using the Perl implementation of the Illumina
+pipeline.
+
 ![Publish Illumina Run](publish_illumina_run.svg)
 
+This is an abstract overview of the steps required to update metadata on
+previously published data in iRODS. The steps apply to all DNA sequencing
+platforms.
 
 ![Update iRODS Metadata](update_irods_metadata.svg)
 
