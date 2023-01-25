@@ -13,7 +13,7 @@ use Readonly;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisFastaManager;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
-use npg_warehouse::loader::pacbio::product;
+use WTSI::NPG::HTS::PacBio::Sequel::Product;
 
 extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
 
@@ -147,6 +147,8 @@ sub publish_sequence_files {
 
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
+  my $product = WTSI::NPG::HTS::PacBio::Sequel::Product->new();
+
   foreach my $file ( @{$files} ){
     my @tag_records;
 
@@ -189,14 +191,14 @@ sub publish_sequence_files {
 
       my $tags;
       if ($is_target) {
-        $tags = npg_warehouse::loader::pacbio::product->get_tags($records[0]);
+        $tags = $product->get_tags($records[0]);
       }
       my $id_product;
       if ($tags) {
-          $id_product = npg_warehouse::loader::pacbio::product->generate_product_id(
+          $id_product = $product->generate_product_id(
             $self->_metadata->run_name, $self->_metadata->well_name, $tags);
       } else {
-        $id_product = npg_warehouse::loader::pacbio::product->generate_product_id(
+        $id_product = $product->generate_product_id(
           $self->_metadata->run_name, $self->_metadata->well_name);
       }
 
