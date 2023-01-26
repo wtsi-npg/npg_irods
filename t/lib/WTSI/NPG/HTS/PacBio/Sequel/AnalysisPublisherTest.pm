@@ -8,6 +8,7 @@ use File::Basename;
 use File::Copy::Recursive qw(dircopy);
 use File::Spec::Functions;
 use File::Temp;
+use File::Which;
 use Log::Log4perl;
 use Test::More;
 use Test::Exception;
@@ -38,6 +39,10 @@ my $db_dir       = File::Temp->newdir;
 my $wh_schema;
 
 my $irods_tmp_coll;
+
+if (!which "generate_pac_bio_id"){
+  plan skip_all => "Pac Bio product_id generation script not installed"
+}
 
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
@@ -172,7 +177,7 @@ sub publish_xml_files : Test(19) {
   check_common_metadata($irods, @observed_paths);
 }
 
-sub publish_sequence_files : Test(61) {
+sub publish_sequence_files : Test(64) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $analysis_path  = "$data_path/001612";
@@ -389,7 +394,7 @@ sub publish_files_2 : Test(2) {
 }
 
 
-sub publish_sequence_files_2 : Test(40) {
+sub publish_sequence_files_2 : Test(42) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $analysis_path  = "$data_path/001185";
@@ -594,7 +599,7 @@ sub publish_files_3 : Test(1) {
   unlink $pub->restart_file;
 }
 
-sub publish_files_4 : Test(291) {
+sub publish_files_4 : Test(307) {
 ## run 83472 cell A01 - isoseq analysis 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);

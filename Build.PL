@@ -21,6 +21,7 @@ my $build = Build->new
    build_requires =>
    {
     'File::Copy::Recursive'         => 0,
+    'File::Which'                   => 0,
     'TAP::Harness'                  => '>= 3.30',
     'Test::Class'                   => '>= 0.41',
     'Test::Compile'                 => 0,
