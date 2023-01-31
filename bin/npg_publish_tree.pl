@@ -51,6 +51,7 @@ my $stdio;
 my @include;
 my @exclude;
 my @groups;
+my $log4perl_config;
 
 GetOptions('collection=s'                        => \$dest_collection,
            'debug'                               => \$debug,
@@ -61,6 +62,7 @@ GetOptions('collection=s'                        => \$dest_collection,
              pod2usage(-verbose => 2, -exitval => 0);
            },
            'include=s'                           => \@include,
+           'logconf=s'                           => \$log4perl_config,
            'max-errors|max_errors=i'             => \$max_errors,
            'metadata=s'                          => \$metadata_file,
            'mlwh-json|mlwh_json=s'               => \$mlwh_json_filename,
@@ -69,14 +71,19 @@ GetOptions('collection=s'                        => \$dest_collection,
            'verbose'                             => \$verbose,
            q[]                                   => \$stdio);
 
-if ($verbose and not $debug) {
-  Log::Log4perl::init(\$log_config);
+if ($log4perl_config) {
+  Log::Log4perl::init($log4perl_config);
 }
 else {
-  my $level = $debug ? $DEBUG : $WARN;
-  Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
-                            level  => $level,
-                            utf8   => 1});
+  if ($verbose and not $debug) {
+    Log::Log4perl::init(\$log_config);
+  }
+  else {
+    my $level = $debug ? $DEBUG : $WARN;
+    Log::Log4perl->easy_init({layout => '%d %-5p %c - %m%n',
+                              level  => $level,
+                              utf8   => 1});
+  }
 }
 
 my $log = Log::Log4perl->get_logger('main');
