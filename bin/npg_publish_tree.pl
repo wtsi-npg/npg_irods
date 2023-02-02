@@ -301,7 +301,10 @@ npg_publish_tree --source-directory <path> --collection <path>
                       published, all others will be ignored. If more than
                       one regex is supplied, the matches for all of them
                       are aggregated.
-
+   --logconf          A file containing log4perl configuration with log
+                      dispatchers. It may include one or more dispatchers
+                      to log messages to different resources
+                      (such as screen, files...).
    --max-errors       The maximum number of errors permitted before aborting.
                       Optional, defaults to unlimited.
    --metadata         A JSON file containing metadata to be added to the
