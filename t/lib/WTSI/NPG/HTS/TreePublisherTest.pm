@@ -280,7 +280,7 @@ sub publish_tree_filter : Test(4) {
 }
 
 sub npg_publish_tree_pl_logconf : Test(1) {
-  my $source_path = "${data_path}/treepublisher";
+  my $source_path = "$data_path/treepublisher";
 
   my @script_args = (
     q[--collection], $irods_tmp_coll,
