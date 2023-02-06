@@ -283,10 +283,10 @@ sub npg_publish_tree_pl_logconf : Test(1) {
   my $source_path = "${data_path}/treepublisher";
 
   my @script_args = (
-    q[--collection], ${irods_tmp_coll},
-    q[--source_directory], ${source_path},
+    q[--collection], $irods_tmp_coll,
+    q[--source_directory], $source_path,
     q[--logconf], q[t/log4perl_test.conf]);
-  ok(system($^X, "${bin_path}/npg_publish_tree.pl", @script_args) == 0,
+  ok(system("$bin_path/npg_publish_tree.pl", @script_args) == 0,
     'Correctly exited with logconf option');
 }
 
