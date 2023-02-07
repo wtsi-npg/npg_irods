@@ -6,6 +6,7 @@ use warnings;
 use English qw[-no_match_vars];
 use File::Copy::Recursive qw(dircopy);
 use File::Spec::Functions;
+use File::Which;
 use JSON;
 use Log::Log4perl;
 use Test::HTTP::Server;
@@ -84,6 +85,10 @@ sub Test::HTTP::Server::Request::QueryJobs {
 my $wh_schema;
 
 my $irods_tmp_coll;
+
+if (!which "generate_pac_bio_id"){
+  plan skip_all => "Pac Bio product_id generation script not installed"
+}
 
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');

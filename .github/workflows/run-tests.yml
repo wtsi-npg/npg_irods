@@ -41,6 +41,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+          architecture: 'x64'
+
       - name: "Install OS dependencies"
         run: |
           sudo apt-get update
@@ -169,6 +174,10 @@ jobs:
              npg_seq_common \
              npg_qc
           cpanm --installdeps --notest .
+
+      - name: "Install Python dependencies"
+        run: |
+          python3 -m pip install git+https://github.com/wtsi-npg/npg_id_generation
 
       - name: "Log install failure"
         if: ${{ failure() }}

@@ -72,6 +72,7 @@ lib/WTSI/NPG/HTS/PacBio/Sequel/APIClient.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/ImageArchive.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/MetaXMLParser.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/MonitorBase.pm
+lib/WTSI/NPG/HTS/PacBio/Sequel/Product.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/Reportdata.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunAuditor.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteMonitor.pm
