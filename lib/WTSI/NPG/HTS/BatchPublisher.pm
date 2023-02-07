@@ -35,6 +35,13 @@ has 'publish_state' =>
    documentation => 'A map of file path to a boolean value, which ' .
                     'is set true if the file was published');
 
+has 'mlwh_locations' =>
+  (isa           =>'WTSI::NPG::HTS::WriteLocations',
+   is            =>'ro',
+   required      => 0,
+   documentation => 'An object used to build and write information to be ' .
+                    'loaded into the seq_product_irods_locations table.');
+
 has 'obj_factory' =>
   (does          => 'WTSI::NPG::HTS::DataObjectFactory',
    is            => 'ro',
@@ -223,6 +230,27 @@ has 'require_checksum_cache' =>
 
         if (!$mlwh_json_cb->($obj, $dest_coll, $filename)){
           $self->logcroak("Failed to add '$file' to ml warehouse json file");
+        }
+        if ($self->mlwh_locations){
+          my $target;
+          my $pid;
+          for my $avu (@primary_avus){
+            if ($avu->{attribute} eq 'target'){
+              $target = $avu->{value};
+            }elsif ($avu->{attribute} eq 'id_product'){
+              $pid = $avu->{value};
+            }
+            if (defined($target) && $pid){
+              last;
+            }
+          }
+          if ($target) {
+            $self->mlwh_locations->add_location(
+              pid  => $pid,
+              coll => $dest_coll,
+              path => $filename
+            );
+          }
         }
       }
       catch {

@@ -99,11 +99,14 @@ sub handler {
 
   $log->info('Writing restart file ', $publisher->restart_file);
   $publisher->write_restart_file;
+  $publisher->write_locations;
   $log->error("Exiting due to $signal");
   exit 1;
 }
 
 my ($num_files, $num_published, $num_errors) = $publisher->publish_files;
+
+$publisher->write_locations;
 
 if ($num_errors == 0) {
   $log->info("Processed $num_files, published $num_published ",

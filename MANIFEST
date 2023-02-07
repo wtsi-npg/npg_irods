@@ -40,6 +40,7 @@ lib/WTSI/NPG/HTS/DataObject.pm
 lib/WTSI/NPG/HTS/DataObjectFactory.pm
 lib/WTSI/NPG/HTS/DefaultDataObjectFactory.pm
 lib/WTSI/NPG/HTS/HeaderParser.pm
+lib/WTSI/NPG/HTS/WriteLocations.pm
 lib/WTSI/NPG/HTS/Illumina/AgfDataObject.pm
 lib/WTSI/NPG/HTS/Illumina/AlnDataObject.pm
 lib/WTSI/NPG/HTS/Illumina/AncDataObject.pm

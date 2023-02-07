@@ -12,6 +12,7 @@ use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::BatchPublisher;
+use WTSI::NPG::HTS::WriteLocations;
 use WTSI::NPG::HTS::PacBio::DataObjectFactory;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS::Publisher;
@@ -26,8 +27,12 @@ with qw[
 
 our $VERSION = '';
 
+
 # Default
 our $DEFAULT_ROOT_COLL    = '/seq/pacbio';
+
+my $MLWH_JSON_PATH = 'mlwh_locations.json'; # Move this?
+my $PACBIO = 'pacbio';
 
 has 'irods' =>
   (isa           => 'WTSI::NPG::iRODS',
@@ -65,6 +70,15 @@ has 'restart_file' =>
    builder       => '_build_restart_file',
    documentation => 'A file containing a list of files for which ' .
                     'publication failed');
+
+has 'mlwh_locations' =>
+  (isa           => 'WTSI::NPG::HTS::WriteLocations',
+   is            => 'ro',
+   required      => 1,
+   lazy          => 1,
+   builder       => '_build_locations',
+   documentation => 'An object used to build and write information to be ' .
+                    'loaded into the seq_product_irods_locations table.');
 
 has 'dest_collection' =>
   (isa           => 'Str',
@@ -149,6 +163,13 @@ sub write_restart_file {
   return
 }
 
+sub write_locations{
+  my ($self) = @_;
+
+  $self->mlwh_locations->write_locations;
+  return;
+}
+
 ## no critic (ProhibitManyArgs)
 sub pb_publish_files {
   my ($self, $files, $dest_coll, $primary_avus, $secondary_avus,
@@ -197,6 +218,7 @@ sub _build_batch_publisher {
      irods                  => $self->irods,
      obj_factory            => $self->obj_factory,
      state_file             => $self->restart_file,
+     mlwh_locations         => $self->mlwh_locations,
      require_checksum_cache => []); ## no md5s precreated for PacBio
 }
 
@@ -204,6 +226,12 @@ sub _build_restart_file {
   my ($self) = @_;
 
   return catfile($self->runfolder_path, 'published.json');
+}
+
+sub _build_locations {
+  my ($self) = @_;
+
+  return WTSI::NPG::HTS::WriteLocations->new(path=> $self->runfolder_path . $MLWH_JSON_PATH, platform_name=> $PACBIO);
 }
 
 sub _build_obj_factory {

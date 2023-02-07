@@ -5,8 +5,9 @@ use namespace::autoclean;
 use Data::Dump qw[pp];
 use English qw[-no_match_vars];
 use Moose;
+use Readonly;
 use Try::Tiny;
-use WTSI::DNAP::Utilities::Params;
+use WTSI::DNAP::Utilities::Params qw[function_params];
 
 
 with qw[
@@ -19,46 +20,58 @@ our $VERSION = '';
 Readonly::Scalar my $JSON_FILE_VERSION => '1.0';
 Readonly::Scalar my $NPG_PROD => 'npg-prod';
 
-has 'file' => {
-  isa           => 'str',
+has 'path' => (
+  isa           => 'Str',
   is            => 'ro',
   required      => 1,
-  documentation => 'The path to the output file'
-};
+  documentation => 'The path to the output file');
 
-has 'locations' => {
+has 'locations' => (
   isa           => 'ArrayRef',
   is            => 'rw',
   required      => 1,
   builder       => '_build_locations',
   lazy          => 1,
-  documentation => 'The rows of the seq_product_irods_locations table for each
-                    target data object loaded'
-};
+  documentation => 'The rows of the seq_product_irods_locations table for each' .
+                   'target data object loaded');
+
+has 'pipeline_name' =>(
+  isa           => 'Str',
+  is            => 'ro',
+  required      => 1,
+  default       => $NPG_PROD,
+  documentation => 'The name of the pipeline used to produce the data');
+
+has 'platform_name' => (
+  isa           => 'Str',
+  is            => 'ro',
+  required      => 1,
+  documentation => 'Name of the platform used to produce raw data');
 
 sub _build_locations {
   my ($self) = @_;
 
-  if (-e $self->file) {
-    open my $fh , '<:encoding(UTF-8)', $self->file or
+  if (-e $self->path) {
+    open my $fh , '<:encoding(UTF-8)', $self->path or
       $self->logcroak(q[could not open ml warehouse json file] .
-        qq[$self->file_path]);
+        $self->path);
     my $file_contents = <$fh>;
     close $fh or $self->logcroak(q[could not close ml warehouse ] .
-        qq[json file $self->mlwh_json]);
+        qq[json file $self->path]);
 
     try {
       my $decoded = $self->decode($file_contents);
       my $locations = $decoded->{products};
       $self->locations($locations);
-      $self->debug('Read previous locations from file: ', $self->file);
+      $self->debug('Read previous locations from file: ', $self->path);
     } catch{
-      $self->logcroak('Failed to parse locations from JSON file: ', $self->file);
+      $self->logcroak('Failed to parse locations from JSON file: ', $self->path);
     }
   } else {
     $self->locations([]);
-    $self->debug("No file at ${$self->file}, using empty location arrayref");
+    $self->debug("No file at ${$self->path}, using empty location arrayref");
   }
+  return;
 
 }
 
@@ -67,16 +80,12 @@ sub _build_locations {
   Named args : coll                 Collection. Str.
                path                 Relative Path. Str.
                pid                  Product Id. Str.
-               platform             Sequencing Platform. Str.
-               process              Process name. Str. Optional
-                                    Defaults to 'npg-prod'.
                secondary_path       Path to secondary data object for this product
                                     Str. Optional.
 
   Example    : $self->add_location(coll     => $collection,
                                    path     => $path,
                                    pid      => $pid,
-                                   platform => $platform)
   Description: Add a data hash to the location array, if it is not already
                present
   Returntype : Void
@@ -84,10 +93,10 @@ sub _build_locations {
 =cut
 sub add_location{
   my $positional = 1;
-  my @named      = qw[pid, platform, process, coll, path, secondary_path];
+  my @named      = qw[pid coll path secondary_path];
   my $params = function_params($positional, @named);
 
-  my ($self) = $params->parse();
+  my ($self) = $params->parse(@_);
 
   my @existing = grep {
     $params->pid ne $_->{id_product} ||
@@ -96,17 +105,16 @@ sub add_location{
 
   my $location = {
     id_product               => $params->pid,
-    seq_platform_name        => $params->platform,
-    pipeline_name            => defined($params->process) ?
-      $params->process : $NPG_PROD,
+    seq_platform_name        => $self->{platform_name},
+    pipeline_name            => $self->{pipeline_name},
     irods_root_collection    => $params->coll,
     irods_data_relative_path => $params->path
   };
   if ($params->secondary_path) {
-    $location->{"irods_secondary_data_relative_path"} = $params->secondary_path;
+    $location->{irods_secondary_data_relative_path} = $params->secondary_path;
   }
 
-  if (scalar (@existing) < scalar @{$self->locations}){
+  if (scalar (@existing) < scalar @{$self->{locations}}){
     $self->{locations} = \@existing;
   }
 
@@ -127,21 +135,21 @@ sub add_location{
 sub write_locations{
   my ($self) = @_;
 
-  $self->debug("Writing to locations file '$self->{file}:'", pp($self->{locations}));
+  $self->info("Writing locations file '$self->path:'", pp($self->{locations}));
 
   my $json_out = {
     version  => $JSON_FILE_VERSION,
     products => $self->{locations}
   };
 
-  open my $fh, '>:encoding(UTF-8)', $self->{file} or
-    $self->logcroak(qq[Could not open ml warehouse json file $self->{file}],
+  open my $fh, '>:encoding(UTF-8)', $self->path or
+    $self->logcroak(qq[Could not open ml warehouse json file $self->path],
       q[to write]);
   print $fh $self->encode($json_out) or
     $self->logcroak(q[Could not write to ml warehouse json file],
-      qq[$self->{file}]);
+      $self->path);
   close $fh or $self->logcroak(q[Could not close ml warehouse json file],
-    qq[$self->{file}]);
+    $self->path);
 
   return;
 
@@ -153,3 +161,32 @@ no Moose::Role;
 1;
 
 __END__
+
+=head1 NAME
+
+WTSI::NPG::HTS::WriteLocations
+
+=head1 DESCRIPTION
+
+Stores information used to load the ml warehouse seq_product_irods_locations
+table, and provides methods to write that information to a json file.
+
+=head1 AUTHOR
+
+Michael Kubiak E<lt>mk35@sanger.ac.ukE<gt>
+
+=head1 COPYRIGHT AND DISCLAIMER
+
+Copyright (C) 2023 Genome Research Limited. All Rights Reserved.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the Perl Artistic License or the GNU General
+Public License as published by the Free Software Foundation, either
+version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+=cut
