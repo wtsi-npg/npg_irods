@@ -1,14 +1,13 @@
 
 use strict;
 use warnings;
+use WTSI::DNAP::Utilities::Build;
 
 # These paths are propagated to @INC in the build script. The 't/lib'
 # directory is added because the Test::Class tests are there.
 use lib qw[lib t/lib];
 
-use Build;
-
-my $build = Build->new
+my $build = WTSI::DNAP::Utilities::Build->new
   (module_name        => 'npg_irods',
    dist_author        => 'NPG <npg@sanger.ac.uk>',
    dist_abstract      => 'NPG iRODS data/metadata loading and update tools',
