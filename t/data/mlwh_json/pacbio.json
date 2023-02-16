@@ -1,0 +1,1 @@
+{"version":"1.0","products":[{"irods_data_relative_path":"m64089e_220615_173331.hifi_reads.bc1015_BAK8B_OA--bc1015_BAK8B_OA.bam","id_product":"ad0fb3a2fa5a13af2daa6181a40b5e5c762691981b493895edd608f99fbe1dc4","irods_root_collection":"/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_files/","pipeline_name":"npg-prod","seq_platform_name":"pacbio"}]}

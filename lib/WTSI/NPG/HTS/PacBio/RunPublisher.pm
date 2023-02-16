@@ -231,7 +231,7 @@ sub _build_restart_file {
 sub _build_locations {
   my ($self) = @_;
 
-  return WTSI::NPG::HTS::WriteLocations->new(path=> $self->runfolder_path . $MLWH_JSON_PATH, platform_name=> $PACBIO);
+  return WTSI::NPG::HTS::WriteLocations->new(path=> join('/', $self->runfolder_path, $MLWH_JSON_PATH), platform_name=> $PACBIO);
 }
 
 sub _build_obj_factory {

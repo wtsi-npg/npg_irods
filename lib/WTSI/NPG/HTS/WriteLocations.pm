@@ -155,8 +155,7 @@ sub write_locations{
 
 }
 
-
-no Moose::Role;
+no Moose;
 
 1;
 
