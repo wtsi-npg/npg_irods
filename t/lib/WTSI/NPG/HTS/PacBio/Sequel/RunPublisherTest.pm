@@ -252,14 +252,13 @@ sub publish_files_on_instrument_1 : Test(42) {
   unlink $pub->restart_file;
 }
 
-sub publish_files_on_instrument_2 : Test(86) {
+sub publish_files_on_instrument_2 : Test(84) {
 ## on instrument deplexing: 1 cell
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r64089e_20220615_171559";
   my $dest_coll = "$irods_tmp_coll/publish_files";
-  my $expected_json = 't/data/mlwh_json/pacbio.json';
 
   my $client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new();
   
@@ -306,11 +305,6 @@ sub publish_files_on_instrument_2 : Test(86) {
   check_primary_metadata($irods, $pub, @seq_paths);
   check_study_metadata($irods, @seq_paths);
 
-  my $mlwh_json = $pub->mlwh_locations->path;
-  ok(-e $mlwh_json, "mlwh loader json file $mlwh_json was written by publisher");
-  is_deeply(read_json_content($mlwh_json),
-    set_destination(read_json_content($expected_json), $irods_tmp_coll),
-    "contents of $mlwh_json are correct");
 
 }
 
@@ -792,24 +786,6 @@ sub check_study_metadata {
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
   }
-}
-
-sub read_json_content {
-  my ($path) = @_;
-
-  open my $mlwh_json_fh, '<:encoding(UTF-8)', $path or die qq[could not open $path];
-
-  my $json = decode_json(<$mlwh_json_fh>);
-  close $mlwh_json_fh;
-  return $json
-}
-
-sub set_destination {
-  my ($json_hash, $temp_coll) = @_;
-  foreach my $product (@{$json_hash->{products}}){
-    $product->{irods_root_collection} =~ s|/testZone/home/irods/RunPublisherTest.XXXXX.0/|$temp_coll/|xms;
-  }
-  return $json_hash;
 }
 
 1;

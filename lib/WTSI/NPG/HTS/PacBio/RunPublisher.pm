@@ -196,11 +196,13 @@ sub pb_publish_files {
     return @{$extra_avus};
   };
 
-  return $self->batch_publisher->publish_file_batch
+  my ($num_files, $num_published, $num_errors) = $self->batch_publisher->publish_file_batch
     ($files, $dest_coll,
      primary_cb   => $primary_avus_callback,
      secondary_cb => $secondary_avus_callback,
      extra_cb     => $extra_avus_callback);
+
+  return ($num_files, $num_published, $num_errors);
 }
 ## use critic
 
@@ -231,7 +233,10 @@ sub _build_restart_file {
 sub _build_locations {
   my ($self) = @_;
 
-  return WTSI::NPG::HTS::WriteLocations->new(path=> join('/', $self->runfolder_path, $MLWH_JSON_PATH), platform_name=> $PACBIO);
+  return WTSI::NPG::HTS::WriteLocations->new(
+    path=> join(q[/], $self->runfolder_path, $MLWH_JSON_PATH),
+    platform_name=> $PACBIO
+  );
 }
 
 sub _build_obj_factory {

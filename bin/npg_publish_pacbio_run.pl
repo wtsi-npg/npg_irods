@@ -106,8 +106,6 @@ sub handler {
 
 my ($num_files, $num_published, $num_errors) = $publisher->publish_files;
 
-$publisher->write_locations;
-
 if ($num_errors == 0) {
   $log->info("Processed $num_files, published $num_published ",
              "with $num_errors errors");

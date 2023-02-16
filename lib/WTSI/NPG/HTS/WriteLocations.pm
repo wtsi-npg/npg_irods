@@ -135,12 +135,16 @@ sub add_location{
 sub write_locations{
   my ($self) = @_;
 
-  $self->info("Writing locations file '$self->path:'", pp($self->{locations}));
+  if (!$self->{locations}){
+    $self->warn("No irods locations to write");
+    return;
+  }
 
   my $json_out = {
     version  => $JSON_FILE_VERSION,
     products => $self->{locations}
   };
+  $self->info("Writing locations file '$self->{path}':", pp($json_out));
 
   open my $fh, '>:encoding(UTF-8)', $self->path or
     $self->logcroak(qq[Could not open ml warehouse json file $self->path],

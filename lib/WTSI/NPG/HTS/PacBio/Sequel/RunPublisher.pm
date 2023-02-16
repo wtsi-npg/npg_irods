@@ -132,6 +132,8 @@ sub publish_files {
     }
   }
 
+  $self->write_locations;
+
   return ($num_files, $num_processed, $num_errors);
 };
 
