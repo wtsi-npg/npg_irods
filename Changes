@@ -1,3 +1,9 @@
+Release 2.41.0
+  - Add --logconf option to npg_publish-tree.pl
+  - Add id_product metadata to PacBio data objects.
+  - Remove WTSI::NPG::HTS::PacBio::Sequel::APIClient (moved to
+    wtsi-npg/perl-dnap-utilities).
+  - Add sequence diagrams of metadata flow when publishing.
 
 Release 2.40.0
   - PacBio - added support niche run folder processing special case
