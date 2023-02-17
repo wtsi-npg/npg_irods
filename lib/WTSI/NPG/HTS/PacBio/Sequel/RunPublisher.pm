@@ -376,8 +376,11 @@ sub publish_sequence_files {
      @run_records > 1 || $is_r_and_d || $is_aux) ? 0 : 1;
 
   my $product = WTSI::NPG::HTS::PacBio::Sequel::Product->new();
+
   my $id_product = $product->generate_product_id(
-          $metadata->run_name, $metadata->well_name);
+          $metadata->run_name,
+          $self->remove_well_padding($metadata->run_name, $metadata->well_name)
+  );
 
   my @primary_avus   = $self->make_primary_metadata
       ($metadata,
