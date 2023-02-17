@@ -193,18 +193,9 @@ sub publish_sequence_files {
       if ($is_target) {
         $tags = $product->get_tags($records[0]);
       }
-      # Well addresses are unpadded in the ML warehouse
-      my ($row, $col) = $self->_metadata->well_name =~
-          m{^([[:upper:]])([[:digit:]]+)$}msx;
-      if ($row and $col) {
-          $col =~ s/^0+//msx; # Remove leading zeroes
-        }
-        else {
-          $self->logcroak("Failed to match a plate row and column in well ",
-            "'${$self->_metadata->well_name}' ",
-            "of PacBio run '${$self->_metadata->run_id}'");
-        }
-      my $well_label = "$row$col";
+
+      my $well_label = $self->remove_well_padding($self->_metadata->run_name,
+                                                  $self->_metadata->well_name);
       my $id_product;
 
       if ($tags) {
