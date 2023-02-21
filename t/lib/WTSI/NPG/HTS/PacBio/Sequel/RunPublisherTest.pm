@@ -8,6 +8,7 @@ use File::Basename;
 use File::Copy::Recursive qw(dircopy);
 use File::Spec::Functions;
 use File::Temp;
+use File::Which;
 use Log::Log4perl;
 use Test::More;
 
@@ -15,6 +16,7 @@ use base qw[WTSI::NPG::HTS::Test];
 
 use WTSI::NPG::HTS::PacBio::Sequel::APIClient;
 use WTSI::NPG::HTS::PacBio::Sequel::RunPublisher;
+use WTSI::NPG::HTS::PacBio::Sequel::Product;
 use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS::Metadata;
@@ -51,6 +53,10 @@ my $SEQUENCE_INDEX_FORMAT = $WTSI::NPG::HTS::PacBio::Sequel::RunPublisher::SEQUE
 my $wh_schema;
 
 my $irods_tmp_coll;
+
+if (!which "generate_pac_bio_id"){
+  plan skip_all => "Pac Bio product_id generation script not installed"
+}
 
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
@@ -198,7 +204,7 @@ sub list_image_archive_files : Test(1) {
     \@expected_paths, 'Found image archive files 1_A02');
 }
 
-sub publish_files_on_instrument_1 : Test(40) {
+sub publish_files_on_instrument_1 : Test(42) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r64174e_20210114_161659";
@@ -241,12 +247,12 @@ sub publish_files_on_instrument_1 : Test(40) {
 
   check_common_metadata($irods, @observed_paths);
   my @seq_paths = grep /.bam$/, @observed_paths;
-  check_primary_metadata($irods, @seq_paths);
+  check_primary_metadata($irods, $pub, @seq_paths);
  
   unlink $pub->restart_file;
 }
 
-sub publish_files_on_instrument_2 : Test(80) {
+sub publish_files_on_instrument_2 : Test(84) {
 ## on instrument deplexing: 1 cell
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -296,7 +302,7 @@ sub publish_files_on_instrument_2 : Test(80) {
 
   check_common_metadata($irods, @observed_paths);
   my @seq_paths = grep /.bam$/, @observed_paths;
-  check_primary_metadata($irods, @seq_paths);
+  check_primary_metadata($irods, $pub, @seq_paths);
   check_study_metadata($irods, @seq_paths);
 
 }
@@ -564,7 +570,7 @@ sub publish_aux_files : Test(9) {
   unlink $pub->restart_file;
 }
 
-sub publish_sequence_files : Test(36) {
+sub publish_sequence_files : Test(40) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r54097_20170727_165601";
@@ -601,7 +607,7 @@ sub publish_sequence_files : Test(36) {
             'Published correctly named sequence files') or
               diag explain \@observed_paths;
 
-  check_primary_metadata($irods, @observed_paths);
+  check_primary_metadata($irods, $pub, @observed_paths);
   check_common_metadata($irods, @observed_paths);
   check_study_metadata($irods, @observed_paths);
 
@@ -716,7 +722,7 @@ sub check_common_metadata {
 }
 
 sub check_primary_metadata {
-  my ($irods, @paths) = @_;
+  my ($irods, $pub, @paths) = @_;
 
   foreach my $path (@paths) {
     my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $path);
@@ -729,10 +735,38 @@ sub check_primary_metadata {
        $PACBIO_INSTRUMENT_NAME,
        $PACBIO_RUN,
        $PACBIO_WELL,
-       $PACBIO_SAMPLE_LOAD_NAME) {
+       $PACBIO_SAMPLE_LOAD_NAME,
+       $ID_PRODUCT) {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
+
+    my @runs = $obj->find_in_metadata($PACBIO_RUN);
+    my $run_name = $runs[0]->{value};
+    my @wells = $obj->find_in_metadata($PACBIO_WELL);
+    my $well_label = $pub->remove_well_padding($run_name, $wells[0]->{value});
+    my @product_ids  = $obj->find_in_metadata($ID_PRODUCT);
+    my $product_id = $product_ids[0]->{value};
+
+    my $product = WTSI::NPG::HTS::PacBio::Sequel::Product->new();
+    my $expected_id;
+    if ($obj->find_in_metadata($TARGET)){
+      my @tags = $obj->find_in_metadata($TAG_SEQUENCE);
+      my $tags;
+      foreach my $tag (@tags){
+        if (defined($tags)) {
+          $tags = join(q/,/, $tags, $tag->{value});
+        } else {
+          $tags = $tag->{value};
+        }
+      }
+      $expected_id = $product->generate_product_id($run_name, $well_label, $tags);
+    }else{
+      $expected_id = $product->generate_product_id($run_name, $well_label);
+    }
+
+    is($product_id, $expected_id,
+      "$file_name has expected id_product metadata");
   }
 }
 

@@ -279,6 +279,17 @@ sub publish_tree_filter : Test(4) {
       diag explain \@observed_paths;
 }
 
+sub npg_publish_tree_pl_logconf : Test(1) {
+  my $source_path = "$data_path/treepublisher";
+
+  my @script_args = (
+    q[--collection], $irods_tmp_coll,
+    q[--source_directory], $source_path,
+    q[--logconf], q[t/log4perl_test.conf]);
+  ok(system("$bin_path/npg_publish_tree.pl", @script_args) == 0,
+    'Correctly exited with logconf option');
+}
+
 sub observed_data_objects {
   my ($irods, $dest_collection, $root_collection) = @_;
 

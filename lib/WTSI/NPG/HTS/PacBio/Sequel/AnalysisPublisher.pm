@@ -13,6 +13,7 @@ use Readonly;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisFastaManager;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
+use WTSI::NPG::HTS::PacBio::Sequel::Product;
 
 extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
 
@@ -146,6 +147,8 @@ sub publish_sequence_files {
 
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
 
+  my $product = WTSI::NPG::HTS::PacBio::Sequel::Product->new();
+
   foreach my $file ( @{$files} ){
     my @tag_records;
 
@@ -186,9 +189,27 @@ sub publish_sequence_files {
          ($format eq $SEQUENCE_FASTA_FORMAT))
           ? 0 : 1;
 
+      my $tags;
+      if ($is_target) {
+        $tags = $product->get_tags($records[0]);
+      }
+
+      my $well_label = $self->remove_well_padding($self->_metadata->run_name,
+                                                  $self->_metadata->well_name);
+      my $id_product;
+
+      if ($tags) {
+          $id_product = $product->generate_product_id(
+            $self->_metadata->run_name, $well_label, $tags);
+      } else {
+        $id_product = $product->generate_product_id(
+          $self->_metadata->run_name, $well_label);
+      }
+
       my @primary_avus   = $self->make_primary_metadata
          ($self->_metadata,
           data_level => $DATA_LEVEL,
+          id_product => $id_product,
           is_target  => $is_target);
       my @secondary_avus = $self->make_secondary_metadata(@records);
 

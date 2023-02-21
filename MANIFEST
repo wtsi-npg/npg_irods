@@ -17,7 +17,6 @@ bin/npg_update_illumina_metadata.pl
 bin/npg_update_pacbio_metadata.pl
 bin/samgen.pl
 Build.PL
-Build.pm
 Changes
 etc/log4perl_example1.conf
 etc/log4perl_example2.conf
@@ -68,10 +67,10 @@ lib/WTSI/NPG/HTS/PacBio/SeqDataObject.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisMonitor.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisPublisher.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisReport.pm
-lib/WTSI/NPG/HTS/PacBio/Sequel/APIClient.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/ImageArchive.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/MetaXMLParser.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/MonitorBase.pm
+lib/WTSI/NPG/HTS/PacBio/Sequel/Product.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/Reportdata.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunAuditor.pm
 lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteMonitor.pm
@@ -16603,7 +16602,6 @@ t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisFastaManagerTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/AnalysisReportTest.pm
-t/lib/WTSI/NPG/HTS/PacBio/Sequel/ApiClientTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/ImageArchiveTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunAuditorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/Sequel/RunDeleteMonitorTest.pm
@@ -16626,7 +16624,6 @@ t/pacbio_sequel_analysis_fasta_manager.t
 t/pacbio_sequel_analysis_monitor.t
 t/pacbio_sequel_analysis_publisher.t
 t/pacbio_sequel_analysis_report.t
-t/pacbio_sequel_api_client.t
 t/pacbio_sequel_image_archive.t
 t/pacbio_sequel_run_auditor.t
 t/pacbio_sequel_run_delete_monitor.t
