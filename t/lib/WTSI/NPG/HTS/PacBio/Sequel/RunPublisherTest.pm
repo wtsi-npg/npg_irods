@@ -247,7 +247,7 @@ sub publish_files_on_instrument_1 : Test(42) {
 
   check_common_metadata($irods, @observed_paths);
   my @seq_paths = grep /.bam$/, @observed_paths;
-  check_primary_metadata($irods, @seq_paths);
+  check_primary_metadata($irods, $pub, @seq_paths);
  
   unlink $pub->restart_file;
 }
@@ -302,7 +302,7 @@ sub publish_files_on_instrument_2 : Test(84) {
 
   check_common_metadata($irods, @observed_paths);
   my @seq_paths = grep /.bam$/, @observed_paths;
-  check_primary_metadata($irods, @seq_paths);
+  check_primary_metadata($irods, $pub, @seq_paths);
   check_study_metadata($irods, @seq_paths);
 
 }
@@ -607,7 +607,7 @@ sub publish_sequence_files : Test(40) {
             'Published correctly named sequence files') or
               diag explain \@observed_paths;
 
-  check_primary_metadata($irods, @observed_paths);
+  check_primary_metadata($irods, $pub, @observed_paths);
   check_common_metadata($irods, @observed_paths);
   check_study_metadata($irods, @observed_paths);
 
@@ -722,7 +722,7 @@ sub check_common_metadata {
 }
 
 sub check_primary_metadata {
-  my ($irods, @paths) = @_;
+  my ($irods, $pub, @paths) = @_;
 
   foreach my $path (@paths) {
     my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $path);
@@ -744,7 +744,7 @@ sub check_primary_metadata {
     my @runs = $obj->find_in_metadata($PACBIO_RUN);
     my $run_name = $runs[0]->{value};
     my @wells = $obj->find_in_metadata($PACBIO_WELL);
-    my $well_label = $wells[0]->{value};
+    my $well_label = $pub->remove_well_padding($run_name, $wells[0]->{value});
     my @product_ids  = $obj->find_in_metadata($ID_PRODUCT);
     my $product_id = $product_ids[0]->{value};
 

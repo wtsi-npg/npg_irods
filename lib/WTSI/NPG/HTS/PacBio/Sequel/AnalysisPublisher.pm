@@ -193,13 +193,17 @@ sub publish_sequence_files {
       if ($is_target) {
         $tags = $product->get_tags($records[0]);
       }
+
+      my $well_label = $self->remove_well_padding($self->_metadata->run_name,
+                                                  $self->_metadata->well_name);
       my $id_product;
+
       if ($tags) {
           $id_product = $product->generate_product_id(
-            $self->_metadata->run_name, $self->_metadata->well_name, $tags);
+            $self->_metadata->run_name, $well_label, $tags);
       } else {
         $id_product = $product->generate_product_id(
-          $self->_metadata->run_name, $self->_metadata->well_name);
+          $self->_metadata->run_name, $well_label);
       }
 
       my @primary_avus   = $self->make_primary_metadata
