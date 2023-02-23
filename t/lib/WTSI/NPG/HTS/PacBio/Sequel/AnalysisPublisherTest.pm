@@ -9,12 +9,12 @@ use File::Copy::Recursive qw(dircopy);
 use File::Spec::Functions;
 use File::Temp;
 use File::Which;
-use JSON;
 use Log::Log4perl;
 use Test::More;
 use Test::Exception;
 
 use base qw[WTSI::NPG::HTS::Test];
+use WTSI::NPG::HTS::WriteLocationsTest;
 
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
 use WTSI::NPG::iRODS;
@@ -144,9 +144,13 @@ sub publish_files : Test(4) {
 
   my $mlwh_json = $pub->mlwh_locations->path;
   ok(-e $mlwh_json, "mlwh loader json file $mlwh_json was written by publisher");
-  is_deeply(read_json_content($mlwh_json),
-    set_destination(read_json_content($expected_json), $irods_tmp_coll),
+  is_deeply(WTSI::NPG::HTS::WriteLocationsTest::read_json_content($mlwh_json),
+    WTSI::NPG::HTS::WriteLocationsTest::set_destination(
+      WTSI::NPG::HTS::WriteLocationsTest::read_json_content($expected_json),
+      $irods_tmp_coll),
     "contents of $mlwh_json are correct");
+
+  unlink $mlwh_json;
 }
 
 
@@ -746,24 +750,6 @@ sub list_files_3 : Test(2) {
   is_deeply($pub->list_files('pbi$', 1), \@expected_paths2,
      'Found sequence index files for r64089e_20220615_171559/1_A01');
 
-}
-
-sub read_json_content {
-  my ($path) = @_;
-
-  open my $mlwh_json_fh, '<:encoding(UTF-8)', $path or die qq[could not open $path];
-
-  my $json = decode_json(<$mlwh_json_fh>);
-  close $mlwh_json_fh;
-  return $json
-}
-
-sub set_destination {
-  my ($json_hash, $temp_coll) = @_;
-  foreach my $product (@{$json_hash->{products}}){
-    $product->{irods_root_collection} =~ s|/testZone/home/irods/RunPublisherTest.XXXXX.0/|$temp_coll/|xms;
-  }
-  return $json_hash;
 }
 
 1;

@@ -305,7 +305,6 @@ sub publish_files_on_instrument_2 : Test(84) {
   check_primary_metadata($irods, $pub, @seq_paths);
   check_study_metadata($irods, @seq_paths);
 
-
 }
 
 sub publish_files_on_instrument_3 : Test(3) {
@@ -611,7 +610,6 @@ sub publish_sequence_files : Test(40) {
   check_primary_metadata($irods, $pub, @observed_paths);
   check_common_metadata($irods, @observed_paths);
   check_study_metadata($irods, @observed_paths);
-
 
   unlink $pub->restart_file;
 }

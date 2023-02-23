@@ -30,8 +30,8 @@ has 'locations' => (
   isa           => 'ArrayRef',
   is            => 'rw',
   required      => 1,
-  builder       => '_build_locations',
   lazy          => 1,
+  builder       => '_build_locations',
   documentation => 'The rows of the seq_product_irods_locations table for each' .
                    'target data object loaded');
 
@@ -50,7 +50,7 @@ has 'platform_name' => (
 
 sub _build_locations {
   my ($self) = @_;
-
+  my $locations;
   if (-e $self->path) {
     open my $fh , '<:encoding(UTF-8)', $self->path or
       $self->logcroak(q[could not open ml warehouse json file] .
@@ -61,17 +61,17 @@ sub _build_locations {
 
     try {
       my $decoded = $self->decode($file_contents);
-      my $locations = $decoded->{products};
-      $self->locations($locations);
+      $locations = $decoded->{products};
       $self->debug('Read previous locations from file: ', $self->path);
+
     } catch{
       $self->logcroak('Failed to parse locations from JSON file: ', $self->path);
     }
-  } else {
-    $self->locations([]);
-    $self->debug("No file at ${$self->path}, using empty location arrayref");
+  }else{
+    $self->debug("No file at $self->{path}, using empty location arrayref");
+    $locations = [];
   }
-  return;
+  return $locations;
 
 }
 
@@ -98,23 +98,31 @@ sub add_location{
 
   my ($self) = $params->parse(@_);
 
+  my $coll = $params->coll;
+
+  if ($coll !~ m{.*/$}xms){
+    $coll .= q[/]
+  }
+
+  # Get a list of all entries that do not have the same pid and coll as the
+  # one to be added
   my @existing = grep {
     $params->pid ne $_->{id_product} ||
       $params->coll ne $_->{irods_root_collection}}
-    @{$self->{locations}};
+    @{$self->locations};
 
   my $location = {
     id_product               => $params->pid,
     seq_platform_name        => $self->{platform_name},
     pipeline_name            => $self->{pipeline_name},
-    irods_root_collection    => $params->coll,
+    irods_root_collection    => $coll,
     irods_data_relative_path => $params->path
   };
   if ($params->secondary_path) {
     $location->{irods_secondary_data_relative_path} = $params->secondary_path;
   }
 
-  if (scalar (@existing) < scalar @{$self->{locations}}){
+  if (scalar (@existing) < scalar @{$self->locations}){
     $self->{locations} = \@existing;
   }
 
@@ -135,24 +143,24 @@ sub add_location{
 sub write_locations{
   my ($self) = @_;
 
-  if (!$self->{locations}){
-    $self->warn("No irods locations to write");
+  if (@{$self->locations} == 0){
+    $self->warn('No irods locations to write');
     return;
   }
 
   my $json_out = {
     version  => $JSON_FILE_VERSION,
-    products => $self->{locations}
+    products => $self->locations
   };
   $self->info("Writing locations file '$self->{path}':", pp($json_out));
 
   open my $fh, '>:encoding(UTF-8)', $self->path or
-    $self->logcroak(qq[Could not open ml warehouse json file $self->path],
+    $self->logcroak(qq[Could not open ml warehouse json file $self->{path} ],
       q[to write]);
   print $fh $self->encode($json_out) or
-    $self->logcroak(q[Could not write to ml warehouse json file],
+    $self->logcroak(q[Could not write to ml warehouse json file ],
       $self->path);
-  close $fh or $self->logcroak(q[Could not close ml warehouse json file],
+  close $fh or $self->logcroak(q[Could not close ml warehouse json file ],
     $self->path);
 
   return;
