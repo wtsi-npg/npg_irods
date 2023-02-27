@@ -364,6 +364,8 @@ sub publish_alignment_files {
        with_spiked_control => $with_spiked_control);
   };
 
+  # The mlwh_json_callback is deprecated, and will be removed once the
+  # illumina code is refactored to use the LocationWriter
   my $mlwh_json_cb = sub {
     my ($obj, $collection, $file) = @_;
     if ($self->mlwh_json && $file =~ /cram$/xsm && !($file =~/(phix|human)/xsm)) {

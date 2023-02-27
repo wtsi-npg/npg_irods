@@ -228,16 +228,20 @@ has 'require_checksum_cache' =>
         $self->publish_state->set_published($file);
         $self->info("Published '$dest' [$num_processed / $num_files]");
 
+        # The mlwh_json_callback is deprecated, and will be removed once the
+        # illumina code is refactored to use the LocationWriter
         if (!$mlwh_json_cb->($obj, $dest_coll, $filename)){
           $self->logcroak("Failed to add '$file' to ml warehouse json file");
         }
         if ($self->mlwh_locations){
           my $target;
           my $pid;
+          # The simplest way to obtain product ids and to discover whether an
+          # object is the target of a run/analysis is to search its metadata.
           for my $avu (@primary_avus){
             if ($avu->{attribute} eq 'target'){
               $target = $avu->{value};
-            }elsif ($avu->{attribute} eq 'id_product'){
+            }elsif ($avu->{attribute} eq 'id_product') {
               $pid = $avu->{value};
             }
             if (defined($target) && $pid){
