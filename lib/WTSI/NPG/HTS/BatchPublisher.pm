@@ -36,7 +36,7 @@ has 'publish_state' =>
                     'is set true if the file was published');
 
 has 'mlwh_locations' =>
-  (isa           =>'WTSI::NPG::HTS::WriteLocations',
+  (isa           =>'WTSI::NPG::HTS::LocationWriter',
    is            =>'ro',
    required      => 0,
    documentation => 'An object used to build and write information to be ' .

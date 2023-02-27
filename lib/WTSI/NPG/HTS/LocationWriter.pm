@@ -1,4 +1,4 @@
-package WTSI::NPG::HTS::WriteLocations;
+package WTSI::NPG::HTS::LocationWriter;
 
 use namespace::autoclean;
 
@@ -175,7 +175,7 @@ __END__
 
 =head1 NAME
 
-WTSI::NPG::HTS::WriteLocations
+WTSI::NPG::HTS::LocationWriter
 
 =head1 DESCRIPTION
 

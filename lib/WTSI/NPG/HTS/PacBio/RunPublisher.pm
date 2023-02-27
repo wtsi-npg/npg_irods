@@ -12,7 +12,7 @@ use Try::Tiny;
 
 use WTSI::DNAP::Utilities::Params qw[function_params];
 use WTSI::NPG::HTS::BatchPublisher;
-use WTSI::NPG::HTS::WriteLocations;
+use WTSI::NPG::HTS::LocationWriter;
 use WTSI::NPG::HTS::PacBio::DataObjectFactory;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS::Publisher;
@@ -72,7 +72,7 @@ has 'restart_file' =>
                     'publication failed');
 
 has 'mlwh_locations' =>
-  (isa           => 'WTSI::NPG::HTS::WriteLocations',
+  (isa           => 'WTSI::NPG::HTS::LocationWriter',
    is            => 'ro',
    required      => 1,
    lazy          => 1,
@@ -233,7 +233,7 @@ sub _build_restart_file {
 sub _build_locations {
   my ($self) = @_;
 
-  return WTSI::NPG::HTS::WriteLocations->new(
+  return WTSI::NPG::HTS::LocationWriter->new(
     path=> join(q[/], $self->runfolder_path, $MLWH_JSON_PATH),
     platform_name=> $PACBIO
   );

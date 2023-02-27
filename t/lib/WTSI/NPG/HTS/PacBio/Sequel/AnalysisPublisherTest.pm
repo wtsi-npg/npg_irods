@@ -14,7 +14,7 @@ use Test::More;
 use Test::Exception;
 
 use base qw[WTSI::NPG::HTS::Test];
-use WTSI::NPG::HTS::WriteLocationsTest;
+use WTSI::NPG::HTS::LocationWriterTest;
 
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
 use WTSI::NPG::iRODS;
@@ -144,9 +144,9 @@ sub publish_files : Test(4) {
 
   my $mlwh_json = $pub->mlwh_locations->path;
   ok(-e $mlwh_json, "mlwh loader json file $mlwh_json was written by publisher");
-  is_deeply(WTSI::NPG::HTS::WriteLocationsTest::read_json_content($mlwh_json),
-    WTSI::NPG::HTS::WriteLocationsTest::set_destination(
-      WTSI::NPG::HTS::WriteLocationsTest::read_json_content($expected_json),
+  is_deeply(WTSI::NPG::HTS::LocationWriterTest::read_json_content($mlwh_json),
+    WTSI::NPG::HTS::LocationWriterTest::set_destination(
+      WTSI::NPG::HTS::LocationWriterTest::read_json_content($expected_json),
       $irods_tmp_coll),
     "contents of $mlwh_json are correct");
 
