@@ -124,7 +124,7 @@ sub publish_files : Test(4) {
   my $analysis_path  = "$data_path/001612";
   my $runfolder_path = "$analysis_path/tasks/barcoding.tasks.lima-0",
   my $dest_coll      = "$irods_tmp_coll/publish_files";
-  my $expected_json = 't/data/mlwh_json/pacbio.json';
+  my $expected_json  = 't/data/mlwh_json/pacbio.json';
 
 
   my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");

@@ -22,6 +22,26 @@ my $data_path = 't/data/mlwh_json';
 my $new_path = $data_path . '/new.json';
 my $existing_path = $data_path . '/illumina_existing.json';
 
+my $expected_existing_locations = {
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
+        '7382ff198a7321eadcea98bb39ade23749b3bace2874bbaced29789dbcd987659' => 'test.cram',
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
+        '98441df9e535436533620dcba86eef653d5749c546eb218dc9e2f7c587cec272' => '18448_1.cram',
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
+        '976dc767037549da1c8cc66c56379ee5c04403212bf82353646cbd6f880b83e7' => '18448_2.cram',
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
+        '38fbf8d4e04c677233464d8927c204e174a01d8ed997f4d1590cf1747e3f8f4e' => '18448_3.cram',
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
+        '6b54ffeb474f22eaff2292f017b22061e0ca7a946590b39a0cc5be66e6b72492' => '18448_4.cram',
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
+        'cffb91c18f6cd7c0817390fb6abf2b29db813e44719022f590f20d773731224a' => '18448_5.cram',
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
+        '411f5591390f380585535a955fede5bfc92b7eed8d2d79fc8352599cf3b187b8' => '18448_6.cram',
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
+        'd030d4ca2ffdee37359911653f1ddfb593af48d8945d039e6d3af960cde882b7' => '18448_7.cram',
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
+        '9f5f842c658619a3c38e221eb71bb620fdd2a9a1220df7aae5902e804a83a08d' => '18448_8.cram'};
+
 sub require: Test(1){
   require_ok('WTSI::NPG::HTS::LocationWriter');
 }
@@ -29,37 +49,26 @@ sub require: Test(1){
 sub build_locations : Test(2){
   my $new_locations = WTSI::NPG::HTS::LocationWriter->new(
     path => $new_path, platform_name => 'platform');
-  is(@{$new_locations->locations}, 0,
-    'Arrayref is empty where file does not exist');
+  is(%{$new_locations->locations}, 0,
+    'Hashref is empty where file does not exist');
 
   my $existing_locations = WTSI::NPG::HTS::LocationWriter->new(
     path => $existing_path, platform_name => 'platform');
-  is_deeply($existing_locations->locations, read_json_content($existing_path)->{products},
-    'Arrayref populated from file if it exists');
+  is_deeply($existing_locations->locations, $expected_existing_locations,
+    'Hashref populated from file if it exists');
 }
 
-sub add_location_new : Test(7){
+sub add_location_new : Test(5){
   my $expected_location_original = {
-    id_product  => 'abcde12345',
-    irods_root_collection => '/testZone/test/',
-    irods_data_relative_path => 'data.cram',
-    seq_platform_name => 'platform',
-    pipeline_name => 'npg-prod'
+    "/testZone/test/\0" . 'abcde12345' => 'data.cram'
   };
-  my $expected_location_2 ={
-    id_product  => 'fghij67890',
-    irods_root_collection => '/testZone/test/',
-    irods_data_relative_path => 'data2.cram',
-    irods_secondary_data_relative_path => 'data2.alt',
-    seq_platform_name => 'platform',
-    pipeline_name => 'npg-prod'
+  my $expected_location_2 = {
+    "/testZone/test/\0" . 'abcde12345' => 'data.cram',
+    "/testZone/test/\0" . 'fghij67890' => "data2.cram\0" . 'data2.alt'
   };
   my $expected_location_updated = {
-    id_product  => 'abcde12345',
-    irods_root_collection => '/testZone/test/',
-    irods_data_relative_path => 'data.bam',
-    seq_platform_name => 'platform',
-    pipeline_name => 'npg-prod'
+    "/testZone/test/\0" . 'abcde12345' => 'data.bam',
+    "/testZone/test/\0" . 'fghij67890' => "data2.cram\0" . 'data2.alt'
   };
 
   my $new_locations = WTSI::NPG::HTS::LocationWriter->new(
@@ -71,8 +80,8 @@ sub add_location_new : Test(7){
     path => 'data.cram'
   )} 'Add location method runs without errors';
 
-  is_deeply($new_locations->locations, [$expected_location_original],
-    'Location added to empty location array');
+  is_deeply($new_locations->locations, $expected_location_original,
+    'Location added to empty location hash');
 
   $new_locations->add_location(
     pid => 'fghij67890',
@@ -80,9 +89,8 @@ sub add_location_new : Test(7){
     path => 'data2.cram',
     secondary_path => 'data2.alt');
 
-  cmp_deeply($new_locations->locations,
-    bag($expected_location_original, $expected_location_2),
-    'Location added to populated array, collection corrected to include trailing slash');
+  is_deeply($new_locations->locations, $expected_location_2,
+    'Location added to populated hash, collection corrected to include trailing slash');
 
   $new_locations->add_location(
     pid  => 'abcde12345',
@@ -90,36 +98,23 @@ sub add_location_new : Test(7){
     path => 'data.cram'
   );
 
-  is (scalar @{$new_locations->locations}, 2, 'Correct length after identical hash is added');
-
-  cmp_deeply($new_locations->locations,
-    bag($expected_location_original, $expected_location_2),
-    'No change to locations array when an identical location hash is added');
+  is_deeply($new_locations->locations, $expected_location_2,
+    'No change to locations hash when an identical location hash is added');
 
   $new_locations->add_location(
     pid  => 'abcde12345',
     coll => '/testZone/test/',
     path => 'data.bam');
 
-  is (scalar @{$new_locations->locations}, 2,
-    'Correct length after hash is updated with new values for an existing hash');
-
-  cmp_deeply($new_locations->locations,
-    bag($expected_location_updated, $expected_location_2),
-    'Locations array updated when a different location hash with the same ' .
+  is_deeply($new_locations->locations, $expected_location_updated,
+    'Locations hash updated when a different location hash with the same ' .
     'id_product and collection name is added');
 
 }
 
 sub add_location_existing: Test(2){
-  my $expected_locations = read_json_content($existing_path)->{products};
-  push @{$expected_locations}, {
-    id_product  => 'abcde12345',
-    irods_root_collection => '/testZone/test/',
-    irods_data_relative_path => 'data.cram',
-    seq_platform_name => 'platform',
-    pipeline_name => 'npg-prod'
-  };
+  my %expected_locations = %{$expected_existing_locations};
+  $expected_locations{"/testZone/test/\0" . 'abcde12345'} = 'data.cram';
   my $existing_locations = WTSI::NPG::HTS::LocationWriter->new(
     path => $existing_path, platform_name => 'platform');
 
@@ -127,9 +122,9 @@ sub add_location_existing: Test(2){
     pid  => 'abcde12345',
     coll => '/testZone/test/',
     path => 'data.cram'
-  )} 'Location added to an array read from file without error';
+  )} 'Location added to an hash read from file without error';
 
-  cmp_deeply($existing_locations->locations, bag(@{$expected_locations}),
+  is_deeply($existing_locations->locations, $expected_locations,
     'Location correctly added to locations read from file');
 }
 

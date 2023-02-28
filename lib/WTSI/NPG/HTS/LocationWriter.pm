@@ -17,6 +17,7 @@ with qw[
 
 our $VERSION = '';
 
+Readonly::Scalar my $DELIMITER => "\0";
 Readonly::Scalar my $JSON_FILE_VERSION => '1.0';
 Readonly::Scalar my $NPG_PROD => 'npg-prod';
 
@@ -27,13 +28,13 @@ has 'path' => (
   documentation => 'The path to the output file');
 
 has 'locations' => (
-  isa           => 'ArrayRef',
+  isa           => 'HashRef',
   is            => 'rw',
   required      => 1,
   lazy          => 1,
   builder       => '_build_locations',
-  documentation => 'The rows of the seq_product_irods_locations table for each' .
-                   'target data object loaded');
+  documentation => 'A hash with keys built from collection and id_product, ' .
+                    'and lists of locations as values');
 
 has 'pipeline_name' =>(
   isa           => 'Str',
@@ -50,7 +51,7 @@ has 'platform_name' => (
 
 sub _build_locations {
   my ($self) = @_;
-  my $locations;
+  my $locations = {};
   if (-e $self->path) {
     open my $fh , '<:encoding(UTF-8)', $self->path or
       $self->logcroak(q[could not open ml warehouse json file] .
@@ -61,7 +62,16 @@ sub _build_locations {
 
     try {
       my $decoded = $self->decode($file_contents);
-      $locations = $decoded->{products};
+      foreach my $product (@{$decoded->{products}}){
+        my ($key, $paths) = $self->_build_location_pair(
+          $product->{irods_root_collection},
+          $product->{irods_data_relative_path},
+          $product->{id_product},
+          $product->{irods_secondary_data_relative_path}
+          );
+        $locations->{$key} = $paths
+
+      }
       $self->debug('Read previous locations from file: ', $self->path);
 
     } catch{
@@ -69,7 +79,7 @@ sub _build_locations {
     }
   }else{
     $self->debug("No file at $self->{path}, using empty location arrayref");
-    $locations = [];
+    $locations = {};
   }
   return $locations;
 
@@ -85,52 +95,47 @@ sub _build_locations {
 
   Example    : $self->add_location(coll     => $collection,
                                    path     => $path,
-                                   pid      => $pid,
-  Description: Add a data hash to the location array, if it is not already
-               present
+                                   pid      => $pid);
+  Description: Add a key value pair to the location hash, replacing any prior
+               value
   Returntype : Void
 
 =cut
 sub add_location{
   my $positional = 1;
   my @named      = qw[pid coll path secondary_path];
-  my $params = function_params($positional, @named);
+  my $params     = function_params($positional, @named);
 
   my ($self) = $params->parse(@_);
+  my $secondary_path = '';
+  if ($params->secondary_path){
+    $secondary_path = $params->secondary_path;
+  }
+  my ($key, $paths) = $self->_build_location_pair(
+    $params->coll,
+    $params->path,
+    $params->pid,
+    $secondary_path);
+  $self->{locations}->{$key} = $paths;
 
-  my $coll = $params->coll;
+  return;
+}
+
+sub _build_location_pair{
+
+  my ($self, $coll, $path, $pid, $secondary_path) = @_;
 
   if ($coll !~ m{.*/$}xms){
     $coll .= q[/]
   }
 
-  # Get a list of all entries that do not have the same pid and coll as the
-  # one to be added
-  my @existing = grep {
-    $params->pid ne $_->{id_product} ||
-      $params->coll ne $_->{irods_root_collection}}
-    @{$self->locations};
-
-  my $location = {
-    id_product               => $params->pid,
-    seq_platform_name        => $self->{platform_name},
-    pipeline_name            => $self->{pipeline_name},
-    irods_root_collection    => $coll,
-    irods_data_relative_path => $params->path
-  };
-  if ($params->secondary_path) {
-    $location->{irods_secondary_data_relative_path} = $params->secondary_path;
+  my $key = $coll . $DELIMITER . $pid;
+  my $paths = $path;
+  if ($secondary_path){
+    $paths .= $DELIMITER . $secondary_path;
   }
 
-  if (scalar (@existing) < scalar @{$self->locations}){
-    $self->{locations} = \@existing;
-  }
-
-  $self->debug('Adding product location, ', pp($location));
-  push @{$self->{locations}}, $location;
-
-  return;
-
+  return $key, $paths;
 }
 
 =head2 write_locations
@@ -143,15 +148,33 @@ sub add_location{
 sub write_locations{
   my ($self) = @_;
 
-  if (@{$self->locations} == 0){
+  if (!%{$self->locations}){
     $self->warn('No irods locations to write');
     return;
   }
 
   my $json_out = {
     version  => $JSON_FILE_VERSION,
-    products => $self->locations
+    products => {}
   };
+
+  # Extract product rows from locations hash
+  foreach my $key ( keys %{$self->locations}){
+    my ($coll, $pid) = split $DELIMITER, $key;
+    my ($path, $secondary_path) = split $DELIMITER, $self->locations->{$key};
+    my $location = {
+      irods_root_collection    => $coll,
+      id_product               => $pid,
+      irods_data_relative_path => $path,
+      seq_platform_name        => $self->{platform_name},
+      pipeline_name            => $self->{pipeline_name}
+    };
+    if ($secondary_path){
+      $location->{irods_secondary_data_relative_path} = $secondary_path;
+    }
+    push @{$json_out->{products}}, $location;
+  }
+
   $self->info("Writing locations file '$self->{path}':", pp($json_out));
 
   open my $fh, '>:encoding(UTF-8)', $self->path or
