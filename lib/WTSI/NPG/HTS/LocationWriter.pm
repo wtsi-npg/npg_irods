@@ -17,7 +17,7 @@ with qw[
 
 our $VERSION = '';
 
-Readonly::Scalar my $DELIMITER => "\0";
+Readonly::Scalar my $DELIMITER => ',';
 Readonly::Scalar my $JSON_FILE_VERSION => '1.0';
 Readonly::Scalar my $NPG_PROD => 'npg-prod';
 
@@ -107,7 +107,11 @@ sub add_location{
   my $params     = function_params($positional, @named);
 
   my ($self) = $params->parse(@_);
-  my $secondary_path = '';
+
+  #initialise location hash if not already done
+  $self->locations;
+
+  my $secondary_path = q[];
   if ($params->secondary_path){
     $secondary_path = $params->secondary_path;
   }
@@ -155,7 +159,7 @@ sub write_locations{
 
   my $json_out = {
     version  => $JSON_FILE_VERSION,
-    products => {}
+    products => []
   };
 
   # Extract product rows from locations hash
