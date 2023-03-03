@@ -17,7 +17,7 @@ with qw[
 
 our $VERSION = '';
 
-Readonly::Scalar my $DELIMITER => ',';
+Readonly::Scalar my $DELIMITER => q[,];
 Readonly::Scalar my $JSON_FILE_VERSION => '1.0';
 Readonly::Scalar my $NPG_PROD => 'npg-prod';
 

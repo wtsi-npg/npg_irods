@@ -136,19 +136,21 @@ sub publish_files : Test(4) {
      analysis_path   => $analysis_path,
      runfolder_path  => $runfolder_path);
 
+  my $mlwh_json = $pub->mlwh_locations->path;
+  unlink $mlwh_json; # A file may have been written to this path during a
+                     # previous test set with a different destination collection
+
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
   my $num_expected = 10;
 
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
   cmp_ok($num_errors,    '==', 0);
 
-  my $mlwh_json = $pub->mlwh_locations->path;
   ok(-e $mlwh_json, "mlwh loader json file $mlwh_json was written by publisher");
   is_deeply(WTSI::NPG::HTS::LocationWriterTest::read_json_content($mlwh_json),
     WTSI::NPG::HTS::LocationWriterTest::set_destination(
       WTSI::NPG::HTS::LocationWriterTest::read_json_content($expected_json),
-      $irods_tmp_coll),
-    "contents of $mlwh_json are correct");
+      $irods_tmp_coll), "contents of $mlwh_json are correct");
 
   unlink $mlwh_json;
 }

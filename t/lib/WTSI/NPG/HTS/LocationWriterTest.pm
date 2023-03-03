@@ -149,8 +149,7 @@ sub write_locations : Test(1){
 
   $new_locations->write_locations;
 
-  is_deeply(read_json_content($tmp_path), read_json_content($expected_json),
-    'written file has correct contents');
+  is_deeply( read_json_content($tmp_path), read_json_content($expected_json), 'written file has correct contents');
 
 }
 
@@ -161,6 +160,10 @@ sub read_json_content {
 
   my $json = decode_json(<$mlwh_json_fh>);
   close $mlwh_json_fh;
+
+  @{$json->{products}} = sort             # sort so that files with the same
+  {$a->{id_product} cmp $b->{id_product}} # contents are always equal
+    @{$json->{products}};
   return $json
 }
 
@@ -171,3 +174,4 @@ sub set_destination {
   }
   return $json_hash;
 }
+
