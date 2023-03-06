@@ -23,23 +23,23 @@ my $new_path = $data_path . '/new.json';
 my $existing_path = $data_path . '/illumina_existing.json';
 
 my $expected_existing_locations = {
-      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/," .
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
         '7382ff198a7321eadcea98bb39ade23749b3bace2874bbaced29789dbcd987659' => 'test.cram',
-      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/," .
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
         '98441df9e535436533620dcba86eef653d5749c546eb218dc9e2f7c587cec272' => '18448_1.cram',
-      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/," .
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
         '976dc767037549da1c8cc66c56379ee5c04403212bf82353646cbd6f880b83e7' => '18448_2.cram',
-      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/," .
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
         '38fbf8d4e04c677233464d8927c204e174a01d8ed997f4d1590cf1747e3f8f4e' => '18448_3.cram',
-      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/," .
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
         '6b54ffeb474f22eaff2292f017b22061e0ca7a946590b39a0cc5be66e6b72492' => '18448_4.cram',
-      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/," .
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
         'cffb91c18f6cd7c0817390fb6abf2b29db813e44719022f590f20d773731224a' => '18448_5.cram',
-      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/," .
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
         '411f5591390f380585535a955fede5bfc92b7eed8d2d79fc8352599cf3b187b8' => '18448_6.cram',
-      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/," .
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
         'd030d4ca2ffdee37359911653f1ddfb593af48d8945d039e6d3af960cde882b7' => '18448_7.cram',
-      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/," .
+      "/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/\0" .
         '9f5f842c658619a3c38e221eb71bb620fdd2a9a1220df7aae5902e804a83a08d' => '18448_8.cram'};
 
 sub require: Test(1){
@@ -60,15 +60,15 @@ sub build_locations : Test(2){
 
 sub add_location_new : Test(5){
   my $expected_location_original = {
-    "/testZone/test/," . 'abcde12345' => 'data.cram'
+    "/testZone/test/\0" . 'abcde12345' => 'data.cram'
   };
   my $expected_location_2 = {
-    "/testZone/test/," . 'abcde12345' => 'data.cram',
-    "/testZone/test/," . 'fghij67890' => "data2.cram," . 'data2.alt'
+    "/testZone/test/\0" . 'abcde12345' => 'data.cram',
+    "/testZone/test/\0" . 'fghij67890' => "data2.cram\0" . 'data2.alt'
   };
   my $expected_location_updated = {
-    "/testZone/test/," . 'abcde12345' => 'data.bam',
-    "/testZone/test/," . 'fghij67890' => "data2.cram," . 'data2.alt'
+    "/testZone/test/\0" . 'abcde12345' => 'data.bam',
+    "/testZone/test/\0" . 'fghij67890' => "data2.cram\0" . 'data2.alt'
   };
 
   my $new_locations = WTSI::NPG::HTS::LocationWriter->new(
@@ -114,7 +114,7 @@ sub add_location_new : Test(5){
 
 sub add_location_existing: Test(2){
   my %expected_locations = %{$expected_existing_locations};
-  $expected_locations{"/testZone/test/," . 'abcde12345'} = 'data.cram';
+  $expected_locations{"/testZone/test/\0" . 'abcde12345'} = 'data.cram';
   my $existing_locations = WTSI::NPG::HTS::LocationWriter->new(
     path => $existing_path, platform_name => 'platform');
 
