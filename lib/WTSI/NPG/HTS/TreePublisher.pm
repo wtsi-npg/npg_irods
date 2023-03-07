@@ -95,6 +95,8 @@ has 'mlwh_json' =>
                mlwh_json_cb
                Callback writing information about data objects to a JSON file.
                CodeRef. Optional. Cannot be used with the mlwh_json attribute set.
+               The mlwh_json_cb is deprecated and will be removed once the
+               illumina code is refactored to use the LocationWriter.
 
   Example    : my ($num_files, $num_processed, $num_errors) =
                  $pub->publish_tree($files,

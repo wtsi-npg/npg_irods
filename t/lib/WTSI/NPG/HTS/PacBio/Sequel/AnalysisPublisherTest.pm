@@ -14,6 +14,7 @@ use Test::More;
 use Test::Exception;
 
 use base qw[WTSI::NPG::HTS::Test];
+use WTSI::NPG::HTS::LocationWriterTest;
 
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
 use WTSI::NPG::iRODS;
@@ -117,12 +118,14 @@ sub list_files : Test(3) {
      'Found sequence index files for 001612');
 }
 
-sub publish_files : Test(2) {
+sub publish_files : Test(4) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $analysis_path  = "$data_path/001612";
   my $runfolder_path = "$analysis_path/tasks/barcoding.tasks.lima-0",
   my $dest_coll      = "$irods_tmp_coll/publish_files";
+  my $expected_json  = 't/data/mlwh_json/pacbio.json';
+
 
   my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
@@ -133,11 +136,23 @@ sub publish_files : Test(2) {
      analysis_path   => $analysis_path,
      runfolder_path  => $runfolder_path);
 
+  my $mlwh_json = $pub->mlwh_locations->path;
+  unlink $mlwh_json; # A file may have been written to this path during a
+                     # previous test set with a different destination collection
+
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
   my $num_expected = 10;
 
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
   cmp_ok($num_errors,    '==', 0);
+
+  ok(-e $mlwh_json, "mlwh loader json file $mlwh_json was written by publisher");
+  is_deeply(WTSI::NPG::HTS::LocationWriterTest::read_json_content($mlwh_json),
+    WTSI::NPG::HTS::LocationWriterTest::set_destination(
+      WTSI::NPG::HTS::LocationWriterTest::read_json_content($expected_json),
+      $irods_tmp_coll), "contents of $mlwh_json are correct");
+
+  unlink $mlwh_json;
 }
 
 

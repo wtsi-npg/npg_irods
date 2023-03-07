@@ -40,6 +40,7 @@ lib/WTSI/NPG/HTS/DataObject.pm
 lib/WTSI/NPG/HTS/DataObjectFactory.pm
 lib/WTSI/NPG/HTS/DefaultDataObjectFactory.pm
 lib/WTSI/NPG/HTS/HeaderParser.pm
+lib/WTSI/NPG/HTS/LocationWriter.pm
 lib/WTSI/NPG/HTS/Illumina/AgfDataObject.pm
 lib/WTSI/NPG/HTS/Illumina/AlnDataObject.pm
 lib/WTSI/NPG/HTS/Illumina/AncDataObject.pm
@@ -16295,6 +16296,8 @@ t/data/log_publisher/outgoing/100818_IL32_10371/log/interop_17547_post_qc_review
 t/data/log_publisher/outgoing/100818_IL32_10371/Logs/PreRun.log
 t/data/log_publisher/outgoing/100818_IL32_10371/RTALogs/20150909-1608_WarningLog_00.tsv
 t/data/mlwh_json/illumina.json
+t/data/mlwh_json/illumina_existing.json
+t/data/mlwh_json/pacbio.json
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.adapters.fasta
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.scraps.bam
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.scraps.bam.pbi
@@ -16588,6 +16591,7 @@ t/lib/WTSI/NPG/Data/ConsentWithdrawnTest.pm
 t/lib/WTSI/NPG/DataSub/MetaUpdaterTest.pm
 t/lib/WTSI/NPG/DataSub/SubtrackClientTest.pm
 t/lib/WTSI/NPG/HTS/HeaderParserTest.pm
+t/lib/WTSI/NPG/HTS/LocationWriterTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/AgfDataObjectTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/AlnDataObjectTest.pm
 t/lib/WTSI/NPG/HTS/Illumina/AncDataObjectTest.pm
@@ -16637,3 +16641,4 @@ t/saphyr_run_publisher.t
 t/seqchksum.t
 t/subtrack_client.t
 t/tree_publisher.t
+t/write_locations.t

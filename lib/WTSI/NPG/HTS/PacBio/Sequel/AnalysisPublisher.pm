@@ -119,6 +119,8 @@ sub publish_files {
                  "$num_processed files processed");
   }
 
+  $self->write_locations;
+
   return ($num_files, $num_processed, $num_errors);
 };
 
