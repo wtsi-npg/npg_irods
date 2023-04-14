@@ -28,6 +28,7 @@ our $SEQUENCE_INDEX_FORMAT  = 'pbi';
 our $METADATA_FORMAT = 'xml';
 our $METADATA_PREFIX = 'pbmeta:';
 our $METADATA_SET    = q{(subreadset|consensusreadset)};
+our $SMT_METADATA_SET = q{hifi_reads.consensusreadset};
 
 # Location of source metadata file
 our $ENTRY_DIR       = 'entry-points';
@@ -39,8 +40,9 @@ our $MOVIENAME_PATTERN = 'm[0-9a-z]+_\d+_\d+';
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
 # Additional sequence filenames permitted for loading 
-our @FNAME_PERMITTED    = qw[removed ccs hifi_reads fl_transcripts];
-our @FNAME_NON_DEPLEXED = qw[removed];
+our @FNAME_PERMITTED    = qw[fail_reads removed ccs hifi_reads fl_transcripts];
+our @FNAME_NON_DEPLEXED = qw[unassigned removed];
+our @FNAME_FAILED       = qw[fail_reads];
 
 # Data processing level
 our $DATA_LEVEL = 'secondary';
@@ -65,6 +67,20 @@ has 'is_oninstrument' =>
    required      => 0,
    default       => 0,
    documentation => 'Set if the analysis was done on the instrument or in SMRT Link where publishable files are in analysis sub-directories. Historically if analysis is done in SMRT Link then all standard publishable files will be found in the analysis directory whereas if the analysis is done on the instrument or in a post v11.0 version of SMRT Link publishable deplexed bam, index and xml files are to be found in one or more sub-directories of the specified analysis path.');
+
+has 'movie_pattern' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 0,
+   default       => $MOVIENAME_PATTERN,
+   documentation => 'Set movie name pattern.',);
+
+has 'is_smtwelve' =>
+  (isa           => 'Bool',
+   is            => 'ro',
+   required      => 0,
+   default       => 0,
+   documentation => 'Set to true if SMRT Link v12+ oninstrument files.',);
 
 
 =head2 publish_files
@@ -187,6 +203,7 @@ sub publish_sequence_files {
       #  or data is fasta.gz format
       my $is_target   = (@records > 1 ||
           $self->_is_allowed_fname($filename, \@FNAME_NON_DEPLEXED) ||
+          $self->_is_allowed_fname($filename, \@FNAME_FAILED) ||
          ($tag_id && @tag_records != 1) ||
          ($format eq $SEQUENCE_FASTA_FORMAT))
           ? 0 : 1;
@@ -348,10 +365,15 @@ sub _build_metadata{
   my $entry_path = catdir($self->analysis_path, $ENTRY_DIR);
 
   my @metafiles;
-  if ($self->is_oninstrument == 1 && ! -d $entry_path) {
+  if ($self->is_oninstrument == 1 && ! -d $entry_path && $self->is_smtwelve == 1) {
     @metafiles = $self->list_directory
       ($self->analysis_path,
-       filter => $MOVIENAME_PATTERN .q[.]. $METADATA_SET .q[.]. $METADATA_FORMAT .q[$])
+       filter => $self->movie_pattern .q[.]. $SMT_METADATA_SET .q[.]. $METADATA_FORMAT .q[$],
+       recurse => 1)
+  } elsif ($self->is_oninstrument == 1 && ! -d $entry_path) {
+    @metafiles = $self->list_directory
+      ($self->analysis_path,
+       filter => $self->movie_pattern .q[.]. $METADATA_SET .q[.]. $METADATA_FORMAT .q[$])
   } else {
     @metafiles = $self->list_directory
       ($entry_path, filter => $METADATA_FORMAT . q[$], recurse => 1);
@@ -454,9 +476,12 @@ sub _get_tag_from_fname {
   # SequenceScape tag id is just the numeric part of the name 
   my ($self, $file) = @_;
   my $tag_id;
+
   if ($file =~ /bc(\d+).*bc(\d+)/smx){
     my ($bc1, $bc2) = ($1, $2);
     $tag_id = ($bc1 == $bc2) ? $bc1 : undef;
+  } elsif ($self->is_smtwelve && $file =~ m{[.]bc(\d+)\S*[.]bam}smx){
+    $tag_id = $1;
   }
   return $tag_id;
 }
@@ -469,6 +494,8 @@ sub _get_tag_name_from_fname {
     $tag_name = $1;
     # remove 5 or 3 prime suffix
     $tag_name =~ s/_\dp//smxg;
+  } elsif ($self->is_smtwelve && $file =~ m{[.] (\w+\d+\S*) [.]bam}smx){
+    $tag_name = $1;
   }
   return $tag_name;
 }

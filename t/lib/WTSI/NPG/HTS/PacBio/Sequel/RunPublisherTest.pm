@@ -372,6 +372,7 @@ sub publish_files_on_instrument_3 : Test(3) {
 
 sub publish_files_on_instrument_4 : Test(3) {
   ## on instrument CCS - CCS + subreads bam files produced, deplex off instrument
+
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r64094e_20221214_160714";
@@ -414,6 +415,112 @@ sub publish_files_on_instrument_4 : Test(3) {
             diag explain \@observed_paths;
 }
 
+sub publish_files_on_instrument_5 : Test(172) {
+  ## revio - oninstrument ccs & deplexing
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $runfolder_path = "$data_path/r84047_20230404_164149";
+  my $dest_coll = "$irods_tmp_coll/publish_files";
+
+  my $client = WTSI::NPG::HTS::PacBio::Sequel::APIClient->new();
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $tmprf_path = catdir($tmpdir->dirname, 'r84047_20230404_164149');
+  dircopy($runfolder_path,$tmprf_path) or die $!;
+  chmod (0770, "$tmprf_path/1_A01") or die "Chmod 0770 directory failed : $!";  
+  chmod (0770, "$tmprf_path/1_B01") or die "Chmod 0770 directory failed : $!";  
+  chmod (0770, "$tmprf_path/1_C01") or die "Chmod 0770 directory failed : $!";  
+
+
+  my $pub = WTSI::NPG::HTS::PacBio::Sequel::RunPublisher->new
+    (api_client      => $client,
+     dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     runfolder_path  => $tmprf_path);
+
+  my @expected_pathsA =
+    map { catfile("$dest_coll/1_A01", $_) }
+    ('m84047_230404_164952_s1.fail_reads.bc2073.bam',
+     'm84047_230404_164952_s1.fail_reads.bc2073.bam.pbi',
+     'm84047_230404_164952_s1.fail_reads.bc2073.consensusreadset.xml',
+     'm84047_230404_164952_s1.fail_reads.consensusreadset.xml',
+     'm84047_230404_164952_s1.fail_reads.unassigned.bam',
+     'm84047_230404_164952_s1.fail_reads.unassigned.bam.pbi',
+     'm84047_230404_164952_s1.fail_reads.unassigned.consensusreadset.xml',
+     'm84047_230404_164952_s1.hifi_reads.bc2073.bam',
+     'm84047_230404_164952_s1.hifi_reads.bc2073.bam.pbi',
+     'm84047_230404_164952_s1.hifi_reads.bc2073.consensusreadset.xml',
+     'm84047_230404_164952_s1.hifi_reads.consensusreadset.xml',
+     'm84047_230404_164952_s1.hifi_reads.unassigned.bam',
+     'm84047_230404_164952_s1.hifi_reads.unassigned.bam.pbi',
+     'm84047_230404_164952_s1.hifi_reads.unassigned.consensusreadset.xml',
+     'm84047_230404_164952_s1.primary_qc.tar.xz',
+     'm84047_230404_164952_s1.sts.xml',
+     'm84047_230404_164952_s1.zmw_metrics.json.gz',
+     'merged_analysis_report.json',);
+
+  my @expected_pathsB =
+    map { catfile("$dest_coll/1_B01", $_) }
+    ('m84047_230404_172053_s2.fail_reads.consensusreadset.xml',
+     'm84047_230404_172053_s2.fail_reads.default.bam',
+     'm84047_230404_172053_s2.fail_reads.default.bam.pbi',
+     'm84047_230404_172053_s2.fail_reads.default.consensusreadset.xml',
+     'm84047_230404_172053_s2.fail_reads.unassigned.bam',
+     'm84047_230404_172053_s2.fail_reads.unassigned.bam.pbi',
+     'm84047_230404_172053_s2.fail_reads.unassigned.consensusreadset.xml',
+     'm84047_230404_172053_s2.hifi_reads.consensusreadset.xml',
+     'm84047_230404_172053_s2.hifi_reads.default.bam',
+     'm84047_230404_172053_s2.hifi_reads.default.bam.pbi',
+     'm84047_230404_172053_s2.hifi_reads.default.consensusreadset.xml',
+     'm84047_230404_172053_s2.hifi_reads.unassigned.bam',
+     'm84047_230404_172053_s2.hifi_reads.unassigned.bam.pbi',
+     'm84047_230404_172053_s2.hifi_reads.unassigned.consensusreadset.xml',
+     'm84047_230404_172053_s2.primary_qc.tar.xz',
+     'm84047_230404_172053_s2.sts.xml',
+     'm84047_230404_172053_s2.zmw_metrics.json.gz',
+     'merged_analysis_report.json');
+ 
+  my @expected_pathsC =
+   map { catfile("$dest_coll/1_C01", $_) }
+    ('m84047_230404_175159_s3.fail_reads.bc1010_BAK8A_OA.bam',
+     'm84047_230404_175159_s3.fail_reads.bc1010_BAK8A_OA.bam.pbi',
+     'm84047_230404_175159_s3.fail_reads.bc1010_BAK8A_OA.consensusreadset.xml',
+     'm84047_230404_175159_s3.fail_reads.consensusreadset.xml',
+     'm84047_230404_175159_s3.fail_reads.unassigned.bam',
+     'm84047_230404_175159_s3.fail_reads.unassigned.bam.pbi',
+     'm84047_230404_175159_s3.fail_reads.unassigned.consensusreadset.xml',
+     'm84047_230404_175159_s3.hifi_reads.bc1010_BAK8A_OA.bam',
+     'm84047_230404_175159_s3.hifi_reads.bc1010_BAK8A_OA.bam.pbi',
+     'm84047_230404_175159_s3.hifi_reads.bc1010_BAK8A_OA.consensusreadset.xml',
+     'm84047_230404_175159_s3.hifi_reads.consensusreadset.xml',
+     'm84047_230404_175159_s3.hifi_reads.unassigned.bam',
+     'm84047_230404_175159_s3.hifi_reads.unassigned.bam.pbi',
+     'm84047_230404_175159_s3.hifi_reads.unassigned.consensusreadset.xml',
+     'm84047_230404_175159_s3.primary_qc.tar.xz',
+     'm84047_230404_175159_s3.sts.xml',
+     'm84047_230404_175159_s3.zmw_metrics.json.gz',
+     'merged_analysis_report.json',);
+
+  my @expected_paths;
+  push @expected_paths, @expected_pathsA, @expected_pathsB, @expected_pathsC;
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+  cmp_ok($num_files,     '==', 54);
+  cmp_ok($num_processed, '==', 54);
+  cmp_ok($num_errors,    '==', 0);
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named on instrument files') or
+            diag explain \@observed_paths; 
+
+  my @seq_paths = grep /.bam$/, @observed_paths;
+  check_primary_metadata($irods, $pub, @seq_paths);
+  check_common_metadata($irods, @seq_paths);
+}
+  
 sub publish_files_off_instrument : Test(3) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);

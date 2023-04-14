@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pbds:ConsensusReadSet CreatedAt="2023-04-06T08:16:24.168Z" MetaType="PacBio.DataSet.ConsensusReadSet" Name="TRAC-2-3723-Cell1 (all samples)" Tags="ccs,barcoded" TimeStampedName="TRAC-2-3723-Cell1 (all samples)-230406_081624170" UniqueId="a9ad9f86-04c2-4194-ba69-48240cb745f9" Version="3.0.1" xmlns:pbbase="http://pacificbiosciences.com/PacBioBaseDataModel.xsd" xmlns:pbdm="http://pacificbiosciences.com/PacBioDataModel.xsd" xmlns:pbmeta="http://pacificbiosciences.com/PacBioCollectionMetadata.xsd" xmlns:pbpn="http://pacificbiosciences.com/PacBioPartNumbers.xsd" xmlns:pbrk="http://pacificbiosciences.com/PacBioReagentKit.xsd" xmlns:pbsample="http://pacificbiosciences.com/PacBioSampleInfo.xsd" xmlns="http://pacificbiosciences.com/PacBioDatasets.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pacificbiosciences.com/PacBioDatasets.xsd" xmlns:pbds="http://pacificbiosciences.com/PacBioDatasets.xsd">
+	<pbbase:ExternalResources>
+		<pbbase:ExternalResource CreatedAt="2023-04-06T08:16:24.168Z" MetaType="PacBio.ConsensusReadFile.ConsensusReadBamFile" ResourceId="../hifi_reads/m84047_230404_164952_s1.hifi_reads.bc2073.bam" TimeStampedName="pacbio_consensusreadfile_consensusreadbamfile-230406_081624168" UniqueId="d3b512fd-1cb4-472a-9f47-b40e9a726740" Version="3.0.1">
+			<pbbase:FileIndices>
+				<pbbase:FileIndex CreatedAt="2023-04-06T08:16:24.168Z" MetaType="PacBio.Index.PacBioIndex" ResourceId="../hifi_reads/m84047_230404_164952_s1.hifi_reads.bc2073.bam.pbi" TimeStampedName="pacbio_index_pacbioindex-230406_081624168" UniqueId="42438b14-8945-4ad7-bf6e-eaa7684e8469" Version="3.0.1" />
+			</pbbase:FileIndices>
+			<pbbase:ExternalResources>
+				<pbbase:ExternalResource CreatedAt="2023-04-06T08:16:24.168Z" MetaType="PacBio.DataSet.ConsensusReadSet" ResourceId="../pb_formats/m84047_230404_164952_s1.hifi_reads.bc2073.consensusreadset.xml" TimeStampedName="pacbio_dataset_consensusreadset-230406_081624168" UniqueId="83e1c705-28c9-4750-b1b8-436b02d7b17c" Version="3.0.1" />
+			</pbbase:ExternalResources>
+		</pbbase:ExternalResource>
+	</pbbase:ExternalResources>
+	<pbbase:SupplementalResources>
+		<pbbase:ExternalResource CreatedAt="2023-04-06T08:16:24.168Z" Description="Points to the barcodes.fasta file." MetaType="PacBio.BarcodeFile.BarcodeFastaFile" Name="Barcodes FASTA" ResourceId="../metadata/m84047_230404_164952_s1.barcodes.fasta" TimeStampedName="pacbio_barcodefile_barcodefastafile-230406_081624168" UniqueId="a76068d6-bcc0-410d-9f67-3f72b25ea4bc" Version="3.0.1" />
+		<pbbase:ExternalResource CreatedAt="2023-04-06T08:16:24.168Z" MetaType="PacBio.FileTypes.txt" ResourceId="../statistics/m84047_230404_164952_s1.hifi_reads.lima_counts.txt" TimeStampedName="pacbio_filetypes_txt-230406_081624168" UniqueId="d14cff8c-32df-4950-bce2-17e38b0e0616" Version="3.0.1" />
+		<pbbase:ExternalResource CreatedAt="2023-04-06T08:16:24.168Z" MetaType="PacBio.FileTypes.txt" ResourceId="../statistics/m84047_230404_164952_s1.hifi_reads.lima_report.txt" TimeStampedName="pacbio_filetypes_txt-230406_081624168" UniqueId="87f26002-d420-4dca-8280-3d79d742eb1b" Version="3.0.1" />
+		<pbbase:ExternalResource CreatedAt="2023-04-06T08:16:24.168Z" MetaType="PacBio.FileTypes.txt" ResourceId="../statistics/m84047_230404_164952_s1.hifi_reads.lima_summary.txt" TimeStampedName="pacbio_filetypes_txt-230406_081624168" UniqueId="d964d0d8-31f2-47bb-a93d-39cb5d2001b9" Version="3.0.1" />
+		<pbbase:ExternalResource CreatedAt="2023-04-06T08:16:24.168Z" MetaType="PacBio.FileTypes.txt" ResourceId="../metadata/m84047_230404_164952_s1.hifi_reads.lima.log" TimeStampedName="pacbio_filetypes_txt-230406_081624168" UniqueId="4df945f3-b3ae-47f9-8c7e-d1855cc1d6c1" Version="3.0.1" />
+		<pbbase:ExternalResource CreatedAt="2023-04-06T06:46:00.668Z" MetaType="PacBio.FileTypes.json" ResourceId="../statistics/m84047_230404_164952_s1.zmw_metrics.json.gz" TimeStampedName="pacbio_filetypes_json-230406_064600668" UniqueId="3967bc4b-f1b3-46c3-9b2a-2bdb08c17307" Version="3.0.1" />
+		<pbbase:ExternalResource CreatedAt="2023-04-06T06:46:00.669Z" MetaType="PacBio.FileTypes.JsonReport" ResourceId="../statistics/m84047_230404_164952_s1.ccs_report.json" TimeStampedName="pacbio_filetypes_jsonreport-230406_064600669" UniqueId="03eb20c9-1cff-4c25-980b-90aaacdefd72" Version="3.0.1" />
+		<pbbase:ExternalResource CreatedAt="2023-04-06T06:46:00.669Z" MetaType="PacBio.FileTypes.log" ResourceId="../metadata/m84047_230404_164952_s1.ccs.log" TimeStampedName="pacbio_filetypes_log-230406_064600669" UniqueId="6ef7673e-1775-4901-8ec9-de3b52e0b992" Version="3.0.1" />
+		<pbbase:ExternalResource CreatedAt="2023-04-06T06:46:00.669Z" MetaType="PacBio.FileTypes.txt" ResourceId="../statistics/m84047_230404_164952_s1.ccs_report.txt" TimeStampedName="pacbio_filetypes_txt-230406_064600669" UniqueId="770ee970-00a9-4242-9708-a083709d79e0" Version="3.0.1" />
+		<pbbase:ExternalResource CreatedAt="2023-04-06T06:46:00.669Z" MetaType="PacBio.FileTypes.csv" ResourceId="../statistics/m84047_230404_164952_s1.zmw_metrics.csv.gz" TimeStampedName="pacbio_filetypes_csv-230406_064600669" UniqueId="f58c0fb9-4135-492c-8f49-0ea1c99c4c9d" Version="3.0.1" />
+		<pbbase:ExternalResource CreatedAt="2023-04-06T06:46:00.669Z" MetaType="PacBio.SubreadFile.ChipStatsFile" ResourceId="../metadata/m84047_230404_164952_s1.sts.xml" TimeStampedName="pacbio_subreadfile_chipstatsfile-230406_064600669" UniqueId="4f5edc9a-7eda-401a-84af-b7572217b373" Version="3.0.1" />
+		<pbbase:ExternalResource CreatedAt="2023-04-06T07:14:51.899Z" Description="Points to the 5mC report file." MetaType="PacBio.FileTypes.JsonReport" Name="5mC Report" ResourceId="../statistics/m84047_230404_164952_s1.hifi_reads.5mc_report.json" TimeStampedName="pacbio_filetypes_jsonreport-230406_071451899" UniqueId="348ef486-39e4-486a-969b-0782fcdeb130" Version="3.0.1" />
+		<pbbase:ExternalResource CreatedAt="2023-04-06T07:14:51.899Z" MetaType="PacBio.FileTypes.log" ResourceId="../metadata/m84047_230404_164952_s1.hifi_reads.primrose.log" TimeStampedName="pacbio_filetypes_log-230406_071451899" UniqueId="734f57a3-6a57-4c8b-b8fe-ac0cb322a46f" Version="3.0.1" />
+		<pbbase:ExternalResource CreatedAt="2023-04-06T08:16:24.170Z" Description="Points to the BAM with unbarcoded reads." MetaType="PacBio.ConsensusReadFile.ConsensusReadBamFile" Name="Unbarcoded BAM" ResourceId="../hifi_reads/m84047_230404_164952_s1.hifi_reads.unassigned.bam" TimeStampedName="pacbio_consensusreadfile_consensusreadbamfile-230406_081624170" UniqueId="868d435f-0025-451d-a3d4-542ea4778b17" Version="3.0.1">
+			<pbbase:FileIndices>
+				<pbbase:FileIndex CreatedAt="2023-04-06T08:16:24.170Z" MetaType="PacBio.Index.PacBioIndex" ResourceId="../hifi_reads/m84047_230404_164952_s1.hifi_reads.unassigned.bam.pbi" TimeStampedName="pacbio_index_pacbioindex-230406_081624170" UniqueId="aef36bf9-8591-4880-b251-df1d2d03c519" Version="3.0.1" />
+			</pbbase:FileIndices>
+			<pbbase:ExternalResources>
+				<pbbase:ExternalResource CreatedAt="2023-04-06T08:16:24.170Z" MetaType="PacBio.DataSet.ConsensusReadSet" ResourceId="../pb_formats/m84047_230404_164952_s1.hifi_reads.unassigned.consensusreadset.xml" TimeStampedName="pacbio_dataset_consensusreadset-230406_081624170" UniqueId="db3108b3-b27c-4f28-899b-ff0b9799bfd5" Version="3.0.1" />
+			</pbbase:ExternalResources>
+		</pbbase:ExternalResource>
+	</pbbase:SupplementalResources>
+	<pbds:DataSetMetadata>
+		<pbds:TotalLength>92439476821</pbds:TotalLength>
+		<pbds:NumRecords>8255091</pbds:NumRecords>
+		<Collections xmlns="http://pacificbiosciences.com/PacBioCollectionMetadata.xsd">
+			<CollectionMetadata Context="m84047_230404_164952_s1" CreatedAt="2023-04-04T15:19:13.052+00:00" InstrumentId="84047" InstrumentName="84047" MetaType="CollectionMetadata" ModifiedAt="0001-01-01T00:00:00" Status="PostPrimaryPending" TimeStampedName="84047-CollectionMetadata-2023-04-04T16:41:49.960Z" UniqueId="820ecd22-c227-490f-ae22-cd9b3f717b4f">
+				<pbmeta:MultiJobId>0</pbmeta:MultiJobId>
+				<pbmeta:ConsensusReadSetRef UniqueId="a9ad9f86-04c2-4194-ba69-48240cb745f9" />
+				<pbmeta:RunDetails>
+					<pbmeta:TimeStampedName>r84047_20230404_164149</pbmeta:TimeStampedName>
+					<pbmeta:Name>TRACTION-RUN-525</pbmeta:Name>
+					<pbmeta:CreatedBy>chc</pbmeta:CreatedBy>
+					<pbmeta:WhenCreated>2023-04-04T15:19:13.052+00:00</pbmeta:WhenCreated>
+					<pbmeta:StartedBy>unknown</pbmeta:StartedBy>
+					<pbmeta:WhenStarted>2023-04-04T16:42:51.5603178Z</pbmeta:WhenStarted>
+				</pbmeta:RunDetails>
+				<pbmeta:WellSample CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="TRAC-2-3723">
+					<pbmeta:WellName>A01</pbmeta:WellName>
+					<pbmeta:Application>unspecified</pbmeta:Application>
+					<pbmeta:Concentration>0</pbmeta:Concentration>
+					<pbmeta:OnPlateLoadingConcentration>227</pbmeta:OnPlateLoadingConcentration>
+					<pbmeta:InsertSize>0</pbmeta:InsertSize>
+					<pbmeta:IsoSeq>false</pbmeta:IsoSeq>
+					<pbmeta:IsCCS>true</pbmeta:IsCCS>
+					<pbmeta:SampleReuseEnabled>false</pbmeta:SampleReuseEnabled>
+					<pbmeta:StageHotstartEnabled>false</pbmeta:StageHotstartEnabled>
+					<pbmeta:SizeSelectionEnabled>false</pbmeta:SizeSelectionEnabled>
+					<pbmeta:UseCount>0</pbmeta:UseCount>
+					<pbmeta:DNAControlComplex>Revio sequencing control</pbmeta:DNAControlComplex>
+					<pbsample:BioSamples>
+						<pbsample:BioSample Name="PBcontrol13657123">
+							<pbsample:DNABarcodes>
+								<pbsample:DNABarcode Name="bc2073" UniqueId="b3d61a35-e71a-4066-bf3a-c9a87c921be2" />
+							</pbsample:DNABarcodes>
+						</pbsample:BioSample>
+					</pbsample:BioSamples>
+				</pbmeta:WellSample>
+				<pbmeta:Automation Name="Workflow_Kestrel.py">
+					<pbbase:AutomationParameters xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="MovieLength" SimpleValue="1440.0" ValueDataType="Double" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="DynamicLoadingCognate" SimpleValue="False" ValueDataType="String" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="ReuseCell" SimpleValue="False" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="ExtendFirst" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="ExtensionTime" SimpleValue="120" ValueDataType="Double" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="ImmobilizationTime" SimpleValue="100" ValueDataType="Double" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="TotalSamples" SimpleValue="1" ValueDataType="Int32" />
+						<pbbase:AutomationParameter Name="PCDinPlate" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter Name="UsePredictiveLoadingBuffer" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter Name="CollectionNumber" SimpleValue="0" ValueDataType="Int32" />
+						<pbbase:AutomationParameter Name="BindingKitPartNumber" SimpleValue="102-739-100" ValueDataType="String" />
+						<pbbase:AutomationParameter Name="TipSearchMaxDuration" SimpleValue="576" ValueDataType="Int32" />
+						<pbbase:AutomationParameter Name="PPAEstimatedDuration" SimpleValue="534" ValueDataType="Double" />
+						<pbbase:AutomationParameter Name="PPAMinDuration" SimpleValue="366.16799999999995" ValueDataType="Double" />
+						<pbbase:AutomationParameter Name="PPAMaxDuration" SimpleValue="701.832" ValueDataType="Double" />
+						<pbbase:AutomationParameter Name="PPATimeout" SimpleValue="2910" ValueDataType="Double" />
+						<pbbase:AutomationParameter Name="CCSOverheadDurationMinutesPerUmyGBase" SimpleValue="0.9" ValueDataType="Double" />
+						<pbbase:AutomationParameter Name="SNRCut" SimpleValue="1.5" ValueDataType="Double" />
+						<pbbase:AutomationParameter Name="HQRFMethod" SimpleValue="N2" ValueDataType="String" />
+					</pbbase:AutomationParameters>
+					<pbmeta:Defaults xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd" />
+				</pbmeta:Automation>
+				<pbmeta:CollectionNumber>0</pbmeta:CollectionNumber>
+				<pbmeta:CellIndex>0</pbmeta:CellIndex>
+				<pbmeta:SetNumber>0</pbmeta:SetNumber>
+				<pbmeta:CellPac Barcode="1000000291102202200091623" Description="Tray of 4 Revio SMRT Cells for sequencing on the Revio system." ExpirationDate="2023-09-16" LabelNumber="EA017542" LotNumber="1000000291" MovieTimeGrade="LR" Name="Revio SMRT Cell tray" PartNumber="102-202-200" Version="1.0">
+					<pbmeta:ChipLayout xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">KestrelRTO2</pbmeta:ChipLayout>
+				</pbmeta:CellPac>
+				<pbmeta:ControlKit Barcode="Lxxxxx102798000123199" ChipType="25mChip" Description="The Revio polymerase kit sequencing control contains a fixed 11 kb template bound to polymerase for use as a spike-in control." ExpirationDate="2099-12-31" LotNumber="Lxxxxx" Name="Revio sequencing control" PartNumber="102-798-000" Tags="Control Kit, CCK" Version="1.0">
+					<pbmeta:CustomSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">&gt;left_adapter\nTAGAGAGAGAAAAGGAGGAGGAGGCAACAACAACAACTCTCTCTA\n&gt;right_adapter\nTAGAGAGAGAAAAGGAGGAGGAGGCAACAACAACAACTCTCTCTA\n&gt;custom_sequence\nTCCCGACTGGAAAGCGGGCAGTGAGCGCAACGCAATTAATGTGAGTTAGCTCACTCATTAGGCACCCCAGGCTTTACACTTTATGCTTCCGGCTCGTATGTTGTGTGGAATTGTGAGCGGATAACAATTTCACACAGGAAACAGCTATGACCATGATTACGCCAAGCTTGCATGCCTGCAGGTCGACTCTAGAGGATCCCCCTGGCCGCATCCAGACTCAAATCAACGACCAGATCGCCTACCGGTTCAGCCATACCGGACTCCTCCTGCGATCCCTTCTGATACTGTCATCAGCATTACGTCATCCTCCGTCATGTCCGCCACATCCGGGGAAGCGGGGATAACTTCATTCCCGTCCGGGCCAAAGCGGACACCTCCGGCAAGCCCTGCCGCTTTCTGCAGCAGGCTCGCCAGCAGCGCACTGAGATCCAGCTGCCAGCGGGAAATACTGATGCGCAGCGCCGCCAGCGCATAAACGAAGCAGTCGAGTGCCTCATTGCGTCGCTTTTTGCTGTCCCACAGTATTTTTTTCCTGCCATCCACCCATTTTTCGACCTGCTCTTCAGCAGTCAGCTGCTGCGCTTCGGTCAGATCAAAAATAGGGTACCGAGCTCGAATTCACTGGCCGTCGTTTTACAACGTCGTGACTGGGAAAACCCTGGCGTTACCCAACTTAATCGCCTTGCAGCACATCCCCCTTTCGCCAGCTGGCGTAATAGCGAAGAGGCCCGCACCGATCGCCCTTCCCAACAGTTGCGCAGCCTGAATGGCGAATGGCGCCTGATGCGGTATTTTCTCCTTA</pbmeta:CustomSequence>
+				</pbmeta:ControlKit>
+				<pbmeta:TemplatePrepKit Barcode="Lxxxxx999999001123199" ChipType="25mChip" Description="The SMRTbell® Prep Kit contains reagent supplies to perform SMRTbell library preparations of primer-annealed SMRTbell libraries for insert sizes ranging from 500 bp to over 20 kb." ExpirationDate="2099-12-31" LotNumber="Lxxxxx" MaxInsertSize="20000" MinInsertSize="500" Name="SMRTbell® Prep Kit - Revio" PartNumber="999-999-001" Tags="Template Prep Kit, TPK" Version="1.0">
+					<pbmeta:LeftAdaptorSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">CAACAACAACAACGGAGGAGGAGGAAAAG</pbmeta:LeftAdaptorSequence>
+					<pbmeta:LeftPrimerSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">aacggaggaggagga</pbmeta:LeftPrimerSequence>
+					<pbmeta:RightAdaptorSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">CAACAACAACAACGGAGGAGGAGGAAAAG</pbmeta:RightAdaptorSequence>
+					<pbmeta:RightPrimerSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">aacggaggaggagga</pbmeta:RightPrimerSequence>
+				</pbmeta:TemplatePrepKit>
+				<pbmeta:BindingKit Barcode="030116102739100011124" ChipType="25mChip" Description="The Revio polymerase kit contains reagents for binding polymerase to SMRTbell libraries for sequencing on the Revio system." ExpirationDate="2024-01-11" LotNumber="030116" Name="Revio polymerase kit" PartNumber="102-739-100" Tags="Binding Kit, BDK" Version="1.0" />
+				<pbmeta:SequencingKitPlate Barcode="030157102118800101823" ChipType="25mChip" Description="Sequencing reagents supporting 4 Revio SMRT Cells." ExpirationDate="2023-10-18" LabelNumber="00373" LotNumber="030157" MaxCollections="4" Name="Revio sequencing plate" NumOilTubes="0" NumOseTubes="0" PartNumber="102-118-800" PlateNumber="1" SupportsDynamicLoading="true" Tags="Sequencing Kit, SQK" Version="1.0" />
+				<pbmeta:Primary>
+					<pbmeta:AutomationName>SequelAlpha</pbmeta:AutomationName>
+					<pbmeta:ConfigFileName>SqlPoC_SubCrf_2C2A-t2.xml</pbmeta:ConfigFileName>
+					<pbmeta:SequencingCondition>DefaultPrimarySequencingCondition</pbmeta:SequencingCondition>
+					<pbmeta:CCSOptions>
+						<pbmeta:ExecutionMode>OnInstrument</pbmeta:ExecutionMode>
+						<pbmeta:IncludeKinetics>true</pbmeta:IncludeKinetics>
+					</pbmeta:CCSOptions>
+					<pbmeta:OutputOptions>
+						<pbmeta:ResultsFolder>r84047_20230404_164149/1_A01/</pbmeta:ResultsFolder>
+						<pbmeta:CollectionPathUri>/lustre/scratch120/pacbio/staging/r84047_20230404_164149/1_A01/</pbmeta:CollectionPathUri>
+						<pbmeta:CopyFiles>
+							<pbmeta:CollectionFileCopy>Bam</pbmeta:CollectionFileCopy>
+							<pbmeta:CollectionFileCopy>Fasta</pbmeta:CollectionFileCopy>
+						</pbmeta:CopyFiles>
+						<pbmeta:Readout>Bases_Without_QVs</pbmeta:Readout>
+						<pbmeta:MetricsVerbosity>Minimal</pbmeta:MetricsVerbosity>
+						<pbmeta:TransferResource>
+							<pbmeta:Id>24adfa5e-d8c1-4eef-abbb-e48499d33bf6</pbmeta:Id>
+							<pbmeta:TransferScheme>SRS</pbmeta:TransferScheme>
+							<pbmeta:Name>srs-scheme-2</pbmeta:Name>
+							<pbmeta:Description>Sanger srs</pbmeta:Description>
+							<pbmeta:DestPath>/lustre/scratch120/pacbio/staging</pbmeta:DestPath>
+						</pbmeta:TransferResource>
+					</pbmeta:OutputOptions>
+				</pbmeta:Primary>
+				<pbmeta:Secondary>
+					<pbmeta:AutomationName>SMRTLinkRunDesign</pbmeta:AutomationName>
+					<pbbase:AutomationParameters>
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="SourceId" SimpleValue="smrtlink-rest-api" ValueDataType="String" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="CCS" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="CCSMode" SimpleValue="OnInstrument" ValueDataType="String" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="Kinetics" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="AllReads" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="Demultiplex" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="DemultiplexMode" SimpleValue="OnInstrument" ValueDataType="String" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="BarcodesUuid" SimpleValue="7a7f33e6-4912-4505-0d1e-3ceef7c93695" ValueDataType="String" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="DemultiplexPreset" SimpleValue="SYMMETRIC-ADAPTERS" ValueDataType="String" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="CpG" SimpleValue="True" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="AAV" SimpleValue="False" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="Heteroduplex" SimpleValue="False" ValueDataType="Boolean" />
+						<pbbase:AutomationParameter CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name="SampleSubreadsPct" SimpleValue="0" ValueDataType="Int32" />
+					</pbbase:AutomationParameters>
+					<pbmeta:BarcodesFasta>PmJjMjAwMQpBVENHVEdDR0FDR0FHVEFUCj5iYzIwMDIKVEdDQVRHVENBVEdBR1RBVAo+YmMyMDAzCkFDR0FHVEdDVENHQUdUQVQKPmJjMjAwNApUR0NBR1RHQ1RDR0FHVEFUCj5iYzIwMDUKVEdBQ1RDR0FUQ0dBR1RBVAo+YmMyMDA2CkNBVEdDR0FUQ1RHQUdUQVQKPmJjMjAwNwpBQ1RBR0NBVENUR0FHVEFUCj5iYzIwMDgKQUNHQ1RBR1RDVEdBR1RBVAo+YmMyMDA5CkNHQVRDR0NBQ1RHQUdUQVQKPmJjMjAxMApUQUNHVEFHVEFUR0FHVEFUCj5iYzIwMTEKQ1RHQUNBR1RBQ0dBR1RBVAo+YmMyMDEyClRDR1RBQ1RBQ1RHQUdUQVQKPmJjMjAxMwpDVEdDR1RBR0FDR0FHVEFUCj5iYzIwMTQKQVRBQ0FUR0NBQ0dBR1RBVAo+YmMyMDE1CkNHQUNBVEFHQVRHQUdUQVQKPmJjMjAxNgpBVENUR0NBQ0dUR0FHVEFUCj5iYzIwMTcKQ1RBVEdBVEFHQ0dBR1RBVAo+YmMyMDE4CkNHQVRDQUdUR0NHQUdUQVQKPmJjMjAxOQpDR1RDQVRBR1RDR0FHVEFUCj5iYzIwMjAKQUNUQVRHQ0dUQ0dBR1RBVAo+YmMyMDIxCkNHVEFDQVRHQ1RHQUdUQVQKPmJjMjAyMgpUQ0FUQ0dBQ0dUR0FHVEFUCj5iYzIwMjMKVENHQ0FUR0FDVEdBR1RBVAo+YmMyMDI0CkNBVEdBVENHQUNHQUdUQVQKPmJjMjAyNQpBQ0dDQUNHVEFDR0FHVEFUCj5iYzIwMjYKQ0FHVEFHQ0dUQ0dBR1RBVAo+YmMyMDI3ClRHQUNUR1RBR0NHQUdUQVQKPmJjMjAyOApBQ1RHQ0FHQ0FDR0FHVEFUCj5iYzIwMjkKVEFHQ0FHVEFUQ0dBR1RBVAo+YmMyMDMwCkNBVEFDQUdDQVRHQUdUQVQKPmJjMjAzMQpBVEFHQ0dUQUNUR0FHVEFUCj5iYzIwMzIKQVRBR0FDR0FHVEdBR1RBVAo+YmMyMDMzCkNHQUNUQ0dUQVRHQUdUQVQKPmJjMjAzNApUQUNUQUdUR0FDR0FHVEFUCj5iYzIwMzUKQ0FHQ1RHQUNBVEdBR1RBVAo+YmMyMDM2CkFDR1RDR0NUR0NHQUdUQVQKPmJjMjAzNwpDQUdUQVRHQUdDR0FHVEFUCj5iYzIwMzgKVENBQ0dBQ0dBQ0dBR1RBVAo+YmMyMDM5CkNBVEdUQVRHVENHQUdUQVQKPmJjMjA0MApUR0NUR0NHQUNUR0FHVEFUCj5iYzIwNDEKVEFUR0FUQ0FDVEdBR1RBVAo+YmMyMDQyClRDVEdDQUNUR0NHQUdUQVQKPmJjMjA0MwpBQ0dBVEdBQ0dUR0FHVEFUCj5iYzIwNDQKQ0dBVEdBVEdDVEdBR1RBVAo+YmMyMDQ1ClRBQ0dBQ0FHVENHQUdUQVQKPmJjMjA0NgpBVEFHQ0FUR1RDR0FHVEFUCj5iYzIwNDcKQ0FUQUdUQUNUQ0dBR1RBVAo+YmMyMDQ4ClRHQVRHQ1RBR1RHQUdUQVQKPmJjMjA0OQpUQUdUQ1RHQ0dUR0FHVEFUCj5iYzIwNTAKQ1RDQVRDVEFUQ0dBR1RBVAo+YmMyMDUxClRHQ0FUQUNUR0NHQUdUQVQKPmJjMjA1MgpDQUdBQ1RBR1RDR0FHVEFUCj5iYzIwNTMKQVRDR1RHQVRDVEdBR1RBVAo+YmMyMDU0CkNUR0NHQVRDQUNHQUdUQVQKPmJjMjA1NQpDVENBR0NBVEFDR0FHVEFUCj5iYzIwNTYKVENHQ0FHQ0dUQ0dBR1RBVAo+YmMyMDU3ClRBR0NBQ0dDQVRHQUdUQVQKPmJjMjA1OApUQUNUR0FDR0NUR0FHVEFUCj5iYzIwNTkKQVRDVEdBQ1RBVEdBR1RBVAo+YmMyMDYwCkFUQUNHQUdDVENHQUdUQVQKPmJjMjA2MQpDR0FHQ0FDR0NUR0FHVEFUCj5iYzIwNjIKVENUR0NHVEFUQ0dBR1RBVAo+YmMyMDYzClRDVEdDQVRDQVRHQUdUQVQKPmJjMjA2NApUR0NHVEdBVEdDR0FHVEFUCj5iYzIwNjUKVEdBR0NUQVRHQ0dBR1RBVAo+YmMyMDY2CkNUR1RDR1RBR1RHQUdUQVQKPmJjMjA2NwpBVENHQVRHQ0FUR0FHVEFUCj5iYzIwNjgKQUNUQUNHVEdBVEdBR1RBVAo+YmMyMDY5ClRDVEFUR0FDQVRHQUdUQVQKPmJjMjA3MApUQUNUR0NUQ0FDR0FHVEFUCj5iYzIwNzEKQ0dBR1RDVEFHQ0dBR1RBVAo+YmMyMDcyClRBVENBR1RBR1RHQUdUQVQKPmJjMjA3MwpBVENBQ1RBR1RDR0FHVEFUCj5iYzIwNzQKVEFUQ0FDR0FDVEdBR1RBVAo+YmMyMDc1CkNUQ0dUQ0FHQVRHQUdUQVQKPmJjMjA3NgpDQUdDQUdUR0FDR0FHVEFUCj5iYzIwNzcKVEdDR0FDR1RHQ0dBR1RBVAo+YmMyMDc4CkNUQ0FDVEdBR1RHQUdUQVQKPmJjMjA3OQpDQUNUR0FHQ0dUR0FHVEFUCj5iYzIwODAKQ0FHQ0dUQ1RBQ0dBR1RBVAo+YmMyMDgxCkNUQUNUQVRHVENHQUdUQVQKPmJjMjA4MgpBVEdUQUNBR0FDR0FHVEFUCj5iYzIwODMKQUNUQ0FUQ0FHVEdBR1RBVAo+YmMyMDg0CkNUR0FHQ0FDVENHQUdUQVQKPmJjMjA4NQpBVENBVENUQUNUR0FHVEFUCj5iYzIwODYKVEFDQVRHQ0dBVEdBR1RBVAo+YmMyMDg3ClRDR0NUR1RDQUNHQUdUQVQKPmJjMjA4OApBQ0dDVENBVEdDR0FHVEFUCj5iYzIwODkKVEFDVEFHQ0FHQ0dBR1RBVAo+YmMyMDkwCkNHVEFHQ0FHQVRHQUdUQVQKPmJjMjA5MQpDR1RHQ1RDR1RDR0FHVEFUCj5iYzIwOTIKQUNBR0NUR1RBQ0dBR1RBVAo+YmMyMDkzClRDR0FUR0NUQUNHQUdUQVQKPmJjMjA5NApUQUdBVEFDQUdDR0FHVEFUCj5iYzIwOTUKQ1RBQ1RDQVRBQ0dBR1RBVAo+YmMyMDk2CkFUR1RBQ1RBR1RHQUdUQVQK</pbmeta:BarcodesFasta>
+				</pbmeta:Secondary>
+				<pbmeta:UserDefinedFields>
+					<pbmeta:DataEntities CreatedAt="2023-04-04T15:19:13.052+00:00" ModifiedAt="0001-01-01T00:00:00" Name=" LIMS_IMPORT " SimpleValue="DefaultUserDefinedFieldLIMS" ValueDataType="String" xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd" />
+				</pbmeta:UserDefinedFields>
+				<pbmeta:ComponentVersions>
+					<pbmeta:VersionInfo Name="ics" Version="12.0.0.178953" />
+					<pbmeta:VersionInfo Name="iui" Version="Unknown" />
+					<pbmeta:VersionInfo Name="chemistry" Version="12.0.0.172289" />
+					<pbmeta:VersionInfo Name="pa" Version="12.0.0.1" />
+					<pbmeta:VersionInfo Name="basecaller" Version="12.0.0" />
+					<pbmeta:VersionInfo Name="baz2bam" Version="release/kestrel-12_bf20163dd8f9b4c10254f5feee21f5f35f1c2ad5" />
+					<pbmeta:VersionInfo Name="ccs" Version="ccs 7.0.0 (commit v7.0.0)&#10;&#10;Using:&#10;  unanimity : 7.0.0 (commit v7.0.0)&#10;  pbbam     : 2.3.0 (commit v2.3.0)&#10;  pbcopper  : 2.2.0 (commit v2.2.0)&#10;  pancake   : 2.0.0 (commit v2.0.0)&#10;  pbsparc   : 1.0.0 (commit v1.0.0)&#10;  pbdc      : 1.1.0 (commit v1.1.0)&#10;  boost     : 1.77&#10;  htslib    : 1.15&#10;  zlib      : 1.2.11" />
+					<pbmeta:VersionInfo Name="lima" Version="lima 2.7.1&#10;&#10;Using:&#10;  lima      : 2.7.1 (commit v2.7.1-1-gf067520)&#10;  pbbam     : 2.3.0 (commit v2.3.0)&#10;  pbcopper  : 2.2.0 (commit v2.2.0)&#10;  boost     : 1.77&#10;  htslib    : 1.15&#10;  zlib      : 1.2.11" />
+					<pbmeta:VersionInfo Name="pa-cal" Version="12.0.0.bf20163dd8f9b4c10254f5feee21f5f35f1c2ad5" />
+					<pbmeta:VersionInfo Name="pa-wsgo" Version="12.0.8-124139ce3b5bb1506e18faf385f62ca638b7c9e6" />
+					<pbmeta:VersionInfo Name="pawnee" Version="0.0.2" />
+					<pbmeta:VersionInfo Name="primrose" Version="primrose 1.4.0&#10;&#10;Using:&#10;  primrose    : 1.4.0 (commit v1.3.0-14-gd9f6a32)&#10;  pbbam       : 2.3.0 (commit v2.3.0)&#10;  pbcopper    : 2.2.0 (commit v2.2.0)&#10;  boost       : 1.77&#10;  htslib      : 1.15&#10;  zlib        : 1.2.11&#10;  onnxruntime : 1.11.0" />
+					<pbmeta:VersionInfo Name="reducestats" Version="release/kestrel-12_bf20163dd8f9b4c10254f5feee21f5f35f1c2ad5" />
+					<pbmeta:VersionInfo Name="smrtinub" Version="12.0.0.174552" />
+					<pbmeta:VersionInfo Name="smrtimisc" Version="12.0.0.174552" />
+					<pbmeta:VersionInfo Name="smrtlink-analysisservices-gui" Version="12.0.0.174552" />
+					<pbmeta:VersionInfo Name="smrtlink" Version="12.0.0.174552" />
+					<pbmeta:VersionInfo Name="smrttools" Version="12.0.0.174552" />
+				</pbmeta:ComponentVersions>
+			</CollectionMetadata>
+		</Collections>
+	</pbds:DataSetMetadata>
+</pbds:ConsensusReadSet>

@@ -1,0 +1,2 @@
+IdxFirst	IdxCombined	IdxFirstNamed	IdxCombinedNamed	Counts	MeanScore
+0	0	default	default	7110494	94
