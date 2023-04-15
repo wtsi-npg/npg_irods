@@ -642,7 +642,7 @@ sub publish_image_archive {
 
       my $file_pattern1 = $self->_movie_pattern .q{.}. $file_types . q{$};
       my $file_count = scalar split m/[|]/msx, $file_types;
-      
+
       $runfolder_file1 = $self->list_files($smrt_name,$file_pattern1,$file_count);
       push @runfolder_files, @{$runfolder_file1};
 
@@ -652,7 +652,7 @@ sub publish_image_archive {
       my $file_pattern2   = $self->_movie_pattern .q{.}. $fmc_pattern .q{$};
       my $runfolder_file2 = $self->list_files($smrt_name,$file_pattern2);
       if(defined $runfolder_file2->[0]){
-        push @runfolder_files, $runfolder_file2->[0];
+        push @runfolder_files, @{$runfolder_file2};
       }
 
       my @s_init = @init_args;

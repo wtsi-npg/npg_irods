@@ -445,7 +445,8 @@ sub _basic_qc {
 
     my $lima_text;
     foreach my $report (%{$decoded->{$REPORT_TITLE}}) {
-      if ($report =~ m{$LIMA_SUMMARY$}smx) {
+      if ($report =~ m{$LIMA_SUMMARY$}smx &&
+          !$self->_is_allowed_fname($report, \@FNAME_FAILED)) {
         $lima_text = $decoded->{$REPORT_TITLE}->{$report};
       }
       next if ref $decoded->{$REPORT_TITLE}->{$report}  ne 'ARRAY';
