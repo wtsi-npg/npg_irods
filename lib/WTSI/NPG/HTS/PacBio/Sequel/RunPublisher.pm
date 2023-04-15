@@ -325,18 +325,18 @@ sub _publish_revio_instrument_cell {
 
   my $pub_xml = q[sts];
 
-  my ($nfx, $npx, $nex) = $self->publish_xml_files
-    ($smrt_name, $pub_xml);
   my ($nfb, $npb, $neb) = $self->_publish_deplexed_files
     ($smrt_name);
+  my ($nfx, $npx, $nex) = $self->publish_xml_files
+    ($smrt_name, $pub_xml);
   my ($nfa, $npa, $nea) = $self->publish_aux_files
     ($smrt_name, 'zmw_metrics[.]json[.]gz');
   my ($nfi, $npi, $nei) = $self->publish_image_archive
     ($smrt_name, $meta_data, $process_type);
 
-  $num_files     += ($nfx + $nfb + $nfa + $nfi);
-  $num_processed += ($npx + $npb + $npa + $npi);
-  $num_errors    += ($nex + $neb + $nea + $nei);
+  $num_files     += ($nfb + $nfx + $nfa + $nfi);
+  $num_processed += ($npb + $npx + $npa + $npi);
+  $num_errors    += ($neb + $nex + $nea + $nei);
 
   return ($num_files,$num_processed,$num_errors);
 }
@@ -623,31 +623,26 @@ sub publish_image_archive {
     }
     ## OnInstrument processed data
     elsif ($metadata->has_ccsreads_uuid) {
-      my(@runfolder_files,$runfolder_file1,$file_pattern1,$file_count,$file_types);
+      my(@runfolder_files,$runfolder_file1,$file_types);
       ## OnInstrument processed data - CCS or CCS HiFi only
       if(($process_type eq $ONINSTRUMENT) || ($process_type eq $ONINSTRUMENTHO) ||
          ($process_type eq $ONINSTRUMENTSR)){
-        $file_pattern1   = $self->_movie_pattern .q{.}.
-          q{ccs_reports.json|ccs_reports.txt}.
-          q{$};
-        $file_count = 2;
+        $file_types  = q{ccs_reports.json|ccs_reports.txt};
       }
       elsif ($process_type eq $ONINSTRUMENTDP) {
-        $file_pattern1   = $self->_movie_pattern .q{.}.
-          q{ccs_reports.json|lima_guess.json|lima_guess.txt|lima_counts.txt|}.
-          q{lima_summary.txt|ccs_reports.txt}. q{$};
-        $file_count = 6;
+        $file_types  = q{ccs_reports.json|lima_guess.json|lima_guess.txt|}.
+          q{lima_counts.txt|lima_summary.txt|ccs_reports.txt};
       }
       elsif ($process_type eq $ONINST_REVIO1) {
         $file_types  = q{ccs_report.txt|fail_reads.lima_counts.txt|}.
           q{fail_reads.lima_summary.txt|hifi_reads.lima_counts.txt|}.
           q{hifi_reads.lima_summary.txt|summary.json|fail_reads.json|hifi_reads.json|}.
           q{ccs_report.json|fail_reads.unassigned.json|hifi_reads.unassigned.json};
-        $file_pattern1   = $self->_movie_pattern .q{.}.
-          $file_types . q{$};
-        $file_count = scalar split m/[|]/msx, $file_types;
       }
 
+      my $file_pattern1 = $self->_movie_pattern .q{.}. $file_types . q{$};
+      my $file_count = scalar split m/[|]/msx, $file_types;
+      
       $runfolder_file1 = $self->list_files($smrt_name,$file_pattern1,$file_count);
       push @runfolder_files, @{$runfolder_file1};
 
