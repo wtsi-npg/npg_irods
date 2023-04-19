@@ -1,0 +1,2 @@
+IdxFirst	IdxCombined	IdxFirstNamed	IdxCombinedNamed	Counts	MeanScore
+72	72	bc2073	bc2073	442912	85

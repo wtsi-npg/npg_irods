@@ -3,6 +3,7 @@ package WTSI::NPG::HTS::PacBio::Sequel::RunPublisher;
 use namespace::autoclean;
 use Data::Dump qw[pp];
 use English qw[-no_match_vars];
+use File::Basename;
 use File::Spec::Functions qw[catdir splitdir];
 use Moose;
 use MooseX::StrictConstructor;
@@ -26,10 +27,14 @@ our $SEQUENCE_INDEX_FORMAT  = 'pbi';
 our $SEQUENCE_PRODUCT    = 'subreads';
 our $SEQUENCE_AUXILIARY  = 'scraps';
 
-# CCS Sequence file types
+# CCS Sequence file types - Sequel IIe
 our $CCS_SEQUENCE_PRODUCT    = 'reads';
 our $HIFI_SEQUENCE_PRODUCT   = 'hifi_reads';
 our $HIFIUB_SEQUENCE_PRODUCT = 'unbarcoded.hifi_reads';
+
+# CCS Sequence file types - Revio
+our $REV_HIFIUB_SEQ_PRODUCT = 'hifi_reads.unassigned';
+
 
 ## Processing types
 our $OFFINSTRUMENT  = 'OffInstrument';
@@ -37,9 +42,11 @@ our $ONINSTRUMENT   = 'OnInstrument';
 our $ONINSTRUMENTHO = 'OnInstrumentHifiOnly';
 our $ONINSTRUMENTDP = 'OnInstrumentDeplex';
 our $ONINSTRUMENTSR = 'OnInstrumentPlusSubreads';
+our $ONINST_REVIO1  = 'OnInstrumentRevioOne';
 
 # Generic file prefix
-our $FILE_PREFIX_PATTERN = 'm[0-9a-z]+_\d+_\d+';
+our $FILE_PREFIX_PATTERN  = 'm[0-9a-z]+_\d+_\d+';
+our $REVIO_PREFIX_PATTERN = 'm[0-9a-z]+_\d+_\d+_s[1-4]';
 
 # Well directory pattern
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
@@ -68,6 +75,47 @@ sub _build_directory_pattern{
 
    return $WELL_DIRECTORY_PATTERN;
 };
+
+
+has '_movie_pattern' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   builder       => '_build_movie_pattern',
+   lazy          => 1,
+   init_arg      => undef,
+   documentation => 'Set file prefix pattern based on whether run is Revio or Sequel IIe.',);
+
+sub _build_movie_pattern {
+  my ($self) = @_;
+
+  my $smrt_names = [$self->smrt_names];
+
+  ## run must be all revio - but some cells may have failed to produce data
+  my $revio = 0;
+  foreach my $smrt_name (@{$smrt_names}) {
+    if ( defined $self->list_files($smrt_name, $REVIO_PREFIX_PATTERN
+      .q{[.]}. $REV_HIFIUB_SEQ_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT
+      .q{$}, undef, 1)->[0] ) {
+        $revio++;
+    }
+    last if $revio > 0;
+  }
+  return ($revio > 0) ? $REVIO_PREFIX_PATTERN : $FILE_PREFIX_PATTERN;
+}
+
+
+has '_is_onrevio' =>
+  (isa           => 'Bool',
+   is            => 'ro',
+   builder       => '_build_is_onrevio',
+   lazy          => 1,
+   init_arg      => undef,
+   documentation => 'Set to true if Revio as all files will be in runfolder cell subdirs.',);
+
+sub _build_is_onrevio {
+  my ($self) = @_;
+  return ($self->_movie_pattern eq $REVIO_PREFIX_PATTERN) ? 1 : 0;
+}
 
 
 =head2 publish_files
@@ -118,6 +166,10 @@ sub publish_files {
       ($num_files_cell, $num_processed_cell, $num_errors_cell) =
         $self->_publish_on_instrument_cell($smrt_name, $process_type);
     }
+    elsif ($process_type eq $ONINST_REVIO1) {
+      ($num_files_cell, $num_processed_cell, $num_errors_cell) =
+        $self->_publish_revio_instrument_cell($smrt_name, $process_type);
+    }
     else {
       $self->warn('Skipping '. $self->smrt_path($smrt_name) .' as no seq files found');
     }
@@ -141,9 +193,9 @@ sub _processing_type {
    my ($self, $smrt_name) = @_;
 
    my $type;
-   if (defined $self->list_files($smrt_name, $FILE_PREFIX_PATTERN .q{[.]}.
+   if (defined $self->list_files($smrt_name, $self->_movie_pattern .q{[.]}.
     $SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$})->[0]) {
-     if (defined $self->list_files($smrt_name, $FILE_PREFIX_PATTERN .q{[.]}.
+     if (defined $self->list_files($smrt_name, $self->_movie_pattern .q{[.]}.
       $CCS_SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$})->[0]) {
         # special configuration v11+ resulting in subreads.bam (no scraps.bam)
         # & oninstrument CCS processed reads.bam (so including low qual reads)
@@ -153,17 +205,22 @@ sub _processing_type {
       $type = $OFFINSTRUMENT;
      }
    }
-   elsif (defined $self->list_files($smrt_name, $FILE_PREFIX_PATTERN .q{[.]}.
+   elsif (defined $self->list_files($smrt_name, $self->_movie_pattern .q{[.]}.
     $CCS_SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$})->[0]) {
      $type = $ONINSTRUMENT;
    }
-   elsif (defined $self->list_files($smrt_name, $FILE_PREFIX_PATTERN .q{[.]}.
+   elsif (defined $self->list_files($smrt_name, $self->_movie_pattern .q{[.]}.
     $HIFI_SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$})->[0]) {
      $type = $ONINSTRUMENTHO;
    }
-   elsif (defined $self->list_files($smrt_name, $FILE_PREFIX_PATTERN .q{[.]}.
+   elsif (defined $self->list_files($smrt_name, $self->_movie_pattern .q{[.]}.
     $HIFIUB_SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$})->[0]) {
      $type = $ONINSTRUMENTDP;
+   }
+   elsif (defined $self->list_files($smrt_name, $self->_movie_pattern
+    .q{[.]}. $REV_HIFIUB_SEQ_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT
+     .q{$}, undef, 1)->[0]) {
+     $type = $ONINST_REVIO1;
    }
 
    return $type;
@@ -258,6 +315,32 @@ sub _publish_on_instrument_cell {
   return ($num_files,$num_processed,$num_errors);
 }
 
+sub _publish_revio_instrument_cell {
+  my ($self, $smrt_name, $process_type) = @_;
+
+  my ($meta_data) = $self->_read_metadata
+    ($smrt_name, q[hifi_reads.consensusreadset], q[pbmeta:]);
+
+  my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
+
+  my $pub_xml = q[sts];
+
+  my ($nfb, $npb, $neb) = $self->_publish_deplexed_files
+    ($smrt_name);
+  my ($nfx, $npx, $nex) = $self->publish_xml_files
+    ($smrt_name, $pub_xml);
+  my ($nfa, $npa, $nea) = $self->publish_aux_files
+    ($smrt_name, 'zmw_metrics[.]json[.]gz');
+  my ($nfi, $npi, $nei) = $self->publish_image_archive
+    ($smrt_name, $meta_data, $process_type);
+
+  $num_files     += ($nfb + $nfx + $nfa + $nfi);
+  $num_processed += ($npb + $npx + $npa + $npi);
+  $num_errors    += ($neb + $nex + $nea + $nei);
+
+  return ($num_files,$num_processed,$num_errors);
+}
+
 sub _publish_deplexed_files {
   my ($self, $smrt_name) = @_;
 
@@ -265,6 +348,8 @@ sub _publish_deplexed_files {
 
   my @init_args =
     (is_oninstrument => $ANALYSIS_ONBOARD,
+     is_smtwelve     => $self->_is_onrevio,
+     movie_pattern   => $self->_movie_pattern,
      irods           => $self->irods,
      analysis_path   => $self->smrt_path($smrt_name),
      runfolder_path  => $self->smrt_path($smrt_name),
@@ -308,7 +393,7 @@ sub publish_xml_files {
 
   my $num  = scalar split m/[|]/msx, $type;
 
-  my $file_pattern = $FILE_PREFIX_PATTERN .'[.]'. '(' . $type .')[.]xml$';
+  my $file_pattern = $self->_movie_pattern .'[.]'. '(' . $type .')[.]xml$';
 
   my $files = $self->list_files($smrt_name, $file_pattern, $num);
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
@@ -392,7 +477,7 @@ sub publish_sequence_files {
        is_r_and_d => $is_r_and_d);
   my @secondary_avus = $self->make_secondary_metadata(@run_records);
 
-  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $type .q{[.]}.
+  my $file_pattern = $self->_movie_pattern .q{[.]}. $type .q{[.]}.
         $SEQUENCE_FILE_FORMAT .q{$};
 
   my $files     = $self->list_files($smrt_name,$file_pattern);
@@ -431,7 +516,7 @@ sub publish_index_files {
 
   my $num  = scalar split m/[|]/msx, $type;
 
-  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $type . q{[.]}.
+  my $file_pattern = $self->_movie_pattern .q{[.]}. $type . q{[.]}.
         $SEQUENCE_FILE_FORMAT .q{[.]}. $SEQUENCE_INDEX_FORMAT .q{$};
 
   my $files = $self->list_files($smrt_name, $file_pattern, $num);
@@ -469,7 +554,7 @@ sub publish_aux_files {
 
   my $num  = scalar split m/[|]/msx, $type;
 
-  my $file_pattern = $FILE_PREFIX_PATTERN .q{[.]}. $type .q{$};
+  my $file_pattern = $self->_movie_pattern .q{[.]}. $type .q{$};
 
   my $files = $self->list_files($smrt_name,$file_pattern,$num);
   my $dest_coll = catdir($self->dest_collection, $smrt_name);
@@ -513,6 +598,7 @@ sub publish_image_archive {
   if ($self->api_client) {
     my @init_args = (api_client   => $self->api_client,
                      output_dir   => $self->smrt_path($name));
+
     my @i_handles;
     ## OffInstrument processed data
     if ($metadata->has_subreads_uuid) {
@@ -537,29 +623,36 @@ sub publish_image_archive {
     }
     ## OnInstrument processed data
     elsif ($metadata->has_ccsreads_uuid) {
-      my(@runfolder_files,);
+      my(@runfolder_files,$runfolder_file1,$file_types);
       ## OnInstrument processed data - CCS or CCS HiFi only
       if(($process_type eq $ONINSTRUMENT) || ($process_type eq $ONINSTRUMENTHO) ||
          ($process_type eq $ONINSTRUMENTSR)){
-        my $file_pattern1   = $FILE_PREFIX_PATTERN .q{.}.
-          q{ccs_reports.json|ccs_reports.txt}.
-          q{$};
-        my $runfolder_file1 = $self->list_files($smrt_name,$file_pattern1,2);
-        push @runfolder_files, @{$runfolder_file1};
+        $file_types  = q{ccs_reports.json|ccs_reports.txt};
       }
       elsif ($process_type eq $ONINSTRUMENTDP) {
-        my $file_pattern1   = $FILE_PREFIX_PATTERN .q{.}.
-          q{ccs_reports.json|lima_guess.json|lima_guess.txt|lima_counts.txt|lima_summary.txt|ccs_reports.txt}.
-          q{$};
-        my $runfolder_file1 = $self->list_files($smrt_name,$file_pattern1,6);
-        push @runfolder_files, @{$runfolder_file1};
+        $file_types  = q{ccs_reports.json|lima_guess.json|lima_guess.txt|}.
+          q{lima_counts.txt|lima_summary.txt|ccs_reports.txt};
+      }
+      elsif ($process_type eq $ONINST_REVIO1) {
+        $file_types  = q{ccs_report.txt|fail_reads.lima_counts.txt|}.
+          q{fail_reads.lima_summary.txt|hifi_reads.lima_counts.txt|}.
+          q{hifi_reads.lima_summary.txt|summary.json|fail_reads.json|hifi_reads.json|}.
+          q{ccs_report.json|fail_reads.unassigned.json|hifi_reads.unassigned.json};
       }
 
+      my $file_pattern1 = $self->_movie_pattern .q{.}. $file_types . q{$};
+      my $file_count = scalar split m/[|]/msx, $file_types;
+
+      $runfolder_file1 = $self->list_files($smrt_name,$file_pattern1,$file_count);
+      push @runfolder_files, @{$runfolder_file1};
+
       # Optional 5mC report file
-      my $file_pattern2   = $FILE_PREFIX_PATTERN .q{.5mc_report.json$};
+      my $fmc_pattern = ($process_type eq $ONINST_REVIO1) ?
+        q{fail_reads.5mc_report.json|hifi_reads.5mc_report.json} : q{5mc_report.json};
+      my $file_pattern2   = $self->_movie_pattern .q{.}. $fmc_pattern .q{$};
       my $runfolder_file2 = $self->list_files($smrt_name,$file_pattern2);
       if(defined $runfolder_file2->[0]){
-        push @runfolder_files, $runfolder_file2->[0];
+        push @runfolder_files, @{$runfolder_file2};
       }
 
       my @s_init = @init_args;
@@ -598,6 +691,7 @@ sub publish_image_archive {
   Arg [1]    : SMRT cell name, Str. Required.
   Arg [2]    : File type. Str. Required.
   Arg [3]    : Number of files expected. Optional.
+  Arg [4]    : List files in sub-directories only, Boolean. Optional
 
   Example    : $pub->list_files('1_A01', $type)
   Description: Return paths of all files for the given type.
@@ -607,14 +701,29 @@ sub publish_image_archive {
 =cut
 
 sub list_files {
-  my ($self, $smrt_name, $type, $expect) = @_;
+  my ($self, $smrt_name, $type, $expect, $subdir) = @_;
 
   my $name  = $self->_check_smrt_name($smrt_name);
 
   defined $type or
     $self->logconfess('A defined file type argument is required');
 
-  my @files = $self->list_directory($self->smrt_path($name), filter => $type);
+  my @files;
+  if ((defined $subdir && $subdir == 1) ||
+      (defined $self->_is_onrevio && $self->_is_onrevio == 1)) {
+    # only look in subdirectories for files to load
+    my @allfiles = $self->list_directory
+      ($self->smrt_path($name), filter => $type, recurse => 1);
+    foreach my $file (@allfiles) {
+      my ($filename, $directory, $suffix) = fileparse($file);
+      $directory =~ s/\/$//smx;
+      if ($directory && ($directory ne $self->runfolder_path)){
+        push @files, $file;
+      }
+    }
+  } else {
+    @files = $self->list_directory($self->smrt_path($name), filter => $type);
+  }
 
   my $num_files = scalar @files;
   if ($expect && $num_files != $expect) {
@@ -632,7 +741,7 @@ sub _read_metadata {
   defined $type or
     $self->logconfess('A defined file type argument is required');
 
-  my $pattern = $FILE_PREFIX_PATTERN .'[.]'. $type .'[.]xml$';
+  my $pattern = $self->_movie_pattern .'[.]'. $type .'[.]xml$';
   my $metadata_file = $self->list_files($smrt_name, $pattern, '1')->[0];
   $self->debug("Reading metadata from '$metadata_file'");
 
