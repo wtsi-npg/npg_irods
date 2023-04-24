@@ -10,6 +10,7 @@ use MooseX::StrictConstructor;
 use Perl6::Slurp;
 use Readonly;
 
+use WTSI::DNAP::Warehouse::Schema::Result::PacBioProductMetric;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisFastaManager;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
@@ -210,7 +211,7 @@ sub publish_sequence_files {
 
       my $tags;
       if ($is_target) {
-        $tags = $product->get_tags($records[0]);
+        $tags = WTSI::DNAP::Warehouse::Schema::Result::PacBioProductMetric->get_tags($records[0]);
       }
 
       my $well_label = $self->remove_well_padding($self->_metadata->run_name,

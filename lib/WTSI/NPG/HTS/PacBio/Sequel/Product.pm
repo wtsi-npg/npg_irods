@@ -1,10 +1,14 @@
 package WTSI::NPG::HTS::PacBio::Sequel::Product;
 
 use Moose;
+use English qw[-no_match_vars];
 
 with qw/WTSI::DNAP::Utilities::Loggable/;
 
 our $VERSION = '';
+
+my $ID_SCRIPT = q[generate_pac_bio_id];
+my $ID_LENGTH = 64;
 
 =head2 generate_product_id
 

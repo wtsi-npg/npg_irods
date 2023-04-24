@@ -31,7 +31,7 @@ our $VERSION = '';
 # Default
 our $DEFAULT_ROOT_COLL    = '/seq/pacbio';
 
-my $MLWH_JSON_PATH = 'mlwh_locations.json'; # Move this?
+my $MLWH_JSON_PATH = 'mlwh_locations.json';
 my $PACBIO = 'pacbio';
 
 has 'irods' =>

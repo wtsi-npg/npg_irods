@@ -10,6 +10,7 @@ use MooseX::StrictConstructor;
 use Readonly;
 use Try::Tiny;
 
+use WTSI::DNAP::Warehouse::Schema::Result::PacBioProductMetric;
 use WTSI::NPG::HTS::PacBio::Sequel::ImageArchive;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
