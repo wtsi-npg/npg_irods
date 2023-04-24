@@ -1,6 +1,6 @@
 Unreleased
 
-Release 4.42.0
+Release 2.42.0
 
   - Add location file writer and implement in pacbio run/analysis publisher.
   - Change docker image repository used by CI
