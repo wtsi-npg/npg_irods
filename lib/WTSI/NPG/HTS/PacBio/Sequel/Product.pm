@@ -26,8 +26,8 @@ sub generate_product_id {
 
   my $command = join q[ ],
     $ID_SCRIPT, '--run_name', $run_name, '--well_label', $well_label;
-  if ($tags){
-    $command .= join q[ ], ' --tags', $tags;
+  foreach my $tag (@{$tags}){
+    $command .= join q[ ], ' --tag', $tag;
   }
   $self->info("Generating product id: $command");
   open my $id_product_script, q[-|], $command

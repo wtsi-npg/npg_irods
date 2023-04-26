@@ -54,9 +54,8 @@ my $wh_schema;
 
 my $irods_tmp_coll;
 
-if (!which "generate_pac_bio_id"){
-  plan skip_all => "Pac Bio product_id generation script not installed"
-}
+
+isnt(which ("generate_pac_bio_id"), undef, "id generation script installed");
 
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');

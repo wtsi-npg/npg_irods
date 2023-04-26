@@ -211,7 +211,7 @@ sub publish_sequence_files {
 
       my $tags;
       if ($is_target) {
-        $tags = WTSI::DNAP::Warehouse::Schema::Result::PacBioProductMetric->get_tags($records[0]);
+        $tags = $records[0]->get_tags;
       }
 
       my $well_label = $self->remove_well_padding($self->_metadata->run_name,
