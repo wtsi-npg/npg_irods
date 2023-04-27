@@ -99,6 +99,7 @@ sub handler {
 
   $log->info('Writing restart file ', $publisher->restart_file);
   $publisher->write_restart_file;
+  $publisher->write_locations;
   $log->error("Exiting due to $signal");
   exit 1;
 }

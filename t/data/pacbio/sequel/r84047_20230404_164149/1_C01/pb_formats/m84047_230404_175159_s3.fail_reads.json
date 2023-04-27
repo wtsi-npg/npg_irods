@@ -1,0 +1,19 @@
+{
+  "createdAt": "2023-04-06T15:23:10.485Z",
+  "files": [
+    {
+      "createdAt": "2023-04-06T15:23:10.485Z",
+      "description": "Split BAM file by lima",
+      "fileSize": 1214910568,
+      "fileTypeId": "PacBio.DataSet.ConsensusReadSet",
+      "isChunked": false,
+      "modifiedAt": "2023-04-06T15:23:10.485Z",
+      "name": "Barcodes bc1010_BAK8A_OA--bc1010_BAK8A_OA",
+      "path": "m84047_230404_175159_s3.fail_reads.bc1010_BAK8A_OA.consensusreadset.xml",
+      "sourceId": "barcoding.tasks.lima-0",
+      "uniqueId": "be63ca43-5d32-409e-94a4-562c28367dfb"
+    }
+  ],
+  "updatedAt": "2023-04-06T15:23:10.485Z",
+  "version": "0.2.2"
+}

@@ -2305,3 +2305,84 @@
   pac_bio_library_tube_legacy_id: ~
   library_created_at: ~
   pac_bio_run_name: 'TRACTION-RUN-387'
+- id_pac_bio_tmp: '103603'
+  last_updated: '2023-04-04 15:17:03'
+  recorded_at: '2023-04-04 15:17:03'
+  id_sample_tmp: '4237953'
+  id_study_tmp: '4840'
+  id_pac_bio_run_lims: 'TRACTION-RUN-525'
+  pac_bio_run_uuid: 781f9524-98f4-436e-8553-e2542c94482a
+  cost_code: S4360
+  id_lims: Traction
+  tag_identifier: 'bc2073'
+  tag_sequence: ATCACTAGTCGAGTAT
+  tag_set_id_lims: '9'
+  tag_set_name: Pacbio_96_barcode_plate_v3
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag2_identifier: ~
+  plate_barcode: plate_barcode placeholder
+  plate_uuid_lims: b4aa2a66-20ec-4625-83b9-f3c9ca11958e
+  well_label: A1
+  well_uuid_lims: 77e29ce7-d33a-4974-9bac-a5b5c9ae39d8
+  pac_bio_library_tube_id_lims: 2665
+  pac_bio_library_tube_uuid: 3e54fa92-1899-4f71-92a4-9482d94e7423
+  pac_bio_library_tube_name: PBcontrol13657123 
+  pac_bio_library_tube_legacy_id: ~
+  library_created_at: ~
+  pac_bio_run_name: 'TRACTION-RUN-525'
+- id_pac_bio_tmp: '103604'
+  last_updated: '2023-04-04 15:17:03'
+  recorded_at: '2023-04-04 15:17:03'
+  id_sample_tmp: '2353773'
+  id_study_tmp: '6276'
+  id_pac_bio_run_lims: 'TRACTION-RUN-525'
+  pac_bio_run_uuid: 781f9524-98f4-436e-8553-e2542c94482a
+  cost_code: S10315
+  id_lims: Traction
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag2_identifier: ~
+  plate_barcode: plate_barcode placeholder
+  plate_uuid_lims: b4aa2a66-20ec-4625-83b9-f3c9ca11958e
+  well_label: B1
+  well_uuid_lims: b512318f-7310-4ea7-99fb-943d968e6230
+  pac_bio_library_tube_id_lims: 2024
+  pac_bio_library_tube_uuid: 541f948e-3777-4b87-adc8-bbe49b7e68ef
+  pac_bio_library_tube_name: CG_SB_NB13237703
+  pac_bio_library_tube_legacy_id: ~
+  library_created_at: ~
+  pac_bio_run_name: 'TRACTION-RUN-525'
+- id_pac_bio_tmp: '103606'
+  last_updated: '2022-12-14 16:02:24'
+  recorded_at: '2022-12-14 16:02:24'
+  id_sample_tmp: '2235691'
+  id_study_tmp: '5735'
+  id_pac_bio_run_lims: 'TRACTION-RUN-525'
+  pac_bio_run_uuid: 781f9524-98f4-436e-8553-e2542c94482a
+  cost_code: S4773
+  id_lims: Traction
+  tag_identifier: 'bc1010_BAK8A_OA'
+  tag_sequence: ACGCGCTATCTCAGAGT
+  tag_set_id_lims: '1'
+  tag_set_name: Sequel_16_barcodes_v3
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag2_identifier: ~
+  plate_barcode: plate_barcode placeholder
+  plate_uuid_lims: b4aa2a66-20ec-4625-83b9-f3c9ca11958e 
+  well_label: C1
+  well_uuid_lims: 6c9f11ce-c325-46cc-9790-da5e895040ff
+  pac_bio_library_tube_id_lims: 2191
+  pac_bio_library_tube_uuid: e56da6b9-df17-4c98-a57e-0eb8bfb724b5
+  pac_bio_library_tube_name: DTOL13384046
+  pac_bio_library_tube_legacy_id: ~
+  library_created_at: ~
+  pac_bio_run_name: 'TRACTION-RUN-525'

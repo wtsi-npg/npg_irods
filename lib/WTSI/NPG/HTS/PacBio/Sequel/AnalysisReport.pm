@@ -26,11 +26,11 @@ our $REPORT_NAME = 'merged_analysis_report.json';
 # Deplex files
 our $LIMA        = q{(lima.guess.txt|lima.summary.txt|lima_counts.txt|lima.counts)};
 
+# CCS report files
+our $CCS_FILES   = q{(ccs.report.json|ccs.reports.json|ccs_processing.report.json)};
+
 # Combined metadata file inputs and outputs
 our $OUTPUT_DIR  = 'outputs';
-our $CCS_REPORT  = 'ccs.report.json';
-our $CCS_PROCESS = 'ccs_processing.report.json';
-our $CCS_FILES   = qq{($CCS_REPORT|$CCS_PROCESS)};
 our $REPORTS     = 'reports';
 
 has 'analysis_path' =>
@@ -95,7 +95,7 @@ sub _read_deplex_files {
   my ($self) = @_;
 
   my @files = $self->list_directory
-    ($self->runfolder_path, filter => $LIMA .q[$]);
+    ($self->runfolder_path, filter => $LIMA .q[$], recurse => 1);
 
   foreach my $file (@files) {
     my $file_contents = slurp $file;
@@ -108,8 +108,11 @@ sub _read_deplex_files {
 sub _read_ccs_files {
   my ($self) = @_;
 
-  my @files = $self->list_directory(catdir($self->analysis_path, $OUTPUT_DIR),
-    filter => $CCS_FILES .q[$]);
+  my $spath = (-d catdir($self->analysis_path, $OUTPUT_DIR)) ?
+    catdir($self->analysis_path, $OUTPUT_DIR) : $self->analysis_path;
+
+  my @files = $self->list_directory
+    ($spath, filter => $CCS_FILES .q[$], recurse => 1);
 
   if(@files >= 1){
     foreach my $file (@files) {

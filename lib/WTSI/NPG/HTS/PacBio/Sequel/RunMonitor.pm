@@ -45,6 +45,7 @@ sub publish_completed_runs {
 
         if ($runfolder_path) {
           my $publisher = $self->run_publisher_handle($runfolder_path);
+
           my ($nf, $np, $ne) = $publisher->publish_files();
           $self->debug("Processed [$np / $nf] files in ",
                        "'$runfolder_path' with $ne errors");

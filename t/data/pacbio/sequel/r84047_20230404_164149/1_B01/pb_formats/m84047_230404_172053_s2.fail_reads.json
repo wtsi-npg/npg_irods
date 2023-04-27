@@ -1,0 +1,19 @@
+{
+  "createdAt": "2023-04-06T08:11:50.297Z",
+  "files": [
+    {
+      "createdAt": "2023-04-06T08:11:50.296Z",
+      "description": "Split BAM file by lima",
+      "fileSize": -122166965,
+      "fileTypeId": "PacBio.DataSet.ConsensusReadSet",
+      "isChunked": false,
+      "modifiedAt": "2023-04-06T08:11:50.297Z",
+      "name": "Barcodes default--default",
+      "path": "m84047_230404_172053_s2.fail_reads.default.consensusreadset.xml",
+      "sourceId": "barcoding.tasks.lima-0",
+      "uniqueId": "80ac3eba-7b7c-4a19-b56c-16522bb3acfd"
+    }
+  ],
+  "updatedAt": "2023-04-06T08:11:50.297Z",
+  "version": "0.2.2"
+}

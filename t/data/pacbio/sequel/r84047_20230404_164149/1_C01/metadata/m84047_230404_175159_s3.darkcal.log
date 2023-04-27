@@ -1,0 +1,289 @@
+>|> 20230404 22:27:20.696 -|- WARN     -|- PBLogger -|- rt-84047|P:119702|T:119702 -|- pa-cal timout value is being ignored, and replaced with 1000
+>|> 20230404 22:27:20.696 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119702 -|- {
+	"source" : 
+	{
+		"WXIPCDataSourceConfig" : 
+		{
+			"acqConfig" : 
+			{
+				"A" : 
+				{
+					"baseLabel" : "X",
+					"excessNoiseCV" : 0,
+					"interPulseDistance" : 0,
+					"ipd2SlowStepRatio" : 0,
+					"pulseWidth" : 0,
+					"pw2SlowStepRatio" : 0,
+					"relAmplitude" : 1
+				},
+				"C" : 
+				{
+					"baseLabel" : "X",
+					"excessNoiseCV" : 0,
+					"interPulseDistance" : 0,
+					"ipd2SlowStepRatio" : 0,
+					"pulseWidth" : 0,
+					"pw2SlowStepRatio" : 0,
+					"relAmplitude" : 1
+				},
+				"G" : 
+				{
+					"baseLabel" : "X",
+					"excessNoiseCV" : 0,
+					"interPulseDistance" : 0,
+					"ipd2SlowStepRatio" : 0,
+					"pulseWidth" : 0,
+					"pw2SlowStepRatio" : 0,
+					"relAmplitude" : 1
+				},
+				"T" : 
+				{
+					"baseLabel" : "X",
+					"excessNoiseCV" : 0,
+					"interPulseDistance" : 0,
+					"ipd2SlowStepRatio" : 0,
+					"pulseWidth" : 0,
+					"pw2SlowStepRatio" : 0,
+					"relAmplitude" : 1
+				},
+				"chipLayoutName" : "auto",
+				"photoelectronSensitivity" : 1,
+				"refSnr" : 12
+			},
+			"autoConnect" : true,
+			"chunkValidationLevel" : 0,
+			"daemonUrl" : "http://localhost:23602",
+			"dataMode" : "FRAME",
+			"dataPath" : "Normal",
+			"doneTimeoutSeconds" : 10,
+			"httpTimeout" : 10,
+			"loopback" : false,
+			"maxPopLoops" : 10,
+			"pedestal" : 0,
+			"primerScaler" : 2,
+			"simConfig" : 
+			{
+				"numCols" : 0,
+				"numRows" : 0
+			},
+			"simulatedFrameRate" : 100,
+			"simulatedInputFile" : "",
+			"sleepDebug" : 0,
+			"sraIndex" : 2,
+			"tilePoolFactor" : 3,
+			"verbosity" : 0,
+			"wxDaemonTimeout" : 60
+		}
+	}
+}
+>|> 20230404 22:27:20.696 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119702 -|- pa-cal: Version 12.0.0.178953 CMAKE_BUILD_TYPE:Release
+>|> 20230404 22:27:20.696 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119702 -|- git branch: release/kestrel-12
+>|> 20230404 22:27:20.696 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119702 -|- git commit hash: bf20163dd8f9b4c10254f5feee21f5f35f1c2ad5
+>|> 20230404 22:27:20.696 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119702 -|- git commit date: 2023-02-09 14:33:50 -0800
+>|> 20230404 22:27:20.696 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119702 -|- git status:  ?? build-number.txt
+>|> 20230404 22:27:20.696 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119702 -|- git status: 
+>|> 20230404 22:27:20.696 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119702 -|- command line: /opt/pacbio/pa-cal-12.0.0/bin/pa-cal --statusfd 2 --logoutput /data/icc/m84047_230404_175159_s3/metadata/m84047_230404_175159_s3.darkcal.log --sra 2 --movieNum 0 --numFrames 512 --cal Dark --outputFile /data/icc/m84047_230404_175159_s3/pb_internal/m84047_230404_175159_s3.darkcal.h5 --timeoutSeconds 5.632000000000001 
+>|> 20230404 22:27:20.696 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119702 -|- Process Id:119702
+>|> 20230404 22:27:20.696 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119702 -|- Testing 'info' level logging
+>|> 20230404 22:27:20.696 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119702 -|- PaCalProcess waiting to complete analysis
+>|> 20230404 22:27:20.696 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Analysis: starting
+>|> 20230404 22:27:20.707 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Connecting to shared memory key: 0x50420352 at 0x3500000000
+>|> 20230404 22:27:20.713 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- WXIPCDataSource expectedZmws:25165824
+>|> 20230404 22:27:20.714 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Connecting to wx-daemon http://localhost:23602
+>|> 20230404 22:27:20.727 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- platform:Kestrel
+>|> 20230404 22:27:20.740 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- wxShortVersion: 12.0.6
+wxLongVersion: 12.0.6.63ab89f7fa3a1160e4c900d3fe35fb0c11f2d083
+wxIpcVersion: 2
+wxPersonality: 1.5.3-0
+dataSourceShortVersion: 12.0.6
+dataSourceLongVersion: 12.0.6.SNAPSHOT170531
+dataSourceIpcVersion: 2
+>|> 20230404 22:27:20.752 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Waiting for wx-daemon. Current boot state:"Daemon ready"
+>|> 20230404 22:27:20.761 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Connecting IPC
+>|> 20230404 22:27:20.762 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Reconfiguring:{
+	"cameraConfig" : 0,
+	"crosstalkKernel" : 
+	[
+		[
+			0,
+			0,
+			0,
+			0,
+			0
+		],
+		[
+			0,
+			0,
+			0,
+			0,
+			0
+		],
+		[
+			0,
+			0,
+			1,
+			0,
+			0
+		],
+		[
+			0,
+			0,
+			0,
+			0,
+			0
+		],
+		[
+			0,
+			0,
+			0,
+			0,
+			0
+		]
+	],
+	"darkCalFileName" : "",
+	"encoding" : "UINT8",
+	"expectedZmws" : 25165824,
+	"layoutDims" : 
+	[
+		4096,
+		512,
+		64
+	],
+	"layoutType" : "BLOCK_LAYOUT_DENSE",
+	"memoryPoolIndex" : -1,
+	"mosi_socket_address" : "tcp://0.0.0.0:38944",
+	"numFrames" : 512,
+	"pedestal" : 0,
+	"requireAuroraUp" : true
+}
+>|> 20230404 22:27:20.762 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Reconfigure returned:OK "ok"
+>|> 20230404 22:27:20.771 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Connecting to SRA:2 using tcp://rt-84047:38126
+>|> 20230404 22:27:20.777 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- wx-daemon requests 192 pointers
+>|> 20230404 22:27:20.777 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- wxipc is sending requests 384 pointers
+>|> 20230404 22:27:20.814 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Pushing 384 free packets, with packetSize 134217728
+>|> 20230404 22:27:20.814 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Done, Pushed 384 free packets
+>|> 20230404 22:27:20.814 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Sent first free packet to tcp://127.0.0.1:38126
+>|> 20230404 22:27:20.814 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- bursted 384 free packets
+>|> 20230404 22:27:20.815 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Reconfigure_continue returned:OK "ok"
+>|> 20230404 22:27:27.313 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Waiting for data chunk ... 
+>|> 20230404 22:27:34.333 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119818 -|- Base Frame index set to 2
+>|> 20230404 22:27:34.333 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119818 -|- Movie started at frame:0, expectedEnd Frame set to:512
+>|> 20230404 22:27:34.333 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119818 -|- Reached end of movie, endFrame:512 expectedEndFrame:512
+>|> 20230404 22:27:34.333 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- SensorPacketsChunk::GetCoverageMap()
+>|> 20230404 22:27:34.333 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- reducedFrame range [0,1) times 512 Frames
+>|> 20230404 22:27:34.333 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- reducedZmws range [0,96) times 262144 ZMWs
+>|> 20230404 22:27:34.333 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- SensorPacketsChunk::GetCoverageMap() done, filled.size:1
+>|> 20230404 22:27:34.333 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Received data chunk, frames:[0,512). Has full coverage:true
+>|> 20230404 22:27:34.333 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119818 -|- bursted 96 free packets
+>|> 20230404 22:27:34.333 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119818 -|- DataSourceRunner thread exiting
+>|> 20230404 22:27:34.716 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Polled wx-daemon for pedestal and cached 0
+>|> 20230404 22:27:40.380 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- FIXME FrameRate assumed to be 100.0 fps, not correctly implemented.
+>|> 20230404 22:27:40.380 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- FIXME FrameRate assumed to be 100.0 fps, not correctly implemented.
+>|> 20230404 22:27:40.380 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Calibration file /data/icc/m84047_230404_175159_s3/pb_internal/m84047_230404_175159_s3.darkcal.h5 written and closed.
+>|> 20230404 22:27:40.396 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- ~WXIPCDataSource
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Packet History start: now:110672.750 1970-01-02T06:44:32.750Z
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[0] 110653.168 2023-04-04T22:27:20.815Z BURST 384 pointers, free:0
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[1] 110666.686 2023-04-04T22:27:34.333Z 0x4100000000 51673825280 free:0
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[2] 110666.686 2023-04-04T22:27:34.333Z 0x4108000000 51808043008 free:1
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[3] 110666.686 2023-04-04T22:27:34.333Z 0x4110000000 51942260736 free:2
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[4] 110666.686 2023-04-04T22:27:34.333Z 0x4118000000 52076478464 free:3
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[5] 110666.686 2023-04-04T22:27:34.333Z 0x4120000000 52210696192 free:4
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[6] 110666.686 2023-04-04T22:27:34.333Z 0x4128000000 52344913920 free:5
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[7] 110666.686 2023-04-04T22:27:34.333Z 0x4130000000 52479131648 free:6
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[8] 110666.686 2023-04-04T22:27:34.333Z 0x4138000000 52613349376 free:7
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[9] 110666.686 2023-04-04T22:27:34.333Z 0x4140000000 52747567104 free:8
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[10] 110666.686 2023-04-04T22:27:34.333Z 0x4148000000 52881784832 free:9
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[11] 110666.686 2023-04-04T22:27:34.333Z 0x4150000000 53016002560 free:10
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[12] 110666.686 2023-04-04T22:27:34.333Z 0x4158000000 53150220288 free:11
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[13] 110666.686 2023-04-04T22:27:34.333Z 0x4160000000 53284438016 free:12
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[14] 110666.686 2023-04-04T22:27:34.333Z 0x4168000000 53418655744 free:13
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[15] 110666.686 2023-04-04T22:27:34.333Z 0x4170000000 53552873472 free:14
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[16] 110666.686 2023-04-04T22:27:34.333Z 0x4178000000 53687091200 free:15
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[17] 110666.686 2023-04-04T22:27:34.333Z 0x4180000000 53821308928 free:16
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[18] 110666.686 2023-04-04T22:27:34.333Z 0x4188000000 53955526656 free:17
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[19] 110666.686 2023-04-04T22:27:34.333Z 0x4190000000 54089744384 free:18
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[20] 110666.686 2023-04-04T22:27:34.333Z 0x4198000000 54223962112 free:19
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[21] 110666.686 2023-04-04T22:27:34.333Z 0x41a0000000 54358179840 free:20
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[22] 110666.686 2023-04-04T22:27:34.333Z 0x41a8000000 54492397568 free:21
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[23] 110666.686 2023-04-04T22:27:34.333Z 0x41b0000000 54626615296 free:22
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[24] 110666.686 2023-04-04T22:27:34.333Z 0x41b8000000 54760833024 free:23
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[25] 110666.686 2023-04-04T22:27:34.333Z 0x41c0000000 54895050752 free:24
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[26] 110666.686 2023-04-04T22:27:34.333Z 0x41c8000000 55029268480 free:25
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[27] 110666.686 2023-04-04T22:27:34.333Z 0x41d0000000 55163486208 free:26
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[28] 110666.686 2023-04-04T22:27:34.333Z 0x41d8000000 55297703936 free:27
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[29] 110666.686 2023-04-04T22:27:34.333Z 0x41e0000000 55431921664 free:28
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[30] 110666.686 2023-04-04T22:27:34.333Z 0x41e8000000 55566139392 free:29
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[31] 110666.686 2023-04-04T22:27:34.333Z 0x41f0000000 55700357120 free:30
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[32] 110666.686 2023-04-04T22:27:34.333Z 0x41f8000000 55834574848 free:31
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[33] 110666.686 2023-04-04T22:27:34.333Z 0x4200000000 55968792576 free:32
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[34] 110666.686 2023-04-04T22:27:34.333Z 0x4208000000 56103010304 free:33
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[35] 110666.686 2023-04-04T22:27:34.333Z 0x4210000000 56237228032 free:34
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[36] 110666.686 2023-04-04T22:27:34.333Z 0x4218000000 56371445760 free:35
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[37] 110666.686 2023-04-04T22:27:34.333Z 0x4220000000 56505663488 free:36
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[38] 110666.686 2023-04-04T22:27:34.333Z 0x4228000000 56639881216 free:37
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[39] 110666.686 2023-04-04T22:27:34.333Z 0x4230000000 56774098944 free:38
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[40] 110666.686 2023-04-04T22:27:34.333Z 0x4238000000 56908316672 free:39
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[41] 110666.686 2023-04-04T22:27:34.333Z 0x4240000000 57042534400 free:40
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[42] 110666.686 2023-04-04T22:27:34.333Z 0x4248000000 57176752128 free:41
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[43] 110666.686 2023-04-04T22:27:34.333Z 0x4250000000 57310969856 free:42
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[44] 110666.686 2023-04-04T22:27:34.333Z 0x4258000000 57445187584 free:43
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[45] 110666.686 2023-04-04T22:27:34.333Z 0x4260000000 57579405312 free:44
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[46] 110666.686 2023-04-04T22:27:34.333Z 0x4268000000 57713623040 free:45
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[47] 110666.686 2023-04-04T22:27:34.333Z 0x4270000000 57847840768 free:46
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[48] 110666.686 2023-04-04T22:27:34.333Z 0x4278000000 57982058496 free:47
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[49] 110666.686 2023-04-04T22:27:34.333Z 0x4280000000 58116276224 free:48
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[50] 110666.686 2023-04-04T22:27:34.333Z 0x4288000000 58250493952 free:49
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[51] 110666.686 2023-04-04T22:27:34.333Z 0x4290000000 58384711680 free:50
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[52] 110666.686 2023-04-04T22:27:34.333Z 0x4298000000 58518929408 free:51
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[53] 110666.686 2023-04-04T22:27:34.333Z 0x42a0000000 58653147136 free:52
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[54] 110666.686 2023-04-04T22:27:34.333Z 0x42a8000000 58787364864 free:53
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[55] 110666.686 2023-04-04T22:27:34.333Z 0x42b0000000 58921582592 free:54
+>|> 20230404 22:27:40.397 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[56] 110666.686 2023-04-04T22:27:34.333Z 0x42b8000000 59055800320 free:55
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[57] 110666.686 2023-04-04T22:27:34.333Z 0x42c0000000 59190018048 free:56
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[58] 110666.686 2023-04-04T22:27:34.333Z 0x42c8000000 59324235776 free:57
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[59] 110666.686 2023-04-04T22:27:34.333Z 0x42d0000000 59458453504 free:58
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[60] 110666.686 2023-04-04T22:27:34.333Z 0x42d8000000 59592671232 free:59
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[61] 110666.686 2023-04-04T22:27:34.333Z 0x42e0000000 59726888960 free:60
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[62] 110666.686 2023-04-04T22:27:34.333Z 0x42e8000000 59861106688 free:61
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[63] 110666.686 2023-04-04T22:27:34.333Z 0x42f0000000 59995324416 free:62
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[64] 110666.686 2023-04-04T22:27:34.333Z 0x42f8000000 60129542144 free:63
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[65] 110666.686 2023-04-04T22:27:34.333Z 0x4300000000 60263759872 free:64
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[66] 110666.686 2023-04-04T22:27:34.333Z 0x4308000000 60397977600 free:65
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[67] 110666.686 2023-04-04T22:27:34.333Z 0x4310000000 60532195328 free:66
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[68] 110666.686 2023-04-04T22:27:34.333Z 0x4318000000 60666413056 free:67
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[69] 110666.686 2023-04-04T22:27:34.333Z 0x4320000000 60800630784 free:68
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[70] 110666.686 2023-04-04T22:27:34.333Z 0x4328000000 60934848512 free:69
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[71] 110666.686 2023-04-04T22:27:34.333Z 0x4330000000 61069066240 free:70
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[72] 110666.686 2023-04-04T22:27:34.333Z 0x4338000000 61203283968 free:71
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[73] 110666.686 2023-04-04T22:27:34.333Z 0x4340000000 61337501696 free:72
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[74] 110666.686 2023-04-04T22:27:34.333Z 0x4348000000 61471719424 free:73
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[75] 110666.686 2023-04-04T22:27:34.333Z 0x4350000000 61605937152 free:74
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[76] 110666.686 2023-04-04T22:27:34.333Z 0x4358000000 61740154880 free:75
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[77] 110666.686 2023-04-04T22:27:34.333Z 0x4360000000 61874372608 free:76
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[78] 110666.686 2023-04-04T22:27:34.333Z 0x4368000000 62008590336 free:77
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[79] 110666.686 2023-04-04T22:27:34.333Z 0x4370000000 62142808064 free:78
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[80] 110666.686 2023-04-04T22:27:34.333Z 0x4378000000 62277025792 free:79
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[81] 110666.686 2023-04-04T22:27:34.333Z 0x4380000000 62411243520 free:80
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[82] 110666.686 2023-04-04T22:27:34.333Z 0x4388000000 62545461248 free:81
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[83] 110666.686 2023-04-04T22:27:34.333Z 0x4390000000 62679678976 free:82
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[84] 110666.686 2023-04-04T22:27:34.333Z 0x4398000000 62813896704 free:83
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[85] 110666.686 2023-04-04T22:27:34.333Z 0x43a0000000 62948114432 free:84
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[86] 110666.686 2023-04-04T22:27:34.333Z 0x43a8000000 63082332160 free:85
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[87] 110666.686 2023-04-04T22:27:34.333Z 0x43b0000000 63216549888 free:86
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[88] 110666.686 2023-04-04T22:27:34.333Z 0x43b8000000 63350767616 free:87
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[89] 110666.686 2023-04-04T22:27:34.333Z 0x43c0000000 63484985344 free:88
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[90] 110666.686 2023-04-04T22:27:34.333Z 0x43c8000000 63619203072 free:89
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[91] 110666.686 2023-04-04T22:27:34.333Z 0x43d0000000 63753420800 free:90
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[92] 110666.686 2023-04-04T22:27:34.333Z 0x43d8000000 63887638528 free:91
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[93] 110666.686 2023-04-04T22:27:34.333Z 0x43e0000000 64021856256 free:92
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[94] 110666.686 2023-04-04T22:27:34.333Z 0x43e8000000 64156073984 free:93
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[95] 110666.686 2023-04-04T22:27:34.333Z 0x43f0000000 64290291712 free:94
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[96] 110666.686 2023-04-04T22:27:34.333Z 0x43f8000000 64424509440 free:95
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|-  packetHistory[97] 110666.687 2023-04-04T22:27:34.333Z BURST 96 pointers, free:0
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- inFlight.size:384 freequeue:0
+>|> 20230404 22:27:40.398 -|- NOTICE   -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Packet History end
+>|> 20230404 22:27:40.399 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Main analysis has completed
+>|> 20230404 22:27:40.399 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Analysis Thread Complete
+>|> 20230404 22:27:40.399 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119704 -|- Analysis: done
+>|> 20230404 22:27:40.698 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119702 -|- Joining...
+>|> 20230404 22:27:40.698 -|- INFO     -|- PBLogger -|- rt-84047|P:119702|T:119702 -|- All threads joined
