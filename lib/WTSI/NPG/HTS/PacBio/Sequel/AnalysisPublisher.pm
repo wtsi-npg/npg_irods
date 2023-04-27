@@ -10,7 +10,6 @@ use MooseX::StrictConstructor;
 use Perl6::Slurp;
 use Readonly;
 
-use WTSI::DNAP::Warehouse::Schema::Result::PacBioProductMetric;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisFastaManager;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;

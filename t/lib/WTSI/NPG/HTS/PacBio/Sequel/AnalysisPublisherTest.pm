@@ -41,8 +41,6 @@ my $wh_schema;
 
 my $irods_tmp_coll;
 
-isnt(which ("generate_pac_bio_id"), undef, "id generation script installed");
-
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
   $wh_schema = TestDB->new(sqlite_utf8_enabled => 1,
@@ -72,6 +70,10 @@ sub teardown_test : Test(teardown) {
 
 sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher');
+}
+
+sub script: Test(1) {
+  isnt(which("generate_pac_bio_id"), undef, "id generation script installed");
 }
 
 sub list_files : Test(3) {
