@@ -54,10 +54,6 @@ my $wh_schema;
 
 my $irods_tmp_coll;
 
-if (!which "generate_pac_bio_id"){
-  plan skip_all => "Pac Bio product_id generation script not installed"
-}
-
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
   $wh_schema = TestDB->new(sqlite_utf8_enabled => 1,
@@ -87,6 +83,10 @@ sub teardown_test : Test(teardown) {
 
 sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::PacBio::Sequel::RunPublisher');
+}
+
+sub script: Test(1) {
+  isnt(which("generate_pac_bio_id"), undef, "id generation script installed");
 }
 
 sub list_xml_files : Test(1) {
@@ -858,16 +858,9 @@ sub check_primary_metadata {
     my $product = WTSI::NPG::HTS::PacBio::Sequel::Product->new();
     my $expected_id;
     if ($obj->find_in_metadata($TARGET)){
-      my @tags = $obj->find_in_metadata($TAG_SEQUENCE);
-      my $tags;
-      foreach my $tag (@tags){
-        if (defined($tags)) {
-          $tags = join(q/,/, $tags, $tag->{value});
-        } else {
-          $tags = $tag->{value};
-        }
-      }
-      $expected_id = $product->generate_product_id($run_name, $well_label, $tags);
+      my @tag_meta = $obj->find_in_metadata($TAG_SEQUENCE);
+      my @tags = map {$_->{value}} @tag_meta;
+      $expected_id = $product->generate_product_id($run_name, $well_label, \@tags);
     }else{
       $expected_id = $product->generate_product_id($run_name, $well_label);
     }

@@ -177,7 +177,10 @@ jobs:
 
       - name: "Install Python dependencies"
         run: |
-          python3 -m pip install git+https://github.com/wtsi-npg/npg_id_generation
+          python3 -m pip install git+https://github.com/wtsi-npg/npg_id_generation@$WTSI_NPG_BUILD_BRANCH ||
+          python3 -m pip install git+https://github.com/wtsi-npg/npg_id_generation@devel
+        env:
+          WTSI_NPG_BUILD_BRANCH: ${{ github.base_ref || github.ref }} #getting name of current github branch
 
       - name: "Log install failure"
         if: ${{ failure() }}
