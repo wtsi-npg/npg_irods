@@ -41,10 +41,6 @@ my $wh_schema;
 
 my $irods_tmp_coll;
 
-if (!which "generate_pac_bio_id"){
-  plan skip_all => "Pac Bio product_id generation script not installed"
-}
-
 sub setup_databases : Test(startup) {
   my $wh_db_file = catfile($db_dir, 'ml_wh.db');
   $wh_schema = TestDB->new(sqlite_utf8_enabled => 1,
@@ -74,6 +70,10 @@ sub teardown_test : Test(teardown) {
 
 sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher');
+}
+
+sub script: Test(1) {
+  isnt(which("generate_pac_bio_id"), undef, "id generation script installed");
 }
 
 sub list_files : Test(3) {
@@ -122,7 +122,7 @@ sub publish_files : Test(4) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $analysis_path  = "$data_path/001612";
-  my $runfolder_path = "$analysis_path/tasks/barcoding.tasks.lima-0",
+  my $runfolder_path = "$analysis_path/tasks/barcoding.tasks.lima-0";
   my $dest_coll      = "$irods_tmp_coll/publish_files";
   my $expected_json  = 't/data/mlwh_json/pacbio.json';
 
