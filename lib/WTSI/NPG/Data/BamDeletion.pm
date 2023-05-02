@@ -142,7 +142,9 @@ sub _build_md5sum {
     my $md5_fh;
     open $md5_fh, '>', $self->md5_file ||
          $self->logcroak(q[Failed to open md5 file '], $self->md5_file, q[']);
-         $self->logwarn(q[MD5 file ],$self->md5_file);
+
+    $self->info(q[MD5 file ],$self->md5_file);
+
     print $md5_fh $checksum || $self->logcroak(q[Failed to print to md5 file '], $self->md5_file, q[']);;
     close $md5_fh ||
           $self->logcroak(q[Failed to close md5 file '], $self->md5_file, q[']);
@@ -324,4 +326,3 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 =cut
-

@@ -5,6 +5,8 @@ use Carp;
 use Data::Dump qw[pp];
 use Encode qw[decode];
 use English qw[-no_match_vars];
+use IO::Select;
+use IPC::Open3;
 use List::AllUtils qw[any];
 use Moose;
 use MooseX::StrictConstructor;
@@ -129,7 +131,7 @@ sub is_aligned {
 
                The reference path is taken from the last aligner PG
                record in the PP <- PG graph, or from the last aligner
-               PG line in the headeri if the graph cannot be resolved
+               PG line in the header if the graph cannot be resolved
                into a single, unbranched walk from root to leaf.
 
                The reference path is parsed from CL value of the PG line
@@ -291,7 +293,7 @@ sub _build_is_paired_read {
   foreach my $read (@reads) {
     my ($qname, $flag, $rname, $pos) = split /\t/msx, $read;
 
-    if ($flag & 1) { # 0x1 == read paired
+    if ($flag and $flag & 1) { # 0x1 == read paired
       $is_paired_read = 1;
       last;
     }
@@ -304,54 +306,59 @@ sub _get_reads {
   my ($self, $num_records) = @_;
 
   $num_records ||= 1024;
+  if ($num_records !~ m{^\d+$}msx) {
+    $self->logconfess("Invalid number of records requested: $num_records");
+  }
 
   my $samtools = $self->_find_samtools;
   my $path     = $self->str;
 
-  my @reads;
-  try {
-    local $SIG{PIPE} = sub {
-      # Without this handler, the child process some times gets
-      # SIGPIPE and sometimes exits with an error. With this handler,
-      # the child process always gets SIGPIPE.
-    };
+  my $cmd = "$samtools view irods:$path";
+  my $pid = open3(undef, my $stdout, undef, $cmd);
 
-    open my $fh, q[-|], "$samtools view irods:$path" or
-      croak "Failed to open pipe from samtools: $ERRNO";
+  my $sel = IO::Select->new;
+  $sel->add($stdout);
 
-    my $n = 0;
-    while ($n < $num_records) {
-      my $line = <$fh>;
-      if ($line) {
-        push @reads, $line;
-      }
-      else {
-        last;
-      }
-      $n++;
+  my $out = q[];
+  my $newlines = 0;
+  while (my @ready = $sel->can_read) {
+    my $bytes;
+
+    my $num_bytes = sysread $ready[0], $bytes, 512;
+    if (not defined $num_bytes) {
+      $self->logcroak("Failed sysread from '$cmd': $ERRNO");
+    }
+    if ($num_bytes == 0) {
+      $sel->remove($stdout);
+    }
+    else {
+      $self->debug(q[Read ], length $bytes, q[ bytes]);
+      my $nl = $bytes =~ tr /\n/\n/; # Count newlines i.e. reads
+      $newlines += $nl;
+      $out .= $bytes;
     }
 
-    my $retval = close $fh;
+    last if $newlines >= $num_records; # We have enough reads
+  }
 
-    ## no critic (ValuesAndExpressions::ProhibitMagicNumbers)
-    my $status = $CHILD_ERROR;
-    my $signal = $status & 127;
-    my $error  = $status >> 8;
-
-    if ($signal) {
-      if ($signal != 13) {
-        # 13 == SIGPIPE
-        croak "Error reading from samtools, signal: $signal";
+  if ($sel->can_read) {
+    # The files samtools reads may be >100 GB, so when we have sufficient reads,
+    # we need to stop the process, rather than wait for it.
+    $self->debug("Stopping PID $pid '$cmd'");
+    kill 'SIGINT', $pid;
+  }
+  else {
+    $self->debug("Waiting for PID $pid '$cmd'");
+    my $wait = waitpid $pid, 0;
+    if ($wait != -1) {
+      my $err = $CHILD_ERROR >> 8;
+      if ($err) {
+        $self->logcroak("Failed '$cmd': $err");
       }
     }
-    elsif ($error) {
-      croak "Error reading from samtools, error: $error";
-    }
-    ## use critic
-  } catch {
-    $self->logcroak("Failed to get reads from '$path': $_");
-  };
+  }
 
+  my @reads = split /\n/msx, $out;
   my $num_read = scalar @reads;
   $self->debug("Read $num_read reads from '$path'");
 
