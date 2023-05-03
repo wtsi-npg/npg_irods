@@ -49,7 +49,7 @@ our $DATA_LEVEL = 'secondary';
 
 # If deplexed - minimum deplexed percentage to load
 Readonly::Scalar my $HUNDRED       => 100;
-Readonly::Scalar my $MIN_BARCODED  => 0.3;
+Readonly::Scalar my $MIN_BARCODED  => 0.8;
 Readonly::Scalar my $BARCODE_FIELD => 'Percent Barcoded Reads';
 Readonly::Scalar my $REPORT_TITLE  =>
   $WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport::REPORTS;

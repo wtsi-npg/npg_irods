@@ -1,6 +1,6 @@
 ZMWs input                (A) : 36601
-ZMWs above all thresholds (B) : 26366 (72%)
-ZMWs below any threshold  (C) : 10235 (28%)
+ZMWs above all thresholds (B) : 30012 (82%)
+ZMWs below any threshold  (C) : 6589 (18%)
 
 ZMW marginals for (C):
 Below min length              : 405 (4%)
