@@ -1,10 +1,17 @@
 Unreleased
 
+Release 2.43.0
+
+  - Change PacBio min deplex default as all data now HiFi
+  - Remove dependency on npg_ml_warehouse for generating PacBio product IDs
+  - Add Singularity container support for iRODS clients, remove Conda-based
+    clients
+
 Release 2.42.0
 
   - Add location file writer and implement in pacbio run/analysis publisher.
   - Change docker image repository used by CI
-  
+
 Release 2.41.0
   - Add --logconf option to npg_publish-tree.pl
   - Add id_product metadata to PacBio data objects.
