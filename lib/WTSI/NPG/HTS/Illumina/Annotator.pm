@@ -223,7 +223,7 @@ sub make_target_metadata {
 
   my $target = 1;
   if (($component->has_tag_index and $component->tag_index == 0) or
-      ($component->has_subset and $component->subset ne $YHUMAN)) {
+    ($component->has_subset and $component->subset ne $YHUMAN)) {
     $target = 0;
   }
   elsif ($alt_process) {
@@ -231,8 +231,11 @@ sub make_target_metadata {
   }
 
   my @avus = ($self->make_avu($TARGET, $target));
-  if ($alt_process and $component->subset ne 'phix') {
-    push @avus, $self->make_avu($ALT_TARGET, 1);
+  if ($alt_process) {
+    if (($component->has_subset and $component->subset ne 'phix') or
+      not $component->has_subset) {
+      push @avus, $self->make_avu($ALT_TARGET, 1);
+    }
   }
 
   return @avus;
