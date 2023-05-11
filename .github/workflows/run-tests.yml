@@ -170,16 +170,10 @@ jobs:
           # Required for npg_qc
           cpanm --quiet --notest https://github.com/chapmanb/vcftools-cpan/archive/v0.953.tar.gz
 
-          # Work around the circular dependency between npg_irods and
-          # npg_ml_warehouse. The latter dependency requires the former (which
-          # is this repository itself).
-          export PERL5LIB="$GITHUB_WORKSPACE/lib:$PERL5LIB"
-
           ./scripts/install_wsi_dependencies.sh "$NPG_LIB" \
              perl-dnap-utilities \
              perl-irods-wrap \
              ml_warehouse \
-             npg_ml_warehouse \
              npg_tracking \
              npg_seq_common \
              npg_qc
