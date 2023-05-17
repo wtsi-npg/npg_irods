@@ -33,7 +33,8 @@ jobs:
             irods: "4.2.12"
             client_image: "ghcr.io/wtsi-npg/ub-18.04-irods-clients-4.2.12:latest"
             server_image: "ghcr.io/wtsi-npg/ub-18.04-irods-4.2.12:latest"
-            experimental: false
+            # Marked experimental because of a breaking change in iquest exit code
+            experimental: true
 
     services:
       irods-server:
