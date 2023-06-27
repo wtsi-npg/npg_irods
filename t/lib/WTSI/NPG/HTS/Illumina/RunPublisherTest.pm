@@ -999,7 +999,7 @@ sub publish_archive_path_mlwh : Test(8) {
      lims_factory     => $lims_factory,
      restart_file     => catfile($tmpdir->dirname, 'published.json'),
      source_directory => $runfolder_path,
-     mlwh_json        => catfile($tmpdir->dirname, 'mlwh_irods.json'));
+     mlwh_locations   => WTSI::NPG::HTS::LocationWriter->new(catfile($tmpdir->dirname, 'mlwh_irods.json'), $ILLUMINA));
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
@@ -1007,7 +1007,7 @@ sub publish_archive_path_mlwh : Test(8) {
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
 
-  my $mlwh_json = $pub->mlwh_json;
+  my $mlwh_json = $pub->mlwh_locations->path;
   ok(-e $mlwh_json, "mlwh loader json file $mlwh_json was written by publisher");
   is_deeply(read_json_content($mlwh_json),
     set_destination(read_json_content($expected_json), $irods_tmp_coll),
@@ -1084,7 +1084,7 @@ sub publish_archive_path_existing_mlwh_json : Test(2) {
      lims_factory     => $lims_factory,
      restart_file     => catfile($tmpdir->dirname, 'published.json'),
      source_directory => $runfolder_path,
-     mlwh_json        => $mlwh_json);
+     mlwh_locations   => WTSI::NPG::HTS::LocationWriter->new($mlwh_json, $ILLUMINA));
 
   $pub->publish_files;
 

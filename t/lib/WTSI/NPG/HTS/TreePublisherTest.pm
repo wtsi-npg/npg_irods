@@ -177,7 +177,7 @@ sub write_json_correct_keyvalue : Test(2) {
     (irods            => $irods,
      source_directory => $source_path,
      dest_collection  => $irods_tmp_coll,
-     mlwh_json        => $mlwh_json_filename);
+     mlwh_locations   => WTSI::NPG::HTS::LocationWriter->new($mlwh_json_filename, $ILLUMINA));
   my @files = grep { -f } $pub->list_directory($source_path, recurse => 1);
   
   $pub->publish_tree(\@files);
@@ -201,34 +201,12 @@ sub publish_tree_mlwh_json : Test(1) {
     (irods            => $irods,
      source_directory => $source_path,
      dest_collection  => $irods_tmp_coll,
-     mlwh_json        => $mlwh_json_filename);
+     mlwh_locations   => WTSI::NPG::HTS::LocationWriter->new($mlwh_json_filename, $ILLUMINA));
   my @files = grep { -f } $pub->list_directory($source_path, recurse => 1);
   
   $pub->publish_tree(\@files);
   ok(-e $mlwh_json_filename, 'File json correctly created with no callback');
   unlink $mlwh_json_filename;
-}
-
-sub publish_tree_mlwh_json_plus_cb : Test(2) {
-  my $source_path = "${data_path}/treepublisher";
-  my $mlwh_json_filename = "metadata.json";
-
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-  my $pub = WTSI::NPG::HTS::TreePublisher->new
-    (irods            => $irods,
-     source_directory => $source_path,
-     dest_collection  => $irods_tmp_coll,
-     mlwh_json        => $mlwh_json_filename);
-  my @files = grep { -f } $pub->list_directory($source_path, recurse => 1);
-  
-  dies_ok{
-    $pub->publish_tree(\@files,
-                        mlwh_json_cb => sub {
-                          return 1;
-                        });
-  }, 'publish_tree correctly exited with error (json callback clash)'; 
-  ok(! -e $mlwh_json_filename, 'No json file as expected (json callback clash)');
 }
 
 sub publish_tree_filter : Test(4) {

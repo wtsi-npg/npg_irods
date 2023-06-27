@@ -30,6 +30,13 @@ has 'source_directory' =>
    required      => 1,
    documentation => 'The directory in which to find data to publish');
 
+has 'mlwh_locations' =>
+  (isa           => 'WTSI::NPG::HTS::LocationWriter',
+   is            => 'ro',
+   required      => 0,
+   documentation => 'An object used to build and write information to be ' .
+                    'loaded into the seq_product_irods_locations table.');
+
 sub _build_dest_collection  {
   my ($self) = @_;
 
@@ -58,7 +65,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2018 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2018, 2023 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
