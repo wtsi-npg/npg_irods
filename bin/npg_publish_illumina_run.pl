@@ -18,7 +18,7 @@ use WTSI::NPG::HTS::LocationWriter;
 
 our $VERSION = '';
 our $DEFAULT_ZONE = 'seq';
-my $ILLUMINA = 'Illumina';
+my $ILLUMINA = 'illumina';
 
 my $verbose_config = << 'LOGCONF'
 log4perl.logger = ERROR, A1
@@ -135,8 +135,12 @@ if ($max_errors) {
   push @pub_init_args, max_errors => $max_errors;
 }
 if ($mlwh_json) {
+  my @writer_init_args = (path =>$mlwh_json, platform_name => $ILLUMINA);
+  if ($alt_process){
+    push @writer_init_args, alt_process => 1;
+  }
   push @pub_init_args, mlwh_locations =>
-    WTSI::NPG::HTS::LocationWriter->new($mlwh_json, $ILLUMINA);
+    WTSI::NPG::HTS::LocationWriter->new(@writer_init_args);
 }
 
 my $publisher = WTSI::NPG::HTS::Illumina::RunPublisher->new(@pub_init_args);

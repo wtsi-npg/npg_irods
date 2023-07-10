@@ -37,11 +37,6 @@ our $VERSION = '';
 our $DEFAULT_ROOT_COLL       = '/seq';
 our $NUM_READS_JSON_PROPERTY = 'num_total_reads';
 
-Readonly::Scalar my $JSON_FILE_VERSION => '1.0';
-Readonly::Scalar my $ILLUMINA => 'illumina';
-Readonly::Scalar my $ALT_PROCESS => 'npg-prod-alt-process';
-Readonly::Scalar my $NPG_PROD => 'npg-prod';
-
 has 'id_run' =>
   (isa           => 'NpgTrackingRunId',
    is            => 'ro',

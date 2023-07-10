@@ -20,6 +20,7 @@ use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
+use WTSI::NPG::HTS::LocationWriter;
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
@@ -35,6 +36,7 @@ my $test_counter = 0;
 my $data_path    = 't/data/illumina';
 my $fixture_path = "t/fixtures";
 my $db_dir       = File::Temp->newdir;
+my $ILLUMINA     = 'illumina';
 
 my $wh_schema;
 my $irods_tmp_coll;
@@ -999,7 +1001,9 @@ sub publish_archive_path_mlwh : Test(8) {
      lims_factory     => $lims_factory,
      restart_file     => catfile($tmpdir->dirname, 'published.json'),
      source_directory => $runfolder_path,
-     mlwh_locations   => WTSI::NPG::HTS::LocationWriter->new(catfile($tmpdir->dirname, 'mlwh_irods.json'), $ILLUMINA));
+     mlwh_locations   => WTSI::NPG::HTS::LocationWriter->new(
+      path => catfile($tmpdir->dirname, 'mlwh_irods.json'),
+      platform_name => $ILLUMINA));
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
@@ -1084,7 +1088,9 @@ sub publish_archive_path_existing_mlwh_json : Test(2) {
      lims_factory     => $lims_factory,
      restart_file     => catfile($tmpdir->dirname, 'published.json'),
      source_directory => $runfolder_path,
-     mlwh_locations   => WTSI::NPG::HTS::LocationWriter->new($mlwh_json, $ILLUMINA));
+     mlwh_locations   => WTSI::NPG::HTS::LocationWriter->new(
+      path=>$mlwh_json,
+      platform_name=>$ILLUMINA));
 
   $pub->publish_files;
 
@@ -1186,10 +1192,17 @@ sub check_publish_pri_data {
      restart_file     => catfile($tmpdir->dirname, 'published.json'),
      source_directory => $archive_path);
 
+  my @writer_init_args = (
+    path => catfile($tmpdir->dirname, 'mlwh.json'),
+    platform_name => $ILLUMINA);
+
   if (defined $alt_process) {
     push @init_args, $ALT_PROCESS => $alt_process;
     $publish_coll = "$dest_coll/$alt_process";
+    push @writer_init_args, alt_process => 1;
   }
+
+  push @init_args, WTSI::NPG::HTS::LocationWriter->new(@writer_init_args);
 
   my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new(@init_args);
 
@@ -1206,6 +1219,20 @@ sub check_publish_pri_data {
   $restart_state->read_state($restart_file);
   cmp_ok($restart_state->num_published, '==', $num_files,
          "Restart file recorded $num_files files published");
+
+  my $locations_file = $pub->mlwh_locations->path;
+  $pub->write_locations;
+  ok(-e $locations_file, "Locations file $locations_file exists");
+
+  my $locations = read_json_content($locations_file);
+  my $pipeline_name = $locations->{products}[0]->{pipeline_name};
+  if ($alt_process) {
+    is($pipeline_name, 'npg-prod-alt-process',
+      'Alt process is correctly recorded in mlwh json file');
+  }else{
+    is ($pipeline_name, 'npg-prod',
+      'Normal process is correctly recorded in mlwh json file');
+  }
 
   return $publish_coll;
 }
