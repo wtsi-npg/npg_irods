@@ -146,11 +146,14 @@ has 'require_checksum_cache' =>
       my @init_args =
           (force                  => $self->force,
            irods                  => $self->irods,
-           mlwh_locations         => $self->mlwh_locations,
            obj_factory            => $self->obj_factory,
            publish_state          => $self->publish_state,
            require_checksum_cache => $self->require_checksum_cache);
 
+      if ($self->mlwh_locations){
+
+           push @init_args, mlwh_locations => $self->mlwh_locations;
+      }
       if ($self->has_max_errors) {
         if ($num_errors >= $self->max_errors) {
           $self->error("The number of errors $num_errors reached the maximum ",

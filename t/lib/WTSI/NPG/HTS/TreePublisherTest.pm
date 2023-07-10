@@ -15,6 +15,7 @@ use base qw[WTSI::NPG::HTS::Test];
 
 use WTSI::NPG::HTS::TreePublisher;
 use WTSI::NPG::iRODS;
+use WTSI::NPG::HTS::LocationWriter;
 
 use JSON;
 
@@ -24,6 +25,7 @@ my $pid          = $PID;
 my $test_counter = 0;
 my $data_path    = 't/data';
 my $bin_path     = 'bin';
+my $ILLUMINA     = 'illumina';
 
 my $irods_tmp_coll;
 

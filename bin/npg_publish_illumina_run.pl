@@ -152,8 +152,10 @@ sub handler {
 
   $log->info('Writing restart file ', $publisher->restart_file);
   $publisher->write_restart_file;
-  $log->info('Writing locations file ', $publisher->mlwh_locations->path);
-  $publisher->write_locations;
+  if ($mlwh_json) {
+    $log->info('Writing locations file ', $publisher->mlwh_locations->path);
+    $publisher->write_locations;
+  }
   $log->error("Exiting due to $signal");
   exit 1;
 }

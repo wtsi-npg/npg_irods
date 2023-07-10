@@ -5,6 +5,7 @@ use namespace::autoclean;
 use Data::Dump qw[pp];
 use File::Basename;
 use File::Spec::Functions qw[catfile];
+use List::MoreUtils qw[any];
 use Moose;
 use MooseX::StrictConstructor;
 use Try::Tiny;
@@ -236,7 +237,8 @@ has 'require_checksum_cache' =>
               last;
             }
           }
-          if ($target) {
+          my ($suffix) = $filename =~ m{[.]([^.]+)$}msx;
+          if ($target && any { $suffix eq $_ } qw/bam cram/) {
             $self->mlwh_locations->add_location(
               pid  => $pid,
               coll => $dest_coll,

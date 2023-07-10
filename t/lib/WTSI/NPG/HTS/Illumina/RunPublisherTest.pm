@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Carp;
+use Data::Dumper;
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions qw[abs2rel catfile catdir splitdir];
@@ -306,7 +307,7 @@ sub publish_qc_files : Test(116) {
 }
 
 # Lane-level, primary and secondary data, from ML warehouse
-sub publish_lane_pri_data_mlwh : Test(21) {
+sub publish_lane_pri_data_mlwh : Test(23) {
   note '=== Tests in publish_lane_pri_data_mlwh';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -373,7 +374,7 @@ sub publish_lane_sec_data_mlwh : Test(79) {
 }
 
 # Lane-level, primary and secondary data, from samplesheet
-sub publish_lane_pri_data_samplesheet : Test(21) {
+sub publish_lane_pri_data_samplesheet : Test(23) {
   note '=== Tests in publish_lane_pri_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -450,7 +451,7 @@ sub publish_lane_sec_data_samplesheet : Test(79) {
 }
 
 # Plex-level, primary and secondary data, from ML warehouse
-sub publish_plex_pri_data_mlwh : Test(21) {
+sub publish_plex_pri_data_mlwh : Test(23) {
   note '=== Tests in publish_plex_pri_data_mlwh';
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -519,7 +520,7 @@ sub publish_plex_sec_data_mlwh : Test(59) {
 }
 
 # Plex-level, primary and secondary data, from samplesheet
-sub publish_plex_pri_data_samplesheet : Test(21) {
+sub publish_plex_pri_data_samplesheet : Test(23) {
   note '=== Tests in publish_plex_pri_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -652,7 +653,7 @@ sub publish_plex_geno_sec_data_samplesheet : Test(73) {
 }
 
 # Merged NovaSeq data, from ML warehouse
-sub publish_merged_pri_data_mlwh : Test(19) {
+sub publish_merged_pri_data_mlwh : Test(21) {
   note '=== Tests in publish_merged_pri_data_mlwh';
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -686,7 +687,7 @@ sub publish_merged_pri_data_mlwh : Test(19) {
 }
 
 # Merged NovaSeq data, from samplesheet
-sub publish_merged_pri_data_samplesheet : Test(19) {
+sub publish_merged_pri_data_samplesheet : Test(21) {
   note '=== Tests in publish_merged_pri_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -821,7 +822,7 @@ sub publish_merged_sec_data_samplesheet : Test(89) {
   check_common_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_plex_pri_data_alt_process : Test(13) {
+sub publish_plex_pri_data_alt_process : Test(17) {
   note '=== Tests in publish_plex_pri_data_alt_process';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -1459,6 +1460,10 @@ sub read_json_content {
 
   my $json = decode_json <$mlwh_json_fh>;
   close $mlwh_json_fh;
+
+  @{$json->{products}} = sort             # sort so that files with the same
+  {$a->{id_product} cmp $b->{id_product}} # contents are always equal
+    @{$json->{products}};
   return $json
 }
 

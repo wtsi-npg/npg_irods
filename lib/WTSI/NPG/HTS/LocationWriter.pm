@@ -38,7 +38,7 @@ has 'locations' => (
                     'and lists of locations as values');
 
 has 'alt_process' => (
-  isa           => 'bool',
+  isa           => 'Bool',
   is            => 'ro',
   required      => 0,
   documentation => 'Non-standard process used');
@@ -47,6 +47,7 @@ has 'pipeline_name' =>(
   isa           => 'Str',
   is            => 'ro',
   required      => 1,
+  lazy          => 1,
   builder       => '_build_pipeline_name',
   documentation => 'The name of the pipeline used to produce the data');
 
@@ -187,8 +188,8 @@ sub write_locations{
       irods_root_collection    => $coll,
       id_product               => $pid,
       irods_data_relative_path => $path,
-      seq_platform_name        => $self->{platform_name},
-      pipeline_name            => $self->{pipeline_name}
+      seq_platform_name        => $self->platform_name,
+      pipeline_name            => $self->pipeline_name
     };
     if ($secondary_path){
       $location->{irods_secondary_data_relative_path} = $secondary_path;
