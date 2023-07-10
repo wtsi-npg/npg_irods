@@ -243,7 +243,9 @@ sub publish_collection {
     }
 
     $self->write_restart_file;
-    $self->write_locations;
+    if ($self->mlwh_locations) {
+      $self->write_locations;
+    }
 
     return ($num_files, $num_processed, $num_errors);
   }
@@ -637,10 +639,12 @@ sub _make_tree_publisher {
   my @init_args = (dest_collection  => $self->publish_collection,
                    force            => $self->force,
                    irods            => $self->irods,
-                   mlwh_locations   => $self->mlwh_locations,
                    obj_factory      => $obj_factory,
                    publish_state    => $self->publish_state,
                    source_directory => $self->source_directory);
+  if ($self->mlwh_locations){
+    push @init_args, mlwh_locations   => $self->mlwh_locations;
+  }
   if ($self->has_max_errors) {
     if ($self->num_errors >= $self->max_errors) {
       $self->logconfess(sprintf q[Internal error: the number of publish ].

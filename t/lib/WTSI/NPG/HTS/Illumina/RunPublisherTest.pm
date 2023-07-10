@@ -1040,7 +1040,7 @@ sub publish_archive_path_mlwh : Test(8) {
 }
 
 sub publish_archive_path_existing_mlwh_json : Test(2) {
-  note '=== Tests in publish_existing_mlwh_json';
+  note '=== Tests in publish_archive_path_existing_mlwh_json';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $id_run         = 18448;
   my $initial_json = {
@@ -1202,7 +1202,7 @@ sub check_publish_pri_data {
     push @writer_init_args, alt_process => 1;
   }
 
-  push @init_args, WTSI::NPG::HTS::LocationWriter->new(@writer_init_args);
+  push @init_args, mlwh_locations => WTSI::NPG::HTS::LocationWriter->new(@writer_init_args);
 
   my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new(@init_args);
 
@@ -1252,7 +1252,8 @@ sub check_publish_sec_data {
      irods            => $irods,
      lims_factory     => $lims_factory,
      restart_file     => catfile($tmpdir->dirname, 'published.json'),
-     source_directory => $archive_path);
+     source_directory => $archive_path
+    );
 
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
   my ($nf0, $np0, $ne0) = $pub->publish_ancillary_files($composition_file);
