@@ -237,8 +237,8 @@ has 'require_checksum_cache' =>
               last;
             }
           }
-          my ($suffix) = $filename =~ m{[.]([^.]+)$}msx;
-          if ($target && any { $suffix eq $_ } qw/bam cram/) {
+          my ($ext) = $filename =~ m/[.]([^.]+)$/msx;
+          if ($target && any { $ext eq $_ } qw/bam cram/) {
             $self->mlwh_locations->add_location(
               pid  => $pid,
               coll => $dest_coll,

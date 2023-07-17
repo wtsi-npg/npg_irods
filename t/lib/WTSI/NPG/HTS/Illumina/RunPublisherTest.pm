@@ -1048,18 +1048,18 @@ sub publish_archive_path_existing_mlwh_json : Test(2) {
     "version" => "1.0",
     "products"=>
       [
-        { # replaced during publish
-          "irods_data_relative_path" => "18448_1.cram",
-          "id_product"               => "98441df9e535436533620dcba86eef653d5749c546eb218dc9e2f7c587cec272",
-          "irods_root_collection"    => "$irods_tmp_coll/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/",
-          "pipeline_name"            => "npg-prod-alt-process",
-          "seq_platform_name"        => "illumina"
-        },
         { # unaffected by publish
           "irods_data_relative_path" => "test.cram",
           "id_product"               => "7382ff198a7321eadcea98bb39ade23749b3bace2874bbaced29789dbcd987659",
           "irods_root_collection"    => "$irods_tmp_coll/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/",
           "pipeline_name"            => "npg-prod",
+          "seq_platform_name"        => "illumina"
+        },
+        { # replaced during publish
+          "irods_data_relative_path" => "18448_1.cram",
+          "id_product"               => "98441df9e535436533620dcba86eef653d5749c546eb218dc9e2f7c587cec272",
+          "irods_root_collection"    => "$irods_tmp_coll/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/",
+          "pipeline_name"            => "npg-prod-alt-process",
           "seq_platform_name"        => "illumina"
         }]};
   my $expected_json  = "t/data/mlwh_json/illumina_existing.json";
