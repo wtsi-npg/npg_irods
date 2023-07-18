@@ -822,7 +822,7 @@ sub publish_merged_sec_data_samplesheet : Test(89) {
   check_common_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_plex_pri_data_alt_process : Test(17) {
+sub publish_plex_pri_data_alt_process : Test(16) {
   note '=== Tests in publish_plex_pri_data_alt_process';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -1223,18 +1223,22 @@ sub check_publish_pri_data {
 
   my $locations_file = $pub->mlwh_locations->path;
   $pub->write_locations;
-  ok(-e $locations_file, "Locations file $locations_file exists");
+  if ($composition_file =~ m/.*_phix.*/xms){
+    ok (! -e $locations_file, "Locations file not written for phix files");
+  }else {
+    ok(-e $locations_file, "Locations file $locations_file exists");
 
-  my $locations = read_json_content($locations_file);
-  my $pipeline_name = $locations->{products}[0]->{pipeline_name};
-  if ($alt_process) {
-    is($pipeline_name, 'npg-prod-alt-process',
-      'Alt process is correctly recorded in mlwh json file');
-  }else{
-    is ($pipeline_name, 'npg-prod',
-      'Normal process is correctly recorded in mlwh json file');
+    my $locations = read_json_content($locations_file);
+    my $pipeline_name = $locations->{products}[0]->{pipeline_name};
+    if ($alt_process) {
+      is($pipeline_name, 'npg-prod-alt-process',
+        'Alt process is correctly recorded in mlwh json file');
+    }
+    else {
+      is($pipeline_name, 'npg-prod',
+        'Normal process is correctly recorded in mlwh json file');
+    }
   }
-
   return $publish_coll;
 }
 
