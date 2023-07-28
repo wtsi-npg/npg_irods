@@ -5,6 +5,7 @@ use namespace::autoclean;
 use Data::Dump qw[pp];
 use File::Basename;
 use File::Spec::Functions qw[catfile];
+use List::MoreUtils qw[any];
 use Moose;
 use MooseX::StrictConstructor;
 use Try::Tiny;
@@ -115,7 +116,7 @@ has 'require_checksum_cache' =>
 ## no critic (Subroutines::ProhibitExcessComplexity)
 {
   my $positional = 3;
-  my @named      = qw[primary_cb secondary_cb extra_cb mlwh_json_cb];
+  my @named      = qw[primary_cb secondary_cb extra_cb];
   my $params     = function_params($positional, @named);
 
   sub publish_file_batch {
@@ -147,13 +148,6 @@ has 'require_checksum_cache' =>
       ref $params->extra_cb eq 'CODE' or
           $self->logconfess('The extra_cb argument must be a CodeRef');
       $extra_cb = $params->extra_cb;
-    }
-
-    my $mlwh_json_cb = sub {return 1};
-    if (defined $params->mlwh_json_cb) {
-      ref $params->mlwh_json_cb eq 'CODE' or
-          $self->logconfess('The mlwh_json_cb argument must be a CodeRef');
-      $mlwh_json_cb = $params->mlwh_json_cb;
     }
 
     my $publisher =
@@ -228,19 +222,17 @@ has 'require_checksum_cache' =>
         $self->publish_state->set_published($file);
         $self->info("Published '$dest' [$num_processed / $num_files]");
 
-        # The mlwh_json_callback is deprecated, and will be removed once the
-        # illumina code is refactored to use the LocationWriter
-        if (!$mlwh_json_cb->($obj, $dest_coll, $filename)){
-          $self->logcroak("Failed to add '$file' to ml warehouse json file");
-        }
         if ($self->mlwh_locations){
           my $target;
           my $pid;
           # The simplest way to obtain product ids and to discover whether an
           # object is the target of a run/analysis is to search its metadata.
           for my $avu (@primary_avus){
-            if ($avu->{attribute} eq 'target'){
-              $target = $avu->{value};
+            if (
+                (any { $avu->{attribute} eq $_ } qw/target alt_target/) &&
+                ($avu->{value} == 1)
+            ){
+                $target = 1;
             }elsif ($avu->{attribute} eq 'id_product') {
               $pid = $avu->{value};
             }
@@ -248,7 +240,8 @@ has 'require_checksum_cache' =>
               last;
             }
           }
-          if ($target) {
+          my ($ext) = $filename =~ m/[.]([^.]+)$/msx;
+          if ($target && any { $ext eq $_ } qw/bam cram/) {
             $self->mlwh_locations->add_location(
               pid  => $pid,
               coll => $dest_coll,

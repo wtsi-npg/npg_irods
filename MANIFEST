@@ -16761,6 +16761,7 @@ t/lib/WTSI/NPG/OM/BioNano/RunFinderTest.pm
 t/lib/WTSI/NPG/OM/BioNano/RunPublisherTest.pm
 t/lib/WTSI/NPG/OM/BioNano/Saphyr/RunPublisherTest.pm
 t/log_publisher.t
+t/location_writer.t
 t/pacbio_meta_updater.t
 t/pacbio_run_publisher.t
 t/pacbio_seq_data_object.t
@@ -16781,4 +16782,3 @@ t/saphyr_run_publisher.t
 t/seqchksum.t
 t/subtrack_client.t
 t/tree_publisher.t
-t/write_locations.t

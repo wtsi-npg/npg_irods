@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Carp;
+use Data::Dumper;
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions qw[abs2rel catfile catdir splitdir];
@@ -20,6 +21,7 @@ use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::iRODS::DataObject;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
+use WTSI::NPG::HTS::LocationWriter;
 
 Log::Log4perl::init('./etc/log4perl_tests.conf');
 
@@ -35,6 +37,7 @@ my $test_counter = 0;
 my $data_path    = 't/data/illumina';
 my $fixture_path = "t/fixtures";
 my $db_dir       = File::Temp->newdir;
+my $ILLUMINA     = 'illumina';
 
 my $wh_schema;
 my $irods_tmp_coll;
@@ -304,7 +307,7 @@ sub publish_qc_files : Test(116) {
 }
 
 # Lane-level, primary and secondary data, from ML warehouse
-sub publish_lane_pri_data_mlwh : Test(21) {
+sub publish_lane_pri_data_mlwh : Test(23) {
   note '=== Tests in publish_lane_pri_data_mlwh';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -371,7 +374,7 @@ sub publish_lane_sec_data_mlwh : Test(79) {
 }
 
 # Lane-level, primary and secondary data, from samplesheet
-sub publish_lane_pri_data_samplesheet : Test(21) {
+sub publish_lane_pri_data_samplesheet : Test(23) {
   note '=== Tests in publish_lane_pri_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -448,7 +451,7 @@ sub publish_lane_sec_data_samplesheet : Test(79) {
 }
 
 # Plex-level, primary and secondary data, from ML warehouse
-sub publish_plex_pri_data_mlwh : Test(21) {
+sub publish_plex_pri_data_mlwh : Test(23) {
   note '=== Tests in publish_plex_pri_data_mlwh';
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -517,7 +520,7 @@ sub publish_plex_sec_data_mlwh : Test(59) {
 }
 
 # Plex-level, primary and secondary data, from samplesheet
-sub publish_plex_pri_data_samplesheet : Test(21) {
+sub publish_plex_pri_data_samplesheet : Test(23) {
   note '=== Tests in publish_plex_pri_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -650,7 +653,7 @@ sub publish_plex_geno_sec_data_samplesheet : Test(73) {
 }
 
 # Merged NovaSeq data, from ML warehouse
-sub publish_merged_pri_data_mlwh : Test(19) {
+sub publish_merged_pri_data_mlwh : Test(21) {
   note '=== Tests in publish_merged_pri_data_mlwh';
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -684,7 +687,7 @@ sub publish_merged_pri_data_mlwh : Test(19) {
 }
 
 # Merged NovaSeq data, from samplesheet
-sub publish_merged_pri_data_samplesheet : Test(19) {
+sub publish_merged_pri_data_samplesheet : Test(21) {
   note '=== Tests in publish_merged_pri_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/180709_A00538_0010_BH3FCMDRXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -819,7 +822,7 @@ sub publish_merged_sec_data_samplesheet : Test(89) {
   check_common_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_plex_pri_data_alt_process : Test(13) {
+sub publish_plex_pri_data_alt_process : Test(16) {
   note '=== Tests in publish_plex_pri_data_alt_process';
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -999,7 +1002,9 @@ sub publish_archive_path_mlwh : Test(8) {
      lims_factory     => $lims_factory,
      restart_file     => catfile($tmpdir->dirname, 'published.json'),
      source_directory => $runfolder_path,
-     mlwh_json        => catfile($tmpdir->dirname, 'mlwh_irods.json'));
+     mlwh_locations   => WTSI::NPG::HTS::LocationWriter->new(
+      path => catfile($tmpdir->dirname, 'mlwh_irods.json'),
+      platform_name => $ILLUMINA));
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
@@ -1007,7 +1012,7 @@ sub publish_archive_path_mlwh : Test(8) {
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
 
-  my $mlwh_json = $pub->mlwh_json;
+  my $mlwh_json = $pub->mlwh_locations->path;
   ok(-e $mlwh_json, "mlwh loader json file $mlwh_json was written by publisher");
   is_deeply(read_json_content($mlwh_json),
     set_destination(read_json_content($expected_json), $irods_tmp_coll),
@@ -1036,25 +1041,25 @@ sub publish_archive_path_mlwh : Test(8) {
 }
 
 sub publish_archive_path_existing_mlwh_json : Test(2) {
-  note '=== Tests in publish_existing_mlwh_json';
+  note '=== Tests in publish_archive_path_existing_mlwh_json';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $id_run         = 18448;
   my $initial_json = {
     "version" => "1.0",
     "products"=>
       [
-        { # replaced during publish
-          "irods_data_relative_path" => "18448_1.cram",
-          "id_product"               => "98441df9e535436533620dcba86eef653d5749c546eb218dc9e2f7c587cec272",
-          "irods_root_collection"    => "$irods_tmp_coll/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/",
-          "pipeline_name"            => "npg-prod-alt-process",
-          "seq_platform_name"        => "illumina"
-        },
         { # unaffected by publish
           "irods_data_relative_path" => "test.cram",
           "id_product"               => "7382ff198a7321eadcea98bb39ade23749b3bace2874bbaced29789dbcd987659",
           "irods_root_collection"    => "$irods_tmp_coll/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/",
           "pipeline_name"            => "npg-prod",
+          "seq_platform_name"        => "illumina"
+        },
+        { # replaced during publish
+          "irods_data_relative_path" => "18448_1.cram",
+          "id_product"               => "98441df9e535436533620dcba86eef653d5749c546eb218dc9e2f7c587cec272",
+          "irods_root_collection"    => "$irods_tmp_coll/publish_entire_mlwh/Data/Intensities/BAM_basecalls_20151214-085833/no_cal/archive/",
+          "pipeline_name"            => "npg-prod-alt-process",
           "seq_platform_name"        => "illumina"
         }]};
   my $expected_json  = "t/data/mlwh_json/illumina_existing.json";
@@ -1084,7 +1089,9 @@ sub publish_archive_path_existing_mlwh_json : Test(2) {
      lims_factory     => $lims_factory,
      restart_file     => catfile($tmpdir->dirname, 'published.json'),
      source_directory => $runfolder_path,
-     mlwh_json        => $mlwh_json);
+     mlwh_locations   => WTSI::NPG::HTS::LocationWriter->new(
+      path=>$mlwh_json,
+      platform_name=>$ILLUMINA));
 
   $pub->publish_files;
 
@@ -1186,10 +1193,17 @@ sub check_publish_pri_data {
      restart_file     => catfile($tmpdir->dirname, 'published.json'),
      source_directory => $archive_path);
 
+  my @writer_init_args = (
+    path => catfile($tmpdir->dirname, 'mlwh.json'),
+    platform_name => $ILLUMINA);
+
   if (defined $alt_process) {
     push @init_args, $ALT_PROCESS => $alt_process;
     $publish_coll = "$dest_coll/$alt_process";
+    push @writer_init_args, alt_process => 1;
   }
+
+  push @init_args, mlwh_locations => WTSI::NPG::HTS::LocationWriter->new(@writer_init_args);
 
   my $pub = WTSI::NPG::HTS::Illumina::RunPublisher->new(@init_args);
 
@@ -1207,6 +1221,24 @@ sub check_publish_pri_data {
   cmp_ok($restart_state->num_published, '==', $num_files,
          "Restart file recorded $num_files files published");
 
+  my $locations_file = $pub->mlwh_locations->path;
+  $pub->write_locations;
+  if ($composition_file =~ m/.*_phix.*/xms){
+    ok (! -e $locations_file, "Locations file not written for phix files");
+  }else {
+    ok(-e $locations_file, "Locations file $locations_file exists");
+
+    my $locations = read_json_content($locations_file);
+    my $pipeline_name = $locations->{products}[0]->{pipeline_name};
+    if ($alt_process) {
+      is($pipeline_name, 'npg-prod-alt-process',
+        'Alt process is correctly recorded in mlwh json file');
+    }
+    else {
+      is($pipeline_name, 'npg-prod',
+        'Normal process is correctly recorded in mlwh json file');
+    }
+  }
   return $publish_coll;
 }
 
@@ -1225,7 +1257,8 @@ sub check_publish_sec_data {
      irods            => $irods,
      lims_factory     => $lims_factory,
      restart_file     => catfile($tmpdir->dirname, 'published.json'),
-     source_directory => $archive_path);
+     source_directory => $archive_path
+    );
 
   my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
   my ($nf0, $np0, $ne0) = $pub->publish_ancillary_files($composition_file);
@@ -1431,6 +1464,10 @@ sub read_json_content {
 
   my $json = decode_json <$mlwh_json_fh>;
   close $mlwh_json_fh;
+
+  @{$json->{products}} = sort             # sort so that files with the same
+  {$a->{id_product} cmp $b->{id_product}} # contents are always equal
+    @{$json->{products}};
   return $json
 }
 
