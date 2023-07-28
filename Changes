@@ -1,5 +1,7 @@
 Unreleased
 
+  - Changes to PacBio iRODS loading to support multi plate runs.
+
 Release 2.43.0
 
   - Change PacBio min deplex default as all data now HiFi

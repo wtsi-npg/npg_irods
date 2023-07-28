@@ -175,12 +175,14 @@ sub publish_sequence_files {
 
     if ($tag_id) {
         my @tag_id_records = $self->find_pacbio_runs
-            ($self->_metadata->run_name, $self->_metadata->well_name, $tag_id);
+            ($self->_metadata->run_name, $self->_metadata->well_name,
+             $tag_id, $self->_metadata->plate_number);
 
         @tag_records = (@tag_id_records == 1) ? @tag_id_records :
             $self->find_pacbio_runs($self->_metadata->run_name,
                                     $self->_metadata->well_name,
-                                    $self->_get_tag_name_from_fname($filename));
+                                    $self->_get_tag_name_from_fname($filename),
+                                    $self->_metadata->plate_number);
 
         if (@tag_records != 1) {
           $self->logcroak("Unexpected barcode from $file for SMRT cell ",
@@ -192,7 +194,7 @@ sub publish_sequence_files {
     }
 
     my @all_records = $self->find_pacbio_runs($self->_metadata->run_name,
-                                              $self->_metadata->well_name);
+      $self->_metadata->well_name, undef, $self->_metadata->plate_number);
 
     my @records = (@tag_records == 1) ? @tag_records : @all_records;
 
@@ -218,11 +220,11 @@ sub publish_sequence_files {
       my $id_product;
 
       if ($tags) {
-          $id_product = $product->generate_product_id(
-            $self->_metadata->run_name, $well_label, $tags);
+        $id_product = $product->generate_product_id($self->_metadata->run_name,
+          $well_label, $tags, $self->_metadata->plate_number);
       } else {
-        $id_product = $product->generate_product_id(
-          $self->_metadata->run_name, $well_label);
+        $id_product = $product->generate_product_id($self->_metadata->run_name,
+          $well_label, undef, $self->_metadata->plate_number);
       }
 
       my @primary_avus   = $self->make_primary_metadata

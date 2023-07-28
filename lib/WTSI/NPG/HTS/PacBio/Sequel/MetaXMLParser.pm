@@ -41,6 +41,9 @@ our $UNIQUE_ID_TAG         = 'UniqueId';
 
 our $CCSREADSET_TAG        = 'ConsensusReadSetRef';
 
+our $SEQKITPLATE           = 'SequencingKitPlate';
+our $PLATE_NUMBER          = 'PlateNumber';
+
 =head2 parse_file
 
   Arg [1]    : Path to metadata xml file. Required.
@@ -100,6 +103,10 @@ sub parse_file {
     $dom->getElementsByTagName($prefix . $CCSREADSET_TAG)->[0]->getAttribute($UNIQUE_ID_TAG)
     : undef;
 
+  my $plate_number = $dom->getElementsByTagName($prefix . $SEQKITPLATE) ?
+    $dom->getElementsByTagName($prefix . $SEQKITPLATE)->[0]->getAttribute($PLATE_NUMBER)
+    : undef;
+
   my %versions;
   my @version_info = $dom->getElementsByTagName($prefix . $COMP_VERSION);
   foreach my $v (@version_info){
@@ -107,6 +114,7 @@ sub parse_file {
       my $vers = $v->getAttribute($CVERSION);
       $versions{$name} = $vers;
   }
+
 
   return WTSI::NPG::HTS::PacBio::Metadata->new
     (file_path          => $file_path,
@@ -122,6 +130,7 @@ sub parse_file {
      movie_name         => $movie_name,
      results_folder     => $results_folder,
      execution_mode     => $exec_mode,
+     plate_number       => $plate_number,
      version_info       => \%versions,
      );
 }

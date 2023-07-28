@@ -15,6 +15,7 @@ my $ID_LENGTH = 64;
   Arg [1]    : Run name, String. Required.
   Arg [2]    : Well label, String. Required.
   Arg [3]    : Comma separated list of tag sequences, String. Optional.
+  Arg [4]    : Plate number (only relevant for Revio runs), Int. Optional.
   Example    : $id = $self->generate_product_id($run, $well, $tags);
   Description: Runs a python script which generates a product id from run,
                well and tag data.
@@ -22,14 +23,16 @@ my $ID_LENGTH = 64;
 =cut
 
 sub generate_product_id {
-  my ($self, $run_name, $well_label, $tags) = @_;
+  my ($self, $run_name, $well_label, $tags, $plate_number) = @_;
 
   my $command = join q[ ],
     $ID_SCRIPT, '--run_name', $run_name, '--well_label', $well_label;
   foreach my $tag (@{$tags}){
     $command .= join q[ ], ' --tag', $tag;
   }
+  if (defined $plate_number) { $command .= ' --plate_number '. $plate_number; }
   $self->info("Generating product id: $command");
+
   open my $id_product_script, q[-|], $command
     or $self->logconfess('Cannot generate id_product ' . $CHILD_ERROR);
   my $id_product = <$id_product_script>;

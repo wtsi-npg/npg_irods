@@ -116,6 +116,14 @@ has 'version_info'  =>
    predicate     => 'has_version_info',
    documentation => 'The PacBio version info');
 
+has 'plate_number'  =>
+  (isa           => 'Int',
+   is            => 'ro',
+   required      => 0,
+   predicate     => 'has_plate_number',
+   documentation => 'The plate number - only relevant for Revio runs');
+
+
 
 around BUILDARGS => sub {
   my $orig   = shift;
