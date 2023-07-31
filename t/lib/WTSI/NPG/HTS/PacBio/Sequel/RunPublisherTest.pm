@@ -204,7 +204,7 @@ sub list_image_archive_files : Test(1) {
     \@expected_paths, 'Found image archive files 1_A02');
 }
 
-sub publish_files_on_instrument_1 : Test(42) {
+sub publish_files_on_instrument_1 : Test(43) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r64174e_20210114_161659";
@@ -247,12 +247,12 @@ sub publish_files_on_instrument_1 : Test(42) {
 
   check_common_metadata($irods, @observed_paths);
   my @seq_paths = grep /.bam$/, @observed_paths;
-  check_primary_metadata($irods, $pub, @seq_paths);
+  check_primary_metadata($irods, $pub, '0', @seq_paths);
  
   unlink $pub->restart_file;
 }
 
-sub publish_files_on_instrument_2 : Test(84) {
+sub publish_files_on_instrument_2 : Test(86) {
 ## on instrument deplexing: 1 cell
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -302,7 +302,7 @@ sub publish_files_on_instrument_2 : Test(84) {
 
   check_common_metadata($irods, @observed_paths);
   my @seq_paths = grep /.bam$/, @observed_paths;
-  check_primary_metadata($irods, $pub, @seq_paths);
+  check_primary_metadata($irods, $pub, '0', @seq_paths);
   check_study_metadata($irods, @seq_paths);
 
 }
@@ -415,7 +415,7 @@ sub publish_files_on_instrument_4 : Test(3) {
             diag explain \@observed_paths;
 }
 
-sub publish_files_on_instrument_5 : Test(172) {
+sub publish_files_on_instrument_5 : Test(184) {
   ## revio - oninstrument ccs & deplexing
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -517,7 +517,7 @@ sub publish_files_on_instrument_5 : Test(172) {
             diag explain \@observed_paths; 
 
   my @seq_paths = grep /.bam$/, @observed_paths;
-  check_primary_metadata($irods, $pub, @seq_paths);
+  check_primary_metadata($irods, $pub, '1', @seq_paths);  
   check_common_metadata($irods, @seq_paths);
 }
   
@@ -677,7 +677,7 @@ sub publish_aux_files : Test(9) {
   unlink $pub->restart_file;
 }
 
-sub publish_sequence_files : Test(40) {
+sub publish_sequence_files : Test(42) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path = "$data_path/r54097_20170727_165601";
@@ -714,7 +714,7 @@ sub publish_sequence_files : Test(40) {
             'Published correctly named sequence files') or
               diag explain \@observed_paths;
 
-  check_primary_metadata($irods, $pub, @observed_paths);
+  check_primary_metadata($irods, $pub, '0', @observed_paths);
   check_common_metadata($irods, @observed_paths);
   check_study_metadata($irods, @observed_paths);
 
@@ -829,7 +829,7 @@ sub check_common_metadata {
 }
 
 sub check_primary_metadata {
-  my ($irods, $pub, @paths) = @_;
+  my ($irods, $pub, $revio, @paths) = @_;
 
   foreach my $path (@paths) {
     my $obj = WTSI::NPG::iRODS::DataObject->new($irods, $path);
@@ -852,6 +852,16 @@ sub check_primary_metadata {
     my $run_name = $runs[0]->{value};
     my @wells = $obj->find_in_metadata($PACBIO_WELL);
     my $well_label = $pub->remove_well_padding($run_name, $wells[0]->{value});
+
+    my $pn;
+    my @pns = $obj->find_in_metadata($PACBIO_PLATE_NUMBER);
+    if($revio) {     
+      cmp_ok(scalar @pns, '==', 1, "$file_name $PACBIO_PLATE_NUMBER metadata present");
+      $pn = $pns[0]->{value};
+    } else {
+      cmp_ok(scalar @pns, '==', 0, "$file_name $PACBIO_PLATE_NUMBER metadata not present");
+    }
+    
     my @product_ids  = $obj->find_in_metadata($ID_PRODUCT);
     my $product_id = $product_ids[0]->{value};
 
@@ -860,9 +870,9 @@ sub check_primary_metadata {
     if ($obj->find_in_metadata($TARGET)){
       my @tag_meta = $obj->find_in_metadata($TAG_SEQUENCE);
       my @tags = map {$_->{value}} @tag_meta;
-      $expected_id = $product->generate_product_id($run_name, $well_label, \@tags);
+      $expected_id = $product->generate_product_id($run_name, $well_label, \@tags, $pn);
     }else{
-      $expected_id = $product->generate_product_id($run_name, $well_label);
+      $expected_id = $product->generate_product_id($run_name, $well_label, undef, $pn);
     }
 
     is($product_id, $expected_id,

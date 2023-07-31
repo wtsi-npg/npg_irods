@@ -53,9 +53,15 @@ with qw[
         push @avus, $self->make_avu($PACBIO_WELL,              $metadata->well_name);
         push @avus, $self->make_avu($PACBIO_SAMPLE_LOAD_NAME,  $metadata->sample_load_name);
 
+
         if ($params->data_level) {
             push @avus, $self->make_avu($PACBIO_DATA_LEVEL, $params->data_level);
         }
+
+        if ($metadata->plate_number) {
+            push @avus, $self->make_avu($PACBIO_PLATE_NUMBER, $metadata->plate_number);
+        }
+
 
         # Deprecated field, used in early version of RS
         if ($metadata->has_set_number){
