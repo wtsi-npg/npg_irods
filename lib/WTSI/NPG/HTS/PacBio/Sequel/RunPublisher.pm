@@ -468,8 +468,7 @@ sub publish_sequence_files {
   my $id_product = $product->generate_product_id(
       $metadata->run_name,
       $self->remove_well_padding($metadata->run_name, $metadata->well_name),
-      undef,
-      $metadata->plate_number
+      plate_number => $metadata->plate_number
   );
 
   my @primary_avus   = $self->make_primary_metadata

@@ -220,11 +220,16 @@ sub publish_sequence_files {
       my $id_product;
 
       if ($tags) {
-        $id_product = $product->generate_product_id($self->_metadata->run_name,
-          $well_label, $tags, $self->_metadata->plate_number);
+        $id_product = $product->generate_product_id(
+          $self->_metadata->run_name,
+          $well_label,
+          tags => $tags,
+          plate_number => $self->_metadata->plate_number);
       } else {
-        $id_product = $product->generate_product_id($self->_metadata->run_name,
-          $well_label, undef, $self->_metadata->plate_number);
+        $id_product = $product->generate_product_id(
+          $self->_metadata->run_name,
+          $well_label,
+          plate_number => $self->_metadata->plate_number);
       }
 
       my @primary_avus   = $self->make_primary_metadata

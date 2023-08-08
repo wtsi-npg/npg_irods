@@ -870,9 +870,11 @@ sub check_primary_metadata {
     if ($obj->find_in_metadata($TARGET)){
       my @tag_meta = $obj->find_in_metadata($TAG_SEQUENCE);
       my @tags = map {$_->{value}} @tag_meta;
-      $expected_id = $product->generate_product_id($run_name, $well_label, \@tags, $pn);
+      $expected_id = $product->generate_product_id
+        ($run_name, $well_label, tags => \@tags, plate_number => $pn);
     }else{
-      $expected_id = $product->generate_product_id($run_name, $well_label, undef, $pn);
+      $expected_id = $product->generate_product_id
+        ($run_name, $well_label, plate_number => $pn);
     }
 
     is($product_id, $expected_id,
