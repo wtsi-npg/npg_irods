@@ -45,7 +45,6 @@ my $metadata_file;
 my $restart_file;
 my $source_directory;
 my $verbose;
-my $mlwh_json_filename;
 my $stdio;
 
 my @include;
@@ -65,7 +64,6 @@ GetOptions('collection=s'                        => \$dest_collection,
            'logconf=s'                           => \$log4perl_config,
            'max-errors|max_errors=i'             => \$max_errors,
            'metadata=s'                          => \$metadata_file,
-           'mlwh-json|mlwh_json=s'               => \$mlwh_json_filename,
            'restart-file|restart_file=s'         => \$restart_file,
            'source-directory|source_directory=s' => \$source_directory,
            'verbose'                             => \$verbose,
@@ -186,9 +184,6 @@ my @init_args = (dest_collection        => $dest_collection,
                 source_directory       => $source_directory);
 if ($max_errors) {
   push @init_args, max_errors => $max_errors;
-}
-if (defined $mlwh_json_filename) {
-  push @init_args, mlwh_json => $mlwh_json_filename;
 }
 my $coll = WTSI::NPG::iRODS::Collection->new($irods, $dest_collection);
 my $publisher = WTSI::NPG::HTS::TreePublisher->new(@init_args);
@@ -315,9 +310,6 @@ npg_publish_tree --source-directory <path> --collection <path>
                       E.g. [{"attribute": "attr1", "value": "val1"},
                             {"attribute": "attr2", "value": "val2"}]
 
-   --mlwh-json        
-   --mlwh_json        Write information about the root collection to json file. 
-                      Optional.
    --restart-file
    --restart_file     A file path where a record of successfully published
                       files will be recorded in JSON format on exit. If the

@@ -28,6 +28,12 @@ jobs:
             irods: "4.2.11"
             client_image: "ghcr.io/wtsi-npg/ub-18.04-irods-clients-4.2.11:latest"
             server_image: "ghcr.io/wtsi-npg/ub-18.04-irods-4.2.11:latest"
+            experimental: false
+          - perl: "5.22.4"
+            irods: "4.2.12"
+            client_image: "ghcr.io/wtsi-npg/ub-18.04-irods-clients-4.2.12:latest"
+            server_image: "ghcr.io/wtsi-npg/ub-18.04-irods-4.2.12:latest"
+            # Marked experimental because of a breaking change in iquest exit code
             experimental: true
 
     services:

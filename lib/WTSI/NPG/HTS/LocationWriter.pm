@@ -20,6 +20,7 @@ our $VERSION = '';
 Readonly::Scalar my $DELIMITER => qq[\0];
 Readonly::Scalar my $JSON_FILE_VERSION => '1.0';
 Readonly::Scalar my $NPG_PROD => 'npg-prod';
+Readonly::Scalar my $ALT_PROCESS => 'npg-prod-alt-process';
 
 has 'path' => (
   isa           => 'Str',
@@ -36,11 +37,18 @@ has 'locations' => (
   documentation => 'A hash with keys built from collection and id_product, ' .
                     'and lists of locations as values');
 
+has 'alt_process' => (
+  isa           => 'Bool',
+  is            => 'ro',
+  required      => 0,
+  documentation => 'Non-standard process used');
+
 has 'pipeline_name' =>(
   isa           => 'Str',
   is            => 'ro',
   required      => 1,
-  default       => $NPG_PROD,
+  lazy          => 1,
+  builder       => '_build_pipeline_name',
   documentation => 'The name of the pipeline used to produce the data');
 
 has 'platform_name' => (
@@ -83,6 +91,16 @@ sub _build_locations {
   }
   return $locations;
 
+}
+
+sub _build_pipeline_name{
+  my ($self) = @_;
+
+  if ($self->alt_process){
+    return $ALT_PROCESS;
+  } else {
+    return $NPG_PROD;
+  }
 }
 
 =head2 add_location
@@ -170,8 +188,8 @@ sub write_locations{
       irods_root_collection    => $coll,
       id_product               => $pid,
       irods_data_relative_path => $path,
-      seq_platform_name        => $self->{platform_name},
-      pipeline_name            => $self->{pipeline_name}
+      seq_platform_name        => $self->platform_name,
+      pipeline_name            => $self->pipeline_name
     };
     if ($secondary_path){
       $location->{irods_secondary_data_relative_path} = $secondary_path;

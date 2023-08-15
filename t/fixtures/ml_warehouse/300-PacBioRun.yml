@@ -2197,6 +2197,7 @@
   pac_bio_library_tube_legacy_id: '43509080'
   library_created_at: ~
   pac_bio_run_name: 'TRACTION-RUN-142'
+  plate_number: 1
 - id_pac_bio_tmp: '99057'
   last_updated: '2022-09-30 15:49:01'
   recorded_at: '2022-09-30 15:49:01'
@@ -2224,6 +2225,7 @@
   pac_bio_library_tube_legacy_id: ~
   library_created_at: ~
   pac_bio_run_name: 'TRACTION-RUN-282'
+  plate_number: 1 
 - id_pac_bio_tmp: '99058'
   last_updated: '2022-09-30 15:49:01'
   recorded_at: '2022-09-30 15:49:01'
@@ -2251,6 +2253,7 @@
   pac_bio_library_tube_legacy_id: ~
   library_created_at: ~
   pac_bio_run_name: 'TRACTION-RUN-282'
+  plate_number: 1
 - id_pac_bio_tmp: '99679'
   last_updated: '2022-11-04 14:28:27'
   recorded_at: '2022-11-04 14:28:27'
@@ -2278,6 +2281,7 @@
   pac_bio_library_tube_legacy_id: ~
   library_created_at: ~
   pac_bio_run_name: 'TRACTION-RUN-327'
+  plate_number: 1
 - id_pac_bio_tmp: '100461'
   last_updated: '2022-12-14 16:02:24'
   recorded_at: '2022-12-14 16:02:24'
@@ -2305,6 +2309,7 @@
   pac_bio_library_tube_legacy_id: ~
   library_created_at: ~
   pac_bio_run_name: 'TRACTION-RUN-387'
+  plate_number: 1
 - id_pac_bio_tmp: '103603'
   last_updated: '2023-04-04 15:17:03'
   recorded_at: '2023-04-04 15:17:03'
@@ -2332,6 +2337,7 @@
   pac_bio_library_tube_legacy_id: ~
   library_created_at: ~
   pac_bio_run_name: 'TRACTION-RUN-525'
+  plate_number: 1
 - id_pac_bio_tmp: '103604'
   last_updated: '2023-04-04 15:17:03'
   recorded_at: '2023-04-04 15:17:03'
@@ -2359,6 +2365,7 @@
   pac_bio_library_tube_legacy_id: ~
   library_created_at: ~
   pac_bio_run_name: 'TRACTION-RUN-525'
+  plate_number: 1
 - id_pac_bio_tmp: '103606'
   last_updated: '2022-12-14 16:02:24'
   recorded_at: '2022-12-14 16:02:24'
@@ -2386,3 +2393,4 @@
   pac_bio_library_tube_legacy_id: ~
   library_created_at: ~
   pac_bio_run_name: 'TRACTION-RUN-525'
+  plate_number: 1

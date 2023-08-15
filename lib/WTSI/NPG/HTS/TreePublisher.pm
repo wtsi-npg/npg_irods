@@ -64,14 +64,6 @@ has 'require_checksum_cache' =>
      documentation => 'A list of file suffixes for which MD5 cache files ' .
                       'must be provided and will not be created on the fly');
 
-has 'mlwh_json' =>
-  (isa           => 'Str',
-  is             => 'ro',
-  required       => 0,
-  predicate     => 'has_mlwh_json',
-  documentation  => 'The json file to which information about the irods collection ' .
-                    'folder will be added. Cannot be used with mlwh_json_cb defined.');
-
 =head2 publish_tree
 
   Arg [1]    : File batch, ArrayRef[Str].
@@ -91,12 +83,6 @@ has 'mlwh_json' =>
                filter
                Function returning true for each file path to be published.
                CodeRef. Optional.
-
-               mlwh_json_cb
-               Callback writing information about data objects to a JSON file.
-               CodeRef. Optional. Cannot be used with the mlwh_json attribute set.
-               The mlwh_json_cb is deprecated and will be removed once the
-               illumina code is refactored to use the LocationWriter.
 
   Example    : my ($num_files, $num_processed, $num_errors) =
                  $pub->publish_tree($files,
@@ -118,35 +104,12 @@ has 'mlwh_json' =>
 
 {
   my $positional = 2;
-  my @named      = qw[primary_cb secondary_cb extra_cb filter mlwh_json_cb];
+  my @named      = qw[primary_cb secondary_cb extra_cb filter];
   my $params     = function_params($positional, @named);
-
-  sub write_json {
-    my ($self) = @_;
-    my ($json_fh, $json_hash);
-    open $json_fh, '>:encoding(UTF-8)', $self->mlwh_json or
-      self->logconfess(q[could not open ml warehouse json file] .
-      qq[$self->mlwh_json]);
-    $json_hash = {
-      version  => $JSON_FILE_VERSION,
-      irods_collection => $self->dest_collection
-    };
-    print $json_fh encode_json($json_hash) or
-      self->logconfess(q[could not write to ml warehouse json file ] .
-      qq[$self->mlwh_json]);
-
-    close $json_fh or
-      self->logconfess(q[could not close ml warehouse json file] .
-      qq[$self->mlwh_json]);
-    return 1;
-  }
 
   sub publish_tree {
     my ($self, $files) = $params->parse(@_);
 
-    if ($self->has_mlwh_json && defined $params->mlwh_json_cb) {
-      $self->logconfess('The mlwh_json_cb cannot be defined with the mlwh_json attribute set');
-    }
     if (defined $params->filter) {
       ref $params->filter eq 'CODE' or
           $self->logconfess('The filter argument must be a CodeRef');
@@ -187,6 +150,10 @@ has 'mlwh_json' =>
            publish_state          => $self->publish_state,
            require_checksum_cache => $self->require_checksum_cache);
 
+      if ($self->mlwh_locations){
+
+           push @init_args, mlwh_locations => $self->mlwh_locations;
+      }
       if ($self->has_max_errors) {
         if ($num_errors >= $self->max_errors) {
           $self->error("The number of errors $num_errors reached the maximum ",
@@ -205,15 +172,10 @@ has 'mlwh_json' =>
               ($subset, $dest_coll,
                primary_cb   => $params->primary_cb,
                secondary_cb => $params->secondary_cb,
-               extra_cb     => $params->extra_cb,
-               mlwh_json_cb => $params->mlwh_json_cb);
+               extra_cb     => $params->extra_cb);
       $num_files     += $nf;
       $num_processed += $np;
       $num_errors    += $ne;
-    }
-
-    if ($self->has_mlwh_json) {
-      $self->write_json();
     }
 
     return ($num_files, $num_processed, $num_errors);

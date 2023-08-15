@@ -434,7 +434,8 @@ sub publish_sequence_files {
   # There will be 1 record for a non-multiplexed SMRT cell and >1
   # record for a multiplexed (currently no uuids recorded in XML).
   my @run_records =
-    $self->find_pacbio_runs($metadata->run_name, $metadata->well_name);
+    $self->find_pacbio_runs($metadata->run_name, $metadata->well_name,
+      undef, $metadata->plate_number);
 
   # R & D runs have no records in the ML warehouse
   my $is_r_and_d = @run_records ? 0 : 1;
@@ -465,8 +466,9 @@ sub publish_sequence_files {
   my $product = WTSI::NPG::HTS::PacBio::Sequel::Product->new();
 
   my $id_product = $product->generate_product_id(
-          $metadata->run_name,
-          $self->remove_well_padding($metadata->run_name, $metadata->well_name)
+      $metadata->run_name,
+      $self->remove_well_padding($metadata->run_name, $metadata->well_name),
+      plate_number => $metadata->plate_number
   );
 
   my @primary_avus   = $self->make_primary_metadata
