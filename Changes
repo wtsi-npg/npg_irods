@@ -1,5 +1,7 @@
 Unreleased
 
+Release 2.44.0
+
   - Changes to PacBio iRODS loading to support multi plate runs
     (requires npg_id_generation v4.0.0)
   - Unify location file writing for Illumina and PacBio products
