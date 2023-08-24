@@ -9,6 +9,7 @@ use File::Temp qw( tempdir );
 use Log::Log4perl;
 use Test::MockObject;
 
+use WTSI::NPG::Data::ConsentWithdrawn;
 use WTSI::NPG::iRODS;
 
 use base 'WTSI::NPG::HTS::Test';
@@ -46,10 +47,7 @@ sub teardown_test : Test(teardown) {
   $irods->remove_collection($collection);
 }
 
-sub object_and_query_creation : Test(6) {
-
-  use_ok 'WTSI::NPG::Data::ConsentWithdrawn';
-
+sub object_and_query_creation : Test(2) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $cw = WTSI::NPG::Data::ConsentWithdrawn->new(irods => $irods);
@@ -58,27 +56,9 @@ sub object_and_query_creation : Test(6) {
   throws_ok { WTSI::NPG::Data::ConsentWithdrawn->new() }
     qr/Attribute \(irods\) is required/,
     'constructor should have irods attr. defined';
-
-  my $query = q{"%s/%s" "select COLL_NAME, DATA_NAME where } .
-    q{META_DATA_ATTR_NAME = 'sample_consent_withdrawn' and } .
-    q{META_DATA_ATTR_VALUE = '1' and DATA_NAME not like '%header.bam%'"};
-
-  is($cw->_iquery, q{iquest --no-page } . $query,
-    'default iquery, no zone');
-
-  $cw = WTSI::NPG::Data::ConsentWithdrawn->new(irods => $irods);
-  is($cw->_iquery, q{iquest --no-page } . $query,
-    'iquery with zone set');
-
-  $cw = WTSI::NPG::Data::ConsentWithdrawn->new(irods      => $irods,
-                                               zone       => 'seq',
-                                               collection => '/some/other');
-  is($cw->_iquery, q{iquest --no-page -z seq } . substr($query, 0, -1) .q{ and COLL_NAME like '/some/other%'"},
-    'iquery with both zone and collection set');
 }
 
 sub permissions : Test(21) {
-
   my $mock = Test::MockObject->new();
   $mock->fake_new( 'MIME::Lite' );
   $mock->set_true('send');
@@ -88,8 +68,8 @@ sub permissions : Test(21) {
 
   my $cw = WTSI::NPG::Data::ConsentWithdrawn->new(
     irods => $irods, collection => $collection);
-  is_deeply($cw->_files, [], 'no data files are found');
-  is_deeply($cw->_new_files, [], 'nothing to do');
+  is_deeply($cw->files_withdrawn, [], 'no data files are found');
+  is_deeply($cw->files_to_email, [], 'nothing to do');
   lives_ok {$cw->process} q[process when nothing to do];
 
   my @data_f = @data_files;
@@ -106,7 +86,7 @@ sub permissions : Test(21) {
   my @files_with_extra_permissions = map {"$collection/$_"} qw/5.cram 5.cram.crai/;
   for my $file (@files_with_extra_permissions) {
     $irods->set_object_permissions('read', 'public', $file);
-    is ($irods->get_object_permissions($file), 2, "two sets of permissions for $file");
+    is($irods->get_object_permissions($file), 2, "two sets of permissions for $file");
   }
 
   my @to_do = map { "$collection/$_" } qw/2.bam 5.cram 6.cram/;
@@ -114,20 +94,20 @@ sub permissions : Test(21) {
 
   $cw = WTSI::NPG::Data::ConsentWithdrawn->new(
     dry_run => 1, irods => $irods, collection => $collection);
-  is_deeply($cw->_files, \@data_f, 'all data with consent withdrawn are found');
-  is_deeply($cw->_new_files, \@to_do, 'pending processing files are found');
+  is_deeply($cw->files_withdrawn, \@data_f, 'all data with consent withdrawn are found');
+  is_deeply($cw->files_to_email, \@to_do, 'pending processing files are found');
   lives_ok {$cw->process} 'dry run processing data';
 
   $cw = WTSI::NPG::Data::ConsentWithdrawn->new(irods => $irods, collection => $collection);
-  is_deeply($cw->_files, \@data_f, 'all data with consent withdrawn are found');
-  is_deeply($cw->_new_files, \@to_do, 'pending processing files are found');
+  is_deeply($cw->files_withdrawn, \@data_f, 'all data with consent withdrawn are found');
+  is_deeply($cw->files_to_email, \@to_do, 'pending processing files are found');
   lives_ok {$cw->process} 'no error processing data';
 
   my $ownp = $WTSI::NPG::iRODS::OWN_PERMISSION;
   for my $file (@files_with_extra_permissions) {
     my @permissions = $irods->get_object_permissions($file);
-    is (@permissions, 1, "only one set permissions is left for $file");
-    is ($permissions[0]->{level}, $ownp, 'the only permission is for the owner');
+    is(@permissions, 1, "only one set permissions is left for $file");
+    is($permissions[0]->{level}, $ownp, 'the only permission is for the owner');
   }
   
   for my $file (@to_do) {
@@ -135,17 +115,17 @@ sub permissions : Test(21) {
       grep { $_->{value} == 1 }
       grep { $_->{attribute} eq q{sample_consent_withdrawn_email_sent} }
       $irods->get_object_meta($file);
-    is (scalar @meta, 1, 'sample_consent_withdrawn_email_sent flag set');
+    is(scalar @meta, 1, 'sample_consent_withdrawn_email_sent flag set');
   }
   
   $cw = WTSI::NPG::Data::ConsentWithdrawn->new(
     dry_run => 1, irods => $irods, collection => $collection);
-  ok(!@{$cw->_new_files}, 'no files to process');
+  ok(!@{$cw->files_to_email}, 'no files to process');
   lives_ok {$cw->process} 'dry run processing when no eligible files exist';
 
   $cw = WTSI::NPG::Data::ConsentWithdrawn->new(
     dry_run => 1, irods => $irods, collection => '/some/collection');
-  ok(!@{$cw->_new_files}, 'no files to process in a collection that does not exist');
+  ok(!@{$cw->files_to_email}, 'no files to process in a collection that does not exist');
 }
 
 1;
