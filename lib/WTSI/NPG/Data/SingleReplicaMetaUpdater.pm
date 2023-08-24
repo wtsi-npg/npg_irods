@@ -14,6 +14,7 @@ use WTSI::DNAP::Utilities::Params qw[function_params];
 
 use WTSI::NPG::iRODS;
 use WTSI::NPG::iRODS::DataObject;
+use WTSI::NPG::iRODS::icommands qw[iquest];
 
 with qw[
   WTSI::DNAP::Utilities::Loggable
@@ -186,48 +187,13 @@ sub _find_candidate_objects {
   $self->debug(sprintf q[Running query %s %s %s], $SPECIFIC_QUERY_NAME,
                        $begin_date->iso8601, $end_date->iso8601);
 
-  my @iquest_cmd = qw[iquest --no-page];
+  my @query;
   if ($zone) {
-    push @iquest_cmd, '-z', $zone;
+    push @query, '-z', $zone;
   }
-  push @iquest_cmd, '--sql', $SPECIFIC_QUERY_NAME, $begin_date->iso8601, $end_date->iso8601;
-  my $iquest_cmd = join q[ ], @iquest_cmd;
+  push @query, '--sql', $SPECIFIC_QUERY_NAME, $begin_date->iso8601, $end_date->iso8601;
 
-  $self->debug("Executing '$iquest_cmd'");
-  my $pid = open3(undef, my $stdout, my $stderr = gensym, $iquest_cmd);
-
-  my @records;
-  while (my $line = <$stdout>) {
-    chomp $line;
-    next if $line =~ m{^\s*$}msx;
-
-    # Work around the iquest bug/misfeature where it mixes its logging output
-    # with its data output
-    next if $line =~ m{^Zone is}msx;
-    next if $line =~ m{^No rows found}msx;
-    # Skip record separators. These are not printed consistently; when there
-    # are sufficient records to cause pagination, the separator is missing.
-    next if $line =~ m{^----$}msx;
-
-    $self->debug("iquest: $line");
-    push @records, $line;
-  }
-
-  waitpid $pid, 0;
-  if ($CHILD_ERROR >> 8) {
-    my $errmsg = q[];
-    if ($stderr) {
-      while (my $line = <$stderr>) {
-        chomp $line;
-        $errmsg .= " $line";
-      }
-    }
-
-    $self->logcroak("Failed to run iquest: '$iquest_cmd': $errmsg");
-  }
-  close $stdout or
-      $self->logcroak("Failed close STDOUT of iquest '$iquest_cmd': $ERRNO");
-
+  my @records = iquest(@query);
   my $paths = $self->_parse_iquest_records(@records);
   my $found = scalar @{$paths};
   $self->debug(sprintf q[Found %d paths], $found);

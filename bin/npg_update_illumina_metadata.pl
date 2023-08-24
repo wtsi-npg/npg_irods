@@ -18,6 +18,7 @@ use WTSI::NPG::DriRODS;
 use WTSI::NPG::HTS::Illumina::MetaUpdater;
 use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::iRODS;
+use WTSI::NPG::iRODS::icommands qw[iquest];
 
 our $VERSION = '';
 
@@ -79,12 +80,8 @@ sub _find_composition_paths_irods {
 
   $logger->debug('Running ', $query);
   my $start_time = time;
-  my $iquest = WTSI::DNAP::Utilities::Runnable->new
-    (executable => 'iquest',
-     arguments  => ['-z', $zone, '--no-page', q[%s/%s], $query])->run;
 
-  my @paths = $iquest->split_stdout;
-
+  my @paths = iquest('-z', $zone, q[%s/%s], $query);
   my $num_paths = scalar @paths;
   my $duration  = time - $start_time;
   my $num_min = floor($duration / $SEC_PER_MIN);
