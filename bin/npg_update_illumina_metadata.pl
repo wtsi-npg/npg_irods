@@ -273,7 +273,8 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2018, 2019 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2018, 2019, 2023 Genome Research Limited. All Rights
+Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
