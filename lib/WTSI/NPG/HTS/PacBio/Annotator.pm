@@ -110,6 +110,7 @@ sub make_secondary_metadata {
     push @avus, $self->make_study_metadata(@run_records);
     push @avus, $self->make_sample_metadata(@run_records);
     push @avus, $self->make_tag_metadata(@run_records);
+    push @avus, $self->make_qc_metadata(@run_records);
 
     # May be removed in future if legacy data no longer required
     push @avus, $self->make_legacy_metadata(@run_records);
@@ -223,6 +224,26 @@ sub make_tag_metadata {
                      tag_identifier => $TAG_INDEX};
 
   return $self->_make_multi_value_metadata(\@run_records, $method_attr);
+}
+
+sub make_qc_metadata {
+  my ($self, @run_records) = @_;
+
+  my @avus = ();
+  my @product_records = grep { defined }
+                        map  { $_->pac_bio_product_metric() }
+                        @run_records;
+  if (@product_records == @run_records) {
+    my @qc_outcomes = uniq map { $_->qc() } @product_records;
+    if (@qc_outcomes == 1) {
+      my $qc_outcome = qc_outcomes[0];
+      if defined ($qc_outcome) {
+        push @avus, $self->make_avu($MANUAL_QC, $qc_outcome);
+      } 
+    }
+  }
+
+  return @avus;
 }
 
 sub _make_multi_value_metadata {
