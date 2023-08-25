@@ -65,7 +65,10 @@ sub update_secondary_metadata {
 
     my $id_run = $obj->get_avu($PACBIO_RUN)->{value};
     my $well   = $obj->get_avu($PACBIO_WELL)->{value};
-
+    my $plate_number;
+    if ($obj->find_in_metadata($PACBIO_PLATE_NUMBER)) {
+      $plate_number = $obj->get_avu($PACBIO_PLATE_NUMBER)->{value};
+    }
     my $tag_id;
     if($obj->find_in_metadata($TAG_INDEX) &&
        !$obj->find_in_metadata($PACBIO_MULTIPLEX)){
@@ -73,7 +76,8 @@ sub update_secondary_metadata {
     }
 
     try {
-      my @run_records = $self->find_pacbio_runs($id_run, $well, $tag_id);
+      my @run_records = $self->find_pacbio_runs(
+          $id_run, $well, $tag_id, $plate_number);
       my @secondary_avus = $self->make_secondary_metadata(@run_records);
       $obj->update_secondary_metadata(@secondary_avus);
 

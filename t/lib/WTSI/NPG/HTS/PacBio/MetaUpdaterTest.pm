@@ -73,23 +73,37 @@ sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::PacBio::MetaUpdater');
 }
 
-sub update_secondary_metadata : Test(2) {
+sub update_secondary_metadata : Test(7) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $updater = WTSI::NPG::HTS::PacBio::MetaUpdater->new
     (irods       => $irods,
      mlwh_schema => $wh_schema);
 
+  my $run_name = '45137';
+  my $well_label = 'A1';
+  my $study_id = 2572;
+  my $study_name = 'Ag 1000g';
+
+  # Tests for a case when the plate number is not defined.
+  my $row = $wh_schema->resultset('PacBioRun')->search({
+    pac_bio_run_name => $run_name, well_label => $well_label})->next();
+  is ($row->plate_number, undef, 'Plate number is undefined');
+  my $study_row = $wh_schema->resultset('Study')->search(
+        {id_study_lims => $study_id})->next();
+  is($study_row->name, $study_name, 'Current study name value');
+
   my @paths_to_update = ("$irods_tmp_coll/$data_file");
 
   cmp_ok($updater->update_secondary_metadata(\@paths_to_update),
          '==', scalar @paths_to_update,
          'All iRODS paths processed without errors');
+
   my $expected_meta =
     [
      {attribute => $LIBRARY_ID,              value => 15977171},
      {attribute => $PACBIO_LIBRARY_NAME,     value => 'DN434306G-A1'},
-     {attribute => $PACBIO_RUN,              value     => 45137},
+     {attribute => $PACBIO_RUN,              value => $run_name},
      {attribute => $SAMPLE_NAME,             value => '2572STDY6358500'},
      {attribute => $SAMPLE_ACCESSION_NUMBER, value => 'ERS1075968'},
      {attribute => $SAMPLE_COMMON_NAME,      value => 'Anopheles gambiae'},
@@ -97,13 +111,13 @@ sub update_secondary_metadata : Test(2) {
      {attribute => $SAMPLE_ID,               value => 2567488},
      {attribute => $SAMPLE_PUBLIC_NAME,      value => 70628},
      {attribute => $SAMPLE_SUPPLIER_NAME,    value => 'AR0091-CW'},
-     {attribute => $STUDY_NAME,              value => 'Ag 1000g'},
+     {attribute => $STUDY_NAME,              value => $study_name},
      {attribute => $STUDY_ACCESSION_NUMBER,  value => 'ERP002372'},
-     {attribute => $STUDY_ID,                value => 2572},
-     {attribute => $PACBIO_STUDY_NAME,       value => 'Ag 1000g'},
+     {attribute => $STUDY_ID,                value => $study_id},
+     {attribute => $PACBIO_STUDY_NAME,       value => $study_name},
      {attribute => $STUDY_TITLE,
       value     => 'Anopheles Genome Variation Project'},
-     {attribute => $PACBIO_WELL,             value     => 'A01'}
+     {attribute => $PACBIO_WELL,             value     => 'A01'},
     ];
 
   my $obj = WTSI::NPG::HTS::DataObject->new
@@ -113,6 +127,44 @@ sub update_secondary_metadata : Test(2) {
   is_deeply($obj->metadata, $expected_meta,
             'Secondary metadata updated correctly') or
               diag explain $obj->metadata;
+
+  # Tests for a case when the plate number is defined.
+  my $plate_number = 2;
+  $row->update({'plate_number' => $plate_number}); # Update plate number in mlwh
+  $irods->add_object_avu("$irods_tmp_coll/$data_file",
+    'plate_number', $plate_number); # Update primary metadata
+  my $new_study_name = 'Updated for the test';
+  $study_row->update({name => $new_study_name}); # Update study name in mlwh
+  
+  # Call the updater again.
+  $updater->update_secondary_metadata(\@paths_to_update);
+  
+  # Inspect the metadata after the update.
+  my $updated = WTSI::NPG::HTS::DataObject->new
+    (collection  => $irods_tmp_coll,
+     data_object => $data_file,
+     irods       => $irods)->metadata;
+
+  my $updated_as_dict = {};
+  for my $meta (@{$updated}) {
+    $updated_as_dict->{$meta->{'attribute'}} = $meta->{'value'};
+  }
+  for my $key ((map { $_ . '_history'} ($STUDY_NAME, $PACBIO_STUDY_NAME))) {
+    ok(exists $updated_as_dict->{$key}, "History is preserved for $key");
+    delete $updated_as_dict->{$key};
+  }
+
+  my $expected_as_dict = {};
+  for my $meta (@{$expected_meta}) {
+     $expected_as_dict->{$meta->{'attribute'}} = $meta->{'value'};
+  }
+  $expected_as_dict->{$PACBIO_PLATE_NUMBER} = $plate_number;
+  for my $key (($STUDY_NAME, $PACBIO_STUDY_NAME)) {
+    $expected_as_dict->{$key} = $new_study_name;
+  }
+
+  is_deeply($updated_as_dict, $expected_as_dict,
+    'Updated metadata is correct after the update');
 }
 
 1;
