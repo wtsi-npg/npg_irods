@@ -13,8 +13,10 @@ jobs:
 
     env:
       SINGULARITY_VERSION: "3.11.1"
+      SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity-cache
       PERL_CACHE: ~/perl5 # Perlbrew and CPAN modules installed here, cached
       NPG_LIB: ~/perl5npg # NPG modules installed here, not cached
+      WTSI_NPG_BUILD_BRANCH: ${{ github.base_ref || github.ref }}
 
     strategy:
       matrix:
@@ -98,7 +100,6 @@ jobs:
         env:
           DOCKER_IMAGE: ${{ matrix.client_image }}
           PREFIX: ${{ github.workspace }}
-          SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity-cache
         run: |
           # Use -s option for the wrappers to enable re-usable service instances
           singularity exec docker://$DOCKER_IMAGE singularity-wrapper -s -p $PREFIX install
@@ -108,7 +109,6 @@ jobs:
         env:
           DOCKER_IMAGE: ${{ matrix.client_image }}
           PREFIX: ${{ github.workspace }}
-          SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity-cache
         run: |
           mkdir -p "$HOME/.irods"
           cat <<'EOF' > "$HOME/.irods/irods_environment.json"
@@ -199,8 +199,6 @@ jobs:
         run: |
           python3 -m pip install git+https://github.com/wtsi-npg/npg_id_generation@$WTSI_NPG_BUILD_BRANCH ||
           python3 -m pip install git+https://github.com/wtsi-npg/npg_id_generation@devel
-        env:
-          WTSI_NPG_BUILD_BRANCH: ${{ github.base_ref || github.ref }} #getting name of current github branch
 
       - name: "Log install failure"
         if: ${{ failure() }}
