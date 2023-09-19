@@ -1,5 +1,16 @@
 Unreleased
 
+Release 2.45.0
+
+  - Add link to metadata repository to README
+  - Refactor to use common iquest wrapper from perl-irods-wrap
+  - Add Perl 5.34 to CI matrix
+  - Fixed a bug in the PacBio metadata updater.
+      Added a missing plate number when calling the find_pacbio_runs()
+      method that retrieves up-to-date metadata from mlwh.
+  - Refactor by hoisting environment variables
+  - Install iRODS clients outside of working directory
+
 Release 2.44.0
 
   - Changes to PacBio iRODS loading to support multi plate runs
