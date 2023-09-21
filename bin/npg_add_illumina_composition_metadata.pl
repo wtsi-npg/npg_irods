@@ -25,6 +25,7 @@ use WTSI::NPG::iRODS::Metadata qw[ $ALIGNMENT_FILTER
                                    $ID_RUN
                                    $POSITION
                                    $TAG_INDEX ];
+use WTSI::NPG::iRODS::icommands qw[iquest];
 use npg_tracking::glossary::composition;
 use npg_tracking::glossary::composition::component::illumina;
 
@@ -90,20 +91,16 @@ sub _filter_file_paths_irods {
 sub _find_file_paths_irods {
   my ($logger, $zone, $collection) = @_;
 
-  my @paths = ();
+  my @paths;
 
   for my $ext (qw/cram bam/) {
     my $query =
      sprintf q[select COLL_NAME, DATA_NAME where ] .
              q[COLL_NAME like '%s/%%' ]          .
              q[and DATA_NAME like '%%.%s'], $collection, $ext;
-
     $logger->debug('Running ', $query);
-    my $iquest = WTSI::DNAP::Utilities::Runnable->new
-      (executable => 'iquest',
-       arguments  => ['-z', $zone, '--no-page', q[%s/%s], $query])->run;
 
-    push @paths, ($iquest->split_stdout);
+    push @paths, iquest('-z', $zone, q[%s/%s], $query);
   }
 
   return @paths;
@@ -433,7 +430,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2019 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2019, 2023 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

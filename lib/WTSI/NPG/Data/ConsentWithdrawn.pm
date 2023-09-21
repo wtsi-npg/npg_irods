@@ -7,6 +7,7 @@ use MIME::Lite;
 use Readonly;
 
 use WTSI::NPG::HTS::DataObject;
+use WTSI::NPG::iRODS::icommands qw[iquest];
 
 with qw{
   MooseX::Getopt
@@ -102,18 +103,18 @@ sub process {
 
   $self->dry_run and $self->info('DRY RUN - no metadata and permissions change');
 
-  if (!@{$self->_new_files}) {
+  if (!@{$self->files_to_email}) {
     $self->info('No files to process found');
     return;
   }
 
-  foreach my $file (@{$self->_new_files}) {
+  foreach my $file (@{$self->files_to_email}) {
     $self->dry_run or $self->_restrict_permissions($file);
   }
 
   $self->_create_rt_ticket();
 
-  foreach my $file (@{$self->_new_files}) {
+  foreach my $file (@{$self->files_to_email}) {
     $self->dry_run or $self->irods->add_object_avu(
       $file, $RT_TICKET_FLAG_META_KEY, 1);
   }
@@ -122,45 +123,40 @@ sub process {
 }
 
 # List of files with sample_consent_withdrawn flag set
-has '_files' => (
+has 'files_withdrawn' => (
   isa        => 'ArrayRef',
   is         => 'ro',
   required   => 0,
   lazy_build => 1,
 );
-sub _build__files {
+
+sub _build_files_withdrawn {
   my $self = shift;
 
-  my $iquest_cmd = $self->_iquery;
-  $self->info("Will run: $iquest_cmd");
+  my @query;
+  if ($self->zone) {
+    push @query, q[-z], $self->zone;
+  }
+
+  my $select = q[select COLL_NAME, DATA_NAME ] .
+      q[where META_DATA_ATTR_NAME = 'sample_consent_withdrawn' ] .
+      q[and META_DATA_ATTR_VALUE = '1' ] .
+      q[and DATA_NAME not like '%header.bam%'];
+
+  if ($self->collection) {
+      $select .= sprintf q[ and COLL_NAME like '%s%%'], $self->collection();
+  }
+  push @query, q[%s/%s], qq("$select");
+
+  $self->info('Will run: iquest ', join q[ ], @query);
+
   my @files;
-  my $no_rows_error = 0;
-
-  my $pid = open3( undef, my $iquest_out_fh, undef, $iquest_cmd);
-  while (my $line = <$iquest_out_fh> ) {
-    chomp $line;
-    if($line =~ /^ERROR/mxs) {
-      if ($line !~ /CAT_NO_ROWS_FOUND/mxs) {
-        $self->debug($line);
-      } else {
-        $no_rows_error = 1;
-      }
-      last;
-    }
-    if ($line =~/[.]bam$|[.]cram$/mxs) {
-      $self->debug('Found ' . $line);
-      push @files, $line;
+  foreach my $rec (iquest(@query)) {
+    if ($rec =~/[.]bam$|[.]cram$/mxs) {
+      $self->debug('Found ', $rec);
+      push @files, $rec;
     }
   }
-
-  waitpid $pid, 0;
-  if( $CHILD_ERROR >> $EXIT_CODE_SHIFT ) {
-    if (!$no_rows_error) {
-      $self->logcroak("Failed: $iquest_cmd");
-    }
-  }
-  close $iquest_out_fh or
-    $self->logcroak("Cannot close iquest command output: $ERRNO");
 
   @files = sort @files;
   return \@files;
@@ -168,17 +164,18 @@ sub _build__files {
 
 # List of files with sample_consent_withdrawn flag set
 # and sample_consent_withdrawn_email_sent not set
-has '_new_files' => (
+has 'files_to_email' => (
   isa        => 'ArrayRef',
   is         => 'ro',
   required   => 0,
   lazy_build => 1,
 );
-sub _build__new_files {
+
+sub _build_files_to_email {
   my $self = shift;
 
-  my @files = ();
-  foreach my $file (@{$self->_files}) {
+  my @files;
+  foreach my $file (@{$self->files_withdrawn}) {
     my @meta =
       grep { $_->{value} }
       grep { $_->{attribute} eq $RT_TICKET_FLAG_META_KEY }
@@ -192,7 +189,8 @@ sub _build__new_files {
 sub _create_rt_ticket {
   my $self = shift;
 
-  my $payload  = "The files with consent withdrawn:\n\n" . join qq[\n] , @{$self->_new_files};
+  my $payload = "The files with consent withdrawn:\n\n" . join qq[\n] ,
+    @{$self->_build_files_to_email};
   $self->info(qq{The following email will be sent to $RT_TICKET_EMAIL_ADDRESS\n$payload\n});
 
   $self->dry_run and return;
@@ -207,32 +205,15 @@ sub _create_rt_ticket {
   return;
 }
 
-sub _iquery {
-  my $self = shift;
-
-  my $query = q{iquest --no-page};
-  if ($self->zone) {
-    $query .= q[ -z ] .$self->zone;
-  }
-  $query .=
-    q{ "%s/%s" "select COLL_NAME, DATA_NAME where META_DATA_ATTR_NAME = 'sample_consent_withdrawn'} .
-    q{ and META_DATA_ATTR_VALUE = '1' and DATA_NAME not like '%header.bam%'};
-  if ($self->collection) {
-    $query .= q{ and COLL_NAME like '} . $self->collection() . q{%'};
-  }
-  $query .= q{"};
-
-  return $query;
-}
-
 sub _restrict_permissions {
   my ($self, $file) = @_;
 
-  my @files = ( $file );
+  my @files = ($file);
 
   my $index_file = $file;
   $index_file =~ s/[.]bam$/.bai/smx;
   $index_file =~ s/[.]cram$/.cram.crai/smx;
+
   my $obj = WTSI::NPG::HTS::DataObject->new($self->irods, $index_file);
   if ($obj->is_present) {
     push @files, $index_file;
@@ -272,8 +253,6 @@ __END__
 
 =item Readonly
 
-=item IPC::Open3
-
 =item MIME::Lite
 
 =item WTSI::NPG::HTS::DataObject
@@ -292,7 +271,7 @@ Marina Gourtovaia
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (C) 2012,2013,2015,2020 Genome Research Ltd.
+Copyright (C) 2012, 2013, 2015, 2020, 2023 Genome Research Ltd.
 
 This file is part of NPG.
 
