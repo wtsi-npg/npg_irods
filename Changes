@@ -1,5 +1,14 @@
 Unreleased
 
+Release 2.46.0
+
+  - Add iRODS 4.3.1 Ubuntu 22.04 as a optional test target
+  - Minor change to PacBio AnalysisPublisher
+  - Update test matrix iRODS versions
+      Remove the combination of 4.2.11 clients with a 4.2.7 server
+      Add the combination of 4.2.7 clients with a 4.2.7 server
+      Add the combination of 4.3-nightly clients with a 4.3-nightly server
+
 Release 2.45.0
 
   - Add link to metadata repository to README
