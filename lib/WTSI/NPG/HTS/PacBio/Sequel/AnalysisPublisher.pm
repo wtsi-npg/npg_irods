@@ -485,10 +485,10 @@ sub _get_tag_from_fname {
   my ($self, $file) = @_;
   my $tag_id;
 
-  if ($file =~ /bc(\d+).*bc(\d+)/smx){
+  if ($file =~ /bc\D*(\d+).*bc\D*(\d+)/smx){
     my ($bc1, $bc2) = ($1, $2);
     $tag_id = ($bc1 == $bc2) ? $bc1 : undef;
-  } elsif ($self->is_smtwelve && $file =~ m{[.]bc(\d+)\S*[.]bam}smx){
+  } elsif ($self->is_smtwelve && $file =~ m{[.]bc\D*(\d+)\S*[.]bam}smx){
     $tag_id = $1;
   }
   return $tag_id;
