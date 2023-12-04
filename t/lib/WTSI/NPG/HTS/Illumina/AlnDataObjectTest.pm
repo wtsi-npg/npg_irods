@@ -98,7 +98,8 @@ my $group_filter = sub {
 };
 
 # Groups to be added to the test iRODS
-my @irods_groups = map { $group_prefix . $_ } (10, 100, 198, 619, 2967, 3720);
+my @irods_groups = map { $group_prefix . $_ , $group_prefix . $_ . '_human' }
+                   (10, 100, 198, 619, 2967, 3720);
 push @irods_groups, $public_group;
 # Groups added to the test iRODS in fixture setup
 my @groups_added;
