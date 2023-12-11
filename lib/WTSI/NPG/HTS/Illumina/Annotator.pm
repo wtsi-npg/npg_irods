@@ -163,15 +163,15 @@ sub make_run_metadata {
 
 =head2 make_alignment_metadata
 
-  Arg [1]      Number of (non-secondardy/supplementary) reads present, Int.
-  Arg [2]      Reference file path, Str.
-  Arg [3]      Run is aligned, Bool. Optional.
+  Arg [1]      npg_tracking::glossary::composition::component::illumina object
+  Arg [2]      Number of (non-secondardy/supplementary) reads present, Int.
+  Arg [3]      Reference file path, Str.
+  Arg [4]      Run is aligned, Bool. Optional.
 
   Named args : alignment_filter Alignment filter name, Str. Optional.
 
   Example    : my @avus = $ann->make_aligment_metadata
-                   ($num_reads, '/path/to/ref.fa', $is_algined,
-                    alignment_filter => 'xahuman');
+                   ($component, $num_reads, '/path/to/ref.fa', $is_algined);
 
   Description: Return HTS alignment metadata AVUs.
   Returntype : Array[HashRef]
