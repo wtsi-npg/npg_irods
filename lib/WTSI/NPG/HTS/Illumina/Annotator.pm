@@ -226,16 +226,10 @@ sub make_target_metadata {
     ($component->has_subset and $component->subset ne $YHUMAN)) {
     $target = 0;
   }
-  elsif ($alt_process) {
-    $target = 0;
-  }
 
-  my @avus = ($self->make_avu($TARGET, $target));
-  if ($alt_process) {
-    if (($component->has_subset and $component->subset ne 'phix') or
-      not $component->has_subset) {
-      push @avus, $self->make_avu($ALT_TARGET, 1);
-    }
+  my @avus = ($self->make_avu($TARGET, $alt_process ? 0 : $target));
+  if ($alt_process && $target) {
+    push @avus, $self->make_avu($ALT_TARGET, 1);
   }
 
   return @avus;
