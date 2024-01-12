@@ -19,20 +19,20 @@ with qw[
 =head2 make_primary_metadata
 
   Arg [1]    : Biomaterial composition, npg_tracking::glossary::composition.
-  Arg [2]    : Total number of reads (non-secondary/supplementary), Int.
 
-  Named args : tag_index        Tag index, Int. Optional.
-               is_paired_read   Run is paired, Bool. Optional.
+  Named args : is_paired_read   Run is paired, Bool. Optional.
                is_aligned       Run is aligned, Bool. Optional.
                reference        Reference file path, Str. Optional.
                alt_process      Alternative process name, Str. Optional.
-               alignment_filter Alignment filter name, Str. Optional.
+               num_reads        Total number of reads
+                                (non-secondary/supplementary), Int. Optional.
                seqchksum        Seqchksum digestgg112, Str. Optional.
                lims_factory     Factory for st:api::lims objects,
                                 WTSI::NPG::HTS::LIMSFactory. Optional.
 
   Example    : my @avus = $ann->make_primary_metadata
-                   ($id_run, $position, $num_reads,
+                   ($composition,
+                    num_reads      => 100,
                     tag_index      => $tag_index,
                     is_paired_read => 1,
                     is_aligned     => 1,
