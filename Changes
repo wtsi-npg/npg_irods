@@ -1,5 +1,23 @@
 Unreleased
 
+Release 2.47.0
+
+  - Fixed some outdated POD
+  - 'alt_target' iRODS metadata attribute value is now computed in the
+    same way as the 'target' metadata attribute value. To be consistent
+    with prior practice, the 'alt_target' value is assigned only when it
+    is true. This resolves the issue of tag zero files, which are
+    produced by the alternative process, previously having 'alt_target'
+    metadata attribute value of 1.
+  - Following introduction of ss_<STUDY_ID>_human iRODS groups to
+    provide limited access to split-out human data and consolidation
+    of logic about assignment of study_related iRODS groups in
+    https://github.com/wtsi-npg/perl-irods-wrap/pull/297, the following
+    changes were made:
+      - contains_nonconsented_human and update_group_permissions methods
+        were dropped from WTSI::NPG::HTS::Illumina::AlnDataObject
+      - ss_<STUDY_ID>_human iRODS groups were added to test fixtures
+
 Release 2.46.0
 
   - Add iRODS 4.3.1 Ubuntu 22.04 as a optional test target
