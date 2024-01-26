@@ -19,20 +19,20 @@ with qw[
 =head2 make_primary_metadata
 
   Arg [1]    : Biomaterial composition, npg_tracking::glossary::composition.
-  Arg [2]    : Total number of reads (non-secondary/supplementary), Int.
 
-  Named args : tag_index        Tag index, Int. Optional.
-               is_paired_read   Run is paired, Bool. Optional.
+  Named args : is_paired_read   Run is paired, Bool. Optional.
                is_aligned       Run is aligned, Bool. Optional.
                reference        Reference file path, Str. Optional.
                alt_process      Alternative process name, Str. Optional.
-               alignment_filter Alignment filter name, Str. Optional.
+               num_reads        Total number of reads
+                                (non-secondary/supplementary), Int. Optional.
                seqchksum        Seqchksum digestgg112, Str. Optional.
                lims_factory     Factory for st:api::lims objects,
                                 WTSI::NPG::HTS::LIMSFactory. Optional.
 
   Example    : my @avus = $ann->make_primary_metadata
-                   ($id_run, $position, $num_reads,
+                   ($composition,
+                    num_reads      => 100,
                     tag_index      => $tag_index,
                     is_paired_read => 1,
                     is_aligned     => 1,
@@ -163,15 +163,15 @@ sub make_run_metadata {
 
 =head2 make_alignment_metadata
 
-  Arg [1]      Number of (non-secondardy/supplementary) reads present, Int.
-  Arg [2]      Reference file path, Str.
-  Arg [3]      Run is aligned, Bool. Optional.
+  Arg [1]      npg_tracking::glossary::composition::component::illumina object
+  Arg [2]      Number of (non-secondardy/supplementary) reads present, Int.
+  Arg [3]      Reference file path, Str.
+  Arg [4]      Run is aligned, Bool. Optional.
 
   Named args : alignment_filter Alignment filter name, Str. Optional.
 
   Example    : my @avus = $ann->make_aligment_metadata
-                   ($num_reads, '/path/to/ref.fa', $is_algined,
-                    alignment_filter => 'xahuman');
+                   ($component, $num_reads, '/path/to/ref.fa', $is_algined);
 
   Description: Return HTS alignment metadata AVUs.
   Returntype : Array[HashRef]
@@ -226,16 +226,10 @@ sub make_target_metadata {
     ($component->has_subset and $component->subset ne $YHUMAN)) {
     $target = 0;
   }
-  elsif ($alt_process) {
-    $target = 0;
-  }
 
-  my @avus = ($self->make_avu($TARGET, $target));
-  if ($alt_process) {
-    if (($component->has_subset and $component->subset ne 'phix') or
-      not $component->has_subset) {
-      push @avus, $self->make_avu($ALT_TARGET, 1);
-    }
+  my @avus = ($self->make_avu($TARGET, $alt_process ? 0 : $target));
+  if ($alt_process && $target) {
+    push @avus, $self->make_avu($ALT_TARGET, 1);
   }
 
   return @avus;

@@ -1407,20 +1407,21 @@ sub check_alt_process_metadata {
               [{attribute => $TARGET,
                 value     => 0}],
               "$file_name $TARGET metadata correct when alt_process");
-    if ($path =~ /phix/) {
+    is_deeply([$obj->get_avu($ALT_PROCESS)],
+              [{attribute => $ALT_PROCESS,
+                value     => $alt_process}],
+              "$file_name $ALT_PROCESS metadata correct when alt_process");
+
+    if (($path =~ /_phix/) || ($path =~ /\#0/)) {
       is_deeply([$obj->get_avu($ALT_TARGET)],
                 [undef],
-                "$file_name $ALT_TARGET metadata not set for phiX file");
-    }else{
+                "$file_name $ALT_TARGET metadata not set");
+    } else { # including _yhuman
       is_deeply([$obj->get_avu($ALT_TARGET)],
                 [{attribute => $ALT_TARGET,
                   value     => 1}],
                 "$file_name $ALT_TARGET metadata correct when alt_process");
     }
-     is_deeply([$obj->get_avu($ALT_PROCESS)],
-              [{attribute => $ALT_PROCESS,
-                value     => $alt_process}],
-              "$file_name $ALT_PROCESS metadata correct when alt_process");
   }
 }
 

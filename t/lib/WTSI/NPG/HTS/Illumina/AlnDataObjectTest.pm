@@ -98,7 +98,8 @@ my $group_filter = sub {
 };
 
 # Groups to be added to the test iRODS
-my @irods_groups = map { $group_prefix . $_ } (10, 100, 198, 619, 2967, 3720);
+my @irods_groups = map { $group_prefix . $_ , $group_prefix . $_ . '_human' }
+                   (10, 100, 198, 619, 2967, 3720);
 push @irods_groups, $public_group;
 # Groups added to the test iRODS in fixture setup
 my @groups_added;
@@ -178,13 +179,20 @@ sub setup_test : Test(setup) {
 
         my $num_reads = 10000;
 
-        my @avus;
-        push @avus, TestAnnotator->new->make_primary_metadata
-          ($obj->composition,
+        my $composition = $obj->composition;
+        my $component = $composition->get_component(0);
+        my %args = (
            is_paired_read => 1,
            is_aligned     => $obj->is_aligned,
            num_reads      => $num_reads,
-           reference      => $obj->reference);
+           reference      => $obj->reference, 
+        );
+        my $ta = TestAnnotator->new();
+
+        my @avus;
+        push @avus, $ta->make_primary_metadata($composition, %args),
+          $ta->make_alignment_metadata(
+            $component, $num_reads, $obj->reference, $obj->is_aligned);
 
         foreach my $avu (@avus) {
           my $attribute = $avu->{attribute};
@@ -254,41 +262,6 @@ sub position : Test(12) {
       cmp_ok(WTSI::NPG::HTS::Illumina::AlnDataObject->new
              ($irods, $full_path, @initargs)->position,
              '==', 3, "$full_path position is correct");
-    }
-  }
-}
-
-sub contains_nonconsented_human : Test(12) {
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-
-  foreach my $format (qw[bam cram]) {
-    foreach my $path (sort grep { /17550/ } keys %file_composition) {
-      my $full_path = "/seq/17550/$path.$format";
-      my @initargs = _build_initargs(\%file_composition, $path);
-
-      my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
-        ($irods, $full_path, @initargs);
-
-      my $ss = $obj->subset;
-      if (not $ss) {
-        ok(!$obj->contains_nonconsented_human,
-           "$full_path is not nonconsented human");
-      }
-      elsif ($ss eq 'nonhuman' or
-             $ss eq 'yhuman'   or
-             $ss eq 'phix') {
-        ok(!$obj->contains_nonconsented_human,
-           "$full_path is not nonconsented human ($ss)");
-      }
-      elsif ($ss eq 'human' or
-             $ss eq 'xahuman') {
-        ok($obj->contains_nonconsented_human,
-           "$full_path is nonconsented human ($ss)");
-      }
-      else {
-        fail "Unexpected alignment_filter '$ss'";
-      }
     }
   }
 }
@@ -422,7 +395,7 @@ sub nonconsented_human_access_revoked : Test(6) {
                           expected_groups_before => [$public_group,
                                                      'ss_10',
                                                      'ss_100'],
-                          expected_groups_after  => [] # all access removed
+                          expected_groups_after  => ['ss_619_human']
                          });
   }
 }
