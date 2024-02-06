@@ -481,7 +481,7 @@ sub publish_plex_pri_data_mlwh : Test(23) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_plex_sec_data_mlwh : Test(59) {
+sub publish_plex_sec_data_mlwh : Test(64) {
   note '=== Tests in publish_plex_sec_data_mlwh';
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -500,9 +500,10 @@ sub publish_plex_sec_data_mlwh : Test(59) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
-  # No index files expected because the CRAM file contains no reads
+  # 17550_1#1.cram has no reads
   my @expected = ("lane$lane/17550_1#1.bam_stats",
                   "lane$lane/17550_1#1.composition.json",
+                  "lane$lane/17550_1#1.cram.crai",
                   "lane$lane/17550_1#1.flagstat",
                   "lane$lane/17550_1#1.markdups_metrics.txt",
                   "lane$lane/17550_1#1.seqchksum",
@@ -555,7 +556,7 @@ sub publish_plex_pri_data_samplesheet : Test(23) {
   check_study_metadata($irods, $pkg, @absolute_paths);
 }
 
-sub publish_plex_sec_data_samplesheet : Test(59) {
+sub publish_plex_sec_data_samplesheet : Test(64) {
   note '=== Tests in publish_plex_sec_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -578,9 +579,10 @@ sub publish_plex_sec_data_samplesheet : Test(59) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my @observed = observed_data_objects($irods, $dest_coll, $dest_coll);
-  # No index files expected because the CRAM file contains no reads
+  # 17550_1#1.cram has no reads
   my @expected = ("lane$lane/17550_1#1.bam_stats",
                   "lane$lane/17550_1#1.composition.json",
+                  "lane$lane/17550_1#1.cram.crai",
                   "lane$lane/17550_1#1.flagstat",
                   "lane$lane/17550_1#1.markdups_metrics.txt",
                   "lane$lane/17550_1#1.seqchksum",
@@ -1008,7 +1010,9 @@ sub publish_archive_path_mlwh : Test(8) {
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 
-  my $num_expected = 385;
+  # According to 18448_1.bam_flagstats.json, 18448_1.cram is empty
+  # The count below includes 18448_1.cram.crai
+  my $num_expected = 386;
   cmp_ok($num_errors,    '==', 0, 'No errors on publishing');
   cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
 

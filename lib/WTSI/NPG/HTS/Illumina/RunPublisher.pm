@@ -392,12 +392,6 @@ sub publish_index_files {
   my ($name, $directory, $suffix) =
     $self->parse_composition_filename($composition_file);
 
-  my $num_reads = $self->_find_num_reads($name);
-  if ($num_reads == 0) {
-    $self->debug("Skipping index files for $name: no reads");
-    return (0, 0, 0);
-  }
-
   my $primary_avus = sub {
     my ($obj) = @_;
     return $self->make_primary_metadata
