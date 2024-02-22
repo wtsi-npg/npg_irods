@@ -1,5 +1,10 @@
 Unreleased
 
+Release 2.47.1
+
+  - Amended policy on archival of index files. No longer skipping
+    index files if there are no reads.
+
 Release 2.47.0
 
   - Fixed some outdated POD
