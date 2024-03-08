@@ -2394,3 +2394,33 @@
   library_created_at: ~
   pac_bio_run_name: 'TRACTION-RUN-525'
   plate_number: 1
+- id_pac_bio_tmp: 120474
+  last_updated: 2024-02-19 10:07:12
+  recorded_at: 2024-02-19 10:07:12
+  id_sample_tmp: 8409942
+  id_study_tmp: 5735
+  id_pac_bio_run_lims: TRACTION-RUN-1130
+  pac_bio_run_uuid: 
+  cost_code: s4699
+  id_lims: Traction
+  tag_identifier: bc2076
+  tag_sequence: CAGCAGTGACGAGTAT
+  tag_set_id_lims: 9
+  tag_set_name: Pacbio_96_barcode_plate_v3
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag2_identifier: ~ 
+  pipeline_id_lims: Pacbio_HiFi
+  plate_barcode:  ~
+  plate_uuid_lims: 76458489-3fd9-4245-8cbf-4e64c6660675
+  plate_number: 1
+  well_label: A1
+  well_uuid_lims: 36e6f6a7-0fcc-4743-a404-f0dc939071d0
+  pac_bio_library_tube_id_lims:  5887
+  pac_bio_library_tube_uuid: eafa21b2-164b-49c8-afdc-ed2dcf3a683e
+  pac_bio_library_tube_name: SAMEA13602751
+  pac_bio_library_tube_legacy_id: ~
+  library_created_at: ~
+  pac_bio_run_name: TRACTION-RUN-1130
+  pac_bio_library_tube_barcode: TRAC-2-7582

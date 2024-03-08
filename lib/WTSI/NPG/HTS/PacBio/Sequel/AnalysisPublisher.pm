@@ -40,8 +40,8 @@ our $MOVIENAME_PATTERN = 'm[0-9a-z]+_\d+_\d+';
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
 # Additional sequence filenames permitted for loading 
-our @FNAME_PERMITTED    = qw[fail_reads removed ccs hifi_reads fl_transcripts];
-our @FNAME_NON_DEPLEXED = qw[unassigned removed];
+our @FNAME_PERMITTED    = qw[fail_reads removed ccs hifi_reads fl_transcripts sequencing_control.subreads];
+our @FNAME_NON_DEPLEXED = qw[unassigned removed sequencing_control.subreads];
 our @FNAME_FAILED       = qw[fail_reads];
 
 # Data processing level

@@ -1,5 +1,8 @@
 Unreleased
 
+ - Add sequencing_control.subreads.bam and index file to PacBio run
+   archiving. These files can be used to regenerate QC metrics.
+
 Release 2.47.1
 
   - Amended policy on archival of index files. No longer skipping

@@ -1,0 +1,3 @@
+IdxFirst	IdxCombined	IdxFirstNamed	IdxCombinedNamed	Counts	MeanScore
+-1	-1	Not Barcoded	Not Barcoded	616085	46
+75	75	bc2076	bc2076	1023758	80

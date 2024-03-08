@@ -1,0 +1,19 @@
+{
+  "createdAt": "2024-02-21T00:12:47.160Z",
+  "files": [
+    {
+      "createdAt": "2024-02-21T00:12:47.160Z",
+      "description": "Split BAM file by lima",
+      "fileSize": 1143921336,
+      "fileTypeId": "PacBio.DataSet.ConsensusReadSet",
+      "isChunked": false,
+      "modifiedAt": "2024-02-21T00:12:47.160Z",
+      "name": "Barcodes bc2076--bc2076",
+      "path": "m84098_240219_110741_s1.fail_reads.bc2076.consensusreadset.xml",
+      "sourceId": "barcoding.tasks.lima-0",
+      "uniqueId": "0f3f9556-9045-4a2a-8551-485ff07801d5"
+    }
+  ],
+  "updatedAt": "2024-02-21T00:12:47.160Z",
+  "version": "0.2.2"
+}
