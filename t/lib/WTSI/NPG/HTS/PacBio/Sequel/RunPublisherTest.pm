@@ -457,6 +457,7 @@ sub publish_files_on_instrument_5 : Test(184) {
      'm84047_230404_164952_s1.hifi_reads.unassigned.bam.pbi',
      'm84047_230404_164952_s1.hifi_reads.unassigned.consensusreadset.xml',
      'm84047_230404_164952_s1.primary_qc.tar.xz',
+     'm84047_230404_164952_s1.reports.zip',
      'm84047_230404_164952_s1.sts.xml',
      'm84047_230404_164952_s1.zmw_metrics.json.gz',
      'merged_analysis_report.json',);
@@ -478,6 +479,7 @@ sub publish_files_on_instrument_5 : Test(184) {
      'm84047_230404_172053_s2.hifi_reads.unassigned.bam.pbi',
      'm84047_230404_172053_s2.hifi_reads.unassigned.consensusreadset.xml',
      'm84047_230404_172053_s2.primary_qc.tar.xz',
+     'm84047_230404_172053_s2.reports.zip',
      'm84047_230404_172053_s2.sts.xml',
      'm84047_230404_172053_s2.zmw_metrics.json.gz',
      'merged_analysis_report.json');
@@ -499,6 +501,7 @@ sub publish_files_on_instrument_5 : Test(184) {
      'm84047_230404_175159_s3.hifi_reads.unassigned.bam.pbi',
      'm84047_230404_175159_s3.hifi_reads.unassigned.consensusreadset.xml',
      'm84047_230404_175159_s3.primary_qc.tar.xz',
+     'm84047_230404_175159_s3.reports.zip',
      'm84047_230404_175159_s3.sts.xml',
      'm84047_230404_175159_s3.zmw_metrics.json.gz',
      'merged_analysis_report.json',);
@@ -507,8 +510,8 @@ sub publish_files_on_instrument_5 : Test(184) {
   push @expected_paths, @expected_pathsA, @expected_pathsB, @expected_pathsC;
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
-  cmp_ok($num_files,     '==', 54);
-  cmp_ok($num_processed, '==', 54);
+  cmp_ok($num_files,     '==', 57);
+  cmp_ok($num_processed, '==', 57);
   cmp_ok($num_errors,    '==', 0);
 
   my @observed_paths = observed_data_objects($irods, $dest_coll);
@@ -559,6 +562,7 @@ sub publish_files_on_instrument_6 : Test(79) {
       'm84098_240219_110741_s1.hifi_reads.unassigned.bam.pbi',
       'm84098_240219_110741_s1.hifi_reads.unassigned.consensusreadset.xml',
       'm84098_240219_110741_s1.primary_qc.tar.xz',
+      'm84098_240219_110741_s1.reports.zip',
       'm84098_240219_110741_s1.sequencing_control.subreads.bam',
       'm84098_240219_110741_s1.sequencing_control.subreads.bam.pbi',
       'm84098_240219_110741_s1.sts.xml',
@@ -567,8 +571,8 @@ sub publish_files_on_instrument_6 : Test(79) {
      );
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
-  cmp_ok($num_files,     '==', 20);
-  cmp_ok($num_processed, '==', 20);
+  cmp_ok($num_files,     '==', 21);
+  cmp_ok($num_processed, '==', 21);
   cmp_ok($num_errors,    '==', 0);
 
   my @observed_paths = observed_data_objects($irods, $dest_coll);

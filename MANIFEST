@@ -16432,6 +16432,7 @@ t/data/pacbio/sequel/r84047_20230404_164149/1_A01/statistics/m84047_230404_16495
 t/data/pacbio/sequel/r84047_20230404_164149/1_A01/statistics/m84047_230404_164952_s1.hifi_reads.lima_report.txt
 t/data/pacbio/sequel/r84047_20230404_164149/1_A01/statistics/m84047_230404_164952_s1.hifi_reads.lima_summary.txt
 t/data/pacbio/sequel/r84047_20230404_164149/1_A01/statistics/m84047_230404_164952_s1.hifi_reads.unassigned.json
+t/data/pacbio/sequel/r84047_20230404_164149/1_A01/statistics/m84047_230404_164952_s1.reports.zip
 t/data/pacbio/sequel/r84047_20230404_164149/1_A01/statistics/m84047_230404_164952_s1.summary.json
 t/data/pacbio/sequel/r84047_20230404_164149/1_A01/statistics/m84047_230404_164952_s1.zmw_metrics.csv.gz
 t/data/pacbio/sequel/r84047_20230404_164149/1_A01/statistics/m84047_230404_164952_s1.zmw_metrics.json.gz
@@ -16479,6 +16480,7 @@ t/data/pacbio/sequel/r84047_20230404_164149/1_B01/statistics/m84047_230404_17205
 t/data/pacbio/sequel/r84047_20230404_164149/1_B01/statistics/m84047_230404_172053_s2.hifi_reads.lima_report.txt
 t/data/pacbio/sequel/r84047_20230404_164149/1_B01/statistics/m84047_230404_172053_s2.hifi_reads.lima_summary.txt
 t/data/pacbio/sequel/r84047_20230404_164149/1_B01/statistics/m84047_230404_172053_s2.hifi_reads.unassigned.json
+t/data/pacbio/sequel/r84047_20230404_164149/1_B01/statistics/m84047_230404_172053_s2.reports.zip
 t/data/pacbio/sequel/r84047_20230404_164149/1_B01/statistics/m84047_230404_172053_s2.summary.json
 t/data/pacbio/sequel/r84047_20230404_164149/1_B01/statistics/m84047_230404_172053_s2.zmw_metrics.csv.gz
 t/data/pacbio/sequel/r84047_20230404_164149/1_B01/statistics/m84047_230404_172053_s2.zmw_metrics.json.gz
@@ -16526,6 +16528,7 @@ t/data/pacbio/sequel/r84047_20230404_164149/1_C01/statistics/m84047_230404_17515
 t/data/pacbio/sequel/r84047_20230404_164149/1_C01/statistics/m84047_230404_175159_s3.hifi_reads.lima_report.txt
 t/data/pacbio/sequel/r84047_20230404_164149/1_C01/statistics/m84047_230404_175159_s3.hifi_reads.lima_summary.txt
 t/data/pacbio/sequel/r84047_20230404_164149/1_C01/statistics/m84047_230404_175159_s3.hifi_reads.unassigned.json
+t/data/pacbio/sequel/r84047_20230404_164149/1_C01/statistics/m84047_230404_175159_s3.reports.zip
 t/data/pacbio/sequel/r84047_20230404_164149/1_C01/statistics/m84047_230404_175159_s3.summary.json
 t/data/pacbio/sequel/r84047_20230404_164149/1_C01/statistics/m84047_230404_175159_s3.zmw_metrics.csv.gz
 t/data/pacbio/sequel/r84047_20230404_164149/1_C01/statistics/m84047_230404_175159_s3.zmw_metrics.json.gz
