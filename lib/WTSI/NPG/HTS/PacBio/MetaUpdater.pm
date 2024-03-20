@@ -78,7 +78,8 @@ sub update_secondary_metadata {
     try {
       my @run_records = $self->find_pacbio_runs(
           $id_run, $well, $tag_id, $plate_number);
-      my @secondary_avus = $self->make_secondary_metadata(@run_records);
+      my @secondary_avus = map { $self->$_(@run_records) }
+        qw/make_secondary_metadata make_qc_metadata/;
       $obj->update_secondary_metadata(@secondary_avus);
 
       $self->info("Updated metadata on '$path' ",
