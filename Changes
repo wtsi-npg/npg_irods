@@ -1,5 +1,11 @@
 Unreleased
 
+Release 2.48.0
+ - Add sequencing_control.subreads.bam and index file to PacBio run
+   archiving. These files can be used to regenerate QC metrics.
+ - Add new (SMRT Link v13+) reports.zip file to PacBio Revio data 
+   archiving.
+
 Release 2.47.1
 
   - Amended policy on archival of index files. No longer skipping

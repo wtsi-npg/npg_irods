@@ -330,7 +330,7 @@ sub _publish_revio_instrument_cell {
   my ($nfx, $npx, $nex) = $self->publish_xml_files
     ($smrt_name, $pub_xml);
   my ($nfa, $npa, $nea) = $self->publish_aux_files
-    ($smrt_name, 'zmw_metrics[.]json[.]gz');
+    ($smrt_name, q{(zmw_metrics[.]json[.]gz|reports.zip)});
   my ($nfi, $npi, $nei) = $self->publish_image_archive
     ($smrt_name, $meta_data, $process_type);
 
