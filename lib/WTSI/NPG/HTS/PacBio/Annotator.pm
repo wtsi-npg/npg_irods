@@ -225,6 +225,51 @@ sub make_tag_metadata {
   return $self->_make_multi_value_metadata(\@run_records, $method_attr);
 }
 
+=head2 make_qc_metadata
+
+  Arg [n]      PacBio run database records,
+               List[WTSI::DNAP::Warehouse::Schema::Result::PacBioRun].
++
+  Example    : my @avus = $ann->make_qc_metadata(@run_records);
+  Description: Return QC outcome AVU metadata for a single product.
+
+               An empty list is returned if the input list contains
+               either no records or multiple records or the only record
+               is not linked to a record in the pac_bio_product_metrics
+               table.
+
+               This method should be called in the context of a single
+               iRODS object. If, according to a record in the pac_bio_run
+               table, a well contains multiple samples, but in practice
+               no deplexing was done, when trying to establish data
+               provenance we might get multiple pac_bio_run table rows.
+               Opting out of assigning a QC outcome in this case is
+               a conscious conservative decision that was made at the
+               time of writing (March 2024).
+
+  Returntype : List[HashRef]
+
+=cut
+
+sub make_qc_metadata {
+  my ($self, @run_records) = @_;
+
+   my @avus = ();
+  if (@run_records == 1) {
+    my @product_metrics = $run_records[0]->pac_bio_product_metrics()->all();
+    # Absence of linked product records is not unknown, one linked product
+    # record is normal, multiple linked records is, most likely, an error.
+    if (@product_metrics == 1) {
+      my $qc_outcome = $product_metrics[0]->qc();
+      if (defined $qc_outcome) {
+        push @avus, $self->make_avu($QC_STATE, $qc_outcome);
+      }
+    }
+  }
+
+  return @avus;
+}
+
 sub _make_multi_value_metadata {
   my ($self, $objs, $method_attr) = @_;
   # The method_attr argument is a map of method name to attribute name

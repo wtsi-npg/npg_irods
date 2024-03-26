@@ -73,7 +73,7 @@ sub require : Test(1) {
   require_ok('WTSI::NPG::HTS::PacBio::MetaUpdater');
 }
 
-sub update_secondary_metadata : Test(7) {
+sub update_secondary_metadata : Test(8) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $updater = WTSI::NPG::HTS::PacBio::MetaUpdater->new
@@ -135,7 +135,20 @@ sub update_secondary_metadata : Test(7) {
     'plate_number', $plate_number); # Update primary metadata
   my $new_study_name = 'Updated for the test';
   $study_row->update({name => $new_study_name}); # Update study name in mlwh
-  
+  # Create a linked product row with QC outcome defined.
+  my $rw_row = $wh_schema->resultset('PacBioRunWellMetric')->create({
+    pac_bio_run_name => $run_name,
+    well_label => $well_label,
+    plate_number => $plate_number,
+    id_pac_bio_product => 'A' x 64,
+    instrument_type => 'SomeType'
+  });
+  my $p_row = $wh_schema->resultset('PacBioProductMetric')->create({
+    id_pac_bio_rw_metrics_tmp => $rw_row->id_pac_bio_rw_metrics_tmp,
+    id_pac_bio_tmp => $row->id_pac_bio_tmp,
+    id_pac_bio_product => $rw_row->id_pac_bio_product
+  });
+
   # Call the updater again.
   $updater->update_secondary_metadata(\@paths_to_update);
   
@@ -165,6 +178,25 @@ sub update_secondary_metadata : Test(7) {
 
   is_deeply($updated_as_dict, $expected_as_dict,
     'Updated metadata is correct after the update');
+
+  $p_row->update({qc => 1});
+  $expected_as_dict->{$QC_STATE} = 1;
+  for my $key ((map { $_ . '_history'} ($STUDY_NAME, $PACBIO_STUDY_NAME))) {
+    delete $expected_as_dict->{$key};
+  }
+  # Call the updater again.
+  $updater->update_secondary_metadata(\@paths_to_update); 
+  # Inspect the metadata after the update.
+  $updated = WTSI::NPG::HTS::DataObject->new
+    (collection  => $irods_tmp_coll,
+     data_object => $data_file,
+     irods       => $irods)->metadata;
+
+  $updated_as_dict = {};
+  for my $meta (@{$updated}) {
+    $updated_as_dict->{$meta->{'attribute'}} = $meta->{'value'};
+  }
+  is($expected_as_dict->{$QC_STATE}, 1, 'Updated metadata contains qc outcome');  
 }
 
 1;
