@@ -27,14 +27,11 @@ our $SEQUENCE_INDEX_FORMAT  = 'pbi';
 our $SEQUENCE_PRODUCT    = 'subreads';
 our $SEQUENCE_AUXILIARY  = 'scraps';
 
-# CCS Sequence file types - Sequel IIe
+# CCS Sequence file types
 our $CCS_SEQUENCE_PRODUCT    = 'reads';
 our $HIFI_SEQUENCE_PRODUCT   = 'hifi_reads';
 our $HIFIUB_SEQUENCE_PRODUCT = 'unbarcoded.hifi_reads';
-
-# CCS Sequence file types - Revio
-our $REV_HIFIUB_SEQ_PRODUCT = 'hifi_reads.unassigned';
-
+our $REV_HIFIUB_SEQ_PRODUCT  = 'hifi_reads.unassigned';
 
 ## Processing types
 our $OFFINSTRUMENT  = 'OffInstrument';
@@ -43,6 +40,7 @@ our $ONINSTRUMENTHO = 'OnInstrumentHifiOnly';
 our $ONINSTRUMENTDP = 'OnInstrumentDeplex';
 our $ONINSTRUMENTSR = 'OnInstrumentPlusSubreads';
 our $ONINST_REVIO1  = 'OnInstrumentRevioOne';
+our $ONINST_REVIO2  = 'OnInstrumentRevioTwo';
 
 # Generic file prefix
 our $FILE_PREFIX_PATTERN  = 'm[0-9a-z]+_\d+_\d+';
@@ -96,6 +94,11 @@ sub _build_movie_pattern {
     if ( defined $self->list_files($smrt_name, $REVIO_PREFIX_PATTERN
       .q{[.]}. $REV_HIFIUB_SEQ_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT
       .q{$}, undef, 1)->[0] ) {
+        $revio++;
+    } elsif ( defined $self->list_files($smrt_name, $REVIO_PREFIX_PATTERN
+      .q{[.]}. $HIFI_SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT
+      .q{$}, undef, 1)->[0] ) {
+        ## non deplexed data now supported for Revio
         $revio++;
     }
     last if $revio > 0;
@@ -166,7 +169,8 @@ sub publish_files {
       ($num_files_cell, $num_processed_cell, $num_errors_cell) =
         $self->_publish_on_instrument_cell($smrt_name, $process_type);
     }
-    elsif ($process_type eq $ONINST_REVIO1) {
+    elsif (($process_type eq $ONINST_REVIO1) ||
+           ($process_type eq $ONINST_REVIO2)) {
       ($num_files_cell, $num_processed_cell, $num_errors_cell) =
         $self->_publish_revio_instrument_cell($smrt_name, $process_type);
     }
@@ -211,7 +215,7 @@ sub _processing_type {
    }
    elsif (defined $self->list_files($smrt_name, $self->_movie_pattern .q{[.]}.
     $HIFI_SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$})->[0]) {
-     $type = $ONINSTRUMENTHO;
+     $type = ($self->_is_onrevio) ? $ONINST_REVIO2 : $ONINSTRUMENTHO;
    }
    elsif (defined $self->list_files($smrt_name, $self->_movie_pattern .q{[.]}.
     $HIFIUB_SEQUENCE_PRODUCT .q{[.]}. $SEQUENCE_FILE_FORMAT .q{$})->[0]) {
@@ -325,8 +329,7 @@ sub _publish_revio_instrument_cell {
 
   my $pub_xml = q[sts];
 
-  my ($nfb, $npb, $neb) = $self->_publish_deplexed_files
-    ($smrt_name);
+  my ($nfb, $npb, $neb) = $self->_publish_deplexed_files($smrt_name);
   my ($nfx, $npx, $nex) = $self->publish_xml_files
     ($smrt_name, $pub_xml);
   my ($nfa, $npa, $nea) = $self->publish_aux_files
@@ -641,6 +644,9 @@ sub publish_image_archive {
           q{hifi_reads.lima_summary.txt|summary.json|fail_reads.json|hifi_reads.json|}.
           q{ccs_report.json|fail_reads.unassigned.json|hifi_reads.unassigned.json};
       }
+      elsif ($process_type eq $ONINST_REVIO2) {
+        $file_types  = q{ccs_report.txt|summary.json|ccs_report.json};
+      }
 
       my $file_pattern1 = $self->_movie_pattern .q{.}. $file_types . q{$};
       my $file_count = scalar split m/[|]/msx, $file_types;
@@ -649,7 +655,8 @@ sub publish_image_archive {
       push @runfolder_files, @{$runfolder_file1};
 
       # Optional 5mC report file
-      my $fmc_pattern = ($process_type eq $ONINST_REVIO1) ?
+      my $fmc_pattern =
+        (($process_type eq $ONINST_REVIO1) || ($process_type eq $ONINST_REVIO2)) ?
         q{fail_reads.5mc_report.json|hifi_reads.5mc_report.json} : q{5mc_report.json};
       my $file_pattern2   = $self->_movie_pattern .q{.}. $fmc_pattern .q{$};
       my $runfolder_file2 = $self->list_files($smrt_name,$file_pattern2);

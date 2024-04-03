@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PacBioDataModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="4.0.1" xmlns="http://pacificbiosciences.com/PacBioDataModel.xsd">
+  <ExperimentContainer CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00">
+    <InvestigatorName>Default</InvestigatorName>
+    <CreatedDate>2024-03-21</CreatedDate>
+    <Runs>
+      <Run Name="TRACTION-RUN-1199" Description="TRAC-2-8178 253pM TRAC-2-8179 248pM TRAC-2-8033 66pM TRAC-2-8034 217pM" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" UniqueId="6add1ac4-58e2-442a-b3ce-c02a9ce08632" MetaType="Run" TimeStampedName="r84098_20240321_105751" Status="Running" ChipType="25mChip" InstrumentType="Revio" CreatedBy="ju5" StartedBy="unknown" WhenStarted="2024-03-21T11:33:24.1187243Z">
+        <Outputs>
+          <SubreadSets>
+            <SubreadSet Name="TRAC-2-8178-Cell1" CreatedAt="2024-03-21T09:09:10.924Z" UniqueId="c0acfa39-fe26-40b9-85c4-19ce39406136" MetaType="SubreadSetCollection" TimeStampedName="84098-SubreadSetCollection-2024-03-21T10:57:51.139Z" xmlns="http://pacificbiosciences.com/PacBioDatasets.xsd">
+              <ExternalResources xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">
+                <ExternalResource UniqueId="2d27e534-ad5f-4c1b-9c58-e555b7469101" MetaType="ExternalResource" TimeStampedName="84098-ExternalResource-2024-03-21T10:57:51.139Z" />
+              </ExternalResources>
+              <DataSetMetadata>
+                <TotalLength>0</TotalLength>
+                <NumRecords>0</NumRecords>
+                <Collections xmlns="http://pacificbiosciences.com/PacBioCollectionMetadata.xsd">
+                  <CollectionMetadata CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" UniqueId="c0acfa39-fe26-40b9-85c4-19ce39406136" MetaType="CollectionMetadata" TimeStampedName="84098-CollectionMetadata-2024-03-21T10:57:51.139Z" Context="m84098_240321_114027_s1" Status="PostPrimaryPending" InstrumentId="84098" InstrumentName="84098">
+                    <MultiJobId>19294</MultiJobId>
+                    <ProjectId>1</ProjectId>
+                    <ConsensusReadSetRef UniqueId="d28a0340-481d-44e3-80d8-e1546c98343e" />
+                    <RunDetails>
+                      <TimeStampedName>r84098_20240321_105751</TimeStampedName>
+                      <Name>TRACTION-RUN-1199</Name>
+                      <CreatedBy>ju5</CreatedBy>
+                      <WhenCreated>2024-03-21T09:09:10.924Z</WhenCreated>
+                      <StartedBy>unknown</StartedBy>
+                      <WhenStarted>2024-03-21T11:33:24.1187243Z</WhenStarted>
+                    </RunDetails>
+                    <WellSample Name="TRAC-2-8178" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00">
+                      <WellName>A01</WellName>
+                      <Application>unspecified</Application>
+                      <Concentration>0</Concentration>
+                      <OnPlateLoadingConcentration>253</OnPlateLoadingConcentration>
+                      <InsertSize>13641</InsertSize>
+                      <IsoSeq>false</IsoSeq>
+                      <IsCCS>true</IsCCS>
+                      <SampleReuseEnabled>false</SampleReuseEnabled>
+                      <StageHotstartEnabled>false</StageHotstartEnabled>
+                      <SizeSelectionEnabled>false</SizeSelectionEnabled>
+                      <UseCount>0</UseCount>
+                      <DNAControlComplex>Revio sequencing control</DNAControlComplex>
+                      <BioSamples xmlns="http://pacificbiosciences.com/PacBioSampleInfo.xsd">
+                        <BioSample Name="7323STDY14717195" />
+                      </BioSamples>
+                    </WellSample>
+                    <Automation Name="Workflow_Kestrel.py">
+                      <AutomationParameters xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">
+                        <AutomationParameter Name="MovieLength" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Double" SimpleValue="1440.0" />
+                        <AutomationParameter Name="DynamicLoadingCognate" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="String" SimpleValue="True" />
+                        <AutomationParameter Name="ReuseCell" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Boolean" SimpleValue="False" />
+                        <AutomationParameter Name="TotalSamples" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Int32" SimpleValue="1" />
+                        <AutomationParameter Name="InsertSize" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Int32" SimpleValue="13641" />
+                        <AutomationParameter Name="PCDinPlate" ValueDataType="Boolean" SimpleValue="True" />
+                        <AutomationParameter Name="UsePredictiveLoadingBuffer" ValueDataType="Boolean" SimpleValue="True" />
+                        <AutomationParameter Name="CollectionNumber" ValueDataType="Int32" SimpleValue="0" />
+                        <AutomationParameter Name="BindingKitPartNumber" ValueDataType="String" SimpleValue="102-739-100" />
+                        <AutomationParameter Name="TipSearchMaxDuration" ValueDataType="Int32" SimpleValue="576" />
+                        <AutomationParameter Name="PPAEstimatedDuration" ValueDataType="Double" SimpleValue="780" />
+                        <AutomationParameter Name="PPAMinDuration" ValueDataType="Double" SimpleValue="620.1600000000001" />
+                        <AutomationParameter Name="PPAMaxDuration" ValueDataType="Double" SimpleValue="939.84" />
+                        <AutomationParameter Name="PPATimeout" ValueDataType="Double" SimpleValue="3180" />
+                        <AutomationParameter Name="CCSOverheadDurationMinutesPerUmyGBase" ValueDataType="Double" SimpleValue="0.2" />
+                        <AutomationParameter Name="SNRCut" ValueDataType="Double" SimpleValue="1.5" />
+                        <AutomationParameter Name="HQRFMethod" ValueDataType="String" SimpleValue="N2" />
+                        <AutomationParameter Name="DynamicLoadingTotalTimeSeconds" ValueDataType="Double" SimpleValue="3836.5730354" />
+                        <AutomationParameter Name="DynamicLoadingTimeZero" ValueDataType="String" SimpleValue="3/21/2024 11:57:06 AM" />
+                        <AutomationParameter Name="DynamicLoadingServiceStartTime" ValueDataType="String" SimpleValue="3/21/2024 12:06:03 PM" />
+                        <AutomationParameter Name="DynamicLoadingServiceTotalTimeSeconds" ValueDataType="Double" SimpleValue="3300.0040303" />
+                      </AutomationParameters>
+                      <Defaults xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd" />
+                    </Automation>
+                    <CollectionNumber>0</CollectionNumber>
+                    <CellIndex>0</CellIndex>
+                    <SetNumber>0</SetNumber>
+                    <CellPac Name="Revio SMRT Cell tray" Description="Tray of 4 Revio SMRT Cells for sequencing on the Revio system." Version="1.0" PartNumber="102-202-200" LotNumber="1000001953" LabelNumber="EA092849" Barcode="EA092849" ExpirationDate="2024-11-01" MovieTimeGrade="LR">
+                      <ChipLayout xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">KestrelRTO2</ChipLayout>
+                    </CellPac>
+                    <ControlKit Name="Revio sequencing control" Description="The Revio polymerase kit sequencing control contains a fixed 11 kb template bound to polymerase for use as a spike-in control." Tags="Control Kit, CCK" Version="1.0" PartNumber="102-798-000" LotNumber="Lxxxxx" Barcode="Lxxxxx102798000123199" ExpirationDate="2099-12-31" ChipType="25mChip">
+                      <CustomSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">&gt;left_adapter\nTAGAGAGAGAAAAGGAGGAGGAGGCAACAACAACAACTCTCTCTA\n&gt;right_adapter\nTAGAGAGAGAAAAGGAGGAGGAGGCAACAACAACAACTCTCTCTA\n&gt;custom_sequence\nTCCCGACTGGAAAGCGGGCAGTGAGCGCAACGCAATTAATGTGAGTTAGCTCACTCATTAGGCACCCCAGGCTTTACACTTTATGCTTCCGGCTCGTATGTTGTGTGGAATTGTGAGCGGATAACAATTTCACACAGGAAACAGCTATGACCATGATTACGCCAAGCTTGCATGCCTGCAGGTCGACTCTAGAGGATCCCCCTGGCCGCATCCAGACTCAAATCAACGACCAGATCGCCTACCGGTTCAGCCATACCGGACTCCTCCTGCGATCCCTTCTGATACTGTCATCAGCATTACGTCATCCTCCGTCATGTCCGCCACATCCGGGGAAGCGGGGATAACTTCATTCCCGTCCGGGCCAAAGCGGACACCTCCGGCAAGCCCTGCCGCTTTCTGCAGCAGGCTCGCCAGCAGCGCACTGAGATCCAGCTGCCAGCGGGAAATACTGATGCGCAGCGCCGCCAGCGCATAAACGAAGCAGTCGAGTGCCTCATTGCGTCGCTTTTTGCTGTCCCACAGTATTTTTTTCCTGCCATCCACCCATTTTTCGACCTGCTCTTCAGCAGTCAGCTGCTGCGCTTCGGTCAGATCAAAAATAGGGTACCGAGCTCGAATTCACTGGCCGTCGTTTTACAACGTCGTGACTGGGAAAACCCTGGCGTTACCCAACTTAATCGCCTTGCAGCACATCCCCCTTTCGCCAGCTGGCGTAATAGCGAAGAGGCCCGCACCGATCGCCCTTCCCAACAGTTGCGCAGCCTGAATGGCGAATGGCGCCTGATGCGGTATTTTCTCCTTA</CustomSequence>
+                    </ControlKit>
+                    <TemplatePrepKit Name="SMRTbell® Prep Kit - Revio" Description="The SMRTbell® Prep Kit contains reagent supplies to perform SMRTbell library preparations of primer-annealed SMRTbell libraries for insert sizes ranging from 500 bp to over 20 kb." Tags="Template Prep Kit, TPK" Version="1.0" PartNumber="999-999-001" LotNumber="Lxxxxx" Barcode="Lxxxxx999999001123199" ExpirationDate="2099-12-31" ChipType="25mChip" MinInsertSize="500" MaxInsertSize="20000">
+                      <LeftAdaptorSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">CAACAACAACAACGGAGGAGGAGGAAAAG</LeftAdaptorSequence>
+                      <LeftPrimerSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">aacggaggaggagga</LeftPrimerSequence>
+                      <RightAdaptorSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">CAACAACAACAACGGAGGAGGAGGAAAAG</RightAdaptorSequence>
+                      <RightPrimerSequence xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd">aacggaggaggagga</RightPrimerSequence>
+                    </TemplatePrepKit>
+                    <BindingKit Name="Revio polymerase kit" Description="The Revio polymerase kit contains reagents for binding polymerase to SMRTbell libraries for sequencing on the Revio system." Tags="Binding Kit, BDK" Version="1.0" PartNumber="102-739-100" LotNumber="Lxxxxx" Barcode="Lxxxxx102739100123199" ExpirationDate="2099-12-31" ChipType="25mChip" />
+                    <SequencingKitPlate Name="Revio sequencing plate" Description="Sequencing reagents supporting 4 Revio SMRT Cells." Tags="Sequencing Kit, SQK" Version="1.0" PartNumber="102-118-800" LotNumber="034063" LabelNumber="00406" PlateNumber="1" Barcode="034063102118800081624" ExpirationDate="2024-08-16" ChipType="25mChip" MaxCollections="4" ActiveHours="0.8418175882777778" ActiveHoursLimit="336" NumOilTubes="0" NumOseTubes="0" SupportsDynamicLoading="true" />
+                    <Primary>
+                      <AutomationName>SequelAlpha</AutomationName>
+                      <ConfigFileName>SqlPoC_SubCrf_2C2A-t2.xml</ConfigFileName>
+                      <SequencingCondition>DefaultPrimarySequencingCondition</SequencingCondition>
+                      <CCSOptions>
+                        <ExecutionMode>OnInstrument</ExecutionMode>
+                        <IncludeKinetics>false</IncludeKinetics>
+                      </CCSOptions>
+                      <OutputOptions>
+                        <ResultsFolder>r84098_20240321_105751/1_A01/</ResultsFolder>
+                        <CollectionPathUri>/lustre/scratch120/pacbio/staging/r84098_20240321_105751/1_A01/</CollectionPathUri>
+                        <CopyFiles>
+                          <CollectionFileCopy>Bam</CollectionFileCopy>
+                          <CollectionFileCopy>Fasta</CollectionFileCopy>
+                        </CopyFiles>
+                        <Readout>Bases_Without_QVs</Readout>
+                        <MetricsVerbosity>Minimal</MetricsVerbosity>
+                        <TransferResource>
+                          <Id>76b3ab89-686d-483b-99f9-cb348bd596ab</Id>
+                          <TransferScheme>SRS</TransferScheme>
+                          <Name>srs-scheme-2</Name>
+                          <Description>Sanger srs</Description>
+                          <DestPath>/lustre/scratch120/pacbio/staging</DestPath>
+                        </TransferResource>
+                      </OutputOptions>
+                    </Primary>
+                    <Secondary>
+                      <AutomationName>SMRTLinkRunDesign</AutomationName>
+                      <AutomationParameters>
+                        <AutomationParameter Name="SourceId" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="String" SimpleValue="smrtlink-rest-api" />
+                        <AutomationParameter Name="CCS" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Boolean" SimpleValue="True" />
+                        <AutomationParameter Name="CCSMode" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="String" SimpleValue="OnInstrument" />
+                        <AutomationParameter Name="Kinetics" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Boolean" SimpleValue="False" />
+                        <AutomationParameter Name="AllReads" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Boolean" SimpleValue="True" />
+                        <AutomationParameter Name="Demultiplex" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Boolean" SimpleValue="False" />
+                        <AutomationParameter Name="DemultiplexMode" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="String" SimpleValue="None" />
+                        <AutomationParameter Name="FullResolutionBaseQual" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Boolean" SimpleValue="False" />
+                        <AutomationParameter Name="SubreadToHiFiPileup" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Boolean" SimpleValue="False" />
+                        <AutomationParameter Name="ByStrand" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Boolean" SimpleValue="False" />
+                        <AutomationParameter Name="CpG" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Boolean" SimpleValue="True" />
+                        <AutomationParameter Name="AAV" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Boolean" SimpleValue="False" />
+                        <AutomationParameter Name="Heteroduplex" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Boolean" SimpleValue="False" />
+                        <AutomationParameter Name="SampleSubreadsPct" CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="Int32" SimpleValue="0" />
+                      </AutomationParameters>
+                    </Secondary>
+                    <UserDefinedFields>
+                      <DataEntities Name=" LIMS_IMPORT " CreatedAt="2024-03-21T09:09:10.924Z" ModifiedAt="0001-01-01T00:00:00" ValueDataType="String" SimpleValue="DefaultUserDefinedFieldLIMS" xmlns="http://pacificbiosciences.com/PacBioBaseDataModel.xsd" />
+                    </UserDefinedFields>
+                    <ComponentVersions>
+                      <VersionInfo Name="ics" Version="13.0.0.212033" />
+                      <VersionInfo Name="iui" Version="Unknown" />
+                      <VersionInfo Name="chemistry" Version="13.0.0.205983" />
+                      <VersionInfo Name="pa" Version="13.0.0.212033" />
+                      <VersionInfo Name="basecaller" Version="13.0.0" />
+                      <VersionInfo Name="baz2bam" Version="release/kestrel-13_002388e6797af47f3ebff3ecb52a2da1e62080c5-dirty" />
+                      <VersionInfo Name="ccs" Version="ccs 8.0.0 (commit v8.0.0)&#xA;&#xA;Using:&#xA;  unanimity : 8.0.0 (commit v8.0.0)&#xA;  pbbam     : 2.5.0 (commit v2.5.0)&#xA;  pbcopper  : 2.4.0 (commit v2.4.0)&#xA;  pancake   : 2.2.0 (commit v2.2.0)&#xA;  pbsparc   : 1.1.0 (commit v1.1.0)&#xA;  pbdc      : 1.3.1 (commit v1.3.1)&#xA;  boost     : 1.81&#xA;  htslib    : 1.17&#xA;  zlib      : 1.2.13" />
+                      <VersionInfo Name="jasmine" Version="jasmine 2.2.0&#xA;&#xA;Using:&#xA;  jasmine     : 2.2.0 (commit v2.2.0)&#xA;  pbbam       : 2.5.0 (commit v2.5.0)&#xA;  pbcopper    : 2.4.0 (commit v2.4.0)&#xA;  pbort       : 1.0.0 (commit v1.0.0)&#xA;  boost       : 1.81&#xA;  htslib      : 1.17&#xA;  onnxruntime : 1.11.0&#xA;  zlib        : 1.2.13" />
+                      <VersionInfo Name="lima" Version="lima 2.9.0&#xA;&#xA;Using:&#xA;  lima      : 2.9.0 (commit v2.9.0)&#xA;  pbbam     : 2.5.0 (commit v2.5.0)&#xA;  pbcopper  : 2.4.0 (commit v2.4.0)&#xA;  boost     : 1.81&#xA;  htslib    : 1.17&#xA;  zlib      : 1.2.13" />
+                      <VersionInfo Name="pa-cal" Version="13.0.0.002388e6797af47f3ebff3ecb52a2da1e62080c5-dirty" />
+                      <VersionInfo Name="pa-wsgo" Version="13.0.2-0fe811ceb7ddd492390327f845a31332a049119c" />
+                      <VersionInfo Name="pawnee" Version="pawnee 1.3.8 (commit v1.3.8)" />
+                      <VersionInfo Name="reducestats" Version="release/kestrel-13_002388e6797af47f3ebff3ecb52a2da1e62080c5-dirty" />
+                      <VersionInfo Name="samtools" Version="samtools 1.17&#xA;Using htslib 1.17&#xA;Copyright (C) 2023 Genome Research Ltd.&#xA;&#xA;Samtools compilation details:&#xA;    Features:       build=configure curses=no &#xA;    CC:             gcc&#xA;    CPPFLAGS:       -I/var/lib/bamboo/bamboo-agent-home/xml-data/build-dir/RBREVIO-K13REVINST-SAM/software/include&#xA;    CFLAGS:         -Wall -g -O2&#xA;    LDFLAGS:        -L/var/lib/bamboo/bamboo-agent-home/xml-data/build-dir/RBREVIO-K13REVINST-SAM/software/lib&#xA;    HTSDIR:         htslib-1.17&#xA;    LIBS:           &#xA;    CURSES_LIB:     &#xA;&#xA;HTSlib compilation details:&#xA;    Features:       build=configure libcurl=no S3=no GCS=no libdeflate=no lzma=no bzip2=no plugins=no htscodecs=1.4.0&#xA;    CC:             gcc&#xA;    CPPFLAGS:       -I/var/lib/bamboo/bamboo-agent-home/xml-data/build-dir/RBREVIO-K13REVINST-SAM/software/include&#xA;    CFLAGS:         -Wall -g -O2 -fvisibility=hidden&#xA;    LDFLAGS:        -L/var/lib/bamboo/bamboo-agent-home/xml-data/build-dir/RBREVIO-K13REVINST-SAM/software/lib -fvisibility=hidden &#xA;&#xA;HTSlib URL scheme handlers present:&#xA;    built-in:&#x9; preload, data, file&#xA;    crypt4gh-needed:&#x9; crypt4gh&#xA;    mem:&#x9; mem" />
+                      <VersionInfo Name="smrtlink-analysisservices-gui" Version="13.0.0.207600" />
+                      <VersionInfo Name="smrtimisc" Version="13.0.0.207600" />
+                      <VersionInfo Name="smrttools" Version="13.0.0.207600" />
+                      <VersionInfo Name="smrtlink" Version="13.0.0.207600" />
+                      <VersionInfo Name="smrtinub" Version="13.0.0.207600" />
+                    </ComponentVersions>
+                  </CollectionMetadata>
+                </Collections>
+              </DataSetMetadata>
+            </SubreadSet>
+          </SubreadSets>
+        </Outputs>
+      </Run>
+    </Runs>
+  </ExperimentContainer>
+</PacBioDataModel>
