@@ -1,0 +1,42 @@
+{
+    "_comment": "Created by pbcopper v2.4.0",
+    "attributes": [],
+    "dataset_uuids": [],
+    "id": "lima_infer",
+    "plotGroups": [],
+    "tables": [
+        {
+            "columns": [
+                {
+                    "header": "Barcode",
+                    "id": "first_bc_name",
+                    "values": [
+                        "bc2048--bc2048",
+                        "unassigned"
+                    ]
+                },
+                {
+                    "header": "Reads, %",
+                    "id": "num_zmws",
+                    "values": [
+                        98.6,
+                        1.4
+                    ]
+                },
+                {
+                    "header": "Barcode score, mean",
+                    "id": "mean_bc_score",
+                    "values": [
+                        97,
+                        0
+                    ]
+                }
+            ],
+            "id": "inferred_barcode_table",
+            "title": "Inferred Barcodes"
+        }
+    ],
+    "title": "Inferred Barcodes",
+    "uuid": "8b88fc06-4c6d-4375-91c8-34153c70b3da",
+    "version": "1.0.1"
+}

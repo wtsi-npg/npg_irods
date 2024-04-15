@@ -443,7 +443,7 @@ sub publish_files_4 : Test(6) {
   
   my $runfolder_path = "$analysis_path/cromwell-job/call-lima/execution",
   my $dest_coll      = "$irods_tmp_coll/publish_sequence_files";
-  my $expected_json  = 't/data/mlwh_json/pacbio.json';
+  my $expected_json  = 't/data/mlwh_json/pacbio2.json';
 
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
     (restart_file    => catfile($tmpdir->dirname, 'published.json'),

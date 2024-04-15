@@ -380,7 +380,7 @@ sub _build_metadata{
     # well and plate number as no merged cell analysis - so just pick one.
     my @files = $self->list_directory
       ($output_path, filter => $METADATA_SET .q[.]. $METADATA_FORMAT . q[$]);
-    push @metafiles, $files[0];      
+    push @metafiles, $files[0];
   } elsif ($self->is_oninstrument == 1 && ! -d $entry_path && $self->is_smtwelve == 1) {
     # Revio
     @metafiles = $self->list_directory

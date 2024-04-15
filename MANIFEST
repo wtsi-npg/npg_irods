@@ -16298,6 +16298,7 @@ t/data/log_publisher/outgoing/100818_IL32_10371/RTALogs/20150909-1608_WarningLog
 t/data/mlwh_json/illumina.json
 t/data/mlwh_json/illumina_existing.json
 t/data/mlwh_json/pacbio.json
+t/data/mlwh_json/pacbio2.json
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.adapters.fasta
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.scraps.bam
 t/data/pacbio/sequel/r54097_20170727_165601/1_A02/m54097_170727_170646.scraps.bam.pbi
@@ -16591,17 +16592,6 @@ t/data/pacbio/sequel_analysis/0000002152/entry-points/7da072af-387d-49e8-8ee3-b0
 t/data/pacbio/sequel_analysis/0000002152/outputs/barcode_ccs.report.json
 t/data/pacbio/sequel_analysis/0000002152/outputs/ccs_processing.report.json
 t/data/pacbio/sequel_analysis/0000002152/outputs/ccs.report.json
-t/data/pacbio/sequel_analysis/0000003280/cromwell-job/call-demultiplex_barcodes/call-lima/execution/demultiplex.bc1009_BAK8A_OA--bc1009_BAK8A_OA.bam
-t/data/pacbio/sequel_analysis/0000003280/cromwell-job/call-demultiplex_barcodes/call-lima/execution/demultiplex.bc1009_BAK8A_OA--bc1009_BAK8A_OA.bam.pbi
-t/data/pacbio/sequel_analysis/0000003280/cromwell-job/call-demultiplex_barcodes/call-lima/execution/demultiplex.bc1009_BAK8A_OA--bc1009_BAK8A_OA.consensusreadset.xml
-t/data/pacbio/sequel_analysis/0000003280/cromwell-job/call-demultiplex_barcodes/call-lima/execution/demultiplex.lima.counts
-t/data/pacbio/sequel_analysis/0000003280/cromwell-job/call-demultiplex_barcodes/call-lima/execution/demultiplex.lima.guess.txt
-t/data/pacbio/sequel_analysis/0000003280/cromwell-job/call-demultiplex_barcodes/call-lima/execution/demultiplex.lima.summary.txt
-t/data/pacbio/sequel_analysis/0000003280/cromwell-job/call-demultiplex_barcodes/call-lima/execution/demultiplex.removed.bam
-t/data/pacbio/sequel_analysis/0000003280/cromwell-job/call-demultiplex_barcodes/call-lima/execution/demultiplex.removed.bam.pbi
-t/data/pacbio/sequel_analysis/0000003280/cromwell-job/call-demultiplex_barcodes/call-lima/execution/demultiplex.removed.consensusreadset.xml
-t/data/pacbio/sequel_analysis/0000003280/cromwell-job/call-demultiplex_barcodes/call-lima/execution/merged_analysis_report.json
-t/data/pacbio/sequel_analysis/0000003280/entry-points/081746ec-5099-4efb-9702-0f97bf22dc59.subreadset.xml
 t/data/pacbio/sequel_analysis/0000003442/cromwell-job/call-demultiplex_barcodes/call-lima/execution/demultiplex.bc1017_BAK8B_OA--bc1017_BAK8B_OA.bam
 t/data/pacbio/sequel_analysis/0000003442/cromwell-job/call-demultiplex_barcodes/call-lima/execution/demultiplex.bc1017_BAK8B_OA--bc1017_BAK8B_OA.bam.pbi
 t/data/pacbio/sequel_analysis/0000003442/cromwell-job/call-demultiplex_barcodes/call-lima/execution/demultiplex.bc1017_BAK8B_OA--bc1017_BAK8B_OA.consensusreadset.xml
