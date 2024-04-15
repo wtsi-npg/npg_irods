@@ -1,0 +1,57 @@
+ZMWs input                    : 6,954,078         
+
+ZMWs pass filters             : 3,657,602 (52.60%)
+ZMWs fail filters             : 3,296,476 (47.40%)
+ZMWs shortcut filters         : 0 (0.000%)
+
+ZMWs with tandem repeats      : 30,706 (0.931%)
+
+Exclusive failed counts
+Below SNR threshold           : 70,374 (2.135%)
+Median length filter          : 956,636 (29.02%)
+Lacking full passes           : 1,560,501 (47.34%)
+Heteroduplex insertions       : 0 (0.000%)
+Coverage drops                : 0 (0.000%)
+Insufficient draft cov        : 0 (0.000%)
+Draft too different           : 0 (0.000%)
+Draft generation error        : 0 (0.000%)
+Draft above --max-length      : 0 (0.000%)
+Draft below --min-length      : 0 (0.000%)
+Reads failed polishing        : 3,927 (0.119%)
+Empty coverage windows        : 6,198 (0.188%)
+CCS did not converge          : 0 (0.000%)
+CCS adapter concatenation     : 0 (0.000%)
+CCS adapter palindrome        : 0 (0.000%)
+CCS adapter residue           : 11 (0.000%)
+ZMW with full-length subread  : 693,529 (21.04%)
+ZMW with control failure      : 4,155 (0.126%)
+ZMW with control success      : 1,145 (0.035%)
+CCS below minimum RQ          : 0 (0.000%)
+Unknown error                 : 0 (0.000%)
+
+Additional passing metrics
+ZMWs missing adapters         : 33,615 (0.919%)
+
+- - - - - - - - - - - - - - - : - - - - -
+
+HiFi Reads                    : 3,568,177
+HiFi Yield (bp)               : 50,734,162,563
+HiFi Read Length (mean, bp)   : 14,218
+HiFi Read Length (median, bp) : 14,194
+HiFi Read Length N50 (bp)     : 14,194
+HiFi Read Quality (median)    : 32
+HiFi Number of Passes (mean)  : 10
+
+<Q20 Reads                    : 89,425
+<Q20 Yield (bp)               : 1,249,524,114
+<Q20 Read Length (mean, bp)   : 13,972
+<Q20 Read Length (median, bp) : 14,064
+<Q20 Read Quality (median)    : 17
+
+>=Q30 Reads                   : 2,283,999
+>=Q30 Yield (bp)              : 32,438,019,319
+>=Q30 Read Length (mean, bp)  : 14,202
+>=Q30 Read Length (median, bp): 14,199
+>=Q30 Read Quality (median)   : 34
+
+Base quality >=Q30 (bp)       : 49,153,092,114 (96.9%)

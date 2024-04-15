@@ -2424,6 +2424,36 @@
   library_created_at: ~
   pac_bio_run_name: TRACTION-RUN-1130
   pac_bio_library_tube_barcode: TRAC-2-7582
+- id_pac_bio_tmp: 121059
+  last_updated: 2024-03-21 08:59:02
+  recorded_at: 2024-03-21 08:59:02
+  id_sample_tmp: 8409942
+  id_study_tmp: 5735
+  id_pac_bio_run_lims: TRACTION-RUN-1199
+  pac_bio_run_uuid: 7c19d2e4-c908-47ba-bd37-e1234635ee15
+  cost_code: S10613
+  id_lims: Traction
+  tag_identifier: ~
+  tag_sequence: ~
+  tag_set_id_lims: ~
+  tag_set_name: ~
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag2_identifier: ~ 
+  pipeline_id_lims: Pacbio_IsoSeq
+  plate_barcode:  ~
+  plate_uuid_lims: 76458489-3fd9-4245-8cbf-4e64c6660675
+  plate_number: 1
+  well_label: A1
+  well_uuid_lims: e894a0b1-da57-4626-a021-faeb3daff03a
+  pac_bio_library_tube_id_lims:  11684
+  pac_bio_library_tube_uuid: 927693e2-7b6d-43b8-8df0-3c58e88c074b
+  pac_bio_library_tube_name: 7323STDY14717195
+  pac_bio_library_tube_legacy_id: ~
+  library_created_at: ~
+  pac_bio_run_name: TRACTION-RUN-1199
+  pac_bio_library_tube_barcode: TRAC-2-8178
 - id_pac_bio_tmp: 121170
   last_updated: 2024-04-03 10:10:23
   recorded_at: 2024-04-03 10:10:23
@@ -2454,4 +2484,3 @@
   library_created_at: ~
   pac_bio_run_name: TRACTION-RUN-1200
   pac_bio_library_tube_barcode: TRAC-2-8046
-
