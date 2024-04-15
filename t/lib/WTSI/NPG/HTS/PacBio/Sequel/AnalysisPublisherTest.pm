@@ -97,7 +97,7 @@ sub list_files : Test(3) {
      'lima_output.removed.bam');
 
   is_deeply($pub->list_files('bam$'), \@expected_paths1,
-     'Found sequence files for 001612');
+     'Found sequence files for 0000019480');
 
   my @expected_paths2 =
     map { catfile($runfolder_path, $_) }
@@ -106,7 +106,7 @@ sub list_files : Test(3) {
      'lima_output.removed.bam.pbi');
 
   is_deeply($pub->list_files('pbi$'), \@expected_paths2,
-     'Found sequence index files for 001612');
+     'Found sequence index files for 0000019480');
 
   my @expected_paths3 =
     map { catfile($runfolder_path, $_) }
@@ -115,46 +115,8 @@ sub list_files : Test(3) {
      'lima_output.removed.subreadset.xml');
 
   is_deeply($pub->list_files('subreadset.xml$'), \@expected_paths3,
-     'Found sequence index files for 001612');
+     'Found xml files for 0000019480');
 }
-
-sub publish_files : Test(4) {
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-  my $analysis_path  = "$data_path/001612";
-  my $runfolder_path = "$analysis_path/tasks/barcoding.tasks.lima-0";
-  my $dest_coll      = "$irods_tmp_coll/publish_files";
-  my $expected_json  = 't/data/mlwh_json/pacbio.json';
-
-
-  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
-  my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
-    (restart_file    => catfile($tmpdir->dirname, 'published.json'),
-     dest_collection => $dest_coll,
-     irods           => $irods,
-     mlwh_schema     => $wh_schema,
-     analysis_path   => $analysis_path,
-     runfolder_path  => $runfolder_path);
-
-  my $mlwh_json = $pub->mlwh_locations->path;
-  unlink $mlwh_json; # A file may have been written to this path during a
-                     # previous test set with a different destination collection
-
-  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
-  my $num_expected = 10;
-
-  cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
-  cmp_ok($num_errors,    '==', 0);
-
-  ok(-e $mlwh_json, "mlwh loader json file $mlwh_json was written by publisher");
-  is_deeply(WTSI::NPG::HTS::LocationWriterTest::read_json_content($mlwh_json),
-    WTSI::NPG::HTS::LocationWriterTest::set_destination(
-      WTSI::NPG::HTS::LocationWriterTest::read_json_content($expected_json),
-      $irods_tmp_coll), "contents of $mlwh_json are correct");
-
-  unlink $mlwh_json;
-}
-
 
 sub publish_xml_files : Test(19) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
@@ -190,84 +152,6 @@ sub publish_xml_files : Test(19) {
               diag explain \@observed_paths;
 
   check_common_metadata($irods, @observed_paths);
-}
-
-sub publish_sequence_files : Test(64) {
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-  my $analysis_path  = "$data_path/001612";
-  my $runfolder_path = "$analysis_path/tasks/barcoding.tasks.lima-0",
-  my $dest_coll      = "$irods_tmp_coll/publish_sequence_files";
-
-  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
-  my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
-    (restart_file    => catfile($tmpdir->dirname, 'published.json'),
-     dest_collection => $dest_coll,
-     irods           => $irods,
-     mlwh_schema     => $wh_schema,
-     analysis_path   => $analysis_path,
-     runfolder_path  => $runfolder_path);
-
-  my @expected_paths =
-    map { catfile("$dest_coll/2_B01", $_) }
-    ('lima_output.lbc12--lbc12.bam',
-     'lima_output.lbc5--lbc5.bam',
-     'lima_output.removed.bam');
-
-  my ($num_files, $num_processed, $num_errors) =
-    $pub->publish_sequence_files('bam$');
-  cmp_ok($num_files,     '==', scalar @expected_paths);
-  cmp_ok($num_processed, '==', scalar @expected_paths);
-  cmp_ok($num_errors,    '==', 0);
-
-  my @observed_paths = observed_data_objects($irods, $dest_coll);
-  is_deeply(\@observed_paths, \@expected_paths,
-            'Published correctly named sequence files') or
-              diag explain \@observed_paths;
-
-  check_primary_metadata($irods, 0, @observed_paths);
-  check_common_metadata($irods, @observed_paths);
-  check_secondary_metadata($irods, @observed_paths);
-
-  unlink $pub->restart_file;
-}
-
-sub publish_index_files : Test(19) {
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-  my $analysis_path  = "$data_path/001612";
-  my $runfolder_path = "$analysis_path/tasks/barcoding.tasks.lima-0",
-  my $dest_coll      = "$irods_tmp_coll/publish_index_files";
-
-  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
-  my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
-    (restart_file    => catfile($tmpdir->dirname, 'published.json'),
-     dest_collection => $dest_coll,
-     irods           => $irods,
-     mlwh_schema     => $wh_schema,
-     analysis_path   => $analysis_path,
-     runfolder_path  => $runfolder_path);
-
-  my @expected_paths =
-    map { catfile("$dest_coll/2_B01", $_) }
-    ('lima_output.lbc12--lbc12.bam.pbi',
-     'lima_output.lbc5--lbc5.bam.pbi',
-     'lima_output.removed.bam.pbi',);
-
-  my ($num_files, $num_processed, $num_errors) =
-     $pub->publish_non_sequence_files('pbi$');
-  cmp_ok($num_files,     '==', scalar @expected_paths);
-  cmp_ok($num_processed, '==', scalar @expected_paths);
-  cmp_ok($num_errors,    '==', 0);
-
-  my @observed_paths = observed_data_objects($irods, $dest_coll);
-  is_deeply(\@observed_paths, \@expected_paths,
-            'Published correctly named index files') or
-              diag explain \@observed_paths;
-
-  check_common_metadata($irods, @observed_paths);
-
-  unlink $pub->restart_file;
 }
 
 sub observed_data_objects {
@@ -355,100 +239,6 @@ sub check_secondary_metadata {
   }
 }
 
-sub list_files_2 : Test(2) {
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-  my $analysis_path  = "$data_path/000226";
-  my $runfolder_path = "$analysis_path/tasks/pbcoretools.tasks.auto_ccs_outputs-0",
-  my $dest_coll      = $irods_tmp_coll;
-
-  my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
-    (dest_collection => $dest_coll,
-     irods           => $irods,
-     mlwh_schema     => $wh_schema,
-     analysis_path   => $analysis_path,
-     runfolder_path  => $runfolder_path);
-
-  my @expected_paths1 =
-    map { catfile($runfolder_path, $_) }
-    ('m64016_190608_025655.ccs.bam');
-
-  is_deeply($pub->list_files('bam$'), \@expected_paths1,
-     'Found sequence files for 000226');
-
-  my @expected_paths2 =
-    map { catfile($runfolder_path, $_) }
-    ('m64016_190608_025655.ccs.bam.pbi');
-
-  is_deeply($pub->list_files('pbi$'), \@expected_paths2,
-     'Found sequence index files for 000226');
-
-}
-
-sub publish_files_2 : Test(2) {
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-  my $analysis_path  = "$data_path/000226";
-  my $runfolder_path = "$analysis_path/tasks/pbcoretools.tasks.auto_ccs_outputs-0",
-  my $dest_coll      = "$irods_tmp_coll/publish_files_2";
-
-  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
-  my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
-    (restart_file    => catfile($tmpdir->dirname, 'published.json'),
-     dest_collection => $dest_coll,
-     irods           => $irods,
-     mlwh_schema     => $wh_schema,
-     analysis_path   => $analysis_path,
-     runfolder_path  => $runfolder_path);
-
-  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
-  my $num_expected = 3;
-
-  cmp_ok($num_processed, '==', $num_expected, "Published $num_expected files");
-  cmp_ok($num_errors,    '==', 0);
-}
-
-
-sub publish_sequence_files_2 : Test(42) {
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-  my $analysis_path  = "$data_path/001185";
-  my $runfolder_path = "$analysis_path/tasks/barcoding.tasks.lima-0",
-  my $dest_coll      = "$irods_tmp_coll/publish_sequence_files";
-
-  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
-  my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
-    (restart_file    => catfile($tmpdir->dirname, 'published.json'),
-     dest_collection => $dest_coll,
-     irods           => $irods,
-     mlwh_schema     => $wh_schema,
-     analysis_path   => $analysis_path,
-     runfolder_path  => $runfolder_path);
-
-  my @expected_paths =
-    map { catfile("$dest_coll/2_B01", $_) }
-    ('lima.bc1022_BAK8B_OA--bc1022_BAK8B_OA.bam',
-     'lima.removed.bam');
-
-  my ($num_files, $num_processed, $num_errors) =
-    $pub->publish_sequence_files('bam$');
-  cmp_ok($num_files,     '==', scalar @expected_paths);
-  cmp_ok($num_processed, '==', scalar @expected_paths);
-  cmp_ok($num_errors,    '==', 0);
-
-  my @observed_paths = observed_data_objects($irods, $dest_coll);
-  is_deeply(\@observed_paths, \@expected_paths,
-            'Published correctly named sequence files') or
-              diag explain \@observed_paths;
-
-  check_primary_metadata($irods, 1, @observed_paths);
-  check_common_metadata($irods, @observed_paths);
-  check_secondary_metadata($irods, @observed_paths);
-
-  unlink $pub->restart_file;
-}
-
-
 sub publish_sequence_files_3 : Test(4) {
 ## run 81230 cell B01 - expected deplexing
 
@@ -486,14 +276,13 @@ sub publish_sequence_files_3 : Test(4) {
   unlink $pub->restart_file;
 }
 
-
-sub publish_sequence_files_4 : Test(1) {
-## run 81230 cell B01 - unexpected barcode
+sub publish_sequence_files_4 : Test(4) {
+## redo demultiplexing in SMRT Link v13
 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
-  my $analysis_path  = "$data_path/0000003280";
-  my $runfolder_path = "$analysis_path/cromwell-job/call-demultiplex_barcodes/call-lima/execution",
+  my $analysis_path  = "$data_path/0000019480";
+  my $runfolder_path = "$analysis_path/cromwell-job/call-lima/execution",
   my $dest_coll      = "$irods_tmp_coll/publish_sequence_files";
 
   my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
@@ -505,8 +294,21 @@ sub publish_sequence_files_4 : Test(1) {
      analysis_path   => $analysis_path,
      runfolder_path  => $runfolder_path);
 
-  throws_ok { $pub->publish_sequence_files('bam$'); } qr /Unexpected barcode/, 
-    'Correctly failed to publish data from unexpected barcode';
+  my @expected_paths =
+    map { catfile("$dest_coll/1_A01", $_) }
+    ('m84098_240322_112047_s1.bc2048--bc2048.bam',
+     'm84098_240322_112047_s1.unbarcoded.bam',);
+
+  my ($num_files, $num_processed, $num_errors) =
+    $pub->publish_sequence_files('bam$');
+  cmp_ok($num_files,     '==', scalar @expected_paths);
+  cmp_ok($num_processed, '==', scalar @expected_paths);
+  cmp_ok($num_errors,    '==', 0);
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named sequence files') or
+              diag explain \@observed_paths;
 
   unlink $pub->restart_file;
 }
@@ -590,31 +392,7 @@ sub publish_sequence_files_6 : Test(4) {
   unlink $pub->restart_file;
 }
 
-sub publish_files_3 : Test(1) {
-## run 81230 cell B01 - qc check failed
-
-  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                    strict_baton_version => 0);
-  my $analysis_path  = "$data_path/0000003280";
-  my $runfolder_path = "$analysis_path/cromwell-job/call-demultiplex_barcodes/call-lima/execution",
-  my $dest_coll      = "$irods_tmp_coll/publish_sequence_files";
-
-  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
-  my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
-    (restart_file    => catfile($tmpdir->dirname, 'published.json'),
-     dest_collection => $dest_coll,
-     irods           => $irods,
-     mlwh_schema     => $wh_schema,
-     analysis_path   => $analysis_path,
-     runfolder_path  => $runfolder_path);
-
-  throws_ok { $pub->publish_files } qr /QC check failed/, 
-    'Correctly failed to publish qc fail data';
-
-  unlink $pub->restart_file;
-}
-
-sub publish_files_4 : Test(307) {
+sub publish_files_3 : Test(307) {
 ## run 83472 cell A01 - isoseq analysis 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
@@ -653,18 +431,19 @@ sub publish_files_4 : Test(307) {
   unlink $pub->restart_file;
 }
 
-sub publish_files_5 : Test(4) {
-## run TRACTION-RUN-327 cell A01 - SMRT Link deplex in subdirectories
+sub publish_files_4 : Test(6) {
+## redo demultiplexing in SMRT Link v13
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
-  my $analysis_path = catdir($tmpdir->dirname, '0000010313');
-  dircopy("$data_path/0000010313",$analysis_path) or die $!;
+  my $analysis_path = catdir($tmpdir->dirname, '0000019480');
+  dircopy("$data_path/0000019480",$analysis_path) or die $!;
   chmod (0770, "$analysis_path") or die "Chmod 0770 directory failed : $!";
-
+  
   my $runfolder_path = "$analysis_path/cromwell-job/call-lima/execution",
   my $dest_coll      = "$irods_tmp_coll/publish_sequence_files";
+  my $expected_json  = 't/data/mlwh_json/pacbio.json';
 
   my $pub = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new
     (restart_file    => catfile($tmpdir->dirname, 'published.json'),
@@ -673,16 +452,23 @@ sub publish_files_5 : Test(4) {
      mlwh_schema     => $wh_schema,
      analysis_path   => $analysis_path,
      runfolder_path  => $runfolder_path,
-     is_oninstrument => 1);
+     );
 
-
-  my @expected_paths =  map { catfile("$dest_coll/1_A01", $_) }
-    ('demultiplex.bc1019_BAK8B_OA--bc1019_BAK8B_OA.bam',
-     'demultiplex.bc1019_BAK8B_OA--bc1019_BAK8B_OA.bam.pbi',
-     'demultiplex.bc1019_BAK8B_OA--bc1019_BAK8B_OA.consensusreadset.xml',
-     'merged_analysis_report.json');
+  my $mlwh_json = $pub->mlwh_locations->path;
+  unlink $mlwh_json; # A file may have been written to this path during a
+                     # previous test set with a different destination collection
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+
+  my @expected_paths =  map { catfile("$dest_coll/1_A01", $_) }
+    ('m84098_240322_112047_s1.bc2048--bc2048.bam',
+     'm84098_240322_112047_s1.bc2048--bc2048.bam.pbi',
+     'm84098_240322_112047_s1.bc2048--bc2048.consensusreadset.xml',  
+     'm84098_240322_112047_s1.consensusreadset.xml',
+     'm84098_240322_112047_s1.unbarcoded.bam',
+     'm84098_240322_112047_s1.unbarcoded.bam.pbi',
+     'm84098_240322_112047_s1.unbarcoded.consensusreadset.xml',
+     'merged_analysis_report.json');
 
   cmp_ok($num_files,     '==', scalar @expected_paths);
   cmp_ok($num_processed, '==', scalar @expected_paths);
@@ -693,15 +479,21 @@ sub publish_files_5 : Test(4) {
             'Published correctly named sequence files') or
               diag explain \@observed_paths;
 
+  ok(-e $mlwh_json, "mlwh loader json file $mlwh_json was written by publisher");
+  is_deeply(WTSI::NPG::HTS::LocationWriterTest::read_json_content($mlwh_json),
+    WTSI::NPG::HTS::LocationWriterTest::set_destination(
+      WTSI::NPG::HTS::LocationWriterTest::read_json_content($expected_json),
+      $irods_tmp_coll), "contents of $mlwh_json are correct");
 }
-sub publish_files_6 : Test(1) {
-## run TRACTION-RUN-327 cell A01 - deplex in subdirectories - deplex fail
+
+sub publish_files_5 : Test(1) {
+## redo demultiplexing in SMRT Link v13 - deplexing fail
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
 
   my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
-  my $analysis_path = catdir($tmpdir->dirname, '0000010313_deplexfail');
-  dircopy("$data_path/0000010313_deplexfail",$analysis_path) or die $!;
+  my $analysis_path = catdir($tmpdir->dirname, '0000019480_deplexfail');
+  dircopy("$data_path/0000019480_deplexfail",$analysis_path) or die $!;
   chmod (0770, "$analysis_path") or die "Chmod 0770 directory failed : $!";
 
   my $runfolder_path = "$analysis_path/cromwell-job/call-lima/execution",
@@ -714,14 +506,14 @@ sub publish_files_6 : Test(1) {
      mlwh_schema     => $wh_schema,
      analysis_path   => $analysis_path,
      runfolder_path  => $runfolder_path,
-     is_oninstrument => 1);
+     );
 
-   throws_ok { $pub->publish_files(); } qr /QC check failed/, 
+  throws_ok { $pub->publish_files(); } qr /QC check failed/, 
     'Correctly failed to publish data where QC check fails';
 }
 
-sub list_files_3 : Test(2) {
-# testing finding files in sud-directories for on instrument analysis 
+sub list_files_2 : Test(2) {
+# testing finding files in sub-directories for on instrument analysis 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $analysis_path  = "$rundata_path/r64089e_20220615_171559/1_A01";

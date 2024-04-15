@@ -24,14 +24,14 @@ has 'pipeline_name' =>
   (isa           => 'Str',
    is            => 'ro',
    required      => 1,
-   default       => 'pbsmrtpipe.pipelines.sa3_ds_barcode2',
+   default       => 'cromwell.workflows.pb_demux_ccs',
    documentation => 'A specified pipeline name to identify relevant jobs');
 
 has 'task_name' =>
   (isa           => 'Str',
    is            => 'ro',
    required      => 1,
-   default       => 'barcoding.tasks.lima-0',
+   default       => 'call-lima/execution',
    documentation => 'A specified task name to identify relevant output directories');
 
 has 'job_root' =>
@@ -40,13 +40,6 @@ has 'job_root' =>
    required      => 1,
    default       => 'cromwell-job',
    documentation => 'Root directory for job processing output');
-
-has 'is_sub' =>
-  (isa           => 'Bool',
-   is            => 'ro',
-   required      => 0,
-   default       => 0,
-   documentation => 'Data to be loaded is in the sub-directories of main output directory');
 
 
 =head2 publish_analysed_cells
@@ -118,9 +111,6 @@ sub _publish_analysis_path {
 
   if ($self->dest_collection) {
     push @init_args, dest_collection => $self->dest_collection;
-  }
-  if ($self->is_sub == 1 ) {
-    push @init_args, is_oninstrument => 1;
   }
 
   my $publisher = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new(@init_args);

@@ -1,2 +1,0 @@
-IdxFirst	IdxCombined	IdxFirstNamed	IdxCombinedNamed	NumZMWs	MeanScore	Picked
-12	12	bc1019_BAK8B_OA	bc1019_BAK8B_OA	46856	98	1
