@@ -1,5 +1,13 @@
 Unreleased
 
+Release 2.49.0
+ - PacBio iRODS data - set QC state metadata when it is safe to do so.
+ - Allow non deplexed Revio cells to publish now
+ - Analysis loading changes post SMRT Link v13
+   Remove very old test data and update some tests. Add new test data and minor
+   code change to support loading of data from deplexing jobs in SMRT Link v13+
+   (very rare as only done when deplexing on instrument is incorrect).
+
 Release 2.48.0
  - Add sequencing_control.subreads.bam and index file to PacBio run
    archiving. These files can be used to regenerate QC metrics.
