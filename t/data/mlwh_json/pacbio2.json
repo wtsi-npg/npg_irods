@@ -1,0 +1,1 @@
+{"version":"1.0","products":[{"id_product":"04bd5036fff6b0037535221ba755725b14ef0f4f44a3ac0030f899edaae2e391","irods_root_collection":"/testZone/home/irods/RunPublisherTest.XXXXX.0/publish_sequence_files/1_A01/","irods_data_relative_path":"m84098_240322_112047_s1.bc2048--bc2048.bam","pipeline_name":"npg-prod","seq_platform_name":"pacbio"}]}

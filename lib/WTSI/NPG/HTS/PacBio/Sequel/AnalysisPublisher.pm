@@ -32,6 +32,7 @@ our $SMT_METADATA_SET = q{hifi_reads.consensusreadset};
 
 # Location of source metadata file
 our $ENTRY_DIR       = 'entry-points';
+our $OUTPUT_DIR      = 'outputs';
 
 # Generic moviename file prefix
 our $MOVIENAME_PATTERN = 'm[0-9a-z]+_\d+_\d+';
@@ -40,8 +41,8 @@ our $MOVIENAME_PATTERN = 'm[0-9a-z]+_\d+_\d+';
 our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
 # Additional sequence filenames permitted for loading 
-our @FNAME_PERMITTED    = qw[fail_reads removed ccs hifi_reads fl_transcripts sequencing_control.subreads];
-our @FNAME_NON_DEPLEXED = qw[unassigned removed sequencing_control.subreads];
+our @FNAME_PERMITTED    = qw[fail_reads removed ccs hifi_reads fl_transcripts sequencing_control.subreads unbarcoded];
+our @FNAME_NON_DEPLEXED = qw[unassigned removed sequencing_control.subreads unbarcoded];
 our @FNAME_FAILED       = qw[fail_reads];
 
 # Data processing level
@@ -323,7 +324,8 @@ sub list_files {
       }
     }
   } else {
-    @files = $self->list_directory($self->runfolder_path, filter => $type);
+    @files = $self->list_directory
+      ($self->runfolder_path, filter => $type, recurse => 1);
   }
 
   return \@files;
@@ -369,25 +371,34 @@ has '_metadata' =>
 sub _build_metadata{
   my ($self) = @_;
 
-  my $entry_path = catdir($self->analysis_path, $ENTRY_DIR);
+  my $entry_path  = catdir($self->analysis_path, $ENTRY_DIR);
+  my $output_path = catdir($self->analysis_path, $OUTPUT_DIR);
 
   my @metafiles;
-  if ($self->is_oninstrument == 1 && ! -d $entry_path && $self->is_smtwelve == 1) {
+  if (-d $output_path && ! -d $entry_path) {
+    # As all analysis cell based all metafiles should have the correct run name,
+    # well and plate number as no merged cell analysis - so just pick one.
+    my @files = $self->list_directory
+      ($output_path, filter => $METADATA_SET .q[.]. $METADATA_FORMAT . q[$]);
+    push @metafiles, $files[0];
+  } elsif ($self->is_oninstrument == 1 && ! -d $entry_path && $self->is_smtwelve == 1) {
+    # Revio
     @metafiles = $self->list_directory
       ($self->analysis_path,
        filter => $self->movie_pattern .q[.]. $SMT_METADATA_SET .q[.]. $METADATA_FORMAT .q[$],
        recurse => 1)
   } elsif ($self->is_oninstrument == 1 && ! -d $entry_path) {
+    # Sequel IIe - as will never be upgraded from ICS v11
     @metafiles = $self->list_directory
       ($self->analysis_path,
        filter => $self->movie_pattern .q[.]. $METADATA_SET .q[.]. $METADATA_FORMAT .q[$])
-  } else {
+  } elsif (-d $entry_path) {
     @metafiles = $self->list_directory
       ($entry_path, filter => $METADATA_FORMAT . q[$], recurse => 1);
   }
 
   if (@metafiles != 1) {
-    $self->logcroak('Expect one xml file in '. $self->analysis_path . ' (entry_dir)');
+    $self->logcroak('Expect one xml file in '. $self->analysis_path);
   }
   return  WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file
                  ($metafiles[0], $METADATA_PREFIX);
