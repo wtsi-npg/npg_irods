@@ -36,24 +36,30 @@ my $db_dir       = File::Temp->newdir;
 my $test_response =
   [
    {
-  comment => "8pM",
-  createdAt => "2018-04-23T09:04:08.042Z",
-  createdBy => "chc",
-  id => 1612,
-  jobTypeId => "analysis",
-  subJobTypeId => "pbsmrtpipe.pipelines.sa3_ds_barcode2",
-  name => "Demultiplexing of DN505769FNCTCPool4",
-  parentMultiJobId => 1601,
-  path => "t/data/pacbio/sequel_analysis/001612",
-  projectId => 1,
-  smrtlinkVersion => "5.1.0.26412",
-  state => "SUCCESSFUL",
-  updatedAt => "2018-04-24T11:02:04.223Z",
-  uuid => "3bf09718-58fe-4fb6-a32a-9adbda384b27",
-  workflow => "{}",
-  jobStartedAt => "2018-04-25T11:02:04.223Z",
-  jobCompletedAt => "2018-04-26T11:02:04.223Z",
-  jobUpdatedAt => "2018-04-26T11:02:04.223Z"
+    "subJobTypeId" => "cromwell.workflows.pb_demux_ccs",
+    "name" => "TRAC-2-8046-Cell1_redo_demultiplex",
+    "updatedAt" => "2024-04-08T16:39:32.434Z",
+    "workflow" => "{}",
+    "path" => "t/data/pacbio/sequel_analysis/0000019480",
+    "state" => "SUCCESSFUL",
+    "tags" => "",
+    "uuid" => "41b9c9b0-5621-41d8-a373-e04a641ddb2b",
+    "externalJobId" => "2a15bfd3-d378-4701-9dea-83d77c67a062",
+    "jobStartedAt" => "2024-04-08T15:45:35.893Z",
+    "applicationName" => "Demultiplex Barcodes",
+    "projectId" => 1,
+    "childJobsCount" => 0,
+    "jobCompletedAt" => "2024-04-08T16:39:32.434Z",
+    "jobTypeId" => "analysis",
+    "id" => 19480,
+    "smrtlinkVersion" => "13.0.0.207600",
+    "comment" => "Description for job Run Analysis Application",
+    "isNested" => "false",
+    "createdAt" => "2024-04-08T15:45:34.218Z",
+    "isActive" => "true",
+    "isMultiJob" => "false",
+    "jsonSettings" =>  "",
+    "jobUpdatedAt" => "2024-04-08T16:39:32.434Z"
    }
   ];
 
@@ -116,7 +122,10 @@ sub publish_completed_jobs : Test(3) {
     (api_client         => $client,
      dest_collection    => $dest_coll,
      irods              => $irods,
-     mlwh_schema        => $wh_schema);
+     mlwh_schema        => $wh_schema,
+     pipeline_name      => 'cromwell.workflows.pb_demux_ccs',
+     task_name          => 'call-lima/execution',
+     );
 
   my ($num_jobs, $num_processed, $num_errors) =
     $monitor->publish_analysed_cells;
