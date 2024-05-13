@@ -187,10 +187,6 @@ jobs:
           eval $(perl -I ${{ env.PERL_CACHE }}/lib/perl5/ -Mlocal::lib="$NPG_LIB")
           eval $(perl -I ${{ env.PERL_CACHE }}/lib/perl5/ -Mlocal::lib)
 
-          # Required for npg_tracking (at least), but not declared as a
-          # dependency
-          cpanm --quiet --notest Alien::Tidyp
-
           # Required for npg_qc
           cpanm --quiet --notest https://github.com/chapmanb/vcftools-cpan/archive/v0.953.tar.gz
 

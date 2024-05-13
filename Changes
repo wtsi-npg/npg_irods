@@ -1,5 +1,7 @@
 Unreleased
 
+ - Removing Tidyp dependency from CI
+
 Release 2.49.0
  - PacBio iRODS data - set QC state metadata when it is safe to do so.
  - Allow non deplexed Revio cells to publish now
