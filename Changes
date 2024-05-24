@@ -1,6 +1,8 @@
 Unreleased
 
+Release 2.49.1
  - Removing Tidyp dependency from CI
+ - Add iRODS 4.3.2, remove 4.3-nightly
 
 Release 2.49.0
  - PacBio iRODS data - set QC state metadata when it is safe to do so.
