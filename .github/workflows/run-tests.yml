@@ -144,18 +144,6 @@ jobs:
           
           baton-do --version
 
-      - name: "Configure test Warehouse"
-        run: |
-          mkdir -p "$HOME/.npg"
-          cat <<'EOF' > "$HOME/.npg/WTSI-DNAP-Warehouse-Schema"
-          #!/usr/bin/env perl
-          my $VAR1 = {
-              'live' => {
-              dsn => 'dbi:sqlite:database=test'
-              }
-          };
-          EOF
-
       - name: "Cache Perl"
         id: cache-perl
         uses: actions/cache@v4
