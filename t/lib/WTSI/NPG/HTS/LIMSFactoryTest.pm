@@ -3,8 +3,9 @@ package WTSI::NPG::HTS::LIMSFactoryTest;
 use strict;
 use warnings;
 
-use English qw[-no_match_vars];
 use Log::Log4perl;
+use File::Temp qw[tempdir];
+use File::Slurp;
 use Test::More;
 use Test::Exception;
 
@@ -27,6 +28,15 @@ sub make_composition {
 }
 
 sub make_lims_mlwh_driver : Test(10){
+
+  my $dir = tempdir( CLEANUP => 1 );
+  $ENV{HOME} = $dir;
+  mkdir "$dir/.npg";
+  my $f = "$dir/.npg/WTSI-DNAP-Warehouse-Schema";
+  my @lines = (q[#!/usr/bin/env perl], qq[\n],
+    q[my $VAR1 = {'live' => {dsn => 'dbi:sqlite:database=test'}};]);
+  write_file($f, @lines);
+
   my $lims_factory = WTSI::NPG::HTS::LIMSFactory->new(
     {driver_type => 'ml_warehouse_fc_cache'});
   my $composition = make_composition(1, 1);

@@ -1,5 +1,8 @@
 Unreleased
 
+Release 2.49.2
+ - Prevent access to a live mlwh database from tests.
+
 Release 2.49.1
  - Removing Tidyp dependency from CI
  - Add iRODS 4.3.2, remove 4.3-nightly

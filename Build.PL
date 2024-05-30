@@ -20,6 +20,8 @@ my $build = WTSI::DNAP::Utilities::Build->new
    build_requires =>
    {
     'File::Copy::Recursive'         => 0,
+    'File::Slurp'                   => 0,
+    'File::Temp'                    => 0,
     'File::Which'                   => 0,
     'TAP::Harness'                  => '>= 3.30',
     'Test::Class'                   => '>= 0.41',
