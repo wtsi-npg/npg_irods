@@ -113,6 +113,7 @@ sub publish_files {
 
     my ($nff, $npf, $nef) = $self->_iso_fasta_files() ?
         $self->publish_sequence_files($SEQUENCE_FASTA_FORMAT) : (0,0,0);
+
     my ($nfb, $npb, $neb) = $self->publish_sequence_files
         ($SEQUENCE_FILE_FORMAT);
     my ($nfp, $npp, $nep) = $self->publish_non_sequence_files

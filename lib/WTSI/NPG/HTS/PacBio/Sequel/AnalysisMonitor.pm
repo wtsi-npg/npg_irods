@@ -5,9 +5,11 @@ use DateTime;
 use File::Spec::Functions qw[catdir];
 use Moose;
 use MooseX::StrictConstructor;
+use Readonly;
 use Try::Tiny;
 
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
+use WTSI::NPG::HTS::PacBio::Sequel::IsoSeqPublisher;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
@@ -16,6 +18,8 @@ with qw[
        ];
 
 our $VERSION = '';
+
+our $ISO_ANALYSIS = q{(pb_segment_reads_and_sc_isoseq|pb_segment_reads_and_isoseq)};
 
 has '+local_staging_area' =>
   (required => 0);
@@ -69,7 +73,13 @@ sub publish_analysed_cells {
        try {
          my $analysis_path = $job->{path};
          if(-d $analysis_path){
-            my ($nf, $np, $ne) =  $self->_publish_analysis_path($analysis_path);
+            $self->debug("Publishing data in analysis job path '$analysis_path'");
+
+            my ($nf, $np, $ne) =
+              ($self->pipeline_name =~ m/$ISO_ANALYSIS/smx) ?
+              $self->_publish_iso_analysis_path($job) :
+              $self->_publish_analysis_path($analysis_path);
+
             $self->debug("Processed [$np / $nf] files in ",
                        "'$analysis_path' with $ne errors");
 
@@ -99,9 +109,8 @@ sub publish_analysed_cells {
 sub _publish_analysis_path {
   my ($self, $analysis_path) = @_;
 
-  $self->debug("Publishing data in analysis job path '$analysis_path'");
-
   my @glob = glob catdir($analysis_path, $self->job_root, $self->task_name);
+
   my $runfolder_path = (@glob == 1) ? $glob[0] : q[];
 
   my @init_args = (irods          => $self->irods,
@@ -114,6 +123,29 @@ sub _publish_analysis_path {
   }
 
   my $publisher = WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher->new(@init_args);
+
+  return $publisher->publish_files();
+}
+
+
+sub _publish_iso_analysis_path {
+  my ($self, $job) = @_;
+
+  my @glob = glob catdir($job->{path}, $self->task_name);
+  my $runfolder_path = (@glob == 1) ? $glob[0] : q[];
+
+  my @init_args = (irods          => $self->irods,
+                   analysis_path  => $job->{path},
+                   runfolder_path => $runfolder_path,
+                   mlwh_schema    => $self->mlwh_schema);
+
+  if ($self->dest_collection) {
+    push @init_args, dest_collection => $self->dest_collection;
+  }
+
+  push @init_args, analysis_id => $job->{id};
+  push @init_args, analysis_subtype => $job->{subJobTypeId};
+  my $publisher = WTSI::NPG::HTS::PacBio::Sequel::IsoSeqPublisher->new(@init_args);
 
   return $publisher->publish_files();
 }
