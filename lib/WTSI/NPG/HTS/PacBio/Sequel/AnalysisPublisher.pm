@@ -11,7 +11,6 @@ use Perl6::Slurp;
 use Readonly;
 
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport;
-use WTSI::NPG::HTS::PacBio::Sequel::AnalysisFastaManager;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
 use WTSI::NPG::HTS::PacBio::Sequel::Product;
 
@@ -111,9 +110,6 @@ sub publish_files {
                       ' : QC check failed');
     }
 
-    my ($nff, $npf, $nef) = $self->_iso_fasta_files() ?
-        $self->publish_sequence_files($SEQUENCE_FASTA_FORMAT) : (0,0,0);
-
     my ($nfb, $npb, $neb) = $self->publish_sequence_files
         ($SEQUENCE_FILE_FORMAT);
     my ($nfp, $npp, $nep) = $self->publish_non_sequence_files
@@ -123,9 +119,9 @@ sub publish_files {
     my ($nfr, $npr, $ner) = $self->publish_non_sequence_files
         ($self->_merged_report);
 
-    $num_files     += ($nfx + $nfb + $nff + $nfp + $nfr);
-    $num_processed += ($npx + $npb + $npf + $npp + $npr);
-    $num_errors    += ($nex + $neb + $nef + $nep + $ner);
+    $num_files     += ($nfx + $nfb + $nfp + $nfr);
+    $num_processed += ($npx + $npb + $npp + $npr);
+    $num_errors    += ($nex + $neb + $nep + $ner);
   }
   else {
     $self->warn('Skipping ', $self->analysis_path,

@@ -19,7 +19,7 @@ with qw[
 
 our $VERSION = '';
 
-our $ISO_ANALYSIS = q{(pb_segment_reads_and_sc_isoseq|pb_segment_reads_and_isoseq)};
+our $ISO_ANALYSIS = q{(pb_segment_reads_and_isoseq)};
 
 has '+local_staging_area' =>
   (required => 0);
