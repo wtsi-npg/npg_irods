@@ -14,7 +14,10 @@ use WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport;
 use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
 use WTSI::NPG::HTS::PacBio::Sequel::Product;
 
-extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
+with qw[
+         WTSI::NPG::HTS::PacBio::PublisherBase
+         WTSI::NPG::HTS::PacBio::AnalysisPublisherBase
+       ];
 
 our $VERSION = '';
 
@@ -23,21 +26,12 @@ our $SEQUENCE_FILE_FORMAT   = 'bam';
 our $SEQUENCE_FASTA_FORMAT  = 'fasta.gz';
 our $SEQUENCE_INDEX_FORMAT  = 'pbi';
 
-# Metadata relatedist
+# Metadata related
 our $METADATA_FORMAT = 'xml';
-our $METADATA_PREFIX = 'pbmeta:';
 our $METADATA_SET    = q{(subreadset|consensusreadset)};
-our $SMT_METADATA_SET = q{hifi_reads.consensusreadset};
-
-# Location of source metadata file
-our $ENTRY_DIR       = 'entry-points';
-our $OUTPUT_DIR      = 'outputs';
 
 # Generic moviename file prefix
 our $MOVIENAME_PATTERN = 'm[0-9a-z]+_\d+_\d+';
-
-# Well directory pattern
-our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
 # Additional sequence filenames permitted for loading 
 our @FNAME_PERMITTED    = qw[fail_reads removed ccs hifi_reads fl_transcripts sequencing_control.subreads unbarcoded];
@@ -55,18 +49,6 @@ Readonly::Scalar my $REPORT_TITLE  =>
   $WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport::REPORTS;
 Readonly::Scalar my $LIMA_SUMMARY  => 'lima.summary.txt';
 
-has 'analysis_path' =>
-  (isa           => 'Str',
-   is            => 'ro',
-   required      => 1,
-   documentation => 'PacBio root analysis job path');
-
-has 'is_oninstrument' =>
-  (isa           => 'Bool',
-   is            => 'ro',
-   required      => 0,
-   default       => 0,
-   documentation => 'Set if the analysis was done on the instrument or in SMRT Link where publishable files are in analysis sub-directories. Historically if analysis is done in SMRT Link then all standard publishable files will be found in the analysis directory whereas if the analysis is done on the instrument or in a post v11.0 version of SMRT Link publishable deplexed bam, index and xml files are to be found in one or more sub-directories of the specified analysis path.');
 
 has 'movie_pattern' =>
   (isa           => 'Str',
@@ -74,13 +56,6 @@ has 'movie_pattern' =>
    required      => 0,
    default       => $MOVIENAME_PATTERN,
    documentation => 'Set movie name pattern.',);
-
-has 'is_smtwelve' =>
-  (isa           => 'Bool',
-   is            => 'ro',
-   required      => 0,
-   default       => 0,
-   documentation => 'Set to true if SMRT Link v12+ oninstrument files.',);
 
 
 =head2 publish_files
@@ -328,79 +303,6 @@ sub list_files {
   return \@files;
 }
 
-
-override 'run_name'  => sub {
-  my ($self) = @_;
-  return $self->_metadata->ts_run_name;
-};
-
-override 'smrt_names'  => sub {
-  my ($self)  = @_;
-
-  ($self->_metadata->has_results_folder &&
-      $self->_metadata->ts_run_name) or
-      $self->logconfess('Error ts or results folder missing');
-
-  my $rfolder = $self->_metadata->results_folder;
-  my $ts_name = $self->_metadata->ts_run_name;
-
-  $rfolder =~ /$ts_name/smx or
-     $self->logconfess('Error ts name missing from results folder ', $rfolder);
-
-  $rfolder =~ s/$ts_name//smx;
-  $rfolder =~ s/\///gsmx;
-
-  $rfolder =~ /$WELL_DIRECTORY_PATTERN/smx or
-     $self->logconfess('Error derived folder name ', $rfolder,
-     'does not match expected pattern');
-
-  return [$rfolder];
-};
-
-has '_metadata' =>
-  (isa           => 'WTSI::NPG::HTS::PacBio::Metadata',
-   is            => 'ro',
-   builder       => '_build_metadata',
-   lazy          => 1,
-   init_arg      => undef,
-   documentation => 'Load source meta data from file.',);
-
-sub _build_metadata{
-  my ($self) = @_;
-
-  my $entry_path  = catdir($self->analysis_path, $ENTRY_DIR);
-  my $output_path = catdir($self->analysis_path, $OUTPUT_DIR);
-
-  my @metafiles;
-  if (-d $output_path && ! -d $entry_path) {
-    # As all analysis cell based all metafiles should have the correct run name,
-    # well and plate number as no merged cell analysis - so just pick one.
-    my @files = $self->list_directory
-      ($output_path, filter => $METADATA_SET .q[.]. $METADATA_FORMAT . q[$]);
-    push @metafiles, $files[0];
-  } elsif ($self->is_oninstrument == 1 && ! -d $entry_path && $self->is_smtwelve == 1) {
-    # Revio
-    @metafiles = $self->list_directory
-      ($self->analysis_path,
-       filter => $self->movie_pattern .q[.]. $SMT_METADATA_SET .q[.]. $METADATA_FORMAT .q[$],
-       recurse => 1)
-  } elsif ($self->is_oninstrument == 1 && ! -d $entry_path) {
-    # Sequel IIe - as will never be upgraded from ICS v11
-    @metafiles = $self->list_directory
-      ($self->analysis_path,
-       filter => $self->movie_pattern .q[.]. $METADATA_SET .q[.]. $METADATA_FORMAT .q[$])
-  } elsif (-d $entry_path) {
-    @metafiles = $self->list_directory
-      ($entry_path, filter => $METADATA_FORMAT . q[$], recurse => 1);
-  }
-
-  if (@metafiles != 1) {
-    $self->logcroak('Expect one xml file in '. $self->analysis_path);
-  }
-  return  WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file
-                 ($metafiles[0], $METADATA_PREFIX);
-}
-
 has '_merged_report' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -418,27 +320,6 @@ sub _build_merged_report {
 
   my $report = WTSI::NPG::HTS::PacBio::Sequel::AnalysisReport->new(@init_args);
   return $report->generate_analysis_report;
-}
-
-has '_iso_fasta_files' =>
-  (isa           => 'Bool',
-   is            => 'ro',
-   builder       => '_build_iso_fasta_files',
-   lazy          => 1,
-   init_arg      => undef,
-   documentation => 'Find, reformat and write any isoseq fasta files to the analysis directory.',);
-
-sub _build_iso_fasta_files {
-  my ($self) = @_;
-
-  my @init_args  = (analysis_path  => $self->analysis_path,
-                    runfolder_path => $self->runfolder_path,
-                    meta_data      => $self->_metadata);
-
-  my $iso = WTSI::NPG::HTS::PacBio::Sequel::AnalysisFastaManager->new(@init_args);
-  my $is_success = $iso->make_loadable_files;
-
-  return $is_success;
 }
 
 

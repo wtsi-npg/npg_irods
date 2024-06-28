@@ -5,6 +5,7 @@ use Data::Dump qw[pp];
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions qw[catdir splitdir];
+use List::AllUtils qw[first];
 use Moose;
 use MooseX::StrictConstructor;
 use Readonly;
@@ -15,7 +16,9 @@ use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
 use WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher;
 use WTSI::NPG::HTS::PacBio::Sequel::Product;
 
-extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
+with qw[
+         WTSI::NPG::HTS::PacBio::PublisherBase
+       ];
 
 our $VERSION = '';
 
@@ -66,7 +69,6 @@ has 'api_client' =>
   (isa           => 'WTSI::NPG::HTS::PacBio::Sequel::APIClient',
    is            => 'ro',
    documentation => 'A PacBio Sequel API client used to fetch runs');
-
 
 sub _build_directory_pattern{
    my ($self) = @_;
@@ -743,6 +745,32 @@ sub list_files {
   return \@files;
 }
 
+sub run_name {
+  my ($self) = @_;
+
+  return first { $_ ne q[] } reverse splitdir($self->runfolder_path);
+}
+
+=head2 smrt_names
+
+  Arg [1]    : None
+
+  Example    : my @names = $pub->smrt_names;
+  Description: Return the SMRT cell names within a run, sorted lexically.
+  Returntype : Array[Str]
+
+=cut
+
+sub smrt_names {
+  my ($self) = @_;
+
+  my $dir_pattern = $self->directory_pattern;
+  my @dirs = grep { -d } $self->list_directory($self->runfolder_path,
+                                               filter => $dir_pattern);
+  my @names = sort map { first { $_ ne q[] } reverse splitdir($_) } @dirs;
+
+  return @names;
+}
 
 sub _read_metadata {
   my ($self, $smrt_name, $type, $prefix) = @_;

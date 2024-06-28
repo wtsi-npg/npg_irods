@@ -19,8 +19,10 @@ use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
 use WTSI::NPG::HTS::PacBio::Sequel::Product;
 use WTSI::DNAP::Utilities::Runnable;
 
-extends qw{WTSI::NPG::HTS::PacBio::RunPublisher};
-
+with qw[
+         WTSI::NPG::HTS::PacBio::PublisherBase
+         WTSI::NPG::HTS::PacBio::AnalysisPublisherBase
+       ];
 our $VERSION = '';
 
 # Sequence and index file suffixes
@@ -31,14 +33,6 @@ our $SEQUENCE_INDEX_FORMAT   = 'pbi';
 
 # Data processing level
 our $DATA_LEVEL = 'secondary';
-
-# Metadata relatedist
-our $METADATA_FORMAT = 'xml';
-our $METADATA_PREFIX = 'pbmeta:';
-our $METADATA_SET    = q{consensusreadset};
-
-# Well directory pattern
-our $WELL_DIRECTORY_PATTERN = '\d+_[A-Z]\d+$';
 
 # Not permitted name signalling processing with 
 # annotation which is not handled yet
@@ -54,6 +48,7 @@ Readonly::Scalar my $PRIMER_FIELD  => q{Primer Name};
 Readonly::Scalar my $PRIMERS_JSON  => q{isoseq_primers.report.json};
 Readonly::Scalar my $LOADED        => q{loaded.txt};
 
+
 has 'analysis_id' =>
   (isa           => 'Str',
    is            => 'ro',
@@ -65,16 +60,6 @@ has 'analysis_subtype' =>
    is            => 'ro',
    required      => 1,
    documentation => 'PacBio analysis subtype');
-
-has 'analysis_path' =>
-  (isa           => 'Str',
-   is            => 'ro',
-   required      => 1,
-   documentation => 'PacBio root analysis job path');
-
-
-# Location of source metadata file
-our $OUTPUT_DIR  = 'outputs';
 
 
 =head2 publish_files
@@ -309,85 +294,6 @@ sub publish_non_sequence_files {
               $self->_metadata->run_name);
 
   return ($num_files, $num_processed, $num_errors);
-}
-
-
-override 'run_name'  => sub {
-  my ($self) = @_;
-  return $self->_metadata->ts_run_name;
-};
-
-
-override 'smrt_names'  => sub {
-  my ($self)  = @_;
-
-  ($self->_metadata->has_results_folder &&
-      $self->_metadata->ts_run_name) or
-      $self->logconfess('Error ts or results folder missing');
-
-  my $rfolder = $self->_metadata->results_folder;
-  my $ts_name = $self->_metadata->ts_run_name;
-
-  $rfolder =~ /$ts_name/smx or
-     $self->logconfess('Error ts name missing from results folder ', $rfolder);
-
-  $rfolder =~ s/$ts_name//smx;
-  $rfolder =~ s/\///gsmx;
-
-  $rfolder =~ /$WELL_DIRECTORY_PATTERN/smx or
-     $self->logconfess('Error derived folder name ', $rfolder,
-     'does not match expected pattern');
-
-  return [$rfolder];
-};
-
-
-has '_metadata_file' =>
-  (isa           => 'Str',
-   is            => 'ro',
-   builder       => '_build_metadata_file',
-   lazy          => 1,
-   init_arg      => undef,
-   documentation => 'Source meta data file.',);
-
-sub _build_metadata_file{
-  my ($self) = @_;
-
-  my $output_path = catdir($self->analysis_path, $OUTPUT_DIR);
-
-  my @metafiles;
-  if (-d $output_path) {
-    # As all analysis cell based all metafiles should have the correct run name,
-    # well and plate number as no merged cell analysis - so just pick one.
-    my @files = $self->list_directory
-      ($output_path, filter => $METADATA_SET .q[.]. $METADATA_FORMAT . q[$]);
-    push @metafiles, $files[0];
-  }
-
-  if (@metafiles != 1) {
-    $self->logcroak('Expect one xml file in '. $self->analysis_path);
-  }
-  return $metafiles[0];
-}
-
-
-has '_metadata' =>
-  (isa           => 'WTSI::NPG::HTS::PacBio::Metadata',
-   is            => 'ro',
-   builder       => '_build_metadata',
-   lazy          => 1,
-   init_arg      => undef,
-   documentation => 'Load source meta data from file.',);
-
-sub _build_metadata{
-  my ($self) = @_;
-
-  if ( !defined $self->_metadata_file ) {
-    $self->logcroak('Metadata files is not defined for '. $self->analysis_path);
-  }
-
-  return  WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file
-                 ($self->_metadata_file, $METADATA_PREFIX);
 }
 
 

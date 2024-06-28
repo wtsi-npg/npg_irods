@@ -1,12 +1,12 @@
-package WTSI::NPG::HTS::PacBio::RunPublisher;
+package WTSI::NPG::HTS::PacBio::PublisherBase;
 
+use Moose::Role;
 use namespace::autoclean;
 use Data::Dump qw[pp];
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions qw[catdir catfile splitdir];
-use List::AllUtils qw[any first];
-use Moose;
+use List::AllUtils qw[any];
 use MooseX::StrictConstructor;
 use Try::Tiny;
 
@@ -26,7 +26,6 @@ with qw[
        ];
 
 our $VERSION = '';
-
 
 # Default
 our $DEFAULT_ROOT_COLL    = '/seq/pacbio';
@@ -102,33 +101,6 @@ has 'force' =>
    required      => 0,
    default       => 0,
    documentation => 'Force re-publication of files that have been published');
-
-sub run_name {
-  my ($self) = @_;
-
-  return first { $_ ne q[] } reverse splitdir($self->runfolder_path);
-}
-
-=head2 smrt_names
-
-  Arg [1]    : None
-
-  Example    : my @names = $pub->smrt_names;
-  Description: Return the SMRT cell names within a run, sorted lexically.
-  Returntype : Array[Str]
-
-=cut
-
-sub smrt_names {
-  my ($self) = @_;
-
-  my $dir_pattern = $self->directory_pattern;
-  my @dirs = grep { -d } $self->list_directory($self->runfolder_path,
-                                               filter => $dir_pattern);
-  my @names = sort map { first { $_ ne q[] } reverse splitdir($_) } @dirs;
-
-  return @names;
-}
 
 =head2 smrt_path
 
@@ -257,9 +229,7 @@ sub _check_smrt_name {
   return $smrt_name;
 }
 
-__PACKAGE__->meta->make_immutable;
-
-no Moose;
+no Moose::Role;
 
 1;
 
@@ -267,7 +237,7 @@ __END__
 
 =head1 NAME
 
-WTSI::NPG::HTS::PacBio::RunPublisher
+WTSI::NPG::HTS::PacBio::PublisherBase
 
 =head1 DESCRIPTION
 
@@ -280,8 +250,8 @@ Keith James E<lt>kdj@sanger.ac.ukE<gt>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2011, 2016, 2017, 2021 Genome Research Limited. All Rights
-Reserved.
+Copyright (C) 2011, 2016, 2017, 2021, 2024 Genome Research Limited. 
+All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
