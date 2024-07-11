@@ -144,7 +144,7 @@ sub _publish_iso_analysis_path {
   }
 
   push @init_args, analysis_id => $job->{id};
-  push @init_args, analysis_subtype => $job->{subJobTypeId};
+
   my $publisher = WTSI::NPG::HTS::PacBio::Sequel::IsoSeqPublisher->new(@init_args);
 
   return $publisher->publish_files();

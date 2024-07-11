@@ -8493,3 +8493,37 @@
   phenotype: ~
   developmental_stage: ~
   control_type: ~
+- id_sample_tmp: '9523049'
+  id_lims: SQSCP
+  uuid_sample_lims: aae4d9a4-11ea-11ef-a1ed-024224dd57f4
+  id_sample_lims: '9678190'
+  last_updated: '2024-05-14 12:08:26'
+  recorded_at: '2024-05-14 12:08:26'
+  deleted_at: ~
+  created: '2024-05-14 12:08:25'
+  name: KNX_DTOL14815334
+  reference_genome: ~
+  organism: ~
+  accession_number: SAMEA115359117
+  common_name: Mus musculus
+  description: ~
+  taxon_id: 10090
+  father: ~
+  mother: ~
+  replicate: ~
+  ethnicity: ~
+  gender: ~
+  cohort: ~
+  country_of_origin: ~
+  geographical_region: ~
+  sanger_sample_id: KNX_DTOL14815334
+  control: '0'
+  supplier_name: SAN00003702
+  public_name: mMusMuc108
+  sample_visibility: ~
+  strain: ~
+  consent_withdrawn: '0'
+  donor_id: SAMEA115359047
+  phenotype: ~
+  developmental_stage: ~
+  control_type: ~

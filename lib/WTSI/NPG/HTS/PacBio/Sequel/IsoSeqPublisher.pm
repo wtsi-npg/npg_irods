@@ -36,17 +36,19 @@ our $DATA_LEVEL = 'secondary';
 
 # Not permitted name signalling processing with 
 # annotation which is not handled yet
-Readonly::Scalar my $FNAME_NOT_PERMITTED  => qw[classification];
+Readonly::Scalar my $FNAME_NOT_PERMITTED => qw[classification];
 
-Readonly::Scalar my $FNAME_SEQUENCE     =>
+Readonly::Scalar my $FNAME_SEQUENCE =>
   qq{(flnc\.*$SEQUENCE_FILE_FORMAT|mapped\.*$SEQUENCE_FILE_FORMAT|$SEQUENCE_FASTA_FORMAT)};
-Readonly::Scalar my $FNAME_EXCLUDED     => qw[segmented];
+Readonly::Scalar my $FNAME_EXCLUDED => qw[segmented];
 
-Readonly::Scalar my $SAMPLE_FIELD  => q{Bio Sample Name};
-Readonly::Scalar my $SAMPLE_PREFIX => q{BioSample};
-Readonly::Scalar my $PRIMER_FIELD  => q{Primer Name};
-Readonly::Scalar my $PRIMERS_JSON  => q{isoseq_primers.report.json};
-Readonly::Scalar my $LOADED        => q{loaded.txt};
+Readonly::Scalar my $SAMPLE_FIELD   => q{Bio Sample Name};
+Readonly::Scalar my $SAMPLE_PREFIX  => q{BioSample};
+Readonly::Scalar my $PRIMER_FIELD   => q{Primer Name};
+Readonly::Scalar my $PRIMERS_JSON   => q{isoseq_primers.report.json};
+Readonly::Scalar my $LOADED         => q{loaded.txt};
+Readonly::Scalar my $NICE_N         => 19;
+Readonly::Scalar my $BWLIMIT        => 48_000;
 
 
 has 'analysis_id' =>
@@ -54,12 +56,6 @@ has 'analysis_id' =>
    is            => 'ro',
    required      => 1,
    documentation => 'PacBio analysis id');
-
-has 'analysis_subtype' =>
-  (isa           => 'Str',
-   is            => 'ro',
-   required      => 1,
-   documentation => 'PacBio analysis subtype');
 
 
 =head2 publish_files
@@ -88,7 +84,6 @@ sub publish_files {
   ## check if directory previously loaded and if so skip
   my $lf = catdir
     ($self->runfolder_path, $self->analysis_id .q[.]. $self->_metadata->movie_name .q[.]. $LOADED);
-
 
   if (! -f $lf ) {
     my @all_files = $self->list_directory($self->runfolder_path);
@@ -124,7 +119,7 @@ sub publish_files {
     $num_errors    += ($neb + $nep);
 
     ## if no error mark directory so don't try to load again
-    if ( $num_processed > 1 && ($num_files == $num_processed) && $num_errors < 1) {
+    if ( $num_processed > 1 && ($num_files == $num_processed) && $num_errors < 1 ) {
       try {
         my $done = IO::File->new($lf, q[+>]) or $self->logcroak('Could not open: ', $lf);
         $done->write('Loaded on '. DateTime->now ."\n");
@@ -150,7 +145,7 @@ sub _create_loadable_files {
     my $filename = fileparse($file);
     my $newfile  = catdir
       ($tmpdir, $self->analysis_id .q[.]. $self->_metadata->movie_name .q[.]. $filename);
-    push @cmds, qq[rsync -av -L $file $newfile];
+    push @cmds, qq[nice -n $NICE_N rsync -av -L $file $newfile --bwlimit=$BWLIMIT];
     if ( $newfile =~ m/ [.] $SEQUENCE_FASTA_FORMAT /smx ) {
       push @cmds, qq[gzip $newfile];
       $newfile =~ s/$SEQUENCE_FASTA_FORMAT/$SEQUENCE_FASTAGZ_FORMAT/smx;
@@ -229,20 +224,21 @@ sub publish_sequence_files {
         }
       }
 
-      my $tags = $records[0]->get_tags;
+      my $tags         = $records[0]->get_tags;
+      my $is_target    = 0;
 
-      my $id_product = $product->generate_product_id(
+      my $id_product   = $product->generate_product_id(
           $self->_metadata->run_name,
           $well_label,
           tags => $tags,
           plate_number => $self->_metadata->plate_number);
 
-      my @primary_avus   = $self->make_primary_metadata
+      my @primary_avus = $self->make_primary_metadata
          ($self->_metadata,
-          data_level => $DATA_LEVEL,
-          id_product => $id_product,
+          data_level     => $DATA_LEVEL,
+          id_product     => $id_product,
           isoseq_primers => $isoseq_primers,
-         );
+          is_target      => $is_target);
 
       my @secondary_avus = $self->make_secondary_metadata(@records);
 
