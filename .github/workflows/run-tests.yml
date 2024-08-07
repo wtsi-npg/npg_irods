@@ -46,9 +46,9 @@ jobs:
             server_image: "ghcr.io/wtsi-npg/ub-22.04-irods-4.3.1:latest"
             experimental: true
           - perl: "5.22.4"
-            irods: "4.3.0"
-            client_image: "ghcr.io/wtsi-npg/ub-22.04-irods-clients-4.3-nightly:latest"
-            server_image: "ghcr.io/wtsi-npg/ub-22.04-irods-4.3-nightly:latest"
+            irods: "4.3.2"
+            client_image: "ghcr.io/wtsi-npg/ub-22.04-irods-clients-4.3.2:latest"
+            server_image: "ghcr.io/wtsi-npg/ub-22.04-irods-4.3.2:latest"
             experimental: true
 
     services:
@@ -144,18 +144,6 @@ jobs:
           
           baton-do --version
 
-      - name: "Configure test Warehouse"
-        run: |
-          mkdir -p "$HOME/.npg"
-          cat <<'EOF' > "$HOME/.npg/WTSI-DNAP-Warehouse-Schema"
-          #!/usr/bin/env perl
-          my $VAR1 = {
-              'live' => {
-              dsn => 'dbi:sqlite:database=test'
-              }
-          };
-          EOF
-
       - name: "Cache Perl"
         id: cache-perl
         uses: actions/cache@v4
@@ -186,10 +174,6 @@ jobs:
           cpanm --local-lib=${{ env.PERL_CACHE }} local::lib
           eval $(perl -I ${{ env.PERL_CACHE }}/lib/perl5/ -Mlocal::lib="$NPG_LIB")
           eval $(perl -I ${{ env.PERL_CACHE }}/lib/perl5/ -Mlocal::lib)
-
-          # Required for npg_tracking (at least), but not declared as a
-          # dependency
-          cpanm --quiet --notest Alien::Tidyp
 
           # Required for npg_qc
           cpanm --quiet --notest https://github.com/chapmanb/vcftools-cpan/archive/v0.953.tar.gz
