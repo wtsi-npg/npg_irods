@@ -147,7 +147,7 @@ sub _create_loadable_files {
       ($tmpdir, $self->analysis_id .q[.]. $self->_metadata->movie_name .q[.]. $filename);
     push @cmds, qq[nice -n $NICE_N rsync -av -L $file $newfile --bwlimit=$BWLIMIT];
     if ( $newfile =~ m/ [.] $SEQUENCE_FASTA_FORMAT /smx ) {
-      push @cmds, qq[gzip $newfile];
+      push @cmds, qq[nice -n $NICE_N gzip $newfile];
       $newfile =~ s/$SEQUENCE_FASTA_FORMAT/$SEQUENCE_FASTAGZ_FORMAT/smx;
     }
     push @newfiles, $newfile;
