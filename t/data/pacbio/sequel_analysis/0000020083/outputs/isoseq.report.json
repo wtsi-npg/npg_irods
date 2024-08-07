@@ -1,0 +1,90 @@
+{
+    "_comment": "Generated with pbcommand version  at 2024-06-09T15:01:48.412596",
+    "attributes": [],
+    "dataset_uuids": [],
+    "id": "isoseq",
+    "plotGroups": [
+        {
+            "id": "isoseq.consensus_isoforms_readlength_group",
+            "legend": null,
+            "plots": [
+                {
+                    "caption": null,
+                    "id": "isoseq.consensus_isoforms_readlength_group.consensus_isoforms_readlength_hist_0",
+                    "image": "consensus_isoforms_readlength_hist_0.png",
+                    "plotType": "image",
+                    "thumbnail": "consensus_isoforms_readlength_hist_0_thumb.png",
+                    "title": null
+                },
+                {
+                    "caption": null,
+                    "id": "isoseq.consensus_isoforms_readlength_group.consensus_isoforms_readlength_hist_1",
+                    "image": "consensus_isoforms_readlength_hist_1.png",
+                    "plotType": "image",
+                    "thumbnail": "consensus_isoforms_readlength_hist_1_thumb.png",
+                    "title": null
+                },
+                {
+                    "caption": null,
+                    "id": "isoseq.consensus_isoforms_readlength_group.consensus_isoforms_readlength_hist_2",
+                    "image": "consensus_isoforms_readlength_hist_2.png",
+                    "plotType": "image",
+                    "thumbnail": "consensus_isoforms_readlength_hist_2_thumb.png",
+                    "title": null
+                },
+                {
+                    "caption": null,
+                    "id": "isoseq.consensus_isoforms_readlength_group.consensus_isoforms_readlength_hist_3",
+                    "image": "consensus_isoforms_readlength_hist_3.png",
+                    "plotType": "image",
+                    "thumbnail": "consensus_isoforms_readlength_hist_3_thumb.png",
+                    "title": null
+                },
+                {
+                    "caption": null,
+                    "id": "isoseq.consensus_isoforms_readlength_group.consensus_isoforms_readlength_hist_4",
+                    "image": "consensus_isoforms_readlength_hist_4.png",
+                    "plotType": "image",
+                    "thumbnail": "consensus_isoforms_readlength_hist_4_thumb.png",
+                    "title": null
+                }
+            ],
+            "thumbnail": "consensus_isoforms_readlength_hist_4_thumb.png",
+            "title": "Length of Consensus Isoforms"
+        }
+    ],
+    "tables": [
+        {
+            "columns": [
+                {
+                    "header": "Sample Name",
+                    "id": "isoseq.isoseq_cluster_table.sample_name",
+                    "values": [
+                        "BioSample_1",
+                        "BioSample_2",
+                        "BioSample_3",
+                        "BioSample_4",
+                        "BioSample_5"
+                    ]
+                },
+                {
+                    "header": "Number of High-Quality Isoforms",
+                    "id": "isoseq.isoseq_cluster_table.num_polished_hq_isoforms",
+                    "values": [
+                        913942,
+                        795206,
+                        307796,
+                        631541,
+                        428275
+                    ]
+                }
+            ],
+            "id": "isoseq.isoseq_cluster_table",
+            "title": "Summary Metrics"
+        }
+    ],
+    "tags": [],
+    "title": "Report isoseq",
+    "uuid": "91cb163d-e597-43ec-b27b-ed0b44f37ae1",
+    "version": "1.0.1"
+}

@@ -25,6 +25,7 @@ with qw[
                               data level is the default for the customer.
                               Boolean. Defaults to true.
                is_r_and_d     Is data R & D? Boolean. Defaults to false.
+               isoseq_primers IsoSeq primers. Optional.
 
   Example    : my @avus = $ann->make_primary_metadata($metadata);
   Description: Return instrument, run, cell index, collection number, set
@@ -36,7 +37,7 @@ with qw[
 
 {
     my $positional = 2;
-    my @named      = qw[data_level id_product is_target is_r_and_d ];
+    my @named      = qw[data_level id_product is_target is_r_and_d isoseq_primers];
     my $params     = function_params($positional, @named);
 
     sub make_primary_metadata {
@@ -82,7 +83,11 @@ with qw[
         }
 
         if ($params->id_product) {
-          push @avus, $self->make_avu($ID_PRODUCT, $params->id_product);
+            push @avus, $self->make_avu($ID_PRODUCT, $params->id_product);
+        }
+
+        if ($params->isoseq_primers) {
+            push @avus, $self->make_avu($PACBIO_ISOSEQ_PRIMERS, $params->isoseq_primers);
         }
 
         return @avus;
