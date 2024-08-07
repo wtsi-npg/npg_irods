@@ -2484,3 +2484,33 @@
   library_created_at: ~
   pac_bio_run_name: TRACTION-RUN-1200
   pac_bio_library_tube_barcode: TRAC-2-8046
+- id_pac_bio_tmp: 122219
+  last_updated: 2024-06-06 12:22:47
+  recorded_at: 2024-06-06 12:22:47
+  id_sample_tmp: 9523049
+  id_study_tmp: 5735
+  id_pac_bio_run_lims: TRACTION-RUN-1324
+  pac_bio_run_uuid: d3fb03a6-eb0d-47c1-9918-f72e37fa303c
+  cost_code: S10984
+  id_lims: Traction
+  tag_identifier: bcM0001
+  tag_sequence: ACAGTC
+  tag_set_id_lims: 13
+  tag_set_name: MAS_SMRTbell_barcoded_adapters_(v2)
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag2_identifier: ~ 
+  pipeline_id_lims: Pacbio_HiFi
+  plate_barcode:  ~
+  plate_uuid_lims: 16fe2d0d-f46d-4456-8cfc-323907e27321
+  plate_number: 1
+  well_label: A1
+  well_uuid_lims: c308aa7c-22c9-4fec-8e65-02509d9eff2c
+  pac_bio_library_tube_id_lims: 12445
+  pac_bio_library_tube_uuid: 0d09a826-1fb40a9-9fbb-a03198a84a71
+  pac_bio_library_tube_name: KNX_DTOL14815334
+  pac_bio_library_tube_legacy_id: ~
+  library_created_at: ~
+  pac_bio_run_name: TRACTION-RUN-1324
+  pac_bio_library_tube_barcode: TRAC-2-9007

@@ -1,0 +1,261 @@
+{
+    "_comment": "Generated with pbcommand version  at 2024-06-13T22:05:27.994864",
+    "attributes": [
+        {
+            "id": "isoseq_primers.n_reads_total",
+            "name": "Reads",
+            "value": 66245549
+        },
+        {
+            "id": "isoseq_primers.num_reads_fl",
+            "name": "Reads with 5' and 3' Primers",
+            "value": 64969955
+        },
+        {
+            "id": "isoseq_primers.num_reads_flnc",
+            "name": "Non-Concatamer Reads with 5' and 3' Primers",
+            "value": 64870105
+        },
+        {
+            "id": "isoseq_primers.num_reads_flnc_polya",
+            "name": "Non-Concatamer Reads with 5' and 3' Primers and Poly-A Tail (FLNC Reads)",
+            "value": 64827909
+        },
+        {
+            "id": "isoseq_primers.mean_flnc_read_length",
+            "name": "Mean Length of FLNC Reads",
+            "value": 1515
+        },
+        {
+            "id": "isoseq_primers.n_barcodes",
+            "name": "Unique Primers",
+            "value": 5
+        },
+        {
+            "id": "isoseq_primers.mean_reads",
+            "name": "Mean Reads per Primer",
+            "value": 12993991
+        },
+        {
+            "id": "isoseq_primers.max_reads",
+            "name": "Max. Reads per Primer",
+            "value": 13644437
+        },
+        {
+            "id": "isoseq_primers.min_reads",
+            "name": "Min. Reads per Primer",
+            "value": 11868447
+        },
+        {
+            "id": "isoseq_primers.n_unbarcoded_reads",
+            "name": "Reads without Primers",
+            "value": 1275594
+        },
+        {
+            "id": "isoseq_primers.percent_barcoded_bases",
+            "name": "Percent Bases in Reads with Primers",
+            "value": 0.9772058200502222
+        },
+        {
+            "id": "isoseq_primers.percent_barcoded_reads",
+            "name": "Percent Reads with Primers",
+            "value": 0.9807444572615739
+        }
+    ],
+    "dataset_uuids": [],
+    "id": "isoseq_primers",
+    "plotGroups": [
+        {
+            "id": "isoseq_primers.read_stats",
+            "legend": null,
+            "plots": [
+                {
+                    "caption": "Number Of Reads Per Primer",
+                    "id": "isoseq_primers.read_stats.nreads",
+                    "image": "nreads.png",
+                    "plotType": "image",
+                    "thumbnail": "nreads_thumb.png",
+                    "title": "Number Of Reads Per Primer"
+                },
+                {
+                    "caption": "Primer Frequency Distribution",
+                    "id": "isoseq_primers.read_stats.nreads_histogram",
+                    "image": "nreads_histogram.png",
+                    "plotType": "image",
+                    "thumbnail": "nreads_histogram_thumb.png",
+                    "title": "Primer Frequency Distribution"
+                },
+                {
+                    "caption": "Mean Read Length Distribution",
+                    "id": "isoseq_primers.read_stats.readlength_histogram",
+                    "image": "readlength_histogram.png",
+                    "plotType": "image",
+                    "thumbnail": "readlength_histogram_thumb.png",
+                    "title": "Mean Read Length Distribution"
+                }
+            ],
+            "thumbnail": null,
+            "title": "Primer Read Statistics"
+        },
+        {
+            "id": "isoseq_primers.bq_plots",
+            "legend": null,
+            "plots": [
+                {
+                    "caption": "Primer Quality Score Distribution",
+                    "id": "isoseq_primers.bq_plots.bq_histogram",
+                    "image": "bq_histogram.png",
+                    "plotType": "image",
+                    "thumbnail": "bq_histogram_thumb.png",
+                    "title": "Primer Quality Score Distribution"
+                }
+            ],
+            "thumbnail": null,
+            "title": "Primer Quality Scores"
+        },
+        {
+            "id": "isoseq_primers.fulllength_nonconcatemer_readlength_group",
+            "legend": null,
+            "plots": [
+                {
+                    "caption": null,
+                    "id": "isoseq_primers.fulllength_nonconcatemer_readlength_group.fulllength_nonconcatemer_readlength_hist_0",
+                    "image": "fulllength_nonconcatemer_readlength_hist_0.png",
+                    "plotType": "image",
+                    "thumbnail": "fulllength_nonconcatemer_readlength_hist_0_thumb.png",
+                    "title": null
+                },
+                {
+                    "caption": null,
+                    "id": "isoseq_primers.fulllength_nonconcatemer_readlength_group.fulllength_nonconcatemer_readlength_hist_1",
+                    "image": "fulllength_nonconcatemer_readlength_hist_1.png",
+                    "plotType": "image",
+                    "thumbnail": "fulllength_nonconcatemer_readlength_hist_1_thumb.png",
+                    "title": null
+                },
+                {
+                    "caption": null,
+                    "id": "isoseq_primers.fulllength_nonconcatemer_readlength_group.fulllength_nonconcatemer_readlength_hist_2",
+                    "image": "fulllength_nonconcatemer_readlength_hist_2.png",
+                    "plotType": "image",
+                    "thumbnail": "fulllength_nonconcatemer_readlength_hist_2_thumb.png",
+                    "title": null
+                },
+                {
+                    "caption": null,
+                    "id": "isoseq_primers.fulllength_nonconcatemer_readlength_group.fulllength_nonconcatemer_readlength_hist_3",
+                    "image": "fulllength_nonconcatemer_readlength_hist_3.png",
+                    "plotType": "image",
+                    "thumbnail": "fulllength_nonconcatemer_readlength_hist_3_thumb.png",
+                    "title": null
+                },
+                {
+                    "caption": null,
+                    "id": "isoseq_primers.fulllength_nonconcatemer_readlength_group.fulllength_nonconcatemer_readlength_hist_4",
+                    "image": "fulllength_nonconcatemer_readlength_hist_4.png",
+                    "plotType": "image",
+                    "thumbnail": "fulllength_nonconcatemer_readlength_hist_4_thumb.png",
+                    "title": null
+                }
+            ],
+            "thumbnail": "fulllength_nonconcatemer_readlength_hist_0_thumb.png",
+            "title": "Length of Full-length Non-Concatemer Reads"
+        }
+    ],
+    "tables": [
+        {
+            "columns": [
+                {
+                    "header": "Bio Sample Name",
+                    "id": "isoseq_primers.primer_table.biosample",
+                    "values": [
+                        "BioSample_1",
+                        "BioSample_2",
+                        "BioSample_3",
+                        "BioSample_4",
+                        "BioSample_5",
+                        "KNX_DTOL14815334"
+                    ]
+                },
+                {
+                    "header": "Primer Name",
+                    "id": "isoseq_primers.primer_table.barcode",
+                    "values": [
+                        "IsoSeqX_bc01_5p--IsoSeqX_3p",
+                        "IsoSeqX_bc02_5p--IsoSeqX_3p",
+                        "IsoSeqX_bc03_5p--IsoSeqX_3p",
+                        "IsoSeqX_bc04_5p--IsoSeqX_3p",
+                        "IsoSeqX_bc05_5p--IsoSeqX_3p",
+                        "No Primer"
+                    ]
+                },
+                {
+                    "header": "CCS Reads",
+                    "id": "isoseq_primers.primer_table.number_of_reads",
+                    "values": [
+                        13125273,
+                        11868447,
+                        12917459,
+                        13414339,
+                        13644437,
+                        1275594
+                    ]
+                },
+                {
+                    "header": "Mean Primer Quality",
+                    "id": "isoseq_primers.primer_table.mean_bcqual",
+                    "values": [
+                        99.67838924188472,
+                        99.6819382519044,
+                        99.67113578607062,
+                        99.66519453548922,
+                        99.67620254320497,
+                        0.0
+                    ]
+                },
+                {
+                    "header": "Reads with 5' and 3' Primers",
+                    "id": "isoseq_primers.primer_table.num_reads_fl",
+                    "values": [
+                        13125273,
+                        11868447,
+                        12917459,
+                        13414339,
+                        13644437,
+                        0
+                    ]
+                },
+                {
+                    "header": "Non-Concatamer Reads with 5' and 3' Primers",
+                    "id": "isoseq_primers.primer_table.num_reads_flnc",
+                    "values": [
+                        13098821,
+                        11844061,
+                        12901345,
+                        13395814,
+                        13630064,
+                        0
+                    ]
+                },
+                {
+                    "header": "Non-Concatamer Reads with 5' and 3' Primers and Poly-A Tail",
+                    "id": "isoseq_primers.primer_table.num_reads_flnc_polya",
+                    "values": [
+                        13090590,
+                        11835346,
+                        12894879,
+                        13385366,
+                        13621728,
+                        0
+                    ]
+                }
+            ],
+            "id": "isoseq_primers.primer_table",
+            "title": "Primer Data"
+        }
+    ],
+    "tags": [],
+    "title": "Report isoseq_primers",
+    "uuid": "77b30e75-7b54-4ac1-808b-26931fd69b5c",
+    "version": "1.0.1"
+}

@@ -1,5 +1,16 @@
 Unreleased
 
+ - SMRT Link IsoSeq analysis has changed substantially in SMRT Link v13
+   so old code and tests related to this was removed - further work is
+   planned in this area to remove the Sequel subdirectory entirely. As
+   it is an evolving area in sporadic use the loading code for IsoSeq
+   analysis was moved to a separate new IsoSeqPublisher module.
+     - added new WTSI::NPG::HTS::PacBio::Sequel::IsoSeqPublisher module
+       which handles loading of analysis output from SMRT Link
+       pb_segment_reads_and_isoseq jobs
+     - old code for IsoSeq loading completely removed from
+       WTSI::NPG::HTS::PacBio::Sequel::AnalysisPublisher
+
 Release 2.49.2
  - Prevent access to a live mlwh database from tests.
 
