@@ -4,7 +4,7 @@ use File::Spec::Functions qw[catdir];
 use Moose::Role;
 use MooseX::StrictConstructor;
 use WTSI::NPG::HTS::PacBio::Metadata;
-use WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser;
+use WTSI::NPG::HTS::PacBio::MetaXMLParser;
 
 our $VERSION = '';
 
@@ -55,7 +55,7 @@ sub _build_metadata{
     $self->logcroak('Metadata files is not defined for '. $self->analysis_path);
   }
 
-  return  WTSI::NPG::HTS::PacBio::Sequel::MetaXMLParser->new->parse_file
+  return  WTSI::NPG::HTS::PacBio::MetaXMLParser->new->parse_file
                  ($self->_metadata_file, $METADATA_PREFIX);
 }
 
