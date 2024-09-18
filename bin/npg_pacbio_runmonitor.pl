@@ -13,7 +13,7 @@ use Readonly;
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::iRODS;
-use WTSI::NPG::HTS::PacBio::Sequel::RunMonitor;
+use WTSI::NPG::HTS::PacBio::RunMonitor;
 
 
 our $VERSION = '';
