@@ -11,7 +11,7 @@ use Pod::Usage;
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::iRODS;
-use WTSI::NPG::HTS::PacBio::Sequel::RunPublisher;
+use WTSI::NPG::HTS::PacBio::RunPublisher;
 
 our $VERSION = '';
 

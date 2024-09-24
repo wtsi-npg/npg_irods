@@ -13,8 +13,8 @@ use Readonly;
 
 use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::DriRODS;
-use WTSI::NPG::HTS::PacBio::Sequel::RunDeleteMonitor;
-use WTSI::NPG::HTS::PacBio::Sequel::RunAuditor;
+use WTSI::NPG::HTS::PacBio::RunDeleteMonitor;
+use WTSI::NPG::HTS::PacBio::RunAuditor;
 
 our $VERSION = '';
 
