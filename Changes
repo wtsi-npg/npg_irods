@@ -1,5 +1,15 @@
 Unreleased
 
+Release 2.50.1 (2024-10-04)
+ - Remove sequel specific references to Sequel from the code
+ - Following a release on 07/09/2024, see https://metacpan.org/dist/App-perlbrew/changes
+   the checksum of the script served by https://install.perlbrew.pl had changed.
+   https://install.perlbrew.pl is a redirect to raw
+   https://github.com/gugod/App-perlbrew/blob/master/perlbrew-install, so
+   the change originates from GitHub and can be trusted. Our CI flow compares
+   the checksum of the downloaded script to the expected value. We now store
+   an updated expected checksum value, which corresponds to the latest release.
+
 Release 2.50.0 (2024-08-07)
  - SMRT Link IsoSeq analysis has changed substantially in SMRT Link v13
    so old code and tests related to this was removed - further work is
