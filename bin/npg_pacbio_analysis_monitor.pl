@@ -78,7 +78,7 @@ if($api_uri) {
   push @init_args, api_uri => $api_uri;
 }
 
-my $monitor = WTSI::NPG::HTS::PacBio::Sequel::AnalysisMonitor->new
+my $monitor = WTSI::NPG::HTS::PacBio::AnalysisMonitor->new
   (@init_args);
 
 my ($num_files, $num_published, $num_errors) =

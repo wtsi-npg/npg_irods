@@ -43,7 +43,7 @@ GetOptions('collection=s'            => \$collection,
            'verbose'                 => \$verbose);
 
 
-my $module = 'WTSI::NPG::HTS::PacBio::Sequel::RunMonitor';
+my $module = 'WTSI::NPG::HTS::PacBio::RunMonitor';
 
 if ($log4perl_config) {
   Log::Log4perl::init($log4perl_config);
