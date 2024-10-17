@@ -93,10 +93,10 @@ if($api_uri) {
 my ($num_runs, $num_processed, $num_actioned, $num_errors);
 
 if ($task eq 'delete') {
-  my $delete = WTSI::NPG::HTS::PacBio::Sequel::RunDeleteMonitor->new(@init_args);
+  my $delete = WTSI::NPG::HTS::PacBio::RunDeleteMonitor->new(@init_args);
   ($num_runs, $num_processed, $num_actioned, $num_errors) = $delete->delete_runs;
 } elsif ($task eq 'audit') {
-  my $audit = WTSI::NPG::HTS::PacBio::Sequel::RunAuditor->new(@init_args);
+  my $audit = WTSI::NPG::HTS::PacBio::RunAuditor->new(@init_args);
   ($num_runs, $num_processed, $num_actioned, $num_errors) = $audit->check_runs;
 }
 
