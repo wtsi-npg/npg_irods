@@ -3,7 +3,7 @@ package WTSI::NPG::HTS::PacBio::MonitorBase;
 use Moose::Role;
 use WTSI::NPG::iRODS;
 use WTSI::DNAP::Warehouse::Schema;
-
+use WTSI::NPG::HTS::PacBio::Sequel::APIClient;
 
 our $VERSION = '';
 

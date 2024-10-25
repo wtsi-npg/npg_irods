@@ -56,7 +56,7 @@ GetOptions('collection=s'                    => \$collection,
 
 
 
-my   $module = 'WTSI::NPG::HTS::PacBio::Sequel::RunPublisher';
+my   $module = 'WTSI::NPG::HTS::PacBio::RunPublisher';
 
 # Process CLI arguments
 if ($log4perl_config) {

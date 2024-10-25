@@ -1,5 +1,8 @@
 Unreleased
 
+Release 2.51.0 (2024-10-25)
+ - Banish more Sequels
+
 Release 2.50.1 (2024-10-04)
  - Remove sequel specific references to Sequel from the code
  - Following a release on 07/09/2024, see https://metacpan.org/dist/App-perlbrew/changes
