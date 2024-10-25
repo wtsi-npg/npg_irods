@@ -1,0 +1,52 @@
+{
+    "_comment": "Generated with pbcommand version  at 2024-10-23T14:34:28.222296",
+    "attributes": [],
+    "dataset_uuids": [],
+    "id": "isoseq_mapping",
+    "plotGroups": [],
+    "tables": [
+        {
+            "columns": [
+                {
+                    "header": "Sample Name",
+                    "id": "isoseq_mapping.summary_table.sample_name",
+                    "values": [
+                        "BioSample_1",
+                        "BioSample_2",
+                        "BioSample_3",
+                        "BioSample_4",
+                        "BioSample_5"
+                    ]
+                },
+                {
+                    "header": "Number of mapped unique isoforms",
+                    "id": "isoseq_mapping.summary_table.number_mapped_unique_isoforms",
+                    "values": [
+                        599748,
+                        145263,
+                        117714,
+                        2902858,
+                        59317
+                    ]
+                },
+                {
+                    "header": "Number of mapped unique loci",
+                    "id": "isoseq_mapping.summary_table.number_of_mapped_unique_loci",
+                    "values": [
+                        114359,
+                        37361,
+                        32934,
+                        513001,
+                        12270
+                    ]
+                }
+            ],
+            "id": "isoseq_mapping.summary_table",
+            "title": "Summary Metrics"
+        }
+    ],
+    "tags": [],
+    "title": "Report isoseq_mapping",
+    "uuid": "04e233af-04a2-44f3-b35c-c32269913f4f",
+    "version": "1.0.1"
+}

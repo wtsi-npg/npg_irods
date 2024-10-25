@@ -29,7 +29,6 @@ our $VERSION = '';
 our $SEQUENCE_FILE_FORMAT    = 'bam';
 our $SEQUENCE_FASTA_FORMAT   = 'fasta';
 our $SEQUENCE_FASTAGZ_FORMAT = 'fasta.gz';
-our $SEQUENCE_INDEX_FORMAT   = 'pbi';
 
 # Data processing level
 our $DATA_LEVEL = 'secondary';
