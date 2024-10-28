@@ -240,6 +240,110 @@ sub publish_files_2 : Test(5) {
   unlink $load_file;
 }
 
+sub publish_files_3 : Test(5) {
+## Read Segmentation and Iso-Seq with Reference only & 5 IsoSeq barcodes.
+## csi not bai mapped bam indexes due to large reference size
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $analysis_path  = "$data_path/0000021786";
+  my $runfolder_path = "$analysis_path/outputs",
+  my $dest_coll      = "$irods_tmp_coll/publish_sequence_files";
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $pub = WTSI::NPG::HTS::PacBio::IsoSeqPublisher->new
+    (restart_file    => catfile($tmpdir->dirname, 'published.json'),
+     dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     analysis_path   => $analysis_path,
+     runfolder_path  => $runfolder_path,
+     analysis_id     => '21786',);
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+
+  my @expected_paths =
+    map { catfile("$dest_coll/1_A01/21786", $_) }
+    ('21786.m84093_241017_151706_s1.collapse_isoforms-1.fasta.gz',
+     '21786.m84093_241017_151706_s1.collapse_isoforms-1.gff',
+     '21786.m84093_241017_151706_s1.collapse_isoforms-2.fasta.gz',
+     '21786.m84093_241017_151706_s1.collapse_isoforms-2.gff',
+     '21786.m84093_241017_151706_s1.collapse_isoforms-3.fasta.gz',
+     '21786.m84093_241017_151706_s1.collapse_isoforms-3.gff',
+     '21786.m84093_241017_151706_s1.collapse_isoforms-4.fasta.gz',
+     '21786.m84093_241017_151706_s1.collapse_isoforms-4.gff',
+     '21786.m84093_241017_151706_s1.collapse_isoforms-5.fasta.gz',
+     '21786.m84093_241017_151706_s1.collapse_isoforms-5.gff',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.flnc_count-1.txt',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.flnc_count-2.txt',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.flnc_count-3.txt',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.flnc_count-4.txt',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.flnc_count-5.txt',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.group-1.txt',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.group-2.txt',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.group-3.txt',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.group-4.txt',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.group-5.txt',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.read_stat-1.txt',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.read_stat-2.txt',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.read_stat-3.txt',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.read_stat-4.txt',
+     '21786.m84093_241017_151706_s1.collapse_isoforms.read_stat-5.txt',
+     '21786.m84093_241017_151706_s1.flnc-1.bam',
+     '21786.m84093_241017_151706_s1.flnc-2.bam',
+     '21786.m84093_241017_151706_s1.flnc-3.bam',
+     '21786.m84093_241017_151706_s1.flnc-4.bam',
+     '21786.m84093_241017_151706_s1.flnc-5.bam',
+     '21786.m84093_241017_151706_s1.flnc.report-1.csv',
+     '21786.m84093_241017_151706_s1.flnc.report-2.csv',
+     '21786.m84093_241017_151706_s1.flnc.report-3.csv',
+     '21786.m84093_241017_151706_s1.flnc.report-4.csv',
+     '21786.m84093_241017_151706_s1.flnc.report-5.csv',
+     '21786.m84093_241017_151706_s1.isoseq.report.json',
+     '21786.m84093_241017_151706_s1.isoseq_mapping.report.json',
+     '21786.m84093_241017_151706_s1.isoseq_primers.report.json',
+     '21786.m84093_241017_151706_s1.mapped-1.bam',
+     '21786.m84093_241017_151706_s1.mapped-1.bam.csi',
+     '21786.m84093_241017_151706_s1.mapped-2.bam',
+     '21786.m84093_241017_151706_s1.mapped-2.bam.csi',
+     '21786.m84093_241017_151706_s1.mapped-3.bam',
+     '21786.m84093_241017_151706_s1.mapped-3.bam.csi',
+     '21786.m84093_241017_151706_s1.mapped-4.bam',
+     '21786.m84093_241017_151706_s1.mapped-4.bam.csi',
+     '21786.m84093_241017_151706_s1.mapped-5.bam',
+     '21786.m84093_241017_151706_s1.mapped-5.bam.csi',
+     '21786.m84093_241017_151706_s1.read_segmentation.report.json',
+     '21786.m84093_241017_151706_s1.sample0.transcripts.cluster_report.csv',
+     '21786.m84093_241017_151706_s1.sample0.transcripts.fl_counts.csv',
+     '21786.m84093_241017_151706_s1.sample1.transcripts.cluster_report.csv',
+     '21786.m84093_241017_151706_s1.sample1.transcripts.fl_counts.csv',
+     '21786.m84093_241017_151706_s1.sample2.transcripts.cluster_report.csv',
+     '21786.m84093_241017_151706_s1.sample2.transcripts.fl_counts.csv',
+     '21786.m84093_241017_151706_s1.sample3.transcripts.cluster_report.csv',
+     '21786.m84093_241017_151706_s1.sample3.transcripts.fl_counts.csv',
+     '21786.m84093_241017_151706_s1.sample4.transcripts.cluster_report.csv',
+     '21786.m84093_241017_151706_s1.sample4.transcripts.fl_counts.csv',
+     '21786.m84093_241017_151706_s1.transcripts-1.fasta.gz',
+     '21786.m84093_241017_151706_s1.transcripts-2.fasta.gz',
+     '21786.m84093_241017_151706_s1.transcripts-3.fasta.gz',
+     '21786.m84093_241017_151706_s1.transcripts-4.fasta.gz',
+     '21786.m84093_241017_151706_s1.transcripts-5.fasta.gz',
+     );
+
+  cmp_ok($num_files,     '==', scalar @expected_paths);
+  cmp_ok($num_processed, '==', scalar @expected_paths);
+  cmp_ok($num_errors,    '==', 0);
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named sequence files') or
+              diag explain \@observed_paths;
+
+  my $load_file = "$runfolder_path/21786.m84093_241017_151706_s1.loaded.txt";
+  ok(-e $load_file, "Successful loading file created");
+  unlink $load_file;
+
+}
 
 sub observed_data_objects {
   my ($irods, $dest_collection, $regex) = @_;
