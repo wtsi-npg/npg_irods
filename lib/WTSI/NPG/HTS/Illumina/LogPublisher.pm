@@ -96,10 +96,15 @@ sub publish_logs {
   # find links
   my $find_llist = q[find . -type l];
 
+  # find pipeline central and post qc files right under the run folder directory
+  my $find_central_postqc =
+  	q[find . -maxdepth 1 -type f ] . 
+	q[\\( -name "*.log" -o -name "*.definitions.json" \\)];
+
   my $tarcmd = "tar cJf $tarpath --exclude-vcs --exclude='core*' -T -";
   my $cmd =
     qq[set -o pipefail && cd $search_root && ] .
-    qq[($find_dlist && $find_p4 && $find_llist) | $tarcmd];
+    qq[($find_dlist && $find_p4 && $find_llist && $find_central_postqc) | $tarcmd];
 
   try {
     WTSI::DNAP::Utilities::Runnable->new(executable => '/bin/bash',
