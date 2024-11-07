@@ -7,6 +7,7 @@ use Moose;
 use MooseX::StrictConstructor;
 use POSIX qw[strftime];
 use Try::Tiny;
+use Readonly;
 
 use WTSI::NPG::HTS::DataObject;
 use WTSI::NPG::iRODS::Metadata qw[$ID_RUN];
@@ -25,6 +26,8 @@ our $VERSION = '';
 # Default
 our $DEFAULT_ROOT_COLL = '/seq';
 our $DEFAULT_LOG_COLL  = 'log';
+
+Readonly::Scalar my $BAM_BASECALLS_DEPTH => 4;
 
 has 'irods' =>
   (isa           => 'WTSI::NPG::iRODS',
@@ -98,8 +101,9 @@ sub publish_logs {
 
   # find pipeline central and post qc files right under the run folder directory
   my $find_central_postqc =
-		q[find . -maxdepth 1 -type f ] .
-	  q[\\( -name "*.log" -o -name "*.definitions.json" \\)];
+		qq[find . -maxdepth $BAM_BASECALLS_DEPTH -type f ] .
+		q[-a \\( -path "*/BAM_basecalls_*" -a -prune \\) ] .
+		q[-a \\( -name "*.log" -o -name "*.definitions.json" \\)];
 
   my $tarcmd = "tar cJf $tarpath --exclude-vcs --exclude='core*' -T -";
   my $cmd =
