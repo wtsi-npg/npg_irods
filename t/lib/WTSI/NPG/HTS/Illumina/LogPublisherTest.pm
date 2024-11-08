@@ -98,7 +98,7 @@ sub publish_logs : Test(12) {
   my $pub3 = WTSI::NPG::HTS::Illumina::LogPublisher->new
     (irods           => $irods,
      runfolder_path  => $runfolder_path3,
-		 id_run          => 18448,
+     id_run          => 18448,
      dest_collection => "$irods_tmp_coll/publish_logs_pipecentral_qcpost");
 
   my $log_archive3 = $pub3->publish_logs;
