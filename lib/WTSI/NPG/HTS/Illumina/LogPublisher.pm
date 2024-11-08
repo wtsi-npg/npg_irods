@@ -103,7 +103,7 @@ sub publish_logs {
   my $analysis_logs_and_config =
     qq[find . -maxdepth $BAM_BASECALLS_DEPTH -type f ] .
     q[-a \\( -path "*/BAM_basecalls_*" -a -prune \\) ] .
-    q[-a \\( -name "*.log" -o -name "*.definitions.json" -o -name "*.yml" \\)];
+    q[-a \\( -name "*.log" -o -name "*.definitions.json" -o -name "product_release_*.yml" \\)];
 
   my $tarcmd = "tar cJf $tarpath --exclude-vcs --exclude='core*' -T -";
   my $cmd =
