@@ -85,11 +85,11 @@ sub publish_logs : Test(12) {
       'product_release_20241101-132705-1247165951.yml',
       'product_release_20241104-124525-1500421497.yml');
   my $temp_dir = tempdir(CLEANUP => 1);
-  my $ref_name = '151211_HX3_18448_B_HHH55CCXX';
-  my $runfolder_path3 = File::Spec->catfile($temp_dir, $ref_name);
+  my $rf_name = '151211_HX3_18448_B_HHH55CCXX';
+  my $runfolder_path3 = File::Spec->catfile($temp_dir, $rf_name);
   my $bam_basecall_folder3 = 
     File::Spec->catfile( $runfolder_path3, 'Data/Intensities/BAM_basecalls_20151214-085833');
-  dircopy("t/data/illumina/sequence/$ref_name", $runfolder_path3);
+  dircopy("t/data/illumina/sequence/$rf_name", $runfolder_path3);
   for my $log (@log_files) {
     open my $handle, '>', File::Spec->catfile($bam_basecall_folder3, $log)
       or die "error while creating test logs $log";
