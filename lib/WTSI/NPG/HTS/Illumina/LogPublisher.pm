@@ -100,7 +100,7 @@ sub publish_logs {
   my $find_llist = q[find . -type l];
 
   # find pipeline central and post qc files right under the run folder directory
-  my $find_central_postqc =
+  my $analysis_logs_and_config =
 		qq[find . -maxdepth $BAM_BASECALLS_DEPTH -type f ] .
 		q[-a \\( -path "*/BAM_basecalls_*" -a -prune \\) ] .
 		q[-a \\( -name "*.log" -o -name "*.definitions.json" \\)];
@@ -108,7 +108,7 @@ sub publish_logs {
   my $tarcmd = "tar cJf $tarpath --exclude-vcs --exclude='core*' -T -";
   my $cmd =
     qq[set -o pipefail && cd $search_root && ] .
-    qq[($find_dlist && $find_p4 && $find_llist && $find_central_postqc) | $tarcmd];
+    qq[($find_dlist && $find_p4 && $find_llist && $analysis_logs_and_config) | $tarcmd];
 
   try {
     WTSI::DNAP::Utilities::Runnable->new(executable => '/bin/bash',
