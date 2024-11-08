@@ -7,7 +7,7 @@ use Carp;
 use English qw[-no_match_vars];
 use Log::Log4perl;
 use Test::More;
-use File::Temp qw(tempdir tempfile);
+use File::Temp qw(tempdir);
 use File::Copy::Recursive qw(dircopy);
 use File::Spec;
 
