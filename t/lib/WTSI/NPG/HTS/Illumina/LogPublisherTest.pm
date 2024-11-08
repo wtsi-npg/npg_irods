@@ -75,7 +75,7 @@ sub publish_logs : Test(12) {
             {attribute => $ID_RUN,
              value     => 17550}, "Inferred $ID_RUN metadata is present");
 
-	# Test that the pipeline central, postqc and product release logs are archived together with the others
+  # Test that the pipeline central, postqc and product release logs are archived together with the others
   Readonly::Scalar my $LOGS_COUNT => 43;
   my @log_files =
     ('_software_npg_20241107_bin_npg_pipeline_central_17550_20241101-132705-1566962201.definitions.json',
