@@ -101,9 +101,9 @@ sub publish_logs {
 
   # find pipeline central and post qc files right under the run folder directory
   my $analysis_logs_and_config =
-		qq[find . -maxdepth $BAM_BASECALLS_DEPTH -type f ] .
-		q[-a \\( -path "*/BAM_basecalls_*" -a -prune \\) ] .
-		q[-a \\( -name "*.log" -o -name "*.definitions.json" -o -name "*.yml" \\)];
+    qq[find . -maxdepth $BAM_BASECALLS_DEPTH -type f ] .
+    q[-a \\( -path "*/BAM_basecalls_*" -a -prune \\) ] .
+    q[-a \\( -name "*.log" -o -name "*.definitions.json" -o -name "*.yml" \\)];
 
   my $tarcmd = "tar cJf $tarpath --exclude-vcs --exclude='core*' -T -";
   my $cmd =

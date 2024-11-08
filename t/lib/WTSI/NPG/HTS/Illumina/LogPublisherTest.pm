@@ -77,24 +77,24 @@ sub publish_logs : Test(12) {
 
 	# Test that the pipeline central, postqc and product release logs are archived together with the others
   Readonly::Scalar my $LOGS_COUNT => 43;
-	my @log_files =
-		('_software_npg_20241107_bin_npg_pipeline_central_17550_20241101-132705-1566962201.definitions.json',
-		  '_software_npg_20241107_bin_npg_pipeline_post_qc_review_17550_20241104-124525-1544617117.definitions.json',
-		  '_software_npg_20241107_bin_npg_pipeline_central_17550_20241101-132705-1566962201.log',
-		  '_software_npg_20241107_bin_npg_pipeline_post_qc_review_17550_20241104-124525-1544617117.log',
+  my @log_files =
+    ('_software_npg_20241107_bin_npg_pipeline_central_17550_20241101-132705-1566962201.definitions.json',
+      '_software_npg_20241107_bin_npg_pipeline_post_qc_review_17550_20241104-124525-1544617117.definitions.json',
+      '_software_npg_20241107_bin_npg_pipeline_central_17550_20241101-132705-1566962201.log',
+      '_software_npg_20241107_bin_npg_pipeline_post_qc_review_17550_20241104-124525-1544617117.log',
       'product_release_20241101-132705-1247165951.yml',
       'product_release_20241104-124525-1500421497.yml');
-	my $temp_dir = tempdir(CLEANUP => 1);
-	my $ref_name = '151211_HX3_18448_B_HHH55CCXX';
-	my $runfolder_path3 = File::Spec->catfile($temp_dir, $ref_name);
-	my $bam_basecall_folder3 = 
+  my $temp_dir = tempdir(CLEANUP => 1);
+  my $ref_name = '151211_HX3_18448_B_HHH55CCXX';
+  my $runfolder_path3 = File::Spec->catfile($temp_dir, $ref_name);
+  my $bam_basecall_folder3 = 
     File::Spec->catfile( $runfolder_path3, 'Data/Intensities/BAM_basecalls_20151214-085833');
-	dircopy("t/data/illumina/sequence/$ref_name", $runfolder_path3);
-	for my $log (@log_files) {
-		open my $handle, '>', File::Spec->catfile($bam_basecall_folder3, $log)
+  dircopy("t/data/illumina/sequence/$ref_name", $runfolder_path3);
+  for my $log (@log_files) {
+    open my $handle, '>', File::Spec->catfile($bam_basecall_folder3, $log)
       or die "error while creating test logs $log";
-		close $handle or die "error while closing test logs $log";
-	}
+    close $handle or die "error while closing test logs $log";
+  }
   my $pub3 = WTSI::NPG::HTS::Illumina::LogPublisher->new
     (irods           => $irods,
      runfolder_path  => $runfolder_path3,
@@ -105,12 +105,12 @@ sub publish_logs : Test(12) {
   ok($log_archive3, 'Log archive with pipeline central and post qc logs created');
 
   my $cmd_count_out = `iget $log_archive3 - | tar tJ | wc -l`;
-	ok(int($cmd_count_out) == $LOGS_COUNT, 'Correct number of files in the log archive');
+  ok(int($cmd_count_out) == $LOGS_COUNT, 'Correct number of files in the log archive');
 
-	my $cmd_list_out = `iget $log_archive3 - | tar tJ`;
-	for my $log (@log_files) {
-		ok(grep(/$log/, $cmd_list_out), "$log in archive file");
-	}
+  my $cmd_list_out = `iget $log_archive3 - | tar tJ`;
+  for my $log (@log_files) {
+    ok(grep(/$log/, $cmd_list_out), "$log in archive file");
+  }
 }
 
 1;
