@@ -40,7 +40,7 @@ sub teardown_test : Test(teardown) {
   $irods->remove_collection($irods_tmp_coll);
 }
 
-sub publish_logs : Test(10) {
+sub publish_logs : Test(12) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
   my $runfolder_path1 = "$data_path/100818_IL32_10371";
@@ -75,20 +75,24 @@ sub publish_logs : Test(10) {
             {attribute => $ID_RUN,
              value     => 17550}, "Inferred $ID_RUN metadata is present");
 
-	# Test that the pipeline central and postqc logs are archived together with the others
-  Readonly::Scalar my $LOGS_COUNT => 41;
+	# Test that the pipeline central, postqc and product release logs are archived together with the others
+  Readonly::Scalar my $LOGS_COUNT => 43;
 	my @log_files =
 		('_software_npg_20241107_bin_npg_pipeline_central_17550_20241101-132705-1566962201.definitions.json',
 		  '_software_npg_20241107_bin_npg_pipeline_post_qc_review_17550_20241104-124525-1544617117.definitions.json',
 		  '_software_npg_20241107_bin_npg_pipeline_central_17550_20241101-132705-1566962201.log',
-		  '_software_npg_20241107_bin_npg_pipeline_post_qc_review_17550_20241104-124525-1544617117.log');
+		  '_software_npg_20241107_bin_npg_pipeline_post_qc_review_17550_20241104-124525-1544617117.log',
+      'product_release_20241101-132705-1247165951.yml',
+      'product_release_20241104-124525-1500421497.yml');
 	my $temp_dir = tempdir(CLEANUP => 1);
 	my $ref_name = '151211_HX3_18448_B_HHH55CCXX';
 	my $runfolder_path3 = File::Spec->catfile($temp_dir, $ref_name);
-	my $bam_basecall_folder3 = File::Spec->catfile( $runfolder_path3, 'Data/Intensities/BAM_basecalls_20151214-085833');
+	my $bam_basecall_folder3 = 
+    File::Spec->catfile( $runfolder_path3, 'Data/Intensities/BAM_basecalls_20151214-085833');
 	dircopy("t/data/illumina/sequence/$ref_name", $runfolder_path3);
 	for my $log (@log_files) {
-		open my $handle, '>', File::Spec->catfile($bam_basecall_folder3, $log) or die "error while creating test logs $log";
+		open my $handle, '>', File::Spec->catfile($bam_basecall_folder3, $log)
+      or die "error while creating test logs $log";
 		close $handle or die "error while closing test logs $log";
 	}
   my $pub3 = WTSI::NPG::HTS::Illumina::LogPublisher->new
