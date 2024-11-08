@@ -10,6 +10,7 @@ use Test::More;
 use File::Temp qw(tempdir);
 use File::Copy::Recursive qw(dircopy);
 use File::Spec;
+use Readonly;
 
 use base qw[WTSI::NPG::HTS::Test];
 
