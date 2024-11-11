@@ -24,8 +24,8 @@ with qw[
 our $VERSION = '';
 
 # Default
-our $DEFAULT_ROOT_COLL = '/seq';
-our $DEFAULT_LOG_COLL  = 'log';
+Readonly::Scalar my $DEFAULT_ROOT_COLL => '/seq';
+Readonly::Scalar my $DEFAULT_LOG_COLL => 'log';
 
 Readonly::Scalar my $BAM_BASECALLS_DEPTH => 4;
 
