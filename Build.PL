@@ -49,6 +49,7 @@ my $build = WTSI::DNAP::Utilities::Build->new
     'MooseX::Types'                 => '>= 0.45',
     'MooseX::Storage'               => 0,
     'MooseX::StrictConstructor'     => 0,
+    'Readonly'                      => 0,
     'Text::CSV'                     => '>= 1.33',
     'Try::Tiny'                     => '>= 0.12',
     'URI'                           => 0,
