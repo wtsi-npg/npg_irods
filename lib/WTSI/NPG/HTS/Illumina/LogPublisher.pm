@@ -7,6 +7,7 @@ use Moose;
 use MooseX::StrictConstructor;
 use POSIX qw[strftime];
 use Try::Tiny;
+use Readonly;
 
 use WTSI::NPG::HTS::DataObject;
 use WTSI::NPG::iRODS::Metadata qw[$ID_RUN];
@@ -23,8 +24,10 @@ with qw[
 our $VERSION = '';
 
 # Default
-our $DEFAULT_ROOT_COLL = '/seq';
-our $DEFAULT_LOG_COLL  = 'log';
+Readonly::Scalar my $DEFAULT_ROOT_COLL => '/seq';
+Readonly::Scalar my $DEFAULT_LOG_COLL => 'log';
+
+Readonly::Scalar my $BAM_BASECALLS_DEPTH => 4;
 
 has 'irods' =>
   (isa           => 'WTSI::NPG::iRODS',
@@ -96,10 +99,16 @@ sub publish_logs {
   # find links
   my $find_llist = q[find . -type l];
 
+  # find pipeline central and post qc files right under the run folder directory
+  my $analysis_logs_and_config =
+    qq[find . -maxdepth $BAM_BASECALLS_DEPTH -type f ] .
+    q[-a \\( -path "*/BAM_basecalls_*" -a -prune \\) ] .
+    q[-a \\( -name "*.log" -o -name "*.definitions.json" -o -name "product_release_*.yml" \\)];
+
   my $tarcmd = "tar cJf $tarpath --exclude-vcs --exclude='core*' -T -";
   my $cmd =
     qq[set -o pipefail && cd $search_root && ] .
-    qq[($find_dlist && $find_p4 && $find_llist) | $tarcmd];
+    qq[($find_dlist && $find_p4 && $find_llist && $analysis_logs_and_config) | $tarcmd];
 
   try {
     WTSI::DNAP::Utilities::Runnable->new(executable => '/bin/bash',
@@ -166,7 +175,7 @@ Keith James E<lt>kdj@sanger.ac.ukE<gt>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016, 2024 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
