@@ -18,8 +18,8 @@ with qw[
 
 our $VERSION = '';
 
-Readonly::Scalar my $ISO_BULK_ANALYSIS = q{pb_segment_reads_and_isoseq};
-Readonly::Scalar my $ISO_SC_ANALYSIS   = q{pb_segment_reads_and_sc_isoseq};
+Readonly::Scalar my $ISO_BULK_ANALYSIS => q{pb_segment_reads_and_isoseq};
+Readonly::Scalar my $ISO_SC_ANALYSIS   => q{pb_segment_reads_and_sc_isoseq};
 
 has '+local_staging_area' =>
   (required => 0);
