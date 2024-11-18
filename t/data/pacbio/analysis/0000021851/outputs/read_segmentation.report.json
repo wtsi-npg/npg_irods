@@ -1,0 +1,97 @@
+{
+    "_comment": "Generated with pbcommand version  at 2024-10-27T23:07:56.647505",
+    "attributes": [
+        {
+            "id": "read_segmentation.reads",
+            "name": "Reads",
+            "value": 6863041
+        },
+        {
+            "id": "read_segmentation.s_reads",
+            "name": "Segmented reads (S-reads)",
+            "value": 106534546
+        },
+        {
+            "id": "read_segmentation.mean_len_s_reads",
+            "name": "Mean length of S-reads",
+            "value": 747.0
+        },
+        {
+            "id": "read_segmentation.percent_full_array",
+            "name": "Percent of reads with full arrays",
+            "value": 93.11183166503906
+        },
+        {
+            "id": "read_segmentation.mean_array_size",
+            "name": "Mean array size (concatenation factor)",
+            "value": 15.522935969637949
+        }
+    ],
+    "dataset_uuids": [
+        "1aafa115-b1a6-4d11-9783-ce40db484f3e"
+    ],
+    "id": "read_segmentation",
+    "plotGroups": [
+        {
+            "id": "read_segmentation.segmentation_statistics",
+            "legend": null,
+            "plots": [
+                {
+                    "caption": "Histogram of concatemers",
+                    "id": "read_segmentation.segmentation_statistics.concatemer_histogram",
+                    "image": "concatemer_histogram.png",
+                    "plotType": "image",
+                    "thumbnail": "concatemer_histogram_thumb.png",
+                    "title": "Histogram of concatemers"
+                },
+                {
+                    "caption": "Heatmap of concatemer ligations",
+                    "id": "read_segmentation.segmentation_statistics.ligations_heatmap",
+                    "image": "ligations_heatmap.png",
+                    "plotType": "image",
+                    "thumbnail": "ligations_heatmap_thumb.png",
+                    "title": "Heatmap of concatemer ligations"
+                }
+            ],
+            "thumbnail": null,
+            "title": "Segmentation Statistics"
+        },
+        {
+            "id": "read_segmentation.read_length_group",
+            "legend": null,
+            "plots": [
+                {
+                    "caption": "Length of Reads",
+                    "id": "read_segmentation.read_length_group.hifi_read_length",
+                    "image": "hifi_read_length.png",
+                    "plotType": "image",
+                    "thumbnail": "hifi_read_length_thumb.png",
+                    "title": "Length of Reads"
+                }
+            ],
+            "thumbnail": null,
+            "title": "Length of Reads"
+        },
+        {
+            "id": "read_segmentation.sread_length_group",
+            "legend": null,
+            "plots": [
+                {
+                    "caption": "Length of S-reads",
+                    "id": "read_segmentation.sread_length_group.sread_length",
+                    "image": "sread_length.png",
+                    "plotType": "image",
+                    "thumbnail": "sread_length_thumb.png",
+                    "title": "Length of S-read"
+                }
+            ],
+            "thumbnail": null,
+            "title": "S-read Length Distribution"
+        }
+    ],
+    "tables": [],
+    "tags": [],
+    "title": "Report read_segmentation",
+    "uuid": "3e7a460a-65e8-4bfe-a78b-c8bdb9732387",
+    "version": "1.0.1"
+}

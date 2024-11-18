@@ -1,0 +1,50 @@
+{
+    "_comment": "Generated with pbcommand version  at 2024-08-07T08:42:10.420332",
+    "attributes": [
+        {
+            "id": "sc_isoseq_cell_statistics.number_of_cells",
+            "name": "Estimated Number of Cells",
+            "value": 3053
+        },
+        {
+            "id": "sc_isoseq_cell_statistics.fraction_reads_in_cells",
+            "name": "Reads in Cells",
+            "value": 0.6687795827302409
+        },
+        {
+            "id": "sc_isoseq_cell_statistics.mean_reads_per_cell",
+            "name": "Mean Reads per Cell",
+            "value": 25369
+        },
+        {
+            "id": "sc_isoseq_cell_statistics.median_umis_per_cell",
+            "name": "Median UMIs per Cell",
+            "value": 17951.0
+        }
+    ],
+    "dataset_uuids": [],
+    "id": "sc_isoseq_cell_statistics",
+    "plotGroups": [
+        {
+            "id": "sc_isoseq_cell_statistics.barcode_rank_plotgroup",
+            "legend": null,
+            "plots": [
+                {
+                    "caption": "Barcode Rank Plot",
+                    "id": "sc_isoseq_cell_statistics.barcode_rank_plotgroup.barcode_rank_plot",
+                    "image": "barcode_rank_plot.knee.png",
+                    "plotType": "image",
+                    "thumbnail": "barcode_rank_plot.knee_thumb.png",
+                    "title": "Barcode Rank Plot"
+                }
+            ],
+            "thumbnail": "barcode_rank_plot.knee_thumb.png",
+            "title": "Barcode Rank Plot"
+        }
+    ],
+    "tables": [],
+    "tags": [],
+    "title": "Report sc_isoseq_cell_statistics",
+    "uuid": "c0457d56-596e-4894-911d-c50e66679d60",
+    "version": "1.0.1"
+}

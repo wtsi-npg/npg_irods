@@ -1,0 +1,48 @@
+{
+    "_comment": "Generated with pbcommand version  at 2024-10-29T04:15:53.845042",
+    "attributes": [
+        {
+            "id": "sc_isoseq_read_statistics.n_reads_total",
+            "name": "Reads",
+            "value": 106534546
+        },
+        {
+            "id": "sc_isoseq_read_statistics.read_type",
+            "name": "Read Type",
+            "value": "SEGMENT"
+        },
+        {
+            "id": "sc_isoseq_read_statistics.num_reads_fl",
+            "name": "Reads with 5' and 3' Primers with extracted UMIs and Barcodes",
+            "value": 104115822
+        },
+        {
+            "id": "sc_isoseq_read_statistics.num_reads_flnc_polya",
+            "name": "Non-Concatamer Reads with 5' and 3' Primers and Poly-A Tail (FLNC reads)",
+            "value": 89658605
+        },
+        {
+            "id": "sc_isoseq_read_statistics.unchanged_read_count",
+            "name": "FLNC Reads with Valid Barcodes",
+            "value": 86872928.0
+        },
+        {
+            "id": "sc_isoseq_read_statistics.yield_count",
+            "name": "FLNC Reads with Valid Barcodes, corrected",
+            "value": 89430658.0
+        },
+        {
+            "id": "sc_isoseq_read_statistics.n_reads_dedup",
+            "name": "Reads after Barcode Correction and UMI Deduplication",
+            "value": 1562686
+        }
+    ],
+    "dataset_uuids": [],
+    "id": "sc_isoseq_read_statistics",
+    "plotGroups": [],
+    "tables": [],
+    "tags": [],
+    "title": "Report sc_isoseq_read_statistics",
+    "uuid": "48587c60-d9cb-4833-9745-f9f51ce2dcf9",
+    "version": "1.0.1"
+}

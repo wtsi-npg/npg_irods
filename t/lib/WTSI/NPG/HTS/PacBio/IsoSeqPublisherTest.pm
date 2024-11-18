@@ -96,15 +96,15 @@ sub publish_files_1 : Test(5) {
   my @expected_paths =
     map { catfile("$dest_coll/1_A01/20083", $_) }
     ('20083.m84047_240607_151621_s1.collapse_isoforms-1.fasta.gz',
-     '20083.m84047_240607_151621_s1.collapse_isoforms-1.gff',
+     '20083.m84047_240607_151621_s1.collapse_isoforms-1.gff.gz',
      '20083.m84047_240607_151621_s1.collapse_isoforms-2.fasta.gz',
-     '20083.m84047_240607_151621_s1.collapse_isoforms-2.gff',
+     '20083.m84047_240607_151621_s1.collapse_isoforms-2.gff.gz',
      '20083.m84047_240607_151621_s1.collapse_isoforms-3.fasta.gz',
-     '20083.m84047_240607_151621_s1.collapse_isoforms-3.gff',
+     '20083.m84047_240607_151621_s1.collapse_isoforms-3.gff.gz',
      '20083.m84047_240607_151621_s1.collapse_isoforms-4.fasta.gz',
-     '20083.m84047_240607_151621_s1.collapse_isoforms-4.gff',
+     '20083.m84047_240607_151621_s1.collapse_isoforms-4.gff.gz',
      '20083.m84047_240607_151621_s1.collapse_isoforms-5.fasta.gz',
-     '20083.m84047_240607_151621_s1.collapse_isoforms-5.gff',
+     '20083.m84047_240607_151621_s1.collapse_isoforms-5.gff.gz',
      '20083.m84047_240607_151621_s1.collapse_isoforms.flnc_count-1.txt',
      '20083.m84047_240607_151621_s1.collapse_isoforms.flnc_count-2.txt',
      '20083.m84047_240607_151621_s1.collapse_isoforms.flnc_count-3.txt',
@@ -202,7 +202,7 @@ sub publish_files_2 : Test(5) {
     ('20156.m84047_240607_151621_s1.collapse_isoforms.fasta.gz',
      '20156.m84047_240607_151621_s1.collapse_isoforms.fl_count.txt',
      '20156.m84047_240607_151621_s1.collapse_isoforms.flnc_count.txt',
-     '20156.m84047_240607_151621_s1.collapse_isoforms.gff',
+     '20156.m84047_240607_151621_s1.collapse_isoforms.gff.gz',
      '20156.m84047_240607_151621_s1.collapse_isoforms.group.txt',
      '20156.m84047_240607_151621_s1.collapse_isoforms.read_stat.txt',
      '20156.m84047_240607_151621_s1.flnc-1.bam',
@@ -265,15 +265,15 @@ sub publish_files_3 : Test(5) {
   my @expected_paths =
     map { catfile("$dest_coll/1_A01/21786", $_) }
     ('21786.m84093_241017_151706_s1.collapse_isoforms-1.fasta.gz',
-     '21786.m84093_241017_151706_s1.collapse_isoforms-1.gff',
+     '21786.m84093_241017_151706_s1.collapse_isoforms-1.gff.gz',
      '21786.m84093_241017_151706_s1.collapse_isoforms-2.fasta.gz',
-     '21786.m84093_241017_151706_s1.collapse_isoforms-2.gff',
+     '21786.m84093_241017_151706_s1.collapse_isoforms-2.gff.gz',
      '21786.m84093_241017_151706_s1.collapse_isoforms-3.fasta.gz',
-     '21786.m84093_241017_151706_s1.collapse_isoforms-3.gff',
+     '21786.m84093_241017_151706_s1.collapse_isoforms-3.gff.gz',
      '21786.m84093_241017_151706_s1.collapse_isoforms-4.fasta.gz',
-     '21786.m84093_241017_151706_s1.collapse_isoforms-4.gff',
+     '21786.m84093_241017_151706_s1.collapse_isoforms-4.gff.gz',
      '21786.m84093_241017_151706_s1.collapse_isoforms-5.fasta.gz',
-     '21786.m84093_241017_151706_s1.collapse_isoforms-5.gff',
+     '21786.m84093_241017_151706_s1.collapse_isoforms-5.gff.gz',
      '21786.m84093_241017_151706_s1.collapse_isoforms.flnc_count-1.txt',
      '21786.m84093_241017_151706_s1.collapse_isoforms.flnc_count-2.txt',
      '21786.m84093_241017_151706_s1.collapse_isoforms.flnc_count-3.txt',
@@ -343,6 +343,120 @@ sub publish_files_3 : Test(5) {
   ok(-e $load_file, "Successful loading file created");
   unlink $load_file;
 
+}
+
+sub publish_files_4 : Test(5) {
+## Read Segmentation and single cell Iso-Seq with adapter barcode
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $analysis_path  = "$data_path/0000020699";
+  my $runfolder_path = "$analysis_path/outputs",
+  my $dest_coll      = "$irods_tmp_coll/publish_sequence_files";
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $pub = WTSI::NPG::HTS::PacBio::IsoSeqPublisher->new
+    (restart_file    => catfile($tmpdir->dirname, 'published.json'),
+     dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     analysis_path   => $analysis_path,
+     runfolder_path  => $runfolder_path,
+     analysis_id     => '20699',
+     single_cell     => 1,);
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+
+  my @expected_paths =
+    map { catfile("$dest_coll/2_D01/20699", $_) }
+    ('20699.m84047_240804_011814_s3.bcstats_report.tsv.gz',
+     '20699.m84047_240804_011814_s3.cell_statistics.report.json',
+     '20699.m84047_240804_011814_s3.read_segmentation.report.json',
+     '20699.m84047_240804_011814_s3.read_statistics.report.json',
+     '20699.m84047_240804_011814_s3.scisoseq.5p--3p.tagged.refined.corrected.sorted.dedup.bam',
+     '20699.m84047_240804_011814_s3.scisoseq.5p--3p.tagged.refined.corrected.sorted.dedup.fasta.gz',
+     '20699.m84047_240804_011814_s3.scisoseq.mapped.bam',
+     '20699.m84047_240804_011814_s3.scisoseq.mapped.bam.bai',
+     '20699.m84047_240804_011814_s3.scisoseq.mapped_transcripts.collapse.group.txt',
+     '20699.m84047_240804_011814_s3.scisoseq.seurat_info.tar.gz',    
+     '20699.m84047_240804_011814_s3.scisoseq_classification.filtered_lite_classification.txt',
+     '20699.m84047_240804_011814_s3.scisoseq_classification.filtered_lite_junctions.txt',
+     '20699.m84047_240804_011814_s3.scisoseq_classification.txt',
+     '20699.m84047_240804_011814_s3.scisoseq_junctions.txt',
+     '20699.m84047_240804_011814_s3.scisoseq_transcripts.sorted.filtered_lite.gff.gz',
+     '20699.m84047_240804_011814_s3.scisoseq_transcripts.sorted.gff.gz',
+     '20699.m84047_240804_011814_s3.transcript_statistics.report.json',
+     );
+
+  cmp_ok($num_files,     '==', scalar @expected_paths);
+  cmp_ok($num_processed, '==', scalar @expected_paths);
+  cmp_ok($num_errors,    '==', 0);
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named sequence files') or
+              diag explain \@observed_paths;
+
+  my $load_file = "$runfolder_path/20699.m84047_240804_011814_s3.loaded.txt";
+  ok(-e $load_file, "Successful loading file created");
+  unlink $load_file;
+}
+
+sub publish_files_5 : Test(5) {
+## Read Segmentation and single cell Iso-Seq without adapter barcode
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $analysis_path  = "$data_path/0000021851";
+  my $runfolder_path = "$analysis_path/outputs",
+  my $dest_coll      = "$irods_tmp_coll/publish_sequence_files";
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $pub = WTSI::NPG::HTS::PacBio::IsoSeqPublisher->new
+    (restart_file    => catfile($tmpdir->dirname, 'published.json'),
+     dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     analysis_path   => $analysis_path,
+     runfolder_path  => $runfolder_path,
+     analysis_id     => '21851',
+     single_cell     => 1,);
+
+  my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
+
+  my @expected_paths =
+    map { catfile("$dest_coll/1_D01/21851", $_) }
+    ('21851.m84093_241025_215302_s4.bcstats_report.tsv.gz',
+     '21851.m84093_241025_215302_s4.cell_statistics.report.json',
+     '21851.m84093_241025_215302_s4.read_segmentation.report.json',
+     '21851.m84093_241025_215302_s4.read_statistics.report.json',
+     '21851.m84093_241025_215302_s4.scisoseq.5p--3p.tagged.refined.corrected.sorted.dedup.bam',
+     '21851.m84093_241025_215302_s4.scisoseq.5p--3p.tagged.refined.corrected.sorted.dedup.fasta.gz',
+     '21851.m84093_241025_215302_s4.scisoseq.mapped.bam',
+     '21851.m84093_241025_215302_s4.scisoseq.mapped.bam.bai',
+     '21851.m84093_241025_215302_s4.scisoseq.mapped_transcripts.collapse.group.txt',
+     '21851.m84093_241025_215302_s4.scisoseq.seurat_info.tar.gz',    
+     '21851.m84093_241025_215302_s4.scisoseq_classification.filtered_lite_classification.txt',
+     '21851.m84093_241025_215302_s4.scisoseq_classification.filtered_lite_junctions.txt',
+     '21851.m84093_241025_215302_s4.scisoseq_classification.txt',
+     '21851.m84093_241025_215302_s4.scisoseq_junctions.txt',
+     '21851.m84093_241025_215302_s4.scisoseq_transcripts.sorted.filtered_lite.gff.gz',
+     '21851.m84093_241025_215302_s4.scisoseq_transcripts.sorted.gff.gz',
+     '21851.m84093_241025_215302_s4.transcript_statistics.report.json',
+     );
+
+  cmp_ok($num_files,     '==', scalar @expected_paths);
+  cmp_ok($num_processed, '==', scalar @expected_paths);
+  cmp_ok($num_errors,    '==', 0);
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named sequence files') or
+              diag explain \@observed_paths;
+
+  my $load_file = "$runfolder_path/21851.m84093_241025_215302_s4.loaded.txt";
+  ok(-e $load_file, "Successful loading file created");
+  unlink $load_file;
 }
 
 sub observed_data_objects {
