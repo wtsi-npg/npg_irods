@@ -41,7 +41,6 @@ Readonly::Scalar my $SAMPLE_PREFIX  => q{BioSample};
 Readonly::Scalar my $PRIMER_FIELD   => q{Primer Name};
 Readonly::Scalar my $PRIMERS_JSON   => q{isoseq_primers.report.json};
 Readonly::Scalar my $LOADED         => q{loaded.txt};
-Readonly::Scalar my $SC_SHORT       => q{sc};
 Readonly::Scalar my $SC_PREFIX      => q{scisoseq};
 Readonly::Scalar my $NICE_N         => 19;
 Readonly::Scalar my $BWLIMIT        => 48_000;
