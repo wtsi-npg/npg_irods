@@ -64,9 +64,10 @@ sub publish_logs : Test(12) {
   my $runfolder_path2 =
     "t/data/illumina/sequence/150910_HS40_17550_A_C75BCANXX";
   my $pub2 = WTSI::NPG::HTS::Illumina::LogPublisher->new
-    (irods           => $irods,
-     runfolder_path  => $runfolder_path2,
-     dest_collection => "$irods_tmp_coll/publish_logs_inferred_id_run");
+    (irods								=> $irods,
+     runfolder_path				=> $runfolder_path2,
+		 npg_tracking_schema	=> undef,
+     dest_collection			=> "$irods_tmp_coll/publish_logs_inferred_id_run");
 
   my $log_archive2 = $pub2->publish_logs;
   ok($log_archive2, 'Log archive created given a runfolder path');
