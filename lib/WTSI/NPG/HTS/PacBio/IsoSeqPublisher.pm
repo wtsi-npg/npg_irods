@@ -29,25 +29,25 @@ our $VERSION = '';
 our $SEQUENCE_FILE_FORMAT    = 'bam';
 our $SEQUENCE_FASTA_FORMAT   = 'fasta';
 our $SEQUENCE_FASTAGZ_FORMAT = 'fasta.gz';
+our $GFF_FORMAT              = 'gff';
+our $GFFGZ_FORMAT            = 'gff.gz';
 
 # Data processing level
 our $DATA_LEVEL = 'secondary';
 
-# Not permitted name signalling processing with 
-# annotation which is not handled yet
-Readonly::Scalar my $FNAME_NOT_PERMITTED => qw[classification];
-
-Readonly::Scalar my $FNAME_SEQUENCE =>
-  qq{(flnc\.*$SEQUENCE_FILE_FORMAT|mapped\.*$SEQUENCE_FILE_FORMAT|$SEQUENCE_FASTA_FORMAT)};
-Readonly::Scalar my $FNAME_EXCLUDED => qw[segmented];
 
 Readonly::Scalar my $SAMPLE_FIELD   => q{Bio Sample Name};
 Readonly::Scalar my $SAMPLE_PREFIX  => q{BioSample};
 Readonly::Scalar my $PRIMER_FIELD   => q{Primer Name};
 Readonly::Scalar my $PRIMERS_JSON   => q{isoseq_primers.report.json};
 Readonly::Scalar my $LOADED         => q{loaded.txt};
+Readonly::Scalar my $SC_PREFIX      => q{scisoseq};
 Readonly::Scalar my $NICE_N         => 19;
 Readonly::Scalar my $BWLIMIT        => 48_000;
+
+Readonly::Scalar my $FNAME_SEQUENCE =>
+  qq{(flnc\.*$SEQUENCE_FILE_FORMAT|mapped\.*$SEQUENCE_FILE_FORMAT|$SC_PREFIX\.*$SEQUENCE_FILE_FORMAT|$SEQUENCE_FASTA_FORMAT)};
+Readonly::Scalar my $FNAME_EXCLUDED => qw[segmented];
 
 
 has 'analysis_id' =>
@@ -56,6 +56,12 @@ has 'analysis_id' =>
    required      => 1,
    documentation => 'PacBio analysis id');
 
+has 'single_cell' =>
+  (isa           => 'Bool',
+   is            => 'ro',
+   required      => 1,
+   default       => 0,
+   documentation => 'Set if the analysis is single cell. Defaults to false.');
 
 =head2 publish_files
 
@@ -78,7 +84,9 @@ sub publish_files {
 
   ## need to get barcode from meta data if it exists
   my $barcode = $self->_determine_barcode();
-  if (! $barcode ) { $self->logcroak('Not currently supporting processing without adapter barcode'); }
+  if (! $self->single_cell && ! $barcode ) {
+    $self->logcroak('Not currently supporting processing without adapter barcode');
+  }
 
   ## check if directory previously loaded and if so skip
   my $lf = catdir
@@ -86,11 +94,6 @@ sub publish_files {
 
   if (! -f $lf ) {
     my @all_files = $self->list_directory($self->runfolder_path);
-
-    my @exists = grep { m{ $FNAME_NOT_PERMITTED }smx } @all_files;
-    if (@exists) {
-      $self->logcroak('Not currently permitted file names found - aborting : '. @exists);
-    }
 
     ## remove files we don't want to publish and split list into sequence
     ## files and non sequence files
@@ -145,9 +148,13 @@ sub _create_loadable_files {
     my $newfile  = catdir
       ($tmpdir, $self->analysis_id .q[.]. $self->_metadata->movie_name .q[.]. $filename);
     push @cmds, qq[nice -n $NICE_N rsync -av -L $file $newfile --bwlimit=$BWLIMIT];
-    if ( $newfile =~ m/ [.] $SEQUENCE_FASTA_FORMAT /smx ) {
+    if ( $newfile =~ m/ [.] $SEQUENCE_FASTA_FORMAT $/smx ) {
       push @cmds, qq[nice -n $NICE_N gzip $newfile];
-      $newfile =~ s/$SEQUENCE_FASTA_FORMAT/$SEQUENCE_FASTAGZ_FORMAT/smx;
+      $newfile =~ s/$SEQUENCE_FASTA_FORMAT $/$SEQUENCE_FASTAGZ_FORMAT/smx;
+    }
+    if ( $newfile =~ m/ [.] $GFF_FORMAT $/smx ) {
+      push @cmds, qq[nice -n $NICE_N gzip $newfile];
+      $newfile =~ s/$GFF_FORMAT $/$GFFGZ_FORMAT/smx;
     }
     push @newfiles, $newfile;
   }
@@ -189,8 +196,9 @@ sub publish_sequence_files {
   defined $files or
     $self->logconfess('A defined file argument is required');
 
-  defined $tag_id or
+  if(! $self->single_cell && ! defined $tag_id) {
     $self->logconfess('A defined tag_id argument is required');
+  }
 
   my ($sample2primer) = $self->_get_primers();
 
@@ -330,6 +338,7 @@ sub _determine_barcode {
 sub _get_primers {
   my ($self) = @_;
 
+  ## applies to bulk iso-seq workflow only.
   ## get cDNA tags if exist from isoseq_primers.report.json
   ## BioSample_1, BioSample_2...N (12 max) map to files 1 -> N
   ## except sample* files numbered 0 -> (N - 1) 
