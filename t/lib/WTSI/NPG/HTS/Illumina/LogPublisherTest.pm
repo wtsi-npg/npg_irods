@@ -63,6 +63,11 @@ sub publish_logs : Test(12) {
   # test the RunPublisher
   my $runfolder_path2 =
     "t/data/illumina/sequence/150910_HS40_17550_A_C75BCANXX";
+
+  # The tracking database handle must be specified, otherwise when
+  # the tracking schema file exists in .npg folder it tries to retrieve
+  # the db credentials from it and connect to the database defined there.
+  # By setting it to 'undef', the code avoids the database route.
   my $pub2 = WTSI::NPG::HTS::Illumina::LogPublisher->new
     (irods                => $irods,
      runfolder_path       => $runfolder_path2,
