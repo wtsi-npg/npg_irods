@@ -422,6 +422,7 @@ sub make_sample_metadata {
      sample_public_names      => $SAMPLE_PUBLIC_NAME,
      sample_common_names      => $SAMPLE_COMMON_NAME,
      sample_supplier_names    => $SAMPLE_SUPPLIER_NAME,
+     sample_uuids             => $SAMPLE_UUID,
      sample_cohorts           => $SAMPLE_COHORT,
      sample_donor_ids         => $SAMPLE_DONOR_ID};
 

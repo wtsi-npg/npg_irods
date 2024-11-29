@@ -140,6 +140,7 @@ sub update_secondary_metadata : Test(5) {
               value     => 'Burkholderia pseudomallei' },
             { attribute => $SAMPLE_ID, value => '230889' },
             { attribute => $SAMPLE_PUBLIC_NAME, value => '153.0' },
+            { attribute => $SAMPLE_UUID, value => 'a8b4ebaa-c628-11df-8e7f-00144f2062b0' },
             { attribute => $STUDY_NAME,
               value     => 'Burkholderia pseudomallei diversity' },
             { attribute => $STUDY_ACCESSION_NUMBER, value => 'ERP000251' },
