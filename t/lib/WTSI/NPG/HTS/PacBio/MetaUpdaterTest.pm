@@ -111,6 +111,7 @@ sub update_secondary_metadata : Test(8) {
      {attribute => $SAMPLE_ID,               value => 2567488},
      {attribute => $SAMPLE_PUBLIC_NAME,      value => 70628},
      {attribute => $SAMPLE_SUPPLIER_NAME,    value => 'AR0091-CW'},
+     {attribute => $SAMPLE_UUID,             value => '1ca1a900-e463-11e5-88b1-3c4a9275d6c6'},
      {attribute => $STUDY_NAME,              value => $study_name},
      {attribute => $STUDY_ACCESSION_NUMBER,  value => 'ERP002372'},
      {attribute => $STUDY_ID,                value => $study_id},
