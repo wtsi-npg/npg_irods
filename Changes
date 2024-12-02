@@ -1,5 +1,12 @@
 Unreleased
 
+Release 2.52.0 (2024-12-02)
+ - Minor changes and tests for IsoSeq csi publishing
+ - collect pipeline central, postqc and product release logs from BAM_basecalls
+   folder
+ - Pacbio IsoSeq single cell archiving
+ - Fix: missing schema param in inferred id run test
+
 Release 2.51.0 (2024-10-25)
  - Banish more Sequels
 
