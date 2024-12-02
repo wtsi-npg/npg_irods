@@ -18,7 +18,8 @@ with qw[
 
 our $VERSION = '';
 
-our $ISO_ANALYSIS = q{(pb_segment_reads_and_isoseq)};
+Readonly::Scalar my $ISO_BULK_ANALYSIS => q{pb_segment_reads_and_isoseq};
+Readonly::Scalar my $ISO_SC_ANALYSIS   => q{pb_segment_reads_and_sc_isoseq};
 
 has '+local_staging_area' =>
   (required => 0);
@@ -75,7 +76,7 @@ sub publish_analysed_cells {
             $self->debug("Publishing data in analysis job path '$analysis_path'");
 
             my ($nf, $np, $ne) =
-              ($self->pipeline_name =~ m/$ISO_ANALYSIS/smx) ?
+              ($self->pipeline_name =~ m/$ISO_BULK_ANALYSIS|$ISO_SC_ANALYSIS/smx) ?
               $self->_publish_iso_analysis_path($job) :
               $self->_publish_analysis_path($analysis_path);
 
@@ -136,6 +137,7 @@ sub _publish_iso_analysis_path {
   my @init_args = (irods          => $self->irods,
                    analysis_path  => $job->{path},
                    runfolder_path => $runfolder_path,
+                   single_cell    => $self->pipeline_name =~ /$ISO_SC_ANALYSIS/smx ? 1 : 0,
                    mlwh_schema    => $self->mlwh_schema);
 
   if ($self->dest_collection) {

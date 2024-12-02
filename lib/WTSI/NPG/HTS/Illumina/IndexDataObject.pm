@@ -59,6 +59,9 @@ sub _build_indexed_object {
   elsif ($self->file_format eq 'pbi') {
     ($path) = $self->str =~ qr{(.*)[.]pbi$}mxs;
   }
+  elsif ($self->file_format eq 'csi') {
+    ($path) = $self->str =~ qr{(.*)[.]csi$}mxs;
+  }
   else {
     $self->logcroak('Failed to find the indexed file for ', $self->str,
                     '. Unknown index type ', $self->file_format);

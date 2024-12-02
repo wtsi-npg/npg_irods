@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pbds:ConsensusReadSet xmlns:pbbase="http://pacificbiosciences.com/PacBioBaseDataModel.xsd" xmlns:pbds="http://pacificbiosciences.com/PacBioDatasets.xsd" xmlns:pbmeta="http://pacificbiosciences.com/PacBioCollectionMetadata.xsd" xmlns:pbsample="http://pacificbiosciences.com/PacBioSampleInfo.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" CreatedAt="2024-08-05T23:57:42" MetaType="PacBio.DataSet.ConsensusReadSet" Name="TRAC-2-10097-Cell8 (Isogut15020372) Segmented Reads" Tags="ccs,barcoded,segment" TimeStampedName="pacbio_dataset_consensusreadset-240805_225742841" UniqueId="319a8c71-adc9-42cf-8d73-ad3d9b069d7a" Version="3.0.1" xsi:schemaLocation="http://pacificbiosciences.com/PacBioDataModel.xsd">
+	<pbbase:ExternalResources>
+		<pbbase:ExternalResource CreatedAt="2024-08-06T00:47:24.565Z" MetaType="PacBio.ConsensusReadFile.ConsensusReadBamFile" ResourceId="/lustre/scratch120/pacbio/analysis/pacbio01/jobs/cromwell-executions/pb_segment_reads_and_sc_isoseq/ea94b484-0a5d-4f9b-a797-49d642cb51d4/call-pb_segment_reads/pb_segment_reads/8b5ead80-ecb9-4547-a8f5-a3a6a231ab28/call-skera/shard-0/execution/segmented.bam" TimeStampedName="pacbio_consensusreadfile_consensusreadbamfile-240806_004724565" UniqueId="b5cde874-7e12-4241-ad3b-99a71fe43fcf" Version="3.0.1">
+			<pbbase:FileIndices>
+				<pbbase:FileIndex CreatedAt="2024-08-06T00:47:24.565Z" MetaType="PacBio.Index.PacBioIndex" ResourceId="/lustre/scratch120/pacbio/analysis/pacbio01/jobs/cromwell-executions/pb_segment_reads_and_sc_isoseq/ea94b484-0a5d-4f9b-a797-49d642cb51d4/call-pb_segment_reads/pb_segment_reads/8b5ead80-ecb9-4547-a8f5-a3a6a231ab28/call-skera/shard-0/execution/segmented.bam.pbi" TimeStampedName="pacbio_index_pacbioindex-240806_004724565" UniqueId="cd847e7b-0079-493c-b55a-7e3980ae5149" Version="3.0.1"/>
+			</pbbase:FileIndices>
+		</pbbase:ExternalResource>
+	</pbbase:ExternalResources>
+	<pbbase:SupplementalResources>
+		<pbbase:ExternalResource CreatedAt="2024-08-06T00:47:24.566Z" MetaType="PacBio.ConsensusReadFile.ConsensusReadBamFile" ResourceId="/lustre/scratch120/pacbio/analysis/pacbio01/jobs/cromwell-executions/pb_segment_reads_and_sc_isoseq/ea94b484-0a5d-4f9b-a797-49d642cb51d4/call-pb_segment_reads/pb_segment_reads/8b5ead80-ecb9-4547-a8f5-a3a6a231ab28/call-skera/shard-0/execution/segmented.non_passing.bam" TimeStampedName="pacbio_consensusreadfile_consensusreadbamfile-240806_004724566" UniqueId="585613ba-0d8a-4aa1-971d-4261bde54d4f" Version="3.0.1">
+			<pbbase:FileIndices>
+				<pbbase:FileIndex CreatedAt="2024-08-06T00:47:24.566Z" MetaType="PacBio.Index.PacBioIndex" ResourceId="/lustre/scratch120/pacbio/analysis/pacbio01/jobs/cromwell-executions/pb_segment_reads_and_sc_isoseq/ea94b484-0a5d-4f9b-a797-49d642cb51d4/call-pb_segment_reads/pb_segment_reads/8b5ead80-ecb9-4547-a8f5-a3a6a231ab28/call-skera/shard-0/execution/segmented.non_passing.bam.pbi" TimeStampedName="pacbio_index_pacbioindex-240806_004724566" UniqueId="fa818313-2eec-4a34-ad1b-576c42864e5c" Version="3.0.1"/>
+			</pbbase:FileIndices>
+		</pbbase:ExternalResource>
+		<pbbase:ExternalResource CreatedAt="2024-08-06T00:47:24.566Z" MetaType="PacBio.FileTypes.csv" ResourceId="/lustre/scratch120/pacbio/analysis/pacbio01/jobs/cromwell-executions/pb_segment_reads_and_sc_isoseq/ea94b484-0a5d-4f9b-a797-49d642cb51d4/call-pb_segment_reads/pb_segment_reads/8b5ead80-ecb9-4547-a8f5-a3a6a231ab28/call-skera/shard-0/execution/segmented.ligations.csv" TimeStampedName="pacbio_filetypes_csv-240806_004724566" UniqueId="8a5de928-49a4-47fe-bbea-96aab38110a3" Version="3.0.1">
+			<pbbase:FileIndices/>
+		</pbbase:ExternalResource>
+		<pbbase:ExternalResource CreatedAt="2024-08-06T00:47:24.566Z" MetaType="PacBio.FileTypes.csv" ResourceId="/lustre/scratch120/pacbio/analysis/pacbio01/jobs/cromwell-executions/pb_segment_reads_and_sc_isoseq/ea94b484-0a5d-4f9b-a797-49d642cb51d4/call-pb_segment_reads/pb_segment_reads/8b5ead80-ecb9-4547-a8f5-a3a6a231ab28/call-skera/shard-0/execution/segmented.summary.csv" TimeStampedName="pacbio_filetypes_csv-240806_004724566" UniqueId="3d628e16-0907-459a-b880-9af247207574" Version="3.0.1">
+			<pbbase:FileIndices/>
+		</pbbase:ExternalResource>
+		<pbbase:ExternalResource CreatedAt="2024-08-06T00:47:24.566Z" MetaType="PacBio.FileTypes.json" ResourceId="/lustre/scratch120/pacbio/analysis/pacbio01/jobs/cromwell-executions/pb_segment_reads_and_sc_isoseq/ea94b484-0a5d-4f9b-a797-49d642cb51d4/call-pb_segment_reads/pb_segment_reads/8b5ead80-ecb9-4547-a8f5-a3a6a231ab28/call-skera/shard-0/execution/segmented.summary.json" TimeStampedName="pacbio_filetypes_json-240806_004724566" UniqueId="ed621891-e24c-4da7-9e2d-50f2f61d1632" Version="3.0.1">
+			<pbbase:FileIndices/>
+		</pbbase:ExternalResource>
+	</pbbase:SupplementalResources>
+	<pbds:DataSetMetadata>
+		<pbds:TotalLength>91440344139</pbds:TotalLength>
+		<pbds:NumRecords>128245869</pbds:NumRecords>
+		<pbmeta:Collections>
+			<pbmeta:CollectionMetadata Context="m84047_240804_011814_s3" CreatedAt="2024-08-02T13:57:54.165+00:00" InstrumentId="84047" InstrumentName="84047" MetaType="CollectionMetadata" ModifiedAt="0001-01-01T00:00:00" Status="PostPrimaryPending" TimeStampedName="84047-CollectionMetadata-2024-08-02T14:23:10.694Z" UniqueId="6d1f852b-7976-4886-88e7-f10812edf492">
+				<pbmeta:MultiJobId>20692</pbmeta:MultiJobId>
+				<pbmeta:ConsensusReadSetRef UniqueId="a0e50a5c-3d57-47e6-a864-ad7ef023a2c7"/>
+				<pbmeta:RunDetails>
+					<pbmeta:TimeStampedName>r84047_20240802_142310</pbmeta:TimeStampedName>
+					<pbmeta:Name>TRACTION-RUN-1427</pbmeta:Name>
+					<pbmeta:CreatedBy>tm14</pbmeta:CreatedBy>
+					<pbmeta:WhenCreated>2024-08-02T13:57:54.165+00:00</pbmeta:WhenCreated>
+					<pbmeta:StartedBy>unknown</pbmeta:StartedBy>
+					<pbmeta:WhenStarted>2024-08-02T14:23:45.7792868Z</pbmeta:WhenStarted>
+				</pbmeta:RunDetails>
+				<pbmeta:WellSample CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="TRAC-2-10097">
+					<pbmeta:WellName>D01</pbmeta:WellName>
+					<pbmeta:Application>unspecified</pbmeta:Application>
+					<pbmeta:Concentration>0</pbmeta:Concentration>
+					<pbmeta:OnPlateLoadingConcentration>257</pbmeta:OnPlateLoadingConcentration>
+					<pbmeta:InsertSize>11390</pbmeta:InsertSize>
+					<pbmeta:IsoSeq>false</pbmeta:IsoSeq>
+					<pbmeta:IsCCS>true</pbmeta:IsCCS>
+					<pbmeta:SampleReuseEnabled>false</pbmeta:SampleReuseEnabled>
+					<pbmeta:StageHotstartEnabled>false</pbmeta:StageHotstartEnabled>
+					<pbmeta:SizeSelectionEnabled>false</pbmeta:SizeSelectionEnabled>
+					<pbmeta:UseCount>0</pbmeta:UseCount>
+					<pbmeta:DNAControlComplex>Revio sequencing control</pbmeta:DNAControlComplex>
+					<pbsample:BioSamples>
+						<pbsample:BioSample Name="Isogut15020372">
+							<pbsample:DNABarcodes>
+								<pbsample:DNABarcode Name="bcM0001--bcM0001" UniqueId="3706b5ed-3b52-4a9a-b57a-afd319b08b1b"/>
+							</pbsample:DNABarcodes>
+						</pbsample:BioSample>
+					</pbsample:BioSamples>
+				</pbmeta:WellSample>
+				<pbmeta:Automation Name="Workflow_Kestrel.py">
+					<pbbase:AutomationParameters>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="MovieLength" SimpleValue="1440.0" ValueDataType="Double"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="DynamicLoadingCognate" SimpleValue="True" ValueDataType="String"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="ReuseCell" SimpleValue="False" ValueDataType="Boolean"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="TotalSamples" SimpleValue="1" ValueDataType="Int32"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="InsertSize" SimpleValue="11390" ValueDataType="Int32"/>
+						<pbbase:AutomationParameter Name="PCDinPlate" SimpleValue="True" ValueDataType="Boolean"/>
+						<pbbase:AutomationParameter Name="UsePredictiveLoadingBuffer" SimpleValue="True" ValueDataType="Boolean"/>
+						<pbbase:AutomationParameter Name="CollectionNumber" SimpleValue="7" ValueDataType="Int32"/>
+						<pbbase:AutomationParameter Name="BindingKitPartNumber" SimpleValue="102-739-100" ValueDataType="String"/>
+						<pbbase:AutomationParameter Name="TipSearchMaxDuration" SimpleValue="576" ValueDataType="Int32"/>
+						<pbbase:AutomationParameter Name="PPAEstimatedDuration" SimpleValue="780" ValueDataType="Double"/>
+						<pbbase:AutomationParameter Name="PPAMinDuration" SimpleValue="620.1600000000001" ValueDataType="Double"/>
+						<pbbase:AutomationParameter Name="PPAMaxDuration" SimpleValue="939.84" ValueDataType="Double"/>
+						<pbbase:AutomationParameter Name="PPATimeout" SimpleValue="3180" ValueDataType="Double"/>
+						<pbbase:AutomationParameter Name="CCSOverheadDurationMinutesPerUmyGBase" SimpleValue="0.2" ValueDataType="Double"/>
+						<pbbase:AutomationParameter Name="SNRCut" SimpleValue="1.5" ValueDataType="Double"/>
+						<pbbase:AutomationParameter Name="HQRFMethod" SimpleValue="N2" ValueDataType="String"/>
+						<pbbase:AutomationParameter Name="DynamicLoadingTotalTimeSeconds" SimpleValue="2262.782157" ValueDataType="Double"/>
+						<pbbase:AutomationParameter Name="DynamicLoadingTimeZero" SimpleValue="8/4/2024 1:34:11 AM" ValueDataType="String"/>
+						<pbbase:AutomationParameter Name="DynamicLoadingServiceStartTime" SimpleValue="8/4/2024 1:44:22 AM" ValueDataType="String"/>
+						<pbbase:AutomationParameter Name="DynamicLoadingServiceTotalTimeSeconds" SimpleValue="1651.7316681" ValueDataType="Double"/>
+					</pbbase:AutomationParameters>
+					<pbmeta:Defaults/>
+				</pbmeta:Automation>
+				<pbmeta:CollectionNumber>7</pbmeta:CollectionNumber>
+				<pbmeta:CellIndex>7</pbmeta:CellIndex>
+				<pbmeta:SetNumber>0</pbmeta:SetNumber>
+				<pbmeta:CellPac Barcode="EA096410" Description="Tray of 4 Revio SMRT Cells for sequencing on the Revio system." ExpirationDate="2024-11-12" LabelNumber="EA096410" LotNumber="1000002654" MovieTimeGrade="LR" Name="Revio SMRT Cell tray" PartNumber="102-202-200" Version="1.0">
+					<pbmeta:ChipLayout>KestrelRTO2</pbmeta:ChipLayout>
+				</pbmeta:CellPac>
+				<pbmeta:ControlKit Barcode="Lxxxxx102798000123199" ChipType="25mChip" Description="The Revio polymerase kit sequencing control contains a fixed 11 kb template bound to polymerase for use as a spike-in control." ExpirationDate="2099-12-31" LotNumber="Lxxxxx" Name="Revio sequencing control" PartNumber="102-798-000" Tags="Control Kit, CCK" Version="1.0">
+					<pbmeta:CustomSequence>&gt;left_adapter\nTAGAGAGAGAAAAGGAGGAGGAGGCAACAACAACAACTCTCTCTA\n&gt;right_adapter\nTAGAGAGAGAAAAGGAGGAGGAGGCAACAACAACAACTCTCTCTA\n&gt;custom_sequence\nTCCCGACTGGAAAGCGGGCAGTGAGCGCAACGCAATTAATGTGAGTTAGCTCACTCATTAGGCACCCCAGGCTTTACACTTTATGCTTCCGGCTCGTATGTTGTGTGGAATTGTGAGCGGATAACAATTTCACACAGGAAACAGCTATGACCATGATTACGCCAAGCTTGCATGCCTGCAGGTCGACTCTAGAGGATCCCCCTGGCCGCATCCAGACTCAAATCAACGACCAGATCGCCTACCGGTTCAGCCATACCGGACTCCTCCTGCGATCCCTTCTGATACTGTCATCAGCATTACGTCATCCTCCGTCATGTCCGCCACATCCGGGGAAGCGGGGATAACTTCATTCCCGTCCGGGCCAAAGCGGACACCTCCGGCAAGCCCTGCCGCTTTCTGCAGCAGGCTCGCCAGCAGCGCACTGAGATCCAGCTGCCAGCGGGAAATACTGATGCGCAGCGCCGCCAGCGCATAAACGAAGCAGTCGAGTGCCTCATTGCGTCGCTTTTTGCTGTCCCACAGTATTTTTTTCCTGCCATCCACCCATTTTTCGACCTGCTCTTCAGCAGTCAGCTGCTGCGCTTCGGTCAGATCAAAAATAGGGTACCGAGCTCGAATTCACTGGCCGTCGTTTTACAACGTCGTGACTGGGAAAACCCTGGCGTTACCCAACTTAATCGCCTTGCAGCACATCCCCCTTTCGCCAGCTGGCGTAATAGCGAAGAGGCCCGCACCGATCGCCCTTCCCAACAGTTGCGCAGCCTGAATGGCGAATGGCGCCTGATGCGGTATTTTCTCCTTA</pbmeta:CustomSequence>
+				</pbmeta:ControlKit>
+				<pbmeta:TemplatePrepKit Barcode="Lxxxxx999999101123199" ChipType="25mChip" Description="The SMRTbell® Kinnex Prep Kit contains reagent supplies to perform SMRTbell library preparations for Kinnex." ExpirationDate="2099-12-31" IsRestricted="true" LotNumber="Lxxxxx" MaxInsertSize="20000" MinInsertSize="500" Name="SMRTbell® Kinnex Prep Kit" PartNumber="999-999-101" Tags="Template Prep Kit, TPK" Version="1.0">
+					<pbmeta:LeftAdaptorSequence>CCGCTCTCTCACTTTCGTGAGAGAGCGG</pbmeta:LeftAdaptorSequence>
+					<pbmeta:RightAdaptorSequence>CAACAACAACAACGGAGGAGGAGGAAAAG</pbmeta:RightAdaptorSequence>
+					<pbmeta:RightPrimerSequence>aacggaggaggagga</pbmeta:RightPrimerSequence>
+				</pbmeta:TemplatePrepKit>
+				<pbmeta:BindingKit Barcode="035781102739100022825" ChipType="25mChip" Description="The Revio polymerase kit contains reagents for binding polymerase to SMRTbell libraries for sequencing on the Revio system." ExpirationDate="2025-02-28" LotNumber="035781" Name="Revio polymerase kit" PartNumber="102-739-100" Tags="Binding Kit, BDK" Version="1.0"/>
+				<pbmeta:SequencingKitPlate ActiveHours="6.825058230805555" ActiveHoursLimit="336" Barcode="035112102118800111524" ChipType="25mChip" Description="Sequencing reagents supporting 4 Revio SMRT Cells." ExpirationDate="2024-11-15" LabelNumber="00056" LotNumber="035112" MaxCollections="4" Name="Revio sequencing plate" NumOilTubes="0" NumOseTubes="0" PartNumber="102-118-800" PlateNumber="2" SupportsDynamicLoading="true" Tags="Sequencing Kit, SQK" Version="1.0"/>
+				<pbmeta:Primary>
+					<pbmeta:AutomationName>SequelAlpha</pbmeta:AutomationName>
+					<pbmeta:ConfigFileName>SqlPoC_SubCrf_2C2A-t2.xml</pbmeta:ConfigFileName>
+					<pbmeta:SequencingCondition>DefaultPrimarySequencingCondition</pbmeta:SequencingCondition>
+					<pbmeta:CCSOptions>
+						<pbmeta:ExecutionMode>OnInstrument</pbmeta:ExecutionMode>
+						<pbmeta:IncludeKinetics>false</pbmeta:IncludeKinetics>
+					</pbmeta:CCSOptions>
+					<pbmeta:OutputOptions>
+						<pbmeta:ResultsFolder>r84047_20240802_142310/2_D01/</pbmeta:ResultsFolder>
+						<pbmeta:CollectionPathUri>/lustre/scratch120/pacbio/staging/r84047_20240802_142310/2_D01/</pbmeta:CollectionPathUri>
+						<pbmeta:CopyFiles>
+							<pbmeta:CollectionFileCopy>Bam</pbmeta:CollectionFileCopy>
+							<pbmeta:CollectionFileCopy>Fasta</pbmeta:CollectionFileCopy>
+						</pbmeta:CopyFiles>
+						<pbmeta:Readout>Bases_Without_QVs</pbmeta:Readout>
+						<pbmeta:MetricsVerbosity>Minimal</pbmeta:MetricsVerbosity>
+						<pbmeta:TransferResource>
+							<pbmeta:Id>76b3ab89-686d-483b-99f9-cb348bd596ab</pbmeta:Id>
+							<pbmeta:TransferScheme>SRS</pbmeta:TransferScheme>
+							<pbmeta:Name>srs-scheme-2</pbmeta:Name>
+							<pbmeta:Description>Sanger srs</pbmeta:Description>
+							<pbmeta:DestPath>/lustre/scratch120/pacbio/staging</pbmeta:DestPath>
+						</pbmeta:TransferResource>
+					</pbmeta:OutputOptions>
+				</pbmeta:Primary>
+				<pbmeta:Secondary>
+					<pbmeta:AutomationName>SMRTLinkRunDesign</pbmeta:AutomationName>
+					<pbbase:AutomationParameters>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="SourceId" SimpleValue="smrtlink-rest-api" ValueDataType="String"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="CCS" SimpleValue="True" ValueDataType="Boolean"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="CCSMode" SimpleValue="OnInstrument" ValueDataType="String"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="Kinetics" SimpleValue="False" ValueDataType="Boolean"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="AllReads" SimpleValue="True" ValueDataType="Boolean"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="Demultiplex" SimpleValue="True" ValueDataType="Boolean"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="DemultiplexMode" SimpleValue="OnInstrument" ValueDataType="String"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="BarcodesUuid" SimpleValue="d5109545-7f84-97b7-6ab6-ce2ca778e1f5" ValueDataType="String"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="DemultiplexPreset" SimpleValue="SYMMETRIC-ADAPTERS" ValueDataType="String"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="FullResolutionBaseQual" SimpleValue="False" ValueDataType="Boolean"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="SubreadToHiFiPileup" SimpleValue="False" ValueDataType="Boolean"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="ByStrand" SimpleValue="False" ValueDataType="Boolean"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="CpG" SimpleValue="True" ValueDataType="Boolean"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="AAV" SimpleValue="False" ValueDataType="Boolean"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="Heteroduplex" SimpleValue="False" ValueDataType="Boolean"/>
+						<pbbase:AutomationParameter CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name="SampleSubreadsPct" SimpleValue="0" ValueDataType="Int32"/>
+					</pbbase:AutomationParameters>
+					<pbmeta:BarcodesFasta>PmJjTTAwMDENCkFDQUdUQw0KPmJjTTAwMDINCkFUR0FDRw0KPmJjTTAwMDMNCkNBQ0dURw0KPmJjTTAwMDQNCkNBVENHQw0K</pbmeta:BarcodesFasta>
+				</pbmeta:Secondary>
+				<pbmeta:UserDefinedFields>
+					<pbmeta:DataEntities CreatedAt="2024-08-02T13:57:54.165+00:00" ModifiedAt="0001-01-01T00:00:00" Name=" LIMS_IMPORT " SimpleValue="DefaultUserDefinedFieldLIMS" ValueDataType="String"/>
+				</pbmeta:UserDefinedFields>
+				<pbmeta:ComponentVersions>
+					<pbmeta:VersionInfo Name="ics" Version="13.0.0.212033"/>
+					<pbmeta:VersionInfo Name="iui" Version="Unknown"/>
+					<pbmeta:VersionInfo Name="chemistry" Version="13.0.0.205983"/>
+					<pbmeta:VersionInfo Name="pa" Version="13.0.0.212033"/>
+					<pbmeta:VersionInfo Name="basecaller" Version="13.0.0"/>
+					<pbmeta:VersionInfo Name="baz2bam" Version="release/kestrel-13_002388e6797af47f3ebff3ecb52a2da1e62080c5-dirty"/>
+					<pbmeta:VersionInfo Name="ccs" Version="ccs 8.0.0 (commit v8.0.0)
+
+Using:
+  unanimity : 8.0.0 (commit v8.0.0)
+  pbbam     : 2.5.0 (commit v2.5.0)
+  pbcopper  : 2.4.0 (commit v2.4.0)
+  pancake   : 2.2.0 (commit v2.2.0)
+  pbsparc   : 1.1.0 (commit v1.1.0)
+  pbdc      : 1.3.1 (commit v1.3.1)
+  boost     : 1.81
+  htslib    : 1.17
+  zlib      : 1.2.13"/>
+					<pbmeta:VersionInfo Name="jasmine" Version="jasmine 2.2.0
+
+Using:
+  jasmine     : 2.2.0 (commit v2.2.0)
+  pbbam       : 2.5.0 (commit v2.5.0)
+  pbcopper    : 2.4.0 (commit v2.4.0)
+  pbort       : 1.0.0 (commit v1.0.0)
+  boost       : 1.81
+  htslib      : 1.17
+  onnxruntime : 1.11.0
+  zlib        : 1.2.13"/>
+					<pbmeta:VersionInfo Name="lima" Version="lima 2.9.0
+
+Using:
+  lima      : 2.9.0 (commit v2.9.0)
+  pbbam     : 2.5.0 (commit v2.5.0)
+  pbcopper  : 2.4.0 (commit v2.4.0)
+  boost     : 1.81
+  htslib    : 1.17
+  zlib      : 1.2.13"/>
+					<pbmeta:VersionInfo Name="pa-cal" Version="13.0.0.002388e6797af47f3ebff3ecb52a2da1e62080c5-dirty"/>
+					<pbmeta:VersionInfo Name="pa-wsgo" Version="13.0.2-0fe811ceb7ddd492390327f845a31332a049119c"/>
+					<pbmeta:VersionInfo Name="pawnee" Version="pawnee 1.3.8 (commit v1.3.8)"/>
+					<pbmeta:VersionInfo Name="reducestats" Version="release/kestrel-13_002388e6797af47f3ebff3ecb52a2da1e62080c5-dirty"/>
+					<pbmeta:VersionInfo Name="samtools" Version="samtools 1.17
+Using htslib 1.17
+Copyright (C) 2023 Genome Research Ltd.
+
+Samtools compilation details:
+    Features:       build=configure curses=no 
+    CC:             gcc
+    CPPFLAGS:       -I/var/lib/bamboo/bamboo-agent-home/xml-data/build-dir/RBREVIO-K13REVINST-SAM/software/include
+    CFLAGS:         -Wall -g -O2
+    LDFLAGS:        -L/var/lib/bamboo/bamboo-agent-home/xml-data/build-dir/RBREVIO-K13REVINST-SAM/software/lib
+    HTSDIR:         htslib-1.17
+    LIBS:           
+    CURSES_LIB:     
+
+HTSlib compilation details:
+    Features:       build=configure libcurl=no S3=no GCS=no libdeflate=no lzma=no bzip2=no plugins=no htscodecs=1.4.0
+    CC:             gcc
+    CPPFLAGS:       -I/var/lib/bamboo/bamboo-agent-home/xml-data/build-dir/RBREVIO-K13REVINST-SAM/software/include
+    CFLAGS:         -Wall -g -O2 -fvisibility=hidden
+    LDFLAGS:        -L/var/lib/bamboo/bamboo-agent-home/xml-data/build-dir/RBREVIO-K13REVINST-SAM/software/lib -fvisibility=hidden 
+
+HTSlib URL scheme handlers present:
+    built-in:  preload, data, file
+    crypt4gh-needed:  crypt4gh
+    mem:  mem"/>
+					<pbmeta:VersionInfo Name="smrtlink-analysisservices-gui" Version="13.0.0.207600"/>
+					<pbmeta:VersionInfo Name="smrtimisc" Version="13.0.0.207600"/>
+					<pbmeta:VersionInfo Name="smrttools" Version="13.0.0.207600"/>
+					<pbmeta:VersionInfo Name="smrtlink" Version="13.0.0.207600"/>
+					<pbmeta:VersionInfo Name="smrtinub" Version="13.0.0.207600"/>
+				</pbmeta:ComponentVersions>
+			</pbmeta:CollectionMetadata>
+		</pbmeta:Collections>
+	</pbds:DataSetMetadata>
+</pbds:ConsensusReadSet>
