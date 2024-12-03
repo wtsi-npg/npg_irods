@@ -161,6 +161,7 @@ sub make_sample_metadata {
   my @samples = map { $_->sample } @run_records;
   my $method_attr = {accession_number => $SAMPLE_ACCESSION_NUMBER,
                      id_sample_lims   => $SAMPLE_ID,
+                     id_lims          => $SAMPLE_LIMS,
                      uuid_sample_lims => $SAMPLE_UUID,
                      name             => $SAMPLE_NAME,
                      public_name      => $SAMPLE_PUBLIC_NAME,
