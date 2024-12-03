@@ -223,6 +223,7 @@ sub update_secondary_metadata_tag1_no_spike_human : Test(12) {
        {attribute => $SAMPLE_ID,                value => '2376982'},
        {attribute => $SAMPLE_PUBLIC_NAME,       value => 'UTX_IP_UTX_GTX_A'},
        {attribute => $SAMPLE_SUPPLIER_NAME,     value => 'UTX_IP_UTX_GTX_A'},
+       {attribute => $SAMPLE_UUID,              value => '4e0f6640-40f7-11e5-998e-3c4a9275d6c6'},
        {attribute => $STUDY_NAME,
         value     => 'Analysis of the chromatin state of mouse stem and progenitor cell compartment'},
        {attribute => $STUDY_ACCESSION_NUMBER,   value => 'ERP004563'},
