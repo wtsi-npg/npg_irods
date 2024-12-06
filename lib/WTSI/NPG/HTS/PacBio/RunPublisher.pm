@@ -643,7 +643,7 @@ sub publish_image_archive {
       elsif ($process_type eq $ONINST_REVIO1) {
         $file_types  = q{ccs_report.txt|fail_reads.lima_counts.txt|}.
           q{fail_reads.lima_summary.txt|hifi_reads.lima_counts.txt|}.
-          q{hifi_reads.lima_summary.txt|summary.json|fail_reads.json|hifi_reads.json|}.
+          q{hifi_reads.lima_summary.txt|summary.json|hifi_reads.json|}.
           q{ccs_report.json|fail_reads.unassigned.json|hifi_reads.unassigned.json};
       }
       elsif ($process_type eq $ONINST_REVIO2) {
