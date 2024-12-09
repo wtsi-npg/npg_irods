@@ -400,7 +400,7 @@ sub _get_tag_name_from_fname {
 sub _is_allowed_fname {
   my ($self, $file, $fnames) = @_;
   my @exists = grep { $file =~ m{[.] $_ [.]}smx } @{ $fnames };
-  return @exists == 1 ? 1 : 0;
+  return @exists >= 1 ? 1 : 0;
 }
 
 sub _dest_path {
