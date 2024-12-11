@@ -161,6 +161,8 @@ sub make_sample_metadata {
   my @samples = map { $_->sample } @run_records;
   my $method_attr = {accession_number => $SAMPLE_ACCESSION_NUMBER,
                      id_sample_lims   => $SAMPLE_ID,
+                     id_lims          => $SAMPLE_LIMS,
+                     uuid_sample_lims => $SAMPLE_UUID,
                      name             => $SAMPLE_NAME,
                      public_name      => $SAMPLE_PUBLIC_NAME,
                      common_name      => $SAMPLE_COMMON_NAME,
@@ -319,7 +321,7 @@ Keith James <kdj@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2016, 2017 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2016, 2017, 2024 Genome Research Limited. All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
