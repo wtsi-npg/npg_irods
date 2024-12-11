@@ -418,6 +418,7 @@ sub make_sample_metadata {
   my $method_attr =
     {sample_accession_numbers => $SAMPLE_ACCESSION_NUMBER,
      sample_ids               => $SAMPLE_ID,
+     sample_lims              => $SAMPLE_LIMS,
      sample_names             => $SAMPLE_NAME,
      sample_public_names      => $SAMPLE_PUBLIC_NAME,
      sample_common_names      => $SAMPLE_COMMON_NAME,
