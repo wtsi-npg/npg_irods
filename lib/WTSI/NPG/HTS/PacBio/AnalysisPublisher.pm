@@ -4,6 +4,7 @@ use namespace::autoclean;
 use English qw[-no_match_vars];
 use File::Basename;
 use File::Spec::Functions qw[catdir];
+use List::AllUtils qw[any];
 use JSON;
 use Moose;
 use MooseX::StrictConstructor;
@@ -399,8 +400,7 @@ sub _get_tag_name_from_fname {
 
 sub _is_allowed_fname {
   my ($self, $file, $fnames) = @_;
-  my @exists = grep { $file =~ m{[.] $_ [.]}smx } @{ $fnames };
-  return @exists >= 1 ? 1 : 0;
+  return (any {  $file =~ m{[.] $_ [.]}smx  } @{ $fnames } );
 }
 
 sub _dest_path {
