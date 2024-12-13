@@ -418,10 +418,12 @@ sub make_sample_metadata {
   my $method_attr =
     {sample_accession_numbers => $SAMPLE_ACCESSION_NUMBER,
      sample_ids               => $SAMPLE_ID,
+     sample_lims              => $SAMPLE_LIMS,
      sample_names             => $SAMPLE_NAME,
      sample_public_names      => $SAMPLE_PUBLIC_NAME,
      sample_common_names      => $SAMPLE_COMMON_NAME,
      sample_supplier_names    => $SAMPLE_SUPPLIER_NAME,
+     sample_uuids             => $SAMPLE_UUID,
      sample_cohorts           => $SAMPLE_COHORT,
      sample_donor_ids         => $SAMPLE_DONOR_ID};
 
@@ -585,7 +587,7 @@ Keith James <kdj@sanger.ac.uk>, Iain Bancarz <ib5@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016, 2017, 2018, 2019 Genome Research Limited.
+Copyright (C) 2015, 2016, 2017, 2018, 2019, 2024 Genome Research Limited.
 All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
