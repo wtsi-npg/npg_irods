@@ -9,8 +9,6 @@ use Exporter qw[import];
 
 ## no critic (Modules::ProhibitAutomaticExportation)
 our @EXPORT = qw[
-                 $EXPERIMENT_NAME
-                 $GRIDION_DEVICE_ID
                  $LIBRARY_TYPE
                  $SEQCHKSUM
                  $HUMAN
@@ -23,9 +21,6 @@ our @EXPORT = qw[
 our $VERSION = '';
 
 # Annotation
-
-our $EXPERIMENT_NAME   = 'experiment_name';
-our $GRIDION_DEVICE_ID = 'device_id';
 
 our $LIBRARY_TYPE = 'library_type';
 our $SEQCHKSUM    = 'seqchksum';
