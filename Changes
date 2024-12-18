@@ -1,5 +1,8 @@
 Unreleased
 
+ - Fixed perlbrew installation by installing libdevel-patchperl-perl in
+   GitHub runner.
+
 Release 2.52.0 (2024-12-02)
  - Minor changes and tests for IsoSeq csi publishing
  - collect pipeline central, postqc and product release logs from BAM_basecalls

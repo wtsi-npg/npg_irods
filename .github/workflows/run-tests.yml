@@ -87,6 +87,7 @@ jobs:
           sudo apt-get install -qq libgd-dev libgd-text-perl # For npg_tracking
           sudo apt-get install -qq liblzma-dev # For npg_qc
           sudo apt-get install -qq pigz        # for BioNano run publication in npg_irods
+          sudo apt-get install -qq libdevel-patchperl-perl # For perlbrew
 
       - name: "Install Singularity"
         run: |
