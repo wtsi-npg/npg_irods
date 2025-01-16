@@ -1,7 +1,16 @@
 Unreleased
 
+Release 2.53.0 (2025-01-17)
  - Fixed perlbrew installation by installing libdevel-patchperl-perl in
    GitHub runner.
+ - Allow for naming differences in unbarcoded bam files from SMRT Link
+   deplexing
+ - Pacbio - in v13.1 onboard processing changes
+ - Update the annotators of Illumina and Pacbio to accept sample_uuid and
+   sample_lims
+ - Remove unused ONT files and references
+ - Install libdevel-patchperl-perl in GitHub runner
+ - Bump Singularity to 4.2.2 for CI
 
 Release 2.52.0 (2024-12-02)
  - Minor changes and tests for IsoSeq csi publishing
