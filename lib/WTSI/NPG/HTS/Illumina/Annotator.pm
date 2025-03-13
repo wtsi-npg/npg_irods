@@ -324,27 +324,6 @@ sub make_seqchksum_metadata {
   }
 }
 
-# {
-#   my $positional = 3;
-#   my @named      = qw[with_spiked_control];
-#   my $params = function_params($positional, @named);
-
-#   sub make_sec_data_sec_metadata {
-#     my ($self, $composition, $factory) = $params->parse(@_);
-
-#     $composition or $self->logconfess('A composition argument is required');
-#     defined $factory or
-#       $self->logconfess('A defined factory argument is required');
-
-#     my $lims = $factory->make_lims($composition);
-
-#     my @avus = $self->make_study_id_metadata
-#       ($lims, $params->with_spiked_control);
-
-#     return @avus;
-#   }
-# }
-
 =head2 make_study_metadata
 
   Arg [1]    : A LIMS handle, st::api::lims.
@@ -587,7 +566,7 @@ Keith James <kdj@sanger.ac.uk>, Iain Bancarz <ib5@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016, 2017, 2018, 2019, 2024 Genome Research Limited.
+Copyright (C) 2015, 2016, 2017, 2018, 2019, 2024, 2025 Genome Research Limited.
 All Rights Reserved.
 
 This program is free software: you can redistribute it and/or modify
