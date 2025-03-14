@@ -233,9 +233,13 @@ sub publish_collection {
     my @cfiles = $self->result_set->composition_files;
     $self->debug('Found Illumina composition files: ', pp(\@cfiles));
 
+    my %dehumanised_files = map { $_ => 1 }
+                            @{$self->find_dehumanised_target_files(\@cfiles)};
+
     my $spk = $params->with_spiked_control;
     foreach my $cfile (@cfiles) {
-      $call->(sub { $self->publish_alignment_files($cfile, $spk) }, $cfile);
+      my $is_dehumanised_target = exists $dehumanised_files{$cfile};
+      $call->(sub { $self->publish_alignment_files($cfile, $spk, $is_dehumanised_target) }, $cfile);
       $call->(sub { $self->publish_genotype_files($cfile, $spk)  }, $cfile);
       $call->(sub { $self->publish_index_files($cfile, $spk)     }, $cfile);
       $call->(sub { $self->publish_ancillary_files($cfile, $spk) }, $cfile);
@@ -251,6 +255,40 @@ sub publish_collection {
   }
 }
 
+=head2 find_dehumanised_target_files
+
+=cut
+
+sub find_dehumanised_target_files{
+  my ($self, $all_cfile_names) = @_;
+
+  # To pair composition files for target files with corresponding
+  # composition files for a human split, use the fact that rpt keys
+  # for both types of compositions are the same.
+
+  my $target_rpts = {};
+  my @human_split_rpts = ();
+
+  for my $cfile (@{$all_cfile_names}) {
+    my $composition = $self->read_composition_file($cfile);
+    # Components of the composition either have no subset defined or
+    # the value of the subset attribute is the same for all components.
+    my $subset = $composition->get_component(0)->subset();
+    if ($subset) {
+      if ($subset eq 'human') {
+        push @human_split_rpts, $composition->freeze2rpt();
+      }
+    } else {
+      push @human_split_rpts, $composition->freeze2rpt();
+    }
+  }
+
+  my @dehumanised_files = map { $target_rpts->{$_} }
+                          grep { defined $target_rpts->{$_} }
+                          @human_split_rpts;
+
+  return \@dehumanised_files; # This array migh tbe empty.
+}
 
 =head2 publish_interop_files
 
@@ -328,7 +366,7 @@ sub publish_xml_files {
 =cut
 
 sub publish_alignment_files {
-  my ($self, $composition_file, $with_spiked_control) = @_;
+  my ($self, $composition_file, $with_spiked_control, $is_dehumanised_target) = @_;
 
   my ($name, $directory, $suffix) =
     $self->parse_composition_filename($composition_file);
@@ -341,6 +379,7 @@ sub publish_alignment_files {
     return $self->make_primary_metadata
       ($obj->composition,
        alt_process      => $self->alt_process,
+       dehumanised      => $obj->dehumanised($is_dehumanised_target),
        is_aligned       => $obj->is_aligned,
        is_paired_read   => $obj->is_paired_read,
        num_reads        => $num_reads,

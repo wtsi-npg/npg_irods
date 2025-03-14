@@ -307,7 +307,7 @@ sub publish_qc_files : Test(116) {
 }
 
 # Lane-level, primary and secondary data, from ML warehouse
-sub publish_lane_pri_data_mlwh : Test(23) {
+sub publish_lane_pri_data_mlwh : Test(24) {
   note '=== Tests in publish_lane_pri_data_mlwh';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -374,7 +374,7 @@ sub publish_lane_sec_data_mlwh : Test(79) {
 }
 
 # Lane-level, primary and secondary data, from samplesheet
-sub publish_lane_pri_data_samplesheet : Test(23) {
+sub publish_lane_pri_data_samplesheet : Test(24) {
   note '=== Tests in publish_lane_pri_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -451,7 +451,7 @@ sub publish_lane_sec_data_samplesheet : Test(79) {
 }
 
 # Plex-level, primary and secondary data, from ML warehouse
-sub publish_plex_pri_data_mlwh : Test(23) {
+sub publish_plex_pri_data_mlwh : Test(24) {
   note '=== Tests in publish_plex_pri_data_mlwh';
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -521,7 +521,7 @@ sub publish_plex_sec_data_mlwh : Test(64) {
 }
 
 # Plex-level, primary and secondary data, from samplesheet
-sub publish_plex_pri_data_samplesheet : Test(23) {
+sub publish_plex_pri_data_samplesheet : Test(24) {
   note '=== Tests in publish_plex_pri_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -1314,6 +1314,9 @@ sub check_primary_metadata {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
+    my $attr = $DEHUMANISED;
+    is(scalar $obj->find_in_metadata($attr), 0,
+      "$file_name $attr metadata is not present");
   }
 }
 

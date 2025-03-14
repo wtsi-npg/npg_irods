@@ -46,7 +46,7 @@ with qw[
 
 {
   my $positional = 2;
-  my @named      = qw[alt_process is_paired_read is_aligned
+  my @named      = qw[alt_process dehumanised is_paired_read is_aligned
                       lims_factory num_reads reference seqchksum];
   my $params = function_params($positional, @named);
 
@@ -88,6 +88,8 @@ with qw[
       my $lims = $params->lims_factory->make_lims($composition);
       push @avus, $self->make_gbs_metadata($lims);
     }
+
+    push @avus, $self->make_dehumanised_metadata($params->dehumanised);
 
     return @avus;
   }
@@ -204,6 +206,14 @@ sub make_alignment_metadata {
   }
 
   return @avus;
+}
+
+sub make_dehumanised_metadata {
+  my ($self, $dehumanised_process_description) = @_;
+  if ($dehumanised_process_description) {
+    return $self->make_avu($DEHUMANISED, $dehumanised_process_description);
+  }
+  return;
 }
 
 =head2 make_target_metadata

@@ -178,6 +178,16 @@ sub _build_composition {
     ($json, component_class => $pkg);
 }
 
+sub dehumanised {
+  my ($self, $has_been_dehumanised) = @_;
+  #if ($has_been_dehumanised) {
+    # Examine the header, figure out what process was used to dehumanise
+    # the data.
+    #return  WTSI::NPG::HTS::HeaderParser->new()->dehumanising_process_label();
+  #}
+  return $has_been_dehumanised ? 'dodo': undef;
+}
+
 sub _build_is_restricted_access {
   my ($self) = @_;
 

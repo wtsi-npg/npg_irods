@@ -169,7 +169,7 @@ sub get_unique_value {
   Description: Return walks through the PP <- PG graph(s) describing the
                programs that have acted on the data, in order. The nodes
                consist of PG records from the header. Multiple walks will
-               be returned in the header contains multiple graphs.
+               be returned if the header contains multiple graphs.
   Returntype : ArrayRef[ArrayRef[Str]]
 
 =cut
@@ -312,6 +312,11 @@ sub alignment_reference {
   }
 
   return $reference;
+}
+
+sub dehumanising_process_label {
+  my ($elf, $header) = @_;
+  return;
 }
 
 # Scan each graph in reverse to find an aligner PG record in one of
