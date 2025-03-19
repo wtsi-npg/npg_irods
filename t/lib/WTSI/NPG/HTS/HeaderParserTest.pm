@@ -120,6 +120,154 @@ sub alignment_reference : Test(4) {
      '/lustre/scratch120/npg_repository/references/Homo_sapiens/GRCh38_15_plus_hs38d1/all/minimap2/Homo_sapiens.GRCh38_15_plus_hs38d1.fa.mmi')
 }
 
+sub dehumanising_method : Test(60) {
+
+  my $get_header = sub {
+    my $file = shift;
+    my $header =  `samtools view -H $file`;
+    return $header;
+  };
+
+  my $parser = WTSI::NPG::HTS::HeaderParser->new();
+  my $ref_root = q[/lustre/scratch120/npg_repository/references/];
+  my $bowtie2_human_ref = q[Homo_sapiens/T2T-CHM13v2.0/all/bowtie2/T2T-CHM13v2.0.fa];
+  my $bwa_human_ref = q[Homo_sapiens/1000Genomes/all/bwa0_6/human_g1k_v37.fasta];
+  my $phix_ref = q[PhiX/Sanger-SNPs/all/minimap2/phix_unsnipped_short_no_N.fa.mmi];
+  my $viral_ref = q[Mixed_virus/SarsCoV2_RSV_FLU/all/bwa0_6/SARS_RSV_FLU.fa];
+
+  my $path = 't/data/dehumanised/run_50138/lane2';
+  for my $plex ((0,1,3,5)) {
+
+    my $file = join q[/], $path, "plex${plex}/50138_2#${plex}_human.cram";
+    my $header = $get_header->($file);
+    TODO: {
+      local $TODO = 'Waiting for new-style tag zero file';
+      is ($parser->dehumanising_method($header), 'npg2025',
+        "$file human split-put data, 2025 method, adapters clipped");
+      is ($parser->alignment_reference($header),
+        $ref_root . $bowtie2_human_ref, 'correct human reference');
+    }
+
+    $file = join q[/], $path, "plex${plex}/50138_2#${plex}.cram";
+    $header = $get_header->($file);
+    is ($parser->dehumanising_method($header), 'see_human',
+      "$file target file, pointer to the human data sibling file");
+    if ($plex != 0) { # Tag0 is not aligned
+      is ($parser->alignment_reference($header), $ref_root . $viral_ref,
+        'correct viral reference');
+    }
+
+    $file = join q[/], $path, "plex${plex}/50138_2#${plex}_phix.cram";
+    $header = $get_header->($file);
+    is ($parser->dehumanising_method($header), undef,
+      "$file PhiX split-out data, value undefined");
+    is ($parser->alignment_reference($header), $ref_root . $phix_ref, 
+      'correct PhiX reference');
+  }
+  my $f = join q[/], $path, 'plex888/50138_2#888.cram';
+  my $h = $get_header->($f);
+  is ($parser->dehumanising_method($h), undef,
+    "$f PhiX control tag, value undefined");
+  is ($parser->alignment_reference($h), $ref_root . $phix_ref,
+    'correct PhiX reference');
+  
+  $path = 't/data/dehumanised/run_50138/lane1';
+  for my $plex ((0,1,3,5)) {
+
+    my $file = join q[/], $path, "plex${plex}/50138_1#${plex}_human.cram";
+    my $header = $get_header->($file);
+    is ($parser->dehumanising_method($header), 'npg2018nc',
+      "$file human split-put data, 2018 method, adapters not clipped");
+    is($parser->alignment_reference($header),
+      $ref_root . $bwa_human_ref, 'correct human reference');
+
+    $file = join q[/], $path, "plex${plex}/50138_1#${plex}.cram";
+    $header = $get_header->($file);
+    is ($parser->dehumanising_method($header), 'see_human',
+      "$file target file, pointer to the human data sibling file");
+    if ($plex != 0) { # Tag0 is not aligned
+      is ($parser->alignment_reference($header), $ref_root . $viral_ref,
+        'correct viral reference');
+    }
+
+    $file = join q[/], $path, "plex${plex}/50138_1#${plex}_phix.cram";
+    is ($parser->dehumanising_method($get_header->($file)), undef,
+      "$file PhiX split-out data, value undefined");
+  }
+  $f = join q[/], $path, 'plex888/50138_1#888.cram';
+  is ($parser->dehumanising_method($get_header->($f)), undef,
+    "$f PhiX control tag, value undefined");
+
+  $path = 't/data/dehumanised/run_49822/lane1';
+  $f = join q[/], $path, "49822_1#9_human.cram";
+  is ($parser->dehumanising_method($get_header->($f)), 'npg2018',
+    "$f human split-put data, 2018 method, adapters clipped");
+  $f = join q[/], $path, "49822_1#9.cram";
+  is ($parser->dehumanising_method($get_header->($f)), 'see_human',
+    "$f target file, pointer to the human data sibling file");
+  $f = join q[/], $path, "49822_1#9_phix.cram";
+  is ($parser->dehumanising_method($get_header->($f)), undef,
+    "$f PhiX split-out data, value undefined");
+
+  #######
+  # Historic cases, important for back-populating iRODS metadata.
+  #
+
+  $path = 't/data/dehumanised/run_22767';
+  $f = join q[/], $path, '22767_1_human.cram';
+  is ($parser->dehumanising_method($get_header->($f)), 'npg2010',
+    "$f human split-put data, 2010 method, adapters clipped");
+  $f = join q[/], $path, '22767_1.cram';
+  is ($parser->dehumanising_method($get_header->($f)), 'see_human',
+    "$f target file, pointer to the human data sibling file");
+  $f = join q[/], $path, '22767_1_phix.cram';
+  is ($parser->dehumanising_method($get_header->($f)), undef,
+    "$f PhiX split-out data, value undefined");
+
+  $path = 't/data/dehumanised/run_7110';
+  $f = join q[/], $path, '7110_1#7_human.bam';
+  is ($parser->dehumanising_method($get_header->($f)), 'npg2010nc',
+    "$f human split-put data, 2010 method, adapters not clipped");
+  $f = join q[/], $path, '7110_1#7.bam';
+  is ($parser->dehumanising_method($get_header->($f)), 'see_human',
+    "$f target file, pointer to the human data sibling file");
+
+  ######
+  # Non-human sample,no human split.
+  #
+  $path = 't/data/dehumanised/run_25409';
+  $f = join q[/], $path, '25409_1#8.cram';
+  is ($parser->dehumanising_method($get_header->($f)), undef,
+    "$f, target file, no human split");
+  $f = join q[/], $path, '25409_1#8_phix.cram';
+  is ($parser->dehumanising_method($get_header->($f)), undef,
+    "$f, PhiX split-out data, value undefined"); 
+
+  ######
+  # Enforce that human split-out took place.
+  #
+
+  $path = 't/data/dehumanised/run_22767';
+  $f = join q[/], $path, '22767_1_human.cram';
+  is ($parser->dehumanising_method($get_header->($f), 1), 'npg2010',
+    'no change for true human split-out data');
+  $f = join q[/], $path, '22767_1.cram';
+  is ($parser->dehumanising_method($get_header->($f), 1), 'see_human',
+    'no change for a target file');
+  $f = join q[/], $path, '22767_1_phix.cram';
+  is ($parser->dehumanising_method($get_header->($f), 1), undef,
+    'no change for identifiable Phix data');
+
+  $path = 't/data/dehumanised/run_25409';
+  $f = join q[/], $path, '25409_1#8.cram';
+  $h = $get_header->($f); 
+  is ($parser->dehumanising_method($h, 1), 'see_human',
+    "$f forced 'see_human' where no human split is detected");
+  $h =~ s{/Mycobacterium_abscessus/}{/Homo_sapiens/}gxms;
+  is ($parser->dehumanising_method($h, 1), 'unknown',
+    "$f (changed header) forced 'unknown' where no human split is detected"); 
+}
+
 sub split_lines {
   my ($content) = @_;
 
