@@ -25,6 +25,8 @@ use WTSI::NPG::HTS::Metadata;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 use npg_tracking::glossary::composition;
+use npg_tracking::glossary::composition::component::illumina;
+use npg_tracking::glossary::composition::factory;
 
 {
   package TestDB;
@@ -1447,6 +1449,83 @@ sub update_secondary_metadata_tag81_spike_human : Test(12) {
                             expected_groups_after  => ['ss_2967']});
     }
   } # SKIP samtools
+}
+
+sub validate_composition : Test(8) {
+ 
+  my $annotator = TestAnnotator->new();
+
+  my $c_class = 'npg_tracking::glossary::composition::component::illumina';
+  my $fclass = 'npg_tracking::glossary::composition::factory';
+
+  my $c1 = $c_class->new(id_run => 2, position => 3);
+  my $c2 = $c_class->new(id_run => 2, position => 3, subset => 'human');
+  my $c3 = $c_class->new(id_run => 2, position => 3, tag_index => 3, subset => 'human');
+  my $c4 = $c_class->new(id_run => 2, position => 4, tag_index => 3, subset => 'phix');
+  my $c5 = $c_class->new(id_run => 2, position => 4, tag_index => 0);
+  my $c6 = $c_class->new(id_run => 2, position => 6, tag_index => 0);
+  my $c7 = $c_class->new(id_run => 2, position => 6, tag_index => 5);
+  my $c8 = $c_class->new(id_run => 2, position => 6, tag_index => 7);
+
+  my $f = $fclass->new();
+  $f->add_component($c1);
+  my $composition = $f->create_composition();
+  lives_ok { $annotator->_validate_composition($composition) }
+    'no error for ' . $composition->freeze();
+
+  $f = $fclass->new();
+  $f->add_component($c2);
+  $f->add_component($c3);
+  $composition = $f->create_composition();
+  lives_ok { $annotator->_validate_composition($composition) }
+    'no error for ' . $composition->freeze();
+
+
+  $f = $fclass->new();
+  $f->add_component($c1);
+  $f->add_component($c2);
+  $composition = $f->create_composition();
+  throws_ok { $annotator->_validate_composition($composition) }
+    qr/Different subset values/,
+    'subset error for ' . $composition->freeze();
+
+  $f = $fclass->new();
+  $f->add_component($c3);
+  $f->add_component($c4);
+  $composition = $f->create_composition();
+  throws_ok { $annotator->_validate_composition($composition) }
+    qr/Different subset values/,
+    'subset error for ' . $composition->freeze();
+
+  $f = $fclass->new();
+  $f->add_component($c5);
+  $f->add_component($c6);
+  $composition = $f->create_composition();
+  lives_ok { $annotator->_validate_composition($composition) }
+    'no error for ' . $composition->freeze();
+  
+  $f = $fclass->new();
+  $f->add_component($c7);
+  $f->add_component($c8);
+  $composition = $f->create_composition();
+  lives_ok { $annotator->_validate_composition($composition) }
+    'no error for ' . $composition->freeze();
+  
+  $f = $fclass->new();
+  $f->add_component($c1);
+  $f->add_component($c6);
+  $composition = $f->create_composition();
+  throws_ok { $annotator->_validate_composition($composition) }
+    qr/A mixture of tag zero and other indexes/,
+    'tag_index error for ' . $composition->freeze();
+  
+  $f = $fclass->new();
+  $f->add_component($c6);
+  $f->add_component($c7);
+  $composition = $f->create_composition();
+  throws_ok { $annotator->_validate_composition($composition) }
+    qr/A mixture of tag zero and other indexes/,
+    'tag index error for ' . $composition->freeze();
 }
 
 sub test_metadata_update {

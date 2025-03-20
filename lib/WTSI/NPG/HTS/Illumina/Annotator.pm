@@ -54,6 +54,7 @@ with qw[
     my ($self, $composition) = $params->parse(@_);
 
     $composition or $self->logconfess('A composition argument is required');
+    $self->_validate_composition($composition);
 
     my @avus;
     my $num_reads = $params->num_reads ? $params->num_reads : 0;
@@ -64,24 +65,17 @@ with qw[
 
     push @avus, $self->make_composition_metadata($composition);
     push @avus, $self->make_run_metadata($composition);
-    foreach my $component ($composition->components_list) {
-      push @avus, $self->make_target_metadata
-        ($component, $params->alt_process);
 
-      push @avus, $self->make_alignment_metadata
-        ($component, $num_reads, $params->reference,
-         $params->is_aligned);
-    }
+    my $component = $composition->get_component(0);
+    push @avus, $self->make_target_metadata($component, $params->alt_process);
+    push @avus, $self->make_alignment_metadata($component,
+      $num_reads, $params->reference, $params->is_aligned);
 
     push @avus, $self->make_avu($IS_PAIRED_READ,
-                                 $params->is_paired_read ? 1 : 0);
-
-    if ($params->alt_process) {
-      push @avus, $self->make_alt_metadata($params->alt_process);
-    }
+                                $params->is_paired_read ? 1 : 0);
 
     if ($params->seqchksum) {
-      push @avus, $self->make_seqchksum_metadata($params->seqchksum);
+      push @avus, $self->make_avu($SEQCHKSUM, $params->seqchksum);
     }
 
     if ($params->lims_factory) {
@@ -93,29 +87,30 @@ with qw[
   }
 }
 
+=head2 make_composition_metadata
+
+  Arg [1]      npg_tracking::glossary::composition object
+
+  Example    : my @avus = $ann->make_composition_metadata ($composition);
+
+  Description: Returns composition and its componets metadata AVUs.
+  Returntype : Array[HashRef]
+
+=cut 
+
 sub make_composition_metadata {
   my ($self, $composition) = @_;
 
   $composition or $self->logconfess('A composition argument is required');
-  ref $composition or
-    $self->logconfess('The composition argument must be a reference');
 
   my @avus;
   push @avus, $self->make_avu($COMPOSITION, $composition->freeze);
   push @avus, $self->make_avu($ID_PRODUCT, $composition->digest);
   foreach my $component ($composition->components_list) {
-    push @avus, $self->make_component_metadata($component);
+    push @avus, $self->make_avu($COMPONENT, $component->freeze);
   }
 
   return @avus;
-}
-
-sub make_component_metadata {
-  my ($self, $component) = @_;
-
-  $component or $self->logconfess('A component argument is required');
-
-  return ($self->make_avu($COMPONENT, $component->freeze));
 }
 
 =head2 make_run_metadata
@@ -166,7 +161,7 @@ sub make_run_metadata {
   Arg [1]      npg_tracking::glossary::composition::component::illumina object
   Arg [2]      Number of (non-secondardy/supplementary) reads present, Int.
   Arg [3]      Reference file path, Str.
-  Arg [4]      Run is aligned, Bool. Optional.
+  Arg [4]      Data is aligned, Bool. Optional.
 
   Named args : alignment_filter Alignment filter name, Str. Optional.
 
@@ -208,12 +203,12 @@ sub make_alignment_metadata {
 
 =head2 make_target_metadata
 
-  Arg [1]      Tag index, Int. Optional.
-  Arg [1]      Alignment filter name, Str. Optional.
-  Arg [1]      Alternate process name, Str. Optional.
+  Arg [1]      npg_tracking::glossary::composition::component::illumina object
+  Arg [2]      Alternate process name, Str. Optional.
 
-  Example    : my @avus = $ann->make_alt_metadata('my_r&d_process');
-  Description: Return HTS alternate process metadata AVUs.
+  Example    : my @avus = $ann->make_target_metadata($component, 'r&d_process');
+  Description: Returns values for C<target> and, optionally, C<alt_target> and
+               C<alt_process> metadata.
   Returntype : Array[HashRef]
 
 =cut
@@ -228,49 +223,14 @@ sub make_target_metadata {
   }
 
   my @avus = ($self->make_avu($TARGET, $alt_process ? 0 : $target));
-  if ($alt_process && $target) {
-    push @avus, $self->make_avu($ALT_TARGET, 1);
+  if ($alt_process) {
+    if ($target) {
+      push @avus, $self->make_avu($ALT_TARGET, 1);
+    }
+    push @avus, $self->make_avu($ALT_PROCESS, $alt_process);
   }
 
   return @avus;
-}
-
-=head2 make_alt_metadata
-
-  Arg [1]      Alternate process name, Str.
-
-  Example    : my @avus = $ann->make_alt_metadata('my_r&d_process');
-  Description: Return HTS alternate process metadata AVUs.
-  Returntype : Array[HashRef]
-
-=cut
-
-sub make_alt_metadata {
-  my ($self, $alt_process) = @_;
-
-  defined $alt_process or
-    $self->logconfess('A defined alt_process argument is required');
-
-  return ($self->make_avu($ALT_PROCESS, $alt_process));
-}
-
-=head2 make_seqchksum_metadata
-
-  Arg [1]      Seqchksum digest, Str.
-
-  Example    : my @avus = $ann->make_seqchksum_metadata($digest);
-  Description: Return seqchksum metadata AVUs.
-  Returntype : Array[HashRef]
-
-=cut
-
-sub make_seqchksum_metadata {
-  my ($self, $digest) = @_;
-
-  defined $digest or
-    $self->logconfess('A defined alt_process argument is required');
-
-  return ($self->make_avu($SEQCHKSUM, $digest));
 }
 
 =head2 make_secondary_metadata
@@ -323,27 +283,6 @@ sub make_seqchksum_metadata {
     return @avus;
   }
 }
-
-# {
-#   my $positional = 3;
-#   my @named      = qw[with_spiked_control];
-#   my $params = function_params($positional, @named);
-
-#   sub make_sec_data_sec_metadata {
-#     my ($self, $composition, $factory) = $params->parse(@_);
-
-#     $composition or $self->logconfess('A composition argument is required');
-#     defined $factory or
-#       $self->logconfess('A defined factory argument is required');
-
-#     my $lims = $factory->make_lims($composition);
-
-#     my @avus = $self->make_study_id_metadata
-#       ($lims, $params->with_spiked_control);
-
-#     return @avus;
-#   }
-# }
 
 =head2 make_study_metadata
 
@@ -566,6 +505,23 @@ sub _make_multi_value_metadata {
   return @avus;
 }
 
+sub _validate_composition {
+  my ($self, $composition) = @_;
+
+  my @subsets = uniq map { $_->subset } $composition->components_list();
+  if (@subsets > 1) {
+    $self->logconfess('Different subset values in '.$composition->freeze);
+  }
+  my @tag0_indexes = grep { $_ == 0 }
+                     grep { defined }
+                     map { $_->tag_index } $composition->components_list();
+  if (@tag0_indexes && (@tag0_indexes != $composition->num_components)) {
+    $self->logconfess(
+      'A mixture of tag zero and other indexes in '.$composition->freeze);
+  }
+  return;
+}
+
 no Moose::Role;
 
 1;
@@ -585,10 +541,11 @@ runs.
 
 Keith James <kdj@sanger.ac.uk>, Iain Bancarz <ib5@sanger.ac.uk>
 
+Marina Gourtovaia <mg8@sanger.ac.uk>
+
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016, 2017, 2018, 2019, 2024 Genome Research Limited.
-All Rights Reserved.
+Copyright (C) 2015, 2016, 2017, 2018, 2019, 2024, 2025 GRL.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
