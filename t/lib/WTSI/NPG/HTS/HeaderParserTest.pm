@@ -140,13 +140,10 @@ sub dehumanising_method : Test(60) {
 
     my $file = join q[/], $path, "plex${plex}/50138_2#${plex}_human.cram";
     my $header = $get_header->($file);
-    TODO: {
-      local $TODO = 'Waiting for new-style tag zero file';
-      is ($parser->dehumanising_method($header), 'npg2025',
-        "$file human split-put data, 2025 method, adapters clipped");
-      is ($parser->alignment_reference($header),
-        $ref_root . $bowtie2_human_ref, 'correct human reference');
-    }
+    is ($parser->dehumanising_method($header), 'npg2025',
+      "$file human split-put data, 2025 method, adapters clipped");
+    is ($parser->alignment_reference($header),
+      $ref_root . $bowtie2_human_ref, 'correct human reference');
 
     $file = join q[/], $path, "plex${plex}/50138_2#${plex}.cram";
     $header = $get_header->($file);
