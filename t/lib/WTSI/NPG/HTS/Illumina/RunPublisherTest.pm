@@ -1129,16 +1129,16 @@ sub publish_run_assign_dehumanised_metadata : Test(12) {
   my $attr = 'tag_index';
 
   for my $lane ((1)) {
-    for my $plex ((0,5)) {
+    for my $plex ((0, 5)) {
       my $rel_lane_path = join q[/], "lane$lane", "plex$plex";
       my $file_name_root = "${id_run}_${lane}#${plex}";
       my $coll_path = join q[/], $dest_coll, $rel_lane_path;
-      my $path = join q[/], $coll_path, "${file_name_root}.cram";
-      my $cfile = join q[/], $archive_path, $rel_lane_path, "${file_name_root}.composition.json";
       $init{dest_collection} = $coll_path;
       $init{source_directory} = join q[/], $archive_path, $rel_lane_path; 
-      WTSI::NPG::HTS::Illumina::RunPublisher->new(%init)->publish_alignment_files($cfile, join(q[/], $archive_path, $rel_lane_path));
+      WTSI::NPG::HTS::Illumina::RunPublisher->new(%init)
+        ->publish_files(with_spiked_control=>1);
 
+      my $path = join q[/], $coll_path, "${file_name_root}.cram"; 
       my $obj = $pkg->new($irods, $path);
       my $file_name = fileparse($obj->str);
       my @avu = $obj->find_in_metadata($attr);
@@ -1148,8 +1148,6 @@ sub publish_run_assign_dehumanised_metadata : Test(12) {
       for my $split (qw/human phix/) {
         my $fn_root = "${id_run}_${lane}#${plex}_${split}";
         my $p = join q[/], $coll_path, "${fn_root}.cram";
-        my $c = join q[/], $archive_path, $rel_lane_path, "${fn_root}.composition.json";
-        WTSI::NPG::HTS::Illumina::RunPublisher->new(%init)->publish_alignment_files($c, join(q[/], $archive_path, $rel_lane_path));
         my $o = $pkg->new($irods, $p);
         my $f_name = fileparse($o->str);
         @avu = $o->find_in_metadata($attr);
