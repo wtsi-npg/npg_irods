@@ -1104,7 +1104,7 @@ sub publish_archive_path_existing_mlwh_json : Test(2) {
     "contents of $mlwh_json are correct");
 }
 
-sub publish_run_assign_dehumanised_metadata : Test(12) {
+sub publish_run_assign_dehumanised_metadata : Test(22) {
   note '=== Tests in publish_run_assign_dehumanised_metadata';
 
   my $id_run = 50138;
@@ -1126,7 +1126,8 @@ sub publish_run_assign_dehumanised_metadata : Test(12) {
   );
 
   my $pkg = 'WTSI::NPG::HTS::Illumina::AlnDataObject';
-  my $attr = 'tag_index';
+  my $attr_ti = $TAG_INDEX;
+  my $attr_dh = $DEHUMANISED;
 
   for my $lane ((1)) {
     for my $plex ((0, 5)) {
@@ -1141,19 +1142,29 @@ sub publish_run_assign_dehumanised_metadata : Test(12) {
       my $path = join q[/], $coll_path, "${file_name_root}.cram"; 
       my $obj = $pkg->new($irods, $path);
       my $file_name = fileparse($obj->str);
-      my @avu = $obj->find_in_metadata($attr);
-      is(scalar @avu, 1, "$file_name $attr metadata is present");
-      is($avu[0]->{'value'}, $plex, "$file_name $attr metadata is $plex");
+      my @avu = $obj->find_in_metadata($attr_ti);
+      is(scalar @avu, 1, "$file_name $attr_ti metadata is present");
+      is($avu[0]->{'value'}, $plex, "$file_name $attr_ti metadata is $plex");
+      @avu = $obj->find_in_metadata($attr_dh);
+      is(scalar @avu, 1, "$file_name $attr_dh metadata is present");
+      is($avu[0]->{'value'}, 'see_human', "$file_name $attr_dh metadata is see_human");
 
       for my $split (qw/human phix/) {
         my $fn_root = "${id_run}_${lane}#${plex}_${split}";
         my $p = join q[/], $coll_path, "${fn_root}.cram";
         my $o = $pkg->new($irods, $p);
         my $f_name = fileparse($o->str);
-        @avu = $o->find_in_metadata($attr);
-        is(scalar @avu, 1,
-          "$f_name $attr metadata is present");
-        is($avu[0]->{'value'}, $plex, "$f_name $attr metadata is $plex");
+        @avu = $o->find_in_metadata($attr_ti);
+        is(scalar @avu, 1, "$f_name $attr_ti metadata is present");
+        is($avu[0]->{'value'}, $plex, "$f_name $attr_ti metadata is $plex");
+        @avu = $o->find_in_metadata($attr_dh);
+        if ($split eq 'phix') {
+          is(scalar @avu, 0, "$f_name $attr_dh metadata is not present");
+        } else {
+          is(scalar @avu, 1, "$f_name $attr_dh metadata is present");
+          is($avu[0]->{'value'}, 'npg2018nc',
+            "$file_name $attr_dh metadata is npg2018nc");
+        }
       }
     }
   }
