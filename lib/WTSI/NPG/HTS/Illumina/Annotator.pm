@@ -20,15 +20,17 @@ with qw[
 
   Arg [1]    : Biomaterial composition, npg_tracking::glossary::composition.
 
-  Named args : is_paired_read   Run is paired, Bool. Optional.
-               is_aligned       Run is aligned, Bool. Optional.
-               reference        Reference file path, Str. Optional.
+  Named args : is_paired_read   Reads are paired, Bool. Optional.
+               is_aligned       Data is aligned, Bool. Optional.
+               reference        Reference path, Str. Optional.
                alt_process      Alternative process name, Str. Optional.
                num_reads        Total number of reads
                                 (non-secondary/supplementary), Int. Optional.
                seqchksum        Seqchksum digestgg112, Str. Optional.
                lims_factory     Factory for st:api::lims objects,
                                 WTSI::NPG::HTS::LIMSFactory. Optional.
+               dehumanised      Short description of the human reads removal
+                                method if appropriate, Str. Optional.
 
   Example    : my @avus = $ann->make_primary_metadata
                    ($composition,
@@ -46,7 +48,7 @@ with qw[
 
 {
   my $positional = 2;
-  my @named      = qw[alt_process is_paired_read is_aligned
+  my @named      = qw[alt_process is_paired_read is_aligned dehumanised
                       lims_factory num_reads reference seqchksum];
   my $params = function_params($positional, @named);
 
@@ -73,6 +75,10 @@ with qw[
 
     push @avus, $self->make_avu($IS_PAIRED_READ,
                                 $params->is_paired_read ? 1 : 0);
+
+    if ($params->dehumanised) {
+      push @avus, $self->make_avu($DEHUMANISED, $params->dehumanised);
+    }
 
     if ($params->seqchksum) {
       push @avus, $self->make_avu($SEQCHKSUM, $params->seqchksum);

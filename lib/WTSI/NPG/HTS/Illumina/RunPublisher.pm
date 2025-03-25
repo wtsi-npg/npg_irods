@@ -345,6 +345,7 @@ sub publish_alignment_files {
        is_paired_read   => $obj->is_paired_read,
        num_reads        => $num_reads,
        reference        => $obj->reference,
+       dehumanised      => $obj->dehumanised,
        seqchksum        => $seqchksum_digest);
   };
 
@@ -855,10 +856,12 @@ you select a different restart file for each job.
 
 Keith James <kdj@sanger.ac.uk>
 
+Marina Gortovaya <mg8@sanger.ac.uk>
+
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016, 2017, 2018, 2019, 2021 Genome Research
-Limited. All Rights Reserved.
+Copyright (C) 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024,
+              2025 Genome Research Ltd.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
