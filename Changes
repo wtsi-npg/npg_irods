@@ -1,5 +1,9 @@
 Unreleased
 
+ - Added 'dehumanised' iRODS metadata to a list of primary metadata and
+   provided a method of computing the value for this metadata from the
+   content of the CRAM/BAM file header.
+
 Release 2.53.0 (2025-01-17)
  - Fixed perlbrew installation by installing libdevel-patchperl-perl in
    GitHub runner.
