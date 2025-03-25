@@ -17,7 +17,7 @@ my $CL = 'CL';
 my $PG = 'PG';
 my $PP = 'PP';
 
-# These eegexes match the supported aligners from header PG records
+# These regexes match the supported aligners from header PG records
 my $ALIGNER_BWA    = qr{^bwa(?!_sam)}msx;
 my $ALIGNER_TOPHAT = qr{^TopHat}msx;
 my $ALIGNER_STAR   = qr{^STAR}msx;

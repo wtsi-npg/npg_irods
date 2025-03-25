@@ -856,7 +856,7 @@ you select a different restart file for each job.
 
 Keith James <kdj@sanger.ac.uk>
 
-Marina Gortovaya <mg8@sanger.ac.uk>
+Marina Gourtovaia <mg8@sanger.ac.uk>
 
 =head1 COPYRIGHT AND DISCLAIMER
 
