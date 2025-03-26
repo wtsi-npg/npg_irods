@@ -120,7 +120,7 @@ sub alignment_reference : Test(4) {
      '/lustre/scratch120/npg_repository/references/Homo_sapiens/GRCh38_15_plus_hs38d1/all/minimap2/Homo_sapiens.GRCh38_15_plus_hs38d1.fa.mmi')
 }
 
-sub dehumanising_method : Test(60) {
+sub dehumanising_method : Test(64) {
 
   my $get_header = sub {
     my $file = shift;
@@ -263,6 +263,28 @@ sub dehumanising_method : Test(60) {
   $h =~ s{/Mycobacterium_abscessus/}{/Homo_sapiens/}gxms;
   is ($parser->dehumanising_method($h, 1), 'unknown',
     "$f (changed header) forced 'unknown' where no human split is detected"); 
+
+  ######
+  # Check for false positives - yhuman split.
+  #
+  $path = 't/data/dehumanised/run_45165';
+  $f = join q[/], $path, '45165_1#3.cram';
+  is ($parser->dehumanising_method($get_header->($f), 1), undef,
+    "$f target file after yhuman split, value undefined");
+  $f = join q[/], $path, '45165_1#3_yhuman.cram';
+  is ($parser->dehumanising_method($get_header->($f), 1), undef,
+    "$f split out Y chr data, value undefined");
+  
+  ######
+  # Check for false positives - xahuman split.
+  #
+  $path = 't/data/dehumanised/run_14474';
+  $f = join q[/], $path, '14474_1#44.bam';
+  is ($parser->dehumanising_method($get_header->($f), 1), undef,
+    "$f target file after xahuman split, value undefined");
+  $f = join q[/], $path, '14474_1#44_xahuman.bam';
+  is ($parser->dehumanising_method($get_header->($f), 1), undef,
+    "$f split out X and auto chr data, value undefined");
 }
 
 sub split_lines {
