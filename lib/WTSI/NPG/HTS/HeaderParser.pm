@@ -356,20 +356,28 @@ sub alignment_reference {
 sub dehumanising_method {
   my ($self, $header, $is_dehumanised) = @_;
 
-  my $dh_re_since2018 = qr{bambi[ ]select
-                           .+
-                           alignment_filter[:]human
+  my $dh_re_since2018 = qr{ bambi[ ]select
+                            .+
+                            alignment_filter[:]human
                           }msx;
   # In the reg. expression below 't' is optional because we have typos
   # in the headers of very old files.
   ##no critic (RegularExpressions::ProhibitComplexRegexes)
-  my $dh_re_pre2018 = qr{ID[:]AlignmentFilt?er
-                         .+
-                         (?:[HUMAN_SPLIT_BAM_OUT]|[_human.bam])
+  my $dh_re_pre2018 = qr{ ID[:]AlignmentFilt?er
+                          .+
+                          (?:(?:HUMAN_SPLIT_BAM_OUT)|(?:_human[.]bam))
                         }msx;
+
+  # A different type of split of data (by chromosome) should not come under
+  # the 'dehumanising' umbrella.
+  my $chromosome_split_re = qr{ (?:bambi[ ]chrsplit) |
+                                (?:ID[:]SplitBamByChromosomes)
+                              }mxs;
   ## use critic
 
   my @pg_lines = $self->get_records($header, $PG);
+
+  (any { m{$chromosome_split_re}xms } @pg_lines) and return;
 
   my $dh_since2018_found = any { m{$dh_re_since2018}xms } @pg_lines;
   my $dh_pre2018_found = $dh_since2018_found ? undef :
