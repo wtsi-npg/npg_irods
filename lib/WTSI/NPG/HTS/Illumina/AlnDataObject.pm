@@ -250,13 +250,13 @@ sub _get_reads {
   my $cmd = "$samtools view irods:$path";
 
   my @records;
-  open my $fh, '-|', "$samtools head --headers 0 --records $num_records irods:$path" or
+  open my $fh, q[-|], "$samtools head --headers 0 --records $num_records irods:$path" or
       $self->logcroak("Failed to open pipe from '$samtools header': $ERRNO");
-  while (my $record = <$fh>) {
-    chomp $record;
-    push @records, $record;
+  while (my $rec = <$fh>) {
+    chomp $rec;
+    push @records, $rec;
   }
-  close($fh) or $self->logcroak("Failed to close pipe from '$samtools header': $ERRNO");
+  close $fh  or $self->logcroak("Failed to close pipe from '$samtools header': $ERRNO");
 
   my $num_read = scalar @records;
   $self->debug("Read $num_read reads from '$path'");
@@ -272,6 +272,7 @@ sub _get_reads {
   }
 
   return @records;
+  ## use critic
 }
 
 sub _find_samtools {
