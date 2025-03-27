@@ -1,7 +1,7 @@
 ###	set	count		b_seq	name_b_seq	b_seq_qual	b_seq_tags(BC,FI,QT,RT,TC)
-all	all	2		365f67ba	6cf239b1	3721af1	534a1b8c
-all	pass	2		365f67ba	6cf239b1	3721af1	534a1b8c
+all	all	0		1	1	1	1
+all	pass	0		1	1	1	1
 	all	0		1	1	1	1
 	pass	0		1	1	1	1
-50138_1#5	all	2		365f67ba	6cf239b1	3721af1	534a1b8c
-50138_1#5	pass	2		365f67ba	6cf239b1	3721af1	534a1b8c
+50138_1#5	all	0		1	1	1	1
+50138_1#5	pass	0		1	1	1	1
