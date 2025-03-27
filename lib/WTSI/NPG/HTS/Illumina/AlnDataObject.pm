@@ -298,8 +298,9 @@ sub _get_reads {
 
   if ($self->has_num_reads) {
     my $num_reads = $self->num_reads;
-    if ($num_reads > 0 and $num_read == 0) {
-      $self->logcroak("Failed to get reads from '$path' ",
+
+    if ($num_read < $num_reads <= $num_records) {
+      $self->logcroak("Only read $num_read reads from '$path' ",
                       'with samtools, when it is recorded ',
                       "as containing $num_reads reads");
     }

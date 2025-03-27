@@ -1,0 +1,11 @@
+@SQ	SN:test_ref0	LN:1000
+@SQ	SN:test_ref1	LN:1000
+@SQ	SN:test_ref2	LN:1000
+@SQ	SN:test_ref3	LN:1000
+@SQ	SN:test_ref4	LN:1000
+@SQ	SN:test_ref5	LN:1000
+@SQ	SN:test_ref6	LN:1000
+@SQ	SN:test_ref7	LN:1000
+@SQ	SN:test_ref8	LN:1000
+@SQ	SN:test_ref9	LN:1000
+@PG	ID:bwa	PN:emacs	CL:emacs 15440_1#0.sam ./t/data/aln_data_object/test_ref.fa
