@@ -5,8 +5,6 @@ use Carp;
 use Data::Dump qw[pp];
 use Encode qw[decode];
 use English qw[-no_match_vars];
-use IO::Select;
-use IPC::Open3;
 use List::AllUtils qw[any];
 use Moose;
 use MooseX::StrictConstructor;
@@ -246,8 +244,6 @@ sub _get_reads {
 
   my $samtools = $self->_find_samtools;
   my $path     = $self->str;
-
-  my $cmd = "$samtools view irods:$path";
 
   my @records;
   open my $fh, q[-|], "$samtools head --headers 0 --records $num_records irods:$path" or
