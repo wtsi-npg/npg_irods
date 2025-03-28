@@ -246,8 +246,9 @@ sub _get_reads {
   my $path     = $self->str;
 
   my @records;
-  open my $fh, q[-|], "$samtools head --headers 0 --records $num_records irods:$path" or
-      $self->logcroak("Failed to open pipe from '$samtools header': $ERRNO");
+  open my $fh, q[-|],
+      $samtools, qw(head --headers 0 --records), $num_records, "irods:$path" or
+    $self->logcroak("Failed to open pipe from '$samtools header': $ERRNO");
   while (my $rec = <$fh>) {
     chomp $rec;
     push @records, $rec;
