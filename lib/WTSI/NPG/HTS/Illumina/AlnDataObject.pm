@@ -77,6 +77,7 @@ sub BUILD {
     $ALT_TARGET,
     $COMPONENT,
     $COMPOSITION,
+    $DEHUMANISED,
     $ID_PRODUCT,
     $ID_RUN,
     $IS_PAIRED_READ,
@@ -138,7 +139,7 @@ sub is_aligned {
 
                This will give incorrect results if the reference path
                contains whitespace.
-  Returntype : Bool
+  Returntype : Str | undefined value
 
 =cut
 
@@ -152,6 +153,26 @@ sub reference {
   }
 
   return $reference;
+}
+
+=head2 dehumanised
+
+  Example    : my $dh_meta_value = $obj->dehumanised();
+
+  Description: Returns a value for assigning C<dehumanised> iRODS metadata. 
+
+               See details in the documentation for C<dehumanising_method>
+               in C<WTSI::NPG::HTS::HeaderParser>.
+
+  Returntype : Str | undefined value
+
+=cut
+
+sub dehumanised {
+  my $self = shift;
+  my $dehumanised = WTSI::NPG::HTS::HeaderParser->new
+                   ->dehumanising_method($self->header);
+  return $dehumanised;
 }
 
 sub _build_composition {
@@ -246,8 +267,9 @@ sub _get_reads {
   my $path     = $self->str;
 
   my @records;
-  open my $fh, q[-|], "$samtools head --headers 0 --records $num_records irods:$path" or
-      $self->logcroak("Failed to open pipe from '$samtools header': $ERRNO");
+  open my $fh, q[-|],
+      $samtools, qw(head --headers 0 --records), $num_records, "irods:$path" or
+    $self->logcroak("Failed to open pipe from '$samtools header': $ERRNO");
   while (my $rec = <$fh>) {
     chomp $rec;
     push @records, $rec;
@@ -318,10 +340,11 @@ overrides some base class behaviour to introduce:
 
 Keith James <kdj@sanger.ac.uk>
 
+Marina Gourtovaia <mg8@sanger.ac.uk>
+
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016, 2017, 2018, 2020 Genome Research Limited.
- All Rights Reserved.
+Copyright (C) 2015, 2016, 2017, 2018, 2019, 2020, 2023, 2025 Genome Research Ltd.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General

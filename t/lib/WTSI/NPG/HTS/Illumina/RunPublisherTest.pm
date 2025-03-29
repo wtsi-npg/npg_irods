@@ -307,7 +307,7 @@ sub publish_qc_files : Test(116) {
 }
 
 # Lane-level, primary and secondary data, from ML warehouse
-sub publish_lane_pri_data_mlwh : Test(23) {
+sub publish_lane_pri_data_mlwh : Test(24) {
   note '=== Tests in publish_lane_pri_data_mlwh';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -374,7 +374,7 @@ sub publish_lane_sec_data_mlwh : Test(79) {
 }
 
 # Lane-level, primary and secondary data, from samplesheet
-sub publish_lane_pri_data_samplesheet : Test(23) {
+sub publish_lane_pri_data_samplesheet : Test(24) {
   note '=== Tests in publish_lane_pri_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/151211_HX3_18448_B_HHH55CCXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -451,7 +451,7 @@ sub publish_lane_sec_data_samplesheet : Test(79) {
 }
 
 # Plex-level, primary and secondary data, from ML warehouse
-sub publish_plex_pri_data_mlwh : Test(23) {
+sub publish_plex_pri_data_mlwh : Test(24) {
   note '=== Tests in publish_plex_pri_data_mlwh';
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -521,7 +521,7 @@ sub publish_plex_sec_data_mlwh : Test(64) {
 }
 
 # Plex-level, primary and secondary data, from samplesheet
-sub publish_plex_pri_data_samplesheet : Test(23) {
+sub publish_plex_pri_data_samplesheet : Test(24) {
   note '=== Tests in publish_plex_pri_data_samplesheet';
   my $runfolder_path = "$data_path/sequence/150910_HS40_17550_A_C75BCANXX";
   my $archive_path   = "$runfolder_path/Data/Intensities/" .
@@ -1104,6 +1104,72 @@ sub publish_archive_path_existing_mlwh_json : Test(2) {
     "contents of $mlwh_json are correct");
 }
 
+sub publish_run_assign_dehumanised_metadata : Test(22) {
+  note '=== Tests in publish_run_assign_dehumanised_metadata';
+
+  my $id_run = 50138;
+  my $archive_path = 't/data/dehumanised/run_50138';
+  local $ENV{NPG_CACHED_SAMPLESHEET_FILE} =
+    join q[/], $archive_path, q[samplesheet_50138.csv]; 
+
+  my $irods = WTSI::NPG::iRODS->new(
+    environment => \%ENV, strict_baton_version => 0);
+  my $lims_factory =
+    WTSI::NPG::HTS::LIMSFactory->new(driver_type => 'samplesheet');
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $dest_coll = "$irods_tmp_coll/run_50138";
+
+  my %init = (
+    irods => $irods,
+    restart_file => catfile($tmpdir->dirname, 'published.json'), 
+    lims_factory => $lims_factory,
+  );
+
+  my $pkg = 'WTSI::NPG::HTS::Illumina::AlnDataObject';
+  my $attr_ti = $TAG_INDEX;
+  my $attr_dh = $DEHUMANISED;
+
+  for my $lane ((1)) {
+    for my $plex ((0, 5)) {
+      my $rel_lane_path = join q[/], "lane$lane", "plex$plex";
+      my $file_name_root = "${id_run}_${lane}#${plex}";
+      my $coll_path = join q[/], $dest_coll, $rel_lane_path;
+      $init{dest_collection} = $coll_path;
+      $init{source_directory} = join q[/], $archive_path, $rel_lane_path; 
+      WTSI::NPG::HTS::Illumina::RunPublisher->new(%init)
+        ->publish_files(with_spiked_control=>1);
+
+      my $path = join q[/], $coll_path, "${file_name_root}.cram"; 
+      my $obj = $pkg->new($irods, $path);
+      my $file_name = fileparse($obj->str);
+      my @avu = $obj->find_in_metadata($attr_ti);
+      is(scalar @avu, 1, "$file_name $attr_ti metadata is present");
+      is($avu[0]->{'value'}, $plex, "$file_name $attr_ti metadata is $plex");
+      @avu = $obj->find_in_metadata($attr_dh);
+      is(scalar @avu, 1, "$file_name $attr_dh metadata is present");
+      is($avu[0]->{'value'}, 'see_human', "$file_name $attr_dh metadata is see_human");
+
+      for my $split (qw/human phix/) {
+        my $fn_root = "${id_run}_${lane}#${plex}_${split}";
+        my $p = join q[/], $coll_path, "${fn_root}.cram";
+        my $o = $pkg->new($irods, $p);
+        my $f_name = fileparse($o->str);
+        @avu = $o->find_in_metadata($attr_ti);
+        is(scalar @avu, 1, "$f_name $attr_ti metadata is present");
+        is($avu[0]->{'value'}, $plex, "$f_name $attr_ti metadata is $plex");
+        @avu = $o->find_in_metadata($attr_dh);
+        if ($split eq 'phix') {
+          is(scalar @avu, 0, "$f_name $attr_dh metadata is not present");
+        } else {
+          is(scalar @avu, 1, "$f_name $attr_dh metadata is present");
+          is($avu[0]->{'value'}, 'npg2018nc',
+            "$file_name $attr_dh metadata is npg2018nc");
+        }
+      }
+    }
+  }
+}
+
 # From here onwards are test support functions
 
 sub check_publish_lane_pri_data {
@@ -1314,6 +1380,9 @@ sub check_primary_metadata {
       my @avu = $obj->find_in_metadata($attr);
       cmp_ok(scalar @avu, '==', 1, "$file_name $attr metadata present");
     }
+    my $attr = $DEHUMANISED;
+    is(scalar $obj->find_in_metadata($attr), 0,
+      "$file_name $attr metadata is not present");
   }
 }
 

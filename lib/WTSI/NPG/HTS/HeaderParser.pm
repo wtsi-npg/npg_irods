@@ -2,7 +2,7 @@ package WTSI::NPG::HTS::HeaderParser;
 
 use namespace::autoclean;
 use Data::Dump qw[pp];
-use List::AllUtils qw[firstval uniq];
+use List::AllUtils qw[any first_index firstval uniq];
 use Moose;
 use MooseX::StrictConstructor;
 use Try::Tiny;
@@ -12,16 +12,17 @@ with qw[WTSI::DNAP::Utilities::Loggable];
 our $VERSION = '';
 
 # SAM header record tags
-our $ID = 'ID';
-our $CL = 'CL';
-our $PG = 'PG';
-our $PP = 'PP';
+my $ID = 'ID';
+my $CL = 'CL';
+my $PG = 'PG';
+my $PP = 'PP';
 
 # These regexes match the supported aligners from header PG records
-our $ALIGNER_BWA    = qr{^bwa(?!_sam)}msx;
-our $ALIGNER_TOPHAT = qr{^TopHat}msx;
-our $ALIGNER_STAR   = qr{^STAR}msx;
-our $ALIGNER_MINIMAP2 = qr{^minimap2}msx;
+my $ALIGNER_BWA    = qr{^bwa(?!_sam)}msx;
+my $ALIGNER_TOPHAT = qr{^TopHat}msx;
+my $ALIGNER_STAR   = qr{^STAR}msx;
+my $ALIGNER_MINIMAP2 = qr{^minimap2}msx;
+my $ALIGNER_BOWTIE2 = qr{^bowtie2}msx;
 
 # Regex for matching to reference sequence paths in HTS file header PG
 # records.
@@ -269,14 +270,14 @@ sub pg_walk {
                   return $_[0] =~ /my_reference/
                })
   Description: Return the reference path used in alignment. The reference
-               path is parsed from the last BWA @PG line in the header
+               path is parsed from the last aligner @PG line in the header
                by a simple split on whitespace, followed by application of
                the filter.
 
                This will give incorrect results if the reference path
                contains whitespace.
 
-  Returntype : Bool
+  Returntype : Str
 
 =cut
 
@@ -314,6 +315,126 @@ sub alignment_reference {
   return $reference;
 }
 
+=head2 dehumanising_method
+
+  Arg [1]      Entire header. This may be provided as a Str or ArrayRef[Str]
+               where each header row is an element of the array.
+  Arg [2]      An optional boolean flag. True value forces the return value of
+               C<unknown> for split-out human data and C<see_human> for target
+               data where otherwise an undefined value would have been returned.
+
+  Example    : my $dh_method = $obj->dehumanising_method($header);
+               $dh_method = $obj->dehumanising_method($header, 1);
+
+  Description: This method returns a string value which can be used when setting
+               L<iRODS dehumanised metadata|https://github.com/wtsi-npg/irods-metadata/blob/master/irods_sample_metadata.md>.
+               If this method returns an undefined value, setting iRODS
+               C<dehumanised> metadata is not appropriate.
+
+               Evaluates the content of the CRAM/BAM file header to establish
+               whether a procedure of removing human reads (dehumanising) has
+               been performed. If the history of dehumanising is established,
+               for target data and split out human data returns a string. For
+               any other data returns an undefined value (for exceptions see
+               the second argument description).
+
+               Since at the time of writing (March 2025) the target file header
+               header does not contain any hints about the method used to
+               dehumanise (dh) the data, the value of C<see_human> is returned.
+               For split-out human data a short descripton of the method is
+               returned, falling back on C<unknown> when the method cannot be
+               inferred.
+               
+               An attempt to evaluate whether the adapter clipping took place
+               is undertaken. Depending on the dh method suffix C<nc> or
+               C<c> might be addedto the method. Example: npg2018nc.
+
+  Returntype : Str | undefined value
+
+=cut
+
+sub dehumanising_method {
+  my ($self, $header, $is_dehumanised) = @_;
+
+  my $dh_re_since2018 = qr{ bambi[ ]select
+                            .+
+                            alignment_filter[:]human
+                          }msx;
+  # In the reg. expression below 't' is optional because we have typos
+  # in the headers of very old files.
+  ##no critic (RegularExpressions::ProhibitComplexRegexes)
+  my $dh_re_pre2018 = qr{ ID[:]AlignmentFilt?er
+                          .+
+                          (?:(?:HUMAN_SPLIT_BAM_OUT)|(?:_human[.]bam))
+                        }msx;
+
+  # A different type of split of data (by chromosome) should not come under
+  # the 'dehumanising' umbrella.
+  my $chromosome_split_re = qr{ (?:bambi[ ]chrsplit) |
+                                (?:ID[:]SplitBamByChromosomes)
+                              }mxs;
+  ## use critic
+
+  my @pg_lines = $self->get_records($header, $PG);
+
+  (any { m{$chromosome_split_re}xms } @pg_lines) and return;
+
+  my $dh_since2018_found = any { m{$dh_re_since2018}xms } @pg_lines;
+  my $dh_pre2018_found = $dh_since2018_found ? undef :
+    any { m{$dh_re_pre2018}xms } @pg_lines;
+
+  # Return if no trace of dh, neither have to force it.
+  ($dh_since2018_found || $dh_pre2018_found || $is_dehumanised) or return;
+
+  my @sq_lines = $self->get_records($header, 'SQ');
+
+  (any { m{phix}imsx } @sq_lines) and return; # This is PhiX split-out data.
+
+  # Is this human split-out data?
+  if (any { m{ /Homo_sapiens/ | SP[:]Human }msx } @sq_lines) { # Yes
+
+    #######
+    # Figure out first whether clipping took place. Looking for the record
+    # of finding the adapters, then clipping them. Any of these records on
+    # their own or in the wrong order do not count.
+    my $clipped = 0;
+    my $i_find = first_index { m{ID[:]bamadapterfind}msx } @pg_lines;
+    if ($i_find >= 0 ) {
+      if ($i_find < first_index { m{ID[:]bamadapterclip}msx } @pg_lines) {
+        $clipped = 1; # Adapters clipped.
+      }
+    }
+
+    my $method = 'unknown'; # Fallback value
+    if ($dh_since2018_found) {
+      if ( any { m{bowtie2[/]T2T}msx } @pg_lines ) {
+        $method = 'npg2025';
+      } elsif ( any { m{bwa[ ]sam[p|s]e}xms } @pg_lines ) {
+        $method = 'npg2018';
+      }
+    } elsif ($dh_pre2018_found) {
+      $method = 'npg2010';
+    }
+
+    my $clip_suffix = q[];
+    if ($method eq 'npg2025') {
+      if ($clipped) {
+        $clip_suffix = q[c]; # We do not expect to see this case.
+      }
+    } elsif ($method ne 'unknown') {
+      if (!$clipped) {
+        $clip_suffix = q[nc];
+      }
+    }
+
+    return $method . $clip_suffix; # Combine the dh method and adapter
+                                   # cliping info.
+  } # End of human split-out data clause.
+
+  return 'see_human'; # This is target data with a record of having been
+                      # dehumanised.
+}
+
 # Scan each graph in reverse to find an aligner PG record in one of
 # them
 sub _find_aligner_record {
@@ -330,7 +451,11 @@ sub _find_aligner_record {
     my $cl = $self->get_unique_value($rec, $CL);
 
     if (defined $cl) {
-      if ($id =~ m{$ALIGNER_BWA|$ALIGNER_TOPHAT|$ALIGNER_STAR|$ALIGNER_MINIMAP2}msx) {
+      if ($id =~ m{ $ALIGNER_BWA |
+                    $ALIGNER_TOPHAT |
+                    $ALIGNER_STAR |
+                    $ALIGNER_MINIMAP2 |
+                    $ALIGNER_BOWTIE2 }msx ) {
         $self->debug("ID $id identified as an aligner in $rec");
         return 1;
       }
@@ -405,9 +530,11 @@ reference and PG graphs.
 
 Keith James <kdj@sanger.ac.uk>
 
+Marina Gourtovaia <mg8@sanger.ac.uk> 
+
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016, 2021 Genome Research Limited. All Rights Reserved.
+Copyright (C) 2015, 2016, 2017, 2018, 2021, 2025 Genome Research Ltd.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
