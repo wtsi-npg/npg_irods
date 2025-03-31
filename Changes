@@ -1,5 +1,9 @@
 Unreleased
 
+Release 2.54.0 (2025-03-31)
+ - Use samtools head rather than samtools view with open3 shenanigans.
+ - Fix the case where is_paired_read can read fewer than expected reads
+ - Add tests for reading bam/cram files that have zero or one read in them.
  - Added 'dehumanised' iRODS metadata to a list of primary metadata and
    provided a method of computing the value for this metadata from the
    content of the CRAM/BAM file header.
