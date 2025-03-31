@@ -25,6 +25,8 @@ use WTSI::NPG::HTS::Metadata;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 use npg_tracking::glossary::composition;
+use npg_tracking::glossary::composition::component::illumina;
+use npg_tracking::glossary::composition::factory;
 
 {
   package TestDB;
@@ -58,19 +60,27 @@ my $run7915_lane5_tag1_human = '7915_5#1_human';
 my $run15440_lane1_tag0  = '15440_1#0';
 my $run15440_lane1_tag81 = '15440_1#81';
 
-my %file_composition =
-  ('7915_5#0'           => [7915,  5,  0,      undef],
-   '7915_5#1'           => [7915,  5,  1,      undef],
-   '7915_5#1_human'     => [7915,  5,  1,     'human'],
-   '15440_1#0'          => [15440, 1,  0,      undef],
-   '15440_1#81'         => [15440, 1, 81,      undef],
+my $no_reads_run15440_lane1 = 'no_reads_15440_1#0';
+my $one_read_run15440_lane1 = 'one_read_15440_1#0';
 
-   '17550_3#1'          => [17550, 3,  1,      undef],
-   '17550_3#1_human'    => [17550, 3,  1,    'human'],
-   '17550_3#1_nonhuman' => [17550, 3,  1, 'nonhuman'],
-   '17550_3#1_xahuman'  => [17550, 3,  1,  'xahuman'],
-   '17550_3#1_yhuman'   => [17550, 3,  1,   'yhuman'],
-   '17550_3#1_phix'     => [17550, 3,  1,     'phix']);
+my %file_composition =
+    (
+        '7915_5#0'           => [ 7915, 5, 0, undef ],
+        '7915_5#1'           => [ 7915, 5, 1, undef ],
+        '7915_5#1_human'     => [ 7915, 5, 1, 'human' ],
+        '15440_1#0'          => [ 15440, 1, 0, undef ],
+        '15440_1#81'         => [ 15440, 1, 81, undef ],
+
+        '17550_3#1'          => [ 17550, 3, 1, undef ],
+        '17550_3#1_human'    => [ 17550, 3, 1, 'human' ],
+        '17550_3#1_nonhuman' => [ 17550, 3, 1, 'nonhuman' ],
+        '17550_3#1_xahuman'  => [ 17550, 3, 1, 'xahuman' ],
+        '17550_3#1_yhuman'   => [ 17550, 3, 1, 'yhuman' ],
+        '17550_3#1_phix'     => [ 17550, 3, 1, 'phix' ],
+
+        'no_reads_15440_1#0' => [ 15440, 1, 0, undef ],
+        'one_read_15440_1#0' => [ 15440, 1, 0, undef ]
+    );
 
 my $invalid = "1000_1#1";
 
@@ -155,7 +165,8 @@ sub setup_test : Test(setup) {
   if ($samtools_available) {
     foreach my $data_file ($run7915_lane5_tag0, $run7915_lane5_tag1,
                            $run7915_lane5_tag1_human,
-                           $run15440_lane1_tag0, $run15440_lane1_tag81) {
+                           $run15440_lane1_tag0, $run15440_lane1_tag81,
+                           $no_reads_run15440_lane1, $one_read_run15440_lane1) {
       WTSI::DNAP::Utilities::Runnable->new
           (arguments  => ['view', '-C',
                           '-T', "$data_path/$reference_file",
@@ -287,7 +298,7 @@ sub is_paired_read : Test(4) {
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                     strict_baton_version => 0);
  foreach my $format (qw[bam cram]) {
-    foreach my $path (sort grep { /15440/ } keys %file_composition) {
+    foreach my $path (sort grep { /^15440/ } keys %file_composition) {
       my $full_path = "$irods_tmp_coll/$path.$format";
       my @initargs = _build_initargs(\%file_composition, $path);
 
@@ -306,6 +317,59 @@ sub is_paired_read : Test(4) {
       }
     }
   }
+}
+
+sub is_paired_read_empty : Test(6) {
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+
+    foreach my $format (qw[bam cram]) {
+        my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+            ($irods, "$irods_tmp_coll/$no_reads_run15440_lane1.$format",
+                id_run    => 15440,
+                position  => 1,
+                tag_index => 0,
+                file_format => $format);
+        ok(!$obj->has_num_reads, "No external read count supplied");
+        ok(!$obj->is_paired_read, "An empty bam/cram file is not paired");
+
+        dies_ok {
+          $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+            ($irods, "$irods_tmp_coll/$no_reads_run15440_lane1.$format",
+                id_run    => 15440,
+                position  => 1,
+                tag_index => 0,
+                file_format => $format,
+                num_reads => 1);
+            !$obj->is_paired_read
+        } "Fails when mismatched non-zero external read count supplied";
+    }
+}
+
+sub is_paired_read_one_read : Test(4) {
+    my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                      strict_baton_version => 0);
+
+    foreach my $format (qw[bam cram]) {
+        my $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+            ($irods, "$irods_tmp_coll/$one_read_run15440_lane1.$format",
+                id_run    => 15440,
+                position  => 1,
+                tag_index => 0,
+                file_format => $format);
+        ok($obj->is_paired_read, "$one_read_run15440_lane1.$format is paired");
+
+        dies_ok {
+            $obj = WTSI::NPG::HTS::Illumina::AlnDataObject->new
+                ($irods, "$irods_tmp_coll/$one_read_run15440_lane1.$format",
+                    id_run      => 15440,
+                    position    => 1,
+                    tag_index   => 0,
+                    file_format => $format,
+                    num_reads   => 2);
+            $obj->is_paired_read
+        } "Fails when mismatched non-zero external read count supplied";
+    }
 }
 
 sub tag_index : Test(12) {
@@ -1447,6 +1511,83 @@ sub update_secondary_metadata_tag81_spike_human : Test(12) {
                             expected_groups_after  => ['ss_2967']});
     }
   } # SKIP samtools
+}
+
+sub validate_composition : Test(8) {
+ 
+  my $annotator = TestAnnotator->new();
+
+  my $c_class = 'npg_tracking::glossary::composition::component::illumina';
+  my $fclass = 'npg_tracking::glossary::composition::factory';
+
+  my $c1 = $c_class->new(id_run => 2, position => 3);
+  my $c2 = $c_class->new(id_run => 2, position => 3, subset => 'human');
+  my $c3 = $c_class->new(id_run => 2, position => 3, tag_index => 3, subset => 'human');
+  my $c4 = $c_class->new(id_run => 2, position => 4, tag_index => 3, subset => 'phix');
+  my $c5 = $c_class->new(id_run => 2, position => 4, tag_index => 0);
+  my $c6 = $c_class->new(id_run => 2, position => 6, tag_index => 0);
+  my $c7 = $c_class->new(id_run => 2, position => 6, tag_index => 5);
+  my $c8 = $c_class->new(id_run => 2, position => 6, tag_index => 7);
+
+  my $f = $fclass->new();
+  $f->add_component($c1);
+  my $composition = $f->create_composition();
+  lives_ok { $annotator->_validate_composition($composition) }
+    'no error for ' . $composition->freeze();
+
+  $f = $fclass->new();
+  $f->add_component($c2);
+  $f->add_component($c3);
+  $composition = $f->create_composition();
+  lives_ok { $annotator->_validate_composition($composition) }
+    'no error for ' . $composition->freeze();
+
+
+  $f = $fclass->new();
+  $f->add_component($c1);
+  $f->add_component($c2);
+  $composition = $f->create_composition();
+  throws_ok { $annotator->_validate_composition($composition) }
+    qr/Different subset values/,
+    'subset error for ' . $composition->freeze();
+
+  $f = $fclass->new();
+  $f->add_component($c3);
+  $f->add_component($c4);
+  $composition = $f->create_composition();
+  throws_ok { $annotator->_validate_composition($composition) }
+    qr/Different subset values/,
+    'subset error for ' . $composition->freeze();
+
+  $f = $fclass->new();
+  $f->add_component($c5);
+  $f->add_component($c6);
+  $composition = $f->create_composition();
+  lives_ok { $annotator->_validate_composition($composition) }
+    'no error for ' . $composition->freeze();
+  
+  $f = $fclass->new();
+  $f->add_component($c7);
+  $f->add_component($c8);
+  $composition = $f->create_composition();
+  lives_ok { $annotator->_validate_composition($composition) }
+    'no error for ' . $composition->freeze();
+  
+  $f = $fclass->new();
+  $f->add_component($c1);
+  $f->add_component($c6);
+  $composition = $f->create_composition();
+  throws_ok { $annotator->_validate_composition($composition) }
+    qr/A mixture of tag zero and other indexes/,
+    'tag_index error for ' . $composition->freeze();
+  
+  $f = $fclass->new();
+  $f->add_component($c6);
+  $f->add_component($c7);
+  $composition = $f->create_composition();
+  throws_ok { $annotator->_validate_composition($composition) }
+    qr/A mixture of tag zero and other indexes/,
+    'tag index error for ' . $composition->freeze();
 }
 
 sub test_metadata_update {

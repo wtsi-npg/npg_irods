@@ -5,8 +5,6 @@ use Carp;
 use Data::Dump qw[pp];
 use Encode qw[decode];
 use English qw[-no_match_vars];
-use IO::Select;
-use IPC::Open3;
 use List::AllUtils qw[any];
 use Moose;
 use MooseX::StrictConstructor;
@@ -79,6 +77,7 @@ sub BUILD {
     $ALT_TARGET,
     $COMPONENT,
     $COMPOSITION,
+    $DEHUMANISED,
     $ID_PRODUCT,
     $ID_RUN,
     $IS_PAIRED_READ,
@@ -140,7 +139,7 @@ sub is_aligned {
 
                This will give incorrect results if the reference path
                contains whitespace.
-  Returntype : Bool
+  Returntype : Str | undefined value
 
 =cut
 
@@ -154,6 +153,26 @@ sub reference {
   }
 
   return $reference;
+}
+
+=head2 dehumanised
+
+  Example    : my $dh_meta_value = $obj->dehumanised();
+
+  Description: Returns a value for assigning C<dehumanised> iRODS metadata. 
+
+               See details in the documentation for C<dehumanising_method>
+               in C<WTSI::NPG::HTS::HeaderParser>.
+
+  Returntype : Str | undefined value
+
+=cut
+
+sub dehumanised {
+  my $self = shift;
+  my $dehumanised = WTSI::NPG::HTS::HeaderParser->new
+                   ->dehumanising_method($self->header);
+  return $dehumanised;
 }
 
 sub _build_composition {
@@ -247,65 +266,31 @@ sub _get_reads {
   my $samtools = $self->_find_samtools;
   my $path     = $self->str;
 
-  my $cmd = "$samtools view irods:$path";
-  my $pid = open3(undef, my $stdout, undef, $cmd);
-
-  my $sel = IO::Select->new;
-  $sel->add($stdout);
-
-  my $out = q[];
-  my $newlines = 0;
-  while (my @ready = $sel->can_read) {
-    my $bytes;
-
-    my $num_bytes = sysread $ready[0], $bytes, 512;
-    if (not defined $num_bytes) {
-      $self->logcroak("Failed sysread from '$cmd': $ERRNO");
-    }
-    if ($num_bytes == 0) {
-      $sel->remove($stdout);
-    }
-    else {
-      $self->debug(q[Read ], length $bytes, q[ bytes]);
-      my $nl = $bytes =~ tr /\n/\n/; # Count newlines i.e. reads
-      $newlines += $nl;
-      $out .= $bytes;
-    }
-
-    last if $newlines >= $num_records; # We have enough reads
+  my @records;
+  open my $fh, q[-|],
+      $samtools, qw(head --headers 0 --records), $num_records, "irods:$path" or
+    $self->logcroak("Failed to open pipe from '$samtools header': $ERRNO");
+  while (my $rec = <$fh>) {
+    chomp $rec;
+    push @records, $rec;
   }
+  close $fh  or $self->logcroak("Failed to close pipe from '$samtools header': $ERRNO");
 
-  if ($sel->can_read) {
-    # The files samtools reads may be >100 GB, so when we have sufficient reads,
-    # we need to stop the process, rather than wait for it.
-    $self->debug("Stopping PID $pid '$cmd'");
-    kill 'SIGINT', $pid;
-  }
-  else {
-    $self->debug("Waiting for PID $pid '$cmd'");
-    my $wait = waitpid $pid, 0;
-    if ($wait != -1) {
-      my $err = $CHILD_ERROR >> 8;
-      if ($err) {
-        $self->logcroak("Failed '$cmd': $err");
-      }
-    }
-  }
-
-  my @reads = split /\n/msx, $out;
-  my $num_read = scalar @reads;
+  my $num_read = scalar @records;
   $self->debug("Read $num_read reads from '$path'");
 
   if ($self->has_num_reads) {
     my $num_reads = $self->num_reads;
-    if ($num_reads > 0 and $num_read == 0) {
-      $self->logcroak("Failed to get reads from '$path' ",
+
+    if ($num_read < $num_reads <= $num_records) {
+      $self->logcroak("Only read $num_read reads from '$path' ",
                       'with samtools, when it is recorded ',
                       "as containing $num_reads reads");
     }
   }
 
-  return @reads;
+  return @records;
+  ## use critic
 }
 
 sub _find_samtools {
@@ -355,10 +340,11 @@ overrides some base class behaviour to introduce:
 
 Keith James <kdj@sanger.ac.uk>
 
+Marina Gourtovaia <mg8@sanger.ac.uk>
+
 =head1 COPYRIGHT AND DISCLAIMER
 
-Copyright (C) 2015, 2016, 2017, 2018, 2020 Genome Research Limited.
- All Rights Reserved.
+Copyright (C) 2015, 2016, 2017, 2018, 2019, 2020, 2023, 2025 Genome Research Ltd.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the Perl Artistic License or the GNU General
