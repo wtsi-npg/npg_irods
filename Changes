@@ -1,5 +1,10 @@
 Unreleased
 
+Release 2.54.1 (2025-04-08)
+ - Expression '$num_read < $num_reads <= $num_records' does not compile under
+   Perl v5.26.1 on an Ubuntu 18.04.6 hosts where production jobs run. Replaced
+   with '($num_read < $num_reads) && ($num_read <= $num_records)'.
+
 Release 2.54.0 (2025-03-31)
  - Use samtools head rather than samtools view with open3 shenanigans.
  - Fix the case where is_paired_read can read fewer than expected reads
