@@ -282,7 +282,7 @@ sub _get_reads {
   if ($self->has_num_reads) {
     my $num_reads = $self->num_reads;
 
-    if ($num_read < $num_reads <= $num_records) {
+    if (($num_read < $num_reads) && ($num_read <= $num_records)) {
       $self->logcroak("Only read $num_read reads from '$path' ",
                       'with samtools, when it is recorded ',
                       "as containing $num_reads reads");
