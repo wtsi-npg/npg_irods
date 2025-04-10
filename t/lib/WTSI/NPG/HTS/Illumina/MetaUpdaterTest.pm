@@ -17,6 +17,7 @@ use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::HTS::Illumina::MetaUpdater;
 use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::HTS::Metadata;
+use WTSI::NPG::HTS::Samtools qw[put_xam];
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 
@@ -69,19 +70,13 @@ sub setup_test : Test(setup) {
   $test_counter++;
 
   if ($samtools_available) {
-    WTSI::DNAP::Utilities::Runnable->new
-        (arguments  => ['view', '-C',
-                        '-T', "$data_path/$reference_file",
-                        '-o', "irods:$irods_tmp_coll/$data_file.cram",
-                        "$data_path/$data_file.sam"],
-         executable => 'samtools')->run;
+      put_xam("$data_path/$data_file.sam",
+              "$irods_tmp_coll/$data_file.cram",
+              "$data_path/$reference_file");
 
-    WTSI::DNAP::Utilities::Runnable->new
-        (arguments  => ['view', '-b',
-                        '-T', "$data_path/$reference_file",
-                        '-o', "irods:$irods_tmp_coll/$data_file.bam",
-                        "$data_path/$data_file.sam"],
-         executable => 'samtools')->run;
+      put_xam("$data_path/$data_file.sam",
+              "$irods_tmp_coll/$data_file.bam",
+              "$data_path/$reference_file");
   }
 
   $irods->add_collection("$irods_tmp_coll/qc");

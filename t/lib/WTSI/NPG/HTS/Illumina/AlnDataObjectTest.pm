@@ -22,6 +22,7 @@ use WTSI::DNAP::Warehouse::Schema;
 use WTSI::NPG::HTS::Illumina::AlnDataObject;
 use WTSI::NPG::HTS::LIMSFactory;
 use WTSI::NPG::HTS::Metadata;
+use WTSI::NPG::HTS::Samtools qw[put_xam];
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::iRODS;
 use npg_tracking::glossary::composition;
@@ -167,18 +168,13 @@ sub setup_test : Test(setup) {
                            $run7915_lane5_tag1_human,
                            $run15440_lane1_tag0, $run15440_lane1_tag81,
                            $no_reads_run15440_lane1, $one_read_run15440_lane1) {
-      WTSI::DNAP::Utilities::Runnable->new
-          (arguments  => ['view', '-C',
-                          '-T', "$data_path/$reference_file",
-                          '-o', "irods:$irods_tmp_coll/$data_file.cram",
-                                "$data_path/$data_file.sam"],
-           executable => 'samtools')->run;
-      WTSI::DNAP::Utilities::Runnable->new
-          (arguments  => ['view', '-b',
-                          '-T', "$data_path/$reference_file",
-                          '-o', "irods:$irods_tmp_coll/$data_file.bam",
-                                "$data_path/$data_file.sam"],
-           executable => 'samtools')->run;
+        put_xam("$data_path/$data_file.sam",
+                "$irods_tmp_coll/$data_file.cram",
+                "$data_path/$reference_file");
+
+        put_xam("$data_path/$data_file.sam",
+                "$irods_tmp_coll/$data_file.bam",
+                "$data_path/$reference_file");
       my @initargs = _build_initargs(\%file_composition, $data_file);
 
       foreach my $format (qw[bam cram]) {
