@@ -1,5 +1,9 @@
 Unreleased
 
+Release 2.54.2 (2025-04-14)
+
+- Fix check for number of reads obtained via samtools.
+
 Release 2.54.1 (2025-04-08)
  - Expression '$num_read < $num_reads <= $num_records' does not compile under
    Perl v5.26.1 on an Ubuntu 18.04.6 hosts where production jobs run. Replaced
