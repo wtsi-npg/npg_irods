@@ -139,6 +139,11 @@ sub get_xam_header {
 
 sub get_xam_records {
     my ($remote_path, $num_records) = @_;
+
+    if (defined $num_records && $num_records !~ qr/^\d+$/msx) {
+        croak "Invalid number of records requested: '$num_records'";
+    }
+
     $num_records //= 1024; # Default to 1024 records
 
     my $cmd = "$DEFAULT_IGET_EXECUTABLE $remote_path - | " .

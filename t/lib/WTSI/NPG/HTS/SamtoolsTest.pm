@@ -38,7 +38,7 @@ sub setup_test :Test(setup) {
 sub teardown_test :Test(teardown) {
     my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
                                       strict_baton_version => 0);
-    # $irods->remove_collection($irods_tmp_coll);
+    $irods->remove_collection($irods_tmp_coll);
 }
 
 sub require :Test(1) {
@@ -67,9 +67,6 @@ SKIP: {
     }
 
     sub test_get_xam_header :Test(1) {
-        my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
-                                          strict_baton_version => 0);
-
         my $local_path = "$data_path/$run7915_lane5_tag0.sam";
         my $remote_path = "$irods_tmp_coll/$run7915_lane5_tag0.sam";
         WTSI::DNAP::Utilities::Runnable->new
@@ -92,7 +89,7 @@ SKIP: {
         ]) or diag explain $header;
     }
 
-    sub test_get_xam_records :Test(1) {
+    sub test_get_xam_records :Test(2) {
         my $local_path = "$data_path/$run7915_lane5_tag0.sam";
         my $remote_path = "$irods_tmp_coll/$run7915_lane5_tag0.sam";
         WTSI::DNAP::Utilities::Runnable->new
@@ -105,7 +102,11 @@ SKIP: {
             'read.1	16	test_ref0	2	40	100M	*	0	0	GCACCAGTAGCCAGACAACATTGCCAGGTATCGGTGAATTTAGTGCAATGCCAATTATTTCGCAGAAGGAGGCTTAATCGCTGAGTTTGTGGGGACAGTC	IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII',
             'read.2	16	test_ref0	3	40	100M	*	0	0	CACCAGTAGCCAGACAACATTGCCAGGTATCGGTGAATTTAGTGCAATGCCAATTATTTCGCAGAAGGAGGCTTAATCGCTGAGTTTGTGGGGACAGTCG	IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII'
         ]) or diag explain $header;
+
+        dies_ok { get_xam_records($remote_path, "Not a number") }
+                'get_xam_records dies with non-numeric argument'
     }
 }
 
 1;
+
