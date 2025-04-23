@@ -13,20 +13,15 @@ use Try::Tiny;
 use WTSI::NPG::iRODS::Metadata;
 use WTSI::NPG::HTS::Metadata;
 use WTSI::NPG::HTS::HeaderParser;
+use WTSI::NPG::HTS::Samtools qw[get_xam_header get_xam_records];
 use WTSI::NPG::HTS::Types qw[AlnFormat];
 
 our $VERSION = '';
-
-our $DEFAULT_SAMTOOLS_EXECUTABLE = 'samtools';
 
 # SAM SQ header tag
 our $SQ = 'SQ';
 
 extends 'WTSI::NPG::HTS::Illumina::DataObject';
-
-## no critic (ErrorHandling::RequireCheckingReturnValueOfEval)
-eval { with qw[npg_common::roles::software_location] };
-## critic
 
 has 'header' =>
   (is            => 'ro',
@@ -206,41 +201,15 @@ sub _build_is_restricted_access {
 sub _build_header {
   my ($self) = @_;
 
-  my $samtools = $self->_find_samtools;
-  my $path     = $self->str;
-
-  my @header;
-  try {
-    my $run = WTSI::DNAP::Utilities::Runnable->new
-      (arguments  => [qw[view -H], "irods:$path"],
-       executable => $samtools)->run;
-
-    my $stdout = ${$run->stdout};
-    my $header = q[];
-    try {
-      $header = decode('UTF-8', $stdout, Encode::FB_CROAK);
-    } catch {
-      $self->warn("Non UTF-8 data in the header of '$path'");
-      $header = $stdout;
-    };
-
-    push @header, split $INPUT_RECORD_SEPARATOR, $header;
-  } catch {
-    # No logger is set on samtools directly to avoid noisy stack
-    # traces when a file can't be read.
-
-    my @stack = split /\n/msx;   # Chop up the stack trace
-    $self->logcroak("Failed to read the header of '$path': ", pop @stack);
-  };
-
-  return \@header;
+  my $path = $self->str;
+  return get_xam_header($path);
 }
 
 sub _build_is_paired_read {
   my ($self) = @_;
 
   my $read_count = 1024;
-  my @reads = $self->_get_reads($read_count);
+  my @reads = @{$self->_get_reads($read_count)};
 
   my $is_paired_read = 0;
   foreach my $read (@reads) {
@@ -263,20 +232,9 @@ sub _get_reads {
     $self->logconfess("Invalid number of records requested: $num_records");
   }
 
-  my $samtools = $self->_find_samtools;
-  my $path     = $self->str;
-
-  my @records;
-  open my $fh, q[-|],
-      $samtools, qw(head --headers 0 --records), $num_records, "irods:$path" or
-    $self->logcroak("Failed to open pipe from '$samtools header': $ERRNO");
-  while (my $rec = <$fh>) {
-    chomp $rec;
-    push @records, $rec;
-  }
-  close $fh  or $self->logcroak("Failed to close pipe from '$samtools header': $ERRNO");
-
-  my $num_read = scalar @records;
+  my $path = $self->str;
+  my $records = get_xam_records($path, $num_records);
+  my $num_read = scalar @{$records};
   $self->debug("Read $num_read reads from '$path'");
 
   if ($self->has_num_reads) {
@@ -289,26 +247,8 @@ sub _get_reads {
     }
   }
 
-  return @records;
+  return $records;
   ## use critic
-}
-
-sub _find_samtools {
-  my ($self) = @_;
-
-  my $samtools;
-  if ($self->can('samtools_cmd')) {
-    $self->debug('Using npg_common::roles::software_location to find ',
-                 'samtools: ', $self->samtools_cmd);
-    $samtools = $self->samtools_cmd;
-  }
-  else {
-    $self->debug('Using the default samtools executable on PATH: ',
-                 $DEFAULT_SAMTOOLS_EXECUTABLE);
-    $samtools = $DEFAULT_SAMTOOLS_EXECUTABLE;
-  }
-
-  return $samtools;
 }
 
 __PACKAGE__->meta->make_immutable;
