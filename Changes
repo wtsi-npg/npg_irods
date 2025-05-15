@@ -1,5 +1,10 @@
 Unreleased
 
+Release 2.54.3 (2025-05-15)
+ - Add iRODS 4.3.3 and 4.3.4 to test matrix
+ - Remove iRODS 4.2.11 and 4.2.12 from test matrix
+ - Fix check for number of reads obtained via samtools
+
 Release 2.54.2 (2025-04-14)
 
 - Fix check for number of reads obtained via samtools.

@@ -83,6 +83,7 @@ lib/WTSI/NPG/HTS/PacBio/SeqDataObject.pm
 lib/WTSI/NPG/HTS/PathLister.pm
 lib/WTSI/NPG/HTS/PublishState.pm
 lib/WTSI/NPG/HTS/RunPublisher.pm
+lib/WTSI/NPG/HTS/Samtools.pm
 lib/WTSI/NPG/HTS/Seqchksum.pm
 lib/WTSI/NPG/HTS/TreePublisher.pm
 lib/WTSI/NPG/HTS/Types.pm
@@ -17062,6 +17063,7 @@ t/lib/WTSI/NPG/HTS/PacBio/RunDeleteTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/RunMonitorTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/RunPublisherTest.pm
 t/lib/WTSI/NPG/HTS/PacBio/SeqDataObjectTest.pm
+t/lib/WTSI/NPG/HTS/Samtools.pm
 t/lib/WTSI/NPG/HTS/SeqchksumTest.pm
 t/lib/WTSI/NPG/HTS/Test.pm
 t/lib/WTSI/NPG/HTS/TreePublisherTest.pm
@@ -17087,6 +17089,7 @@ t/pacbio_seq_data_object.t
 t/params.t
 t/perlcriticrc
 t/README
+t/samtools.t
 t/saphyr_run_publisher.t
 t/seqchksum.t
 t/subtrack_client.t
