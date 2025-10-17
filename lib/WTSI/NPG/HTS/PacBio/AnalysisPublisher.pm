@@ -380,6 +380,10 @@ sub _get_tag_from_fname {
     $tag_id = ($bc1 == $bc2) ? $bc1 : undef;
   } elsif ($self->is_smtwelve && $file =~ m{[.]bc\D*(\d+)\S*[.]bam}smx){
     $tag_id = $1;
+  } elsif ($file =~ m{--([\S\_]+)[.]bam}smx){
+    # assymetric tags recorded as symmetric in traction
+    $tag_id = $1;
+    $tag_id =~ s/\_\S$//g;
   }
   return $tag_id;
 }
@@ -394,6 +398,10 @@ sub _get_tag_name_from_fname {
     $tag_name =~ s/_\dp//smxg;
   } elsif ($self->is_smtwelve && $file =~ m{[.] (\w+\d+\S*) [.]bam}smx){
     $tag_name = $1;
+  } elsif ($file =~ m{--([\S\_]+)[.]bam}smx){
+    # assymetric tags recorded as symmetric in traction
+    $tag_name = $1;
+    $tag_name =~ s/\_\S$//g;
   }
   return $tag_name;
 }
