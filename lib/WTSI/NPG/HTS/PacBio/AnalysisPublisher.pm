@@ -383,7 +383,7 @@ sub _get_tag_from_fname {
   } elsif ($file =~ m{--([\S\_]+)[.]bam}smx){
     # assymetric tags recorded as symmetric in traction
     $tag_id = $1;
-    $tag_id =~ s/\_\S$//g;
+    $tag_id =~ s/\_\S$//smx;
   }
   return $tag_id;
 }
@@ -401,7 +401,7 @@ sub _get_tag_name_from_fname {
   } elsif ($file =~ m{--([\S\_]+)[.]bam}smx){
     # assymetric tags recorded as symmetric in traction
     $tag_name = $1;
-    $tag_name =~ s/\_\S$//g;
+    $tag_name =~ s/\_\S$//smx;
   }
   return $tag_name;
 }
