@@ -2604,3 +2604,33 @@
   library_created_at: ~
   pac_bio_run_name: TRACTION-RUN-1588
   pac_bio_library_tube_barcode: TRAC-2-11829
+- id_pac_bio_tmp: 131703
+  last_updated: 2025-10-01 08:24:48
+  recorded_at: 2025-10-01 08:24:48
+  id_sample_tmp: 9523049
+  id_study_tmp: 5735
+  id_pac_bio_run_lims: TRACTION-RUN-2103
+  pac_bio_run_uuid: 68c0d7a0-2b58-4056-a7e4-a009a0213a14
+  cost_code: s4699
+  id_lims: Traction
+  tag_identifier: Plate_A_65_A09
+  tag_sequence: ACCTATGAGAACACACTCTTTCCCTACACGACGCTCTTCCGATCT
+  tag_set_id_lims: 17
+  tag_set_name: Twist Universal Adapters with UDI
+  tag2_sequence: ~
+  tag2_set_id_lims: ~
+  tag2_set_name: ~
+  tag2_identifier: ~ 
+  pipeline_id_lims: Pacbio_AmpliFi
+  plate_barcode:  ~
+  plate_uuid_lims: 018e25df-24b0-4aab-9227-5942d07a918e
+  plate_number: 1
+  well_label: C1
+  well_uuid_lims: 6b8095c2-a3c4-4ca9-a799-c67a1691a455
+  pac_bio_library_tube_id_lims: 17268
+  pac_bio_library_tube_uuid: X
+  pac_bio_library_tube_name: DTOL15996515
+  pac_bio_library_tube_legacy_id: ~
+  library_created_at: ~
+  pac_bio_run_name: TRACTION-RUN-2103
+  pac_bio_library_tube_barcode: TRAC-2-18943
