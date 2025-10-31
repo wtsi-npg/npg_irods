@@ -1,0 +1,63 @@
+{
+    "_comment": "Created by pbcopper v2.6.0",
+    "attributes": [],
+    "dataset_uuids": [],
+    "id": "lima_infer",
+    "plotGroups": [],
+    "tables": [
+        {
+            "columns": [
+                {
+                    "header": "Barcode",
+                    "id": "first_bc_name",
+                    "values": [
+                        "Plate_A_57_A08_R--Plate_A_65_A09_F",
+                        "Plate_A_65_A09_F--Plate_A_65_A09_R",
+                        "Plate_A_65_A09_F--Plate_A_66_B09_R",
+                        "Plate_A_65_A09_F--Plate_A_70_F09_R",
+                        "Plate_A_65_A09_F--Plate_A_76_D10_R",
+                        "Plate_A_65_A09_F--Plate_B_99_C01_R",
+                        "Plate_A_65_A09_F--Plate_C_233_A06_R",
+                        "Plate_A_65_A09_F--Plate_C_258_B09_R",
+                        "unassigned"
+                    ]
+                },
+                {
+                    "header": "Reads, %",
+                    "id": "num_zmws",
+                    "values": [
+                        0.0,
+                        86.1,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        13.9
+                    ]
+                },
+                {
+                    "header": "Barcode score, mean",
+                    "id": "mean_bc_score",
+                    "values": [
+                        98,
+                        98,
+                        100,
+                        93,
+                        86,
+                        90,
+                        96,
+                        96,
+                        0
+                    ]
+                }
+            ],
+            "id": "inferred_barcode_table",
+            "title": "Inferred Barcodes"
+        }
+    ],
+    "title": "Inferred Barcodes",
+    "uuid": "fc2dfccb-89ad-4f15-aa0a-f38c77b8757b",
+    "version": "1.0.1"
+}

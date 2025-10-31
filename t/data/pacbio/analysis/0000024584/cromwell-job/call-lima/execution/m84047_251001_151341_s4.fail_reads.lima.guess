@@ -1,0 +1,10 @@
+IdxFirst	IdxCombined	IdxFirstNamed	IdxCombinedNamed	NumZMWs	MeanScore	Picked
+128	129	Plate_A_65_A09_F	Plate_A_65_A09_R	5130	90	1
+128	213	Plate_A_65_A09_F	Plate_B_107_C02_R	2	82	0
+128	323	Plate_A_65_A09_F	Plate_B_162_B09_R	1	81	0
+128	665	Plate_A_65_A09_F	Plate_D_333_E06_R	1	81	0
+128	677	Plate_A_65_A09_F	Plate_D_339_C07_R	1	89	0
+128	763	Plate_A_65_A09_F	Plate_D_382_F12_R	1	81	0
+128	777	Plate_A_65_A09_F	16_UDI_5_E01_R	1	89	0
+129	178	Plate_A_65_A09_R	Plate_A_90_B12_F	1	85	0
+129	754	Plate_A_65_A09_R	Plate_D_378_B12_F	1	81	0

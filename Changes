@@ -1,5 +1,8 @@
 Unreleased
 
+Release 2.55.0 (2025-10-31)
+ - PacBio - add support for new Twist ULI barcodes
+
 Release 2.54.4 (2025-10-09)
  - CI updates
 

@@ -1,0 +1,66 @@
+{
+    "_comment": "Created by pbcopper v2.6.0",
+    "attributes": [],
+    "dataset_uuids": [],
+    "id": "lima_infer",
+    "plotGroups": [],
+    "tables": [
+        {
+            "columns": [
+                {
+                    "header": "Barcode",
+                    "id": "first_bc_name",
+                    "values": [
+                        "Plate_A_65_A09_F--Plate_A_65_A09_R",
+                        "Plate_A_65_A09_F--Plate_B_107_C02_R",
+                        "Plate_A_65_A09_F--Plate_B_162_B09_R",
+                        "Plate_A_65_A09_F--Plate_D_333_E06_R",
+                        "Plate_A_65_A09_F--Plate_D_339_C07_R",
+                        "Plate_A_65_A09_F--Plate_D_382_F12_R",
+                        "Plate_A_65_A09_F--16_UDI_5_E01_R",
+                        "Plate_A_65_A09_R--Plate_A_90_B12_F",
+                        "Plate_A_65_A09_R--Plate_D_378_B12_F",
+                        "unassigned"
+                    ]
+                },
+                {
+                    "header": "Reads, %",
+                    "id": "num_zmws",
+                    "values": [
+                        10.3,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        89.7
+                    ]
+                },
+                {
+                    "header": "Barcode score, mean",
+                    "id": "mean_bc_score",
+                    "values": [
+                        90,
+                        82,
+                        81,
+                        81,
+                        89,
+                        81,
+                        89,
+                        85,
+                        81,
+                        0
+                    ]
+                }
+            ],
+            "id": "inferred_barcode_table",
+            "title": "Inferred Barcodes"
+        }
+    ],
+    "title": "Inferred Barcodes",
+    "uuid": "4a0bf204-035b-4c29-b49e-075aef140062",
+    "version": "1.0.1"
+}

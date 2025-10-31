@@ -351,6 +351,47 @@ sub publish_files_5 : Test(1) {
     'Correctly failed to publish data where QC check fails';
 }
 
+
+sub publish_sequence_files_6 : Test(4) {
+## off instrument deplexing for Twist ULI libraries
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $analysis_path  = "$data_path/0000024584";
+  my $runfolder_path = "$analysis_path/cromwell-job/call-lima/execution",
+  my $dest_coll      = "$irods_tmp_coll/publish_sequence_files";
+
+  my $tmpdir = File::Temp->newdir(TEMPLATE => "./batch_tmp.XXXXXX");
+  my $pub = WTSI::NPG::HTS::PacBio::AnalysisPublisher->new
+    (restart_file    => catfile($tmpdir->dirname, 'published.json'),
+     dest_collection => $dest_coll,
+     irods           => $irods,
+     mlwh_schema     => $wh_schema,
+     analysis_path   => $analysis_path,
+     runfolder_path  => $runfolder_path);
+
+  my @expected_paths =
+    map { catfile("$dest_coll/1_C01", $_) }
+    ('m84047_251001_151341_s4.fail_reads.Plate_A_65_A09_F--Plate_A_65_A09_R.bam',
+     'm84047_251001_151341_s4.fail_reads.unbarcoded.bam',
+     'm84047_251001_151341_s4.hifi_reads.Plate_A_65_A09_F--Plate_A_65_A09_R.bam',
+     'm84047_251001_151341_s4.hifi_reads.unbarcoded.bam',);
+
+  my ($num_files, $num_processed, $num_errors) =
+    $pub->publish_sequence_files('bam$');
+  cmp_ok($num_files,     '==', scalar @expected_paths);
+  cmp_ok($num_processed, '==', scalar @expected_paths);
+  cmp_ok($num_errors,    '==', 0);
+
+  my @observed_paths = observed_data_objects($irods, $dest_coll);
+  is_deeply(\@observed_paths, \@expected_paths,
+            'Published correctly named sequence files') or
+              diag explain \@observed_paths;
+
+  unlink $pub->restart_file;
+}
+
+
 sub list_files_2 : Test(2) {
 # testing finding files in sub-directories for on instrument analysis 
   my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
