@@ -34,6 +34,9 @@ our $METADATA_SET    = q{(subreadset|consensusreadset)};
 # Generic moviename file prefix
 our $MOVIENAME_PATTERN = 'm[0-9a-z]+_\d+_\d+';
 
+# Ampli-Fi library barcode name pattern
+our $AMPLIFI_PATTERN = 'Plate_[A-Z]_\d+_[A-Z]\d+';
+
 # Additional sequence filenames permitted for loading 
 our @FNAME_PERMITTED    = qw[fail_reads removed ccs hifi_reads fl_transcripts sequencing_control.subreads unbarcoded];
 our @FNAME_NON_DEPLEXED = qw[unassigned removed sequencing_control.subreads unbarcoded];
@@ -175,12 +178,17 @@ sub publish_sequence_files {
     if (@records >= 1) {
       # Don't set target = 1 if more than 1 record
       #  or data is non deplexed leftovers on multiplexed run
+      #  or data is of a failed type
       #  or data is for unexpected barcode
+      #  or data is non deplexed data from a single sample Ampli-Fi pool
+      #       which will always be deplexed offinstrument at the moment
       #  or data is fasta.gz format
       my $is_target   = (@records > 1 ||
           $self->_is_allowed_fname($filename, \@FNAME_NON_DEPLEXED) ||
           $self->_is_allowed_fname($filename, \@FNAME_FAILED) ||
          ($tag_id && @tag_records != 1) ||
+         (!$tag_id && @records == 1 &&
+           $records[0]->tag_identifier =~ m{^$AMPLIFI_PATTERN$}smx) ||
          ($format eq $SEQUENCE_FASTA_FORMAT))
           ? 0 : 1;
 
