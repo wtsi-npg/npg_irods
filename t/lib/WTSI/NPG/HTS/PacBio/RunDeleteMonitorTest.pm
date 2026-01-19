@@ -134,6 +134,38 @@ my $test_response3 =
    }
   ];
 
+my $test_response4 =
+  [
+   {
+    reserved => 'true',
+    numLRCells => 0,
+    name => 'TRACTION-RUN-2094',
+    completedAt => '2025-09-28T05:29:32.851Z',
+    chemistrySwVersion => '13.3.0.249246',
+    instrumentType => 'Revio',
+    chipType => '25mChip',
+    instrumentName => '84047',
+    context => 'r84047_20250925_135737',
+    instrumentSwVersion => '13.3.0.253824',
+    numCellsCompleted => 8,
+    plate1 => '1034967000398470017320260122',
+    totalCells => 8,
+    primaryAnalysisSwVersion => '13.3.0.253824',
+    status => 'Complete',
+    numStandardCells => 8,
+    createdAt => '2025-09-25T08:52:12.185Z',
+    startedAt => '2025-09-25T13:58:10.924Z',
+    createdBy => 'ir4',
+    totalSamples => 8,
+    numCellsFailed => 0,
+    plate2 => '1034967000398470018320260122',
+    instrumentSerialNumber => '84047',
+    transfersCompletedAt => '2025-09-28T12:11:19.140Z',
+    uniqueId => '2368ceca-2494-4c67-951f-6231262fd1cd',
+    ccsExecutionMode => 'OnInstrument',
+    summary => 'TRAC-2-18235 295pM TRAC-2-18236 300pM TRAC-2-18237 300pM TRAC-2-18238 225pM TRAC-2-18325 300pM TRAC-2-18330 300pM TRAC-2-18387 300pM TRAC-2-18388 300pM'
+   }
+  ];
 
 my $server = Test::HTTP::Server->new;
 
@@ -151,6 +183,11 @@ sub Test::HTTP::Server::Request::QueryJobs2 {
 sub Test::HTTP::Server::Request::QueryJobs3 {
   my ($self) = @_;
   return to_json($test_response3);
+}
+
+sub Test::HTTP::Server::Request::QueryJobs4 {
+  my ($self) = @_;
+  return to_json($test_response4);
 }
 
 
@@ -329,7 +366,7 @@ sub delete_run_on_board_deplexing : Test(7) {
   my ($dnum_runs, $dnum_processed, $dnum_deleted, $dnum_errors) = 
     $deletable->delete_runs();
 
-  cmp_ok($dnum_runs, '==', scalar @{$test_response},
+  cmp_ok($dnum_runs, '==', scalar @{$test_response2},
          'Correct number of runs to delete');
   cmp_ok($dnum_processed, '==', $num_jobs, 'All run folders processed');
   cmp_ok($dnum_deleted, '==', $num_jobs, 'All run folders deleted');
@@ -384,11 +421,60 @@ sub delete_run_on_board_deplexing_fail : Test(6) {
   my ($dnum_runs, $dnum_processed, $dnum_deleted, $dnum_errors) = 
     $deletable->delete_runs();
 
-  cmp_ok($dnum_runs, '==', scalar @{$test_response},
+  cmp_ok($dnum_runs, '==', scalar @{$test_response3},
          'Correct number of runs to delete');
   cmp_ok($dnum_processed, '==', 0, 'No run folders successfully processed');
   cmp_ok($dnum_deleted, '==', 0, 'No run folders deleted');
   cmp_ok($dnum_errors, '==', 1, 'One error so no runs deleted'); 
+}
+
+sub delete_skip_restored_run : Test(4){
+  my $uri    = URI->new($server->uri . 'QueryJobs4');
+  my $client = TestAPIClient->new(default_interval => 10000,);
+  $client->{'runs_api_uri'} = $uri;
+
+  my $irods = WTSI::NPG::iRODS->new(environment          => \%ENV,
+                                    strict_baton_version => 0);
+  my $drirods = WTSI::NPG::DriRODS->new(environment          => \%ENV,
+                                        strict_baton_version => 0);
+
+  ## create tmp runfolder
+  my $run_name   = 'r84047_20250925_135737';
+  my $well       = '1_A01';
+
+  my $data_path  = catdir('t/data/pacbio/sequence', $run_name, $well);
+  my $dest_coll  = catdir($irods_tmp_coll, $run_name);
+  
+  my $runfolder_path = catdir($tmp_dir,$run_name);
+  mkdir $runfolder_path;
+  my $runfolder_data = catdir($runfolder_path,$well);
+  mkdir $runfolder_data;
+
+  chmod (0770, $runfolder_data) or die "Chmod 0770 directory $runfolder_data failed : $!";
+
+  ## create the blocking file
+  open my $fh, '+>', catfile($runfolder_path, $WTSI::NPG::HTS::PacBio::RunPublisherBase::RESTORED_FILE_NAME);
+  close $fh;
+
+  ## runfolder should be skipped and not deleted
+  my $deletable = WTSI::NPG::HTS::PacBio::RunDeleteMonitor->new
+    (api_client         => $client,
+     check_format       => 0,
+     dest_collection    => $dest_coll,
+     irods              => $drirods,
+     local_staging_area => $tmp_dir,
+     mlwh_schema        => $wh_schema);
+
+  my ($dnum_runs, $dnum_processed, $dnum_deleted, $dnum_errors) = 
+      $deletable->delete_runs();
+
+  ## check runfolder not deleted
+  cmp_ok($dnum_runs, '==', scalar @{$test_response4},
+         'Correct number of runs');
+  cmp_ok($dnum_processed, '==', 0, 'No run folders processed');
+  cmp_ok($dnum_deleted, '==', 0, 'No run folders deleted');
+  cmp_ok($dnum_errors, '==', 0, 'No error in any run deleted');
+
 }
 
 1;
