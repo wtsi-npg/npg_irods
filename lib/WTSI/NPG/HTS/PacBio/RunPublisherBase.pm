@@ -1,9 +1,11 @@
 package  WTSI::NPG::HTS::PacBio::RunPublisherBase;
 
 use Moose::Role;
-use File::Spec::Functions qw[canonpath catdir];
+use File::Spec::Functions qw[canonpath catdir catfile];
 
 use WTSI::NPG::HTS::PacBio::RunPublisher;
+
+our $RESTORED_FILE_NAME = q[restored_record.txt];
 
 Readonly::Scalar my $PROD_DIR_COUNT     => 5;
 Readonly::Scalar my $NEW_PROD_DIR_COUNT => 6;
@@ -153,6 +155,32 @@ sub valid_runfolder_format {
   }
   return 1;
 }
+
+
+=head2 restored_runfolder_directory
+
+  Arg [1]    : directory path
+  Example    : my $publisher = $self->restored_runfolder_directory($directory);
+  Description: A runfolder re-created only with stats files for SMRT Link viewing
+  Returntype : Boolean. Defaults to false.
+
+=cut
+
+sub restored_runfolder_directory {
+  my ($self,$directory) = @_;
+
+  # look for restored top level file
+  my $restored_file = catfile($directory, $RESTORED_FILE_NAME);
+
+  my $restored = 0;
+  if(-e $restored_file && -f $restored_file){
+      $self->info(qq[Run folder '$directory' is a restored directory]);
+      $restored = 1;
+  }
+
+  return $restored;
+}
+
 
 sub _run_info {
   my ($run) = @_;

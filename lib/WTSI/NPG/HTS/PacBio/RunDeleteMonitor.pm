@@ -58,7 +58,9 @@ sub delete_runs {
             # only pick up runs that would be picked up for publication
             my $runfolder_path = $self->get_runfolder_path($run);
 
-            if($runfolder_path && $self->valid_runfolder_directory($runfolder_path)) {
+            if($runfolder_path && $self->valid_runfolder_directory($runfolder_path)
+                && !$self->restored_runfolder_directory($runfolder_path)) {
+
                 if(defined $self->check_format && $self->check_format == 1) {
                     $self->valid_runfolder_format($runfolder_path);
                 }
