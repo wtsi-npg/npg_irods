@@ -1,5 +1,11 @@
 Unreleased
 
+Release 2.55.1 (2026-02-18)
+ - Pacbio
+   - tweak run deletion to skip runfolders restored only for SMRT Link GUI
+   - small fix for target meta data on single sample Ampli-Fi pools
+ - CI updates
+
 Release 2.55.0 (2025-10-31)
  - PacBio - add support for new Twist ULI barcodes
 
