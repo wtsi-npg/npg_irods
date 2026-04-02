@@ -70,6 +70,7 @@ lib/WTSI/NPG/HTS/PacBio/MetaQuery.pm
 lib/WTSI/NPG/HTS/PacBio/MetaUpdater.pm
 lib/WTSI/NPG/HTS/PacBio/MetaXMLParser.pm
 lib/WTSI/NPG/HTS/PacBio/MonitorBase.pm
+lib/WTSI/NPG/HTS/PacBio/PbPathLister.pm
 lib/WTSI/NPG/HTS/PacBio/Product.pm
 lib/WTSI/NPG/HTS/PacBio/PublisherBase.pm
 lib/WTSI/NPG/HTS/PacBio/Reportdata.pm 

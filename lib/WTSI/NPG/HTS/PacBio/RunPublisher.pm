@@ -723,7 +723,7 @@ sub list_files {
   if ((defined $subdir && $subdir == 1) ||
       (defined $self->_is_onrevio && $self->_is_onrevio == 1)) {
     # only look in subdirectories for files to load
-    my @allfiles = $self->list_directory
+    my @allfiles = $self->pb_list_directory
       ($self->smrt_path($name), filter => $type, recurse => 1);
     foreach my $file (@allfiles) {
       my ($filename, $directory, $suffix) = fileparse($file);
@@ -733,7 +733,7 @@ sub list_files {
       }
     }
   } else {
-    @files = $self->list_directory($self->smrt_path($name), filter => $type);
+    @files = $self->pb_list_directory($self->smrt_path($name), filter => $type);
   }
 
   my $num_files = scalar @files;
@@ -765,8 +765,8 @@ sub smrt_names {
   my ($self) = @_;
 
   my $dir_pattern = $self->directory_pattern;
-  my @dirs = grep { -d } $self->list_directory($self->runfolder_path,
-                                               filter => $dir_pattern);
+  my @dirs = grep { -d } $self->pb_list_directory($self->runfolder_path,
+                                                  filter => $dir_pattern);
   my @names = sort map { first { $_ ne q[] } reverse splitdir($_) } @dirs;
 
   return @names;

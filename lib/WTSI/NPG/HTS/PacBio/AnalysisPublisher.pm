@@ -295,7 +295,7 @@ sub list_files {
   if (defined $subdironly && $subdironly == 1) {
     # for analysis files produced on the instrument we are only looking
     # in subdirectories for files to load directly to iRODS
-    my @allfiles = $self->list_directory
+    my @allfiles = $self->pb_list_directory
       ($self->runfolder_path, filter => $type, recurse => 1);
     foreach my $file (@allfiles) {
       my ($filename, $directory, $suffix) = fileparse($file);
@@ -305,10 +305,9 @@ sub list_files {
       }
     }
   } else {
-    @files = $self->list_directory
+    @files = $self->pb_list_directory
       ($self->runfolder_path, filter => $type, recurse => 1);
   }
-
   return \@files;
 }
 
