@@ -40,7 +40,7 @@ our $PATH_EXCLUDE = '^(?!.*pb_internal)';
        ($path, filter => $params->filter, recurse => $params->recurse);
 
      @files = grep { m{$PATH_EXCLUDE}msx } @files;
- 
+
      return @files;
    }
 
