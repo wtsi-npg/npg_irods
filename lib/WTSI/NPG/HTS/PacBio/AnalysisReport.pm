@@ -15,7 +15,7 @@ use WTSI::NPG::HTS::PacBio::Reportdata;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
-         WTSI::NPG::HTS::PathLister
+         WTSI::NPG::HTS::PacBio::PbPathLister
        ];
 
 our $VERSION = '';
@@ -94,7 +94,7 @@ sub generate_analysis_report {
 sub _read_deplex_files {
   my ($self) = @_;
 
-  my @files = $self->list_directory
+  my @files = $self->pb_list_directory
     ($self->runfolder_path, filter => $LIMA .q[$], recurse => 1);
 
   foreach my $file (@files) {
@@ -111,7 +111,7 @@ sub _read_ccs_files {
   my $spath = (-d catdir($self->analysis_path, $OUTPUT_DIR)) ?
     catdir($self->analysis_path, $OUTPUT_DIR) : $self->analysis_path;
 
-  my @files = $self->list_directory
+  my @files = $self->pb_list_directory
     ($spath, filter => $CCS_FILES .q[$], recurse => 1);
 
   if(@files >= 1){

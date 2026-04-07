@@ -76,22 +76,21 @@ sub _build_metadata_file{
   if (-d $output_path) {
     # As all analysis cell based all metafiles should have the correct run name,
     # well and plate number as no merged cell analysis - so just pick one.
-    my @files = $self->list_directory
+    my @files = $self->pb_list_directory
       ($output_path, filter => $METADATA_SET .q[.]. $METADATA_FORMAT . q[$]);
     push @metafiles, $files[0];
   } elsif ($self->is_oninstrument == 1 && $self->is_smtwelve == 1) {
     # Revio
-    @metafiles = $self->list_directory
+    @metafiles = $self->pb_list_directory
       ($self->analysis_path,
        filter => $self->movie_pattern .q[.]. $SMT_METADATA_SET .q[.]. $METADATA_FORMAT .q[$],
        recurse => 1)
   } elsif ($self->is_oninstrument == 1 ) {
     # Sequel IIe - as will never be upgraded from ICS v11
-    @metafiles = $self->list_directory
+    @metafiles = $self->pb_list_directory
       ($self->analysis_path,
        filter => $self->movie_pattern .q[.]. $METADATA_SET .q[.]. $METADATA_FORMAT .q[$])
   }
-
   if (@metafiles != 1) {
     $self->logcroak('Expect one xml file in '. $self->analysis_path);
   }

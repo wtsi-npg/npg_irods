@@ -20,10 +20,10 @@ use WTSI::NPG::iRODS;
 
 with qw[
          WTSI::DNAP::Utilities::Loggable
-         WTSI::NPG::HTS::PathLister
          WTSI::NPG::HTS::PacBio::Annotator
          WTSI::NPG::HTS::PacBio::MetaQuery
-       ];
+         WTSI::NPG::HTS::PacBio::PbPathLister
+         ];
 
 our $VERSION = '';
 
