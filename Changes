@@ -3,6 +3,7 @@ Unreleased
  - Pacbio - add PbPathLister as a wrapper for WTSI::NPG::HTS::PathLister
    to exclude dupicate 'pb_internal' files which appeared in off-instrument
    runfolders in SMRT Link v25.4
+ - Update CI matrix to use perl 5.34.1
   
 Release 2.55.1 (2026-02-18)
  - Pacbio
