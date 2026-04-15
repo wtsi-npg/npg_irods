@@ -93,11 +93,11 @@ sub publish_files {
     ($self->runfolder_path, $self->analysis_id .q[.]. $self->_metadata->movie_name .q[.]. $LOADED);
 
   if (! -f $lf ) {
-    my @all_files = $self->list_directory($self->runfolder_path);
+    my @all_files = $self->pb_list_directory($self->runfolder_path);
 
     ## remove files we don't want to publish and split list into sequence
     ## files and non sequence files
-    my @seq_files = $self->list_directory
+    my @seq_files = $self->pb_list_directory
       ($self->runfolder_path, filter => $FNAME_SEQUENCE . q[$]);
 
     my @not_excluded_files = grep { ! m{ $FNAME_EXCLUDED }smx } @all_files;
@@ -343,7 +343,7 @@ sub _get_primers {
   ## BioSample_1, BioSample_2...N (12 max) map to files 1 -> N
   ## except sample* files numbered 0 -> (N - 1) 
 
-  my @files = $self->list_directory($self->runfolder_path, filter => $PRIMERS_JSON);
+  my @files = $self->pb_list_directory($self->runfolder_path, filter => $PRIMERS_JSON);
 
   my (@names, @primers);
   if (scalar @files == 1) {
