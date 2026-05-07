@@ -481,7 +481,7 @@ sub publish_files_6 : Test(5) {
      runfolder_path  => $runfolder_path,
      analysis_id     => '21851',
      single_cell     => 1,
-     alt_tmpdir      => $tmpdir2,);
+     alt_tmpdir      => $tmpdir2->dirname,);
 
   my ($num_files, $num_processed, $num_errors) = $pub->publish_files;
 

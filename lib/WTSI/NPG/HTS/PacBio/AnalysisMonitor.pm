@@ -138,7 +138,7 @@ sub _publish_iso_analysis_path {
 
   my @glob = glob catdir($job->{path}, $self->task_name);
   my $runfolder_path = (@glob == 1) ? $glob[0] : q[];
-  
+
   my @init_args = (irods          => $self->irods,
                    analysis_path  => $job->{path},
                    runfolder_path => $runfolder_path,
