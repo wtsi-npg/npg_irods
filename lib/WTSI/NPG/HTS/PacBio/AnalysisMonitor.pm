@@ -45,6 +45,11 @@ has 'job_root' =>
    default       => 'cromwell-job',
    documentation => 'Root directory for job processing output');
 
+has 'alt_tmpdir' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 0,
+   documentation => 'Alternative temp directory for IsoSeq analysis archiving.');
 
 =head2 publish_analysed_cells
 
@@ -133,7 +138,7 @@ sub _publish_iso_analysis_path {
 
   my @glob = glob catdir($job->{path}, $self->task_name);
   my $runfolder_path = (@glob == 1) ? $glob[0] : q[];
-
+  
   my @init_args = (irods          => $self->irods,
                    analysis_path  => $job->{path},
                    runfolder_path => $runfolder_path,
@@ -142,6 +147,10 @@ sub _publish_iso_analysis_path {
 
   if ($self->dest_collection) {
     push @init_args, dest_collection => $self->dest_collection;
+  }
+
+  if ($self->alt_tmpdir) {
+    push @init_args, alt_tmpdir => $self->alt_tmpdir;
   }
 
   push @init_args, analysis_id => $job->{id};
