@@ -63,6 +63,12 @@ has 'single_cell' =>
    default       => 0,
    documentation => 'Set if the analysis is single cell. Defaults to false.');
 
+has 'alt_tmpdir' =>
+  (isa           => 'Str',
+   is            => 'ro',
+   required      => 0,
+   documentation => 'Alternative temp directory. Defaults to /tmp');
+
 =head2 publish_files
 
   Example    : my ($num_files, $num_published, $num_errors) =
@@ -108,8 +114,12 @@ sub publish_files {
 
     $self->warn('Publishing '. $self->analysis_id .' to '. $self->_dest_path  ."\n");
 
+    ## set tmpdir depending on whether alt_tmpdir set
+    my $tmpdir = $self->alt_tmpdir ?
+      tempdir(DIR => $self->alt_tmpdir, CLEANUP => 1) : tempdir(CLEANUP => 1);
+    $self->warn("Using directory $tmpdir as tmpdir for intermediate files\n");
+
     ## copy files to tmp directory & prefix file names with movie_name and analysis id
-    my $tmpdir = tempdir(CLEANUP => 1);
     my ($copied_seq_files)    = $self->_create_loadable_files($tmpdir, \@seq_files);
     my ($copied_nonseq_files) = $self->_create_loadable_files($tmpdir, \@nonseq_files);
 
