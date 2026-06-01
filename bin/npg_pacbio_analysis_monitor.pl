@@ -20,6 +20,7 @@ our $VERSION = '';
 Readonly::Scalar my $DEFAULT_INTERVAL_DAYS   => 14;
 Readonly::Scalar my $DEFAULT_OLDER_THAN_DAYS => 0;
 
+my $alt_tmpdir;
 my $api_uri;
 my $collection;
 my $debug;
@@ -41,6 +42,7 @@ GetOptions('collection=s'                  => \$collection,
            'pipeline-name|pipeline_name=s' => \$pipeline_name,
            'task-name|task_name=s'         => \$task_name,
            'api-uri|api_uri=s'             => \$api_uri,
+           'alt-tmpdir|alt_tmpdir=s'       => \$alt_tmpdir,
            'verbose'                       => \$verbose);
 
 
@@ -53,6 +55,9 @@ else {
                             level  => $level,
                             utf8   => 1});
 }
+
+my $log = Log::Log4perl->get_logger('main');
+$log->level($ALL);
 
 my $irods     = WTSI::NPG::iRODS->new;
 my $wh_schema = WTSI::DNAP::Warehouse::Schema->connect;
@@ -74,8 +79,16 @@ if ($task_name) {
   push @init_args, task_name => $task_name;
 }
 
-if($api_uri) {
+if ($api_uri) {
   push @init_args, api_uri => $api_uri;
+}
+
+if ($alt_tmpdir) {
+  if(-e $alt_tmpdir && -d $alt_tmpdir) {
+    push @init_args, alt_tmpdir => $alt_tmpdir;
+  } else {
+    $log->logcroak("Supplied $alt_tmpdir doesn't exist or isn't a directory");
+  }
 }
 
 my $monitor = WTSI::NPG::HTS::PacBio::AnalysisMonitor->new
@@ -84,8 +97,6 @@ my $monitor = WTSI::NPG::HTS::PacBio::AnalysisMonitor->new
 my ($num_files, $num_published, $num_errors) =
   $monitor->publish_analysed_cells;
 
-my $log = Log::Log4perl->get_logger('main');
-$log->level($ALL);
 
 if ($num_errors == 0) {
   $log->info("Processed $num_files, published $num_published ",
@@ -129,6 +140,10 @@ npg_pacbio_analysis_monitor
    --task_name       The SMRT Link task name. Optional.
    --api-uri
    --api_uri         Specify the server host and port. Optional.
+   --alt-tempdir
+   --alt_tempdir     Specify an alternative temporary directory for IsoSeq
+                     iRODS upload processing. Optional. Defaults to /tmp.
+
    --verbose         Print messages while processing. Optional.
 
 
