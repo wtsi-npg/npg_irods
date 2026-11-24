@@ -132,6 +132,20 @@ has 'require_checksum_cache' =>
 
     $self->_ensure_coll_exists($self->dest_collection);
 
+    # Update permissions on destination collection before adding collections and
+    # data objects beneath. This ordering is significant when inheritance is enabled
+    # as it avoids public permissions being inherited from parent collection and
+    # possibly not removed if there's a failure during data object creation.
+
+    # Option 1: Remove public
+    $self->irods->set_collection_permissions($WTSI::NPG::iRODS::NULL_PERMISSION,
+                                             $WTSI::NPG::iRODS::PUBLIC_GROUP,
+                                             $self->dest_collection);
+
+    # Option 2: Set to desired permisssions (like https://github.com/wtsi-npg/npg-irods-python/pull/620)
+
+    # TODO
+
     my $collated_by_dest = $self->_collate_by_dest_coll($files);
 
     my ($num_files, $num_processed, $num_errors) = (0, 0, 0);
@@ -214,7 +228,7 @@ sub _infer_dest_coll {
 sub _ensure_coll_exists {
   my ($self, $coll) = @_;
   if (not $self->irods->is_collection($coll)) {
-    $self->irods->add_collection($coll);
+  $self->irods->add_collection($coll);
   }
 
   return $coll;
